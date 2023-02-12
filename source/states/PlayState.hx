@@ -1,16 +1,32 @@
 package states;
 
+import flixel.util.FlxColor;
+import data.ReceptorSkin;
 import flixel.FlxState;
-import flixel.text.FlxText;
+import ui.Receptor;
 
 class PlayState extends FlxState
 {
-	var text:FlxText;
-
 	override public function create()
 	{
-		text = new FlxText(0, 0, 0, '');
-		add(text);
+		bgColor = FlxColor.GRAY;
+		var skin:ReceptorSkin = {
+			receptors: [
+				{
+					staticAnim: 'arrow static instance 1',
+					pressedAnim: 'left press',
+					confirmAnim: 'left confirm'
+				}
+			],
+			receptorsCenterAnimation: true,
+			receptorsImage: 'NOTE_assets',
+			receptorsOffset: [0, 5],
+			receptorsPadding: 0,
+			receptorsScale: 0.7,
+			antialiasing: true
+		};
+		var receptor = new Receptor(0, 0, 0, skin);
+		add(receptor);
 
 		super.create();
 	}

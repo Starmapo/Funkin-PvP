@@ -20,17 +20,44 @@ class Receptor extends FlxSprite
 
 		if (skin != null && skin.receptors[id] != null)
 		{
-			addAnimation('static', skin.receptors[id].staticAnim, skin.receptors[id].staticFPS);
-			addAnimation('pressed', skin.receptors[id].pressedAnim, skin.receptors[id].pressedFPS);
-			addAnimation('confirm', skin.receptors[id].confirmAnim, skin.receptors[id].confirmFPS);
+			frames = Paths.getSpritesheet(skin.receptorsImage);
+
+			addAnim('static', skin.receptors[id].staticAnim, skin.receptors[id].staticFPS, true, skin.receptors[id].staticOffset);
+			addAnim('pressed', skin.receptors[id].pressedAnim, skin.receptors[id].pressedFPS, false, skin.receptors[id].pressedOffset);
+			addAnim('confirm', skin.receptors[id].confirmAnim, skin.receptors[id].confirmFPS, false, skin.receptors[id].confirmOffset);
+
+			playAnim('static', true);
+			scale.set(skin.receptorsScale, skin.receptorsScale);
+			updateHitbox();
+
+			antialiasing = skin.antialiasing;
 		}
 	}
 
-	public function addAnimation(name:String, atlasName:String, ?fps:Float)
+	public function playAnim(name:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)
+	{
+		if (!animation.exists(name))
+			return false;
+
+		animation.play(name, force, reversed, frame);
+
+		if (skin.receptorsCenterAnimation == true)
+		{
+			centerOffsets();
+		}
+
+		return true;
+	}
+
+	function addAnim(name:String, atlasName:String, ?fps:Float, loop:Bool = true, ?offsets:Array<Float>)
 	{
 		if (fps == null)
 			fps = 24;
 
-		animation.addByAtlasName(name, atlasName, fps);
+		animation.addByAtlasName(name, atlasName, fps, loop);
+		if (offsets != null)
+		{
+			animation.addOffset(name, offsets[0], offsets[1]);
+		}
 	}
 }
