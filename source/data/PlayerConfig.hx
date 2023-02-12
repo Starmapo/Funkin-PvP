@@ -1,10 +1,9 @@
 package data;
 
-import Controls;
+import data.Controls;
 
 typedef PlayerConfig =
 {
-	var name:String;
 	var device:PlayerConfigDevice;
 	var controls:Map<Control, Array<Int>>;
 }

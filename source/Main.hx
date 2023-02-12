@@ -1,12 +1,9 @@
 package;
 
-import flixel.FlxG;
 import flixel.FlxGame;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import openfl.events.KeyboardEvent;
-import openfl.ui.Keyboard;
 import states.BootState;
 
 using StringTools;
@@ -20,7 +17,6 @@ class Main extends Sprite
 
 	public function new()
 	{
-
 		super();
 
 		if (stage != null)
