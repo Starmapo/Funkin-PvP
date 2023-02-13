@@ -2,6 +2,7 @@ package ui;
 
 import data.ReceptorSkin;
 import flixel.FlxSprite;
+import flixel.tweens.FlxTween;
 
 /**
 	A receptor is a static arrow that indicates when you should hit a note.
@@ -11,6 +12,7 @@ class Receptor extends FlxSprite
 {
 	public var id(default, null):Int;
 	public var skin(default, null):ReceptorSkin;
+	public var alphaTween(default, null):FlxTween;
 
 	public function new(x:Float = 0, y:Float = 0, id:Int = 0, ?skin:ReceptorSkin)
 	{
@@ -47,6 +49,14 @@ class Receptor extends FlxSprite
 		}
 
 		return true;
+	}
+
+	public function startAlphaTween(alpha:Float, duration:Float = 1, ?options:TweenOptions)
+	{
+		if (alphaTween != null)
+			alphaTween.cancel();
+
+		alphaTween = FlxTween.tween(this, {alpha: alpha}, duration, options);
 	}
 
 	function addAnim(name:String, atlasName:String, ?fps:Float, loop:Bool = true, ?offsets:Array<Float>)

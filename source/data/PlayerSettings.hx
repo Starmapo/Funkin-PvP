@@ -69,7 +69,8 @@ class PlayerSettings
 						BACK => [FlxKey.BACKSPACE, FlxKey.ESCAPE],
 						PAUSE => [FlxKey.ENTER, FlxKey.ESCAPE],
 						RESET => [FlxKey.R, FlxKey.NONE],
-					]
+					],
+					downScroll: false
 				}
 			];
 
@@ -94,7 +95,8 @@ class PlayerSettings
 							BACK => [FlxGamepadInputID.B, FlxGamepadInputID.NONE],
 							PAUSE => [FlxGamepadInputID.START, FlxGamepadInputID.NONE],
 							RESET => [FlxGamepadInputID.Y, FlxGamepadInputID.NONE],
-						]
+						],
+						downScroll: false
 					});
 					foundGamepad = true;
 					break;
@@ -107,7 +109,8 @@ class PlayerSettings
 					controls: [
 						NOTE_LEFT => [-1, -1], NOTE_DOWN => [-1, -1], NOTE_UP => [-1, -1], NOTE_RIGHT => [-1, -1], UI_UP => [-1, -1], UI_LEFT => [-1, -1],
 						 UI_RIGHT => [-1, -1],   UI_DOWN => [-1, -1],  ACCEPT => [-1, -1],       BACK => [-1, -1], PAUSE => [-1, -1],   RESET => [-1, -1],
-					]
+					],
+					downScroll: false
 				});
 			}
 
