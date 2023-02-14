@@ -34,6 +34,7 @@ class Receptor extends FlxSprite
 
 			antialiasing = skin.antialiasing;
 		}
+		scrollFactor.set();
 	}
 
 	public function playAnim(name:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)

@@ -1,5 +1,6 @@
 package states;
 
+import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
@@ -21,6 +22,8 @@ class BootState extends FlxTransitionableState
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
 		WindowsAPI.setWindowToDarkMode();
+
+		PlayerSettings.init();
 
 		FlxG.switchState(new PlayState());
 

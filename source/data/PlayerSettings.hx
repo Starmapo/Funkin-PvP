@@ -42,7 +42,7 @@ class PlayerSettings
 		for (i in 0...players.length)
 		{
 			var player = players[i];
-			if (player.config.device == Gamepad(name) && !player.controls.controlsAdded)
+			if (player.config.device.equals(Gamepad(name)) && !player.controls.controlsAdded)
 			{
 				player.controls.loadFromConfig(player.config);
 			}

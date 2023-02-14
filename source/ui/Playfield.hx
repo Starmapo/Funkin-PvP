@@ -29,8 +29,13 @@ class Playfield extends FlxGroup
 	function initReceptors()
 	{
 		receptors = new FlxTypedGroup();
+		add(receptors);
 
 		var curX:Float = skin.receptorsOffset[0];
+		if (player == 1)
+		{
+			curX += FlxG.width / 2;
+		}
 		for (i in 0...4)
 		{
 			var receptor = new Receptor(curX, skin.receptorsOffset[1], i, skin);
@@ -39,7 +44,7 @@ class Playfield extends FlxGroup
 			curX += receptor.width + skin.receptorsPadding;
 		}
 
-		var newX = ((FlxG.width / 2) - CoolUtil.getGroupWidth(cast receptors));
+		var newX = ((FlxG.width / 2) - CoolUtil.getGroupWidth(receptors)) / 2;
 		for (receptor in receptors)
 		{
 			receptor.x += newX;

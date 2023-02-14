@@ -5,15 +5,12 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 class CoolUtil
 {
-	/**
-		You gotta use `cast` on the group for some reason???
-	**/
-	public static function getGroupWidth(group:FlxTypedGroup<FlxSprite>):Float
+	public static function getGroupWidth(group:FlxTypedGroup<Dynamic>):Float
 	{
 		if (group.length == 0)
 			return 0;
 
-		return getGroupMaxX(group) - getGroupMinX(group);
+		return getGroupMaxX(cast group) - getGroupMinX(cast group);
 	}
 
 	static function getGroupMaxX(group:FlxTypedGroup<FlxSprite>):Float

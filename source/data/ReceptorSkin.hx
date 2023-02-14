@@ -1,6 +1,6 @@
 package data;
 
-typedef ReceptorSkin =
+typedef ReceptorSkinFile =
 {
 	var receptors:Array<ReceptorData>;
 	var receptorsCenterAnimation:Bool;
