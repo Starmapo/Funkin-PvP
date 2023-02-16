@@ -17,10 +17,10 @@ class PlayState extends FlxState
 	{
 		FlxG.camera.bgColor = FlxColor.GRAY;
 		camHUD = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
+		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		var skin:ReceptorSkinFile = {
+		var skin:ReceptorSkin = new ReceptorSkin({
 			receptors: [
 				{
 					staticAnim: 'arrow static instance 1',
@@ -49,7 +49,7 @@ class PlayState extends FlxState
 			receptorsPadding: 0,
 			receptorsScale: 0.39,
 			antialiasing: true
-		};
+		});
 
 		playfields = new FlxTypedGroup();
 		playfields.cameras = [camHUD];

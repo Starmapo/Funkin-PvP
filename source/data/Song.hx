@@ -1,72 +1,72 @@
 package data;
 
-class Song
+class Song extends JsonObject
 {
-	public var songName:String = '';
-	public var scrollSpeed:Float = 1;
+	public var songName:String;
+	public var scrollSpeed:Float;
 	public var timingPoints:Array<TimingPoint> = [];
 	public var sliderVelocities:Array<SliderVelocity> = [];
 	public var notes:Array<NoteInfo> = [];
 
 	public function new(data:Dynamic)
 	{
-		songName = data.songName;
-		scrollSpeed = data.scrollSpeed;
-		for (t in data.timingPoints)
+		songName = readString(data.songName);
+		scrollSpeed = readFloat(data.scrollSpeed, 1);
+		for (t in readArray(data.timingPoints))
 		{
-			timingPoints.push(t);
+			timingPoints.push(new TimingPoint(t));
 		}
-		for (s in data.sliderVelocities)
+		for (s in readArray(data.sliderVelocities))
 		{
-			sliderVelocities.push(s);
+			sliderVelocities.push(new SliderVelocity(s));
 		}
-		for (n in data.notes)
+		for (n in readArray(data.notes))
 		{
-			notes.push(n);
+			notes.push(new NoteInfo(n));
 		}
 	}
 }
 
-class TimingPoint
+class TimingPoint extends JsonObject
 {
-	public var startTime:Float = 0;
-	public var bpm:Float = 120;
-	public var meter:Int = 4;
+	public var startTime:Float;
+	public var bpm:Float;
+	public var meter:Int;
 
 	public function new(data:Dynamic)
 	{
-		startTime = data.startTime;
-		bpm = data.bpm;
-		meter = data.meter;
+		startTime = readFloat(data.startTime);
+		bpm = readFloat(data.bpm, 120);
+		meter = readInt(data.meter, 4);
 	}
 }
 
-class SliderVelocity
+class SliderVelocity extends JsonObject
 {
-	public var startTime:Float = 0;
-	public var multiplier:Float = 1;
+	public var startTime:Float;
+	public var multiplier:Float;
 
 	public function new(data:Dynamic)
 	{
-		startTime = data.startTime;
-		multiplier = data.multiplier;
+		startTime = readFloat(data.startTime);
+		multiplier = readFloat(data.multiplier, 1);
 	}
 }
 
-class NoteInfo
+class NoteInfo extends JsonObject
 {
-	public var startTime:Float = 0;
+	public var startTime:Int = 0;
 	public var lane:Int = 0;
-	public var endTime:Float = 0;
+	public var endTime:Int = 0;
 	public var type:String = '';
 	public var params:String = '';
 
 	public function new(data:Dynamic)
 	{
-		startTime = data.startTime;
-		lane = data.lane;
-		endTime = data.endTime;
-		type = data.type;
-		params = data.params;
+		startTime = readInt(data.startTime);
+		lane = readInt(data.lane);
+		endTime = readInt(data.endTime);
+		type = readString(data.type);
+		params = readString(data.params);
 	}
 }
