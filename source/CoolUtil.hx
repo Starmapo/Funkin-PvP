@@ -1,10 +1,14 @@
 package;
 
-import flixel.FlxSprite;
+import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 class CoolUtil
 {
+	/**
+		Returns the width of an FlxGroup.
+		@param group The group that contains objects.
+	**/
 	public static function getGroupWidth(group:FlxTypedGroup<Dynamic>):Float
 	{
 		if (group.length == 0)
@@ -13,7 +17,18 @@ class CoolUtil
 		return getGroupMaxX(cast group) - getGroupMinX(cast group);
 	}
 
-	static function getGroupMaxX(group:FlxTypedGroup<FlxSprite>):Float
+	/**
+		Returns an array containing all the values of this map.
+		@param map The map.
+	**/
+	@:generic
+	public static function getMapArray<T1, T2>(map:Map<T1, T2>):Array<T2>
+	{
+		var array:Array<T2> = [for (value in map.iterator()) value];
+		return array;
+	}
+
+	static function getGroupMaxX(group:FlxTypedGroup<FlxObject>):Float
 	{
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in group)
@@ -29,7 +44,7 @@ class CoolUtil
 		return value;
 	}
 
-	static function getGroupMinX(group:FlxTypedGroup<FlxSprite>):Float
+	static function getGroupMinX(group:FlxTypedGroup<FlxObject>):Float
 	{
 		var value = Math.POSITIVE_INFINITY;
 		for (member in group)

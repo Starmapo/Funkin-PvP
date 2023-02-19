@@ -47,7 +47,7 @@ class PlayState extends FlxState
 			receptorsImage: 'NOTE_assets',
 			receptorsOffset: [0, 5],
 			receptorsPadding: 0,
-			receptorsScale: 0.39,
+			receptorsScale: 0.5,
 			antialiasing: true
 		});
 

@@ -5,28 +5,30 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 
 /**
-	A receptor is a static arrow that indicates when you should hit a note.
-	It also gives feedback whenever you press it and if you hit a note or not.
+	A receptor is a static note sprite that indicates when you should hit a note.
+	It gives feedback whenever you press it and also if you hit a note or not.
 **/
 class Receptor extends FlxSprite
 {
-	public var id(default, null):Int;
+	public var lane(default, null):Int;
 	public var skin(default, null):ReceptorSkin;
 	public var alphaTween(default, null):FlxTween;
 
-	public function new(x:Float = 0, y:Float = 0, id:Int = 0, ?skin:ReceptorSkin)
+	public function new(x:Float = 0, y:Float = 0, lane:Int = 0, ?skin:ReceptorSkin)
 	{
 		super(x, y);
-		this.id = id;
+		this.lane = lane;
 		this.skin = skin;
 
-		if (skin != null && skin.receptors[id] != null)
+		if (skin != null && skin.receptors[lane] != null)
 		{
+			var data = skin.receptors[lane];
+
 			frames = Paths.getSpritesheet(skin.receptorsImage);
 
-			addAnim('static', skin.receptors[id].staticAnim, skin.receptors[id].staticFPS, true, skin.receptors[id].staticOffset);
-			addAnim('pressed', skin.receptors[id].pressedAnim, skin.receptors[id].pressedFPS, false, skin.receptors[id].pressedOffset);
-			addAnim('confirm', skin.receptors[id].confirmAnim, skin.receptors[id].confirmFPS, false, skin.receptors[id].confirmOffset);
+			addAnim('static', data.staticAnim, data.staticFPS, true, data.staticOffset);
+			addAnim('pressed', data.pressedAnim, data.pressedFPS, false, data.pressedOffset);
+			addAnim('confirm', data.confirmAnim, data.confirmFPS, false, data.confirmOffset);
 
 			playAnim('static', true);
 			scale.set(skin.receptorsScale, skin.receptorsScale);
@@ -62,13 +64,7 @@ class Receptor extends FlxSprite
 
 	function addAnim(name:String, atlasName:String, ?fps:Float, loop:Bool = true, ?offsets:Array<Float>)
 	{
-		if (fps == null)
-			fps = 24;
-
 		animation.addByAtlasName(name, atlasName, fps, loop);
-		if (offsets != null)
-		{
-			animation.addOffset(name, offsets[0], offsets[1]);
-		}
+		animation.addOffset(name, offsets[0], offsets[1]);
 	}
 }

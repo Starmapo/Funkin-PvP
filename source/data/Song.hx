@@ -1,6 +1,7 @@
 package data;
 
 import flixel.math.FlxMath;
+import flixel.util.FlxSort;
 
 class Song extends JsonObject
 {
@@ -85,6 +86,202 @@ class Song extends JsonObject
 		}
 	}
 
+	/**
+		Checks if the song file is actually valid.
+	**/
+	public function isValid()
+	{
+		if (notes.length == 0)
+			return false;
+
+		if (timingPoints.length == 0)
+			return false;
+
+		for (note in notes)
+		{
+			if (note.isLongNote && note.endTime <= note.startTime)
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+		Sorts the notes, timing points and slider velocities.
+	**/
+	public function sort()
+	{
+		notes.sort(function(a, b)
+		{
+			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
+		});
+		timingPoints.sort(function(a, b)
+		{
+			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
+		});
+		sliderVelocities.sort(function(a, b)
+		{
+			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
+		});
+	}
+
+	/**
+		Gets the average notes per second in the map.
+		@param rate The current playback rate.
+	**/
+	function getAverageNotesPerSecond(rate:Float = 1):Float
+	{
+		if (notes.length == 0)
+			return 0;
+
+		return notes.length / (length / (1000 / rate));
+	}
+
+	/**
+		Gets the average actions per second in the map. Actions per second is defined as the amount of presses and long note releases the player performs a second.
+
+		Excludes break times.
+
+		@param rate The current playback rate.
+	**/
+	function getActionsPerSecond(rate:Float = 1):Float
+	{
+		var actions:Array<Int> = [];
+		for (note in notes)
+		{
+			actions.push(note.startTime);
+			if (note.isLongNote)
+				actions.push(note.endTime);
+		}
+
+		if (actions.length == 0)
+			return 0;
+
+		actions.sort(function(a, b)
+		{
+			return FlxSort.byValues(FlxSort.ASCENDING, a, b);
+		});
+
+		var length = actions[actions.length - 1] - actions[0];
+
+		for (i in 0...actions.length)
+		{
+			if (i == 0)
+				continue;
+
+			var action = actions[i];
+			var previousAction = actions[i - 1];
+			var difference = action - previousAction;
+			if (difference >= 1000)
+				length -= difference;
+		}
+
+		return actions.length / (length / (1000 / rate));
+	}
+
+	/**
+		Finds the most common BPM in the map.
+	**/
+	function getCommonBPM():Float
+	{
+		if (timingPoints.length == 0)
+			return 0;
+
+		if (notes.length == 0)
+			return timingPoints[0].bpm;
+
+		var copiedNotes = notes.copy();
+		copiedNotes.sort(function(a, b)
+		{
+			return FlxSort.byValues(FlxSort.DESCENDING, a.maxTime, b.maxTime);
+		});
+		var lastObject = copiedNotes[0];
+		var lastTime:Float = lastObject.maxTime;
+
+		var durations:Map<Float, Int> = new Map();
+		var i = timingPoints.length - 1;
+		while (i >= 0)
+		{
+			var point = timingPoints[i];
+			if (point.startTime > lastTime)
+				continue;
+
+			var duration = Std.int(lastTime - (i == 0 ? 0 : point.startTime));
+			lastTime = point.startTime;
+
+			if (durations.exists(point.bpm))
+				durations[point.bpm] += duration;
+			else
+				durations[point.bpm] = duration;
+		}
+
+		var durationsList:Array<Int> = CoolUtil.getMapArray(durations);
+
+		if (durationsList.length == 0)
+			return timingPoints[0].bpm;
+
+		durationsList.sort(function(a, b)
+		{
+			return FlxSort.byValues(FlxSort.DESCENDING, a, b);
+		});
+
+		return durationsList[0];
+	}
+
+	/**
+		Gets the timing point at a particular point in the map.
+		@param time The time to find a timing point at.
+	**/
+	public function getTimingPointAt(time:Float)
+	{
+		var index = timingPoints.length - 1;
+		while (index >= 0)
+		{
+			if (timingPoints[index].startTime <= time)
+				break;
+		}
+
+		if (index == -1)
+			return timingPoints[0];
+
+		return timingPoints[index];
+	}
+
+	/**
+		Gets the scroll velocity at a particular point in the map.
+		@param time The time to find a scroll velocity at.
+	**/
+	public function getScrollVelocityAt(time:Float)
+	{
+		var index = sliderVelocities.length - 1;
+		while (index >= 0)
+		{
+			if (sliderVelocities[index].startTime <= time)
+				break;
+		}
+
+		if (index == -1)
+			return null;
+
+		return sliderVelocities[index];
+	}
+
+	/**
+		Finds the length of a timing point.
+		@param point The timing point.
+	**/
+	public function getTimingPointLength(point:TimingPoint):Float
+	{
+		var index = timingPoints.indexOf(point);
+		if (index == -1)
+			return 0;
+
+		if (index + 1 < timingPoints.length)
+			return timingPoints[index + 1].startTime - timingPoints[index].startTime;
+
+		return length - point.startTime;
+	}
+
 	function get_length()
 	{
 		if (notes.length == 0)
@@ -123,12 +320,12 @@ class TimingPoint extends JsonObject
 	/**
 		The amount of milliseconds per beat this timing point takes up.
 	**/
-	public var millisecondsPerBeat(get, never):Float;
+	public var beatLength(get, never):Float;
 
 	/**
 		The amount of milliseconds per step this timing point takes up.
 	**/
-	public var millisecondsPerStep(get, never):Float;
+	public var stepLength(get, never):Float;
 
 	public function new(data:Dynamic)
 	{
@@ -138,14 +335,14 @@ class TimingPoint extends JsonObject
 		meter = readInt(data.meter, 4, 1, 16);
 	}
 
-	function get_millisecondsPerBeat()
+	function get_beatLength()
 	{
 		return 60000 / bpm;
 	}
 
-	function get_millisecondsPerStep()
+	function get_stepLength()
 	{
-		return millisecondsPerBeat / 4;
+		return beatLength / 4;
 	}
 }
 
@@ -189,7 +386,7 @@ class NoteInfo extends JsonObject
 	public var endTime:Int;
 
 	/**
-		The type of the object. If empty, the default type is used.
+		The type of the note. If empty, the default type is used.
 	**/
 	public var type:String;
 
@@ -201,7 +398,12 @@ class NoteInfo extends JsonObject
 	/**
 		If the object is a long note (endTime > 0).
 	**/
-	public var isLongNote:Bool;
+	public var isLongNote(get, never):Bool;
+
+	/**
+		Gets the maximum time of this note, returning `endTime` if it's a long note and `startTime` if not.
+	**/
+	public var maxTime(get, never):Int;
 
 	public function new(data:Dynamic)
 	{
@@ -231,5 +433,10 @@ class NoteInfo extends JsonObject
 	function get_isLongNote()
 	{
 		return endTime > 0;
+	}
+
+	function get_maxTime()
+	{
+		return isLongNote ? endTime : startTime;
 	}
 }
