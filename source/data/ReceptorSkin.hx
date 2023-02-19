@@ -12,15 +12,15 @@ class ReceptorSkin extends JsonObject
 
 	public function new(data:Dynamic)
 	{
-		for (r in readArray(data.receptors))
+		for (r in readArray(data.receptors, null, null, 4))
 		{
 			receptors.push(new ReceptorData(r));
 		}
 		receptorsCenterAnimation = readBool(data.receptorsCenterAnimation, true);
 		receptorsImage = readString(data.receptorsImage, 'NOTE_assets');
-		receptorsOffset = cast readArray(data.receptorsOffset, [0.0, 0.0]);
-		receptorsPadding = readFloat(data.receptorsPadding);
-		receptorsScale = readFloat(data.receptorsScale, 1);
+		receptorsOffset = readFloatArray(data.receptorsOffset, [0, 0], null, 2, -1000, 1000, 2);
+		receptorsPadding = readFloat(data.receptorsPadding, 0, -1000, 1000, 2);
+		receptorsScale = readFloat(data.receptorsScale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}
 }
@@ -42,11 +42,11 @@ class ReceptorData extends JsonObject
 		staticAnim = readString(data.staticAnim);
 		pressedAnim = readString(data.pressedAnim);
 		confirmAnim = readString(data.confirmAnim);
-		staticFPS = readFloat(data.staticFPS);
-		pressedFPS = readFloat(data.pressedFPS);
-		confirmFPS = readFloat(data.confirmFPS);
-		staticOffset = cast readArray(data.staticOffset, [0.0, 0.0]);
-		pressedOffset = cast readArray(data.pressedOffset, [0.0, 0.0]);
-		confirmOffset = cast readArray(data.confirmOffset, [0.0, 0.0]);
+		staticFPS = readFloat(data.staticFPS, 0, 0, 1000, 2);
+		pressedFPS = readFloat(data.pressedFPS, 0, 0, 1000, 2);
+		confirmFPS = readFloat(data.confirmFPS, 0, 0, 1000, 2);
+		staticOffset = readFloatArray(data.staticOffset, [0, 0], null, 2, -1000, 1000, 2);
+		pressedOffset = readFloatArray(data.pressedOffset, [0, 0], null, 2, -1000, 1000, 2);
+		confirmOffset = readFloatArray(data.confirmOffset, [0, 0], null, 2, -1000, 1000, 2);
 	}
 }
