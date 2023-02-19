@@ -23,17 +23,12 @@ class JsonObject
 	**/
 	function readInt(value:Null<Int>, defaultValue:Int = 0, ?min:Int, ?max:Int):Int
 	{
-		var property = readProperty(value, defaultValue);
-		if (property != null && Std.isOfType(property, Int))
-		{
-			var int:Int = cast property;
-			if (int < min)
-				int = min;
-			if (int > max)
-				int = max;
-			return int;
-		}
-		return defaultValue;
+		var int:Null<Int> = readProperty(value, defaultValue);
+		if (int < min)
+			int = min;
+		if (int > max)
+			int = max;
+		return int;
 	}
 
 	/**
