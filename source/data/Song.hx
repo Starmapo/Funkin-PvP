@@ -8,7 +8,7 @@ class Song extends JsonObject
 		The title of the song.
 	**/
 	public var title:String;
-	
+
 	/**
 		The artist of the song.
 	**/
@@ -61,24 +61,27 @@ class Song extends JsonObject
 
 	public function new(data:Dynamic)
 	{
-		title = readString(data.title);
-		artist = readString(data.artist);
-		source = readString(data.source);
-		instFile = readString(data.instFile);
-		vocalsFile = readString(data.vocalsFile);
+		title = readString(data.title, 'Untitled Song');
+		artist = readString(data.artist, 'Unknown Artist');
+		source = readString(data.source, 'Unknown Source');
+		instFile = readString(data.instFile, 'Inst.ogg');
+		vocalsFile = readString(data.vocalsFile, 'Voices.ogg');
 		scrollSpeed = readFloat(data.scrollSpeed, 1, 0.01, 10, 2);
 		for (t in readArray(data.timingPoints))
 		{
-			timingPoints.push(new TimingPoint(t));
+			if (t != null)
+				timingPoints.push(new TimingPoint(t));
 		}
 		initialScrollVelocity = readFloat(data.initialScrollVelocity, 1, -100, 100, 2);
 		for (s in readArray(data.sliderVelocities))
 		{
-			sliderVelocities.push(new SliderVelocity(s));
+			if (s != null)
+				sliderVelocities.push(new SliderVelocity(s));
 		}
 		for (n in readArray(data.notes))
 		{
-			notes.push(new NoteInfo(n));
+			if (n != null)
+				notes.push(new NoteInfo(n));
 		}
 	}
 

@@ -14,7 +14,8 @@ class ReceptorSkin extends JsonObject
 	{
 		for (r in readArray(data.receptors, null, null, 4))
 		{
-			receptors.push(new ReceptorData(r));
+			if (r != null)
+				receptors.push(new ReceptorData(r));
 		}
 		receptorsCenterAnimation = readBool(data.receptorsCenterAnimation, true);
 		receptorsImage = readString(data.receptorsImage, 'NOTE_assets');
