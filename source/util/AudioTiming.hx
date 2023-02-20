@@ -27,7 +27,6 @@ class AudioTiming
 	var startDelay:Int;
 	var extraMusic:Array<FlxSound>;
 	var previousTime:Float = 0;
-	var stopped:Bool = false;
 
 	/**
 		Creates a new timing object.
@@ -49,7 +48,9 @@ class AudioTiming
 
 	public function update(elapsed:Float)
 	{
-		if (state.isPaused || music == null || stopped)
+		if (state.isPaused || music == null)
+			return;
+		if (time >= 0 && !music.playing)
 			return;
 
 		if (time < 0)
@@ -74,9 +75,6 @@ class AudioTiming
 		{
 			time += elapsed * 1000 * music.pitch;
 
-			if (!music.playing)
-				return;
-
 			resyncExtraMusic();
 
 			var timeOutOfThreshold = time < music.time || time > music.time + (SYNC_THRESHOLD * music.pitch);
@@ -90,11 +88,7 @@ class AudioTiming
 		}
 		else
 		{
-			if (music.playing)
-				time = music.time;
-			else
-				time += elapsed * 1000 * music.pitch;
-
+			time = music.time;
 			resyncExtraMusic();
 		}
 	}
@@ -109,7 +103,6 @@ class AudioTiming
 		{
 			extra.pause();
 		}
-		stopped = false;
 	}
 
 	/**
@@ -122,7 +115,6 @@ class AudioTiming
 		{
 			extra.resume();
 		}
-		stopped = false;
 	}
 
 	/**
@@ -136,7 +128,6 @@ class AudioTiming
 			extra.stop();
 		}
 		time = 0;
-		stopped = true;
 	}
 
 	function resyncExtraMusic()
