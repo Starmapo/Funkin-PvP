@@ -61,6 +61,10 @@ class AudioTiming
 		if (!state.hasStarted)
 		{
 			music.play(true, time);
+			for (extra in extraMusic)
+			{
+				extra.play(true, time);
+			}
 			state.startSong();
 		}
 
@@ -70,6 +74,8 @@ class AudioTiming
 
 			if (!music.playing)
 				return;
+
+			resyncExtraMusic();
 
 			var timeOutOfThreshold = time < music.time || time > music.time + (SYNC_THRESHOLD * music.pitch);
 			var checkTime = music.time - previousTime;
@@ -86,6 +92,62 @@ class AudioTiming
 				time = music.time;
 			else
 				time += elapsed * 1000 * music.pitch;
+
+			resyncExtraMusic();
+		}
+	}
+
+	/**
+		Pauses all music.
+	**/
+	public function pauseMusic()
+	{
+		music.pause();
+		for (extra in extraMusic)
+		{
+			extra.pause();
+		}
+	}
+
+	/**
+		Resumes all music.
+	**/
+	public function resumeMusic()
+	{
+		music.resume();
+		for (extra in extraMusic)
+		{
+			extra.resume();
+		}
+	}
+
+	/**
+		Stops all music.
+	**/
+	public function stopMusic()
+	{
+		music.stop();
+		for (extra in extraMusic)
+		{
+			extra.stop();
+		}
+	}
+
+	function resyncExtraMusic()
+	{
+		if (!music.playing)
+			return;
+
+		for (extra in extraMusic)
+		{
+			if (!extra.playing)
+				continue;
+
+			var timeOutOfThreshold = extra.time < music.time || extra.time > music.time + (SYNC_THRESHOLD * music.pitch);
+			if (timeOutOfThreshold)
+			{
+				extra.time = music.time;
+			}
 		}
 	}
 }
