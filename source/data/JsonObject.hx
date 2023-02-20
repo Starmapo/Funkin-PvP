@@ -165,12 +165,15 @@ class JsonObject
 	{
 		var array:Array<Int> = readTypedArray(value, defaultValue, maxLength, fixedLength);
 
-		for (int in array)
+		if (minValue != null || maxValue != null)
 		{
-			if (minValue != null && int < minValue)
-				int = minValue;
-			if (maxValue != null && int > maxValue)
-				int = maxValue;
+			for (int in array)
+			{
+				if (minValue != null && int < minValue)
+					int = minValue;
+				if (maxValue != null && int > maxValue)
+					int = maxValue;
+			}
 		}
 
 		return array;
@@ -191,14 +194,17 @@ class JsonObject
 	{
 		var array:Array<Float> = readTypedArray(value, defaultValue, maxLength, fixedLength);
 
-		for (float in array)
+		if (minValue != null || maxValue != null || decimals != null)
 		{
-			if (minValue != null && float < minValue)
-				float = minValue;
-			if (maxValue != null && float > maxValue)
-				float = maxValue;
-			if (decimals != null && FlxMath.getDecimals(float) > decimals)
-				float = FlxMath.roundDecimal(float, decimals);
+			for (float in array)
+			{
+				if (minValue != null && float < minValue)
+					float = minValue;
+				if (maxValue != null && float > maxValue)
+					float = maxValue;
+				if (decimals != null && FlxMath.getDecimals(float) > decimals)
+					float = FlxMath.roundDecimal(float, decimals);
+			}
 		}
 
 		return array;

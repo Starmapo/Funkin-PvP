@@ -1,7 +1,7 @@
 package ui;
 
 import data.PlayerConfig;
-import data.ReceptorSkin;
+import data.skin.NoteSkin;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 
@@ -13,14 +13,14 @@ class Playfield extends FlxGroup
 {
 	public var player(default, null):Int = 0;
 	public var playerConfig(default, null):PlayerConfig;
-	public var skin(default, null):ReceptorSkin;
+	public var noteSkin(default, null):NoteSkin;
 	public var receptors(default, null):FlxTypedGroup<Receptor>;
 
-	public function new(player:Int = 0, skin:ReceptorSkin)
+	public function new(player:Int = 0, noteSkin:NoteSkin)
 	{
 		super();
 		this.player = player;
-		this.skin = skin;
+		this.noteSkin = noteSkin;
 		playerConfig = FlxG.save.data.playerConfigs[player];
 
 		initReceptors();
@@ -31,17 +31,17 @@ class Playfield extends FlxGroup
 		receptors = new FlxTypedGroup();
 		add(receptors);
 
-		var curX:Float = skin.receptorsOffset[0];
+		var curX:Float = noteSkin.receptorsOffset[0];
 		if (player == 1)
 		{
 			curX += FlxG.width / 2;
 		}
 		for (i in 0...4)
 		{
-			var receptor = new Receptor(curX, skin.receptorsOffset[1], i, skin);
+			var receptor = new Receptor(curX, noteSkin.receptorsOffset[1], i, noteSkin);
 			receptors.add(receptor);
 
-			curX += receptor.width + skin.receptorsPadding;
+			curX += receptor.width + noteSkin.receptorsPadding;
 		}
 
 		var newX = ((FlxG.width / 2) - CoolUtil.getGroupWidth(receptors)) / 2;

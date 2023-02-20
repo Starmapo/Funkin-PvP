@@ -9,7 +9,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 
-class BootState extends FlxTransitionableState
+class BootState extends FNFState
 {
 	override function create()
 	{

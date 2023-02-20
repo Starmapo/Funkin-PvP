@@ -1,6 +1,9 @@
-package data;
+package data.skin;
 
-class ReceptorSkin extends JsonObject
+/**
+	Configuration for a note skin.
+**/
+class NoteSkin extends JsonObject
 {
 	/**
 		The list of receptor configurations.

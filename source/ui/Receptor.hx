@@ -1,6 +1,6 @@
 package ui;
 
-import data.ReceptorSkin;
+import data.skin.NoteSkin;
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 
@@ -11,10 +11,10 @@ import flixel.tweens.FlxTween;
 class Receptor extends FlxSprite
 {
 	public var lane(default, null):Int;
-	public var skin(default, null):ReceptorSkin;
+	public var skin(default, null):NoteSkin;
 	public var alphaTween(default, null):FlxTween;
 
-	public function new(x:Float = 0, y:Float = 0, lane:Int = 0, ?skin:ReceptorSkin)
+	public function new(x:Float = 0, y:Float = 0, lane:Int = 0, ?skin:NoteSkin)
 	{
 		super(x, y);
 		this.lane = lane;

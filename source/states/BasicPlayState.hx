@@ -1,25 +1,43 @@
 package states;
 
-import data.ReceptorSkin;
+import data.skin.NoteSkin;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import ui.Playfield;
+import util.AudioTiming;
 
 /**
 	A basic PlayState, includes just the playfields.
 **/
-class BasicPlayState extends FlxState
+class BasicPlayState extends FNFState
 {
-	var camHUD:FlxCamera;
-	var playfields:FlxTypedGroup<Playfield>;
-
+	/**
+		The current song file.
+	**/
 	public var song:Song;
 
-	public function new(song:Song)
+	/**
+		Whether the game is currently paused.
+	**/
+	public var isPaused:Bool = false;
+
+	/**
+		Whether the song has started playing.
+	**/
+	public var hasStarted:Bool = false;
+
+	var songName:String;
+	var camHUD:FlxCamera;
+	var playfields:FlxTypedGroup<Playfield>;
+	var timing:AudioTiming;
+	var songInst:FlxSound;
+	var songVocals:FlxSound;
+
+	public function new(song:Song, songName:String)
 	{
 		super();
 		this.song = song;
@@ -27,6 +45,10 @@ class BasicPlayState extends FlxState
 
 	override public function create()
 	{
+		songInst = FlxG.sound.load(Paths.getSongInst(song));
+		songVocals = FlxG.sound.load(Paths.getSongVocals(song));
+		timing = new AudioTiming(this, songInst, [songVocals], Std.int(song.timingPoints[0].beatLength * 5));
+
 		initCameras();
 
 		initPlayfields();
@@ -36,9 +58,19 @@ class BasicPlayState extends FlxState
 
 	override public function update(elapsed:Float)
 	{
+		timing.update(elapsed);
+
 		super.update(elapsed);
 
-		FlxG.watch.addQuick('song', song);
+		FlxG.watch.addQuick('Song Time', timing.time);
+	}
+
+	/**
+		Called by the timing object once the music has started playing.
+	**/
+	public function startSong()
+	{
+		hasStarted = true;
 	}
 
 	function initCameras()
@@ -52,7 +84,7 @@ class BasicPlayState extends FlxState
 
 	function initPlayfields()
 	{
-		var skin:ReceptorSkin = new ReceptorSkin({
+		var skin = new NoteSkin({
 			receptors: [
 				{
 					staticAnim: 'arrow static instance 1',
@@ -91,7 +123,7 @@ class BasicPlayState extends FlxState
 		createPlayfield(1, skin);
 	}
 
-	function createPlayfield(player:Int = 0, ?skin:ReceptorSkin)
+	function createPlayfield(player:Int = 0, ?skin:NoteSkin)
 	{
 		var playfield = new Playfield(player, skin);
 		playfields.add(playfield);

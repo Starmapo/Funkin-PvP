@@ -4,6 +4,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import haxe.Json;
+import haxe.io.Path;
 
 class Song extends JsonObject
 {
@@ -34,7 +35,7 @@ class Song extends JsonObject
 			json = convertFNFSong(json.song);
 
 		var song = new Song(json);
-
+		song.directory = Path.directory(path);
 		return song;
 	}
 
@@ -161,6 +162,11 @@ class Song extends JsonObject
 		The length in milliseconds of this map.
 	**/
 	public var length(get, never):Float;
+
+	/**
+		The directory of this map.
+	**/
+	public var directory:String;
 
 	public function new(data:Dynamic)
 	{
