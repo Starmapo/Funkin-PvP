@@ -30,14 +30,13 @@ class BasicPlayState extends FNFState
 	**/
 	public var hasStarted:Bool = false;
 
-	var songName:String;
 	var camHUD:FlxCamera;
 	var playfields:FlxTypedGroup<Playfield>;
 	var timing:AudioTiming;
 	var songInst:FlxSound;
 	var songVocals:FlxSound;
 
-	public function new(song:Song, songName:String)
+	public function new(song:Song)
 	{
 		super();
 		this.song = song;
@@ -46,6 +45,7 @@ class BasicPlayState extends FNFState
 	override public function create()
 	{
 		songInst = FlxG.sound.load(Paths.getSongInst(song));
+		songInst.onComplete = endSong;
 		songVocals = FlxG.sound.load(Paths.getSongVocals(song));
 		timing = new AudioTiming(this, songInst, [songVocals], Std.int(song.timingPoints[0].beatLength * 5));
 
@@ -128,5 +128,10 @@ class BasicPlayState extends FNFState
 		var playfield = new Playfield(player, skin);
 		playfields.add(playfield);
 		return playfield;
+	}
+
+	function endSong()
+	{
+		timing.stopMusic();
 	}
 }

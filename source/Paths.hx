@@ -2,6 +2,7 @@ import data.song.Song;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
+import haxe.io.Path;
 import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
@@ -65,10 +66,14 @@ class Paths
 	{
 		var originalPath = path;
 
-		if (!exists(path + '.png'))
-			path = getPath('images/$path');
+		var imagePath = path + '.png';
+		if (!exists(imagePath))
+		{
+			imagePath = getPath('images/$imagePath');
+			path = Path.withoutExtension(imagePath);
+		}
 
-		var image = getImage(path, mod);
+		var image = getImage(imagePath, mod);
 		if (image == null)
 			return null;
 
@@ -76,7 +81,7 @@ class Paths
 		if (frames != null)
 			return frames;
 
-		var description:String = getContent(getPath('$path.xml', mod));
+		var description:String = getContent('$path.xml');
 		if (description != null)
 		{
 			frames = FlxAtlasFrames.fromSparrow(image, description);
@@ -84,7 +89,7 @@ class Paths
 				return frames;
 		}
 
-		description = getContent(getPath('$path.txt', mod));
+		description = getContent('$path.txt');
 		if (description != null)
 		{
 			frames = FlxAtlasFrames.fromSpriteSheetPacker(image, description);
@@ -92,9 +97,9 @@ class Paths
 				return frames;
 		}
 
-		description = getContent(getPath('$path.json', mod));
+		description = getContent('$path.json');
 		if (description != null)
-		{
+		{ 
 			frames = FlxAtlasFrames.fromTexturePackerJson(image, description);
 			if (frames != null)
 				return frames;
@@ -131,12 +136,12 @@ class Paths
 
 	public static function getSongInst(song:Song, ?mod:String)
 	{
-		return getSound(getPath('songs/${song.directory}/${song.instFile}', mod));
+		return getSound('${song.directory}/${song.instFile}', mod);
 	}
 
 	public static function getSongVocals(song:Song, ?mod:String)
 	{
-		return getSound(getPath('songs/${song.directory}/${song.vocalsFile}', mod));
+		return getSound('${song.directory}/${song.vocalsFile}', mod);
 	}
 
 	public static function getContent(path:String)

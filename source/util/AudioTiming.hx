@@ -1,13 +1,14 @@
 package util;
 
 import data.Settings;
+import flixel.FlxG;
 import flixel.system.FlxSound;
 import states.BasicPlayState;
 
 class AudioTiming
 {
 	/**
-		How much the current time has to be behind or ahead of the music's time.
+		How much the current time has to be behind or ahead of the music's time to resync it.
 	**/
 	public static final SYNC_THRESHOLD:Int = 16;
 
@@ -26,6 +27,7 @@ class AudioTiming
 	var startDelay:Int;
 	var extraMusic:Array<FlxSound>;
 	var previousTime:Float = 0;
+	var stopped:Bool = false;
 
 	/**
 		Creates a new timing object.
@@ -47,7 +49,7 @@ class AudioTiming
 
 	public function update(elapsed:Float)
 	{
-		if (state.isPaused)
+		if (state.isPaused || music == null || stopped)
 			return;
 
 		if (time < 0)
@@ -107,6 +109,7 @@ class AudioTiming
 		{
 			extra.pause();
 		}
+		stopped = false;
 	}
 
 	/**
@@ -119,6 +122,7 @@ class AudioTiming
 		{
 			extra.resume();
 		}
+		stopped = false;
 	}
 
 	/**
@@ -131,6 +135,8 @@ class AudioTiming
 		{
 			extra.stop();
 		}
+		time = 0;
+		stopped = true;
 	}
 
 	function resyncExtraMusic()
@@ -143,9 +149,10 @@ class AudioTiming
 			if (!extra.playing)
 				continue;
 
-			var timeOutOfThreshold = extra.time < music.time || extra.time > music.time + (SYNC_THRESHOLD * music.pitch);
+			var timeOutOfThreshold = Math.abs(extra.time - music.time) >= SYNC_THRESHOLD * music.pitch;
 			if (timeOutOfThreshold)
 			{
+				FlxG.log.add('Resynced vocals with difference of ' + Math.abs(extra.time - music.time));
 				extra.time = music.time;
 			}
 		}
