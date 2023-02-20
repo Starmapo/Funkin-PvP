@@ -1,6 +1,7 @@
 package states;
 
 import data.PlayerSettings;
+import data.song.Song;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
@@ -25,7 +26,7 @@ class BootState extends FlxTransitionableState
 
 		PlayerSettings.init();
 
-		FlxG.switchState(new PlayState());
+		FlxG.switchState(new BasicPlayState(Song.loadSong('mods/fnf/songs/Bopeebo/Hard.json')));
 
 		super.create();
 	}

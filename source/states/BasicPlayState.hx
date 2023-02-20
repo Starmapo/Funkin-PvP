@@ -1,6 +1,7 @@
 package states;
 
 import data.ReceptorSkin;
+import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -8,18 +9,49 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import ui.Playfield;
 
-class PlayState extends FlxState
+/**
+	A basic PlayState, includes just the playfields.
+**/
+class BasicPlayState extends FlxState
 {
 	var camHUD:FlxCamera;
 	var playfields:FlxTypedGroup<Playfield>;
 
+	public var song:Song;
+
+	public function new(song:Song)
+	{
+		super();
+		this.song = song;
+	}
+
 	override public function create()
 	{
+		initCameras();
+
+		initPlayfields();
+
+		super.create();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		FlxG.watch.addQuick('song', song);
+	}
+
+	function initCameras()
+	{
 		FlxG.camera.bgColor = FlxColor.GRAY;
+
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
+	}
 
+	function initPlayfields()
+	{
 		var skin:ReceptorSkin = new ReceptorSkin({
 			receptors: [
 				{
@@ -57,11 +89,9 @@ class PlayState extends FlxState
 
 		createPlayfield(0, skin);
 		createPlayfield(1, skin);
-
-		super.create();
 	}
 
-	public function createPlayfield(player:Int = 0, ?skin:ReceptorSkin)
+	function createPlayfield(player:Int = 0, ?skin:ReceptorSkin)
 	{
 		var playfield = new Playfield(player, skin);
 		playfields.add(playfield);

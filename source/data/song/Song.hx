@@ -1,10 +1,112 @@
-package data;
+package data.song;
 
 import flixel.math.FlxMath;
 import flixel.util.FlxSort;
+import flixel.util.FlxStringUtil;
+import haxe.Json;
 
 class Song extends JsonObject
 {
+	/**
+		Loads a song from a path.
+	**/
+	public static function loadSong(path:String)
+	{
+		if (!Paths.exists(path))
+			return null;
+
+		var data = Paths.getContent(path);
+		if (data.length == 0)
+			return null;
+
+		var json:Dynamic = null;
+		try
+		{
+			json = Json.parse(data);
+		}
+		catch (e)
+		{
+			trace(e);
+			return null;
+		}
+
+		if (json.song != null)
+			json = convertFNFSong(json.song);
+
+		var song = new Song(json);
+
+		return song;
+	}
+
+	static function convertFNFSong(json:Dynamic)
+	{
+		var song:Dynamic = {
+			title: json.song,
+			vocalsFile: json.needsVoices ? 'Voices.ogg' : '',
+			scrollSpeed: json.speed,
+			timingPoints: [
+				{
+					bpm: json.bpm
+				}
+			],
+			notes: []
+		};
+
+		var curTime:Float = 0;
+		var curBPM:Float = json.bpm;
+		for (i in 0...json.notes.length)
+		{
+			var section = json.notes[i];
+			if (section.changeBPM == true)
+			{
+				song.timingPoints.push({
+					startTime: curTime,
+					bpm: section.bpm
+				});
+				curBPM = section.bpm;
+			}
+			for (i in 0...section.sectionNotes.length)
+			{
+				var note:Array<Dynamic> = section.sectionNotes[i];
+				var noteInfo = {
+					startTime: note[0],
+					lane: note[1],
+					endTime: note[2] > 0 ? note[0] + note[2] : 0,
+					type: ''
+				};
+				if (section.mustHitSection)
+				{
+					if (noteInfo.lane >= 4)
+					{
+						noteInfo.lane -= 4;
+					}
+					else
+					{
+						noteInfo.lane += 4;
+					}
+				}
+				if (section.altAnim == true)
+				{
+					noteInfo.type = 'Alt Animation';
+				}
+				if (note[3] != null)
+				{
+					if (note[3] == true)
+					{
+						noteInfo.type = 'Alt Animation';
+					}
+					else if (Std.isOfType(note[3], String))
+					{
+						noteInfo.type = note[3];
+					};
+				}
+				song.notes.push(noteInfo);
+			}
+			curTime += section.lengthInSteps * (15000 / curBPM);
+		}
+		return song;
+	}
+
 	/**
 		The title of the song.
 	**/
@@ -129,10 +231,12 @@ class Song extends JsonObject
 		Gets the average notes per second in the map.
 		@param rate The current playback rate.
 	**/
-	function getAverageNotesPerSecond(rate:Float = 1):Float
+	public function getAverageNotesPerSecond(rate:Float = 1):Float
 	{
 		if (notes.length == 0)
 			return 0;
+		if (length == 0)
+			return notes.length;
 
 		return notes.length / (length / (1000 / rate));
 	}
@@ -144,8 +248,11 @@ class Song extends JsonObject
 
 		@param rate The current playback rate.
 	**/
-	function getActionsPerSecond(rate:Float = 1):Float
+	public function getActionsPerSecond(rate:Float = 1):Float
 	{
+		if (notes.length == 0)
+			return 0;
+
 		var actions:Array<Int> = [];
 		for (note in notes)
 		{
@@ -153,9 +260,6 @@ class Song extends JsonObject
 			if (note.isLongNote)
 				actions.push(note.endTime);
 		}
-
-		if (actions.length == 0)
-			return 0;
 
 		actions.sort(function(a, b)
 		{
@@ -176,13 +280,16 @@ class Song extends JsonObject
 				length -= difference;
 		}
 
+		if (length == 0)
+			return actions.length;
+
 		return actions.length / (length / (1000 / rate));
 	}
 
 	/**
 		Finds the most common BPM in the map.
 	**/
-	function getCommonBPM():Float
+	public function getCommonBPM():Float
 	{
 		if (timingPoints.length == 0)
 			return 0;
@@ -198,7 +305,8 @@ class Song extends JsonObject
 		var lastObject = copiedNotes[0];
 		var lastTime:Float = lastObject.maxTime;
 
-		var durations:Map<Float, Int> = new Map();
+		// for whatever reason, float maps aren't supported, so I have to make it a string map
+		var durations:Map<String, Int> = [];
 		var i = timingPoints.length - 1;
 		while (i >= 0)
 		{
@@ -209,23 +317,25 @@ class Song extends JsonObject
 			var duration = Std.int(lastTime - (i == 0 ? 0 : point.startTime));
 			lastTime = point.startTime;
 
-			if (durations.exists(point.bpm))
-				durations[point.bpm] += duration;
+			var bpm = Std.string(point.bpm);
+			if (durations.exists(bpm))
+				durations[bpm] += duration;
 			else
-				durations[point.bpm] = duration;
+				durations[bpm] = duration;
 		}
 
-		var durationsList:Array<Int> = CoolUtil.getMapArray(durations);
-
-		if (durationsList.length == 0)
-			return timingPoints[0].bpm;
-
-		durationsList.sort(function(a, b)
+		var commonBPM:Float = 0;
+		var maxDuration:Int = 0;
+		for (bpm => duration in durations)
 		{
-			return FlxSort.byValues(FlxSort.DESCENDING, a, b);
-		});
+			if (duration > maxDuration)
+			{
+				commonBPM = Std.parseFloat(bpm);
+				maxDuration = duration;
+			}
+		}
 
-		return durationsList[0];
+		return commonBPM;
 	}
 
 	/**
@@ -282,6 +392,19 @@ class Song extends JsonObject
 		return length - point.startTime;
 	}
 
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("title", title),
+			LabelValuePair.weak("timingPoints", timingPoints),
+			LabelValuePair.weak("sliderVelocities", sliderVelocities),
+			LabelValuePair.weak("notes", notes)
+		]);
+	}
+
 	function get_length()
 	{
 		if (notes.length == 0)
@@ -295,148 +418,5 @@ class Song extends JsonObject
 				max = time;
 		}
 		return max;
-	}
-}
-
-class TimingPoint extends JsonObject
-{
-	/**
-		The time in milliseconds for when this timing point begins.
-	**/
-	public var startTime:Float;
-
-	/**
-		The BPM during this timing point.
-	**/
-	public var bpm:Float;
-
-	/**
-		The beats per bar during this timing point.
-
-		Timing points are limited to quarter notes only. If you want to use a note value other than quarter notes, you'll have to multiply the BPM. For example, 120 BPM at a 7/8 time signature would be 240 BPM at a 7/4 time signature.
-	**/
-	public var meter:Int;
-
-	/**
-		The amount of milliseconds per beat this timing point takes up.
-	**/
-	public var beatLength(get, never):Float;
-
-	/**
-		The amount of milliseconds per step this timing point takes up.
-	**/
-	public var stepLength(get, never):Float;
-
-	public function new(data:Dynamic)
-	{
-		startTime = readFloat(data.startTime, 0, 0, null, 3);
-		// Max BPM value is based off of the highest BPM song
-		bpm = readFloat(data.bpm, 120, 10, 1015, 3);
-		meter = readInt(data.meter, 4, 1, 16);
-	}
-
-	function get_beatLength()
-	{
-		return 60000 / bpm;
-	}
-
-	function get_stepLength()
-	{
-		return beatLength / 4;
-	}
-}
-
-class SliderVelocity extends JsonObject
-{
-	/**
-		The time in milliseconds for when this slider velocity begins.
-	**/
-	public var startTime:Float;
-
-	/**
-		The velocity multiplier for this slider velocity.
-	**/
-	public var multiplier:Float;
-
-	public function new(data:Dynamic)
-	{
-		startTime = readFloat(data.startTime, 0, 0, null, 3);
-		multiplier = readFloat(data.multiplier, 1, -100, 100, 2);
-	}
-}
-
-/**
-	Note info from a song file.
-**/
-class NoteInfo extends JsonObject
-{
-	/**
-		The time in milliseconds when the note is supposed to be hit.
-	**/
-	public var startTime:Int;
-
-	/**
-		The lane the note falls in.
-	**/
-	public var lane:Int;
-
-	/**
-		The time in milliseconds when the note ends (if greater than 0, it's considered a hold note).
-	**/
-	public var endTime:Int;
-
-	/**
-		The type of the note. If empty, the default type is used.
-	**/
-	public var type:String;
-
-	/**
-		Extra parameters for the note, if needed.
-	**/
-	public var params:Array<String>;
-
-	/**
-		If the object is a long note (endTime > 0).
-	**/
-	public var isLongNote(get, never):Bool;
-
-	/**
-		Gets the maximum time of this note, returning `endTime` if it's a long note and `startTime` if not.
-	**/
-	public var maxTime(get, never):Int;
-
-	public function new(data:Dynamic)
-	{
-		startTime = readInt(data.startTime, 0, 0);
-		lane = readInt(data.lane, 0, 0, 3);
-		endTime = readInt(data.endTime, 0, 0);
-		type = readString(data.type);
-		params = readString(data.params).split(',');
-	}
-
-	/**
-	 * Gets the timing point this note is in range of.
-	 * @param timingPoints 	The list of timing points to use.
-	 */
-	public function getTimingPoint(timingPoints:Array<TimingPoint>)
-	{
-		var i = timingPoints.length - 1;
-		while (i >= 0)
-		{
-			if (startTime >= timingPoints[i].startTime)
-				return timingPoints[i];
-		}
-
-		return timingPoints[0];
-	}
-
-	function get_isLongNote()
-	{
-		return endTime > 0;
-	}
-
-	function get_maxTime()
-	{
-		return isLongNote ? endTime : startTime;
 	}
 }
