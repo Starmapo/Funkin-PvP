@@ -1,5 +1,6 @@
 package states;
 
+import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.util.FlxTimer;
 import util.MusicTiming;
@@ -18,6 +19,14 @@ class TitleState extends FNFState
 		super.create();
 	}
 
+	override public function update(elapsed:Float)
+	{
+		if (timing != null)
+			timing.update(elapsed);
+
+		super.update(elapsed);
+	}
+
 	function startIntro()
 	{
 		if (!FlxG.sound.musicPlaying)
@@ -26,6 +35,12 @@ class TitleState extends FNFState
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
 
-		timing = new MusicTiming(FlxG.sound.music, null, 0);
+		timing = new MusicTiming(FlxG.sound.music, null, [
+			new TimingPoint({
+				startTime: 0,
+				bpm: 102,
+				meter: 4
+			})
+		]);
 	}
 }

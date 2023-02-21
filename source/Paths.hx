@@ -99,7 +99,7 @@ class Paths
 
 		description = getContent('$path.json');
 		if (description != null)
-		{ 
+		{
 			frames = FlxAtlasFrames.fromTexturePackerJson(image, description);
 			if (frames != null)
 				return frames;
@@ -132,6 +132,14 @@ class Paths
 
 		FlxG.log.warn('Sound \"$originalPath\" not found.');
 		return null;
+	}
+
+	public static function getMusic(path:String, ?mod:String)
+	{
+		if (!path.endsWith('.ogg') && !path.endsWith('.mp3') && !path.endsWith('.wav'))
+			path += '.ogg';
+
+		return getSound(getPath('music/$path'), mod);
 	}
 
 	public static function getSongInst(song:Song, ?mod:String)

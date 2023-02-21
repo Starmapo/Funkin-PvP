@@ -1,9 +1,16 @@
 package util;
 
 import data.Settings;
+import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.sound.FlxSound;
+import flixel.util.FlxSignal.FlxTypedSignal;
 
+/**
+	Handles time on a music object, plus step/beat hits, resyncing vocals, all that good stuff.
+
+	Note that `curStep`, `curBeat` and `curBar` are all relative to the current timing section, not the whole song. This is due to the fact that timing points can be placed anywhere, unlike the original FNF where changing BPMs is limited to every 4 beats.
+**/
 class MusicTiming
 {
 	/**
@@ -22,6 +29,11 @@ class MusicTiming
 	public var time(default, null):Float = 0;
 
 	/**
+		Current audio position with user offsets applied.
+	**/
+	public var audioPosition(default, null):Float = 0;
+
+	/**
 		Whether the music has started playing.
 	**/
 	public var hasStarted(default, null):Bool = false;
@@ -31,10 +43,57 @@ class MusicTiming
 	**/
 	public var onStart:MusicTiming->Void;
 
+	/**
+		The list of timing points, used for calculating the current step.
+	**/
+	public var timingPoints:Array<TimingPoint> = [];
+
+	/**
+		The current step of the current TIMING SECTION, not the whole song.
+	**/
+	public var curStep(get, never):Int;
+
+	/**
+		The current decimal step of the current TIMING SECTION, not the whole song.
+	**/
+	public var curDecStep(default, null):Float = 0;
+
+	/**
+		The current beat of the current TIMING SECTION, not the whole song.
+	**/
+	public var curBeat(get, never):Int;
+
+	/**
+		The current decimal beat of the current TIMING SECTION, not the whole song.
+	**/
+	public var curDecBeat(default, null):Float = 0;
+
+	/**
+		The current bar of the current TIMING SECTION, not the whole song.
+	**/
+	public var curBar(get, never):Int;
+
+	/**
+		The current decimal bar of the current TIMING SECTION, not the whole song.
+	**/
+	public var curDecBar(default, null):Float = 0;
+
+	/**
+		Gets dispatched when a new step is reached.
+	**/
+	public var onStepHit:FlxTypedSignal<Int->Float->Void> = new FlxTypedSignal();
+
+	/**
+		Gets dispatched when a new beat is reached.
+	**/
+	public var onBeatHit:FlxTypedSignal<Int->Float->Void> = new FlxTypedSignal();
+
 	var music:FlxSound;
-	var startDelay:Int;
+	var startDelay:Float;
 	var extraMusic:Array<FlxSound>;
 	var previousTime:Float = 0;
+	var storedSteps:Array<Int> = [];
+	var oldStep:Int = 0;
 
 	/**
 		Creates a new timing object.
@@ -43,7 +102,7 @@ class MusicTiming
 		@param startDelay   The time to wait before playing the music.
 		@param onStart		A callback for when the music starts playing.
 	**/
-	public function new(music:FlxSound, ?extraMusic:Array<FlxSound>, startDelay:Int = 0, ?onStart:MusicTiming->Void)
+	public function new(music:FlxSound, ?extraMusic:Array<FlxSound>, timingPoints:Array<TimingPoint>, startDelay:Float = 0, ?onStart:MusicTiming->Void)
 	{
 		if (music == null)
 			music = new FlxSound();
@@ -51,11 +110,23 @@ class MusicTiming
 			extraMusic = [];
 
 		this.music = music;
-		this.startDelay = startDelay;
 		this.extraMusic = extraMusic;
+		this.timingPoints = timingPoints;
+		this.startDelay = startDelay;
 		this.onStart = onStart;
 
-		time = -startDelay * music.pitch;
+		if (music.playing)
+		{
+			hasStarted = true;
+			time = music.time;
+			resyncExtraMusic();
+			updateAudioPosition();
+			updateCurStep();
+		}
+		else
+		{
+			time = -startDelay * music.pitch;
+		}
 	}
 
 	public function update(elapsed:Float)
@@ -76,39 +147,20 @@ class MusicTiming
 		{
 			hasStarted = true;
 
-			if (!music.playing)
-				music.play(true, time);
-
+			music.play(true, time);
 			for (extra in extraMusic)
 			{
-				if (!extra.playing)
-					extra.play(true, time);
+				extra.play(true, time);
 			}
 
 			if (onStart != null)
 				onStart(this);
 		}
 
-		if (Settings.smoothAudioTiming)
-		{
-			time += elapsed * 1000 * music.pitch;
-
-			resyncExtraMusic();
-
-			var timeOutOfThreshold = time < music.time || time > music.time + (SYNC_THRESHOLD * music.pitch);
-			var checkTime = music.time - previousTime;
-			var needsRoutineSync = checkTime >= ROUTINE_SYNC_TIME || checkTime <= -ROUTINE_SYNC_TIME;
-
-			if (!timeOutOfThreshold && !needsRoutineSync && previousTime != 0)
-				return;
-
-			previousTime = time = music.time;
-		}
-		else
-		{
-			time = music.time;
-			resyncExtraMusic();
-		}
+		updateTime();
+		resyncExtraMusic();
+		updateAudioPosition();
+		updateCurStep();
 	}
 
 	/**
@@ -148,6 +200,27 @@ class MusicTiming
 		time = 0;
 	}
 
+	function updateTime()
+	{
+		if (Settings.smoothAudioTiming)
+		{
+			time += FlxG.elapsed * 1000 * music.pitch;
+
+			var timeOutOfThreshold = time < music.time || time > music.time + (SYNC_THRESHOLD * music.pitch);
+			var checkTime = music.time - previousTime;
+			var needsRoutineSync = checkTime >= ROUTINE_SYNC_TIME || checkTime <= -ROUTINE_SYNC_TIME;
+
+			if (!timeOutOfThreshold && !needsRoutineSync && previousTime != 0)
+				return;
+
+			previousTime = time = music.time;
+		}
+		else
+		{
+			time = music.time;
+		}
+	}
+
 	function resyncExtraMusic()
 	{
 		if (!music.playing)
@@ -161,9 +234,91 @@ class MusicTiming
 			var timeOutOfThreshold = Math.abs(extra.time - music.time) >= SYNC_THRESHOLD * music.pitch;
 			if (timeOutOfThreshold)
 			{
-				FlxG.log.add('Resynced vocals with difference of ' + Math.abs(extra.time - music.time));
+				FlxG.log.notice('Resynced vocals with difference of ' + Math.abs(extra.time - music.time));
 				extra.time = music.time;
 			}
 		}
+	}
+
+	function updateAudioPosition()
+	{
+		audioPosition = time + Settings.globalOffset * music.pitch;
+
+		FlxG.watch.addQuick('Song Time', audioPosition);
+	}
+
+	function updateCurStep()
+	{
+		var i = timingPoints.length - 1;
+		while (i >= 0)
+		{
+			if (audioPosition >= timingPoints[i].startTime)
+				break;
+
+			i--;
+		}
+
+		if (i < 0)
+			i = 0;
+
+		var point = timingPoints[i];
+		curDecStep = (audioPosition - point.startTime) / point.stepLength;
+		curDecBeat = curDecStep / 4;
+		curDecBar = curDecBeat / point.meter;
+
+		// thx forever engine
+		for (i in storedSteps)
+		{
+			if (i < oldStep)
+				storedSteps.remove(i);
+		}
+		for (i in oldStep...curStep)
+		{
+			if (!storedSteps.contains(i) && i >= 0)
+			{
+				FlxG.log.notice('Repeating missed step $i');
+				stepHit(i, i);
+			}
+		}
+
+		if (oldStep != curStep && curStep >= 0 && !storedSteps.contains(curStep))
+			stepHit(curStep, curDecStep);
+		oldStep = curStep;
+
+		FlxG.watch.addQuick('Current Step', curStep);
+		FlxG.watch.addQuick('Current Beat', curBeat);
+	}
+
+	function stepHit(step:Int, decStep:Float)
+	{
+		onStepHit.dispatch(step, decStep);
+
+		if (curStep % 4 == 0)
+		{
+			beatHit();
+		}
+
+		if (!storedSteps.contains(curStep))
+			storedSteps.push(curStep);
+	}
+
+	function beatHit()
+	{
+		onBeatHit.dispatch(curBeat, curDecBeat);
+	}
+
+	function get_curStep()
+	{
+		return Math.floor(curDecStep);
+	}
+
+	function get_curBeat()
+	{
+		return Math.floor(curDecBeat);
+	}
+
+	function get_curBar()
+	{
+		return Math.floor(curDecBar);
 	}
 }
