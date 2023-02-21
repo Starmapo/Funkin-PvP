@@ -2,10 +2,9 @@ package util;
 
 import data.Settings;
 import flixel.FlxG;
-import flixel.system.FlxSound;
-import states.BasicPlayState;
+import flixel.sound.FlxSound;
 
-class AudioTiming
+class MusicTiming
 {
 	/**
 		How much the current time has to be behind or ahead of the music's time to resync it.
@@ -20,9 +19,18 @@ class AudioTiming
 	/**
 		The time in audio/play.
 	**/
-	public var time:Float = 0;
+	public var time(default, null):Float = 0;
 
-	var state:BasicPlayState;
+	/**
+		Whether the music has started playing.
+	**/
+	public var hasStarted(default, null):Bool = false;
+
+	/**
+		The callback for when the music starts playing.
+	**/
+	public var onStart:MusicTiming->Void;
+
 	var music:FlxSound;
 	var startDelay:Int;
 	var extraMusic:Array<FlxSound>;
@@ -31,44 +39,54 @@ class AudioTiming
 	/**
 		Creates a new timing object.
 		@param music        The music to base the timing off of. Note that it should be pitched beforehand.
+		@param extraMusic	Extra music objects to sync with the main music.
 		@param startDelay   The time to wait before playing the music.
+		@param onStart		A callback for when the music starts playing.
 	**/
-	public function new(state:BasicPlayState, music:FlxSound, ?extraMusic:Array<FlxSound>, startDelay:Int = 3000)
+	public function new(music:FlxSound, ?extraMusic:Array<FlxSound>, startDelay:Int = 0, ?onStart:MusicTiming->Void)
 	{
+		if (music == null)
+			music = new FlxSound();
 		if (extraMusic == null)
 			extraMusic = [];
 
-		this.state = state;
 		this.music = music;
 		this.startDelay = startDelay;
 		this.extraMusic = extraMusic;
+		this.onStart = onStart;
 
-		time = -startDelay;
+		time = -startDelay * music.pitch;
 	}
 
 	public function update(elapsed:Float)
 	{
-		if (state.isPaused || music == null)
+		if (music == null)
 			return;
+
 		if (time >= 0 && !music.playing)
 			return;
 
 		if (time < 0)
 		{
 			time += elapsed * 1000 * music.pitch;
-
-			if (time < 0)
-				return;
+			return;
 		}
 
-		if (!state.hasStarted)
+		if (!hasStarted)
 		{
-			music.play(true, time);
+			hasStarted = true;
+
+			if (!music.playing)
+				music.play(true, time);
+
 			for (extra in extraMusic)
 			{
-				extra.play(true, time);
+				if (!extra.playing)
+					extra.play(true, time);
 			}
-			state.startSong();
+
+			if (onStart != null)
+				onStart(this);
 		}
 
 		if (Settings.smoothAudioTiming)

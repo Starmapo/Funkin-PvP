@@ -1,10 +1,20 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 class CoolUtil
 {
+	/**
+		Plays the menu music.
+		@param volume The volume that the music should start at. Defaults to 1, or full volume.
+	**/
+	public static function playMenuMusic(volume:Float = 1)
+	{
+		FlxG.sound.playMusic(Paths.getSound('music/freakyMenu'), volume);
+	}
+
 	/**
 		Returns the width of an FlxGroup.
 		@param group The group that contains objects.

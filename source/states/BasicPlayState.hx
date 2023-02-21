@@ -5,10 +5,10 @@ import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.util.FlxColor;
 import ui.Playfield;
-import util.AudioTiming;
+import util.MusicTiming;
 
 /**
 	A basic PlayState, includes just the playfields.
@@ -32,7 +32,7 @@ class BasicPlayState extends FNFState
 
 	var camHUD:FlxCamera;
 	var playfields:FlxTypedGroup<Playfield>;
-	var timing:AudioTiming;
+	var timing:MusicTiming;
 	var songInst:FlxSound;
 	var songVocals:FlxSound;
 
@@ -44,13 +44,8 @@ class BasicPlayState extends FNFState
 
 	override public function create()
 	{
-		songInst = FlxG.sound.load(Paths.getSongInst(song));
-		songInst.onComplete = endSong;
-		songVocals = FlxG.sound.load(Paths.getSongVocals(song));
-		timing = new AudioTiming(this, songInst, [songVocals], Std.int(song.timingPoints[0].beatLength * 5));
-
 		initCameras();
-
+		initSong();
 		initPlayfields();
 
 		super.create();
@@ -68,10 +63,7 @@ class BasicPlayState extends FNFState
 	/**
 		Called by the timing object once the music has started playing.
 	**/
-	public function startSong()
-	{
-		hasStarted = true;
-	}
+	public function startSong(timing:MusicTiming) {}
 
 	function initCameras()
 	{
@@ -80,6 +72,15 @@ class BasicPlayState extends FNFState
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
+	}
+
+	function initSong()
+	{
+		songInst = FlxG.sound.load(Paths.getSongInst(song));
+		songInst.onComplete = endSong;
+		songVocals = FlxG.sound.load(Paths.getSongVocals(song));
+
+		timing = new MusicTiming(songInst, [songVocals], Std.int(song.timingPoints[0].beatLength * 5), startSong);
 	}
 
 	function initPlayfields()

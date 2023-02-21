@@ -1,5 +1,6 @@
 package data;
 
+import data.Controls.Action;
 import flixel.FlxG;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
@@ -31,6 +32,17 @@ class PlayerSettings
 		}
 
 		FlxG.gamepads.deviceConnected.add(onGamepadConnected);
+	}
+
+	public static function checkAction(action:Action)
+	{
+		for (player in players)
+		{
+			if (player.controls.checkByName(action))
+				return true;
+		}
+
+		return false;
 	}
 
 	static function onGamepadConnected(gamepad:FlxGamepad)
