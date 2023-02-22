@@ -109,7 +109,7 @@ class BasicPlayState extends FNFState
 				}
 			],
 			receptorsCenterAnimation: true,
-			receptorsImage: 'NOTE_assets',
+			receptorsImage: 'notes/NOTE_assets',
 			receptorsOffset: [0, 5],
 			receptorsPadding: 0,
 			receptorsScale: 0.5,

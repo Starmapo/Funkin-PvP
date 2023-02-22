@@ -503,21 +503,6 @@ class Controls extends FlxActionSet
 		}
 	}
 
-	public function anyReleased()
-	{
-		switch (config.device)
-		{
-			case Keyboard:
-				return FlxG.keys.released.ANY;
-			case Gamepad(_):
-				if (gamepad != null)
-					return gamepad.released.ANY;
-				return false;
-			case None:
-				return false;
-		}
-	}
-
 	public function anyJustReleased()
 	{
 		switch (config.device)

@@ -45,6 +45,39 @@ class PlayerSettings
 		return false;
 	}
 
+	public static function anyPressed()
+	{
+		for (player in players)
+		{
+			if (player.controls.anyPressed())
+				return true;
+		}
+
+		return false;
+	}
+
+	public static function anyJustPressed()
+	{
+		for (player in players)
+		{
+			if (player.controls.anyJustPressed())
+				return true;
+		}
+
+		return false;
+	}
+
+	public static function anyJustReleased()
+	{
+		for (player in players)
+		{
+			if (player.controls.anyJustReleased())
+				return true;
+		}
+
+		return false;
+	}
+
 	static function onGamepadConnected(gamepad:FlxGamepad)
 	{
 		var name = gamepad.name;

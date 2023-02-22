@@ -49,6 +49,16 @@ class MusicTiming
 	public var timingPoints:Array<TimingPoint> = [];
 
 	/**
+		The current timing point.
+	**/
+	public var curTimingPoint:TimingPoint;
+
+	/**
+		The current timing point index.
+	**/
+	public var curTimingIndex:Int;
+
+	/**
 		The current step of the current TIMING SECTION, not the whole song.
 	**/
 	public var curStep(get, never):Int;
@@ -102,12 +112,14 @@ class MusicTiming
 		@param startDelay   The time to wait before playing the music.
 		@param onStart		A callback for when the music starts playing.
 	**/
-	public function new(music:FlxSound, ?extraMusic:Array<FlxSound>, timingPoints:Array<TimingPoint>, startDelay:Float = 0, ?onStart:MusicTiming->Void)
+	public function new(music:FlxSound, ?extraMusic:Array<FlxSound>, ?timingPoints:Array<TimingPoint>, startDelay:Float = 0, ?onStart:MusicTiming->Void)
 	{
 		if (music == null)
 			music = new FlxSound();
 		if (extraMusic == null)
 			extraMusic = [];
+		if (timingPoints == null)
+			timingPoints = [];
 
 		this.music = music;
 		this.extraMusic = extraMusic;
@@ -249,22 +261,30 @@ class MusicTiming
 
 	function updateCurStep()
 	{
-		var i = timingPoints.length - 1;
-		while (i >= 0)
+		if (timingPoints.length == 0)
 		{
-			if (audioPosition >= timingPoints[i].startTime)
-				break;
-
-			i--;
+			curTimingPoint = null;
+			curTimingIndex = 0;
+			curDecStep = curDecBeat = curDecBar = 0;
+			return;
 		}
 
-		if (i < 0)
-			i = 0;
+		curTimingIndex = timingPoints.length - 1;
+		while (curTimingIndex >= 0)
+		{
+			if (audioPosition >= timingPoints[curTimingIndex].startTime)
+				break;
 
-		var point = timingPoints[i];
-		curDecStep = (audioPosition - point.startTime) / point.stepLength;
+			curTimingIndex--;
+		}
+
+		if (curTimingIndex < 0)
+			curTimingIndex = 0;
+
+		curTimingPoint = timingPoints[curTimingIndex];
+		curDecStep = (audioPosition - curTimingPoint.startTime) / curTimingPoint.stepLength;
 		curDecBeat = curDecStep / 4;
-		curDecBar = curDecBeat / point.meter;
+		curDecBar = curDecBeat / curTimingPoint.meter;
 
 		// thx forever engine
 		for (i in storedSteps)
@@ -272,16 +292,19 @@ class MusicTiming
 			if (i < oldStep)
 				storedSteps.remove(i);
 		}
-		for (i in oldStep...curStep)
+		if (curStep > oldStep)
 		{
-			if (!storedSteps.contains(i) && i >= 0)
+			for (i in oldStep...curStep)
 			{
-				FlxG.log.notice('Repeating missed step $i');
-				stepHit(i, i);
+				if (!storedSteps.contains(i) && i >= 0)
+				{
+					FlxG.log.notice('Repeating missed step $i');
+					stepHit(i, i);
+				}
 			}
 		}
 
-		if (oldStep != curStep && curStep >= 0 && !storedSteps.contains(curStep))
+		if (curStep > oldStep && curStep >= 0 && !storedSteps.contains(curStep))
 			stepHit(curStep, curDecStep);
 		oldStep = curStep;
 
@@ -293,18 +316,19 @@ class MusicTiming
 	{
 		onStepHit.dispatch(step, decStep);
 
-		if (curStep % 4 == 0)
+		if (step % 4 == 0)
 		{
-			beatHit();
+			var decBeat = decStep / 4;
+			beatHit(Math.floor(decBeat), decBeat);
 		}
 
-		if (!storedSteps.contains(curStep))
-			storedSteps.push(curStep);
+		if (!storedSteps.contains(step))
+			storedSteps.push(step);
 	}
 
-	function beatHit()
+	function beatHit(beat:Int, decBeat:Float)
 	{
-		onBeatHit.dispatch(curBeat, curDecBeat);
+		onBeatHit.dispatch(beat, decBeat);
 	}
 
 	function get_curStep()

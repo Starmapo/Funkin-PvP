@@ -3,6 +3,7 @@ import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.io.Path;
+import lime.utils.Assets as LimeAssets;
 import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
@@ -150,6 +151,19 @@ class Paths
 	public static function getSongVocals(song:Song, ?mod:String)
 	{
 		return getSound('${song.directory}/${song.vocalsFile}', mod);
+	}
+
+	public static function getText(path:String, ?mod:String)
+	{
+		if (!path.endsWith('.txt'))
+			path += '.txt';
+		if (!exists(path))
+			path = getPath('data/$path', mod);
+
+		if (exists(path))
+			return getContent(path);
+
+		return null;
 	}
 
 	public static function getContent(path:String)
