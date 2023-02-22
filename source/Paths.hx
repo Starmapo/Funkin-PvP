@@ -3,7 +3,6 @@ import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.io.Path;
-import lime.utils.Assets as LimeAssets;
 import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
@@ -170,12 +169,12 @@ class Paths
 	{
 		if (Assets.exists(path))
 		{
-			return Assets.getText(path);
+			return Assets.getText(path).trim();
 		}
 		#if sys
 		else if (FileSystem.exists(path))
 		{
-			return File.getContent(path);
+			return File.getContent(path).trim();
 		}
 		#end
 		return null;

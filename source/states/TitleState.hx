@@ -126,13 +126,18 @@ class TitleState extends FNFState
 		var coolText = new FlxText(0, 0, 0, text);
 		coolText.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		coolText.antialiasing = true;
+		if (coolText.width > FlxG.width)
+		{
+			var ratio = FlxG.width / coolText.width;
+			coolText.size = Math.floor(coolText.size * ratio);
+		}
 		coolText.screenCenter(X);
 		if (bottom)
 			coolText.y = FlxG.height + (textGroup.length * 80);
 		else
 			coolText.y -= coolText.height;
 
-		FlxTween.tween(coolText, {y: y + (textGroup.length * 60)}, timing.curTimingPoint.stepLength * 0.002, {ease: FlxEase.quadOut});
+		FlxTween.tween(coolText, {y: y + (textGroup.length * 80)}, timing.curTimingPoint.stepLength * 0.002, {ease: FlxEase.quadOut});
 
 		textGroup.add(coolText);
 	}
