@@ -25,7 +25,7 @@ class BootState extends FNFState
 
 		PlayerSettings.init();
 
-		FlxG.switchState(new TitleTest());
+		FlxG.switchState(new TitleState());
 
 		super.create();
 	}

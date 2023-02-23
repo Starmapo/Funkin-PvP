@@ -3,13 +3,15 @@ package states;
 import data.PlayerSettings;
 import data.song.TimingPoint;
 import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
-import ui.AtlasText;
 import util.MusicTiming;
 
 class TitleState extends FNFState
@@ -19,6 +21,10 @@ class TitleState extends FNFState
 	var timing:MusicTiming;
 	var startTimer:FlxTimer;
 	var textGroup:FlxTypedGroup<FlxText>;
+	var gradient:FlxSprite;
+	var gradientAlpha:Float = 0;
+	var gradientBop:Float = 0;
+	var emitter:FlxEmitter;
 	var skippedIntro:Bool = false;
 	var introText:Array<String>;
 
@@ -41,6 +47,20 @@ class TitleState extends FNFState
 		]);
 		timing.onBeatHit.add(onBeatHit);
 
+		emitter = new FlxEmitter(FlxG.width / 2, FlxG.height + 50);
+		emitter.loadParticles(Paths.getImage('titleScreen/particle'), 200, 0);
+		emitter.velocity.set(-1000, -1000, 1000, -1000);
+		emitter.alpha.set(0.5, 1, 0, 0);
+		emitter.lifespan.set(1000);
+		emitter.start(false, 0.1);
+		add(emitter);
+
+		gradient = FlxGradient.createGradientFlxSprite(FlxG.width, Std.int(FlxG.height / 2) + 20, [0, FlxColor.WHITE]);
+		gradient.y = FlxG.height / 2;
+		gradient.antialiasing = true;
+		gradient.alpha = 0;
+		add(gradient);
+
 		textGroup = new FlxTypedGroup();
 		add(textGroup);
 
@@ -50,6 +70,10 @@ class TitleState extends FNFState
 			{
 				startIntro();
 			});
+		}
+		else
+		{
+			skipIntro();
 		}
 
 		super.create();
@@ -66,6 +90,16 @@ class TitleState extends FNFState
 			startIntro();
 		}
 
+		// need to do this manually cause the alpha range doesn't work???
+		// maybe im just missing something but this will have to do
+		for (particle in emitter)
+		{
+			if (particle.alive && (particle.x + particle.width < 0 || particle.x >= FlxG.width || particle.y + particle.height < 0))
+				particle.kill();
+		}
+
+		gradient.alpha = gradientAlpha + gradientBop;
+
 		super.update(elapsed);
 	}
 
@@ -81,47 +115,60 @@ class TitleState extends FNFState
 			swagGoodArray.push(i.split('--'));
 		}
 
-		introText = FlxG.random.getObject(swagGoodArray);
+		introText = swagGoodArray[FlxG.random.int(0, swagGoodArray.length - 1)];
 	}
 
 	function startIntro()
 	{
 		FlxG.sound.music.fadeIn(4, 0, 1);
+		FlxTween.num(0, 0.5, timing.timingPoints[0].beatLength * 0.002, null, function(num)
+		{
+			gradientAlpha = num;
+		});
 	}
 
 	function onBeatHit(beat:Int, decBeat:Float)
 	{
 		if (!skippedIntro)
 		{
+			var tweenDuration = timing.curTimingPoint.stepLength * 0.002;
+			gradientBop = 0.5;
+			FlxTween.num(0.5, 0, tweenDuration, null, function(num)
+			{
+				gradientBop = num;
+			});
+			gradient.y = (FlxG.height / 2) - 20;
+			FlxTween.tween(gradient, {y: FlxG.height / 2}, tweenDuration);
+
 			switch (beat)
 			{
 				case 0:
 					addText('Starmapo');
 				case 2:
-					addText('presents', 200, true);
+					addText('presents', 0, true);
 				case 4:
-					resetTexts(['Friday Night Funkin', 'by'], 150);
+					resetTexts(['Friday Night Funkin', 'by'], -100);
 				case 6:
-					addTexts(['ninjamuffin99', 'PhantomArcade', 'Kawai Sprite', 'Evilsk8er', 'Newgrounds'], 150, true);
+					addTexts(['ninjamuffin99', 'PhantomArcade', 'Kawai Sprite', 'Evilsk8er', 'Newgrounds'], -100, true);
 				case 8:
 					resetText(introText[0].toUpperCase());
 				case 10:
-					addText(introText[1].toUpperCase(), 200, true);
+					addText(introText[1].toUpperCase(), 0, true);
 				case 12:
 					clearText();
 				case 13:
 					addText('Friday');
 				case 14:
-					addText('Night', 200, true);
+					addText('Night', 0, true);
 				case 15:
-					addText('Funkin', 200, true);
+					addText('Funkin', 0, true);
 				case 16:
 					skipIntro();
 			}
 		}
 	}
 
-	function addText(text:String, y:Float = 200, bottom:Bool = false)
+	function addText(text:String, yOffset:Float = 0, bottom:Bool = false)
 	{
 		var coolText = new FlxText(0, 0, 0, text);
 		coolText.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
@@ -137,16 +184,16 @@ class TitleState extends FNFState
 		else
 			coolText.y -= coolText.height;
 
-		FlxTween.tween(coolText, {y: y + (textGroup.length * 80)}, timing.curTimingPoint.stepLength * 0.002, {ease: FlxEase.quadOut});
+		FlxTween.tween(coolText, {y: 200 + yOffset + (textGroup.length * 80)}, timing.curTimingPoint.stepLength * 0.002, {ease: FlxEase.quadOut});
 
 		textGroup.add(coolText);
 	}
 
-	function addTexts(texts:Array<String>, y:Float = 200, bottom:Bool = false)
+	function addTexts(texts:Array<String>, yOffset:Float = 0, bottom:Bool = false)
 	{
 		for (text in texts)
 		{
-			addText(text, y, bottom);
+			addText(text, yOffset, bottom);
 		}
 	}
 
@@ -155,16 +202,16 @@ class TitleState extends FNFState
 		textGroup.destroyMembers();
 	}
 
-	function resetText(text:String, y:Float = 200, bottom:Bool = false)
+	function resetText(text:String, yOffset:Float = 0, bottom:Bool = false)
 	{
 		clearText();
-		addText(text, y, bottom);
+		addText(text, yOffset, bottom);
 	}
 
-	function resetTexts(texts:Array<String>, y:Float = 200, bottom:Bool = false)
+	function resetTexts(texts:Array<String>, yOffset:Float = 0, bottom:Bool = false)
 	{
 		clearText();
-		addTexts(texts, y, bottom);
+		addTexts(texts, yOffset, bottom);
 	}
 
 	function skipIntro()
@@ -173,6 +220,7 @@ class TitleState extends FNFState
 		{
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			clearText();
+			gradient.visible = false;
 			skippedIntro = true;
 		}
 	}

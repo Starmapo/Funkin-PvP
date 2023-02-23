@@ -66,7 +66,7 @@ class MusicTiming
 	/**
 		The current decimal step of the current TIMING SECTION, not the whole song.
 	**/
-	public var curDecStep(default, null):Float = 0;
+	public var curDecStep(default, null):Float = -1;
 
 	/**
 		The current beat of the current TIMING SECTION, not the whole song.
@@ -76,7 +76,7 @@ class MusicTiming
 	/**
 		The current decimal beat of the current TIMING SECTION, not the whole song.
 	**/
-	public var curDecBeat(default, null):Float = 0;
+	public var curDecBeat(default, null):Float = -1;
 
 	/**
 		The current bar of the current TIMING SECTION, not the whole song.
@@ -86,7 +86,7 @@ class MusicTiming
 	/**
 		The current decimal bar of the current TIMING SECTION, not the whole song.
 	**/
-	public var curDecBar(default, null):Float = 0;
+	public var curDecBar(default, null):Float = -1;
 
 	/**
 		Gets dispatched when a new step is reached.
@@ -171,6 +171,19 @@ class MusicTiming
 
 		updateTime();
 		resyncExtraMusic();
+		updateAudioPosition();
+		updateCurStep();
+	}
+
+	/**
+		Forces the time to the new value.
+	**/
+	public function setTime(newTime:Float)
+	{
+		music.time = newTime;
+		for (extra in extraMusic)
+			extra.time = newTime;
+		time = newTime;
 		updateAudioPosition();
 		updateCurStep();
 	}
@@ -265,7 +278,7 @@ class MusicTiming
 		{
 			curTimingPoint = null;
 			curTimingIndex = 0;
-			curDecStep = curDecBeat = curDecBar = 0;
+			curDecStep = curDecBeat = curDecBar = -1;
 			return;
 		}
 
