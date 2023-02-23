@@ -103,7 +103,7 @@ class MusicTiming
 	var extraMusic:Array<FlxSound>;
 	var previousTime:Float = 0;
 	var storedSteps:Array<Int> = [];
-	var oldStep:Int = 0;
+	var oldStep:Int = -1;
 
 	/**
 		Creates a new timing object.
@@ -311,7 +311,7 @@ class MusicTiming
 			{
 				if (!storedSteps.contains(i) && i >= 0)
 				{
-					FlxG.log.notice('Repeating missed step $i');
+					FlxG.log.notice('Repeating missed step $i, current step is $curStep');
 					stepHit(i, i);
 				}
 			}

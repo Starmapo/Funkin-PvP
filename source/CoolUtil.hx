@@ -12,7 +12,7 @@ class CoolUtil
 	**/
 	public static function playMenuMusic(volume:Float = 1)
 	{
-		FlxG.sound.playMusic(Paths.getMusic('freakyMenu'), volume);
+		FlxG.sound.playMusic(Paths.getMusic("Gettin' Freaky"), volume);
 	}
 
 	/**

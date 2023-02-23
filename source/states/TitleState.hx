@@ -4,7 +4,6 @@ import data.PlayerSettings;
 import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -12,6 +11,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
+import sprites.InfiniteEmitter;
 import util.MusicTiming;
 
 class TitleState extends FNFState
@@ -24,7 +24,7 @@ class TitleState extends FNFState
 	var gradient:FlxSprite;
 	var gradientAlpha:Float = 0;
 	var gradientBop:Float = 0;
-	var emitter:FlxEmitter;
+	var emitter:InfiniteEmitter;
 	var skippedIntro:Bool = false;
 	var introText:Array<String>;
 
@@ -38,20 +38,16 @@ class TitleState extends FNFState
 
 		getIntroText();
 
-		timing = new MusicTiming(FlxG.sound.music, null, [
-			new TimingPoint({
-				startTime: 0,
-				bpm: 102,
-				meter: 4
-			})
-		]);
+		timing = new MusicTiming(FlxG.sound.music, null, TimingPoint.getMusicTimingPoints("Gettin' Freaky"));
 		timing.onBeatHit.add(onBeatHit);
 
-		emitter = new FlxEmitter(FlxG.width / 2, FlxG.height + 50);
-		emitter.loadParticles(Paths.getImage('titleScreen/particle'), 200, 0);
-		emitter.velocity.set(-1000, -1000, 1000, -1000);
-		emitter.alpha.set(0.5, 1, 0, 0);
-		emitter.lifespan.set(1000);
+		emitter = new InfiniteEmitter(0, FlxG.height + 30);
+		emitter.width = FlxG.width;
+		emitter.loadParticles(Paths.getImage('titleScreen/particle'), 10, 0);
+		emitter.velocity.set(-500, -500, 500, -500);
+		emitter.acceleration.set(0, -250, 0, -250);
+		emitter.alpha.set(0.5, 0.8, 0, 0);
+		emitter.lifespan.set(5, 10);
 		emitter.start(false, 0.1);
 		add(emitter);
 
@@ -90,8 +86,6 @@ class TitleState extends FNFState
 			startIntro();
 		}
 
-		// need to do this manually cause the alpha range doesn't work???
-		// maybe im just missing something but this will have to do
 		for (particle in emitter)
 		{
 			if (particle.alive && (particle.x + particle.width < 0 || particle.x >= FlxG.width || particle.y + particle.height < 0))
@@ -129,17 +123,17 @@ class TitleState extends FNFState
 
 	function onBeatHit(beat:Int, decBeat:Float)
 	{
+		var tweenDuration = timing.curTimingPoint.stepLength * 0.002;
+		gradientBop = 0.5;
+		FlxTween.num(0.5, 0, tweenDuration, null, function(num)
+		{
+			gradientBop = num;
+		});
+		gradient.y = (FlxG.height / 2) - 20;
+		FlxTween.tween(gradient, {y: FlxG.height / 2}, tweenDuration);
+
 		if (!skippedIntro)
 		{
-			var tweenDuration = timing.curTimingPoint.stepLength * 0.002;
-			gradientBop = 0.5;
-			FlxTween.num(0.5, 0, tweenDuration, null, function(num)
-			{
-				gradientBop = num;
-			});
-			gradient.y = (FlxG.height / 2) - 20;
-			FlxTween.tween(gradient, {y: FlxG.height / 2}, tweenDuration);
-
 			switch (beat)
 			{
 				case 0:
@@ -220,7 +214,6 @@ class TitleState extends FNFState
 		{
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			clearText();
-			gradient.visible = false;
 			skippedIntro = true;
 		}
 	}

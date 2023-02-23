@@ -136,10 +136,7 @@ class Paths
 
 	public static function getMusic(path:String, ?mod:String)
 	{
-		if (!path.endsWith('.ogg') && !path.endsWith('.mp3') && !path.endsWith('.wav'))
-			path += '.ogg';
-
-		return getSound(getPath('music/$path'), mod);
+		return getSound(getPath('music/$path/audio'), mod);
 	}
 
 	public static function getSongInst(song:Song, ?mod:String)

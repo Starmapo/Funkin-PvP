@@ -4,6 +4,31 @@ import flixel.util.FlxStringUtil;
 
 class TimingPoint extends JsonObject
 {
+	public static function getMusicTimingPoints(music:String)
+	{
+		var timingPoints:Array<TimingPoint> = [];
+		var path = Paths.getPath('music/$music/timingPoints.txt');
+		if (Paths.exists(path))
+		{
+			var data = Paths.getContent(path);
+			if (data.length > 0)
+			{
+				var splitData = data.split('\n');
+				for (point in splitData)
+				{
+					var splitPoint = point.split(':');
+					timingPoints.push(new TimingPoint({
+						startTime: Std.parseFloat(splitPoint[0]),
+						bpm: Std.parseFloat(splitPoint[1]),
+						meter: splitPoint[2] != null ? Std.parseInt(splitPoint[2]) : 4
+					}));
+				}
+			}
+		}
+
+		return timingPoints;
+	}
+
 	/**
 		The time in milliseconds for when this timing point begins.
 	**/
