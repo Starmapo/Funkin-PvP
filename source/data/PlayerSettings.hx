@@ -45,6 +45,15 @@ class PlayerSettings
 		return false;
 	}
 
+	public static function checkPlayerAction(player:Int, action:Action)
+	{
+		var player = players[player];
+		if (player != null && player.controls.checkByName(action))
+			return true;
+
+		return false;
+	}
+
 	public static function anyPressed()
 	{
 		for (player in players)

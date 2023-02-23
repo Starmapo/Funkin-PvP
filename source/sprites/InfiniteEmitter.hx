@@ -10,6 +10,7 @@ import flixel.util.FlxColor;
 
 /**
 	An edit of FlxEmitter where there isn't a max size, meaning there can be any amount of particles.
+	I made this just for the title screen lol.
 **/
 class InfiniteEmitter extends FlxEmitter
 {

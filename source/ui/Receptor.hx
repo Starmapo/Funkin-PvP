@@ -3,12 +3,13 @@ package ui;
 import data.skin.NoteSkin;
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
+import sprites.AnimatedSprite;
 
 /**
 	A receptor is a static note sprite that indicates when you should hit a note.
 	It gives feedback whenever you press it and also if you hit a note or not.
 **/
-class Receptor extends FlxSprite
+class Receptor extends AnimatedSprite
 {
 	public var lane(default, null):Int;
 	public var skin(default, null):NoteSkin;
@@ -39,19 +40,12 @@ class Receptor extends FlxSprite
 		scrollFactor.set();
 	}
 
-	public function playAnim(name:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)
+	override public function animPlayed(animName:String)
 	{
-		if (!animation.exists(name))
-			return false;
-
-		animation.play(name, force, reversed, frame);
-
-		if (skin.receptorsCenterAnimation == true)
+		if (skin.receptorsCenterAnimation)
 		{
 			centerOffsets();
 		}
-
-		return true;
 	}
 
 	public function startAlphaTween(alpha:Float, duration:Float = 1, ?options:TweenOptions)

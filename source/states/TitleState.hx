@@ -11,6 +11,8 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
+import shaders.ColorSwap;
+import sprites.DancingSprite;
 import sprites.InfiniteEmitter;
 import util.MusicTiming;
 
@@ -22,18 +24,25 @@ class TitleState extends FNFState
 	var startTimer:FlxTimer;
 	var textGroup:FlxTypedGroup<FlxText>;
 	var gradient:FlxSprite;
+	var logo:DancingSprite;
+	var gf:DancingSprite;
+	var pressEnter:FlxSprite;
+	var colorSwap:ColorSwap;
 	var gradientAlpha:Float = 0;
 	var gradientBop:Float = 0;
 	var emitter:InfiniteEmitter;
+	var startedIntro:Bool = false;
 	var skippedIntro:Bool = false;
 	var introText:Array<String>;
+	var transitioning:Bool = false;
 
 	override public function create()
 	{
 		if (!FlxG.sound.musicPlaying)
 		{
-			CoolUtil.playMenuMusic(0);
-			FlxG.sound.music.stop();
+			CoolUtil.playMenuMusic(initialized ? 1 : 0);
+			if (!initialized)
+				FlxG.sound.music.stop();
 		}
 
 		getIntroText();
@@ -41,9 +50,28 @@ class TitleState extends FNFState
 		timing = new MusicTiming(FlxG.sound.music, null, TimingPoint.getMusicTimingPoints("Gettin' Freaky"));
 		timing.onBeatHit.add(onBeatHit);
 
+		colorSwap = new ColorSwap();
+
+		gf = new DancingSprite(FlxG.width, FlxG.height * 0.07, Paths.getSpritesheet('menus/title/gfDanceTitle'));
+		gf.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+		gf.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		gf.setDancePreset(DOUBLE);
+		gf.antialiasing = true;
+		gf.shader = colorSwap.shader;
+		timing.addDancingSprite(gf);
+		add(gf);
+
+		logo = new DancingSprite(-150, -100, Paths.getSpritesheet('menus/title/logoBumpin'));
+		logo.animation.addByPrefix('idle', 'logo bumpin', 24, false);
+		logo.dance();
+		logo.y -= logo.height;
+		logo.shader = colorSwap.shader;
+		timing.addDancingSprite(logo);
+		add(logo);
+
 		emitter = new InfiniteEmitter(0, FlxG.height + 30);
 		emitter.width = FlxG.width;
-		emitter.loadParticles(Paths.getImage('titleScreen/particle'), 10, 0);
+		emitter.loadParticles(Paths.getImage('menus/title/particle'), 10, 0);
 		emitter.velocity.set(-500, -500, 500, -500);
 		emitter.acceleration.set(0, -250, 0, -250);
 		emitter.alpha.set(0.5, 0.8, 0, 0);
@@ -57,6 +85,14 @@ class TitleState extends FNFState
 		gradient.alpha = 0;
 		add(gradient);
 
+		pressEnter = new FlxSprite(100, FlxG.height);
+		pressEnter.frames = Paths.getSpritesheet('menus/title/titleEnter');
+		pressEnter.animation.addByPrefix('idle', "Press Enter to Begin", 24);
+		pressEnter.animation.addByPrefix('press', "ENTER PRESSED", 24);
+		pressEnter.animation.play('idle');
+		pressEnter.antialiasing = true;
+		add(pressEnter);
+
 		textGroup = new FlxTypedGroup();
 		add(textGroup);
 
@@ -69,7 +105,7 @@ class TitleState extends FNFState
 		}
 		else
 		{
-			skipIntro();
+			startIntro();
 		}
 
 		super.create();
@@ -80,11 +116,46 @@ class TitleState extends FNFState
 		if (timing != null)
 			timing.update(elapsed);
 
-		if (startTimer != null && !startTimer.finished && PlayerSettings.anyJustPressed())
+		if (!startedIntro)
 		{
-			startTimer.cancel();
-			startIntro();
+			if (CoolUtil.anyJustInputted())
+			{
+				startTimer.cancel();
+				startIntro();
+			}
 		}
+		else if (!skippedIntro)
+		{
+			if (PlayerSettings.checkAction(ACCEPT_P))
+				skipIntro();
+		}
+		else if (!transitioning)
+		{
+			var pressedEnter = FlxG.keys.justPressed.ENTER;
+			if (!pressedEnter)
+			{
+				for (i in 0...FlxG.gamepads.numActiveGamepads)
+				{
+					var gamepad = FlxG.gamepads.getByID(i);
+					if (gamepad != null && gamepad.justPressed.START)
+						pressedEnter = true;
+				}
+			}
+
+			if (pressedEnter)
+			{
+				pressEnter.animation.play('press');
+				pressEnter.centerOffsets();
+				FlxG.camera.flash(FlxColor.WHITE, 1);
+				CoolUtil.playConfirmSound();
+				transitioning = true;
+			}
+		}
+
+		if (PlayerSettings.checkAction(UI_LEFT))
+			colorSwap.update(-elapsed * 0.1);
+		else if (PlayerSettings.checkAction(UI_RIGHT))
+			colorSwap.update(elapsed * 0.1);
 
 		for (particle in emitter)
 		{
@@ -114,11 +185,15 @@ class TitleState extends FNFState
 
 	function startIntro()
 	{
-		FlxG.sound.music.fadeIn(4, 0, 1);
+		if (!initialized)
+		{
+			FlxG.sound.music.fadeIn(4, 0, 1);
+		}
 		FlxTween.num(0, 0.5, timing.timingPoints[0].beatLength * 0.002, null, function(num)
 		{
 			gradientAlpha = num;
 		});
+		startedIntro = true;
 	}
 
 	function onBeatHit(beat:Int, decBeat:Float)
@@ -212,8 +287,13 @@ class TitleState extends FNFState
 	{
 		if (!skippedIntro)
 		{
-			FlxG.camera.flash(FlxColor.WHITE, 4);
+			FlxG.camera.flash(FlxColor.WHITE, 1);
 			clearText();
+
+			var tweenDuration = timing.curTimingPoint.beatLength * 0.002;
+			FlxTween.tween(logo, {y: -100}, tweenDuration, {ease: FlxEase.quadInOut});
+			FlxTween.tween(gf, {x: FlxG.width * 0.4}, tweenDuration, {ease: FlxEase.quadInOut});
+			FlxTween.tween(pressEnter, {y: FlxG.height * 0.8}, tweenDuration, {ease: FlxEase.backOut, startDelay: timing.curTimingPoint.beatLength * 0.001});
 			skippedIntro = true;
 		}
 	}

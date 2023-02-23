@@ -17,6 +17,7 @@ class BootState extends FNFState
 		FlxG.game.focusLostFramerate = 60; // 60 fps instead of 10 when focus is lost
 		FlxG.mouse.useSystemCursor = true; // use system cursor instead of HaxeFlixel one
 		FlxG.mouse.visible = false; // hide mouse by default
+		FlxG.sound.muteKeys = [ZERO]; // remove numpad zero from mute keys
 		FlxGraphic.defaultPersist = true; // graphics won't be cleared by default
 		// create custom transitions
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);

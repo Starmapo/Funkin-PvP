@@ -5,6 +5,7 @@ import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.sound.FlxSound;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import sprites.DancingSprite;
 
 /**
 	Handles time on a music object, plus step/beat hits, resyncing vocals, all that good stuff.
@@ -104,6 +105,7 @@ class MusicTiming
 	var previousTime:Float = 0;
 	var storedSteps:Array<Int> = [];
 	var oldStep:Int = -1;
+	var dancingSprites:Array<DancingSprite> = [];
 
 	/**
 		Creates a new timing object.
@@ -189,6 +191,22 @@ class MusicTiming
 	}
 
 	/**
+		Adds a dancing sprite to this object.
+	**/
+	public function addDancingSprite(sprite:DancingSprite)
+	{
+		dancingSprites.push(sprite);
+	}
+
+	/**
+		Removes a dancing sprite from this object.
+	**/
+	public function removeDancingSprite(sprite:DancingSprite)
+	{
+		dancingSprites.remove(sprite);
+	}
+
+	/**
 		Pauses all music.
 	**/
 	public function pauseMusic()
@@ -222,7 +240,7 @@ class MusicTiming
 		{
 			extra.stop();
 		}
-		time = 0;
+		reset();
 	}
 
 	function updateTime()
@@ -300,9 +318,13 @@ class MusicTiming
 		curDecBar = curDecBeat / curTimingPoint.meter;
 
 		// thx forever engine
+		if (oldStep > curStep)
+		{
+			oldStep = curStep - 1;
+		}
 		for (i in storedSteps)
 		{
-			if (i < oldStep)
+			if (i < oldStep || i > curStep)
 				storedSteps.remove(i);
 		}
 		if (curStep > oldStep)
@@ -341,7 +363,24 @@ class MusicTiming
 
 	function beatHit(beat:Int, decBeat:Float)
 	{
+		for (sprite in dancingSprites)
+		{
+			if (beat % sprite.danceBeats == 0)
+			{
+				sprite.dance();
+			}
+		}
+
 		onBeatHit.dispatch(beat, decBeat);
+	}
+
+	function reset()
+	{
+		time = 0;
+		curTimingPoint = null;
+		curTimingIndex = 0;
+		curDecStep = curDecBeat = curDecBar = -1;
+		oldStep = -1;
 	}
 
 	function get_curStep()

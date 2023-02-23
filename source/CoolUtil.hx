@@ -1,5 +1,6 @@
 package;
 
+import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -13,6 +14,33 @@ class CoolUtil
 	public static function playMenuMusic(volume:Float = 1)
 	{
 		FlxG.sound.playMusic(Paths.getMusic("Gettin' Freaky"), volume);
+	}
+
+	/**
+		Plays the scroll sound for menus.
+		@param volume The volume that the sound should play at. Defaults to 1, or full volume.
+	**/
+	public static function playScrollSound(volume:Float = 1)
+	{
+		return FlxG.sound.play(Paths.getSound('scrollMenu'), volume);
+	}
+
+	/**
+		Plays the confirm sound for menus.
+		@param volume The volume that the sound should play at. Defaults to 1, or full volume.
+	**/
+	public static function playConfirmSound(volume:Float = 1)
+	{
+		return FlxG.sound.play(Paths.getSound('confirmMenu'), volume);
+	}
+
+	/**
+		Plays the cancel sound for menus.
+		@param volume The volume that the sound should play at. Defaults to 1, or full volume.
+	**/
+	public static function playCancelSound(volume:Float = 1)
+	{
+		return FlxG.sound.play(Paths.getSound('cancelMenu'), volume);
 	}
 
 	/**
@@ -36,6 +64,15 @@ class CoolUtil
 	{
 		var array:Array<T2> = [for (value in map.iterator()) value];
 		return array;
+	}
+
+	/**
+		Returns if anything has been inputted. This includes the keyboard, gamepads, and the mouse.
+	**/
+	public static function anyJustInputted()
+	{
+		return (PlayerSettings.anyJustPressed() || FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed || FlxG.mouse.justPressedMiddle
+			|| FlxG.mouse.justPressedRight);
 	}
 
 	static function getGroupMaxX(group:FlxTypedGroup<FlxObject>):Float
