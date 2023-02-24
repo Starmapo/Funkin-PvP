@@ -3,10 +3,25 @@ package;
 import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 class CoolUtil
 {
+	public static function createMenuBG(image:String = 'menus/menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0)
+	{
+		var bg = new FlxSprite(0, 0, Paths.getImage(image));
+		bg.scrollFactor.set(scrollX, scrollY);
+		if (scale != 1)
+		{
+			bg.scale.set(scale, scale);
+			bg.updateHitbox();
+		}
+		bg.screenCenter();
+		bg.antialiasing = true;
+		return bg;
+	}
+
 	/**
 		Plays the menu music.
 		@param volume The volume that the music should start at. Defaults to 1, or full volume.

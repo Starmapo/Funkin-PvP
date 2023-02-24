@@ -2,6 +2,7 @@ package states;
 
 import data.PlayerSettings;
 import data.song.TimingPoint;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -20,6 +21,7 @@ class TitleState extends FNFState
 {
 	static var initialized:Bool = false;
 
+	var camHUD:FlxCamera;
 	var timing:MusicTiming;
 	var startTimer:FlxTimer;
 	var textGroup:FlxTypedGroup<FlxText>;
@@ -38,8 +40,11 @@ class TitleState extends FNFState
 
 	override public function create()
 	{
-		transIn = null;
-		transOut = null;
+		transIn = transOut = null;
+
+		camHUD = new FlxCamera();
+		camHUD.bgColor = 0;
+		FlxG.cameras.add(camHUD, false);
 
 		if (!FlxG.sound.musicPlaying)
 		{
@@ -51,7 +56,6 @@ class TitleState extends FNFState
 		getIntroText();
 
 		timing = new MusicTiming(FlxG.sound.music, null, TimingPoint.getMusicTimingPoints("Gettin' Freaky"));
-		timing.onBeatHit.add(onBeatHit);
 
 		colorSwap = new ColorSwap();
 
@@ -110,6 +114,8 @@ class TitleState extends FNFState
 		{
 			startIntro();
 		}
+
+		timing.onBeatHit.add(onBeatHit);
 
 		super.create();
 	}
@@ -184,15 +190,20 @@ class TitleState extends FNFState
 
 	function startIntro()
 	{
-		if (!initialized)
-		{
-			FlxG.sound.music.fadeIn(4, 0, 1);
-		}
 		FlxTween.num(0, 0.5, timing.timingPoints[0].beatLength * 0.002, null, function(num)
 		{
 			gradientAlpha = num;
 		});
+		if (!initialized)
+		{
+			FlxG.sound.music.fadeIn(4, 0, 1);
+		}
+		else
+		{
+			skipIntro();
+		}
 		startedIntro = true;
+		initialized = true;
 	}
 
 	function onBeatHit(beat:Int, decBeat:Float)
@@ -286,9 +297,8 @@ class TitleState extends FNFState
 	{
 		if (!skippedIntro)
 		{
-			FlxG.camera.flash(FlxColor.WHITE, 1);
+			camHUD.flash(FlxColor.WHITE, 1);
 			clearText();
-
 			var tweenDuration = timing.curTimingPoint.beatLength * 0.002;
 			FlxTween.tween(logo, {y: -100}, tweenDuration, {ease: FlxEase.quadInOut});
 			FlxTween.tween(gf, {x: FlxG.width * 0.4}, tweenDuration, {ease: FlxEase.quadInOut});
@@ -302,11 +312,10 @@ class TitleState extends FNFState
 		if (!transitioning)
 		{
 			pressEnter.animation.play('press');
-			pressEnter.centerOffsets();
-			FlxG.camera.flash(FlxColor.WHITE, 1);
-			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, 0.8, {ease: FlxEase.backIn});
-			FlxTween.tween(FlxG.camera, {zoom: 5}, 0.8, {ease: FlxEase.expoIn});
-			FlxTween.tween(FlxG.camera, {alpha: 0}, 0.8, {
+			camHUD.flash(FlxColor.WHITE, Main.TRANSITION_TIME);
+			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
+			FlxTween.tween(FlxG.camera, {y: FlxG.height, alpha: 0}, Main.TRANSITION_TIME, {
+				ease: FlxEase.expoIn,
 				onComplete: function(_)
 				{
 					FlxG.switchState(new MainMenuState());

@@ -333,7 +333,6 @@ class MusicTiming
 			{
 				if (!storedSteps.contains(i) && i >= 0)
 				{
-					FlxG.log.notice('Repeating missed step $i, current step is $curStep');
 					stepHit(i, i);
 				}
 			}

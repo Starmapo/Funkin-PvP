@@ -10,6 +10,8 @@ using StringTools;
 
 class Main extends Sprite
 {
+	public static final TRANSITION_TIME:Float = 0.7;
+
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());
