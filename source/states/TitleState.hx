@@ -38,6 +38,9 @@ class TitleState extends FNFState
 
 	override public function create()
 	{
+		transIn = null;
+		transOut = null;
+
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playMenuMusic(initialized ? 1 : 0);
@@ -144,11 +147,7 @@ class TitleState extends FNFState
 
 			if (pressedEnter)
 			{
-				pressEnter.animation.play('press');
-				pressEnter.centerOffsets();
-				FlxG.camera.flash(FlxColor.WHITE, 1);
-				CoolUtil.playConfirmSound();
-				transitioning = true;
+				onPressEnter();
 			}
 		}
 
@@ -295,6 +294,26 @@ class TitleState extends FNFState
 			FlxTween.tween(gf, {x: FlxG.width * 0.4}, tweenDuration, {ease: FlxEase.quadInOut});
 			FlxTween.tween(pressEnter, {y: FlxG.height * 0.8}, tweenDuration, {ease: FlxEase.backOut, startDelay: timing.curTimingPoint.beatLength * 0.001});
 			skippedIntro = true;
+		}
+	}
+
+	function onPressEnter()
+	{
+		if (!transitioning)
+		{
+			pressEnter.animation.play('press');
+			pressEnter.centerOffsets();
+			FlxG.camera.flash(FlxColor.WHITE, 1);
+			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, 0.8, {ease: FlxEase.backIn});
+			FlxTween.tween(FlxG.camera, {zoom: 5}, 0.8, {ease: FlxEase.expoIn});
+			FlxTween.tween(FlxG.camera, {alpha: 0}, 0.8, {
+				onComplete: function(_)
+				{
+					FlxG.switchState(new MainMenuState());
+				}
+			});
+			CoolUtil.playConfirmSound();
+			transitioning = true;
 		}
 	}
 }
