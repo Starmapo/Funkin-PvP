@@ -6,6 +6,8 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
+typedef MenuList = TypedMenuList<MenuItem>;
+
 class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 {
 	/**
@@ -44,6 +46,11 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 	public var playScrollSound:Bool = true;
 
 	/**
+		Whether to instantly fire the current item's callback when the player presses accept.
+	**/
+	public var fireCallbacks:Bool = true;
+
+	/**
 		Called when a new item is selected.
 	**/
 	public var onChange(default, null):FlxTypedSignal<T->Void> = new FlxTypedSignal();
@@ -62,7 +69,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		this.controlsMode = controlsMode;
 		this.wrapEnabled = wrapEnabled;
 
-		Paths.getSound('menus/scrollMenu');
+		CoolUtil.playScrollSound(0);
 	}
 
 	override function update(elapsed:Float)
@@ -78,6 +85,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		if (length == selectedIndex)
 			item.select();
 
+		item.ID = length;
 		byName[name] = item;
 		return add(item);
 	}
@@ -93,6 +101,21 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		item.setItem(newName, callback);
 
 		return item;
+	}
+
+	public function selectItem(index:Int)
+	{
+		var prevItem = members[selectedIndex];
+		prevItem.idle();
+		prevItem.selected = false;
+
+		selectedIndex = index;
+
+		var curItem = members[selectedIndex];
+		curItem.select();
+		curItem.selected = true;
+
+		onChange.dispatch(curItem);
 	}
 
 	function updateControls()
@@ -163,27 +186,12 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return index;
 	}
 
-	function selectItem(index:Int)
-	{
-		var prevItem = members[selectedIndex];
-		prevItem.idle();
-		prevItem.selected = false;
-
-		selectedIndex = index;
-
-		var curItem = members[selectedIndex];
-		curItem.select();
-		curItem.selected = true;
-
-		onChange.dispatch(curItem);
-	}
-
 	function accept()
 	{
 		var selectedItem = members[selectedIndex];
 		onAccept.dispatch(selectedItem);
 
-		if (selectedItem.callback != null)
+		if (fireCallbacks && selectedItem.callback != null)
 			selectedItem.callback();
 	}
 
@@ -207,17 +215,11 @@ class MenuItem extends FlxSprite
 	public var callback(default, null):Void->Void;
 	public var selected:Bool = false;
 
-	public function new(x:Float = 0, y:Float = 0, name:String, callback:Void->Void)
+	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void)
 	{
 		super(x, y, graphic);
-	}
-
-	function setData(name:String, ?callback:Void->Void)
-	{
-		this.name = name;
-
-		if (callback != null)
-			this.callback = callback;
+		setData(name, callback);
+		idle();
 	}
 
 	public function setItem(name:String, ?callback:Void->Void)
@@ -238,6 +240,97 @@ class MenuItem extends FlxSprite
 	public function select()
 	{
 		alpha = 1;
+	}
+
+	function setData(name:String, ?callback:Void->Void)
+	{
+		this.name = name;
+
+		if (callback != null)
+			this.callback = callback;
+	}
+}
+
+class TypedMenuItem<T:FlxSprite> extends MenuItem
+{
+	public var label(default, set):T;
+
+	public function new(x:Float = 0, y:Float = 0, label:T, name:String, ?callback:Void->Void)
+	{
+		super(x, y, name, callback);
+		// set label after super otherwise setters fuck up
+		this.label = label;
+	}
+
+	/**
+	 * Use this when you only want to show the label
+	 */
+	function setEmptyBackground()
+	{
+		var oldWidth = width;
+		var oldHeight = height;
+		makeGraphic(1, 1, 0x0);
+		width = oldWidth;
+		height = oldHeight;
+	}
+
+	function set_label(value:T)
+	{
+		if (value != null)
+		{
+			value.x = x;
+			value.y = y;
+			value.alpha = alpha;
+		}
+		return this.label = value;
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		if (label != null)
+			label.update(elapsed);
+	}
+
+	override function draw()
+	{
+		super.draw();
+		if (label != null)
+		{
+			label.cameras = cameras;
+			label.scrollFactor.copyFrom(scrollFactor);
+			label.draw();
+		}
+	}
+
+	override function set_alpha(value:Float):Float
+	{
+		super.set_alpha(value);
+
+		if (label != null)
+			label.alpha = alpha;
+
+		return alpha;
+	}
+
+	override function set_x(value:Float):Float
+	{
+		super.set_x(value);
+
+		if (label != null)
+			label.x = x;
+
+		return x;
+	}
+
+	override function set_y(Value:Float):Float
+	{
+		super.set_y(Value);
+
+		if (label != null)
+			label.y = y;
+
+		return y;
 	}
 }
 

@@ -124,7 +124,7 @@ class TitleState extends FNFState
 
 		timing.onBeatHit.add(onBeatHit);
 
-		Paths.getSound('menus/confirmMenu');
+		CoolUtil.playConfirmSound(0);
 
 		super.create();
 	}
@@ -164,6 +164,12 @@ class TitleState extends FNFState
 			{
 				onPressEnter();
 			}
+			#if sys
+			else if (PlayerSettings.checkAction(BACK_P))
+			{
+				onExit();
+			}
+			#end
 		}
 
 		if (PlayerSettings.checkAction(UI_LEFT))
@@ -336,7 +342,7 @@ class TitleState extends FNFState
 			pressEnter.playAnim('press');
 			camHUD.flash(FlxColor.WHITE, Main.TRANSITION_TIME);
 			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
-			FlxTween.tween(FlxG.camera, {y: FlxG.height, alpha: 0}, Main.TRANSITION_TIME, {
+			FlxTween.tween(FlxG.camera, {y: FlxG.height}, Main.TRANSITION_TIME, {
 				ease: FlxEase.expoIn,
 				onComplete: function(_)
 				{
@@ -347,4 +353,16 @@ class TitleState extends FNFState
 			transitioning = true;
 		}
 	}
+
+	#if sys
+	function onExit()
+	{
+		FlxG.camera.fade(FlxColor.BLACK, 1, false, function()
+		{
+			Sys.exit(0);
+		});
+		FlxG.sound.music.fadeOut(1, 0);
+		transitioning = true;
+	}
+	#end
 }

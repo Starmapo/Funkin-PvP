@@ -8,6 +8,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 class CoolUtil
 {
+	public static function getLerp(lerp:Float = 1)
+	{
+		return lerp * (60 / FlxG.updateFramerate);
+	}
+
 	public static function createMenuBG(image:String = 'menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0)
 	{
 		var bg = new FlxSprite(0, 0, Paths.getImage('menus/$image'));
