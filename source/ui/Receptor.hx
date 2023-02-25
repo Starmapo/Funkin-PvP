@@ -27,9 +27,26 @@ class Receptor extends AnimatedSprite
 
 			frames = Paths.getSpritesheet(skin.receptorsImage);
 
-			addAnim('static', data.staticAnim, data.staticFPS, true, data.staticOffset);
-			addAnim('pressed', data.pressedAnim, data.pressedFPS, false, data.pressedOffset);
-			addAnim('confirm', data.confirmAnim, data.confirmFPS, false, data.confirmOffset);
+			addAnim({
+				name: 'static',
+				atlasName: data.staticAnim,
+				fps: data.staticFPS,
+				offset: data.staticOffset
+			});
+			addAnim({
+				name: 'pressed',
+				atlasName: data.pressedAnim,
+				fps: data.pressedFPS,
+				loop: false,
+				offset: data.pressedOffset
+			});
+			addAnim({
+				name: 'confirm',
+				atlasName: data.confirmAnim,
+				fps: data.confirmFPS,
+				loop: false,
+				offset: data.confirmOffset
+			});
 
 			playAnim('static', true);
 			scale.set(skin.receptorsScale, skin.receptorsScale);
@@ -40,7 +57,7 @@ class Receptor extends AnimatedSprite
 		scrollFactor.set();
 	}
 
-	override public function animPlayed(animName:String)
+	override public function animPlayed(name:String)
 	{
 		if (skin.receptorsCenterAnimation)
 		{
@@ -54,11 +71,5 @@ class Receptor extends AnimatedSprite
 			alphaTween.cancel();
 
 		alphaTween = FlxTween.tween(this, {alpha: alpha}, duration, options);
-	}
-
-	function addAnim(name:String, atlasName:String, ?fps:Float, loop:Bool = true, ?offsets:Array<Float>)
-	{
-		animation.addByAtlasName(name, atlasName, fps, loop);
-		animation.addOffset(name, offsets[0], offsets[1]);
 	}
 }

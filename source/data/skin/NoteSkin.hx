@@ -111,8 +111,8 @@ class ReceptorData extends JsonObject
 		staticFPS = readFloat(data.staticFPS, 0, 0, 1000, 2);
 		pressedFPS = readFloat(data.pressedFPS, 0, 0, 1000, 2);
 		confirmFPS = readFloat(data.confirmFPS, 0, 0, 1000, 2);
-		staticOffset = readFloatArray(data.staticOffset, [0, 0], null, 2, -1000, 1000, 2);
-		pressedOffset = readFloatArray(data.pressedOffset, [0, 0], null, 2, -1000, 1000, 2);
-		confirmOffset = readFloatArray(data.confirmOffset, [0, 0], null, 2, -1000, 1000, 2);
+		staticOffset = readFloatArray(data.staticOffset, [], null, 2, -1000, 1000, 2);
+		pressedOffset = readFloatArray(data.pressedOffset, [], null, 2, -1000, 1000, 2);
+		confirmOffset = readFloatArray(data.confirmOffset, [], null, 2, -1000, 1000, 2);
 	}
 }

@@ -36,12 +36,6 @@ class DancingSprite extends AnimatedSprite
 	**/
 	public var onDance:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 
-	public function new(x:Float = 0, y:Float = 0, ?frames:FlxAtlasFrames)
-	{
-		super(x, y);
-		this.frames = frames;
-	}
-
 	/**
 		Makes this sprite play the next dancing animation.
 	**/
@@ -93,7 +87,7 @@ class DancingSprite extends AnimatedSprite
 	/**
 		This function is called after this sprite dances. You can override this with whatever you wish.
 	**/
-	public function danced(animName:String) {}
+	public function danced(name:String) {}
 }
 
 @:enum

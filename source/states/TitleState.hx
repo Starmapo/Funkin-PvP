@@ -13,6 +13,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
 import shaders.ColorSwap;
+import sprites.AnimatedSprite;
 import sprites.DancingSprite;
 import sprites.InfiniteEmitter;
 import util.MusicTiming;
@@ -30,7 +31,7 @@ class TitleState extends FNFState
 	var logo:DancingSprite;
 	var icon:FlxSprite;
 	var iconTween:FlxTween;
-	var pressEnter:FlxSprite;
+	var pressEnter:AnimatedSprite;
 	var colorSwap:ColorSwap;
 	var gradientAlpha:Float = 0;
 	var gradientBop:Float = 0;
@@ -67,7 +68,11 @@ class TitleState extends FNFState
 		add(icon);
 
 		logo = new DancingSprite(-100, logoY, Paths.getSpritesheet('menus/title/logoBumpin'));
-		logo.animation.addByPrefix('idle', 'logo bumpin', 24, false);
+		logo.addAnim({
+			name: 'idle',
+			atlasName: 'logo bumpin',
+			loop: false
+		});
 		logo.forceRestartDance = true;
 		logo.dance();
 		logo.y -= logo.height;
@@ -90,11 +95,16 @@ class TitleState extends FNFState
 		gradient.alpha = 0;
 		add(gradient);
 
-		pressEnter = new FlxSprite(100, FlxG.height);
-		pressEnter.frames = Paths.getSpritesheet('menus/title/titleEnter');
-		pressEnter.animation.addByPrefix('idle', "Press Enter to Begin", 24);
-		pressEnter.animation.addByPrefix('press', "ENTER PRESSED", 24);
-		pressEnter.animation.play('idle');
+		pressEnter = new AnimatedSprite(100, FlxG.height, Paths.getSpritesheet('menus/title/titleEnter'));
+		pressEnter.addAnim({
+			name: 'idle',
+			atlasName: 'Press Enter to Begin'
+		});
+		pressEnter.addAnim({
+			name: 'press',
+			atlasName: 'ENTER PRESSED'
+		});
+		pressEnter.playAnim('idle');
 		add(pressEnter);
 
 		textGroup = new FlxTypedGroup();
@@ -314,7 +324,7 @@ class TitleState extends FNFState
 	{
 		if (!transitioning)
 		{
-			pressEnter.animation.play('press');
+			pressEnter.playAnim('press');
 			camHUD.flash(FlxColor.WHITE, Main.TRANSITION_TIME);
 			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
 			FlxTween.tween(FlxG.camera, {y: FlxG.height, alpha: 0}, Main.TRANSITION_TIME, {

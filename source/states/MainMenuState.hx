@@ -64,4 +64,10 @@ class MainMenuState extends FNFState
 	}
 }
 
-class MainMenuItem extends AnimatedSprite {}
+class MainMenuItem extends AnimatedSprite
+{
+	public function new(x:Float = 0, y:Float = 0)
+	{
+		super(x, y);
+	}
+}

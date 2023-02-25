@@ -1,6 +1,7 @@
 package sprites;
 
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 /**
@@ -13,27 +14,108 @@ class AnimatedSprite extends FlxSprite
 	**/
 	public var onAnimPlayed:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 
+	public function new(x:Float = 0, y:Float = 0, ?frames:FlxAtlasFrames)
+	{
+		super(x, y);
+		this.frames = frames;
+	}
+
+	/**
+		Adds a new animation using `AnimData`.
+	**/
+	public function addAnim(data:AnimData)
+	{
+		data = resolveAnimData(data);
+		if (data.indices != null && data.indices.length > 0)
+		{
+			animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
+		}
+		else
+		{
+			animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
+		}
+		if (data.offset != null && data.offset.length > 0)
+		{
+			animation.addOffset(data.name, data.offset[0], data.offset[1]);
+		}
+	}
+
 	/**
 		Plays an animation in this sprite.
-		@param animName The name of the animation.
+		@param name 	The name of the animation.
 		@param force 	Whether to force the animation to restart if it's already playing.
 		@param reversed Whether to reverse the animation.
 		@param frame	The frame to begin playing the animation at.
 	**/
-	public function playAnim(animName:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)
+	public function playAnim(name:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)
 	{
-		if (!animation.exists(animName))
+		if (!animation.exists(name))
 			return;
 
-		animation.play(animName, force, reversed, frame);
+		animation.play(name, force, reversed, frame);
 
-		animPlayed(animName);
+		animPlayed(name);
 
-		onAnimPlayed.dispatch(animName);
+		onAnimPlayed.dispatch(name);
 	}
 
 	/**
 		This function is called after an animation is played. You can override this with whatever you wish.
 	**/
-	public function animPlayed(animName:String) {}
+	public function animPlayed(name:String) {}
+
+	function resolveAnimData(data:AnimData)
+	{
+		if (data.fps == null)
+			data.fps = 24;
+
+		if (data.loop == null)
+			data.loop = true;
+
+		if (data.flipX == null)
+			data.flipX = false;
+
+		if (data.flipY == null)
+			data.flipY = false;
+
+		return data;
+	}
+}
+
+typedef AnimData =
+{
+	/**
+		What this animation should be called.
+	**/
+	name:String,
+
+	/**
+		The animation's name in the atlas.
+	**/
+	atlasName:String,
+
+	/**
+		Optional, an array of numbers indicating what frames to play in what order.
+	**/
+	?indices:Array<Int>,
+	/**
+		The speed in frames per second that the animation should play at. Defaults to 24.
+	**/
+	?fps:Float,
+	/**
+		Whether or not the animation is looped or just plays once. Defaults to true.
+	**/
+	?loop:Bool,
+	/**
+		Whether the frames should be flipped horizontally.
+	**/
+	?flipX:Bool,
+	/**
+		Whether the frames should be flipped vertically.
+	**/
+	?flipY:Bool,
+	/**
+		Optional, an offset for this animation.
+	**/
+	?offset:Array<Float>
 }

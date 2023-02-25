@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxStringUtil;
+import sprites.AnimatedSprite;
 
 @:forward
 abstract BoldText(AtlasText) from AtlasText to AtlasText
@@ -179,14 +180,13 @@ class AtlasText extends FlxTypedSpriteGroup<AtlasChar>
 	}
 }
 
-class AtlasChar extends FlxSprite
+class AtlasChar extends AnimatedSprite
 {
 	public var char(default, set):String;
 
 	public function new(x = 0.0, y = 0.0, atlas:FlxAtlasFrames, char:String)
 	{
-		super(x, y);
-		frames = atlas;
+		super(x, y, atlas);
 		this.char = char;
 	}
 
@@ -195,8 +195,11 @@ class AtlasChar extends FlxSprite
 		if (this.char != value)
 		{
 			var prefix = getAnimPrefix(value);
-			animation.addByPrefix("anim", prefix, 24);
-			animation.play("anim");
+			addAnim({
+				name: 'anim',
+				atlasName: prefix
+			});
+			playAnim("anim");
 			updateHitbox();
 		}
 
