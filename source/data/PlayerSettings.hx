@@ -54,6 +54,30 @@ class PlayerSettings
 		return false;
 	}
 
+	public static function checkActions(actions:Array<Action>)
+	{
+		for (action in actions)
+		{
+			if (checkAction(action))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static function checkPlayerActions(player:Int, actions:Array<Action>)
+	{
+		for (action in actions)
+		{
+			if (checkPlayerAction(player, action))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static function anyPressed()
 	{
 		for (player in players)

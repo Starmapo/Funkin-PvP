@@ -124,6 +124,8 @@ class TitleState extends FNFState
 
 		timing.onBeatHit.add(onBeatHit);
 
+		Paths.getSound('menus/confirmMenu');
+
 		super.create();
 	}
 
@@ -178,6 +180,13 @@ class TitleState extends FNFState
 		gradient.alpha = gradientAlpha + gradientBop;
 
 		super.update(elapsed);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		if (timing != null)
+			timing.destroy();
 	}
 
 	function getIntroText()

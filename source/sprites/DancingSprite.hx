@@ -36,6 +36,12 @@ class DancingSprite extends AnimatedSprite
 	**/
 	public var onDance:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 
+	override function destroy()
+	{
+		super.destroy();
+		onDance.removeAll();
+	}
+
 	/**
 		Makes this sprite play the next dancing animation.
 	**/

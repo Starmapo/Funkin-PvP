@@ -177,6 +177,12 @@ class MusicTiming
 		updateCurStep();
 	}
 
+	public function destroy()
+	{
+		onStepHit.removeAll();
+		onBeatHit.removeAll();
+	}
+
 	/**
 		Forces the time to the new value.
 	**/

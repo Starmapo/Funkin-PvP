@@ -53,11 +53,19 @@ class BasicPlayState extends FNFState
 
 	override public function update(elapsed:Float)
 	{
-		timing.update(elapsed);
+		if (timing != null)
+			timing.update(elapsed);
 
 		super.update(elapsed);
 
 		FlxG.watch.addQuick('Song Time', timing.time);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		if (timing != null)
+			timing.destroy();
 	}
 
 	/**

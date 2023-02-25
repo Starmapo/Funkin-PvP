@@ -20,6 +20,12 @@ class AnimatedSprite extends FlxSprite
 		this.frames = frames;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		onAnimPlayed.removeAll();
+	}
+
 	/**
 		Adds a new animation using `AnimData`.
 	**/

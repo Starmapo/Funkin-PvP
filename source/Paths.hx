@@ -18,6 +18,11 @@ class Paths
 {
 	public static var currentMod:String = 'fnf';
 
+	/**
+		Cache of sounds that have been loaded.
+	**/
+	public static var cachedSounds:Map<String, Sound> = new Map();
+
 	public static function getPath(key:String, ?mod:String):String
 	{
 		if (mod == null)
@@ -40,26 +45,25 @@ class Paths
 		if (!exists(path))
 			path = getPath('images/$path', mod);
 
-		var graphic:FlxGraphic = null;
+		if (FlxG.bitmap.checkCache(path))
+			return FlxG.bitmap.get(path);
 
 		// exists in openfl assets, so get it from there
 		if (Assets.exists(path, IMAGE))
 		{
-			graphic = FlxGraphic.fromAssetKey(path);
+			return FlxGraphic.fromAssetKey(path, false, path);
 		}
 		#if sys
 		// otherwise, get it from the file
 		else if (FileSystem.exists(path))
 		{
 			var bitmap = BitmapData.fromFile(path);
-			graphic = FlxGraphic.fromBitmapData(bitmap);
+			return FlxGraphic.fromBitmapData(bitmap, false, path);
 		}
 		#end
 
-		if (graphic == null)
-			FlxG.log.warn('Graphic \"$originalPath\" not found.');
-
-		return graphic;
+		FlxG.log.warn('Graphic \"$originalPath\" not found.');
+		return null;
 	}
 
 	public static function getSpritesheet(path:String, ?mod:String):FlxAtlasFrames
@@ -119,14 +123,21 @@ class Paths
 		if (!exists(path))
 			path = getPath('sounds/$path', mod);
 
+		if (cachedSounds.exists(path))
+			return cachedSounds.get(path);
+
 		if (Assets.exists(path, SOUND))
 		{
-			return Assets.getSound(path);
+			var sound = Assets.getSound(path);
+			cachedSounds.set(path, sound);
+			return sound;
 		}
 		#if sys
 		else if (FileSystem.exists(path))
 		{
-			return Sound.fromFile(path);
+			var sound = Sound.fromFile(path);
+			cachedSounds.set(path, sound);
+			return sound;
 		}
 		#end
 
@@ -180,5 +191,27 @@ class Paths
 	public static function exists(path:String):Bool
 	{
 		return Assets.exists(path) #if sys || FileSystem.exists(path) #end;
+	}
+
+	public static function clear()
+	{
+		clearImages();
+		clearSounds();
+		Assets.cache.clear('');
+	}
+
+	public static function clearImages()
+	{
+		FlxG.bitmap.reset();
+	}
+
+	public static function clearSounds()
+	{
+		// idk if this does anything but whatever
+		for (_ => sound in cachedSounds)
+		{
+			sound.close();
+		}
+		cachedSounds.clear();
 	}
 }
