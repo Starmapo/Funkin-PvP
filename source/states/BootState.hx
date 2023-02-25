@@ -2,6 +2,7 @@ package states;
 
 import data.PlayerSettings;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
@@ -19,14 +20,15 @@ class BootState extends FNFState
 		FlxG.mouse.visible = false; // hide mouse by default
 		FlxG.sound.muteKeys = [ZERO]; // remove numpad zero from mute keys
 		FlxGraphic.defaultPersist = true; // graphics won't be cleared by default
+		FlxSprite.defaultAntialiasing = true; // set antialiasing to true by default
 		// create custom transitions
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
-		WindowsAPI.setWindowToDarkMode();
+		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
 
-		PlayerSettings.init();
+		PlayerSettings.init(); // initialize players and controls
 
-		FlxG.switchState(new TitleState());
+		FlxG.switchState(new TitleState()); // switch to the title screen
 
 		super.create();
 	}

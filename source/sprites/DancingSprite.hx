@@ -22,6 +22,11 @@ class DancingSprite extends AnimatedSprite
 	public var danceBeats:Int = 1;
 
 	/**
+		Whether to force a dance animation to restart if it's still playing when a new beat is reached.
+	**/
+	public var forceRestartDance:Bool = false;
+
+	/**
 		The current "step" into the dance animations list.
 	**/
 	public var danceStep(default, null) = -1;
@@ -79,7 +84,7 @@ class DancingSprite extends AnimatedSprite
 		var anim = danceAnims[danceStep];
 		if (anim != null)
 		{
-			playAnim(anim, force);
+			playAnim(anim, force || forceRestartDance);
 			danced(anim);
 			onDance.dispatch(anim);
 		}

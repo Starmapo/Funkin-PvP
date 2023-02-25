@@ -23,7 +23,6 @@ class TitleTest extends FNFState
 		{
 			var coolText = new FlxText(0, 200 + (textGroup.length * 80));
 			coolText.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-			coolText.antialiasing = true;
 			coolText.screenCenter(X);
 			textGroup.add(coolText);
 		}

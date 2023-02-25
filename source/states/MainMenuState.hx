@@ -23,7 +23,7 @@ class MainMenuState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		var bg = CoolUtil.createMenuBG('menus/menuBG', 1.2);
+		var bg = CoolUtil.createMenuBG('menuBG', 1.2);
 		add(bg);
 
 		transWhite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
@@ -49,7 +49,7 @@ class MainMenuState extends FNFState
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
 		{
 			FlxTween.tween(transWhite, {alpha: 1}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
-			FlxTween.tween(FlxG.camera, {zoom: 5, alpha: 0}, Main.TRANSITION_TIME, {
+			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
 				ease: FlxEase.expoIn,
 				onComplete: function(_)
 				{

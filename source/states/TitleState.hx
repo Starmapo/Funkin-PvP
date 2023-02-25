@@ -19,6 +19,7 @@ import util.MusicTiming;
 
 class TitleState extends FNFState
 {
+	static var logoY:Float = -50;
 	static var initialized:Bool = false;
 
 	var camHUD:FlxCamera;
@@ -27,7 +28,8 @@ class TitleState extends FNFState
 	var textGroup:FlxTypedGroup<FlxText>;
 	var gradient:FlxSprite;
 	var logo:DancingSprite;
-	var gf:DancingSprite;
+	var icon:FlxSprite;
+	var iconTween:FlxTween;
 	var pressEnter:FlxSprite;
 	var colorSwap:ColorSwap;
 	var gradientAlpha:Float = 0;
@@ -59,17 +61,14 @@ class TitleState extends FNFState
 
 		colorSwap = new ColorSwap();
 
-		gf = new DancingSprite(FlxG.width, FlxG.height * 0.07, Paths.getSpritesheet('menus/title/gfDanceTitle'));
-		gf.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gf.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		gf.setDancePreset(DOUBLE);
-		gf.antialiasing = true;
-		gf.shader = colorSwap.shader;
-		timing.addDancingSprite(gf);
-		add(gf);
+		icon = new FlxSprite(FlxG.width, 0, Paths.getImage('menus/title/iconTitle'));
+		icon.screenCenter(Y);
+		icon.shader = colorSwap.shader;
+		add(icon);
 
-		logo = new DancingSprite(-150, -100, Paths.getSpritesheet('menus/title/logoBumpin'));
+		logo = new DancingSprite(-100, logoY, Paths.getSpritesheet('menus/title/logoBumpin'));
 		logo.animation.addByPrefix('idle', 'logo bumpin', 24, false);
+		logo.forceRestartDance = true;
 		logo.dance();
 		logo.y -= logo.height;
 		logo.shader = colorSwap.shader;
@@ -88,7 +87,6 @@ class TitleState extends FNFState
 
 		gradient = FlxGradient.createGradientFlxSprite(FlxG.width, Std.int(FlxG.height / 2) + 20, [0, FlxColor.WHITE]);
 		gradient.y = FlxG.height / 2;
-		gradient.antialiasing = true;
 		gradient.alpha = 0;
 		add(gradient);
 
@@ -97,7 +95,6 @@ class TitleState extends FNFState
 		pressEnter.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 		pressEnter.animation.addByPrefix('press', "ENTER PRESSED", 24);
 		pressEnter.animation.play('idle');
-		pressEnter.antialiasing = true;
 		add(pressEnter);
 
 		textGroup = new FlxTypedGroup();
@@ -245,13 +242,19 @@ class TitleState extends FNFState
 					skipIntro();
 			}
 		}
+		else
+		{
+			icon.scale.set(1.1, 1.1);
+			if (iconTween != null)
+				iconTween.cancel();
+			FlxTween.tween(icon.scale, {x: 1, y: 1}, 0.55, {ease: FlxEase.cubeOut});
+		}
 	}
 
 	function addText(text:String, yOffset:Float = 0, bottom:Bool = false)
 	{
 		var coolText = new FlxText(0, 0, 0, text);
 		coolText.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		coolText.antialiasing = true;
 		if (coolText.width > FlxG.width)
 		{
 			var ratio = FlxG.width / coolText.width;
@@ -300,8 +303,8 @@ class TitleState extends FNFState
 			camHUD.flash(FlxColor.WHITE, 1);
 			clearText();
 			var tweenDuration = timing.curTimingPoint.beatLength * 0.002;
-			FlxTween.tween(logo, {y: -100}, tweenDuration, {ease: FlxEase.quadInOut});
-			FlxTween.tween(gf, {x: FlxG.width * 0.4}, tweenDuration, {ease: FlxEase.quadInOut});
+			FlxTween.tween(logo, {y: logoY}, tweenDuration, {ease: FlxEase.quadInOut});
+			FlxTween.tween(icon, {x: FlxG.width * 0.62}, tweenDuration, {ease: FlxEase.quadInOut});
 			FlxTween.tween(pressEnter, {y: FlxG.height * 0.8}, tweenDuration, {ease: FlxEase.backOut, startDelay: timing.curTimingPoint.beatLength * 0.001});
 			skippedIntro = true;
 		}

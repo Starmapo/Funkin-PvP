@@ -8,9 +8,9 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 class CoolUtil
 {
-	public static function createMenuBG(image:String = 'menus/menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0)
+	public static function createMenuBG(image:String = 'menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0)
 	{
-		var bg = new FlxSprite(0, 0, Paths.getImage(image));
+		var bg = new FlxSprite(0, 0, Paths.getImage('menus/$image'));
 		bg.scrollFactor.set(scrollX, scrollY);
 		if (scale != 1)
 		{
@@ -18,7 +18,6 @@ class CoolUtil
 			bg.updateHitbox();
 		}
 		bg.screenCenter();
-		bg.antialiasing = true;
 		return bg;
 	}
 
