@@ -267,11 +267,7 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 	 */
 	function setEmptyBackground()
 	{
-		var oldWidth = width;
-		var oldHeight = height;
 		makeGraphic(1, 1, 0x0);
-		width = oldWidth;
-		height = oldHeight;
 	}
 
 	function set_label(value:T)

@@ -5,6 +5,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.effects.FlxFlicker;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -21,6 +22,7 @@ class MainMenuState extends FNFState
 	var menuList:MainMenuList;
 	var camFollow:FlxObject;
 	var bg:FlxSprite;
+	var magenta:FlxSprite;
 
 	override function create()
 	{
@@ -28,32 +30,53 @@ class MainMenuState extends FNFState
 
 		bg = CoolUtil.createMenuBG('menuBG', 1.2);
 		bg.scrollFactor.set();
+		bg.angle = 180;
 		add(bg);
+
+		magenta = CoolUtil.createMenuBG('menuBGMagenta', 1.2);
+		magenta.scrollFactor.set();
+		magenta.visible = false;
+		add(magenta);
 
 		camFollow = new FlxObject();
 		add(camFollow);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 
 		menuList = new MainMenuList();
-		menuList.createItem('PvP', function() {});
-		menuList.createItem('Credits', function() {});
-		menuList.createItem('Options', function() {});
+		menuList.createItem('PvP', function()
+		{
+			FlxG.switchState(new CharacterSelectState());
+		});
+		menuList.createItem('Credits', function()
+		{
+			FlxG.switchState(new CreditsState());
+		});
+		menuList.createItem('Options', function()
+		{
+			FlxG.switchState(new OptionsState());
+		});
 		menuList.onChange.add(onChange);
+		menuList.onAccept.add(onAccept);
 		menuList.selectItem(lastSelected);
+		menuList.controlsEnabled = false;
 		add(menuList);
 
 		FlxG.camera.snapToTarget();
-		bg.y = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
+		magenta.y = bg.y = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
 
 		FlxG.camera.zoom = 3;
+		FlxTween.tween(bg, {angle: 0}, Main.TRANSITION_TIME, {ease: FlxEase.quartInOut});
 		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
 			{
 				transitioning = false;
+				menuList.controlsEnabled = true;
 			}
 		});
 		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true);
+
+		CoolUtil.playConfirmSound(0);
 
 		super.create();
 	}
@@ -61,7 +84,8 @@ class MainMenuState extends FNFState
 	override function update(elapsed:Float)
 	{
 		var bgY = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
-		bg.y = FlxMath.lerp(bg.y, bgY, 0.1);
+		magenta.y = bg.y = FlxMath.lerp(bg.y, bgY, 0.1);
+		magenta.angle = bg.angle;
 
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
 		{
@@ -83,7 +107,7 @@ class MainMenuState extends FNFState
 	function updateFollow()
 	{
 		var midpoint = menuList.selectedItem.getMidpoint();
-		camFollow.setPosition(midpoint.x, midpoint.y);
+		camFollow.setPosition(FlxG.width / 2, midpoint.y);
 		midpoint.put();
 	}
 
@@ -91,6 +115,38 @@ class MainMenuState extends FNFState
 	{
 		updateFollow();
 		lastSelected = item.ID;
+	}
+
+	function onAccept(selectedItem:MainMenuItem)
+	{
+		if (selectedItem.callback == null || transitioning)
+			return;
+
+		if (selectedItem.fireInstantly)
+		{
+			selectedItem.callback();
+		}
+		else
+		{
+			transitioning = true;
+			menuList.controlsEnabled = false;
+			menuList.forEach(function(item)
+			{
+				if (item != selectedItem)
+				{
+					FlxTween.tween(item, {x: item.x - FlxG.width}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
+				}
+			});
+			FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME);
+			FlxTween.tween(bg, {angle: 45}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
+			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
+			FlxFlicker.flicker(magenta, Main.TRANSITION_TIME, 0.15, false);
+			FlxFlicker.flicker(selectedItem, Main.TRANSITION_TIME, 0.06, true, false, function(_)
+			{
+				selectedItem.callback();
+			});
+			CoolUtil.playConfirmSound();
+		}
 	}
 }
 
@@ -107,6 +163,9 @@ class MainMenuList extends TypedMenuList<MainMenuItem>
 	{
 		var item = new MainMenuItem(0, 150 * length, name, callback, fireInstantly);
 		item.screenCenter(X);
+		var targetX = item.x;
+		item.x -= FlxG.width;
+		FlxTween.tween(item, {x: targetX}, Main.TRANSITION_TIME, {ease: FlxEase.expoInOut});
 		return addItem(name, item);
 	}
 }
