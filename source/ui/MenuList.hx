@@ -4,6 +4,7 @@ import data.Controls.Action;
 import data.PlayerSettings;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 typedef MenuList = TypedMenuList<MenuItem>;
@@ -105,6 +106,8 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 
 	public function selectItem(index:Int)
 	{
+		index = FlxMath.wrap(index, 0, length - 1);
+
 		var prevItem = members[selectedIndex];
 		prevItem.idle();
 		prevItem.selected = false;

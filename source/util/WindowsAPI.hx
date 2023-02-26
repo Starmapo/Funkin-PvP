@@ -1,3 +1,5 @@
+package util;
+
 #if windows
 @:buildXml('
 <compilerflag value="/DelayLoad:ComCtl32.dll"/>

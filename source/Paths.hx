@@ -2,6 +2,7 @@ import data.song.Song;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
+import haxe.Json;
 import haxe.io.Path;
 import openfl.Assets;
 import openfl.display.BitmapData;
@@ -169,6 +170,19 @@ class Paths
 
 		if (exists(path))
 			return getContent(path);
+
+		return null;
+	}
+
+	public static function getJson(path:String, ?mod:String)
+	{
+		if (!path.endsWith('.json'))
+			path += '.json';
+		if (!exists(path))
+			path = getPath('data/$path', mod);
+
+		if (exists(path))
+			return Json.parse(getContent(path));
 
 		return null;
 	}

@@ -5,12 +5,18 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 
 class CoolUtil
 {
-	public static function getLerp(lerp:Float = 1)
+	public static function getLerp(lerp:Float)
 	{
 		return lerp * (60 / FlxG.updateFramerate);
+	}
+
+	public static function lerp(a:Float, b:Float, ratio:Float)
+	{
+		return FlxMath.lerp(a, b, getLerp(ratio));
 	}
 
 	public static function createMenuBG(image:String = 'menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0)
