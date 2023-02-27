@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
+import flixel.util.FlxAxes;
 
 class CoolUtil
 {
@@ -69,15 +70,48 @@ class CoolUtil
 	}
 
 	/**
+		Centers a group of objects on the screen.
+		@param group 	The group that contains objects.
+		@param axes 	The axes to center it to.
+	**/
+	@:generic
+	public static function screenCenterGroup<T:FlxObject>(group:FlxTypedGroup<T>, axes:FlxAxes = XY)
+	{
+		var centerX = (FlxG.width - getGroupWidth(group)) / 2;
+		var centerY = (FlxG.height - getGroupHeight(group)) / 2;
+		for (member in group)
+		{
+			if (axes.x)
+				member.x += centerX;
+			if (axes.y)
+				member.y += centerY;
+		}
+	}
+
+	/**
 		Returns the width of an FlxGroup.
 		@param group The group that contains objects.
 	**/
-	public static function getGroupWidth(group:FlxTypedGroup<Dynamic>):Float
+	@:generic
+	public static function getGroupWidth<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
 		if (group.length == 0)
 			return 0;
 
-		return getGroupMaxX(cast group) - getGroupMinX(cast group);
+		return getGroupMaxX(group) - getGroupMinX(group);
+	}
+
+	/**
+		Returns the height of an FlxGroup.
+		@param group The group that contains objects.
+	**/
+	@:generic
+	public static function getGroupHeight<T:FlxObject>(group:FlxTypedGroup<T>):Float
+	{
+		if (group.length == 0)
+			return 0;
+
+		return getGroupMaxY(group) - getGroupMinY(group);
 	}
 
 	/**
@@ -100,7 +134,7 @@ class CoolUtil
 			|| FlxG.mouse.justPressedRight);
 	}
 
-	static function getGroupMaxX(group:FlxTypedGroup<FlxObject>):Float
+	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in group)
@@ -116,7 +150,7 @@ class CoolUtil
 		return value;
 	}
 
-	static function getGroupMinX(group:FlxTypedGroup<FlxObject>):Float
+	static function getGroupMinX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
 		var value = Math.POSITIVE_INFINITY;
 		for (member in group)
@@ -128,6 +162,38 @@ class CoolUtil
 
 			if (minX < value)
 				value = minX;
+		}
+		return value;
+	}
+
+	static function getGroupMaxY<T:FlxObject>(group:FlxTypedGroup<T>):Float
+	{
+		var value = Math.NEGATIVE_INFINITY;
+		for (member in group)
+		{
+			if (member == null)
+				continue;
+
+			var maxY:Float = member.y + member.height;
+
+			if (maxY > value)
+				value = maxY;
+		}
+		return value;
+	}
+
+	static function getGroupMinY<T:FlxObject>(group:FlxTypedGroup<T>):Float
+	{
+		var value = Math.POSITIVE_INFINITY;
+		for (member in group)
+		{
+			if (member == null)
+				continue;
+
+			var minY:Float = member.y;
+
+			if (minY < value)
+				value = minY;
 		}
 		return value;
 	}

@@ -14,7 +14,16 @@ class TextMenuItem extends TypedMenuItem<FlxText>
 		label.setFormat('PhantomMuff 1.5', size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 
 		super(x, y, label, name, callback);
+
 		setEmptyBackground();
+	}
+
+	override function setData(name:String, ?callback:Void->Void)
+	{
+		super.setData(name, callback);
+
+		if (label != null)
+			label.text = name;
 	}
 
 	override function get_width()

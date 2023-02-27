@@ -2,6 +2,7 @@ package ui;
 
 import data.Controls.Action;
 import data.PlayerSettings;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
@@ -61,7 +62,24 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 	**/
 	public var onAccept(default, null):FlxTypedSignal<T->Void> = new FlxTypedSignal();
 
+	/**
+		Whether holding a button to scroll automatically is enabled.
+	**/
+	public var holdEnabled:Bool = true;
+
+	/**
+		The time it takes to start scrolling after holding a button.
+	**/
+	public var minScrollTime:Float = 0.5;
+
+	/**
+		The time to wait before scrolling again while holding.
+	**/
+	public var scrollDelay:Float = 0.1;
+
 	var byName:Map<String, T> = new Map();
+	var holdTime:Float = 0;
+	var lastHoldTime:Float = 0;
 
 	public function new(?navMode:NavMode = VERTICAL, ?controlsMode:ControlsMode = ALL, wrapEnabled:Bool = true)
 	{
@@ -109,35 +127,45 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		index = FlxMath.wrap(index, 0, length - 1);
 
 		var prevItem = members[selectedIndex];
-		prevItem.idle();
-		prevItem.selected = false;
+		if (prevItem != null)
+		{
+			prevItem.idle();
+			prevItem.selected = false;
+		}
 
 		selectedIndex = index;
 
 		var curItem = members[selectedIndex];
-		curItem.select();
-		curItem.selected = true;
+		if (curItem != null)
+		{
+			curItem.select();
+			curItem.selected = true;
+		}
 
 		onChange.dispatch(curItem);
 	}
 
 	function updateControls()
 	{
-		var index = switch (navMode)
+		if (length > 1)
 		{
-			case HORIZONTAL: navigate(checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P));
-			case VERTICAL: navigate(checkAction(UI_UP_P), checkAction(UI_DOWN_P));
-			case BOTH: navigate(checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P));
+			var index = switch (navMode)
+			{
+				case HORIZONTAL: navigate(checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT));
+				case VERTICAL: navigate(checkAction(UI_UP_P), checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
+				case BOTH: navigate(checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P), checkAction(UI_LEFT) || checkAction(UI_UP), checkAction(UI_RIGHT)
+						|| checkAction(UI_DOWN));
+			}
+
+			if (index != selectedIndex)
+			{
+				selectItem(index);
+				if (playScrollSound)
+					CoolUtil.playScrollSound();
+			}
 		}
 
-		if (index != selectedIndex)
-		{
-			selectItem(index);
-			if (playScrollSound)
-				CoolUtil.playScrollSound();
-		}
-
-		if (checkAction(ACCEPT_P))
+		if (length > 0 && checkAction(ACCEPT_P))
 			accept();
 	}
 
@@ -164,13 +192,34 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return false;
 	}
 
-	function navigate(prev:Bool, next:Bool)
+	function navigate(prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
 	{
 		var index = selectedIndex;
 
-		if (prev == next)
+		if (prev == next && (!holdEnabled || prevHold == nextHold))
 			return index;
 
+		if (prev || next)
+		{
+			holdTime = lastHoldTime = 0;
+			index = changeIndex(index, prev);
+		}
+		else if (holdEnabled && (prevHold || nextHold))
+		{
+			holdTime += FlxG.elapsed;
+
+			if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
+			{
+				index = changeIndex(index, prevHold);
+				lastHoldTime = holdTime;
+			}
+		}
+
+		return index;
+	}
+
+	function changeIndex(index:Int, prev:Bool)
+	{
 		if (prev)
 		{
 			if (index > 0)
@@ -185,9 +234,8 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 			else if (wrapEnabled)
 				index = 0;
 		}
-
 		return index;
-	}
+	};
 
 	function accept()
 	{

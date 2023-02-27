@@ -1,6 +1,7 @@
 package data;
 
 import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 /**
 	Basically this just allows for easily reading JSON files.
@@ -95,6 +96,45 @@ class JsonObject
 	function readString(value:String, defaultValue:String = ''):String
 	{
 		return readProperty(value, defaultValue);
+	}
+
+	/**
+		Returns a color value from a JSON file, whether it be an integer, a string, or an array.
+		* @param value 			The property from the JSON file.
+		* @param defaultValue 	A value to return if the property doesn't exist on the JSON file. The default is the color white.
+	**/
+	function readColor(value:Dynamic, defaultValue:FlxColor = FlxColor.WHITE):FlxColor
+	{
+		var color:Null<FlxColor> = null;
+		if (value != null)
+		{
+			if (Std.isOfType(value, Array))
+			{
+				var colorArray:Array<Int> = cast value;
+				if (colorArray != null && colorArray.length >= 3)
+				{
+					if (colorArray.length > 3)
+						color = FlxColor.fromRGB(colorArray[0], colorArray[1], colorArray[2], colorArray[3]);
+					else
+						color = FlxColor.fromRGB(colorArray[0], colorArray[1], colorArray[2]);
+				}
+			}
+			else if (Std.isOfType(value, String))
+			{
+				var colorString:String = cast value;
+				color = FlxColor.fromString(colorString);
+			}
+			else if (Std.isOfType(value, Int))
+			{
+				var colorInt:Int = cast value;
+				color = new FlxColor(colorInt);
+			}
+		}
+
+		if (color == null)
+			color = defaultValue;
+
+		return color;
 	}
 
 	/**

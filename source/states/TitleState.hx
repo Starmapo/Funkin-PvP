@@ -250,7 +250,7 @@ class TitleState extends FNFState
 				case 4:
 					resetTexts(['Friday Night Funkin', 'by'], -100);
 				case 6:
-					addTexts(['ninjamuffin99', 'PhantomArcade', 'Kawai Sprite', 'Evilsk8er', 'Newgrounds'], -100, true);
+					addTexts(['ninjamuffin99', 'PhantomArcade', 'Kawai Sprite', 'evilsk8er', 'Newgrounds'], -100, true);
 				case 8:
 					resetText(introText[0].toUpperCase());
 				case 10:
