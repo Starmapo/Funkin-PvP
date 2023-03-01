@@ -10,10 +10,10 @@ import ui.MenuList;
 
 class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
 {
-	public function createItem(name:String, ?callback:Void->Void, data:SettingData)
+	public function createItem(data:SettingData, ?callback:Void->Void)
 	{
-		var item = new SettingsMenuItem(0, length * 120, name, callback, data);
-		return addItem(name, item);
+		var item = new SettingsMenuItem(0, length * 120, data.displayName, callback, data);
+		return addItem(item.name, item);
 	}
 }
 
@@ -57,6 +57,8 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			nameText.text = data.displayName;
 			nameText.size = 65;
 			var value = Reflect.getProperty(Settings, data.name);
+			if (value == null)
+				value = data.defaultValue;
 			var maxWidth = (FlxG.width / 2) - 10;
 			switch (data.type)
 			{
