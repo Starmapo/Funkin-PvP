@@ -350,16 +350,6 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 		}
 	}
 
-	override function set_alpha(value:Float):Float
-	{
-		super.set_alpha(value);
-
-		if (label != null)
-			label.alpha = alpha;
-
-		return alpha;
-	}
-
 	override function set_x(value:Float):Float
 	{
 		super.set_x(value);
@@ -378,6 +368,16 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 			label.y = y;
 
 		return y;
+	}
+
+	override function set_alpha(value:Float):Float
+	{
+		super.set_alpha(value);
+
+		if (label != null)
+			label.alpha = alpha;
+
+		return alpha;
 	}
 }
 
