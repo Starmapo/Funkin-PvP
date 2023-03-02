@@ -8,6 +8,8 @@ import flixel.util.FlxColor;
 import sprites.AnimatedSprite;
 import ui.MenuList;
 
+using StringTools;
+
 class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
 {
 	public function createItem(data:SettingData, ?callback:Void->Void)
@@ -23,16 +25,21 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 	public var nameText:FlxText;
 	public var checkbox:Checkbox;
 	public var valueText:FlxText;
+	public var value(get, set):Dynamic;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, data:SettingData)
 	{
-		this.data = data;
+		this.data = resolveSettingData(data);
+
 		var label = new FlxSpriteGroup();
-		nameText = new FlxText(0, 0, 0, '', 65);
-		nameText.setFormat('PhantomMuff 1.5', nameText.size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		nameText = new FlxText(5, 0, 0, '', 65);
+		nameText.setFormat('PhantomMuff 1.5', nameText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		label.add(nameText);
 
 		super(x, y, label, name, callback);
+
+		setEmptyBackground();
+		setData(name, callback);
 	}
 
 	override function setData(name:String, ?callback:Void->Void)
@@ -56,29 +63,20 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 			nameText.text = data.displayName;
 			nameText.size = 65;
-			var value = Reflect.getProperty(Settings, data.name);
-			if (value == null)
-				value = data.defaultValue;
 			var maxWidth = (FlxG.width / 2) - 10;
 			switch (data.type)
 			{
 				case CHECKBOX:
-					var pos = FlxG.width - 140;
-					nameText.x = x + 5;
-					maxWidth = pos - 10;
-
-					checkbox = new Checkbox(pos, 0, value);
+					checkbox = new Checkbox(FlxG.width / 2 + ((FlxG.width / 2 - 102) / 2), 0, value);
 					label.add(checkbox);
 				case ACTION:
 					maxWidth = FlxG.width - 10;
 					nameText.screenCenter(X);
 					nameText.x += x;
 				default:
-					nameText.x = x + 5;
-
 					valueText = new FlxText((FlxG.width / 2) + 5, 0, 0, '', 65);
-					valueText.setFormat('PhantomMuff 1.5', valueText.size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-					updateValue(value);
+					valueText.setFormat('PhantomMuff 1.5', valueText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+					updateValueText();
 					label.add(valueText);
 			}
 			if (nameText.width > maxWidth)
@@ -89,18 +87,14 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 	}
 
-	function updateValue(value:Dynamic)
+	function updateValueText()
 	{
 		if (valueText == null)
 			return;
 
-		if (data.type == PERCENT)
-		{
-			var num:Float = value * 100;
-			valueText.text = '< ' + num + '% >';
-		}
-		else
-			valueText.text = '< ' + value + ' >';
+		var displayValue = Std.string(data.type == PERCENT ? (value * 100) : value);
+		var displayText = data.displayFormat.replace('%v', displayValue);
+		valueText.text = '< ' + displayText + ' >';
 
 		valueText.size = 65;
 		var maxWidth = (FlxG.width / 2) - 10;
@@ -109,6 +103,26 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			var ratio = (maxWidth / valueText.width);
 			valueText.size = Math.floor(valueText.size * ratio);
 		}
+		valueText.x = (FlxG.width / 2) + 5 + ((maxWidth - valueText.width) / 2);
+	}
+
+	function resolveSettingData(data:SettingData)
+	{
+		if (data.displayFormat == null)
+		{
+			data.displayFormat = switch (data.type)
+			{
+				case PERCENT:
+					'%v%';
+				default:
+					'%v';
+			}
+		}
+		if (data.changeAmount == null)
+			data.changeAmount = 0.1;
+		if (data.scrollDelay == null)
+			data.scrollDelay = 0.1;
+		return data;
 	}
 
 	override function get_width()
@@ -130,11 +144,30 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		return height;
 	}
+
+	function get_value():Dynamic
+	{
+		return Reflect.getProperty(Settings, data.name);
+	}
+
+	function set_value(value:Dynamic):Dynamic
+	{
+		Reflect.setProperty(Settings, data.name, value);
+		switch (data.type)
+		{
+			case CHECKBOX:
+				checkbox.value = value;
+			case ACTION:
+			default:
+				updateValueText();
+		}
+		return value;
+	}
 }
 
 class Checkbox extends AnimatedSprite
 {
-	var value(default, set):Bool;
+	public var value(default, set):Bool;
 
 	public function new(x:Float = 0, y:Float = 0, value:Bool = false)
 	{
@@ -143,7 +176,8 @@ class Checkbox extends AnimatedSprite
 		addAnim({
 			name: 'static',
 			atlasName: 'Check Box unselected',
-			loop: false
+			loop: false,
+			offset: [0, 0]
 		});
 		addAnim({
 			name: 'checked',
@@ -151,20 +185,25 @@ class Checkbox extends AnimatedSprite
 			loop: false,
 			offset: [17, 70]
 		});
-		playAnim('static');
 
 		scale.set(0.7, 0.7);
 		updateHitbox();
 
+		playAnim('static');
+
 		this.value = value;
+		animation.finish();
 	}
 
 	function set_value(newValue:Bool)
 	{
-		if (newValue)
-			playAnim('checked', true);
-		else
-			playAnim('static');
+		if (value != newValue)
+		{
+			if (newValue)
+				playAnim('checked');
+			else
+				playAnim('static');
+		}
 
 		return value = newValue;
 	}
@@ -177,17 +216,19 @@ typedef SettingData =
 	var description:String;
 	var type:SettingType;
 	var defaultValue:Dynamic;
+	var ?displayFormat:String;
+	var ?minValue:Float;
+	var ?maxValue:Float;
+	var ?changeAmount:Float;
+	var ?scrollDelay:Float;
 	var ?options:Array<String>;
-	var ?enumClass:Dynamic;
 }
 
 enum SettingType
 {
 	CHECKBOX;
-	INTEGER;
-	FLOAT;
+	NUMBER;
 	PERCENT;
 	STRING;
-	ENUM;
 	ACTION;
 }

@@ -1,5 +1,6 @@
 package data;
 
+@:keep
 class Settings
 {
 	public static var smoothAudioTiming:Bool = false;
