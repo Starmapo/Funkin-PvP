@@ -30,7 +30,8 @@ class OptionsState extends FNFState
 		camPages.bgColor = 0;
 		FlxG.cameras.add(camPages, false);
 
-		var bg = CoolUtil.createMenuBG();
+		var bg = CoolUtil.createMenuBG('menuBGDesat');
+		bg.color = 0xFF5C6CA5;
 		add(bg);
 
 		camFollow = new FlxObject();
@@ -179,14 +180,14 @@ class Page extends FlxGroup
 		}
 	}
 
+	function exit()
+	{
+		onExit.dispatch();
+	}
+
 	inline function switchPage(name:PageName)
 	{
 		onSwitch.dispatch(name);
-	}
-
-	inline function exit()
-	{
-		onExit.dispatch();
 	}
 
 	inline function get_camFollow()
@@ -208,11 +209,11 @@ class OptionsPage extends Page
 		items.onAccept.add(onAccept);
 		add(items);
 
-		createItem('Players', switchPage.bind(Players));
-		createItem('Video', switchPage.bind(Video));
+		// createItem('Players', switchPage.bind(Players));
+		// createItem('Video', switchPage.bind(Video));
 		createItem('Audio', switchPage.bind(Audio));
-		createItem('Gameplay', switchPage.bind(Gameplay));
-		createItem('Miscellaneous', switchPage.bind(Miscellaneous));
+		// createItem('Gameplay', switchPage.bind(Gameplay));
+		// createItem('Miscellaneous', switchPage.bind(Miscellaneous));
 		createItem('Exit', exit);
 
 		updateCamFollow(items.selectedItem);
@@ -267,6 +268,12 @@ class BaseSettingsPage extends Page
 		updateCamFollow(items.selectedItem);
 	}
 
+	override function exit()
+	{
+		Settings.saveData();
+		super.exit();
+	}
+
 	function addSetting(data:SettingData, ?callback:Void->Void)
 	{
 		return items.createItem(data, callback);
@@ -284,13 +291,7 @@ class BaseSettingsPage extends Page
 		updateCamFollow(item);
 	}
 
-	function onAccept(item:SettingsMenuItem)
-	{
-		if (item.data.type == CHECKBOX)
-		{
-			item.value = !item.value;
-		}
-	}
+	function onAccept(item:SettingsMenuItem) {}
 }
 
 class AudioPage extends BaseSettingsPage
@@ -308,18 +309,17 @@ class AudioPage extends BaseSettingsPage
 			displayFormat: '%v ms',
 			minValue: -300,
 			maxValue: 300,
-			changeAmount: 1
+			changeAmount: 1,
+			holdDelay: 0,
+			holdMult: 2
 		});
 		addSetting({
 			name: 'smoothAudioTiming',
 			displayName: 'Smooth Audio Timing',
-			description: "If enabled, attempts to make the audio/frame timing update smoothly, instead of being set to the audio's exact position.",
+			description: "If enabled, attempts to make the audio/frame timing move smoothly, instead of being set to the audio's exact position.",
 			type: CHECKBOX,
 			defaultValue: false
 		});
-
-		FlxG.log.add('${items.members[0].value}, ${items.members[0].data.name}, ${items.members[0].data.defaultValue}');
-		FlxG.watch.add(Settings, 'globalOffset', 'globalOffset');
 	}
 }
 

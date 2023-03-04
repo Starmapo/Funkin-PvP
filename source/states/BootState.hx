@@ -1,6 +1,7 @@
 package states;
 
 import data.PlayerSettings;
+import data.Settings;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -27,6 +28,7 @@ class BootState extends FNFState
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
 		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
 
+		Settings.loadData(); // load settings
 		PlayerSettings.init(); // initialize players and controls
 
 		FlxG.switchState(new TitleState()); // switch to the title screen

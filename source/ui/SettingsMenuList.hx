@@ -3,6 +3,7 @@ package ui;
 import data.Settings;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import sprites.AnimatedSprite;
@@ -12,26 +13,107 @@ using StringTools;
 
 class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
 {
+	var itemHoldTime:Float = 0;
+	var itemLastHoldTime:Float = 0;
+
+	override function updateControls()
+	{
+		super.updateControls();
+
+		if (selectedItem != null && selectedItem.isScroll)
+		{
+			if (navigateItem(selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT))
+				&& playScrollSound)
+			{
+				CoolUtil.playScrollSound();
+			}
+		}
+	}
+
+	override function accept()
+	{
+		super.accept();
+
+		if (selectedItem != null && selectedItem.data.type == CHECKBOX)
+		{
+			selectedItem.value = !selectedItem.value;
+
+			if (playScrollSound)
+				CoolUtil.playScrollSound();
+		}
+	}
+
 	public function createItem(data:SettingData, ?callback:Void->Void)
 	{
-		var item = new SettingsMenuItem(0, length * 120, data.displayName, callback, data);
+		var item = new SettingsMenuItem(0, length * 140, data.displayName, callback, data);
 		return addItem(item.name, item);
+	}
+
+	function navigateItem(item:SettingsMenuItem, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
+	{
+		var canHold = holdEnabled && item.data.type != STRING;
+		if (prev == next && (!canHold || prevHold == nextHold))
+			return false;
+
+		var lastValue = item.value;
+
+		if (prev || next)
+		{
+			itemHoldTime = itemLastHoldTime = 0;
+			changeItemValue(item, prev);
+
+			return item.value != lastValue;
+		}
+		else if (canHold && (prevHold || nextHold))
+		{
+			itemHoldTime += FlxG.elapsed;
+
+			if (itemHoldTime >= minScrollTime && itemHoldTime - itemLastHoldTime >= item.data.holdDelay)
+			{
+				changeItemValue(item, prevHold, item.data.holdMult);
+				itemLastHoldTime = itemHoldTime;
+			}
+
+			return item.value != lastValue;
+		}
+
+		return false;
+	}
+
+	function changeItemValue(item:SettingsMenuItem, prev:Bool, mult:Float = 1)
+	{
+		var value:Float = item.value;
+		if (prev)
+			value -= item.data.changeAmount * mult;
+		else
+			value += item.data.changeAmount * mult;
+		value = FlxMath.bound(value, item.data.minValue, item.data.maxValue);
+		item.value = value;
 	}
 }
 
 class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 {
 	public var data:SettingData;
+	// public var nameBG:FlxUI9SliceSprite;
 	public var nameText:FlxText;
 	public var checkbox:Checkbox;
 	public var valueText:FlxText;
 	public var value(get, set):Dynamic;
+	public var isScroll(get, never):Bool;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, data:SettingData)
 	{
 		this.data = resolveSettingData(data);
 
 		var label = new FlxSpriteGroup();
+
+		/*
+			nameBG = new FlxUI9SliceSprite(2, 0, Paths.getImage('menus/9SliceBlack'), new Rectangle(0, 0, 18, 18));
+			nameBG.alpha = 0.2;
+			label.add(nameBG);
+		 */
+
 		nameText = new FlxText(5, 0, 0, '', 65);
 		nameText.setFormat('PhantomMuff 1.5', nameText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		label.add(nameText);
@@ -84,6 +166,11 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 				var ratio = maxWidth / nameText.width;
 				nameText.size = Math.floor(nameText.size * ratio);
 			}
+			/*
+				nameBG.x = nameText.x - 2;
+				nameBG.y = nameText.y - 2;
+				nameBG.resize(nameText.width + 2, nameText.height + 2);
+			 */
 		}
 	}
 
@@ -120,8 +207,10 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 		if (data.changeAmount == null)
 			data.changeAmount = 0.1;
-		if (data.scrollDelay == null)
-			data.scrollDelay = 0.1;
+		if (data.holdDelay == null)
+			data.holdDelay = 0.1;
+		if (data.holdMult == null)
+			data.holdMult = 1;
 		return data;
 	}
 
@@ -145,6 +234,13 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		return height;
 	}
 
+	override function set_alpha(value:Float):Float
+	{
+		super.set_alpha(value);
+		// nameBG.alpha = 0.8;
+		return alpha;
+	}
+
 	function get_value():Dynamic
 	{
 		return Reflect.getProperty(Settings, data.name);
@@ -162,6 +258,11 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 				updateValueText();
 		}
 		return value;
+	}
+
+	function get_isScroll()
+	{
+		return data.type != CHECKBOX && data.type != ACTION;
 	}
 }
 
@@ -220,7 +321,8 @@ typedef SettingData =
 	var ?minValue:Float;
 	var ?maxValue:Float;
 	var ?changeAmount:Float;
-	var ?scrollDelay:Float;
+	var ?holdDelay:Float;
+	var ?holdMult:Float;
 	var ?options:Array<String>;
 }
 
