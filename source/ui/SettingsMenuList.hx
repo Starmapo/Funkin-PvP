@@ -22,10 +22,13 @@ class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
 
 		if (selectedItem != null && selectedItem.isScroll)
 		{
-			if (navigateItem(selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT))
-				&& playScrollSound)
+			if (navigateItem(selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT)))
 			{
-				CoolUtil.playScrollSound();
+				if (selectedItem.callback != null)
+					selectedItem.callback();
+
+				if (playScrollSound)
+					CoolUtil.playScrollSound();
 			}
 		}
 	}
@@ -87,7 +90,7 @@ class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
 			value -= item.data.changeAmount * mult;
 		else
 			value += item.data.changeAmount * mult;
-		value = FlxMath.bound(value, item.data.minValue, item.data.maxValue);
+		value = FlxMath.bound(FlxMath.roundDecimal(value, item.data.decimals), item.data.minValue, item.data.maxValue);
 		item.value = value;
 	}
 }
@@ -205,12 +208,19 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 					'%v';
 			}
 		}
+
+		if (data.decimals == null)
+			data.decimals = (data.type == PERCENT ? 2 : 0);
+
 		if (data.changeAmount == null)
-			data.changeAmount = 0.1;
+			data.changeAmount = (data.decimals > 0 ? 0.1 : 1);
+
 		if (data.holdDelay == null)
-			data.holdDelay = 0.1;
+			data.holdDelay = 0;
+
 		if (data.holdMult == null)
 			data.holdMult = 1;
+
 		return data;
 	}
 
@@ -320,6 +330,7 @@ typedef SettingData =
 	var ?displayFormat:String;
 	var ?minValue:Float;
 	var ?maxValue:Float;
+	var ?decimals:Int;
 	var ?changeAmount:Float;
 	var ?holdDelay:Float;
 	var ?holdMult:Float;

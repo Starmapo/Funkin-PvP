@@ -136,7 +136,7 @@ class Paths
 		#if sys
 		else if (FileSystem.exists(path))
 		{
-			var sound = Sound.fromFile(path);
+			var sound = Sound.fromFile('./$path');
 			cachedSounds.set(path, sound);
 			return sound;
 		}

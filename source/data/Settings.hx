@@ -5,19 +5,30 @@ import flixel.FlxG;
 @:keep
 class Settings
 {
-	public static var smoothAudioTiming:Bool = false;
+	// Audio
+	public static var musicVolume:Float = 1;
+	public static var effectVolume:Float = 1;
 	public static var globalOffset:Int = 0;
+	public static var smoothAudioTiming:Bool = false;
 
 	public static function loadData()
 	{
-		load('smoothAudioTiming');
+		load('musicVolume');
+		load('effectVolume');
 		load('globalOffset');
+		load('smoothAudioTiming');
+
+		FlxG.sound.defaultMusicGroup.volume = musicVolume;
+		FlxG.sound.defaultSoundGroup.volume = effectVolume;
 	}
 
 	public static function saveData()
 	{
-		save('smoothAudioTiming');
+		save('musicVolume');
+		save('effectVolume');
 		save('globalOffset');
+		save('smoothAudioTiming');
+
 		FlxG.save.flush();
 	}
 
