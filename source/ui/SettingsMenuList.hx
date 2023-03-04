@@ -169,7 +169,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			/*
 				nameBG.x = nameText.x - 2;
 				nameBG.y = nameText.y - 2;
-				nameBG.resize(nameText.width + 2, nameText.height + 2);
+				nameBG.resize(nameText.width + 4, nameText.height + 4);
 			 */
 		}
 	}
