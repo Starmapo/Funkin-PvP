@@ -11,7 +11,9 @@ import ui.MenuList;
 
 using StringTools;
 
-class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
+typedef SettingsMenuList = TypedSettingsMenuList<SettingsMenuItem>;
+
+class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 {
 	var itemHoldTime:Float = 0;
 	var itemLastHoldTime:Float = 0;
@@ -46,13 +48,7 @@ class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
 		}
 	}
 
-	public function createItem(data:SettingData, ?callback:Void->Void)
-	{
-		var item = new SettingsMenuItem(0, length * 140, data.displayName, callback, data);
-		return addItem(item.name, item);
-	}
-
-	function navigateItem(item:SettingsMenuItem, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
+	function navigateItem(item:T, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
 	{
 		var canHold = holdEnabled && item.data.type != STRING;
 		if (prev == next && (!canHold || prevHold == nextHold))
@@ -83,7 +79,7 @@ class SettingsMenuList extends TypedMenuList<SettingsMenuItem>
 		return false;
 	}
 
-	function changeItemValue(item:SettingsMenuItem, prev:Bool, mult:Float = 1)
+	function changeItemValue(item:T, prev:Bool, mult:Float = 1)
 	{
 		var value:Float = item.value;
 		if (prev)
@@ -177,7 +173,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 	}
 
-	function updateValueText()
+	public function updateValueText()
 	{
 		if (valueText == null)
 			return;
@@ -322,11 +318,11 @@ class Checkbox extends AnimatedSprite
 
 typedef SettingData =
 {
-	var name:String;
+	var ?name:String;
 	var displayName:String;
 	var description:String;
 	var type:SettingType;
-	var defaultValue:Dynamic;
+	var ?defaultValue:Dynamic;
 	var ?displayFormat:String;
 	var ?minValue:Float;
 	var ?maxValue:Float;

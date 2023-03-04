@@ -148,9 +148,6 @@ class MusicTiming
 		if (music == null)
 			return;
 
-		if (time >= 0 && !music.playing)
-			return;
-
 		if (time < 0)
 		{
 			time += elapsed * 1000 * music.pitch;

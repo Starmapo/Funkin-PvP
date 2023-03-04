@@ -1,7 +1,6 @@
 package ui;
 
 import data.skin.NoteSkin;
-import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import sprites.AnimatedSprite;
 
