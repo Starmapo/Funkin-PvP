@@ -122,7 +122,7 @@ class PlayerSettings
 		for (i in 0...players.length)
 		{
 			var player = players[i];
-			if (player.config.device.equals(Gamepad(name)) && !player.controls.controlsAdded)
+			if (player.config.device.equals(GAMEPAD(name)) && !player.controls.controlsAdded)
 			{
 				player.controls.loadFromConfig(player.config);
 			}
@@ -134,7 +134,7 @@ class PlayerSettings
 		if (FlxG.save.data.playerConfigs == null)
 		{
 			var playerConfigs:Array<PlayerConfig> = [
-				createDefaultConfig(Keyboard, [
+				createDefaultConfig(KEYBOARD, [
 					NOTE_LEFT => [FlxKey.A, FlxKey.LEFT],
 					NOTE_DOWN => [FlxKey.S, FlxKey.DOWN],
 					NOTE_UP => [FlxKey.K, FlxKey.UP],
@@ -156,7 +156,7 @@ class PlayerSettings
 				var gamepad = FlxG.gamepads.getByID(i);
 				if (gamepad != null)
 				{
-					playerConfigs.push(createDefaultConfig(Gamepad(gamepad.name), [
+					playerConfigs.push(createDefaultConfig(GAMEPAD(gamepad.name), [
 						NOTE_LEFT => [FlxGamepadInputID.LEFT_TRIGGER, FlxGamepadInputID.NONE],
 						NOTE_DOWN => [FlxGamepadInputID.LEFT_SHOULDER, FlxGamepadInputID.NONE],
 						NOTE_UP => [FlxGamepadInputID.RIGHT_SHOULDER, FlxGamepadInputID.NONE],
@@ -176,7 +176,7 @@ class PlayerSettings
 			}
 			if (!foundGamepad)
 			{
-				playerConfigs.push(createDefaultConfig(None, [
+				playerConfigs.push(createDefaultConfig(NONE, [
 					NOTE_LEFT => [-1, -1], NOTE_DOWN => [-1, -1], NOTE_UP => [-1, -1], NOTE_RIGHT => [-1, -1], UI_UP => [-1, -1], UI_LEFT => [-1, -1],
 					 UI_RIGHT => [-1, -1],   UI_DOWN => [-1, -1],  ACCEPT => [-1, -1],       BACK => [-1, -1], PAUSE => [-1, -1],   RESET => [-1, -1],
 				]));

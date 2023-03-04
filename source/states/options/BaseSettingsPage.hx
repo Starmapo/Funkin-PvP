@@ -100,4 +100,10 @@ class BaseSettingsPage extends Page
 			}
 		});
 	}
+
+	override function set_controlsEnabled(value:Bool)
+	{
+		items.controlsEnabled = value;
+		return super.set_controlsEnabled(value);
+	}
 }

@@ -47,4 +47,10 @@ class PlayersPage extends Page
 	{
 		CoolUtil.playConfirmSound();
 	}
+
+	override function set_controlsEnabled(value:Bool)
+	{
+		items.controlsEnabled = value;
+		return super.set_controlsEnabled(value);
+	}
 }

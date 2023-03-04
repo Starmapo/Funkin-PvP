@@ -9,6 +9,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import states.options.OptionsState;
 import ui.MenuList;
 import ui.TextMenuList.TextMenuItem;
 

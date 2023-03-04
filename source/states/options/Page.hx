@@ -7,7 +7,7 @@ import flixel.util.FlxSignal;
 
 class Page extends FlxGroup
 {
-	public var controlsEnabled:Bool = true;
+	public var controlsEnabled(default, set):Bool = true;
 	public var onSwitch(default, null) = new FlxTypedSignal<PageName->Void>();
 	public var onExit(default, null) = new FlxSignal();
 
@@ -50,5 +50,10 @@ class Page extends FlxGroup
 	inline function get_camFollow()
 	{
 		return OptionsState.camFollow;
+	}
+
+	function set_controlsEnabled(value:Bool)
+	{
+		return controlsEnabled = value;
 	}
 }

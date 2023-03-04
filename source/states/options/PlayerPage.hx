@@ -116,6 +116,12 @@ class PlayerPage extends Page
 			}
 		});
 	}
+
+	override function set_controlsEnabled(value:Bool)
+	{
+		items.controlsEnabled = value;
+		return super.set_controlsEnabled(value);
+	}
 }
 
 class PlayerSettingsMenuList extends TypedSettingsMenuList<PlayerSettingsMenuItem> {}
@@ -132,12 +138,12 @@ class PlayerSettingsMenuItem extends SettingsMenuItem
 
 	override function get_value():Dynamic
 	{
-		return Reflect.getProperty(PlayerSettings.players[player], data.name);
+		return Reflect.getProperty(PlayerSettings.players[player].config, data.name);
 	}
 
 	override function set_value(value:Dynamic):Dynamic
 	{
-		Reflect.setProperty(PlayerSettings.players[player], data.name, value);
+		Reflect.setProperty(PlayerSettings.players[player].config, data.name, value);
 		switch (data.type)
 		{
 			case CHECKBOX:

@@ -17,7 +17,7 @@ class OptionsPage extends Page
 		items.onAccept.add(onAccept);
 		add(items);
 
-		// createItem('Players', switchPage.bind(Players));
+		createItem('Players', switchPage.bind(Players));
 		// createItem('Video', switchPage.bind(Video));
 		createItem('Audio', switchPage.bind(Audio));
 		// createItem('Gameplay', switchPage.bind(Gameplay));
@@ -54,5 +54,11 @@ class OptionsPage extends Page
 	function onAccept(item:TextMenuItem)
 	{
 		CoolUtil.playConfirmSound();
+	}
+
+	override function set_controlsEnabled(value:Bool)
+	{
+		items.controlsEnabled = value;
+		return super.set_controlsEnabled(value);
 	}
 }
