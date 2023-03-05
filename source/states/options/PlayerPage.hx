@@ -83,7 +83,11 @@ class PlayerPage extends Page
 		updateDesc(item, true);
 	}
 
-	function onAccept(item:PlayerSettingsMenuItem) {}
+	function onAccept(item:PlayerSettingsMenuItem)
+	{
+		if (item.data.type == ACTION)
+			CoolUtil.playConfirmSound();
+	}
 
 	function updateDesc(item:PlayerSettingsMenuItem, tween:Bool = false)
 	{

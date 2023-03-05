@@ -131,7 +131,7 @@ class PlayerSettings
 
 	static function initSaveData()
 	{
-		if (FlxG.save.data.playerConfigs == null)
+		if (Settings.playerConfigs == null)
 		{
 			var playerConfigs:Array<PlayerConfig> = [
 				createDefaultConfig(KEYBOARD, [

@@ -34,21 +34,6 @@ class BootState extends FNFState
 		Settings.loadData(); // load settings
 		PlayerSettings.init(); // initialize players and controls
 
-		var song = Song.loadSong('mods/Hard.json');
-		if (Paths.exists('mods/Hard-2.json'))
-		{
-			var song2 = Song.loadSong('mods/Hard-2.json');
-			for (note in song2.notes)
-			{
-				song.notes.push(note);
-			}
-			song.sort();
-		}
-		var averageDifficulty = FlxMath.roundDecimal((song.solveDifficulty(false).overallDifficulty + song.solveDifficulty(true).overallDifficulty) / 2, 2);
-		trace('Average difficulty: $averageDifficulty [${DifficultyProcessor.getDifficultyName(averageDifficulty)}]');
-
-		Sys.exit(0);
-
 		FlxG.switchState(new TitleState()); // switch to the title screen
 
 		super.create();

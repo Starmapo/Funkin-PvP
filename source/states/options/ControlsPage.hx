@@ -9,10 +9,10 @@ import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.keyboard.FlxKey;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import util.InputFormatter;
 
 class ControlsPage extends Page
 {
@@ -27,6 +27,7 @@ class ControlsPage extends Page
 	var deviceText:FlxText;
 	var deviceButton:FlxUIButton;
 	var changingDevice:Bool = false;
+	var inputBlock:Int = 0;
 
 	public function new(player:Int)
 	{
@@ -38,12 +39,21 @@ class ControlsPage extends Page
 		add(items);
 
 		deviceText = new FlxText(5, 0, FlxG.width - 10, '', 16);
+		deviceText.setFormat('Nokia Cellphone FC Small', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		updateDeviceText();
 		add(deviceText);
 
-		deviceButton = new FlxUIButton(0, deviceText.y + deviceText.height + 5, 'Change Device', changeDevice);
+		deviceButton = new FlxUIButton(0, deviceText.y + deviceText.height + 5, 'Change Device', changeDevicePrompt);
+		deviceButton.resize(deviceButton.width * 2, deviceButton.height * 2);
+		deviceButton.label.size *= 2;
+		deviceButton.autoCenterLabel();
 		deviceButton.screenCenter(X);
 		add(deviceButton);
+
+		var helpText = new FlxText(5, FlxG.height - 10, FlxG.width - 10, 'Use your mouse to press the buttons.', 32);
+		helpText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		helpText.y -= helpText.height;
+		add(helpText);
 
 		pressBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		pressBG.alpha = 0.8;
@@ -61,9 +71,9 @@ class ControlsPage extends Page
 		createItem('Down Note', NOTE_DOWN);
 		createItem('Up Note', NOTE_UP);
 		createItem('Right Note', NOTE_RIGHT);
+		createItem('UI Up', UI_UP);
 		createItem('UI Left', UI_LEFT);
 		createItem('UI Down', UI_DOWN);
-		createItem('UI Up', UI_UP);
 		createItem('UI Right', UI_RIGHT);
 		createItem('Accept', ACCEPT);
 		createItem('Back', BACK);
@@ -88,25 +98,23 @@ class ControlsPage extends Page
 				updatePressText();
 				if (changingDevice)
 				{
-					var id = FlxG.keys.firstJustPressed();
+					var id = FlxG.keys.firstJustReleased();
 					if (id > -1)
 					{
-						playerSettings.config.device = KEYBOARD;
-						updateDeviceText();
-						hidePressText();
+						changeDevice(KEYBOARD);
 					}
-
-					var gamepad = FlxG.gamepads.getFirstActiveGamepad();
-					if (gamepad != null)
+					else
 					{
-						playerSettings.config.device = GAMEPAD(gamepad.name);
-						updateDeviceText();
-						hidePressText();
+						var gamepad = FlxG.gamepads.getFirstActiveGamepad();
+						if (gamepad != null)
+						{
+							changeDevice(GAMEPAD(gamepad.name));
+						}
 					}
 				}
 				else
 				{
-					var id = playerSettings.controls.firstJustPressed();
+					var id = playerSettings.controls.firstJustReleased();
 					if (id > -1)
 					{
 						var binds = playerSettings.config.controls.get(curItem.control);
@@ -117,6 +125,9 @@ class ControlsPage extends Page
 
 						curItem.updateLabels();
 						hidePressText();
+						reloadControls();
+						controlsEnabled = true;
+						inputBlock = 5;
 					}
 				}
 			}
@@ -126,6 +137,9 @@ class ControlsPage extends Page
 		{
 			super.update(elapsed);
 		}
+
+		if (inputBlock > 0)
+			inputBlock--;
 	}
 
 	override function onAppear()
@@ -135,8 +149,36 @@ class ControlsPage extends Page
 
 	override function exit()
 	{
-		Settings.saveData();
-		super.exit();
+		var canExit:Bool = true;
+		for (item in items)
+		{
+			if (item.button1.label.text == '[?]')
+			{
+				canExit = false;
+				FlxTween.cancelTweensOf(item.button1);
+				FlxTween.color(item.button1, 1, FlxColor.WHITE, FlxColor.RED, {
+					onComplete: function(_)
+					{
+						FlxTween.color(item.button1, 1, FlxColor.RED, FlxColor.WHITE);
+					}
+				});
+			}
+		}
+
+		if (canExit)
+		{
+			Settings.saveData();
+			super.exit();
+		}
+	}
+
+	override function updateControls()
+	{
+		if (inputBlock <= 0 && PlayerSettings.checkAction(BACK_P))
+		{
+			CoolUtil.playCancelSound();
+			exit();
+		}
 	}
 
 	function createItem(name:String, control:Control)
@@ -163,6 +205,7 @@ class ControlsPage extends Page
 		pressTime = 3;
 		updatePressText();
 		pressText.visible = pressBG.visible = true;
+		controlsEnabled = false;
 	}
 
 	function hidePressText()
@@ -212,9 +255,45 @@ class ControlsPage extends Page
 		}
 	}
 
-	function changeDevice()
+	function changeDevicePrompt()
 	{
 		showPressText(true);
+	}
+
+	function changeDevice(device:PlayerConfigDevice)
+	{
+		var lastDevice = playerSettings.config.device;
+		playerSettings.config.device = device;
+		updateDeviceText();
+		hidePressText();
+		if (!device.equals(lastDevice))
+		{
+			clearBinds();
+		}
+		reloadControls();
+		controlsEnabled = true;
+		inputBlock = 5;
+		CoolUtil.playConfirmSound();
+	}
+
+	function clearBinds()
+	{
+		var controls = playerSettings.config.controls;
+		for (key in controls.keys())
+		{
+			controls.set(key, [-1, -1]);
+		}
+		trace(playerSettings.config.controls);
+		reloadControls();
+		for (item in items)
+		{
+			item.updateLabels();
+		}
+	}
+
+	function reloadControls()
+	{
+		playerSettings.controls.loadFromConfig(playerSettings.config);
 	}
 }
 
@@ -222,13 +301,13 @@ class ControlItem extends FlxSpriteGroup
 {
 	public var name:String;
 	public var control:Control;
+	public var button1:FlxUIButton;
 
 	var callback:Int->ControlItem->Void;
 	var label:FlxText;
 	var buttons:Array<FlxUIButton> = [];
-	var button1:FlxUIButton;
 	var button2:FlxUIButton;
-	var playerConfig:PlayerConfig;
+	var settings:PlayerSettings;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, control:Control, player:Int, callback:Int->ControlItem->Void)
 	{
@@ -236,7 +315,7 @@ class ControlItem extends FlxSpriteGroup
 		this.name = name;
 		this.control = control;
 		this.callback = callback;
-		playerConfig = Settings.playerConfigs[player];
+		settings = PlayerSettings.players[player];
 
 		label = new FlxText(0, 0, 150, name);
 		label.setFormat('Nokia Cellphone FC Small', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
@@ -261,7 +340,9 @@ class ControlItem extends FlxSpriteGroup
 		{
 			button.x += button1.width;
 		}
-		button.resize(button.width, label.height);
+		button.resize(button.width * 2, label.height);
+		button.label.size = 16;
+		button.autoCenterLabel();
 		buttons.push(button);
 		add(button);
 		return button;
@@ -274,15 +355,7 @@ class ControlItem extends FlxSpriteGroup
 
 	function getBindText(id:Int)
 	{
-		var bind = playerConfig.controls.get(control)[id];
-		return switch (playerConfig.device)
-		{
-			case KEYBOARD:
-				(bind : FlxKey).toString();
-			case GAMEPAD(_):
-				(bind : FlxGamepadInputID).toString();
-			case NONE:
-				'';
-		}
+		var bind = settings.config.controls.get(control)[id];
+		return InputFormatter.format(bind, settings);
 	}
 }

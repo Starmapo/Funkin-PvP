@@ -90,13 +90,19 @@ class Controls extends FlxActionSet
 	inline static function addKeys(action:FlxActionDigital, keys:Array<FlxKey>, state:FlxInputState)
 	{
 		for (key in keys)
-			action.addKey(key, state);
+		{
+			if (key != NONE)
+				action.addKey(key, state);
+		}
 	}
 
 	inline static function addButtons(action:FlxActionDigital, buttons:Array<FlxGamepadInputID>, state:FlxInputState, id:Int)
 	{
 		for (button in buttons)
-			action.addGamepad(button, state, id);
+		{
+			if (button != NONE)
+				action.addGamepad(button, state, id);
+		}
 	}
 
 	var _ui_up = new FlxActionDigital(Action.UI_UP);
@@ -447,6 +453,7 @@ class Controls extends FlxActionSet
 						bindButtons(control, gamepad.id, binds);
 					}
 					controlsAdded = true;
+					trace(digitalActions);
 				}
 				else
 				{

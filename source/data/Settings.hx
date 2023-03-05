@@ -6,7 +6,7 @@ import flixel.FlxG;
 class Settings
 {
 	// Players
-	public static var playerConfigs:Array<PlayerConfig> = [];
+	public static var playerConfigs:Array<PlayerConfig>;
 	// Audio
 	public static var masterVolume:Float = 1;
 	public static var musicVolume:Float = 1;
@@ -16,7 +16,7 @@ class Settings
 
 	public static function loadData()
 	{
-		load('playerConfigs');
+		// load('playerConfigs');
 		load('masterVolume');
 		load('musicVolume');
 		load('effectVolume');

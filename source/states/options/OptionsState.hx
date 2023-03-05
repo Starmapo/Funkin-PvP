@@ -101,7 +101,7 @@ class OptionsState extends FNFState
 		{
 			currentPage.controlsEnabled = false;
 		}
-		FlxTween.tween(camPages, {y: FlxG.height}, Main.TRANSITION_TIME, {
+		FlxTween.tween(camPages, {y: FlxG.height}, Main.TRANSITION_TIME / 2, {
 			ease: FlxEase.expoIn,
 			onComplete: function(_)
 			{
@@ -110,7 +110,7 @@ class OptionsState extends FNFState
 				{
 					currentPage.controlsEnabled = false;
 				}
-				FlxTween.tween(camPages, {y: 0}, Main.TRANSITION_TIME, {
+				FlxTween.tween(camPages, {y: 0}, Main.TRANSITION_TIME / 2, {
 					ease: FlxEase.expoOut,
 					onComplete: function(_)
 					{
