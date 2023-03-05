@@ -399,6 +399,14 @@ class Song extends JsonObject
 	}
 
 	/**
+		Solves the difficulty of the map and returns the data for it.
+	**/
+	public function solveDifficulty(mods:Modifiers)
+	{
+		return new DifficultyProcessor(this, mods);
+	}
+
+	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
 	public function toString():String
