@@ -9,6 +9,26 @@ import flixel.util.FlxSort;
 **/
 class DifficultyProcessor
 {
+	public static function getDifficultyName(difficulty:Float)
+	{
+		if (difficulty < 1)
+			return 'Beginner';
+		if (difficulty < 2.5)
+			return 'Easy';
+		if (difficulty < 10)
+			return 'Normal';
+		if (difficulty < 20)
+			return 'Hard';
+		if (difficulty < 30)
+			return 'Insane';
+		if (difficulty < 40)
+			return 'Expert';
+		if (difficulty < 50)
+			return 'Expert+';
+
+		return '???';
+	}
+
 	static var laneToFinger:Map<Int, FingerState> = [0 => MIDDLE, 1 => INDEX, 2 => INDEX, 3 => MIDDLE];
 	static var laneToHand:Map<Int, Hand> = [0 => LEFT, 1 => LEFT, 2 => RIGHT, 3 => RIGHT];
 
@@ -63,7 +83,7 @@ class DifficultyProcessor
 		overallDifficulty = computeForOverallDifficulty(rate);
 
 		var side = rightSide ? 'right' : 'left';
-		trace('Overall $side side difficulty: $overallDifficulty');
+		trace('Overall $side side difficulty: $overallDifficulty [${getDifficultyName(overallDifficulty)}]');
 	}
 
 	function computeForOverallDifficulty(rate:Float = 1)
@@ -103,6 +123,9 @@ class DifficultyProcessor
 		{
 			for (j in i + 1...strainSolverData.length)
 			{
+				if (strainSolverData[j] == null)
+					continue;
+
 				var msDiff = strainSolverData[j].startTime - strainSolverData[i].startTime;
 				if (msDiff > chordClumpToleranceMs)
 					break;
@@ -424,7 +447,7 @@ class DifficultyProcessor
 
 		calculatedDiff *= shortMapAdjustment;
 
-		return calculatedDiff;
+		return FlxMath.roundDecimal(calculatedDiff, 2);
 	}
 
 	function getCoefficientValue(duration:Float, xMin:Float, xMax:Float, strainMax:Float, exp:Float)

@@ -24,6 +24,7 @@ class Song extends JsonObject
 		var song = new Song(json);
 		song.directory = Path.directory(path);
 		song.difficultyName = new Path(path).file;
+		song.sort();
 		return song;
 	}
 

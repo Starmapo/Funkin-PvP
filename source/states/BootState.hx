@@ -2,12 +2,14 @@ package states;
 
 import data.PlayerSettings;
 import data.Settings;
+import data.song.DifficultyProcessor;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import util.WindowsAPI;
@@ -33,8 +35,19 @@ class BootState extends FNFState
 		PlayerSettings.init(); // initialize players and controls
 
 		var song = Song.loadSong('mods/Hard.json');
-		var averageDifficulty = (song.solveDifficulty(false).overallDifficulty + song.solveDifficulty(true).overallDifficulty) / 2;
-		trace('Average difficulty: $averageDifficulty');
+		if (Paths.exists('mods/Hard-2.json'))
+		{
+			var song2 = Song.loadSong('mods/Hard-2.json');
+			for (note in song2.notes)
+			{
+				song.notes.push(note);
+			}
+			song.sort();
+		}
+		var averageDifficulty = FlxMath.roundDecimal((song.solveDifficulty(false).overallDifficulty + song.solveDifficulty(true).overallDifficulty) / 2, 2);
+		trace('Average difficulty: $averageDifficulty [${DifficultyProcessor.getDifficultyName(averageDifficulty)}]');
+
+		Sys.exit(0);
 
 		FlxG.switchState(new TitleState()); // switch to the title screen
 
