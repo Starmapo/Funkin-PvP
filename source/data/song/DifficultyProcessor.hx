@@ -3,6 +3,10 @@ package data.song;
 import flixel.math.FlxMath;
 import flixel.util.FlxSort;
 
+/**
+	Literally everything here comes from Quaver, huge thanks to the Quaver team.
+	And no, I don't understand most of the code that's here. If something isn't right I probably won't notice lol.
+**/
 class DifficultyProcessor
 {
 	static var laneToFinger:Map<Int, FingerState> = [0 => MIDDLE, 1 => INDEX, 2 => INDEX, 3 => MIDDLE];
@@ -13,15 +17,42 @@ class DifficultyProcessor
 	public var strainSolverData:Array<StrainSolverData> = [];
 
 	var song:Song;
+	var rightSide:Bool = false;
+	var notes:Array<NoteInfo> = [];
 	var rollInaccuracyConfidence:Int = 0;
 	var vibroInaccuracyConfidence:Int = 0;
 
-	public function new(song:Song, mods:Modifiers)
+	public function new(song:Song, rightSide:Bool = false, ?mods:Modifiers)
 	{
 		this.song = song;
+		this.rightSide = rightSide;
 
-		if (song == null || song.notes.length < 2)
+		if (song == null)
 			return;
+
+		if (mods == null)
+		{
+			mods = {
+				playbackRate: 1
+			};
+		}
+
+		for (note in song.notes)
+		{
+			if ((!rightSide && note.lane < 4) || (rightSide && note.lane > 3))
+				notes.push(new NoteInfo({
+					startTime: note.startTime,
+					lane: note.lane % 4,
+					endTime: note.endTime,
+					type: note.type,
+					params: note.params
+				}));
+		}
+
+		if (notes.length < 2)
+			return;
+
+		trace('Calculating difficulty: ${song.title} [${song.difficultyName}], $rightSide');
 
 		calculateDifficulty(mods);
 	}
@@ -30,6 +61,9 @@ class DifficultyProcessor
 	{
 		var rate = mods.playbackRate;
 		overallDifficulty = computeForOverallDifficulty(rate);
+
+		var side = rightSide ? 'right' : 'left';
+		trace('Overall $side side difficulty: $overallDifficulty');
 	}
 
 	function computeForOverallDifficulty(rate:Float = 1)
@@ -46,17 +80,17 @@ class DifficultyProcessor
 
 	function computeNoteDensityData(rate:Float = 1)
 	{
-		averageNoteDensity = 1000 * song.notes.length / (song.length * (-0.5 * rate + 1.5));
+		averageNoteDensity = 1000 * notes.length / (song.length * (-0.5 * rate + 1.5));
 	}
 
 	function computeBaseStrainStates(rate:Float = 1)
 	{
-		for (i in 0...song.notes.length)
+		for (i in 0...notes.length)
 		{
-			var curNote = new StrainSolverNote(song.notes[i]);
+			var curNote = new StrainSolverNote(notes[i]);
 			var curStrainData = new StrainSolverData(curNote, rate);
-			curNote.fingerState = laneToFinger[song.notes[i].lane];
-			curStrainData.hand = laneToHand[song.notes[i].lane];
+			curNote.fingerState = laneToFinger[notes[i].lane];
+			curStrainData.hand = laneToHand[notes[i].lane];
 			strainSolverData.push(curStrainData);
 		}
 	}
@@ -88,8 +122,13 @@ class DifficultyProcessor
 						}
 
 						if (!sameStateFound)
+						{
 							strainSolverData[i].notes.push(k);
+							// trace('Found chord: ${strainSolverData[i].startTime}, ${k.note.startTime}, ${k.note.lane}, ${strainSolverData[i].hand}');
+						}
 					}
+
+					strainSolverData.remove(strainSolverData[j]);
 				}
 			}
 		}
@@ -121,22 +160,28 @@ class DifficultyProcessor
 					{
 						curNote.fingerAction = ROLL;
 						curNote.actionStrainCoefficient = getCoefficientValue(actionDuration, 30, 230, 55, 1.13);
+						// trace('Found roll action: ${curNote.startTime}, ${nextNote.startTime}, ${curNote.fingerState}, ${nextNote.fingerState}, ${curNote.actionStrainCoefficient}');
 					}
 					else if (actionSameState)
 					{
 						curNote.fingerAction = SIMPLE_JACK;
 						curNote.actionStrainCoefficient = getCoefficientValue(actionDuration, 40, 320, 68, 1.17);
+						// trace('Found simple jack action: ${curNote.startTime}, ${nextNote.startTime}, ${curNote.fingerState}, ${curNote.actionStrainCoefficient}');
 					}
 					else if (actionJackFound)
 					{
 						curNote.fingerAction = TECHNICAL_JACK;
 						curNote.actionStrainCoefficient = getCoefficientValue(actionDuration, 40, 330, 70, 1.14);
+						// trace('Found technical jack action: ${curNote.startTime}, ${nextNote.startTime}, ${curNote.fingerState}, ${nextNote.fingerState}, ${curNote.actionStrainCoefficient}');
 					}
 					else
 					{
 						curNote.fingerAction = BRACKET;
 						curNote.actionStrainCoefficient = getCoefficientValue(actionDuration, 30, 230, 56, 1.13);
+						// trace('Found bracket action: ${curNote.startTime}, ${nextNote.startTime}, ${curNote.fingerState}, ${nextNote.fingerState}, ${curNote.actionStrainCoefficient}');
 					}
+
+					break;
 				}
 			}
 		}
@@ -171,6 +216,8 @@ class DifficultyProcessor
 
 							manipulationFound = true;
 							rollInaccuracyConfidence++;
+
+							// trace('Roll manipulation found: ${data.startTime}, ${data.fingerState}, ${data.rollManipulationStrainMultiplier}');
 
 							if (manipulationIndex < rollMaxLength)
 								manipulationIndex++;
@@ -208,6 +255,8 @@ class DifficultyProcessor
 
 					manipulationFound = true;
 					vibroInaccuracyConfidence++;
+
+					// trace('Jack manipulation found: ${data.startTime}, ${data.fingerState}, ${data.rollManipulationStrainMultiplier}');
 
 					if (longJackSize < vibroMaxLength)
 						longJackSize++;
@@ -262,6 +311,8 @@ class DifficultyProcessor
 						}
 					}
 				}
+
+				// trace('Long note multiplier: ${data.startTime}, ${data.notes[0].lnStrainMultiplier}, ${data.notes[0].lnLayerType}');
 			}
 		}
 	}
@@ -279,6 +330,8 @@ class DifficultyProcessor
 			calculatedDiff += strain.totalStrainValue;
 		}
 		calculatedDiff /= filteredStrains.length;
+
+		// trace('Average strain value: $calculatedDiff');
 
 		var bins:Array<Float> = [];
 		var binSize = 1000;
@@ -330,14 +383,17 @@ class DifficultyProcessor
 			easyRatingCutoff /= top40.length;
 		}
 
-		var filteredStrains = bins.filter(function(strain) return strain > 0);
+		var continuityStrains = bins.filter(function(strain) return strain > 0);
 		var continuity:Float = 0;
-		for (strain in filteredStrains)
+		for (strain in continuityStrains)
 		{
 			continuity += Math.sqrt(strain / easyRatingCutoff);
 		}
-		continuity /= filteredStrains.length;
+		continuity /= continuityStrains.length;
 
+		// trace('Continuity: $continuity');
+
+		var maxContinuity = 1;
 		var avgContinuity = 0.85;
 		var minContinuity = 0.6;
 		var maxAdjustment = 1.05;
@@ -348,7 +404,7 @@ class DifficultyProcessor
 
 		if (continuity > avgContinuity)
 		{
-			var continuityFactor = 1 - (continuity - avgContinuity) / (1 - avgContinuity);
+			var continuityFactor = 1 - (continuity - avgContinuity) / (maxContinuity - avgContinuity);
 			continuityAdjustment = FlxMath.bound(continuityFactor * (avgAdjustment - minAdjustment) + minAdjustment, minAdjustment, avgAdjustment);
 		}
 		else
@@ -357,10 +413,14 @@ class DifficultyProcessor
 			continuityAdjustment = FlxMath.bound(continuityFactor * (maxAdjustment - avgAdjustment) + avgAdjustment, avgAdjustment, maxAdjustment);
 		}
 
+		// trace('Continuity adjustment: $continuityAdjustment');
+
 		calculatedDiff *= continuityAdjustment;
 
 		var trueDrainTime = bins.length * continuity * binSize;
 		var shortMapAdjustment = FlxMath.bound(0.25 * Math.sqrt(trueDrainTime / 60000) + 0.75, 0.75, 1);
+
+		// trace('Short map adjustment: $shortMapAdjustment');
 
 		calculatedDiff *= shortMapAdjustment;
 

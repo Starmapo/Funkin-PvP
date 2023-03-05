@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxGame;
+import lime.utils.Log;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -19,6 +20,8 @@ class Main extends Sprite
 
 	public function new()
 	{
+		Log.level = NONE; // no lime logs
+
 		super();
 
 		if (stage != null)

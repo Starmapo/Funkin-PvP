@@ -4,7 +4,6 @@ import data.song.CameraFocus.CameraFocusChar;
 import flixel.math.FlxMath;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
-import haxe.Json;
 import haxe.io.Path;
 
 class Song extends JsonObject
@@ -24,6 +23,7 @@ class Song extends JsonObject
 
 		var song = new Song(json);
 		song.directory = Path.directory(path);
+		song.difficultyName = new Path(path).file;
 		return song;
 	}
 
@@ -31,6 +31,7 @@ class Song extends JsonObject
 	{
 		var song:Dynamic = {
 			title: json.song,
+			instFile: 'Inst.ogg',
 			vocalsFile: json.needsVoices ? 'Voices.ogg' : '',
 			scrollSpeed: json.speed,
 			timingPoints: [
@@ -42,12 +43,13 @@ class Song extends JsonObject
 			notes: [],
 			bf: json.player1,
 			opponent: json.player2,
-			gf: json.gfVersion
+			gf: json.gfVerion
 		};
 
 		var curTime:Float = 0;
 		var curBPM:Float = json.bpm;
 		var curFocus:CameraFocusChar = song.cameraFocuses[0].char;
+		var curNotes:Map<Int, Array<Int>> = new Map();
 		for (i in 0...json.notes.length)
 		{
 			var section = json.notes[i];
@@ -87,6 +89,10 @@ class Song extends JsonObject
 						noteInfo.lane += 4;
 					}
 				}
+
+				if (curNotes.exists(noteInfo.startTime) && curNotes.get(noteInfo.startTime).contains(noteInfo.lane))
+					continue;
+
 				if (section.altAnim == true)
 				{
 					noteInfo.type = 'Alt Animation';
@@ -103,6 +109,11 @@ class Song extends JsonObject
 					};
 				}
 				song.notes.push(noteInfo);
+
+				if (curNotes.exists(noteInfo.startTime))
+					curNotes.get(noteInfo.startTime).push(noteInfo.lane);
+				else
+					curNotes.set(noteInfo.startTime, [noteInfo.lane]);
 			}
 			curTime += section.lengthInSteps * (15000 / curBPM);
 		}
@@ -198,9 +209,14 @@ class Song extends JsonObject
 	public var gf:String;
 
 	/**
-		The directory of this map.
+		The directory of this map. Set automatically with `Song.loadSong()`.
 	**/
-	public var directory:String;
+	public var directory:String = '';
+
+	/**
+		The difficulty name of this map. Set automatically with `Song.loadSong()`.
+	**/
+	public var difficultyName:String = '';
 
 	public function new(data:Dynamic)
 	{
@@ -443,9 +459,9 @@ class Song extends JsonObject
 	/**
 		Solves the difficulty of the map and returns the data for it.
 	**/
-	public function solveDifficulty(mods:Modifiers)
+	public function solveDifficulty(rightSide:Bool = false, ?mods:Modifiers)
 	{
-		return new DifficultyProcessor(this, mods);
+		return new DifficultyProcessor(this, rightSide, mods);
 	}
 
 	/**
