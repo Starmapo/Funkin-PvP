@@ -70,12 +70,6 @@ abstract Action(String) to String from String
 	var RESET_R = "reset-release";
 }
 
-enum Device
-{
-	Keys;
-	Gamepad(id:Int);
-}
-
 /**
  * A list of actions that a player would invoke via some input device.
  * Uses FlxActions to funnel various inputs to a single action.
@@ -430,13 +424,13 @@ class Controls extends FlxActionSet
 		this.config = config;
 		switch (config.device)
 		{
-			case Keyboard:
+			case KEYBOARD:
 				for (control => binds in config.controls)
 				{
 					bindKeys(control, binds);
 				}
 				controlsAdded = true;
-			case Gamepad(name):
+			case GAMEPAD(name):
 				for (i in 0...FlxG.gamepads.numActiveGamepads)
 				{
 					var gamepad = FlxG.gamepads.getByID(i);
@@ -458,7 +452,7 @@ class Controls extends FlxActionSet
 				{
 					FlxG.log.warn('Couldn\'t find gamepad \"$name\".');
 				}
-			case None:
+			case NONE:
 		}
 	}
 
@@ -477,13 +471,13 @@ class Controls extends FlxActionSet
 	{
 		switch (config.device)
 		{
-			case Keyboard:
+			case KEYBOARD:
 				return FlxG.keys.pressed.ANY;
-			case Gamepad(_):
+			case GAMEPAD(_):
 				if (gamepad != null)
 					return gamepad.pressed.ANY;
 				return false;
-			case None:
+			case NONE:
 				return false;
 		}
 	}
@@ -492,13 +486,13 @@ class Controls extends FlxActionSet
 	{
 		switch (config.device)
 		{
-			case Keyboard:
+			case KEYBOARD:
 				return FlxG.keys.justPressed.ANY;
-			case Gamepad(_):
+			case GAMEPAD(_):
 				if (gamepad != null)
 					return gamepad.justPressed.ANY;
 				return false;
-			case None:
+			case NONE:
 				return false;
 		}
 	}
@@ -507,13 +501,13 @@ class Controls extends FlxActionSet
 	{
 		switch (config.device)
 		{
-			case Keyboard:
+			case KEYBOARD:
 				return FlxG.keys.justReleased.ANY;
-			case Gamepad(_):
+			case GAMEPAD(_):
 				if (gamepad != null)
 					return gamepad.justReleased.ANY;
 				return false;
-			case None:
+			case NONE:
 				return false;
 		}
 	}
@@ -522,13 +516,13 @@ class Controls extends FlxActionSet
 	{
 		switch (config.device)
 		{
-			case Keyboard:
+			case KEYBOARD:
 				return FlxG.keys.firstPressed();
-			case Gamepad(_):
+			case GAMEPAD(_):
 				if (gamepad != null)
 					return gamepad.firstPressedID();
 				return -1;
-			case None:
+			case NONE:
 				return -1;
 		}
 	}
@@ -537,13 +531,13 @@ class Controls extends FlxActionSet
 	{
 		switch (config.device)
 		{
-			case Keyboard:
+			case KEYBOARD:
 				return FlxG.keys.firstJustPressed();
-			case Gamepad(_):
+			case GAMEPAD(_):
 				if (gamepad != null)
 					return gamepad.firstJustPressedID();
 				return -1;
-			case None:
+			case NONE:
 				return -1;
 		}
 	}
@@ -552,13 +546,13 @@ class Controls extends FlxActionSet
 	{
 		switch (config.device)
 		{
-			case Keyboard:
+			case KEYBOARD:
 				return FlxG.keys.firstJustReleased();
-			case Gamepad(_):
+			case GAMEPAD(_):
 				if (gamepad != null)
 					return gamepad.firstJustReleasedID();
 				return -1;
-			case None:
+			case NONE:
 				return -1;
 		}
 	}

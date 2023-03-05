@@ -174,7 +174,7 @@ class Paths
 		return null;
 	}
 
-	public static function getJson(path:String, ?mod:String)
+	public static function getJson(path:String, ?mod:String):Dynamic
 	{
 		if (!path.endsWith('.json'))
 			path += '.json';

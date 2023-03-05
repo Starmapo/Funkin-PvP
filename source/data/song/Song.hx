@@ -12,25 +12,12 @@ class Song extends JsonObject
 	/**
 		Loads a song from a path.
 	**/
-	public static function loadSong(path:String)
+	public static function loadSong(path:String, ?mod:String)
 	{
 		if (!Paths.exists(path))
 			return null;
 
-		var data = Paths.getContent(path);
-		if (data.length == 0)
-			return null;
-
-		var json:Dynamic = null;
-		try
-		{
-			json = Json.parse(data);
-		}
-		catch (e)
-		{
-			trace(e);
-			return null;
-		}
+		var json:Dynamic = Paths.getJson(path, mod);
 
 		if (json.song != null)
 			json = convertFNFSong(json.song);
