@@ -2,6 +2,7 @@ package states;
 
 import data.PlayerSettings;
 import data.Settings;
+import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -31,6 +32,13 @@ class BootState extends FNFState
 
 		Settings.loadData(); // load settings
 		PlayerSettings.init(); // initialize players and controls
+
+		var song = Song.loadSong(Paths.getJson('mods/song.json'));
+		var difficulty = song.solveDifficulty({
+			playbackRate: 1
+		});
+		FlxG.log.add(difficulty.overallDifficulty);
+		FlxG.log.add(difficulty.averageNoteDensity);
 
 		FlxG.switchState(new TitleState()); // switch to the title screen
 

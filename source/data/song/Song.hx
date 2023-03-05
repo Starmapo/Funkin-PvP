@@ -1,5 +1,6 @@
 package data.song;
 
+import data.song.CameraFocus.CameraFocusChar;
 import flixel.math.FlxMath;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
@@ -50,11 +51,16 @@ class Song extends JsonObject
 					bpm: json.bpm
 				}
 			],
-			notes: []
+			cameraFocuses: [resolveCameraFocus(json.notes[0])],
+			notes: [],
+			bf: json.player1,
+			opponent: json.player2,
+			gf: json.gfVersion
 		};
 
 		var curTime:Float = 0;
 		var curBPM:Float = json.bpm;
+		var curFocus:CameraFocusChar = song.cameraFocuses[0].char;
 		for (i in 0...json.notes.length)
 		{
 			var section = json.notes[i];
@@ -65,6 +71,14 @@ class Song extends JsonObject
 					bpm: section.bpm
 				});
 				curBPM = section.bpm;
+			}
+			if (i > 0)
+			{
+				var sectionFocus = resolveCameraFocus(section, curTime);
+				if (curFocus != sectionFocus.char)
+				{
+					song.cameraFocuses.push(sectionFocus);
+				}
 			}
 			for (i in 0...section.sectionNotes.length)
 			{
@@ -106,6 +120,19 @@ class Song extends JsonObject
 			curTime += section.lengthInSteps * (15000 / curBPM);
 		}
 		return song;
+	}
+
+	static function resolveCameraFocus(section:Dynamic, startTime:Float = 0)
+	{
+		var cameraFocus = {
+			startTime: startTime,
+			char: 0
+		};
+		if (section.gfSection != null && section.gfSection)
+			cameraFocus.char = 2;
+		else if (!section.mustHitSection)
+			cameraFocus.char = 1;
+		return cameraFocus;
 	}
 
 	/**
@@ -154,6 +181,11 @@ class Song extends JsonObject
 	public var sliderVelocities:Array<SliderVelocity> = [];
 
 	/**
+		The list of camera focuses for this map.
+	**/
+	public var cameraFocuses:Array<CameraFocus> = [];
+
+	/**
 		The list of notes for this map.
 	**/
 	public var notes:Array<NoteInfo> = [];
@@ -162,6 +194,21 @@ class Song extends JsonObject
 		The length in milliseconds of this map.
 	**/
 	public var length(get, never):Float;
+
+	/**
+		Boyfriend character for this map.
+	**/
+	public var bf:String;
+
+	/**
+		The opponent for this map.
+	**/
+	public var opponent:String;
+
+	/**
+		Girlfriend character for this map.
+	**/
+	public var gf:String;
 
 	/**
 		The directory of this map.
@@ -176,6 +223,9 @@ class Song extends JsonObject
 		instFile = readString(data.instFile, 'Inst.ogg');
 		vocalsFile = readString(data.vocalsFile, 'Voices.ogg');
 		scrollSpeed = readFloat(data.scrollSpeed, 1, 0.01, 10, 2);
+		bf = readString(data.bf, 'fnf:bf');
+		opponent = readString(data.opponent, 'fnf:dad');
+		gf = readString(data.gf, 'fnf:gf');
 		for (t in readArray(data.timingPoints))
 		{
 			if (t != null)
@@ -186,6 +236,11 @@ class Song extends JsonObject
 		{
 			if (s != null)
 				sliderVelocities.push(new SliderVelocity(s));
+		}
+		for (c in readArray(data.cameraFocuses))
+		{
+			if (c != null)
+				cameraFocuses.push(new CameraFocus(c));
 		}
 		for (n in readArray(data.notes))
 		{

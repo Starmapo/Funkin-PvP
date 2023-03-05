@@ -1,7 +1,6 @@
 package data.song;
 
 import flixel.math.FlxMath;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxSort;
 
 class DifficultyProcessor
