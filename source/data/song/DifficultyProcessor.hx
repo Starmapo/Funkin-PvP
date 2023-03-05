@@ -1,6 +1,8 @@
 package data.song;
 
 import flixel.math.FlxMath;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxSort;
 
 class DifficultyProcessor
 {
@@ -265,12 +267,103 @@ class DifficultyProcessor
 		}
 	}
 
-	function calculateOverallDifficulty()
+	function calculateOverallDifficulty():Float
 	{
 		var calculatedDiff:Float = 0;
 
 		for (data in strainSolverData)
 			data.calculateStrainValue();
+
+		var filteredStrains = strainSolverData.filter(function(s) return s.hand == LEFT || s.hand == RIGHT);
+		for (strain in filteredStrains)
+		{
+			calculatedDiff += strain.totalStrainValue;
+		}
+		calculatedDiff /= filteredStrains.length;
+
+		var bins:Array<Float> = [];
+		var binSize = 1000;
+
+		var mapStart = Math.POSITIVE_INFINITY;
+		var mapEnd = Math.NEGATIVE_INFINITY;
+		for (strain in strainSolverData)
+		{
+			if (strain.startTime < mapStart)
+				mapStart = strain.startTime;
+
+			var endTime = Math.max(strain.startTime, strain.endTime);
+			if (endTime > mapEnd)
+				mapEnd = endTime;
+		}
+
+		var i = mapStart;
+		while (i < mapEnd)
+		{
+			var valuesInBin = strainSolverData.filter(function(s) return s.startTime >= i && s.startTime < i + binSize);
+			var averageRating:Float = 0;
+			if (valuesInBin.length > 0)
+			{
+				for (s in valuesInBin)
+				{
+					averageRating += s.totalStrainValue;
+				}
+				averageRating /= valuesInBin.length;
+			}
+			bins.push(averageRating);
+
+			i += binSize;
+		}
+
+		if (bins.filter(function(strain) return strain > 0).length == 0)
+			return 0;
+
+		var cutoffPos = Math.floor(bins.length * 0.4);
+		var top40 = bins.copy();
+		top40.sort(function(a, b) return FlxSort.byValues(FlxSort.DESCENDING, a, b));
+		top40 = top40.slice(0, cutoffPos);
+		var easyRatingCutoff:Float = 0;
+		if (top40.length > 0)
+		{
+			for (s in top40)
+			{
+				easyRatingCutoff += s;
+			}
+			easyRatingCutoff /= top40.length;
+		}
+
+		var filteredStrains = bins.filter(function(strain) return strain > 0);
+		var continuity:Float = 0;
+		for (strain in filteredStrains)
+		{
+			continuity += Math.sqrt(strain / easyRatingCutoff);
+		}
+		continuity /= filteredStrains.length;
+
+		var avgContinuity = 0.85;
+		var minContinuity = 0.6;
+		var maxAdjustment = 1.05;
+		var avgAdjustment = 1;
+		var minAdjustment = 0.9;
+
+		var continuityAdjustment:Float = 0;
+
+		if (continuity > avgContinuity)
+		{
+			var continuityFactor = 1 - (continuity - avgContinuity) / (1 - avgContinuity);
+			continuityAdjustment = FlxMath.bound(continuityFactor * (avgAdjustment - minAdjustment) + minAdjustment, minAdjustment, avgAdjustment);
+		}
+		else
+		{
+			var continuityFactor = 1 - (continuity - minContinuity) / (avgContinuity - minContinuity);
+			continuityAdjustment = FlxMath.bound(continuityFactor * (maxAdjustment - avgAdjustment) + avgAdjustment, avgAdjustment, maxAdjustment);
+		}
+
+		calculatedDiff *= continuityAdjustment;
+
+		var trueDrainTime = bins.length * continuity * binSize;
+		var shortMapAdjustment = FlxMath.bound(0.25 * Math.sqrt(trueDrainTime / 60000) + 0.75, 0.75, 1);
+
+		calculatedDiff *= shortMapAdjustment;
 
 		return calculatedDiff;
 	}
