@@ -564,6 +564,51 @@ class Controls extends FlxActionSet
 		}
 	}
 
+	public function pressedID(id:Int)
+	{
+		switch (config.device)
+		{
+			case KEYBOARD:
+				return FlxG.keys.checkStatus(id, PRESSED);
+			case GAMEPAD(_):
+				if (gamepad != null)
+					return gamepad.checkStatus(id, PRESSED);
+				return false;
+			case NONE:
+				return false;
+		}
+	}
+
+	public function justPressedID(id:Int)
+	{
+		switch (config.device)
+		{
+			case KEYBOARD:
+				return FlxG.keys.checkStatus(id, JUST_PRESSED);
+			case GAMEPAD(_):
+				if (gamepad != null)
+					return gamepad.checkStatus(id, JUST_PRESSED);
+				return false;
+			case NONE:
+				return false;
+		}
+	}
+
+	public function justReleasedID(id:Int)
+	{
+		switch (config.device)
+		{
+			case KEYBOARD:
+				return FlxG.keys.checkStatus(id, JUST_RELEASED);
+			case GAMEPAD(_):
+				if (gamepad != null)
+					return gamepad.checkStatus(id, JUST_RELEASED);
+				return false;
+			case NONE:
+				return false;
+		}
+	}
+
 	function forEachBound(control:Control, func:FlxActionDigital->FlxInputState->Void)
 	{
 		switch (control)

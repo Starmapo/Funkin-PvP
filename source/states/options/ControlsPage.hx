@@ -23,37 +23,48 @@ class ControlsPage extends Page
 	var pressTime:Float = 0;
 	var curItem:ControlItem;
 	var curID:Int = 0;
-	var playerSettings:PlayerSettings;
+	var settings:PlayerSettings;
 	var deviceText:FlxText;
 	var deviceButton:FlxUIButton;
 	var changingDevice:Bool = false;
 	var inputBlock:Int = 0;
+	var exitButton:FlxUIButton;
 
 	public function new(player:Int)
 	{
 		super();
 		this.player = player;
-		playerSettings = PlayerSettings.players[player];
+		settings = PlayerSettings.players[player];
 
 		items = new FlxTypedGroup();
 		add(items);
 
 		deviceText = new FlxText(5, 0, FlxG.width - 10, '', 16);
-		deviceText.setFormat('Nokia Cellphone FC Small', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		deviceText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		updateDeviceText();
 		add(deviceText);
 
 		deviceButton = new FlxUIButton(0, deviceText.y + deviceText.height + 5, 'Change Device', changeDevicePrompt);
 		deviceButton.resize(deviceButton.width * 2, deviceButton.height * 2);
 		deviceButton.label.size *= 2;
+		deviceButton.label.font = 'PhantomMuff 1.5';
 		deviceButton.autoCenterLabel();
 		deviceButton.screenCenter(X);
 		add(deviceButton);
 
-		var helpText = new FlxText(5, FlxG.height - 10, FlxG.width - 10, 'Use your mouse to press the buttons.', 32);
-		helpText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		var helpText = new FlxText(5, FlxG.height - 10, FlxG.width - 10, 'Use your mouse to change the controls.', 32);
+		helpText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		helpText.y -= helpText.height;
 		add(helpText);
+
+		exitButton = new FlxUIButton(FlxG.width, 0, 'X', exit);
+		exitButton.resize(exitButton.height * 2, exitButton.height * 2);
+		exitButton.label.size *= 2;
+		exitButton.autoCenterLabel();
+		exitButton.x -= exitButton.width;
+		exitButton.color = FlxColor.RED;
+		exitButton.label.color = FlxColor.WHITE;
+		add(exitButton);
 
 		pressBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		pressBG.alpha = 0.8;
@@ -62,7 +73,7 @@ class ControlsPage extends Page
 		add(pressBG);
 
 		pressText = new FlxText(0, 0, FlxG.width - 10);
-		pressText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.scrollFactor.set();
 		pressText.visible = false;
 		add(pressText);
@@ -79,6 +90,8 @@ class ControlsPage extends Page
 		createItem('Back', BACK);
 		createItem('Pause', PAUSE);
 		createItem('Reset', RESET);
+
+		toggleControls(false);
 	}
 
 	override function update(elapsed:Float)
@@ -114,10 +127,10 @@ class ControlsPage extends Page
 				}
 				else
 				{
-					var id = playerSettings.controls.firstJustReleased();
+					var id = settings.controls.firstJustReleased();
 					if (id > -1)
 					{
-						var binds = playerSettings.config.controls.get(curItem.control);
+						var binds = settings.config.controls.get(curItem.control);
 
 						binds[curID] = id;
 						if (binds[1 - curID] == id)
@@ -126,17 +139,32 @@ class ControlsPage extends Page
 						curItem.updateLabels();
 						hidePressText();
 						reloadControls();
-						controlsEnabled = true;
 						inputBlock = 5;
 					}
 				}
 			}
 		}
 
-		if (controlsEnabled)
+		for (i in 0...items.length)
 		{
-			super.update(elapsed);
+			var item = items.members[i];
+			var binds = settings.config.controls.get(item.control);
+			for (i in 0...binds.length)
+			{
+				var bind = binds[i];
+				var label = item.buttons[i].label;
+				if (bind > 0 && settings.controls.pressedID(bind))
+				{
+					label.color = 0x00BF00;
+				}
+				else
+				{
+					label.color = 0x333333;
+				}
+			}
 		}
+
+		super.update(elapsed);
 
 		if (inputBlock > 0)
 			inputBlock--;
@@ -145,45 +173,43 @@ class ControlsPage extends Page
 	override function onAppear()
 	{
 		camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
+		toggleControls(true);
 	}
 
 	override function exit()
 	{
 		var canExit:Bool = true;
-		for (item in items)
+		if (settings.config.device != NONE)
 		{
-			if (item.button1.label.text == '[?]')
+			for (item in items)
 			{
-				canExit = false;
-				FlxTween.cancelTweensOf(item.button1);
-				FlxTween.color(item.button1, 1, FlxColor.WHITE, FlxColor.RED, {
-					onComplete: function(_)
-					{
-						FlxTween.color(item.button1, 1, FlxColor.RED, FlxColor.WHITE);
-					}
-				});
+				if (item.button1.label.text == '[?]')
+				{
+					canExit = false;
+					FlxTween.cancelTweensOf(item.button1);
+					FlxTween.color(item.button1, 1, FlxColor.WHITE, FlxColor.RED, {
+						onComplete: function(_)
+						{
+							FlxTween.color(item.button1, 1, FlxColor.RED, FlxColor.WHITE);
+						}
+					});
+				}
 			}
 		}
 
 		if (canExit)
 		{
+			toggleControls(false);
 			Settings.saveData();
 			super.exit();
 		}
 	}
 
-	override function updateControls()
-	{
-		if (inputBlock <= 0 && PlayerSettings.checkAction(BACK_P))
-		{
-			CoolUtil.playCancelSound();
-			exit();
-		}
-	}
+	override function updateControls() {}
 
 	function createItem(name:String, control:Control)
 	{
-		var item = new ControlItem(0, 160 + (items.length * 30), name, control, player, onClick);
+		var item = new ControlItem(0, 120 + (items.length * 45), name, control, player, onClick);
 		item.screenCenter(X);
 		items.add(item);
 	}
@@ -198,25 +224,18 @@ class ControlsPage extends Page
 	function showPressText(changingDevice:Bool)
 	{
 		this.changingDevice = changingDevice;
-		for (item in items)
-		{
-			item.active = false;
-		}
 		pressTime = 3;
 		updatePressText();
 		pressText.visible = pressBG.visible = true;
-		controlsEnabled = false;
+		toggleControls(false);
 	}
 
 	function hidePressText()
 	{
-		for (item in items)
-		{
-			item.active = true;
-		}
 		pressTime = 0;
 		pressText.visible = pressBG.visible = false;
 		curItem = null;
+		toggleControls(true);
 	}
 
 	function updatePressText()
@@ -244,7 +263,7 @@ class ControlsPage extends Page
 
 	function updateDeviceText()
 	{
-		deviceText.text = switch (playerSettings.config.device)
+		deviceText.text = switch (settings.config.device)
 		{
 			case KEYBOARD:
 				'Keyboard';
@@ -262,8 +281,8 @@ class ControlsPage extends Page
 
 	function changeDevice(device:PlayerConfigDevice)
 	{
-		var lastDevice = playerSettings.config.device;
-		playerSettings.config.device = device;
+		var lastDevice = settings.config.device;
+		settings.config.device = device;
 		updateDeviceText();
 		hidePressText();
 		if (!device.equals(lastDevice))
@@ -271,19 +290,18 @@ class ControlsPage extends Page
 			clearBinds();
 		}
 		reloadControls();
-		controlsEnabled = true;
 		inputBlock = 5;
 		CoolUtil.playConfirmSound();
 	}
 
 	function clearBinds()
 	{
-		var controls = playerSettings.config.controls;
+		var controls = settings.config.controls;
 		for (key in controls.keys())
 		{
 			controls.set(key, [-1, -1]);
 		}
-		trace(playerSettings.config.controls);
+		trace(settings.config.controls);
 		reloadControls();
 		for (item in items)
 		{
@@ -293,7 +311,18 @@ class ControlsPage extends Page
 
 	function reloadControls()
 	{
-		playerSettings.controls.loadFromConfig(playerSettings.config);
+		settings.controls.loadFromConfig(settings.config);
+	}
+
+	function toggleControls(enabled:Bool)
+	{
+		controlsEnabled = enabled;
+		for (item in items)
+		{
+			item.active = enabled;
+		}
+		deviceButton.active = enabled;
+		exitButton.active = enabled;
 	}
 }
 
@@ -301,12 +330,12 @@ class ControlItem extends FlxSpriteGroup
 {
 	public var name:String;
 	public var control:Control;
+	public var label:FlxText;
+	public var buttons:Array<FlxUIButton> = [];
 	public var button1:FlxUIButton;
+	public var button2:FlxUIButton;
 
 	var callback:Int->ControlItem->Void;
-	var label:FlxText;
-	var buttons:Array<FlxUIButton> = [];
-	var button2:FlxUIButton;
 	var settings:PlayerSettings;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, control:Control, player:Int, callback:Int->ControlItem->Void)
@@ -318,7 +347,7 @@ class ControlItem extends FlxSpriteGroup
 		settings = PlayerSettings.players[player];
 
 		label = new FlxText(0, 0, 150, name);
-		label.setFormat('Nokia Cellphone FC Small', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		label.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		add(label);
 
 		button1 = createButton(0);
@@ -341,7 +370,8 @@ class ControlItem extends FlxSpriteGroup
 			button.x += button1.width;
 		}
 		button.resize(button.width * 2, label.height);
-		button.label.size = 16;
+		button.label.size = 24;
+		button.label.font = 'PhantomMuff 1.5';
 		button.autoCenterLabel();
 		buttons.push(button);
 		add(button);
