@@ -11,6 +11,38 @@ import flixel.input.keyboard.FlxKey;
 class PlayerSettings
 {
 	public static var players(default, never):Array<PlayerSettings> = [];
+	public static var defaultKeyboardControls(default, never):Map<Control, Array<Int>> = [
+		NOTE_LEFT => [FlxKey.A, FlxKey.LEFT],
+		NOTE_DOWN => [FlxKey.S, FlxKey.DOWN],
+		NOTE_UP => [FlxKey.K, FlxKey.UP],
+		NOTE_RIGHT => [FlxKey.L, FlxKey.RIGHT],
+		UI_UP => [FlxKey.W, FlxKey.UP],
+		UI_LEFT => [FlxKey.A, FlxKey.LEFT],
+		UI_RIGHT => [FlxKey.D, FlxKey.RIGHT],
+		UI_DOWN => [FlxKey.S, FlxKey.DOWN],
+		ACCEPT => [FlxKey.SPACE, FlxKey.ENTER],
+		BACK => [FlxKey.BACKSPACE, FlxKey.ESCAPE],
+		PAUSE => [FlxKey.ENTER, FlxKey.ESCAPE],
+		RESET => [FlxKey.R, FlxKey.NONE],
+	];
+	public static var defaultGamepadControls(default, never):Map<Control, Array<Int>> = [
+		NOTE_LEFT => [FlxGamepadInputID.LEFT_TRIGGER, FlxGamepadInputID.NONE],
+		NOTE_DOWN => [FlxGamepadInputID.LEFT_SHOULDER, FlxGamepadInputID.NONE],
+		NOTE_UP => [FlxGamepadInputID.RIGHT_SHOULDER, FlxGamepadInputID.NONE],
+		NOTE_RIGHT => [FlxGamepadInputID.RIGHT_TRIGGER, FlxGamepadInputID.NONE],
+		UI_UP => [FlxGamepadInputID.LEFT_STICK_DIGITAL_UP, FlxGamepadInputID.DPAD_UP],
+		UI_LEFT => [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.DPAD_LEFT],
+		UI_RIGHT => [FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT, FlxGamepadInputID.DPAD_RIGHT],
+		UI_DOWN => [FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.DPAD_DOWN],
+		ACCEPT => [FlxGamepadInputID.A, FlxGamepadInputID.NONE],
+		BACK => [FlxGamepadInputID.B, FlxGamepadInputID.NONE],
+		PAUSE => [FlxGamepadInputID.START, FlxGamepadInputID.NONE],
+		RESET => [FlxGamepadInputID.Y, FlxGamepadInputID.NONE],
+	];
+	public static var defaultNoControls(default, never):Map<Control, Array<Int>> = [
+		NOTE_LEFT => [-1, -1], NOTE_DOWN => [-1, -1], NOTE_UP => [-1, -1], NOTE_RIGHT => [-1, -1], UI_UP => [-1, -1], UI_LEFT => [-1, -1],
+		 UI_RIGHT => [-1, -1],   UI_DOWN => [-1, -1],  ACCEPT => [-1, -1],       BACK => [-1, -1], PAUSE => [-1, -1],   RESET => [-1, -1],
+	];
 
 	public var id(default, null):Int;
 	public var config(default, null):PlayerConfig;
@@ -133,22 +165,7 @@ class PlayerSettings
 	{
 		if (Settings.playerConfigs == null)
 		{
-			var playerConfigs:Array<PlayerConfig> = [
-				createDefaultConfig(KEYBOARD, [
-					NOTE_LEFT => [FlxKey.A, FlxKey.LEFT],
-					NOTE_DOWN => [FlxKey.S, FlxKey.DOWN],
-					NOTE_UP => [FlxKey.K, FlxKey.UP],
-					NOTE_RIGHT => [FlxKey.L, FlxKey.RIGHT],
-					UI_UP => [FlxKey.W, FlxKey.UP],
-					UI_LEFT => [FlxKey.A, FlxKey.LEFT],
-					UI_RIGHT => [FlxKey.D, FlxKey.RIGHT],
-					UI_DOWN => [FlxKey.S, FlxKey.DOWN],
-					ACCEPT => [FlxKey.SPACE, FlxKey.ENTER],
-					BACK => [FlxKey.BACKSPACE, FlxKey.ESCAPE],
-					PAUSE => [FlxKey.ENTER, FlxKey.ESCAPE],
-					RESET => [FlxKey.R, FlxKey.NONE],
-				])
-			];
+			var playerConfigs:Array<PlayerConfig> = [createDefaultConfig(KEYBOARD, defaultKeyboardControls.copy())];
 
 			var foundGamepad:Bool = false;
 			for (i in 0...FlxG.gamepads.numActiveGamepads)
@@ -156,30 +173,14 @@ class PlayerSettings
 				var gamepad = FlxG.gamepads.getByID(i);
 				if (gamepad != null)
 				{
-					playerConfigs.push(createDefaultConfig(GAMEPAD(gamepad.name), [
-						NOTE_LEFT => [FlxGamepadInputID.LEFT_TRIGGER, FlxGamepadInputID.NONE],
-						NOTE_DOWN => [FlxGamepadInputID.LEFT_SHOULDER, FlxGamepadInputID.NONE],
-						NOTE_UP => [FlxGamepadInputID.RIGHT_SHOULDER, FlxGamepadInputID.NONE],
-						NOTE_RIGHT => [FlxGamepadInputID.RIGHT_TRIGGER, FlxGamepadInputID.NONE],
-						UI_UP => [FlxGamepadInputID.LEFT_STICK_DIGITAL_UP, FlxGamepadInputID.DPAD_UP],
-						UI_LEFT => [FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT, FlxGamepadInputID.DPAD_LEFT],
-						UI_RIGHT => [FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT, FlxGamepadInputID.DPAD_RIGHT],
-						UI_DOWN => [FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN, FlxGamepadInputID.DPAD_DOWN],
-						ACCEPT => [FlxGamepadInputID.A, FlxGamepadInputID.NONE],
-						BACK => [FlxGamepadInputID.B, FlxGamepadInputID.NONE],
-						PAUSE => [FlxGamepadInputID.START, FlxGamepadInputID.NONE],
-						RESET => [FlxGamepadInputID.Y, FlxGamepadInputID.NONE],
-					]));
+					playerConfigs.push(createDefaultConfig(GAMEPAD(gamepad.name), defaultGamepadControls.copy()));
 					foundGamepad = true;
 					break;
 				}
 			}
 			if (!foundGamepad)
 			{
-				playerConfigs.push(createDefaultConfig(NONE, [
-					NOTE_LEFT => [-1, -1], NOTE_DOWN => [-1, -1], NOTE_UP => [-1, -1], NOTE_RIGHT => [-1, -1], UI_UP => [-1, -1], UI_LEFT => [-1, -1],
-					 UI_RIGHT => [-1, -1],   UI_DOWN => [-1, -1],  ACCEPT => [-1, -1],       BACK => [-1, -1], PAUSE => [-1, -1],   RESET => [-1, -1],
-				]));
+				playerConfigs.push(createDefaultConfig(NONE, defaultNoControls.copy()));
 			}
 
 			Settings.playerConfigs = playerConfigs;

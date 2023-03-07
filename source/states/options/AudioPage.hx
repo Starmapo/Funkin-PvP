@@ -36,7 +36,7 @@ class AudioPage extends BaseSettingsPage
 		addSetting({
 			name: 'globalOffset',
 			displayName: 'Global Offset',
-			description: "An offset to apply to every song. Negative offset means the timing position is behind from the audio position, useful for headphones latency.",
+			description: "An offset to apply to every song. Negative offset means the timing position is behind of the audio position, useful for headphones latency.",
 			type: NUMBER,
 			defaultValue: 0,
 			displayFormat: '%v ms',

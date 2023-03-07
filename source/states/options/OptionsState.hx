@@ -28,6 +28,7 @@ class OptionsState extends FNFState
 	override function create()
 	{
 		transIn = transOut = null;
+		destroySubStates = false;
 
 		camPages = new FlxCamera();
 		camPages.bgColor = 0;
@@ -88,6 +89,7 @@ class OptionsState extends FNFState
 	function addPage<T:Page>(name:PageName, page:T)
 	{
 		page.onSwitch.add(switchPage);
+		page.onOpenSubState.add(openSubState);
 		pages[name] = page;
 		add(page);
 		page.exists = currentName == name;

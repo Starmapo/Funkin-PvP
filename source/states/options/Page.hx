@@ -2,6 +2,7 @@ package states.options;
 
 import data.PlayerSettings;
 import flixel.FlxObject;
+import flixel.FlxSubState;
 import flixel.group.FlxGroup;
 import flixel.util.FlxSignal;
 
@@ -10,6 +11,7 @@ class Page extends FlxGroup
 	public var controlsEnabled(default, set):Bool = true;
 	public var onSwitch(default, null) = new FlxTypedSignal<PageName->Void>();
 	public var onExit(default, null) = new FlxSignal();
+	public var onOpenSubState(default, null) = new FlxTypedSignal<FlxSubState->Void>();
 
 	var camFollow(get, never):FlxObject;
 
@@ -42,12 +44,17 @@ class Page extends FlxGroup
 		onExit.dispatch();
 	}
 
-	inline function switchPage(name:PageName)
+	function switchPage(name:PageName)
 	{
 		onSwitch.dispatch(name);
 	}
 
-	inline function get_camFollow()
+	function openSubState(subState:FlxSubState)
+	{
+		onOpenSubState.dispatch(subState);
+	}
+
+	function get_camFollow()
 	{
 		return OptionsState.camFollow;
 	}

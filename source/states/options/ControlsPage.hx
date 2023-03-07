@@ -12,6 +12,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import states.PromptSubState.YesNoPrompt;
 import util.InputFormatter;
 
 class ControlsPage extends Page
@@ -29,6 +30,10 @@ class ControlsPage extends Page
 	var changingDevice:Bool = false;
 	var inputBlock:Int = 0;
 	var exitButton:FlxUIButton;
+	var defaultButton:FlxUIButton;
+	var clearButton:FlxUIButton;
+	var defaultPrompt:YesNoPrompt;
+	var clearPrompt:YesNoPrompt;
 
 	public function new(player:Int)
 	{
@@ -52,6 +57,42 @@ class ControlsPage extends Page
 		deviceButton.screenCenter(X);
 		add(deviceButton);
 
+		defaultPrompt = new YesNoPrompt("Are you sure you want to reset to the default controls? This can't be undone.", function()
+		{
+			settings.config.controls = switch (settings.config.device)
+			{
+				case KEYBOARD:
+					PlayerSettings.defaultKeyboardControls.copy();
+				case GAMEPAD(_):
+					PlayerSettings.defaultGamepadControls.copy();
+				case NONE:
+					PlayerSettings.defaultNoControls.copy();
+			};
+			reloadControls();
+			updateButtons();
+			CoolUtil.playConfirmSound();
+		});
+
+		defaultButton = new FlxUIButton(5, deviceButton.y, 'Reset to Default Controls', openSubState.bind(defaultPrompt));
+		defaultButton.resize(defaultButton.width * 2, defaultButton.height * 2);
+		defaultButton.label.font = 'PhantomMuff 1.5';
+		defaultButton.label.size *= 2;
+		defaultButton.autoCenterLabel();
+		add(defaultButton);
+
+		clearPrompt = new YesNoPrompt("Are you sure you want to clear your controls? This can't be undone.", function()
+		{
+			clearBinds();
+			CoolUtil.playConfirmSound();
+		});
+
+		clearButton = new FlxUIButton(defaultButton.x, defaultButton.y + defaultButton.height + 5, 'Clear Controls', openSubState.bind(clearPrompt));
+		clearButton.resize(clearButton.width * 2, clearButton.height * 2);
+		clearButton.label.font = 'PhantomMuff 1.5';
+		clearButton.label.size *= 2;
+		clearButton.autoCenterLabel();
+		add(clearButton);
+
 		var helpText = new FlxText(5, FlxG.height - 10, FlxG.width - 10, 'Use your mouse to change the controls.', 32);
 		helpText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		helpText.y -= helpText.height;
@@ -72,7 +113,7 @@ class ControlsPage extends Page
 		pressBG.visible = false;
 		add(pressBG);
 
-		pressText = new FlxText(0, 0, FlxG.width - 10);
+		pressText = new FlxText(0, 0, FlxG.width);
 		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.scrollFactor.set();
 		pressText.visible = false;
@@ -92,6 +133,11 @@ class ControlsPage extends Page
 		createItem('Reset', RESET);
 
 		toggleControls(false);
+
+		FlxG.watch.addFunction('firstPressed', function()
+		{
+			return settings.controls.firstPressed();
+		});
 	}
 
 	override function update(elapsed:Float)
@@ -153,7 +199,7 @@ class ControlsPage extends Page
 			{
 				var bind = binds[i];
 				var label = item.buttons[i].label;
-				if (bind > 0 && settings.controls.pressedID(bind))
+				if (bind >= 0 && settings.controls.pressedID(bind))
 				{
 					label.color = 0x00BF00;
 				}
@@ -168,6 +214,13 @@ class ControlsPage extends Page
 
 		if (inputBlock > 0)
 			inputBlock--;
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		defaultPrompt.destroy();
+		clearPrompt.destroy();
 	}
 
 	override function onAppear()
@@ -202,6 +255,7 @@ class ControlsPage extends Page
 			toggleControls(false);
 			Settings.saveData();
 			super.exit();
+			CoolUtil.playCancelSound();
 		}
 	}
 
@@ -256,9 +310,9 @@ class ControlsPage extends Page
 		}
 
 		pressText.screenCenter();
-		pressBG.setGraphicSize(Std.int(pressText.width + 4), Std.int(pressText.height + 4));
+		pressBG.setGraphicSize(FlxG.width, Std.int(pressText.height + 4));
 		pressBG.updateHitbox();
-		pressBG.setPosition(pressText.x - 2, pressText.y - 2);
+		pressBG.y = pressText.y - 2;
 	}
 
 	function updateDeviceText()
@@ -303,6 +357,11 @@ class ControlsPage extends Page
 		}
 		trace(settings.config.controls);
 		reloadControls();
+		updateButtons();
+	}
+
+	function updateButtons()
+	{
 		for (item in items)
 		{
 			item.updateLabels();

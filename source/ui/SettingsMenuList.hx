@@ -212,7 +212,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			data.changeAmount = (data.decimals > 0 ? 0.1 : 1);
 
 		if (data.holdDelay == null)
-			data.holdDelay = 0;
+			data.holdDelay = (data.type == PERCENT ? 0.05 : 0);
 
 		if (data.holdMult == null)
 			data.holdMult = 1;

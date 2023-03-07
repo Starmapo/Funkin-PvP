@@ -571,9 +571,17 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.checkStatus(id, PRESSED);
 			case GAMEPAD(_):
-				if (gamepad != null)
-					return gamepad.checkStatus(id, PRESSED);
-				return false;
+				try
+				{
+					if (gamepad != null)
+						return gamepad.checkStatus(id, PRESSED);
+					return false;
+				}
+				catch (e)
+				{
+					trace(e);
+					return false;
+				}
 			case NONE:
 				return false;
 		}
@@ -586,9 +594,17 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.checkStatus(id, JUST_PRESSED);
 			case GAMEPAD(_):
-				if (gamepad != null)
-					return gamepad.checkStatus(id, JUST_PRESSED);
-				return false;
+				try
+				{
+					if (gamepad != null)
+						return gamepad.checkStatus(id, JUST_PRESSED);
+					return false;
+				}
+				catch (e)
+				{
+					trace(e);
+					return false;
+				}
 			case NONE:
 				return false;
 		}
@@ -601,9 +617,17 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.checkStatus(id, JUST_RELEASED);
 			case GAMEPAD(_):
-				if (gamepad != null)
-					return gamepad.checkStatus(id, JUST_RELEASED);
-				return false;
+				try
+				{
+					if (gamepad != null)
+						return gamepad.checkStatus(id, JUST_RELEASED);
+					return false;
+				}
+				catch (e)
+				{
+					trace(e);
+					return false;
+				}
 			case NONE:
 				return false;
 		}

@@ -134,6 +134,7 @@ class CoolUtil
 			|| FlxG.mouse.justPressedRight);
 	}
 
+	@:generic
 	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
 		var value = Math.NEGATIVE_INFINITY;
@@ -150,6 +151,7 @@ class CoolUtil
 		return value;
 	}
 
+	@:generic
 	static function getGroupMinX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
 		var value = Math.POSITIVE_INFINITY;
@@ -166,6 +168,7 @@ class CoolUtil
 		return value;
 	}
 
+	@:generic
 	static function getGroupMaxY<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
 		var value = Math.NEGATIVE_INFINITY;
@@ -182,6 +185,7 @@ class CoolUtil
 		return value;
 	}
 
+	@:generic
 	static function getGroupMinY<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
 		var value = Math.POSITIVE_INFINITY;
