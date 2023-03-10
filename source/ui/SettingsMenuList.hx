@@ -278,25 +278,19 @@ class Checkbox extends AnimatedSprite
 
 	public function new(x:Float = 0, y:Float = 0, value:Bool = false)
 	{
-		super(x, y, Paths.getSpritesheet('menus/options/checkboxThingie'));
+		super(x, y, Paths.getSpritesheet('menus/options/checkboxThingie'), 0.7);
 
 		addAnim({
 			name: 'static',
 			atlasName: 'Check Box unselected',
-			loop: false,
-			offset: [0, 0]
-		});
+			loop: false
+		}, true);
 		addAnim({
 			name: 'checked',
 			atlasName: 'Check Box selecting animation',
 			loop: false,
-			offset: [17, 70]
+			offset: [0, 0]
 		});
-
-		scale.set(0.7, 0.7);
-		updateHitbox();
-
-		playAnim('static');
 
 		this.value = value;
 		animation.finish();
@@ -311,6 +305,8 @@ class Checkbox extends AnimatedSprite
 			else
 				playAnim('static');
 		}
+
+		FlxG.log.add(frame.offset);
 
 		return value = newValue;
 	}

@@ -198,9 +198,7 @@ class AtlasChar extends AnimatedSprite
 			addAnim({
 				name: 'anim',
 				atlasName: prefix
-			});
-			playAnim("anim");
-			updateHitbox();
+			}, true);
 		}
 
 		return this.char = value;

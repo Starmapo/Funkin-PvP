@@ -37,7 +37,7 @@ class PlayerSettings
 		ACCEPT => [FlxGamepadInputID.A, FlxGamepadInputID.NONE],
 		BACK => [FlxGamepadInputID.B, FlxGamepadInputID.NONE],
 		PAUSE => [FlxGamepadInputID.START, FlxGamepadInputID.NONE],
-		RESET => [FlxGamepadInputID.Y, FlxGamepadInputID.NONE],
+		RESET => [FlxGamepadInputID.X, FlxGamepadInputID.NONE],
 	];
 	public static var defaultNoControls(default, never):Map<Control, Array<Int>> = [
 		NOTE_LEFT => [-1, -1], NOTE_DOWN => [-1, -1], NOTE_UP => [-1, -1], NOTE_RIGHT => [-1, -1], UI_UP => [-1, -1], UI_LEFT => [-1, -1],

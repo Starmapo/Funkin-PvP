@@ -124,8 +124,8 @@ class ControlsPage extends Page
 		createItem('Up Note', NOTE_UP);
 		createItem('Right Note', NOTE_RIGHT);
 		createItem('UI Up', UI_UP);
-		createItem('UI Left', UI_LEFT);
 		createItem('UI Down', UI_DOWN);
+		createItem('UI Left', UI_LEFT);
 		createItem('UI Right', UI_RIGHT);
 		createItem('Accept', ACCEPT);
 		createItem('Back', BACK);
@@ -133,11 +133,6 @@ class ControlsPage extends Page
 		createItem('Reset', RESET);
 
 		toggleControls(false);
-
-		FlxG.watch.addFunction('firstPressed', function()
-		{
-			return settings.controls.firstPressed();
-		});
 	}
 
 	override function update(elapsed:Float)
@@ -231,7 +226,7 @@ class ControlsPage extends Page
 
 	override function exit()
 	{
-		var canExit:Bool = true;
+		var canExit = true;
 		if (settings.config.device != NONE)
 		{
 			for (item in items)
@@ -270,9 +265,22 @@ class ControlsPage extends Page
 
 	function onClick(id:Int, item:ControlItem)
 	{
-		curID = id;
-		curItem = item;
-		showPressText(false);
+		if (settings.config.device != NONE)
+		{
+			curID = id;
+			curItem = item;
+			showPressText(false);
+		}
+		else
+		{
+			FlxTween.cancelTweensOf(deviceButton);
+			FlxTween.color(deviceButton, 1, FlxColor.WHITE, FlxColor.RED, {
+				onComplete: function(_)
+				{
+					FlxTween.color(deviceButton, 1, FlxColor.RED, FlxColor.WHITE);
+				}
+			});
+		}
 	}
 
 	function showPressText(changingDevice:Bool)

@@ -25,13 +25,14 @@ class Receptor extends AnimatedSprite
 			var data = skin.receptors[lane];
 
 			frames = Paths.getSpritesheet(skin.receptorsImage);
+			scale.set(skin.receptorsScale, skin.receptorsScale);
 
 			addAnim({
 				name: 'static',
 				atlasName: data.staticAnim,
 				fps: data.staticFPS,
 				offset: data.staticOffset
-			});
+			}, true);
 			addAnim({
 				name: 'pressed',
 				atlasName: data.pressedAnim,
@@ -46,10 +47,6 @@ class Receptor extends AnimatedSprite
 				loop: false,
 				offset: data.confirmOffset
 			});
-
-			playAnim('static', true);
-			scale.set(skin.receptorsScale, skin.receptorsScale);
-			updateHitbox();
 
 			antialiasing = skin.antialiasing;
 		}

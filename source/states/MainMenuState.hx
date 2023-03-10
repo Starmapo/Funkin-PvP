@@ -42,10 +42,12 @@ class MainMenuState extends FNFState
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 
 		menuList = new MainMenuList();
-		menuList.createItem('PvP', function()
-		{
-			FlxG.switchState(new CharacterSelectState());
-		});
+		/*
+			menuList.createItem('PvP', function()
+			{
+				FlxG.switchState(new CharacterSelectState());
+			});
+		 */
 		menuList.createItem('Credits', function()
 		{
 			FlxG.switchState(new CreditsState());

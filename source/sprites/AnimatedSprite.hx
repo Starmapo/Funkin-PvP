@@ -14,10 +14,11 @@ class AnimatedSprite extends FlxSprite
 	**/
 	public var onAnimPlayed:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 
-	public function new(x:Float = 0, y:Float = 0, ?frames:FlxAtlasFrames)
+	public function new(x:Float = 0, y:Float = 0, ?frames:FlxAtlasFrames, scale:Float = 1)
 	{
 		super(x, y);
 		this.frames = frames;
+		this.scale.set(scale, scale);
 	}
 
 	override function destroy()
@@ -29,9 +30,10 @@ class AnimatedSprite extends FlxSprite
 	/**
 		Adds a new animation using `AnimData`.
 	**/
-	public function addAnim(data:AnimData)
+	public function addAnim(data:AnimData, baseAnim:Bool = false)
 	{
 		data = resolveAnimData(data);
+
 		if (data.indices != null && data.indices.length > 0)
 		{
 			animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
@@ -40,9 +42,15 @@ class AnimatedSprite extends FlxSprite
 		{
 			animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
 		}
-		if (data.offset != null && data.offset.length > 0)
+
+		if (data.offset != null && data.offset.length >= 2)
 		{
-			animation.addOffset(data.name, data.offset[0], data.offset[1]);
+			frames.addFramesOffsetByAtlasName(data.atlasName, data.offset[0], data.offset[1]);
+		}
+
+		if (baseAnim)
+		{
+			playAnim(data.name, true);
 		}
 	}
 

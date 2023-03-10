@@ -453,7 +453,6 @@ class Controls extends FlxActionSet
 						bindButtons(control, gamepad.id, binds);
 					}
 					controlsAdded = true;
-					trace(digitalActions);
 				}
 				else
 				{

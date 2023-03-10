@@ -2,6 +2,7 @@ package util;
 
 import data.PlayerSettings;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 
 class InputFormatter
@@ -13,7 +14,7 @@ class InputFormatter
 		return switch (settings.config.device)
 		{
 			case KEYBOARD: getKeyName(id);
-			case GAMEPAD(_): getButtonName(id, settings.controls.gamepad);
+			case GAMEPAD(_): getButtonName(id);
 			case NONE: '[?]';
 		}
 	}
@@ -69,9 +70,9 @@ class InputFormatter
 		}
 	}
 
-	inline static public function getButtonName(id:Int, gamepad:FlxGamepad):String
+	inline static public function getButtonName(id:FlxGamepadInputID):String
 	{
-		return shortenButtonName(gamepad.getInputLabel(id));
+		return "Button " + (id : Int);
 	}
 
 	static function titleCase(str:String)

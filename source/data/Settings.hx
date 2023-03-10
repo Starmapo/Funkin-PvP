@@ -16,7 +16,7 @@ class Settings
 
 	public static function loadData()
 	{
-		// load('playerConfigs');
+		load('playerConfigs');
 		load('masterVolume');
 		load('musicVolume');
 		load('effectVolume');
