@@ -21,7 +21,7 @@ class OptionsPage extends Page
 		createItem('Video', switchPage.bind(Video));
 		createItem('Audio', switchPage.bind(Audio));
 		// createItem('Gameplay', switchPage.bind(Gameplay));
-		// createItem('Miscellaneous', switchPage.bind(Miscellaneous));
+		createItem('Miscellaneous', switchPage.bind(Miscellaneous));
 		createItem('Exit', exit);
 
 		items.selectItem(lastSelected);

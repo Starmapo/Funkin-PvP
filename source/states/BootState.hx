@@ -16,7 +16,6 @@ class BootState extends FNFState
 {
 	override function create()
 	{
-		FlxG.autoPause = false; // don't pause when focus is lost by default
 		FlxG.fixedTimestep = false; // allow elapsed time to be variable
 		FlxG.game.focusLostFramerate = 60; // 60 fps instead of 10 when focus is lost
 		FlxG.mouse.useSystemCursor = true; // use system cursor instead of HaxeFlixel one

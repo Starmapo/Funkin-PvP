@@ -22,10 +22,24 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 	{
 		super.updateControls();
 
-		if (selectedItem != null && selectedItem.isScroll)
+		if (selectedItem != null)
 		{
-			if (navigateItem(selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT)))
+			if (!selectedItem.canAccept)
 			{
+				if (navigateItem(selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT)))
+				{
+					if (selectedItem.callback != null)
+						selectedItem.callback();
+
+					if (playScrollSound)
+						CoolUtil.playScrollSound();
+				}
+			}
+
+			if (checkAction(RESET_P) && selectedItem.data.type != ACTION && selectedItem.value != selectedItem.data.defaultValue)
+			{
+				selectedItem.value = selectedItem.data.defaultValue;
+
 				if (selectedItem.callback != null)
 					selectedItem.callback();
 
@@ -37,7 +51,7 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 
 	override function accept()
 	{
-		super.accept();
+		onAccept.dispatch(selectedItem);
 
 		if (selectedItem != null && selectedItem.data.type == CHECKBOX)
 		{
@@ -46,6 +60,9 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 			if (playScrollSound)
 				CoolUtil.playScrollSound();
 		}
+
+		if (fireCallbacks && selectedItem.callback != null && selectedItem.canAccept)
+			selectedItem.callback();
 	}
 
 	function navigateItem(item:T, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
@@ -92,7 +109,6 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 				value = FlxMath.roundDecimal(value, item.data.decimals);
 				if (item.data.wrap && item.data.minValue != null && item.data.maxValue != null)
 				{
-					FlxG.log.add(value);
 					value = FlxMath.wrap(value, item.data.minValue, item.data.maxValue);
 				}
 				else
@@ -133,7 +149,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 	public var checkbox:Checkbox;
 	public var valueText:FlxText;
 	public var value(get, set):Dynamic;
-	public var isScroll(get, never):Bool;
+	public var canAccept(get, never):Bool;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, data:SettingData)
 	{
@@ -234,7 +250,8 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 				case PERCENT:
 					function(value)
 					{
-						return (value * 100.0) + '%';
+						var value:Float = value;
+						return (value * 100) + '%';
 					};
 				default:
 					function(value)
@@ -308,9 +325,9 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		return value;
 	}
 
-	function get_isScroll()
+	function get_canAccept()
 	{
-		return data.type != CHECKBOX && data.type != ACTION;
+		return data.type == CHECKBOX || data.type == ACTION;
 	}
 }
 

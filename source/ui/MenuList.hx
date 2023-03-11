@@ -244,7 +244,6 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 
 	function accept()
 	{
-		var selectedItem = members[selectedIndex];
 		onAccept.dispatch(selectedItem);
 
 		if (fireCallbacks && selectedItem.callback != null)

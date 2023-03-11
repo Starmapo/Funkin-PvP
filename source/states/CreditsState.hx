@@ -17,7 +17,7 @@ class CreditsState extends FNFState
 	static var DEFAULT_COLOR:FlxColor = 0xFF9271FD;
 	static var lastSelected:Int = 0;
 
-	var creditsArray:Array<CreditsData> = [];
+	var creditsArray:Array<CreditGroup> = [];
 	var categoryMenuList:CreditsMenuList;
 	var creditMenuList:CreditsMenuList;
 	var bg:FlxSprite;
@@ -65,8 +65,7 @@ class CreditsState extends FNFState
 			text.setFormat('PhantomMuff 1.5', text.size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		}
 
-		readCredits('assets/data/creditsPvP', "Friday Night Funkin' PvP");
-		readCredits('assets/data/creditsFNF', "Friday Night Funkin'");
+		readCredits('assets/data/credits');
 
 		categoryMenuList.selectItem(lastSelected);
 		categoryMenuList.snapPositions();
@@ -95,15 +94,15 @@ class CreditsState extends FNFState
 				creditMenuList.controlsEnabled = false;
 				for (text in creditGroup)
 				{
-					FlxTween.tween(text, {x: FlxG.width}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
+					FlxTween.tween(text, {x: FlxG.width}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
 				}
-				FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, Main.TRANSITION_TIME, {
+				FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, Main.TRANSITION_TIME / 2, {
 					ease: FlxEase.expoIn,
 					onComplete: function(_)
 					{
 						creditMenuList.visible = false;
 						categoryMenuList.visible = true;
-						FlxTween.tween(FlxG.camera.scroll, {x: 0}, Main.TRANSITION_TIME, {
+						FlxTween.tween(FlxG.camera.scroll, {x: 0}, Main.TRANSITION_TIME / 2, {
 							ease: FlxEase.expoOut,
 							onComplete: function(_)
 							{
@@ -135,16 +134,15 @@ class CreditsState extends FNFState
 	function readCredits(path:String, ?mod:String)
 	{
 		var data = Paths.getJson(path, mod);
-		if (data != null && data.credits != null)
+		if (data != null && data.groups != null)
 		{
 			var creditsData = new CreditsData(data);
-			if (mod != null)
+			for (i in 0...creditsData.groups.length)
 			{
-				creditsData.directory = mod;
+				var group = creditsData.groups[i];
+				creditsArray.push(group);
+				categoryMenuList.createItem(group.name, onAcceptCategory);
 			}
-			creditsArray.push(creditsData);
-
-			categoryMenuList.createItem(creditsData.directory, onAcceptCategory);
 		}
 	}
 
@@ -161,7 +159,7 @@ class CreditsState extends FNFState
 	{
 		creditMenuList.resetCredits(creditsArray[categoryMenuList.selectedIndex].credits, onAcceptCredit);
 		categoryMenuList.controlsEnabled = false;
-		FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, Main.TRANSITION_TIME, {
+		FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, Main.TRANSITION_TIME / 2, {
 			ease: FlxEase.expoIn,
 			onComplete: function(_)
 			{

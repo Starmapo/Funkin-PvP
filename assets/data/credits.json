@@ -1,0 +1,44 @@
+{
+	"groups": [
+		{
+			"name": "Friday Night Funkin' PvP",
+			"credits": [
+				{
+					"name": "Starmapo",
+					"description": "Creator, programmer and artist of Friday Night Funkin' PvP",
+					"color": "#FFFF72",
+					"link": "https://github.com/Starmapo"
+				}
+			]
+		},
+		{
+			"name": "Friday Night Funkin'",
+			"credits": [
+				{
+					"name": "ninjamuffin99",
+					"description": "Programmer of Friday Night Funkin'",
+					"color": "#D83948",
+					"link": "https://twitter.com/ninja_muffin99"
+				},
+				{
+					"name": "PhantomArcade",
+					"description": "Animator of Friday Night Funkin'",
+					"color": "#23D156",
+					"link": "https://twitter.com/PhantomArcade3K"
+				},
+				{
+					"name": "evilsk8r",
+					"description": "Artist of Friday Night Funkin'",
+					"color": "#75E836",
+					"link": "https://twitter.com/evilsk8r"
+				},
+				{
+					"name": "Kawai Sprite",
+					"description": "Composer of Friday Night Funkin'",
+					"color": "#450075",
+					"link": "https://twitter.com/kawaisprite"
+				}
+			]
+		}
+	]
+}

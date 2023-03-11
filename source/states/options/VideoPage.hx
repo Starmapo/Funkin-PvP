@@ -50,18 +50,23 @@ class VideoPage extends BaseSettingsPage
 		addSetting({
 			name: 'filter',
 			displayName: 'Filter',
-			description: 'Select a filter for colorblindness.',
+			description: 'Select a filter for colorblindness, or just for fun.',
 			type: STRING,
 			defaultValue: FilterType.NONE,
 			options: [
 				FilterType.NONE,
 				FilterType.DEUTERANOPIA,
 				FilterType.PROTANOPIA,
-				FilterType.TRITANOPIA
+				FilterType.TRITANOPIA,
+				FilterType.DOWNER,
+				FilterType.GAME_BOY,
+				FilterType.GRAYSCALE,
+				FilterType.INVERT,
+				FilterType.VIRTUAL_BOY
 			]
 		}, function()
 		{
-			Settings.updateFilters();
+			Main.updateColorFilter();
 		});
 		addSetting({
 			name: 'hue',
@@ -74,7 +79,7 @@ class VideoPage extends BaseSettingsPage
 			wrap: true
 		}, function()
 		{
-			Settings.updateFilters();
+			Main.updateHueFilter();
 		});
 		addSetting({
 			name: 'brightness',
@@ -91,7 +96,7 @@ class VideoPage extends BaseSettingsPage
 			changeAmount: 10
 		}, function()
 		{
-			Settings.updateFilters();
+			Main.updateColorFilter();
 		});
 		addSetting({
 			name: 'gamma',
@@ -108,7 +113,7 @@ class VideoPage extends BaseSettingsPage
 			maxValue: 1
 		}, function()
 		{
-			Settings.updateFilters();
+			Main.updateColorFilter();
 		});
 	}
 }
