@@ -331,7 +331,7 @@ class Checkbox extends AnimatedSprite
 			name: 'checked',
 			atlasName: 'Check Box selecting animation',
 			loop: false,
-			offset: [-25, -100]
+			offset: [17, 70]
 		});
 
 		this.value = value;

@@ -36,7 +36,7 @@ class Paths
 		return 'assets/$key';
 	}
 
-	public static function getImage(path:String, ?mod:String):FlxGraphic
+	public static function getImage(path:String, ?mod:String, unique:Bool = false):FlxGraphic
 	{
 		var originalPath = path;
 
@@ -46,20 +46,20 @@ class Paths
 		if (!exists(path))
 			path = getPath('images/$path', mod);
 
-		if (FlxG.bitmap.checkCache(path))
+		if (FlxG.bitmap.checkCache(path) && !unique)
 			return FlxG.bitmap.get(path);
 
 		// exists in openfl assets, so get it from there
 		if (Assets.exists(path, IMAGE))
 		{
-			return FlxGraphic.fromAssetKey(path, false, path);
+			return FlxGraphic.fromAssetKey(path, unique, path);
 		}
 		#if sys
 		// otherwise, get it from the file
 		else if (FileSystem.exists(path))
 		{
 			var bitmap = BitmapData.fromFile(path);
-			return FlxGraphic.fromBitmapData(bitmap, false, path);
+			return FlxGraphic.fromBitmapData(bitmap, unique, path);
 		}
 		#end
 
@@ -67,7 +67,7 @@ class Paths
 		return null;
 	}
 
-	public static function getSpritesheet(path:String, ?mod:String):FlxAtlasFrames
+	public static function getSpritesheet(path:String, ?mod:String, unique:Bool = false):FlxAtlasFrames
 	{
 		var originalPath = path;
 
@@ -78,7 +78,7 @@ class Paths
 			path = Path.withoutExtension(imagePath);
 		}
 
-		var image = getImage(imagePath, mod);
+		var image = getImage(imagePath, mod, unique);
 		if (image == null)
 			return null;
 

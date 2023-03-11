@@ -17,16 +17,16 @@ class ColorSwap
 	public function new():Void
 	{
 		shader = new ColorSwapShader();
-		shader.uTime.value = [0];
-		shader.money.value = [0];
-		shader.awesomeOutline.value = [hasOutline];
+		shader.data.uTime.value = [0];
+		shader.data.money.value = [0];
+		shader.data.awesomeOutline.value = [hasOutline];
 	}
 
 	public function update(elapsed:Float):Void
 	{
-		shader.uTime.value[0] += elapsed;
+		shader.data.uTime.value[0] += elapsed;
 		hueShit += elapsed;
-		// trace(shader.money.value[0]);
+		// trace(shader.data.money.value[0]);
 	}
 
 	function set_colorToReplace(color:FlxColor):FlxColor
@@ -38,7 +38,7 @@ class ColorSwap
 
 	function set_hasOutline(lol:Bool):Bool
 	{
-		shader.awesomeOutline.value = [lol];
+		shader.data.awesomeOutline.value = [lol];
 		return lol;
 	}
 
@@ -57,17 +57,16 @@ class ColorSwap
 
 class ColorSwapShader extends FlxShader
 {
-	@:glFragmentSource('
+	public function new()
+	{
+		super("", "
         #pragma header
 
         uniform float uTime;
         uniform float money;
         uniform bool awesomeOutline;
 
-
         const float offset = 1.0 / 128.0;
-        
-        
 
         vec3 normalizeColor(vec3 color)
         {
@@ -104,12 +103,8 @@ class ColorSwapShader extends FlxShader
             
             // [0] is the hue???
             swagColor[0] += uTime;
-            // swagColor[1] += uTime;
-
-            // money += swagColor[0];
 
             color = vec4(hsv2rgb(vec3(swagColor[0], swagColor[1], swagColor[2])), swagColor[3]);
-            
 
             if (awesomeOutline)
             {
@@ -126,34 +121,11 @@ class ColorSwapShader extends FlxShader
                     || flixel_texture2D(bitmap, vec2(openfl_TextureCoordv.x, openfl_TextureCoordv.y - h)).a != 0.)
                         color = vec4(1.0, 1.0, 1.0, 1.0);
                 }
-
-
             }
 
-           
-            
             gl_FragColor = color;
-            
-            
-            /* 
-            if (color.a > 0.5)
-                gl_FragColor = color;
-            else
-            {
-                float a = flixel_texture2D(bitmap, vec2(openfl_TextureCoordv + offset, openfl_TextureCoordv.y)).a +
-                          flixel_texture2D(bitmap, vec2(openfl_TextureCoordv, openfl_TextureCoordv.y - offset)).a +
-                          flixel_texture2D(bitmap, vec2(openfl_TextureCoordv - offset, openfl_TextureCoordv.y)).a +
-                          flixel_texture2D(bitmap, vec2(openfl_TextureCoordv, openfl_TextureCoordv.y + offset)).a;
-                if (color.a < 1.0 && a > 0.0)
-                    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.8);
-                else
-                    gl_FragColor = color;
-            } */
         }
+        ");
 
-    ')
-	public function new()
-	{
-		super();
 	}
 }

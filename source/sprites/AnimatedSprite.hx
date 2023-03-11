@@ -9,6 +9,8 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 **/
 class AnimatedSprite extends FlxSprite
 {
+	public var offsets:Map<String, Array<Float>> = new Map();
+
 	/**
 		Gets dispatched when this sprite plays an animation.
 	**/
@@ -45,7 +47,7 @@ class AnimatedSprite extends FlxSprite
 
 		if (data.offset != null && data.offset.length >= 2)
 		{
-			frames.setFramesOffsetByAtlasName(data.atlasName, data.offset[0], data.offset[1]);
+			offsets.set(data.atlasName, data.offset.copy());
 		}
 
 		if (baseAnim)
@@ -67,7 +69,7 @@ class AnimatedSprite extends FlxSprite
 			return;
 
 		animation.play(name, force, reversed, frame);
-		updateHitbox();
+		updateOffset();
 		animPlayed(name);
 		onAnimPlayed.dispatch(name);
 	}
@@ -76,6 +78,16 @@ class AnimatedSprite extends FlxSprite
 		This function is called after an animation is played. You can override this with whatever you wish.
 	**/
 	public function animPlayed(name:String) {}
+
+	public function updateOffset()
+	{
+		updateHitbox();
+		var animOffset = offsets.get(animation.name);
+		if (animOffset != null)
+		{
+			offset.add(animOffset[0], animOffset[1]);
+		}
+	}
 
 	function resolveAnimData(data:AnimData)
 	{
