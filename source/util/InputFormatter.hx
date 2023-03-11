@@ -72,7 +72,11 @@ class InputFormatter
 
 	inline static public function getButtonName(id:FlxGamepadInputID):String
 	{
-		return "Button " + (id : Int);
+		return switch (id)
+		{
+			case NONE: "[?]";
+			default: "Button " + (id : Int);
+		}
 	}
 
 	static function titleCase(str:String)

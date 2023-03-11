@@ -124,7 +124,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 
 	public function selectItem(index:Int)
 	{
-		index = FlxMath.wrap(index, 0, length - 1);
+		index = FlxMath.wrapInt(index, 0, length - 1);
 
 		var prevItem = members[selectedIndex];
 		if (prevItem != null)

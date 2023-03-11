@@ -140,6 +140,8 @@ class ControlsPage extends Page
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
 
+		updateDeviceText(); // in case of using a gamepad, update if it's connected or disconnected
+
 		if (pressTime > 0)
 		{
 			pressTime -= elapsed;
@@ -162,7 +164,7 @@ class ControlsPage extends Page
 						var gamepad = FlxG.gamepads.getFirstActiveGamepad();
 						if (gamepad != null)
 						{
-							changeDevice(GAMEPAD(gamepad.name));
+							changeDevice(GAMEPAD(gamepad.id));
 						}
 					}
 				}
@@ -325,14 +327,22 @@ class ControlsPage extends Page
 
 	function updateDeviceText()
 	{
-		deviceText.text = switch (settings.config.device)
+		switch (settings.config.device)
 		{
 			case KEYBOARD:
-				'Keyboard';
-			case GAMEPAD(name):
-				name;
+				deviceText.text = 'Keyboard';
+			case GAMEPAD(id):
+				var gamepad = FlxG.gamepads.getByID(id);
+				if (gamepad != null)
+				{
+					deviceText.text = 'Gamepad $id (${gamepad.name})';
+				}
+				else
+				{
+					deviceText.text = 'Gamepad $id (DISCONNECTED)';
+				}
 			case NONE:
-				'None';
+				deviceText.text = 'None';
 		}
 	}
 

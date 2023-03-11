@@ -12,6 +12,6 @@ typedef PlayerConfig =
 enum PlayerConfigDevice
 {
 	KEYBOARD;
-	GAMEPAD(name:String);
+	GAMEPAD(id:Int);
 	NONE;
 }

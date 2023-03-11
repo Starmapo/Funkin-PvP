@@ -55,7 +55,7 @@ class DancingSprite extends AnimatedSprite
 	**/
 	public function setDanceStep(step:Int = 0, force:Bool = false)
 	{
-		danceStep = FlxMath.wrap(step, 0, danceAnims.length - 1);
+		danceStep = FlxMath.wrapInt(step, 0, danceAnims.length - 1);
 		playDanceAnim(force);
 	}
 

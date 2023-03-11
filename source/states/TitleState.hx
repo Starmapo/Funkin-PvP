@@ -360,7 +360,7 @@ class TitleState extends FNFState
 		FlxG.camera.fade(FlxColor.BLACK, 1, false, function()
 		{
 			Sys.exit(0);
-		});
+		}, true);
 		FlxG.sound.music.fadeOut(1, 0);
 		transitioning = true;
 	}

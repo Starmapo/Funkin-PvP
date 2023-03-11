@@ -39,7 +39,10 @@ class AudioPage extends BaseSettingsPage
 			description: "An offset to apply to every song. Negative offset means the timing position is behind of the audio position, useful for headphones latency.",
 			type: NUMBER,
 			defaultValue: 0,
-			displayFormat: '%v ms',
+			displayFunction: function(value)
+			{
+				return value + 'ms';
+			},
 			minValue: -300,
 			maxValue: 300,
 			holdMult: 2

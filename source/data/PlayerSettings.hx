@@ -147,14 +147,12 @@ class PlayerSettings
 
 	static function onGamepadConnected(gamepad:FlxGamepad)
 	{
-		var name = gamepad.name;
-		if (name == null)
-			return;
+		var id = gamepad.id;
 
 		for (i in 0...players.length)
 		{
 			var player = players[i];
-			if (player.config.device.equals(GAMEPAD(name)) && !player.controls.controlsAdded)
+			if (player.config.device.equals(GAMEPAD(id)) && !player.controls.controlsAdded)
 			{
 				player.controls.loadFromConfig(player.config);
 			}
@@ -173,7 +171,7 @@ class PlayerSettings
 				var gamepad = FlxG.gamepads.getByID(i);
 				if (gamepad != null)
 				{
-					playerConfigs.push(createDefaultConfig(GAMEPAD(gamepad.name), defaultGamepadControls.copy()));
+					playerConfigs.push(createDefaultConfig(GAMEPAD(gamepad.id), defaultGamepadControls.copy()));
 					foundGamepad = true;
 					break;
 				}

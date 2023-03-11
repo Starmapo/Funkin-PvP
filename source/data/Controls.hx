@@ -436,18 +436,11 @@ class Controls extends FlxActionSet
 					bindKeys(control, binds);
 				}
 				controlsAdded = true;
-			case GAMEPAD(name):
-				for (i in 0...FlxG.gamepads.numActiveGamepads)
-				{
-					var gamepad = FlxG.gamepads.getByID(i);
-					if (gamepad != null && gamepad.name == name)
-					{
-						this.gamepad = gamepad;
-						break;
-					}
-				}
+			case GAMEPAD(id):
+				var gamepad = FlxG.gamepads.getByID(id);
 				if (gamepad != null)
 				{
+					this.gamepad = gamepad;
 					for (control => binds in config.controls)
 					{
 						bindButtons(control, gamepad.id, binds);
@@ -456,7 +449,7 @@ class Controls extends FlxActionSet
 				}
 				else
 				{
-					FlxG.log.warn('Couldn\'t find gamepad \"$name\".');
+					FlxG.log.warn('Couldn\'t find gamepad \"$id\".');
 				}
 			case NONE:
 		}

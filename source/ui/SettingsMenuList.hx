@@ -81,12 +81,46 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 
 	function changeItemValue(item:T, prev:Bool, mult:Float = 1)
 	{
-		var value:Float = item.value;
-		if (prev)
-			value -= item.data.changeAmount * mult;
-		else
-			value += item.data.changeAmount * mult;
-		value = FlxMath.bound(FlxMath.roundDecimal(value, item.data.decimals), item.data.minValue, item.data.maxValue);
+		var value:Dynamic = item.value;
+		switch (item.data.type)
+		{
+			case NUMBER, PERCENT:
+				if (prev)
+					value -= item.data.changeAmount * mult;
+				else
+					value += item.data.changeAmount * mult;
+				value = FlxMath.roundDecimal(value, item.data.decimals);
+				if (item.data.wrap && item.data.minValue != null && item.data.maxValue != null)
+				{
+					FlxG.log.add(value);
+					value = FlxMath.wrap(value, item.data.minValue, item.data.maxValue);
+				}
+				else
+				{
+					value = FlxMath.bound(value, item.data.minValue, item.data.maxValue);
+				}
+			case STRING:
+				if (item.data.options == null || item.data.options.length <= 1)
+					return;
+
+				var index = item.data.options.indexOf(value);
+				if (index < 0)
+					index = 0;
+				if (prev)
+					index -= 1;
+				else
+					index += 1;
+				if (item.data.wrap)
+				{
+					index = FlxMath.wrapInt(index, 0, item.data.options.length - 1);
+				}
+				else
+				{
+					index = FlxMath.boundInt(index, 0, item.data.options.length - 1);
+				}
+				value = item.data.options[index];
+			default:
+		}
 		item.value = value;
 	}
 }
@@ -178,8 +212,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		if (valueText == null)
 			return;
 
-		var displayValue = Std.string(data.type == PERCENT ? (value * 100) : value);
-		var displayText = data.displayFormat.replace('%v', displayValue);
+		var displayText = Std.string(data.displayFunction(value));
 		valueText.text = '< ' + displayText + ' >';
 
 		valueText.size = 65;
@@ -194,14 +227,20 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 	function resolveSettingData(data:SettingData)
 	{
-		if (data.displayFormat == null)
+		if (data.displayFunction == null)
 		{
-			data.displayFormat = switch (data.type)
+			data.displayFunction = switch (data.type)
 			{
 				case PERCENT:
-					'%v%';
+					function(value)
+					{
+						return (value * 100.0) + '%';
+					};
 				default:
-					'%v';
+					function(value)
+					{
+						return value;
+					};
 			}
 		}
 
@@ -216,6 +255,9 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		if (data.holdMult == null)
 			data.holdMult = 1;
+
+		if (data.wrap == null)
+			data.wrap = (data.type == STRING);
 
 		return data;
 	}
@@ -289,7 +331,7 @@ class Checkbox extends AnimatedSprite
 			name: 'checked',
 			atlasName: 'Check Box selecting animation',
 			loop: false,
-			offset: [0, 0]
+			offset: [-25, -100]
 		});
 
 		this.value = value;
@@ -306,8 +348,6 @@ class Checkbox extends AnimatedSprite
 				playAnim('static');
 		}
 
-		FlxG.log.add(frame.offset);
-
 		return value = newValue;
 	}
 }
@@ -319,13 +359,14 @@ typedef SettingData =
 	var description:String;
 	var type:SettingType;
 	var ?defaultValue:Dynamic;
-	var ?displayFormat:String;
+	var ?displayFunction:Dynamic->Dynamic;
 	var ?minValue:Float;
 	var ?maxValue:Float;
 	var ?decimals:Int;
 	var ?changeAmount:Float;
 	var ?holdDelay:Float;
 	var ?holdMult:Float;
+	var ?wrap:Bool;
 	var ?options:Array<String>;
 }
 

@@ -45,7 +45,7 @@ class AnimatedSprite extends FlxSprite
 
 		if (data.offset != null && data.offset.length >= 2)
 		{
-			frames.addFramesOffsetByAtlasName(data.atlasName, data.offset[0], data.offset[1]);
+			frames.setFramesOffsetByAtlasName(data.atlasName, data.offset[0], data.offset[1]);
 		}
 
 		if (baseAnim)
@@ -67,9 +67,8 @@ class AnimatedSprite extends FlxSprite
 			return;
 
 		animation.play(name, force, reversed, frame);
-
+		updateHitbox();
 		animPlayed(name);
-
 		onAnimPlayed.dispatch(name);
 	}
 

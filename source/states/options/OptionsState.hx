@@ -49,6 +49,9 @@ class OptionsState extends FNFState
 		var playersPage = addPage(Players, new PlayersPage());
 		playersPage.onExit.add(switchPage.bind(Options));
 
+		var videoPage = addPage(Video, new VideoPage());
+		videoPage.onExit.add(switchPage.bind(Options));
+
 		var audioPage = addPage(Audio, new AudioPage());
 		audioPage.onExit.add(switchPage.bind(Options));
 
@@ -75,7 +78,7 @@ class OptionsState extends FNFState
 				currentPage.controlsEnabled = true;
 			}
 		});
-		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true);
+		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
 
 		super.create();
 	}
@@ -158,7 +161,7 @@ class OptionsState extends FNFState
 				FlxG.switchState(new MainMenuState());
 			}
 		});
-		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME);
+		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 	}
 
 	inline function get_currentPage()

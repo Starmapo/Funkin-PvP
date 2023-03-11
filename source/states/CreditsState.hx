@@ -80,7 +80,7 @@ class CreditsState extends FNFState
 				categoryMenuList.controlsEnabled = true;
 			}
 		});
-		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true);
+		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
 
 		super.create();
 	}
@@ -124,7 +124,7 @@ class CreditsState extends FNFState
 						FlxG.switchState(new MainMenuState());
 					}
 				});
-				FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME);
+				FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 			}
 			CoolUtil.playCancelSound();
 		}
@@ -171,9 +171,9 @@ class CreditsState extends FNFState
 				creditMenuList.snapPositions();
 				for (text in creditGroup)
 				{
-					FlxTween.tween(text, {x: (FlxG.width / 2) + 5}, Main.TRANSITION_TIME, {ease: FlxEase.expoOut});
+					FlxTween.tween(text, {x: (FlxG.width / 2) + 5}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoOut});
 				}
-				FlxTween.tween(FlxG.camera.scroll, {x: 0}, Main.TRANSITION_TIME, {
+				FlxTween.tween(FlxG.camera.scroll, {x: 0}, Main.TRANSITION_TIME / 2, {
 					ease: FlxEase.expoOut,
 					onComplete: function(_)
 					{
@@ -240,7 +240,6 @@ class CreditsMenuList extends TypedMenuList<CreditsMenuItem>
 		{
 			var ratio = MAX_WIDTH / item.width;
 			item.label.size = Math.floor(item.label.size * ratio);
-			FlxG.log.add('${item.width}, $MAX_WIDTH, $ratio');
 		}
 		return addItem(name, item);
 	}

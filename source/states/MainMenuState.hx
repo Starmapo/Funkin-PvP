@@ -75,7 +75,7 @@ class MainMenuState extends FNFState
 				menuList.controlsEnabled = true;
 			}
 		});
-		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true);
+		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
 
 		CoolUtil.playConfirmSound(0);
 
@@ -97,7 +97,7 @@ class MainMenuState extends FNFState
 					FlxG.switchState(new TitleState());
 				}
 			});
-			FlxG.camera.fade(FlxColor.WHITE, Main.TRANSITION_TIME);
+			FlxG.camera.fade(FlxColor.WHITE, Main.TRANSITION_TIME, false, null, true);
 			CoolUtil.playCancelSound();
 			transitioning = true;
 		}
@@ -138,7 +138,7 @@ class MainMenuState extends FNFState
 					FlxTween.tween(item, {x: item.x - FlxG.width}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
 				}
 			});
-			FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME);
+			FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 			FlxTween.tween(bg, {angle: 45}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
 			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
 			FlxFlicker.flicker(magenta, Main.TRANSITION_TIME, 0.15, false);

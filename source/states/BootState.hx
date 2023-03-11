@@ -2,16 +2,14 @@ package states;
 
 import data.PlayerSettings;
 import data.Settings;
-import data.song.DifficultyProcessor;
-import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import lime.app.Application;
 import util.WindowsAPI;
 
 class BootState extends FNFState
@@ -33,6 +31,12 @@ class BootState extends FNFState
 
 		Settings.loadData(); // load settings
 		PlayerSettings.init(); // initialize players and controls
+
+		// make sure to save settings if the player exits the game
+		Application.current.onExit.add(function(_)
+		{
+			Settings.saveData();
+		});
 
 		FlxG.switchState(new TitleState()); // switch to the title screen
 
