@@ -49,6 +49,7 @@ class OptionsPage extends Page
 	function onChange(item:TextMenuItem)
 	{
 		updateCamFollow(item);
+		lastSelected = item.ID;
 	}
 
 	function onAccept(item:TextMenuItem)
