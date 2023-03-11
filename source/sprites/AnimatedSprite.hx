@@ -47,7 +47,7 @@ class AnimatedSprite extends FlxSprite
 
 		if (data.offset != null && data.offset.length >= 2)
 		{
-			offsets.set(data.atlasName, data.offset.copy());
+			offsets.set(data.name, data.offset.copy());
 		}
 
 		if (baseAnim)
