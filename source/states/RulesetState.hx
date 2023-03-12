@@ -167,18 +167,6 @@ class RulesetState extends FNFState
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
-
-		// prevent integer overflow (it would probably take an eternity for that to happen but you can never be too safe)
-		if (iconScroll.x >= 300)
-		{
-			iconScroll.x -= 300;
-		}
-		if (iconScroll.y >= 300)
-		{
-			iconScroll.y -= 300;
-		}
-
 		if (!transitioning && PlayerSettings.checkAction(BACK_P))
 		{
 			transitioning = true;
@@ -193,6 +181,18 @@ class RulesetState extends FNFState
 				}
 			});
 			camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+		}
+
+		super.update(elapsed);
+
+		// prevent overflow (it would probably take an eternity for that to happen but you can never be too safe)
+		if (iconScroll.x >= 300)
+		{
+			iconScroll.x %= 300;
+		}
+		if (iconScroll.y >= 300)
+		{
+			iconScroll.y %= 300;
 		}
 
 		descBG.y = descText.y - 2;
