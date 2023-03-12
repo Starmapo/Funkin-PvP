@@ -78,14 +78,16 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
 
+		var thickness = 4;
+
 		var graphic = Paths.getImage(name, groupData.directory, true, graphicKey);
 
-		var text = new FlxText(0, graphic.height - 10, graphic.width - 60, groupData.name);
+		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupData.name);
 		text.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		text.updateHitbox();
 		text.y -= text.height;
 
-		var textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(text.height), FlxColor.GRAY);
+		var textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(graphic.height - text.y), FlxColor.GRAY);
 		graphic.bitmap.copyPixels(textBG.pixels, new Rectangle(0, 0, textBG.width, textBG.height), new Point(textBG.x, textBG.y), null, null, true);
 		textBG.destroy();
 
@@ -107,7 +109,8 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		if (outline == null)
 		{
 			var sprite = new FlxSprite().makeGraphic(600, 240, FlxColor.TRANSPARENT, false, 'groupOutline');
-			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT, {thickness: 10, color: FlxColor.WHITE});
+			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
+				{thickness: thickness, color: FlxColor.WHITE});
 			outline = sprite.graphic;
 			sprite.destroy();
 		}
