@@ -27,6 +27,7 @@ class RulesetState extends FNFState
 	var descText:FlxText;
 	var descTween:FlxTween;
 	var camFollow:FlxObject;
+	var stateText:FlxText;
 
 	override function create()
 	{
@@ -48,12 +49,13 @@ class RulesetState extends FNFState
 		bg.cameras = [FlxG.camera];
 		add(bg);
 
-		var stateText = new FlxText(0, 0, 0, 'Ruleset');
+		stateText = new FlxText(0, 0, 0, 'Ruleset');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		stateText.screenCenter(X);
 		stateText.scrollFactor.set();
 		stateText.cameras = [camOver];
 		camScroll.height = Math.ceil(stateText.height);
+		stateText.y = camScroll.y -= camScroll.height;
 
 		iconScroll = new FlxBackdrop(Paths.getImage('menus/pvp/iconScroll'));
 		iconScroll.alpha = 0.5;
@@ -130,16 +132,12 @@ class RulesetState extends FNFState
 			type: ACTION,
 		}, function()
 		{
-			transitioning = true;
-			items.controlsEnabled = false;
-			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
-				ease: FlxEase.expoIn
+			exitTransition(function(_)
+			{
+				FlxG.sound.music.stop();
+				FlxG.switchState(new SongSelectState());
 			});
 			FlxFlicker.flicker(items.selectedItem, Main.TRANSITION_TIME, 0.06, true, false);
-			camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, function()
-			{
-				FlxG.switchState(new SongSelectState());
-			}, true);
 		});
 
 		items.selectItem(lastSelected);
@@ -149,6 +147,7 @@ class RulesetState extends FNFState
 		add(descText);
 
 		FlxG.camera.zoom = 3;
+		FlxTween.tween(camScroll, {y: 0}, Main.TRANSITION_TIME, {ease: FlxEase.expoOut});
 		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
@@ -169,18 +168,11 @@ class RulesetState extends FNFState
 	{
 		if (!transitioning && PlayerSettings.checkAction(BACK_P))
 		{
-			transitioning = true;
-			items.controlsEnabled = false;
-			FlxG.sound.music.fadeOut(Main.TRANSITION_TIME);
-			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
-				ease: FlxEase.expoIn,
-				onComplete: function(_)
-				{
-					FlxG.sound.music.stop();
-					FlxG.switchState(new MainMenuState());
-				}
+			exitTransition(function(_)
+			{
+				FlxG.sound.music.stop();
+				FlxG.switchState(new MainMenuState());
 			});
-			camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 		}
 
 		super.update(elapsed);
@@ -195,6 +187,7 @@ class RulesetState extends FNFState
 			iconScroll.y %= 300;
 		}
 
+		stateText.y = camScroll.y;
 		descBG.y = descText.y - 2;
 	}
 
@@ -245,5 +238,21 @@ class RulesetState extends FNFState
 	{
 		var item = new SettingsMenuItem(0, items.length * 140, data.displayName, callback, data);
 		return items.addItem(item.name, item);
+	}
+
+	function exitTransition(onComplete:FlxTween->Void)
+	{
+		if (descTween != null)
+			descTween.cancel();
+		transitioning = true;
+		items.controlsEnabled = false;
+		FlxG.sound.music.fadeOut(Main.TRANSITION_TIME);
+		FlxTween.tween(camScroll, {y: -camScroll.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
+		FlxTween.tween(descText, {y: FlxG.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
+		FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
+			ease: FlxEase.expoIn,
+			onComplete: onComplete
+		});
+		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 	}
 }

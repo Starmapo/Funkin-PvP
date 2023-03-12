@@ -20,6 +20,7 @@ import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import ui.MenuList;
+import ui.TextMenuList;
 
 class SongSelectState extends FNFState
 {
@@ -31,6 +32,7 @@ class SongSelectState extends FNFState
 	var camOver:FlxCamera;
 	var playerGroups:FlxTypedGroup<PlayerSongSelect>;
 	var iconScroll:FlxBackdrop;
+	var stateText:FlxText;
 
 	override function create()
 	{
@@ -71,12 +73,13 @@ class SongSelectState extends FNFState
 			playerGroups.add(new PlayerSongSelect(i, camPlayers[i], this));
 		}
 
-		var stateText = new FlxText(0, 0, 0, 'Song Selection');
+		stateText = new FlxText(0, 0, 0, 'Song Selection');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		stateText.screenCenter(X);
 		stateText.scrollFactor.set();
 		stateText.cameras = [camOver];
 		camScroll.height = Math.ceil(stateText.height);
+		stateText.y = camScroll.y -= camScroll.height;
 
 		iconScroll = new FlxBackdrop(Paths.getImage('menus/pvp/iconScroll'));
 		iconScroll.alpha = 0.5;
@@ -89,6 +92,7 @@ class SongSelectState extends FNFState
 
 		for (cam in camPlayers)
 			cam.zoom = 3;
+		FlxTween.tween(camScroll, {y: 0}, Main.TRANSITION_TIME, {ease: FlxEase.expoOut});
 		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
@@ -117,21 +121,20 @@ class SongSelectState extends FNFState
 			iconScroll.y %= 300;
 		}
 
+		stateText.y = camScroll.y;
 		for (cam in camPlayers)
 			cam.zoom = FlxG.camera.zoom;
 	}
 
-	public function exit()
+	public function exitTransition(onComplete:FlxTween->Void)
 	{
 		transitioning = true;
 		for (group in playerGroups)
 			group.setControlsEnabled(false);
+		FlxTween.tween(camScroll, {y: -camScroll.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
 		FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
 			ease: FlxEase.expoIn,
-			onComplete: function(_)
-			{
-				FlxG.switchState(new RulesetState());
-			}
+			onComplete: onComplete
 		});
 		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 	}
@@ -144,10 +147,11 @@ class PlayerSongSelect extends FlxGroup
 	public var viewingSongs:Bool = false;
 
 	var player:Int = 0;
-	var onExit:Void->Void;
 	var state:SongSelectState;
 	var groupMenuList:GroupMenuList;
+	var songMenuList:SongMenuList;
 	var camFollow:FlxObject;
+	var lastGroupReset:String = '';
 
 	public function new(player:Int, camera:FlxCamera, state:SongSelectState)
 	{
@@ -161,14 +165,22 @@ class PlayerSongSelect extends FlxGroup
 		add(camFollow);
 
 		groupMenuList = new GroupMenuList(player);
-		groupMenuList.onChange.add(onChange);
-		setControlsEnabled(false);
+		groupMenuList.onChange.add(onGroupChange);
+		groupMenuList.onAccept.add(onGroupAccept);
 		add(groupMenuList);
 
 		for (name => group in Mods.songGroups)
 		{
-			groupMenuList.createItem(name, group);
+			groupMenuList.createItem(group);
 		}
+
+		songMenuList = new SongMenuList(player);
+		songMenuList.onChange.add(onSongChange);
+		songMenuList.onAccept.add(onSongAccept);
+		songMenuList.controlsEnabled = false;
+		add(songMenuList);
+
+		setControlsEnabled(false);
 
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 		camera.snapToTarget();
@@ -178,10 +190,19 @@ class PlayerSongSelect extends FlxGroup
 	{
 		if (!state.transitioning && PlayerSettings.checkPlayerAction(player, BACK_P))
 		{
-			if (viewingSongs) {}
+			if (viewingSongs)
+			{
+				groupMenuList.controlsEnabled = true;
+				songMenuList.controlsEnabled = false;
+				camFollow.x = FlxG.width / (Settings.singleSongSelection ? 2 : 4);
+				viewingSongs = false;
+			}
 			else
 			{
-				state.exit();
+				state.exitTransition(function(_)
+				{
+					FlxG.switchState(new RulesetState());
+				});
 			}
 		}
 
@@ -190,21 +211,44 @@ class PlayerSongSelect extends FlxGroup
 
 	public function setControlsEnabled(value:Bool)
 	{
-		groupMenuList.controlsEnabled = value;
+		if (viewingSongs)
+			songMenuList.controlsEnabled = value;
+		else
+			groupMenuList.controlsEnabled = value;
 	}
 
-	function onChange(item:GroupMenuItem)
+	function onGroupChange(item:GroupMenuItem)
 	{
 		updateCamFollow(item);
 		lastSelectedGroups[player] = item.ID;
 	}
 
-	function updateCamFollow(item:GroupMenuItem)
+	function onGroupAccept(item:GroupMenuItem)
+	{
+		groupMenuList.controlsEnabled = false;
+		songMenuList.controlsEnabled = true;
+		camFollow.x = FlxG.width * 0.75;
+		if (lastGroupReset != item.name)
+		{
+			songMenuList.resetGroup(item);
+			lastGroupReset = item.name;
+		}
+		viewingSongs = true;
+	}
+
+	function updateCamFollow(item:MenuItem)
 	{
 		var midpoint = item.getMidpoint();
 		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
+
+	function onSongChange(item:SongMenuItem)
+	{
+		updateCamFollow(item);
+	}
+
+	function onSongAccept(item:SongMenuItem) {}
 }
 
 class GroupMenuList extends TypedMenuList<GroupMenuItem>
@@ -217,8 +261,9 @@ class GroupMenuList extends TypedMenuList<GroupMenuItem>
 		this.player = player;
 	}
 
-	public function createItem(name:String, groupData:ModSongGroup)
+	public function createItem(groupData:ModSongGroup)
 	{
+		var name = groupData.name;
 		var item = new GroupMenuItem(0, 250 * length, name, groupData);
 		if (Settings.singleSongSelection)
 		{
@@ -283,8 +328,6 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
 
-		var startTime = Sys.time();
-
 		var thickness = 4;
 
 		var graphic = Paths.getImage(name, groupData.directory, true, graphicKey);
@@ -324,8 +367,6 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
 
-		trace(Sys.time() - startTime);
-
 		return graphic;
 	}
 
@@ -347,5 +388,71 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 
 		return height;
+	}
+}
+
+class SongMenuList extends TypedMenuList<SongMenuItem>
+{
+	var player:Int = 0;
+
+	public function new(player:Int)
+	{
+		super();
+		this.player = player;
+
+		cacheItems();
+	}
+
+	public function createItem(songData:ModSong)
+	{
+		var name = songData.directory + songData.name;
+		var item = new SongMenuItem(0, 0, name, songData);
+		item.x = (FlxG.width / 2) + (((FlxG.width / 2) - item.width) / 2);
+		byName[name] = item;
+		return item;
+	}
+
+	public function resetGroup(groupItem:GroupMenuItem)
+	{
+		var songGroup = Mods.songGroups.get(groupItem.name);
+		clear();
+		for (song in songGroup.songs)
+		{
+			var item = byName[song.directory + song.name];
+			item.y = groupItem.y + (100 * length);
+			item.ID = length;
+			add(item);
+		}
+		selectItem(0);
+	}
+
+	function cacheItems()
+	{
+		for (group in Mods.songGroups)
+		{
+			for (song in group.songs)
+			{
+				createItem(song);
+			}
+		}
+	}
+}
+
+class SongMenuItem extends TextMenuItem
+{
+	var songData:ModSong;
+	var maxWidth:Float = FlxG.width / 2;
+
+	public function new(x:Float = 0, y:Float = 0, name:String, songData:ModSong)
+	{
+		super(x, y, name, callback);
+		this.songData = songData;
+
+		label.text = songData.name;
+		if (label.width > maxWidth)
+		{
+			var ratio = maxWidth / label.width;
+			label.size = Math.floor(label.size * ratio);
+		}
 	}
 }
