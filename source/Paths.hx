@@ -35,7 +35,7 @@ class Paths
 		return 'assets/$key';
 	}
 
-	public static function getImage(path:String, ?mod:String, unique:Bool = false):FlxGraphic
+	public static function getImage(path:String, ?mod:String, unique:Bool = false, ?key:String):FlxGraphic
 	{
 		var originalPath = path;
 
@@ -48,17 +48,20 @@ class Paths
 		if (FlxG.bitmap.checkCache(path) && !unique)
 			return FlxG.bitmap.get(path);
 
+		if (key == null)
+			key = path;
+
 		// exists in openfl assets, so get it from there
 		if (Assets.exists(path, IMAGE))
 		{
-			return FlxGraphic.fromAssetKey(path, unique, path);
+			return FlxGraphic.fromAssetKey(path, unique, key);
 		}
 		#if sys
 		// otherwise, get it from the file
 		else if (FileSystem.exists(path))
 		{
 			var bitmap = BitmapData.fromFile(path);
-			return FlxGraphic.fromBitmapData(bitmap, unique, path);
+			return FlxGraphic.fromBitmapData(bitmap, unique, key);
 		}
 		#end
 

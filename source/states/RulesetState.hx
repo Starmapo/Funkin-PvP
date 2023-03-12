@@ -44,7 +44,7 @@ class RulesetState extends FNFState
 		add(camFollow);
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
-		bg.color = 0xFF4800FF;
+		bg.color = 0xFF21007F;
 		bg.cameras = [FlxG.camera];
 		add(bg);
 
@@ -192,7 +192,6 @@ class RulesetState extends FNFState
 		}
 
 		descBG.y = descText.y - 2;
-		camScroll.zoom = camOver.zoom = FlxG.camera.zoom;
 	}
 
 	function onChange(item:SettingsMenuItem)

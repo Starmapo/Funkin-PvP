@@ -17,6 +17,8 @@ import sys.FileSystem;
 import sys.thread.Thread;
 import util.WindowsAPI;
 
+using StringTools;
+
 class BootState extends FNFState
 {
 	var bg:FlxSprite;
@@ -146,12 +148,57 @@ class BootState extends FNFState
 					var pvpMusicList = Paths.getText(pvpMusicPath).split('\n');
 					for (i in 0...pvpMusicList.length)
 					{
-						CoolUtil.pvpMusic.push(Path.join([fullPath, 'music', pvpMusicList[i]]));
+						Mods.pvpMusic.push(Path.join([fullPath, 'music', pvpMusicList[i]]));
+					}
+				}
+
+				var songSelectPath = Path.join([fullPath, 'data/songSelect.json']);
+				if (FileSystem.exists(pvpMusicPath))
+				{
+					var songSelect = Paths.getJson(songSelectPath);
+					var groups:Array<Dynamic> = songSelect.groups;
+					for (group in groups)
+					{
+						var songs:Array<ModSong> = [];
+						for (i in 0...group.songs.length)
+						{
+							var song = group.songs[i];
+							var songPath = Paths.getPath('songs/$song', mod.directory);
+							var difficulties:Array<String> = [];
+							for (songFile in FileSystem.readDirectory(songPath))
+							{
+								if (songFile.endsWith('.json'))
+								{
+									difficulties.push(songFile.substr(0, songFile.length - 5));
+								}
+							}
+							songs.push({
+								name: song,
+								difficulties: difficulties,
+								directory: mod.directory
+							});
+						}
+
+						var songGroup = Mods.songGroups.get(group.name);
+						if (songGroup == null)
+						{
+							songGroup = {
+								name: group.name,
+								bg: group.bg,
+								songs: [],
+								directory: mod.directory
+							};
+							Mods.songGroups.set(group.name, songGroup);
+						}
+						for (song in songs)
+						{
+							songGroup.songs.push(song);
+						}
 					}
 				}
 			}
 		}
-		trace(CoolUtil.pvpMusic);
+		trace(Mods.songGroups);
 		if (!hasFNF)
 		{
 			updateText("Base FNF mod not detected. If you deleted it, please download the game again.");

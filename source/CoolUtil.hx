@@ -1,5 +1,6 @@
 package;
 
+import data.Mods;
 import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -11,8 +12,6 @@ import haxe.io.Path;
 
 class CoolUtil
 {
-	public static var pvpMusic:Array<String> = [];
-
 	public static function getLerp(lerp:Float)
 	{
 		return lerp * (60 / FlxG.updateFramerate);
@@ -47,10 +46,10 @@ class CoolUtil
 
 	public static function playPvPMusic(volume:Float = 1)
 	{
-		if (pvpMusic.length == 0)
+		if (Mods.pvpMusic.length == 0)
 			return;
 
-		var music = pvpMusic[FlxG.random.int(0, pvpMusic.length - 1)];
+		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
 		FlxG.sound.playMusic(Paths.getMusic(Path.join([music, 'audio.ogg'])), volume);
 	}
 

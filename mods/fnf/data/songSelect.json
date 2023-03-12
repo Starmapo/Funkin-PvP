@@ -1,0 +1,14 @@
+{
+  "groups": [
+    {
+      "name": "Friday Night Funkin'",
+	  "bg": "bg/fnf",
+      "songs": [
+        "Tutorial",
+        "Bopeebo",
+        "Fresh",
+        "Dadbattle"
+      ]
+    }
+  ]
+}

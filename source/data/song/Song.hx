@@ -42,9 +42,7 @@ class Song extends JsonObject
 			],
 			cameraFocuses: [resolveCameraFocus(json.notes[0])],
 			notes: [],
-			bf: json.player1,
-			opponent: json.player2,
-			gf: json.gfVerion
+			gf: json.gfVersion
 		};
 
 		var curTime:Float = 0;
@@ -195,16 +193,6 @@ class Song extends JsonObject
 	public var length(get, never):Float;
 
 	/**
-		Boyfriend character for this map.
-	**/
-	public var bf:String;
-
-	/**
-		The opponent for this map.
-	**/
-	public var opponent:String;
-
-	/**
 		Girlfriend character for this map.
 	**/
 	public var gf:String;
@@ -227,8 +215,6 @@ class Song extends JsonObject
 		instFile = readString(data.instFile, 'Inst.ogg');
 		vocalsFile = readString(data.vocalsFile, 'Voices.ogg');
 		scrollSpeed = readFloat(data.scrollSpeed, 1, 0.01, 10, 2);
-		bf = readString(data.bf, 'fnf:bf');
-		opponent = readString(data.opponent, 'fnf:dad');
 		gf = readString(data.gf, 'fnf:gf');
 		for (t in readArray(data.timingPoints))
 		{

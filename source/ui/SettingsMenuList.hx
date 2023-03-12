@@ -299,13 +299,6 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		return height;
 	}
 
-	override function set_alpha(value:Float):Float
-	{
-		super.set_alpha(value);
-		// nameBG.alpha = 0.8;
-		return alpha;
-	}
-
 	function get_value():Dynamic
 	{
 		return Reflect.getProperty(Settings, data.name);
