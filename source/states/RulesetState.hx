@@ -76,6 +76,7 @@ class RulesetState extends FNFState
 
 		items = new SettingsMenuList();
 		items.onChange.add(onChange);
+		items.controlsEnabled = false;
 		add(items);
 
 		addSetting({
@@ -130,6 +131,7 @@ class RulesetState extends FNFState
 		}, function()
 		{
 			transitioning = true;
+			items.controlsEnabled = false;
 			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
 				ease: FlxEase.expoIn
 			});
@@ -152,6 +154,7 @@ class RulesetState extends FNFState
 			onComplete: function(_)
 			{
 				transitioning = false;
+				items.controlsEnabled = true;
 			}
 		});
 		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
@@ -179,6 +182,7 @@ class RulesetState extends FNFState
 		if (!transitioning && PlayerSettings.checkAction(BACK_P))
 		{
 			transitioning = true;
+			items.controlsEnabled = false;
 			FlxG.sound.music.fadeOut(Main.TRANSITION_TIME);
 			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
 				ease: FlxEase.expoIn,

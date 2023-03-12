@@ -1,11 +1,15 @@
 package states;
 
 import data.Mods;
+import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapDataChannel;
@@ -15,40 +19,117 @@ import ui.MenuList;
 
 class SongSelectState extends FNFState
 {
-	var camGroups:FlxCamera;
-	var groupMenuList:GroupMenuList;
+	var camPlayers:Array<FlxCamera>;
+	var camDivision:FlxCamera;
+	var camOver:FlxCamera;
+	var transitioning:Bool = true;
+	var playerGroups:FlxTypedGroup<PlayerSongSelect>;
 
 	override function create()
 	{
 		transIn = transOut = null;
 
-		camGroups = new FlxCamera();
-		camGroups.bgColor = 0;
-		FlxG.cameras.add(camGroups, false);
+		var players = Settings.singleSongSelection ? 1 : 2;
+		for (i in 0...players)
+		{
+			var camPlayer = new FlxCamera(0, 0, Std.int(FlxG.width / players));
+			camPlayer.bgColor = 0;
+			FlxG.cameras.add(camPlayer, false);
+		}
+
+		if (!Settings.singleSongSelection)
+		{
+			camDivision = new FlxCamera(Std.int((FlxG.width / 2) - 1), 0, 3);
+			camDivision.bgColor = FlxColor.WHITE;
+			FlxG.cameras.add(camDivision, false);
+		}
+
+		camOver = new FlxCamera();
+		camOver.bgColor = 0;
+		FlxG.cameras.add(camOver, false);
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF21007F;
 		add(bg);
 
-		groupMenuList = new GroupMenuList();
-		groupMenuList.cameras = [camGroups];
+		playerGroups = new FlxTypedGroup();
+		add(playerGroups);
+
+		for (cam in camPlayers)
+			cam.zoom = 3;
+		FlxTween.tween(camPlayers[0], {zoom: 1}, Main.TRANSITION_TIME, {
+			ease: FlxEase.expoInOut,
+			onComplete: function(_)
+			{
+				transitioning = false;
+				for (group in playerGroups)
+					group.setControlsEnabled(true);
+			}
+		});
+		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
+
+		super.create();
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		if (camPlayers[1] != null)
+			camPlayers[1].zoom = camPlayers[0].zoom;
+	}
+}
+
+class PlayerSongSelect extends FlxGroup
+{
+	var player:Int = 0;
+	var groupMenuList:GroupMenuList;
+
+	public function new(player:Int, camera:FlxCamera)
+	{
+		super();
+		this.player = player;
+		cameras = [camera];
+
+		groupMenuList = new GroupMenuList(player);
+		groupMenuList.controlsEnabled = false;
 		add(groupMenuList);
 
 		for (name => group in Mods.songGroups)
 		{
 			groupMenuList.createItem(name, group);
 		}
+	}
 
-		super.create();
+	public function setControlsEnabled(value:Bool)
+	{
+		groupMenuList.controlsEnabled = value;
 	}
 }
 
 class GroupMenuList extends TypedMenuList<GroupMenuItem>
 {
+	var player:Int = 0;
+
+	public function new(player:Int)
+	{
+		super();
+		this.player = player;
+	}
+
 	public function createItem(name:String, groupData:ModSongGroup)
 	{
 		var item = new GroupMenuItem(0, 250 * length, name, groupData);
-		item.screenCenter(X);
+		if (Settings.singleSongSelection)
+		{
+			item.screenCenter(X);
+		}
+		else
+		{
+			item.x = ((FlxG.width / 2) - item.width) / 2;
+			if (player == 1)
+				item.x += (FlxG.width / 2);
+		}
 		return addItem(name, item);
 	}
 }
