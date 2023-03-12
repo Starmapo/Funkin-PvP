@@ -52,6 +52,13 @@ class PlayerPage extends Page
 		}, switchPage.bind(Controls(player)));
 	}
 
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		descBG.y = descText.y - 2;
+	}
+
 	override function onAppear()
 	{
 		updateCamFollow(items.selectedItem);
@@ -108,12 +115,8 @@ class PlayerPage extends Page
 			descTween.cancel();
 
 		descText.y -= 10;
-		descBG.y = descText.y;
+		descBG.y = descText.y - 2;
 		descTween = FlxTween.tween(descText, {y: descText.y + 10}, 0.2, {
-			onUpdate: function(_)
-			{
-				descBG.y = descText.y;
-			},
 			onComplete: function(_)
 			{
 				descTween = null;

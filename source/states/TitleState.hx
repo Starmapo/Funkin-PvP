@@ -45,6 +45,7 @@ class TitleState extends FNFState
 	{
 		transIn = transOut = null;
 
+		FlxG.camera.bgColor = 0;
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
@@ -218,7 +219,7 @@ class TitleState extends FNFState
 		});
 		if (!initialized)
 		{
-			FlxG.sound.music.fadeIn(4, 0, 1);
+			FlxG.sound.music.fadeIn(4);
 		}
 		else
 		{

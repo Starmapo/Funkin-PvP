@@ -21,6 +21,12 @@ class Settings
 	public static var smoothAudioTiming:Bool = false;
 	// Miscellaneous
 	public static var autoPause:Bool = false;
+	// Ruleset
+	public static var singleSongSelection:Bool = false;
+	public static var playbackRate:Float = 1;
+	public static var randomEvents:Bool = true;
+	public static var canDie:Bool = true;
+	public static var winCondition:WinCondition = SCORE;
 
 	public static function loadData()
 	{
@@ -37,6 +43,11 @@ class Settings
 		load('globalOffset');
 		load('smoothAudioTiming');
 		load('autoPause');
+		load('singleSongSelection');
+		load('playbackRate');
+		load('randomEvents');
+		load('canDie');
+		load('winCondition');
 
 		if (!FlxG.fullscreen)
 		{
@@ -66,6 +77,11 @@ class Settings
 		save('globalOffset');
 		save('smoothAudioTiming');
 		save('autoPause');
+		save('singleSongSelection');
+		save('playbackRate');
+		save('randomEvents');
+		save('canDie');
+		save('winCondition');
 
 		FlxG.save.flush();
 	}
@@ -96,4 +112,11 @@ class Settings
 	var GRAYSCALE = "Grayscale";
 	var INVERT = "Invert";
 	var VIRTUAL_BOY = "Virtual Boy";
+}
+
+@:enum abstract WinCondition(String) from String to String
+{
+	var SCORE = 'Highest Score';
+	var ACCURACY = 'Highest Accuracy';
+	var MISSES = 'Least Misses';
 }

@@ -42,12 +42,10 @@ class MainMenuState extends FNFState
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 
 		menuList = new MainMenuList();
-		/*
-			menuList.createItem('PvP', function()
-			{
-				FlxG.switchState(new CharacterSelectState());
-			});
-		 */
+		menuList.createItem('PvP', function()
+		{
+			FlxG.switchState(new RulesetState());
+		}, false, true);
 		menuList.createItem('Credits', function()
 		{
 			FlxG.switchState(new CreditsState());
@@ -78,6 +76,11 @@ class MainMenuState extends FNFState
 		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
 
 		CoolUtil.playConfirmSound(0);
+		if (!FlxG.sound.musicPlaying)
+		{
+			CoolUtil.playMenuMusic(0);
+			FlxG.sound.music.fadeIn(Main.TRANSITION_TIME);
+		}
 
 		super.create();
 	}
@@ -139,6 +142,10 @@ class MainMenuState extends FNFState
 				}
 			});
 			FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+			if (selectedItem.fadeMusic)
+			{
+				FlxG.sound.music.fadeOut(Main.TRANSITION_TIME, 0);
+			}
 			FlxTween.tween(bg, {angle: 45}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
 			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
 			FlxFlicker.flicker(magenta, Main.TRANSITION_TIME, 0.15, false);
@@ -160,9 +167,9 @@ class MainMenuList extends TypedMenuList<MainMenuItem>
 		CoolUtil.playConfirmSound(0);
 	}
 
-	public function createItem(name:String, ?callback:Void->Void, fireInstantly:Bool = false)
+	public function createItem(name:String, ?callback:Void->Void, fireInstantly:Bool = false, fadeMusic:Bool = false)
 	{
-		var item = new MainMenuItem(0, 150 * length, name, callback, fireInstantly);
+		var item = new MainMenuItem(0, 150 * length, name, callback, fireInstantly, fadeMusic);
 		item.screenCenter(X);
 		var targetX = item.x;
 		item.x -= FlxG.width;
@@ -174,13 +181,15 @@ class MainMenuList extends TypedMenuList<MainMenuItem>
 class MainMenuItem extends TextMenuItem
 {
 	public var fireInstantly:Bool = false;
+	public var fadeMusic:Bool = false;
 
 	var targetScale:Float = 1;
 
-	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, fireInstantly:Bool = false)
+	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, fireInstantly:Bool = false, fadeMusic:Bool = false)
 	{
 		super(x, y, name, callback, 98);
 		this.fireInstantly = fireInstantly;
+		this.fadeMusic = fadeMusic;
 		label.scale.set(targetScale, targetScale);
 	}
 

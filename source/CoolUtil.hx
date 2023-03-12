@@ -7,9 +7,12 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxAxes;
+import haxe.io.Path;
 
 class CoolUtil
 {
+	public static var pvpMusic:Array<String> = [];
+
 	public static function getLerp(lerp:Float)
 	{
 		return lerp * (60 / FlxG.updateFramerate);
@@ -40,6 +43,15 @@ class CoolUtil
 	public static function playMenuMusic(volume:Float = 1)
 	{
 		FlxG.sound.playMusic(Paths.getMusic("Gettin' Freaky"), volume);
+	}
+
+	public static function playPvPMusic(volume:Float = 1)
+	{
+		if (pvpMusic.length == 0)
+			return;
+
+		var music = pvpMusic[FlxG.random.int(0, pvpMusic.length - 1)];
+		FlxG.sound.playMusic(Paths.getMusic(Path.join([music, 'audio.ogg'])), volume);
 	}
 
 	/**

@@ -72,10 +72,6 @@ class OptionsState extends FNFState
 		FlxG.camera.zoom = 3;
 		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
 			ease: FlxEase.expoInOut,
-			onUpdate: function(_)
-			{
-				camPages.zoom = FlxG.camera.zoom;
-			},
 			onComplete: function(_)
 			{
 				currentPage.controlsEnabled = true;
@@ -84,6 +80,13 @@ class OptionsState extends FNFState
 		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
 
 		super.create();
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		camPages.zoom = FlxG.camera.zoom;
 	}
 
 	override function destroy()
@@ -155,10 +158,6 @@ class OptionsState extends FNFState
 		}
 		FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
 			ease: FlxEase.expoIn,
-			onUpdate: function(_)
-			{
-				camPages.zoom = FlxG.camera.zoom;
-			},
 			onComplete: function(_)
 			{
 				FlxG.switchState(new MainMenuState());

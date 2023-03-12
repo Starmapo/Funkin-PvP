@@ -36,6 +36,13 @@ class BaseSettingsPage extends Page
 		add(descText);
 	}
 
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		descBG.y = descText.y - 2;
+	}
+
 	override function onAppear()
 	{
 		updateCamFollow(items.selectedItem);
@@ -90,10 +97,6 @@ class BaseSettingsPage extends Page
 		descText.y -= 10;
 		descBG.y = descText.y;
 		descTween = FlxTween.tween(descText, {y: descText.y + 10}, 0.2, {
-			onUpdate: function(_)
-			{
-				descBG.y = descText.y;
-			},
 			onComplete: function(_)
 			{
 				descTween = null;

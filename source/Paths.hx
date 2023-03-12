@@ -1,3 +1,4 @@
+import data.Mods;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
@@ -17,8 +18,6 @@ import sys.io.File;
 
 class Paths
 {
-	public static var currentMod:String = 'fnf';
-
 	/**
 		Cache of sounds that have been loaded.
 	**/
@@ -27,9 +26,9 @@ class Paths
 	public static function getPath(key:String, ?mod:String):String
 	{
 		if (mod == null)
-			mod = currentMod;
+			mod = Mods.currentMod;
 
-		var modPath = 'mods/$mod/$key';
+		var modPath = '${Mods.modsPath}/$mod/$key';
 		if (exists(modPath))
 			return modPath;
 
@@ -148,6 +147,9 @@ class Paths
 
 	public static function getMusic(path:String, ?mod:String)
 	{
+		if (exists(path))
+			return getSound(path, mod);
+
 		return getSound(getPath('music/$path/audio'), mod);
 	}
 
