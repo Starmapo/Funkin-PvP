@@ -222,7 +222,7 @@ class ControlsPage extends Page
 
 	override function onAppear()
 	{
-		camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
+		camFollow.y = FlxG.height / 2;
 		toggleControls(true);
 	}
 

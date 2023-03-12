@@ -1,9 +1,11 @@
 package states;
 
 import data.Mods;
+import data.PlayerSettings;
 import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
@@ -19,11 +21,12 @@ import ui.MenuList;
 
 class SongSelectState extends FNFState
 {
-	var camPlayers:Array<FlxCamera>;
+	var camPlayers:Array<FlxCamera> = [];
 	var camDivision:FlxCamera;
 	var camOver:FlxCamera;
 	var transitioning:Bool = true;
 	var playerGroups:FlxTypedGroup<PlayerSongSelect>;
+	var viewingSongs:Bool = false;
 
 	override function create()
 	{
@@ -32,8 +35,9 @@ class SongSelectState extends FNFState
 		var players = Settings.singleSongSelection ? 1 : 2;
 		for (i in 0...players)
 		{
-			var camPlayer = new FlxCamera(0, 0, Std.int(FlxG.width / players));
+			var camPlayer = new FlxCamera(Std.int((FlxG.width / 2) * i), 0, Std.int(FlxG.width / players));
 			camPlayer.bgColor = 0;
+			camPlayers.push(camPlayer);
 			FlxG.cameras.add(camPlayer, false);
 		}
 
@@ -55,6 +59,11 @@ class SongSelectState extends FNFState
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
 
+		for (i in 0...players)
+		{
+			playerGroups.add(new PlayerSongSelect(i, camPlayers[i]));
+		}
+
 		for (cam in camPlayers)
 			cam.zoom = 3;
 		FlxTween.tween(camPlayers[0], {zoom: 1}, Main.TRANSITION_TIME, {
@@ -73,6 +82,26 @@ class SongSelectState extends FNFState
 
 	override function update(elapsed:Float)
 	{
+		if (!transitioning && PlayerSettings.checkAction(BACK_P))
+		{
+			if (viewingSongs) {}
+			else
+			{
+				transitioning = true;
+				for (group in playerGroups)
+					group.setControlsEnabled(false);
+				FlxG.sound.music.fadeOut(Main.TRANSITION_TIME);
+				FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
+					ease: FlxEase.expoIn,
+					onComplete: function(_)
+					{
+						FlxG.switchState(new RulesetState());
+					}
+				});
+				camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+			}
+		}
+
 		super.update(elapsed);
 
 		if (camPlayers[1] != null)
@@ -82,8 +111,11 @@ class SongSelectState extends FNFState
 
 class PlayerSongSelect extends FlxGroup
 {
+	static var lastSelectedGroups:Array<Int> = [0, 0];
+
 	var player:Int = 0;
 	var groupMenuList:GroupMenuList;
+	var camFollow:FlxObject;
 
 	public function new(player:Int, camera:FlxCamera)
 	{
@@ -91,19 +123,40 @@ class PlayerSongSelect extends FlxGroup
 		this.player = player;
 		cameras = [camera];
 
+		camFollow = new FlxObject(FlxG.width / (Settings.singleSongSelection ? 2 : 4));
+		camera.follow(camFollow, LOCKON, 0.1);
+		add(camFollow);
+
 		groupMenuList = new GroupMenuList(player);
-		groupMenuList.controlsEnabled = false;
+		groupMenuList.onChange.add(onChange);
+		setControlsEnabled(false);
 		add(groupMenuList);
 
 		for (name => group in Mods.songGroups)
 		{
 			groupMenuList.createItem(name, group);
 		}
+
+		groupMenuList.selectItem(lastSelectedGroups[player]);
+		camera.snapToTarget();
 	}
 
 	public function setControlsEnabled(value:Bool)
 	{
 		groupMenuList.controlsEnabled = value;
+	}
+
+	function onChange(item:GroupMenuItem)
+	{
+		updateCamFollow(item);
+		lastSelectedGroups[player] = item.ID;
+	}
+
+	function updateCamFollow(item:GroupMenuItem)
+	{
+		var midpoint = item.getMidpoint();
+		camFollow.y = midpoint.y;
+		midpoint.put();
 	}
 }
 
@@ -113,7 +166,7 @@ class GroupMenuList extends TypedMenuList<GroupMenuItem>
 
 	public function new(player:Int)
 	{
-		super();
+		super(VERTICAL, PLAYER(player));
 		this.player = player;
 	}
 
@@ -127,8 +180,6 @@ class GroupMenuList extends TypedMenuList<GroupMenuItem>
 		else
 		{
 			item.x = ((FlxG.width / 2) - item.width) / 2;
-			if (player == 1)
-				item.x += (FlxG.width / 2);
 		}
 		return addItem(name, item);
 	}
@@ -158,6 +209,8 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		var graphicKey = name + '_cropped';
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
+
+		var startTime = Sys.time();
 
 		var thickness = 4;
 
@@ -197,6 +250,8 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 
 		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
+
+		trace(Sys.time() - startTime);
 
 		return graphic;
 	}

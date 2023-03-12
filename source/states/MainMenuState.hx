@@ -37,7 +37,7 @@ class MainMenuState extends FNFState
 		magenta.visible = false;
 		add(magenta);
 
-		camFollow = new FlxObject();
+		camFollow = new FlxObject(FlxG.width / 2);
 		add(camFollow);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 
@@ -111,7 +111,7 @@ class MainMenuState extends FNFState
 	function updateFollow()
 	{
 		var midpoint = menuList.selectedItem.getMidpoint();
-		camFollow.setPosition(FlxG.width / 2, midpoint.y);
+		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
 
@@ -151,6 +151,9 @@ class MainMenuState extends FNFState
 			FlxFlicker.flicker(magenta, Main.TRANSITION_TIME, 0.15, false);
 			FlxFlicker.flicker(selectedItem, Main.TRANSITION_TIME, 0.06, true, false, function(_)
 			{
+				if (selectedItem.fadeMusic)
+					FlxG.sound.music.stop();
+				
 				selectedItem.callback();
 			});
 			CoolUtil.playConfirmSound();

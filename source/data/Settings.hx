@@ -10,6 +10,7 @@ class Settings
 	// Video
 	public static var resolution:Float = 1;
 	public static var fpsCap:Int = 60;
+	public static var antialiasing:Bool = true;
 	public static var hue:Int = 0;
 	public static var brightness:Int = 0;
 	public static var gamma:Float = 1;
@@ -33,6 +34,7 @@ class Settings
 		load('playerConfigs');
 		load('resolution');
 		load('fpsCap');
+		load('antialiasing');
 		load('hue');
 		load('brightness');
 		load('gamma');
@@ -54,6 +56,7 @@ class Settings
 			FlxG.resizeWindow(Math.round(FlxG.width * resolution), Math.round(FlxG.height * resolution));
 		}
 		FlxG.setFramerate(fpsCap);
+		FlxG.forceNoAntialiasing = !antialiasing;
 		Main.updateFilters();
 
 		FlxG.sound.defaultMusicGroup.volume = musicVolume;
@@ -67,6 +70,7 @@ class Settings
 		save('playerConfigs');
 		save('resolution');
 		save('fpsCap');
+		save('antialiasing');
 		save('hue');
 		save('brightness');
 		save('gamma');

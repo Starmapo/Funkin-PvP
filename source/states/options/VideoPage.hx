@@ -48,25 +48,14 @@ class VideoPage extends BaseSettingsPage
 			FlxG.setFramerate(Settings.fpsCap);
 		});
 		addSetting({
-			name: 'filter',
-			displayName: 'Filter',
-			description: 'Select a filter for colorblindness, or just for fun.',
-			type: STRING,
-			defaultValue: FilterType.NONE,
-			options: [
-				FilterType.NONE,
-				FilterType.DEUTERANOPIA,
-				FilterType.PROTANOPIA,
-				FilterType.TRITANOPIA,
-				FilterType.DOWNER,
-				FilterType.GAME_BOY,
-				FilterType.GRAYSCALE,
-				FilterType.INVERT,
-				FilterType.VIRTUAL_BOY
-			]
+			name: 'antialiasing',
+			displayName: 'Antialiasing',
+			description: "Whether antialiasing is enabled.",
+			type: CHECKBOX,
+			defaultValue: true
 		}, function()
 		{
-			Main.updateColorFilter();
+			FlxG.forceNoAntialiasing = !Settings.antialiasing;
 		});
 		addSetting({
 			name: 'hue',
@@ -111,6 +100,27 @@ class VideoPage extends BaseSettingsPage
 			},
 			minValue: 0.1,
 			maxValue: 1
+		}, function()
+		{
+			Main.updateColorFilter();
+		});
+		addSetting({
+			name: 'filter',
+			displayName: 'Filter',
+			description: 'Select a filter for colorblindness, or just for fun.',
+			type: STRING,
+			defaultValue: FilterType.NONE,
+			options: [
+				FilterType.NONE,
+				FilterType.DEUTERANOPIA,
+				FilterType.PROTANOPIA,
+				FilterType.TRITANOPIA,
+				FilterType.DOWNER,
+				FilterType.GAME_BOY,
+				FilterType.GRAYSCALE,
+				FilterType.INVERT,
+				FilterType.VIRTUAL_BOY
+			]
 		}, function()
 		{
 			Main.updateColorFilter();

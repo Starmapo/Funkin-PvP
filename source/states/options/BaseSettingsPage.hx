@@ -64,7 +64,7 @@ class BaseSettingsPage extends Page
 	function updateCamFollow(item:SettingsMenuItem)
 	{
 		var midpoint = item.getMidpoint();
-		camFollow.setPosition(FlxG.width / 2, midpoint.y);
+		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
 

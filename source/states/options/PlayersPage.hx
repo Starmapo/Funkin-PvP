@@ -34,7 +34,7 @@ class PlayersPage extends Page
 	function updateCamFollow(item:TextMenuItem)
 	{
 		var midpoint = item.getMidpoint();
-		camFollow.setPosition(midpoint.x, midpoint.y);
+		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
 

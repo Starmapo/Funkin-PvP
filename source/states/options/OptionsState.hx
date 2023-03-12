@@ -38,7 +38,7 @@ class OptionsState extends FNFState
 		bg.color = 0xFF5C6CA5;
 		add(bg);
 
-		camFollow = new FlxObject();
+		camFollow = new FlxObject(FlxG.width / 2);
 		camPages.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
 

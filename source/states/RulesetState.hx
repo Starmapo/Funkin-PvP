@@ -39,7 +39,7 @@ class RulesetState extends FNFState
 		camOver.bgColor = 0;
 		FlxG.cameras.add(camOver, false);
 
-		camFollow = new FlxObject();
+		camFollow = new FlxObject(FlxG.width / 2);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
 
@@ -208,7 +208,7 @@ class RulesetState extends FNFState
 	function updateCamFollow(item:SettingsMenuItem)
 	{
 		var midpoint = item.getMidpoint();
-		camFollow.setPosition(FlxG.width / 2, midpoint.y);
+		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
 

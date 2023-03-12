@@ -12,7 +12,7 @@ class MiscellaneousPage extends BaseSettingsPage
 		addSetting({
 			name: 'autoPause',
 			displayName: 'Auto Pause',
-			description: "If enabled, the game will pause when you aren't viewing it.",
+			description: "If enabled, the game will pause while you aren't viewing it.",
 			type: CHECKBOX,
 			defaultValue: false
 		}, function()
