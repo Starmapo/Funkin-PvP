@@ -1,6 +1,7 @@
 package states.menus;
 
 import data.PlayerSettings;
+import data.Settings;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -34,10 +35,13 @@ class MainMenuState extends FNFState
 		bg.angle = 180;
 		add(bg);
 
-		magenta = CoolUtil.createMenuBG('menuBGMagenta', 1.2);
-		magenta.scrollFactor.set();
-		magenta.visible = false;
-		add(magenta);
+		if (Settings.flashing)
+		{
+			magenta = CoolUtil.createMenuBG('menuBGMagenta', 1.2);
+			magenta.scrollFactor.set();
+			magenta.visible = false;
+			add(magenta);
+		}
 
 		camFollow = new FlxObject(FlxG.width / 2);
 		add(camFollow);
@@ -67,7 +71,9 @@ class MainMenuState extends FNFState
 		add(menuList);
 
 		FlxG.camera.snapToTarget();
-		magenta.y = bg.y = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
+		bg.y = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
+		if (magenta != null)
+			magenta.y = bg.y;
 
 		FlxG.camera.zoom = 3;
 		FlxTween.tween(bg, {angle: 0}, Main.TRANSITION_TIME, {ease: FlxEase.quartInOut});
@@ -94,8 +100,7 @@ class MainMenuState extends FNFState
 	override function update(elapsed:Float)
 	{
 		var bgY = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
-		magenta.y = bg.y = FlxMath.lerp(bg.y, bgY, 0.1);
-		magenta.angle = bg.angle;
+		bg.y = FlxMath.lerp(bg.y, bgY, 0.1);
 
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
 		{
@@ -112,6 +117,12 @@ class MainMenuState extends FNFState
 		}
 
 		super.update(elapsed);
+
+		if (magenta != null)
+		{
+			magenta.y = bg.y;
+			magenta.angle = bg.angle;
+		}
 	}
 
 	function updateCamFollow()
@@ -154,7 +165,8 @@ class MainMenuState extends FNFState
 			}
 			FlxTween.tween(bg, {angle: 45}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
 			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
-			FlxFlicker.flicker(magenta, Main.TRANSITION_TIME, 0.15, false);
+			if (magenta != null)
+				FlxFlicker.flicker(magenta, Main.TRANSITION_TIME, 0.15, false);
 			FlxFlicker.flicker(selectedItem, Main.TRANSITION_TIME, 0.06, true, false, function(_)
 			{
 				if (selectedItem.fadeMusic)

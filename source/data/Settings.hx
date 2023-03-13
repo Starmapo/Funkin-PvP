@@ -21,6 +21,7 @@ class Settings
 	public static var globalOffset:Int = 0;
 	public static var smoothAudioTiming:Bool = false;
 	// Miscellaneous
+	public static var flashing:Bool = true;
 	public static var autoPause:Bool = false;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;
@@ -44,6 +45,7 @@ class Settings
 		load('effectVolume');
 		load('globalOffset');
 		load('smoothAudioTiming');
+		load('flashing');
 		load('autoPause');
 		load('singleSongSelection');
 		load('playbackRate');
@@ -80,6 +82,7 @@ class Settings
 		save('effectVolume');
 		save('globalOffset');
 		save('smoothAudioTiming');
+		save('flashing');
 		save('autoPause');
 		save('singleSongSelection');
 		save('playbackRate');

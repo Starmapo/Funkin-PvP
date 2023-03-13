@@ -10,6 +10,13 @@ class MiscellaneousPage extends BaseSettingsPage
 		super();
 
 		addSetting({
+			name: 'flashing',
+			displayName: 'Flashing Lights',
+			description: "Whether flashing lights are enabled.",
+			type: CHECKBOX,
+			defaultValue: true
+		});
+		addSetting({
 			name: 'autoPause',
 			displayName: 'Auto Pause',
 			description: "If enabled, the game will pause while you aren't viewing it.",

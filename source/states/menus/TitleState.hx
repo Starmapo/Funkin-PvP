@@ -1,6 +1,7 @@
 package states.menus;
 
 import data.PlayerSettings;
+import data.Settings;
 import data.song.TimingPoint;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -341,6 +342,8 @@ class TitleState extends FNFState
 		if (!transitioning)
 		{
 			pressEnter.playAnim('press');
+			if (!Settings.flashing)
+				pressEnter.animation.pause();
 			camHUD.flash(FlxColor.WHITE, Main.TRANSITION_TIME);
 			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
 			FlxTween.tween(FlxG.camera, {y: FlxG.height}, Main.TRANSITION_TIME, {
