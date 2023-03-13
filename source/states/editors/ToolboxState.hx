@@ -2,6 +2,7 @@ package states.editors;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import states.editors.song.SongEditorState;
 import ui.lists.TextMenuList;
 
 class ToolboxState extends FNFState
@@ -14,6 +15,10 @@ class ToolboxState extends FNFState
 	public function new()
 	{
 		super();
+
+		var bg = CoolUtil.createMenuBG('menuBGDesat');
+		bg.color = 0xFF353535;
+		add(bg);
 
 		items = new TextMenuList();
 		items.onChange.add(onChange);

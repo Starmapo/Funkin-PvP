@@ -60,7 +60,7 @@ class TitleState extends FNFState
 
 		getIntroText();
 
-		timing = new MusicTiming(FlxG.sound.music, null, TimingPoint.getMusicTimingPoints("Gettin' Freaky"));
+		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized);
 
 		colorSwap = new ColorSwap();
 

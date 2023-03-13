@@ -99,6 +99,11 @@ class MusicTiming
 	**/
 	public var onBeatHit:FlxTypedSignal<Int->Float->Void> = new FlxTypedSignal();
 
+	/**
+		Whether or not this will detect if it missed a step hit and replay it before the current step.
+	**/
+	public var checkSkippedSteps:Bool = true;
+
 	var music:FlxSound;
 	var startDelay:Float;
 	var extraMusic:Array<FlxSound>;
@@ -110,11 +115,13 @@ class MusicTiming
 	/**
 		Creates a new timing object.
 		@param music        The music to base the timing off of. Note that it should be pitched beforehand.
-		@param extraMusic	Extra music objects to sync with the main music.
+		@param timingPoints	The timing points to use for step/beat/bar calculations.
 		@param startDelay   The time to wait before playing the music.
+		@param extraMusic	Extra music objects to sync with the main music.
 		@param onStart		A callback for when the music starts playing.
 	**/
-	public function new(music:FlxSound, ?extraMusic:Array<FlxSound>, ?timingPoints:Array<TimingPoint>, startDelay:Float = 0, ?onStart:MusicTiming->Void)
+	public function new(music:FlxSound, ?timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = true, startDelay:Float = 0, ?extraMusic:Array<FlxSound>,
+			?onStart:MusicTiming->Void)
 	{
 		if (music == null)
 			music = new FlxSound();
@@ -124,8 +131,9 @@ class MusicTiming
 			timingPoints = [];
 
 		this.music = music;
-		this.extraMusic = extraMusic;
 		this.timingPoints = timingPoints;
+		this.checkSkippedSteps = checkSkippedSteps;
+		this.extraMusic = extraMusic;
 		this.startDelay = startDelay;
 		this.onStart = onStart;
 
@@ -330,7 +338,7 @@ class MusicTiming
 			if (i < oldStep || i > curStep)
 				storedSteps.remove(i);
 		}
-		if (curStep > oldStep)
+		if (checkSkippedSteps && curStep > oldStep)
 		{
 			for (i in oldStep...curStep)
 			{
