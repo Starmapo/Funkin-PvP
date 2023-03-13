@@ -1,4 +1,4 @@
-package states;
+package states.menus;
 
 import data.CreditsData;
 import data.PlayerSettings;
@@ -9,8 +9,8 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import ui.MenuList;
-import ui.TextMenuList;
+import ui.lists.MenuList;
+import ui.lists.TextMenuList;
 
 class CreditsState extends FNFState
 {

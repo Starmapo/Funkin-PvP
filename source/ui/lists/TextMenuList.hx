@@ -1,8 +1,8 @@
-package ui;
+package ui.lists;
 
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import ui.MenuList;
+import ui.lists.MenuList;
 
 typedef TextMenuList = TypedMenuList<TextMenuItem>;
 

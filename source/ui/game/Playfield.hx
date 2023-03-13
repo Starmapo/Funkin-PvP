@@ -1,4 +1,4 @@
-package ui;
+package ui.game;
 
 import data.PlayerConfig;
 import data.skin.NoteSkin;

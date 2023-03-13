@@ -1,4 +1,4 @@
-package states;
+package states.menus;
 
 import data.PlayerSettings;
 import data.song.TimingPoint;

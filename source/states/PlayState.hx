@@ -10,10 +10,7 @@ import flixel.util.FlxColor;
 import ui.Playfield;
 import util.MusicTiming;
 
-/**
-	A basic PlayState, includes just the playfields.
-**/
-class BasicPlayState extends FNFState
+class PlayState extends FNFState
 {
 	/**
 		The current song file.

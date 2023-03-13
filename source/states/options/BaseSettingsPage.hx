@@ -6,7 +6,7 @@ import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import ui.SettingsMenuList;
+import ui.lists.SettingsMenuList;
 
 class BaseSettingsPage extends Page
 {

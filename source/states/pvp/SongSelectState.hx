@@ -1,4 +1,4 @@
-package states;
+package states.pvp;
 
 import data.Mods;
 import data.PlayerSettings;
@@ -19,8 +19,8 @@ import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import ui.MenuList;
-import ui.TextMenuList;
+import ui.lists.MenuList;
+import ui.lists.TextMenuList;
 
 class SongSelectState extends FNFState
 {
@@ -195,6 +195,7 @@ class PlayerSongSelect extends FlxGroup
 				groupMenuList.controlsEnabled = true;
 				songMenuList.controlsEnabled = false;
 				camFollow.x = FlxG.width / (Settings.singleSongSelection ? 2 : 4);
+				updateCamFollow(groupMenuList.selectedItem);
 				viewingSongs = false;
 			}
 			else
@@ -204,6 +205,7 @@ class PlayerSongSelect extends FlxGroup
 					FlxG.switchState(new RulesetState());
 				});
 			}
+			CoolUtil.playCancelSound();
 		}
 
 		super.update(elapsed);
@@ -227,13 +229,18 @@ class PlayerSongSelect extends FlxGroup
 	{
 		groupMenuList.controlsEnabled = false;
 		songMenuList.controlsEnabled = true;
-		camFollow.x = FlxG.width * 0.75;
+		camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1.5 : 0.75);
 		if (lastGroupReset != item.name)
 		{
 			songMenuList.resetGroup(item);
 			lastGroupReset = item.name;
 		}
+		else
+		{
+			updateCamFollow(songMenuList.selectedItem);
+		}
 		viewingSongs = true;
+		CoolUtil.playScrollSound();
 	}
 
 	function updateCamFollow(item:MenuItem)
@@ -407,7 +414,14 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 	{
 		var name = songData.directory + songData.name;
 		var item = new SongMenuItem(0, 0, name, songData);
-		item.x = (FlxG.width / 2) + (((FlxG.width / 2) - item.width) / 2);
+		if (Settings.singleSongSelection)
+		{
+			item.x = FlxG.width + ((FlxG.width - item.width) / 2);
+		}
+		else
+		{
+			item.x = (FlxG.width / 2) + (((FlxG.width / 2) - item.width) / 2);
+		}
 		byName[name] = item;
 		return item;
 	}
@@ -415,15 +429,17 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 	public function resetGroup(groupItem:GroupMenuItem)
 	{
 		var songGroup = Mods.songGroups.get(groupItem.name);
+		var midpoint = groupItem.getMidpoint();
 		clear();
 		for (song in songGroup.songs)
 		{
 			var item = byName[song.directory + song.name];
-			item.y = groupItem.y + (100 * length);
+			item.y = (midpoint.y + (100 * length)) - (item.height / 2);
 			item.ID = length;
 			add(item);
 		}
 		selectItem(0);
+		midpoint.put();
 	}
 
 	function cacheItems()
@@ -441,7 +457,7 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 class SongMenuItem extends TextMenuItem
 {
 	var songData:ModSong;
-	var maxWidth:Float = FlxG.width / 2;
+	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, songData:ModSong)
 	{

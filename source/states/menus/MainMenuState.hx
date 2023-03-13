@@ -1,4 +1,4 @@
-package states;
+package states.menus;
 
 import data.PlayerSettings;
 import flixel.FlxG;
@@ -10,8 +10,9 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import states.options.OptionsState;
-import ui.MenuList;
-import ui.TextMenuList.TextMenuItem;
+import states.pvp.RulesetState;
+import ui.lists.MenuList;
+import ui.lists.TextMenuList;
 
 class MainMenuState extends FNFState
 {
@@ -153,7 +154,7 @@ class MainMenuState extends FNFState
 			{
 				if (selectedItem.fadeMusic)
 					FlxG.sound.music.stop();
-				
+
 				selectedItem.callback();
 			});
 			CoolUtil.playConfirmSound();

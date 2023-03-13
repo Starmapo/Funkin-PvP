@@ -1,4 +1,4 @@
-package ui;
+package ui.lists;
 
 import data.Settings;
 import flixel.FlxG;
@@ -7,7 +7,7 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import sprites.AnimatedSprite;
-import ui.MenuList;
+import ui.lists.MenuList;
 
 using StringTools;
 

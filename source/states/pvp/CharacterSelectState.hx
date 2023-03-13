@@ -1,3 +1,3 @@
-package states;
+package states.pvp;
 
 class CharacterSelectState extends FNFState {}

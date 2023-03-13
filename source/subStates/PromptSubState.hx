@@ -1,4 +1,4 @@
-package states;
+package subStates;
 
 import flixel.FlxCamera;
 import flixel.FlxG;

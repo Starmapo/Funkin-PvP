@@ -1,4 +1,4 @@
-package ui;
+package ui.game;
 
 import data.skin.NoteSkin;
 import flixel.tweens.FlxTween;

@@ -1,6 +1,6 @@
 package states.options;
 
-import ui.TextMenuList;
+import ui.lists.TextMenuList;
 
 class PlayersPage extends Page
 {

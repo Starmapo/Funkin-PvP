@@ -1,4 +1,4 @@
-package states;
+package states.pvp;
 
 import data.PlayerSettings;
 import data.Settings.WinCondition;
@@ -12,7 +12,8 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import ui.SettingsMenuList;
+import states.menus.MainMenuState;
+import ui.lists.SettingsMenuList;
 
 class RulesetState extends FNFState
 {
@@ -132,12 +133,12 @@ class RulesetState extends FNFState
 			type: ACTION,
 		}, function()
 		{
-			exitTransition(function(_)
+			exitTransition(false, function(_)
 			{
-				FlxG.sound.music.stop();
 				FlxG.switchState(new SongSelectState());
 			});
 			FlxFlicker.flicker(items.selectedItem, Main.TRANSITION_TIME, 0.06, true, false);
+			CoolUtil.playConfirmSound();
 		});
 
 		items.selectItem(lastSelected);
@@ -168,11 +169,11 @@ class RulesetState extends FNFState
 	{
 		if (!transitioning && PlayerSettings.checkAction(BACK_P))
 		{
-			exitTransition(function(_)
+			exitTransition(true, function(_)
 			{
-				FlxG.sound.music.stop();
 				FlxG.switchState(new MainMenuState());
 			});
+			CoolUtil.playCancelSound();
 		}
 
 		super.update(elapsed);
@@ -240,18 +241,25 @@ class RulesetState extends FNFState
 		return items.addItem(item.name, item);
 	}
 
-	function exitTransition(onComplete:FlxTween->Void)
+	function exitTransition(fadeMusic:Bool, onComplete:FlxTween->Void)
 	{
 		if (descTween != null)
 			descTween.cancel();
 		transitioning = true;
 		items.controlsEnabled = false;
-		FlxG.sound.music.fadeOut(Main.TRANSITION_TIME);
+		if (fadeMusic)
+			FlxG.sound.music.fadeOut(Main.TRANSITION_TIME);
 		FlxTween.tween(camScroll, {y: -camScroll.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
 		FlxTween.tween(descText, {y: FlxG.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
 		FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
 			ease: FlxEase.expoIn,
-			onComplete: onComplete
+			onComplete: function(twn)
+			{
+				if (fadeMusic)
+					FlxG.sound.music.stop();
+
+				onComplete(twn);
+			}
 		});
 		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 	}

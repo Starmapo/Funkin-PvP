@@ -1,4 +1,4 @@
-package ui;
+package ui.lists;
 
 import data.Controls.Action;
 import data.PlayerSettings;

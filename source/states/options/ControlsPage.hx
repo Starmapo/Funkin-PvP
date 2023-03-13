@@ -12,7 +12,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import states.PromptSubState.YesNoPrompt;
+import subStates.PromptSubState;
 import util.InputFormatter;
 
 class ControlsPage extends Page

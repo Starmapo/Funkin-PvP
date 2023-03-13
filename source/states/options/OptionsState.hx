@@ -13,8 +13,9 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal;
-import ui.SettingsMenuList;
-import ui.TextMenuList;
+import states.menus.MainMenuState;
+import ui.lists.SettingsMenuList;
+import ui.lists.TextMenuList;
 
 class OptionsState extends FNFState
 {
