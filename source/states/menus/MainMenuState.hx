@@ -9,6 +9,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import states.editors.ToolboxState;
 import states.options.OptionsState;
 import states.pvp.RulesetState;
 import ui.lists.MenuList;
@@ -50,6 +51,10 @@ class MainMenuState extends FNFState
 		menuList.createItem('Credits', function()
 		{
 			FlxG.switchState(new CreditsState());
+		});
+		menuList.createItem('Toolbox', function()
+		{
+			FlxG.switchState(new ToolboxState());
 		});
 		menuList.createItem('Options', function()
 		{
@@ -109,7 +114,7 @@ class MainMenuState extends FNFState
 		super.update(elapsed);
 	}
 
-	function updateFollow()
+	function updateCamFollow()
 	{
 		var midpoint = menuList.selectedItem.getMidpoint();
 		camFollow.y = midpoint.y;
@@ -118,7 +123,7 @@ class MainMenuState extends FNFState
 
 	function onChange(item:MainMenuItem)
 	{
-		updateFollow();
+		updateCamFollow();
 		lastSelected = item.ID;
 	}
 
