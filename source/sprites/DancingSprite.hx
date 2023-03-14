@@ -1,5 +1,6 @@
 package sprites;
 
+import flixel.util.FlxDestroyUtil;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxSignal.FlxTypedSignal;
@@ -39,7 +40,7 @@ class DancingSprite extends AnimatedSprite
 	override function destroy()
 	{
 		super.destroy();
-		onDance.removeAll();
+		FlxDestroyUtil.destroy(onDance);
 	}
 
 	/**

@@ -6,6 +6,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import sprites.AnimatedSprite;
 import ui.lists.MenuList;
 
@@ -182,14 +183,12 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			if (checkbox != null)
 			{
 				label.remove(checkbox);
-				checkbox.destroy();
-				checkbox = null;
+				checkbox = FlxDestroyUtil.destroy(checkbox);
 			}
 			if (valueText != null)
 			{
 				label.remove(valueText);
-				valueText.destroy();
-				valueText = null;
+				valueText = FlxDestroyUtil.destroy(valueText);
 			}
 
 			nameText.text = data.displayName;

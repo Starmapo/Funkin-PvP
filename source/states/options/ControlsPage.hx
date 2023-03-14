@@ -12,6 +12,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import subStates.PromptSubState;
 import util.InputFormatter;
 
@@ -216,8 +217,8 @@ class ControlsPage extends Page
 	override function destroy()
 	{
 		super.destroy();
-		defaultPrompt.destroy();
-		clearPrompt.destroy();
+		defaultPrompt = FlxDestroyUtil.destroy(defaultPrompt);
+		clearPrompt = FlxDestroyUtil.destroy(clearPrompt);
 	}
 
 	override function onAppear()

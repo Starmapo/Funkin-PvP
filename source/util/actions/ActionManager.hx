@@ -1,8 +1,9 @@
 package util.actions;
 
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
-class ActionManager
+class ActionManager implements IFlxDestroyable
 {
 	public var undoStack:Array<IAction> = [];
 	public var redoStack:Array<IAction> = [];
@@ -47,6 +48,11 @@ class ActionManager
 	public function triggerEvent(type:String, args:Dynamic)
 	{
 		onEvent.dispatch(type, args);
+	}
+
+	public function destroy()
+	{
+		FlxDestroyUtil.destroy(onEvent);
 	}
 
 	function get_hasUnsavedChanges()

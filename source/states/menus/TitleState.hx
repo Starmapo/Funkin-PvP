@@ -1,5 +1,6 @@
 package states.menus;
 
+import flixel.util.FlxDestroyUtil;
 import data.PlayerSettings;
 import data.Settings;
 import data.song.TimingPoint;
@@ -193,8 +194,7 @@ class TitleState extends FNFState
 	override function destroy()
 	{
 		super.destroy();
-		if (timing != null)
-			timing.destroy();
+		timing = FlxDestroyUtil.destroy(timing);
 	}
 
 	function getIntroText()

@@ -4,14 +4,15 @@ import data.PlayerSettings;
 import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal;
 
 class Page extends FlxGroup
 {
 	public var controlsEnabled(default, set):Bool = true;
-	public var onSwitch(default, null) = new FlxTypedSignal<PageName->Void>();
+	public var onSwitch(default, null):FlxTypedSignal<PageName->Void> = new FlxTypedSignal();
 	public var onExit(default, null) = new FlxSignal();
-	public var onOpenSubState(default, null) = new FlxTypedSignal<FlxSubState->Void>();
+	public var onOpenSubState(default, null):FlxTypedSignal<FlxSubState->Void> = new FlxTypedSignal();
 
 	var camFollow(get, never):FlxObject;
 
@@ -26,6 +27,14 @@ class Page extends FlxGroup
 			updateControls();
 
 		super.update(elapsed);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		FlxDestroyUtil.destroy(onSwitch);
+		FlxDestroyUtil.destroy(onExit);
+		FlxDestroyUtil.destroy(onOpenSubState);
 	}
 
 	public function onAppear() {}

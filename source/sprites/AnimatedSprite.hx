@@ -2,6 +2,7 @@ package sprites;
 
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 /**
@@ -26,7 +27,7 @@ class AnimatedSprite extends FlxSprite
 	override function destroy()
 	{
 		super.destroy();
-		onAnimPlayed.removeAll();
+		FlxDestroyUtil.destroy(onAnimPlayed);
 	}
 
 	/**

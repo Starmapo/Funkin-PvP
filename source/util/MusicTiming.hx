@@ -4,6 +4,7 @@ import data.Settings;
 import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.sound.FlxSound;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import sprites.DancingSprite;
 
@@ -12,7 +13,7 @@ import sprites.DancingSprite;
 
 	Note that `curStep`, `curBeat` and `curBar` are all relative to the current timing section, not the whole song. This is due to the fact that timing points can be placed anywhere, unlike the original FNF where changing BPMs is limited to every 4 beats.
 **/
-class MusicTiming
+class MusicTiming implements IFlxDestroyable
 {
 	/**
 		How much the current time has to be behind or ahead of the music's time to resync it.
@@ -184,8 +185,8 @@ class MusicTiming
 
 	public function destroy()
 	{
-		onStepHit.removeAll();
-		onBeatHit.removeAll();
+		FlxDestroyUtil.destroy(onStepHit);
+		FlxDestroyUtil.destroy(onBeatHit);
 	}
 
 	/**

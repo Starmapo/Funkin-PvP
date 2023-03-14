@@ -7,7 +7,8 @@ import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.sound.FlxSound;
 import flixel.util.FlxColor;
-import ui.Playfield;
+import flixel.util.FlxDestroyUtil;
+import ui.game.Playfield;
 import util.MusicTiming;
 
 class PlayState extends FNFState
@@ -61,8 +62,7 @@ class PlayState extends FNFState
 	override function destroy()
 	{
 		super.destroy();
-		if (timing != null)
-			timing.destroy();
+		timing = FlxDestroyUtil.destroy(timing);
 	}
 
 	/**
@@ -85,7 +85,7 @@ class PlayState extends FNFState
 		songInst.onComplete = endSong;
 		songVocals = FlxG.sound.load(Paths.getSongVocals(song));
 
-		timing = new MusicTiming(songInst, song.timingPoints, true, [songVocals], song.timingPoints[0].beatLength * 5, startSong);
+		timing = new MusicTiming(songInst, song.timingPoints, true, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
 	}
 
 	function initPlayfields()

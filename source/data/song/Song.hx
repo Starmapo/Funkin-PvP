@@ -8,6 +8,8 @@ import haxe.io.Path;
 
 class Song extends JsonObject
 {
+	public static var scrollSpeedMult:Float = 0.32;
+	
 	/**
 		Loads a song from a path.
 	**/
@@ -25,6 +27,12 @@ class Song extends JsonObject
 		song.directory = Path.directory(path);
 		song.difficultyName = new Path(path).file;
 		song.sort();
+		return song;
+	}
+
+	public static function createNewSong()
+	{
+		var song = new Song({});
 		return song;
 	}
 
@@ -207,7 +215,7 @@ class Song extends JsonObject
 	**/
 	public var difficultyName:String = '';
 
-	public function new(data:Dynamic)
+	public function new(?data:Dynamic)
 	{
 		title = readString(data.title, 'Untitled Song');
 		artist = readString(data.artist, 'Unknown Artist');

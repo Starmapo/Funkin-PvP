@@ -13,7 +13,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import lime.app.Application;
-import states.menus.TitleState;
+import states.editors.song.SongEditorState;
 import sys.FileSystem;
 import sys.thread.Thread;
 import util.WindowsAPI;
@@ -199,7 +199,6 @@ class BootState extends FNFState
 				}
 			}
 		}
-		trace(Mods.songGroups);
 		if (!hasFNF)
 		{
 			updateText("Base FNF mod not detected. If you deleted it, please download the game again.");
@@ -209,7 +208,7 @@ class BootState extends FNFState
 
 	function exit()
 	{
-		FlxG.switchState(new TitleState()); // switch to the title screen
+		FlxG.switchState(new SongEditorState());
 	}
 
 	function updateText(text:String)

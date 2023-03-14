@@ -1,5 +1,6 @@
 package ui.lists;
 
+import flixel.util.FlxDestroyUtil;
 import data.Controls.Action;
 import data.PlayerSettings;
 import flixel.FlxG;
@@ -254,8 +255,8 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 	{
 		super.destroy();
 		byName.clear();
-		onChange.removeAll();
-		onAccept.removeAll();
+		FlxDestroyUtil.destroy(onChange);
+		FlxDestroyUtil.destroy(onAccept);
 	}
 
 	inline function get_selectedItem():T

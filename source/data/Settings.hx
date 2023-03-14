@@ -1,6 +1,9 @@
 package data;
 
 import flixel.FlxG;
+import util.bindable.Bindable;
+import util.bindable.BindableFloat;
+import util.bindable.BindableInt;
 
 @:keep
 class Settings
@@ -29,6 +32,9 @@ class Settings
 	public static var randomEvents:Bool = true;
 	public static var canDie:Bool = true;
 	public static var winCondition:WinCondition = SCORE;
+	// Editor
+	public static var editorScrollSpeed:BindableInt;
+	public static var editorScaleSpeedWithRate:Bindable<Bool>;
 
 	public static function loadData()
 	{
@@ -52,6 +58,8 @@ class Settings
 		load('randomEvents');
 		load('canDie');
 		load('winCondition');
+		loadBindableInt('editorScrollSpeed', 16, 5, 100);
+		loadBindable('editorScaleSpeedWithRate', true);
 
 		if (!FlxG.fullscreen)
 		{
@@ -98,6 +106,39 @@ class Settings
 		var data = Reflect.field(FlxG.save.data, variable);
 		if (data != null)
 			Reflect.setProperty(Settings, variable, data);
+	}
+
+	static function loadBindable<T>(variable:String, defaultValue:T)
+	{
+		var bindable = new Bindable(defaultValue);
+
+		var data = Reflect.field(FlxG.save.data, variable);
+		if (data != null)
+			bindable.value = data;
+
+		Reflect.setProperty(Settings, variable, bindable);
+	}
+
+	static function loadBindableInt(variable:String, defaultValue:Int, minValue:Int, maxValue:Int)
+	{
+		var bindable = new BindableInt(defaultValue, minValue, maxValue);
+
+		var data = Reflect.field(FlxG.save.data, variable);
+		if (data != null)
+			bindable.value = data;
+
+		Reflect.setProperty(Settings, variable, bindable);
+	}
+
+	static function loadBindableFloat(variable:String, defaultValue:Float, minValue:Float, maxValue:Float)
+	{
+		var bindable = new BindableFloat(defaultValue, minValue, maxValue);
+
+		var data = Reflect.field(FlxG.save.data, variable);
+		if (data != null)
+			bindable.value = data;
+
+		Reflect.setProperty(Settings, variable, bindable);
 	}
 
 	static function save(variable:String)
