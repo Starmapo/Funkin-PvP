@@ -30,12 +30,13 @@ class SongEditorState extends FNFState
 	var dividerLines:FlxTypedGroup<FlxSprite>;
 	var hitPositionLine:FlxSprite;
 	var timeline:SongEditorTimeline;
+	var timeSinceLastPlayfieldZoom:Float = 0;
 
 	override function create()
 	{
 		song = Song.loadSong('mods/fnf/songs/Bopeebo/Hard.json');
-		inst = FlxG.sound.load(Paths.getSongInst(song));
-		vocals = FlxG.sound.load(Paths.getSongVocals(song));
+		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
+		vocals = FlxG.sound.load(Paths.getSongVocals(song), 1, false, FlxG.sound.defaultMusicGroup);
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
@@ -83,6 +84,8 @@ class SongEditorState extends FNFState
 
 	override function update(elapsed:Float)
 	{
+		handleInput();
+
 		resyncVocals();
 
 		FlxG.camera.scroll.y = -trackPositionY;
@@ -97,6 +100,65 @@ class SongEditorState extends FNFState
 		beatSnap = FlxDestroyUtil.destroy(beatSnap);
 	}
 
+	function handleInput()
+	{
+		if (FlxG.keys.justPressed.SPACE)
+		{
+			if (inst.playing)
+			{
+				inst.pause();
+				vocals.pause();
+			}
+			else
+			{
+				inst.resume();
+				vocals.resume();
+			}
+		}
+
+		timeSinceLastPlayfieldZoom += FlxG.elapsed;
+		var canZoom = timeSinceLastPlayfieldZoom >= 0.1;
+
+		if (FlxG.keys.justPressed.PAGEUP)
+		{
+			Settings.editorScrollSpeed.value++;
+		}
+		else if (FlxG.keys.justPressed.PAGEDOWN)
+		{
+			Settings.editorScrollSpeed.value--;
+		}
+		else if (FlxG.keys.pressed.PAGEUP && canZoom)
+		{
+			Settings.editorScrollSpeed.value++;
+			timeSinceLastPlayfieldZoom = 0;
+		}
+		else if (FlxG.keys.pressed.PAGEDOWN && canZoom)
+		{
+			Settings.editorScrollSpeed.value--;
+			timeSinceLastPlayfieldZoom = 0;
+		}
+
+		if (FlxG.keys.justPressed.HOME)
+		{
+			var time:Float = song.notes.length == 0 ? 0 : song.notes[0].startTime;
+			setSongTime(time);
+		}
+		if (FlxG.keys.justPressed.END)
+		{
+			var time:Float = song.notes.length == 0 ? inst.length - 1 : song.notes[song.notes.length - 1].startTime;
+			setSongTime(time);
+		}
+
+		if (FlxG.keys.justPressed.LEFT || FlxG.mouse.wheel < 0)
+		{
+			handleSeeking(false);
+		}
+		if (FlxG.keys.justPressed.RIGHT || FlxG.mouse.wheel > 0)
+		{
+			handleSeeking(true);
+		}
+	}
+
 	function resyncVocals()
 	{
 		var timeOutOfThreshold = Math.abs(vocals.time - inst.time) >= MusicTiming.SYNC_THRESHOLD * inst.pitch;
@@ -105,6 +167,29 @@ class SongEditorState extends FNFState
 			FlxG.log.notice('Resynced vocals with difference of ' + Math.abs(inst.time - inst.time));
 			vocals.time = inst.time;
 		}
+	}
+
+	function setSongTime(time:Float)
+	{
+		vocals.time = inst.time = time;
+	}
+
+	function handleSeeking(forward:Bool)
+	{
+		var time = Song.getNearestSnapTimeFromTime(song, forward, beatSnap.value, inst.time);
+
+		if (inst.playing)
+		{
+			for (i in 0...3)
+				time = Song.getNearestSnapTimeFromTime(song, forward, beatSnap.value, time);
+		}
+
+		if (time < 0)
+			time = 0;
+		if (time > inst.length)
+			time = inst.length - 100;
+
+		setSongTime(time);
 	}
 
 	function get_trackSpeed()

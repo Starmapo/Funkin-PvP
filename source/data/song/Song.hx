@@ -9,7 +9,7 @@ import haxe.io.Path;
 class Song extends JsonObject
 {
 	public static var scrollSpeedMult:Float = 0.32;
-	
+
 	/**
 		Loads a song from a path.
 	**/
@@ -32,8 +32,26 @@ class Song extends JsonObject
 
 	public static function createNewSong()
 	{
-		var song = new Song({});
-		return song;
+		return new Song({});
+	}
+
+	public static function getNearestSnapTimeFromTime(song:Song, forward:Bool, snap:Int, time:Float):Float
+	{
+		if (song == null)
+			return 0;
+
+		var point = song.getTimingPointAt(time);
+		if (point == null)
+			return 0;
+
+		var snapTimePerBeat = 60000 / point.bpm / snap;
+		var pointToSnap:Float = time + (forward ? snapTimePerBeat : -snapTimePerBeat);
+		var nearestTick = Math.round((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
+
+		if (Math.abs(nearestTick - time) <= snapTimePerBeat)
+			return nearestTick;
+
+		return (Math.round((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
 	}
 
 	static function convertFNFSong(json:Dynamic)
@@ -381,6 +399,8 @@ class Song extends JsonObject
 				durations[bpm] += duration;
 			else
 				durations[bpm] = duration;
+
+			i--;
 		}
 
 		var commonBPM:Float = 0;
@@ -408,6 +428,8 @@ class Song extends JsonObject
 		{
 			if (timingPoints[index].startTime <= time)
 				break;
+
+			index--;
 		}
 
 		if (index == -1)
@@ -427,6 +449,8 @@ class Song extends JsonObject
 		{
 			if (sliderVelocities[index].startTime <= time)
 				break;
+
+			index--;
 		}
 
 		if (index == -1)

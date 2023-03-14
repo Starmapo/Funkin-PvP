@@ -97,6 +97,8 @@ class Settings
 		save('randomEvents');
 		save('canDie');
 		save('winCondition');
+		saveBindable('editorScrollSpeed');
+		saveBindable('editorScaleSpeedWithRate');
 
 		FlxG.save.flush();
 	}
@@ -112,7 +114,7 @@ class Settings
 	{
 		var bindable = new Bindable(defaultValue);
 
-		var data = Reflect.field(FlxG.save.data, variable);
+		var data:Null<T> = Reflect.field(FlxG.save.data, variable);
 		if (data != null)
 			bindable.value = data;
 
@@ -123,7 +125,7 @@ class Settings
 	{
 		var bindable = new BindableInt(defaultValue, minValue, maxValue);
 
-		var data = Reflect.field(FlxG.save.data, variable);
+		var data:Null<Int> = Reflect.field(FlxG.save.data, variable);
 		if (data != null)
 			bindable.value = data;
 
@@ -134,7 +136,7 @@ class Settings
 	{
 		var bindable = new BindableFloat(defaultValue, minValue, maxValue);
 
-		var data = Reflect.field(FlxG.save.data, variable);
+		var data:Null<Float> = Reflect.field(FlxG.save.data, variable);
 		if (data != null)
 			bindable.value = data;
 
@@ -144,6 +146,12 @@ class Settings
 	static function save(variable:String)
 	{
 		Reflect.setField(FlxG.save.data, variable, Reflect.getProperty(Settings, variable));
+	}
+
+	static function saveBindable<T>(variable:String)
+	{
+		var bindable:Bindable<T> = Reflect.getProperty(Settings, variable);
+		Reflect.setField(FlxG.save.data, variable, bindable.value);
 	}
 }
 

@@ -62,6 +62,8 @@ class NoteInfo extends JsonObject
 		{
 			if (startTime >= timingPoints[i].startTime)
 				return timingPoints[i];
+
+			i--;
 		}
 
 		return timingPoints[0];
