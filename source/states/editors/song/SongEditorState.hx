@@ -7,8 +7,10 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import util.MusicTiming;
 import util.bindable.BindableInt;
 
@@ -23,6 +25,9 @@ class SongEditorState extends FNFState
 	public var song:Song;
 	public var inst:FlxSound;
 	public var vocals:FlxSound;
+	public var availableBeatSnaps:Array<Int> = [1, 2, 3, 4, 6, 8, 12, 16];
+	public var songSeeked:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
+	public var rateChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 
 	var actionManager:SongEditorActionManager;
 	var borderLeft:FlxSprite;
@@ -31,11 +36,16 @@ class SongEditorState extends FNFState
 	var hitPositionLine:FlxSprite;
 	var timeline:SongEditorTimeline;
 	var timeSinceLastPlayfieldZoom:Float = 0;
+	var beatSnapIndex(get, never):Int;
+	var loadingWaveform:FlxText;
 
 	override function create()
 	{
+		persistentUpdate = true;
+
 		song = Song.loadSong('mods/fnf/songs/Bopeebo/Hard.json');
 		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
+		inst.onComplete = onSongComplete;
 		vocals = FlxG.sound.load(Paths.getSongVocals(song), 1, false, FlxG.sound.defaultMusicGroup);
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
@@ -74,6 +84,11 @@ class SongEditorState extends FNFState
 		timeline = new SongEditorTimeline(this);
 		add(timeline);
 
+		loadingWaveform = new FlxText(0, 135, 0, 'Loading Waveform...', 20);
+		loadingWaveform.screenCenter(X);
+		loadingWaveform.scrollFactor.set();
+		add(loadingWaveform);
+
 		actionManager = new SongEditorActionManager(this);
 
 		inst.play();
@@ -91,6 +106,9 @@ class SongEditorState extends FNFState
 		FlxG.camera.scroll.y = -trackPositionY;
 
 		super.update(elapsed);
+
+		if (!FlxG.mouse.visible)
+			FlxG.mouse.visible = true;
 	}
 
 	override function destroy()
@@ -98,6 +116,7 @@ class SongEditorState extends FNFState
 		super.destroy();
 		actionManager = FlxDestroyUtil.destroy(actionManager);
 		beatSnap = FlxDestroyUtil.destroy(beatSnap);
+		FlxDestroyUtil.destroy(songSeeked);
 	}
 
 	function handleInput()
@@ -111,8 +130,8 @@ class SongEditorState extends FNFState
 			}
 			else
 			{
-				inst.resume();
-				vocals.resume();
+				inst.play();
+				vocals.play();
 			}
 		}
 
@@ -140,22 +159,47 @@ class SongEditorState extends FNFState
 
 		if (FlxG.keys.justPressed.HOME)
 		{
-			var time:Float = song.notes.length == 0 ? 0 : song.notes[0].startTime;
-			setSongTime(time);
+			setSongTime(song.notes.length == 0 ? 0 : song.notes[0].startTime);
 		}
 		if (FlxG.keys.justPressed.END)
 		{
-			var time:Float = song.notes.length == 0 ? inst.length - 1 : song.notes[song.notes.length - 1].startTime;
-			setSongTime(time);
+			setSongTime(song.notes.length == 0 ? inst.length - 1 : song.notes[song.notes.length - 1].startTime);
 		}
 
-		if (FlxG.keys.justPressed.LEFT || FlxG.mouse.wheel < 0)
+		if (!FlxG.keys.pressed.CONTROL)
 		{
-			handleSeeking(false);
+			if (FlxG.keys.justPressed.LEFT || FlxG.mouse.wheel < 0)
+			{
+				handleSeeking(false);
+			}
+			if (FlxG.keys.justPressed.RIGHT || FlxG.mouse.wheel > 0)
+			{
+				handleSeeking(true);
+			}
 		}
-		if (FlxG.keys.justPressed.RIGHT || FlxG.mouse.wheel > 0)
+
+		if (FlxG.keys.pressed.CONTROL)
 		{
-			handleSeeking(true);
+			if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.DOWN)
+			{
+				changeBeatSnap(true);
+			}
+			if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.UP)
+			{
+				changeBeatSnap(false);
+			}
+		}
+
+		if (FlxG.keys.pressed.CONTROL)
+		{
+			if (FlxG.keys.justPressed.MINUS)
+			{
+				changePlaybackRate(false);
+			}
+			if (FlxG.keys.justPressed.PLUS)
+			{
+				changePlaybackRate(true);
+			}
 		}
 	}
 
@@ -169,9 +213,11 @@ class SongEditorState extends FNFState
 		}
 	}
 
-	function setSongTime(time:Float)
+	function setSongTime(time:Float = 0)
 	{
+		var oldTime = inst.time;
 		vocals.time = inst.time = time;
+		songSeeked.dispatch(inst.time, oldTime);
 	}
 
 	function handleSeeking(forward:Bool)
@@ -192,6 +238,38 @@ class SongEditorState extends FNFState
 		setSongTime(time);
 	}
 
+	function changeBeatSnap(forward:Bool)
+	{
+		var index = beatSnapIndex;
+
+		if (forward)
+		{
+			beatSnap.value = index + 1 < availableBeatSnaps.length ? availableBeatSnaps[index + 1] : availableBeatSnaps[0];
+		}
+		else
+		{
+			beatSnap.value = index - 1 >= 0 ? availableBeatSnaps[index - 1] : availableBeatSnaps[availableBeatSnaps.length - 1];
+		}
+	}
+
+	function changePlaybackRate(forward:Bool)
+	{
+		var targetRate:Float = inst.pitch + (forward ? 0.25 : -0.25);
+		if (targetRate <= 0 || targetRate > 2)
+			return;
+
+		var oldPitch = inst.pitch;
+		inst.pitch = vocals.pitch = targetRate;
+		rateChanged.dispatch(inst.pitch, oldPitch);
+	}
+
+	function onSongComplete()
+	{
+		inst.stop();
+		vocals.stop();
+		setSongTime();
+	}
+
 	function get_trackSpeed()
 	{
 		return Settings.editorScrollSpeed.value / (Settings.editorScaleSpeedWithRate.value ? 20 * inst.pitch : 20);
@@ -200,5 +278,10 @@ class SongEditorState extends FNFState
 	function get_trackPositionY()
 	{
 		return inst.time * trackSpeed;
+	}
+
+	function get_beatSnapIndex()
+	{
+		return availableBeatSnaps.indexOf(beatSnap.value);
 	}
 }

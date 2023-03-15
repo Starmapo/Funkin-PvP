@@ -25,6 +25,8 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 
 		initializeLines();
 
+		state.songSeeked.add(onSongSeeked);
+		state.rateChanged.add(onRateChanged);
 		state.beatSnap.valueChanged.add(onBeatSnapChanged);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
@@ -76,6 +78,8 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 			for (line in lines)
 				FlxDestroyUtil.destroy(line);
 		}
+		state.songSeeked.remove(onSongSeeked);
+		state.rateChanged.remove(onRateChanged);
 		state.beatSnap.valueChanged.remove(onBeatSnapChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
@@ -86,6 +90,7 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 		if (cachedLines.exists(state.beatSnap.value) && !forceRefresh)
 		{
 			lines = cachedLines.get(state.beatSnap.value);
+			initializeLinePool();
 			return;
 		}
 
@@ -121,8 +126,6 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 			if (point == state.song.timingPoints[state.song.timingPoints.length - 1])
 				pointLength = state.inst.length + point.beatLength * numBeatsOffsetted + 2000;
 
-			trace(pointLength, point.beatLength);
-
 			var i = 0;
 			while (i < pointLength / point.beatLength * state.beatSnap.value)
 			{
@@ -131,9 +134,6 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 
 				if (measureBeat && time >= point.startTime)
 					measureCount++;
-
-				if (measureBeat)
-					trace(time, i, measureCount);
 
 				var line = new SongEditorTimelineTick(state, point, time, i, measureCount, measureBeat);
 				newLines.push(line);
@@ -147,17 +147,27 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 		initializeLinePool();
 	}
 
-	public function onBeatSnapChanged(_, _)
+	function onSongSeeked(_, _)
+	{
+		initializeLinePool();
+	}
+
+	function onRateChanged(_, _)
+	{
+		initializeLinePool();
+	}
+
+	function onBeatSnapChanged(_, _)
 	{
 		initializeLines();
 	}
 
-	public function onScrollSpeedChanged(_, _)
+	function onScrollSpeedChanged(_, _)
 	{
 		refreshLines();
 	}
 
-	public function onScaleSpeedWithRateChanged(_, _)
+	function onScaleSpeedWithRateChanged(_, _)
 	{
 		refreshLines();
 	}
@@ -210,6 +220,7 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 	var isMeasureLine:Bool;
 	var line:FlxSprite;
 	var measureText:FlxText;
+	var extendedHeight:Bool;
 
 	public function new(state:SongEditorState, timingPoint:TimingPoint, time:Float, index:Int, measureCount:Int, isMeasureLine:Bool)
 	{
@@ -221,7 +232,7 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 		this.measureCount = measureCount;
 		this.isMeasureLine = isMeasureLine;
 
-		var extendedHeight = isMeasureLine && time >= timingPoint.startTime;
+		extendedHeight = isMeasureLine && time >= timingPoint.startTime;
 
 		line = new FlxSprite().makeGraphic(Std.int(state.playfieldBG.width - 4), extendedHeight ? 5 : 2);
 		updateColor();
