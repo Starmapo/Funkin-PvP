@@ -217,7 +217,7 @@ class SongEditorState extends FNFState
 		var timeOutOfThreshold = Math.abs(vocals.time - inst.time) >= MusicTiming.SYNC_THRESHOLD * inst.pitch;
 		if (timeOutOfThreshold)
 		{
-			FlxG.log.notice('Resynced vocals with difference of ' + Math.abs(inst.time - inst.time));
+			FlxG.log.notice('Resynced vocals with difference of ' + Math.abs(vocals.time - inst.time));
 			vocals.time = inst.time;
 		}
 	}

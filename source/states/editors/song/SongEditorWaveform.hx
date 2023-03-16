@@ -87,8 +87,6 @@ class SongEditorWaveform extends FlxBasic
 			slices.push(slice);
 			t += sliceSize;
 		}
-
-		FlxG.debugger.track(slices[0]);
 	}
 
 	/*
