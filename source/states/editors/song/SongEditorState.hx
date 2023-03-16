@@ -19,7 +19,8 @@ import util.bindable.BindableInt;
 
 class SongEditorState extends FNFState
 {
-	public var columnSize:Int = 80;
+	public var columns:Int = 8;
+	public var columnSize:Int = 40;
 	public var hitPositionY:Int = 545;
 	public var beatSnap:BindableInt = new BindableInt(4, 1, 48);
 	public var trackSpeed(get, never):Float;
@@ -43,6 +44,7 @@ class SongEditorState extends FNFState
 	var waveform:SongEditorWaveform;
 	var lineGroup:SongEditorLineGroup;
 	var noteGroup:SongEditorNoteGroup;
+	var seekBar:SongEditorSeekBar;
 
 	override function create()
 	{
@@ -57,7 +59,7 @@ class SongEditorState extends FNFState
 		bg.color = 0xFF222222;
 		add(bg);
 
-		playfieldBG = new FlxSprite().makeGraphic(columnSize * 4, FlxG.height, FlxColor.fromRGB(24, 24, 24));
+		playfieldBG = new FlxSprite().makeGraphic(columnSize * columns, FlxG.height, FlxColor.fromRGB(24, 24, 24));
 		playfieldBG.screenCenter(X);
 		playfieldBG.scrollFactor.set();
 		add(playfieldBG);
@@ -72,10 +74,11 @@ class SongEditorState extends FNFState
 		add(borderRight);
 
 		dividerLines = new FlxTypedGroup();
-		for (i in 0...3)
+		for (i in 1...columns)
 		{
-			var dividerLine = new FlxSprite(playfieldBG.x + (columnSize * (i + 1))).makeGraphic(2, Std.int(playfieldBG.height), FlxColor.WHITE);
-			dividerLine.alpha = 0.35;
+			var playerDivider = i == 4;
+			var dividerLine = new FlxSprite(playfieldBG.x + (columnSize * i)).makeGraphic(2, Std.int(playfieldBG.height), FlxColor.WHITE);
+			dividerLine.alpha = playerDivider ? 0.7 : 0.35;
 			dividerLine.scrollFactor.set();
 			dividerLines.add(dividerLine);
 		}
@@ -97,6 +100,9 @@ class SongEditorState extends FNFState
 
 		noteGroup = new SongEditorNoteGroup(this);
 		add(noteGroup);
+
+		seekBar = new SongEditorSeekBar(this);
+		add(seekBar);
 
 		actionManager = new SongEditorActionManager(this);
 
@@ -128,6 +134,13 @@ class SongEditorState extends FNFState
 		FlxDestroyUtil.destroy(songSeeked);
 	}
 
+	public function setSongTime(time:Float = 0)
+	{
+		var oldTime = inst.time;
+		vocals.time = inst.time = time;
+		songSeeked.dispatch(inst.time, oldTime);
+	}
+
 	function handleInput()
 	{
 		if (FlxG.keys.justPressed.SPACE)
@@ -149,20 +162,20 @@ class SongEditorState extends FNFState
 
 		if (FlxG.keys.justPressed.PAGEUP)
 		{
-			Settings.editorScrollSpeed.value++;
+			Settings.editorScrollSpeed.value += 0.05;
 		}
 		else if (FlxG.keys.justPressed.PAGEDOWN)
 		{
-			Settings.editorScrollSpeed.value--;
+			Settings.editorScrollSpeed.value -= 0.05;
 		}
 		else if (FlxG.keys.pressed.PAGEUP && canZoom)
 		{
-			Settings.editorScrollSpeed.value++;
+			Settings.editorScrollSpeed.value += 0.05;
 			timeSinceLastPlayfieldZoom = 0;
 		}
 		else if (FlxG.keys.pressed.PAGEDOWN && canZoom)
 		{
-			Settings.editorScrollSpeed.value--;
+			Settings.editorScrollSpeed.value -= 0.05;
 			timeSinceLastPlayfieldZoom = 0;
 		}
 
@@ -222,13 +235,6 @@ class SongEditorState extends FNFState
 		}
 	}
 
-	function setSongTime(time:Float = 0)
-	{
-		var oldTime = inst.time;
-		vocals.time = inst.time = time;
-		songSeeked.dispatch(inst.time, oldTime);
-	}
-
 	function handleSeeking(forward:Bool)
 	{
 		var time = Song.getNearestSnapTimeFromTime(song, forward, beatSnap.value, inst.time);
@@ -281,7 +287,7 @@ class SongEditorState extends FNFState
 
 	function get_trackSpeed()
 	{
-		return Settings.editorScrollSpeed.value / (Settings.editorScaleSpeedWithRate.value ? 20 * inst.pitch : 20);
+		return Settings.editorScrollSpeed.value / (Settings.editorScaleSpeedWithRate.value ? inst.pitch : 1);
 	}
 
 	function get_trackPositionY()

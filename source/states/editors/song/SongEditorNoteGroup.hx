@@ -245,7 +245,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updateAnims()
 	{
-		var anim = Std.string(info.lane);
+		var anim = Std.string(info.playerLane);
 		note.playAnim(anim);
 
 		if (!info.isLongNote)

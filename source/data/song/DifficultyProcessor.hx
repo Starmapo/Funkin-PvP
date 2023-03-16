@@ -29,6 +29,26 @@ class DifficultyProcessor
 		return '???';
 	}
 
+	public static function getDifficultyColor(difficulty:Float)
+	{
+		if (difficulty < 1)
+			return 0xFFD1FFFA;
+		if (difficulty < 2.5)
+			return 0xFF5EFF75;
+		if (difficulty < 10)
+			return 0xFF5EC4FF;
+		if (difficulty < 20)
+			return 0xFFF5B25B;
+		if (difficulty < 30)
+			return 0xFFF9645D;
+		if (difficulty < 40)
+			return 0xFFD761EB;
+		if (difficulty < 50)
+			return 0xFF7B61EB;
+
+		return 0xFFB7B7B7;
+	}
+
 	static var laneToFinger:Map<Int, FingerState> = [0 => MIDDLE, 1 => INDEX, 2 => INDEX, 3 => MIDDLE];
 	static var laneToHand:Map<Int, Hand> = [0 => LEFT, 1 => LEFT, 2 => RIGHT, 3 => RIGHT];
 

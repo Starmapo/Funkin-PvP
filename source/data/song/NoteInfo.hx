@@ -42,6 +42,11 @@ class NoteInfo extends JsonObject
 	**/
 	public var maxTime(get, never):Int;
 
+	/**
+		Gets this note's lane relative to the player that will hit it. This equates to `lane` mod 4.
+	**/
+	public var playerLane(get, never):Int;
+
 	public function new(data:Dynamic)
 	{
 		startTime = readInt(data.startTime, 0, 0);
@@ -91,5 +96,10 @@ class NoteInfo extends JsonObject
 	function get_maxTime()
 	{
 		return isLongNote ? endTime : startTime;
+	}
+
+	function get_playerLane()
+	{
+		return lane % 4;
 	}
 }

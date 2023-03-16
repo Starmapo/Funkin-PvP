@@ -33,7 +33,7 @@ class Settings
 	public static var canDie:Bool = true;
 	public static var winCondition:WinCondition = SCORE;
 	// Editor
-	public static var editorScrollSpeed:BindableInt;
+	public static var editorScrollSpeed:BindableFloat;
 	public static var editorScaleSpeedWithRate:Bindable<Bool>;
 	public static var editorLongNoteOpacity:BindableFloat;
 
@@ -59,7 +59,7 @@ class Settings
 		load('randomEvents');
 		load('canDie');
 		load('winCondition');
-		loadBindableInt('editorScrollSpeed', 16, 5, 100);
+		loadBindableFloat('editorScrollSpeed', 0.8, 0.25, 5);
 		loadBindable('editorScaleSpeedWithRate', true);
 		loadBindableFloat('editorLongNoteOpacity', 1, 0.3, 1);
 
