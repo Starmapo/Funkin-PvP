@@ -8,9 +8,12 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import sys.thread.Mutex;
+import sys.thread.Thread;
 import util.MusicTiming;
 import util.bindable.BindableInt;
 
@@ -28,16 +31,18 @@ class SongEditorState extends FNFState
 	public var availableBeatSnaps:Array<Int> = [1, 2, 3, 4, 6, 8, 12, 16];
 	public var songSeeked:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 	public var rateChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
+	public var borderLeft:FlxSprite;
+	public var borderRight:FlxSprite;
 
 	var actionManager:SongEditorActionManager;
-	var borderLeft:FlxSprite;
-	var borderRight:FlxSprite;
 	var dividerLines:FlxTypedGroup<FlxSprite>;
 	var hitPositionLine:FlxSprite;
 	var timeline:SongEditorTimeline;
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
-	var loadingWaveform:FlxText;
+	var waveform:SongEditorWaveform;
+	var lineGroup:SongEditorLineGroup;
+	var noteGroup:SongEditorNoteGroup;
 
 	override function create()
 	{
@@ -84,10 +89,14 @@ class SongEditorState extends FNFState
 		timeline = new SongEditorTimeline(this);
 		add(timeline);
 
-		loadingWaveform = new FlxText(0, 135, 0, 'Loading Waveform...', 20);
-		loadingWaveform.screenCenter(X);
-		loadingWaveform.scrollFactor.set();
-		add(loadingWaveform);
+		waveform = new SongEditorWaveform(this);
+		add(waveform);
+
+		lineGroup = new SongEditorLineGroup(this);
+		add(lineGroup);
+
+		noteGroup = new SongEditorNoteGroup(this);
+		add(noteGroup);
 
 		actionManager = new SongEditorActionManager(this);
 

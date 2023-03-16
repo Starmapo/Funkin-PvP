@@ -388,18 +388,17 @@ class Song extends JsonObject
 		while (i >= 0)
 		{
 			var point = timingPoints[i];
-			if (point.startTime > lastTime)
-				continue;
+			if (point.startTime <= lastTime)
+			{
+				var duration = Std.int(lastTime - (i == 0 ? 0 : point.startTime));
+				lastTime = point.startTime;
 
-			var duration = Std.int(lastTime - (i == 0 ? 0 : point.startTime));
-			lastTime = point.startTime;
-
-			var bpm = Std.string(point.bpm);
-			if (durations.exists(bpm))
-				durations[bpm] += duration;
-			else
-				durations[bpm] = duration;
-
+				var bpm = Std.string(point.bpm);
+				if (durations.exists(bpm))
+					durations[bpm] += duration;
+				else
+					durations[bpm] = duration;
+			}
 			i--;
 		}
 

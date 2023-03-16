@@ -2,14 +2,14 @@ package states.editors.song;
 
 import data.Settings;
 import data.song.TimingPoint;
+import flixel.FlxBasic;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
-class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
+class SongEditorTimeline extends FlxBasic
 {
 	public var lines:Array<SongEditorTimelineTick>;
 	public var linePool:Array<SongEditorTimelineTick>;
@@ -47,10 +47,11 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 		while (i < lines.length)
 		{
 			var line = lines[i];
-			if (!line.lineOnScreen())
-				break;
-			linePool.push(line);
-			lastPooledLineIndex = i;
+			if (line.lineOnScreen())
+			{
+				linePool.push(line);
+				lastPooledLineIndex = i;
+			}
 			i++;
 		}
 	}
@@ -108,7 +109,7 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 			var startTime = point.startTime;
 			var numBeatsOffsetted = 0;
 
-			if (point == state.song.timingPoints[0] && startTime > 0)
+			if (point == state.song.timingPoints[0])
 			{
 				while (true)
 				{
@@ -132,11 +133,11 @@ class SongEditorTimeline extends FlxTypedGroup<SongEditorTimelineTick>
 				var time = startTime + point.beatLength / state.beatSnap.value * i;
 				var measureBeat = (i / state.beatSnap.value) % point.meter == 0 && i % state.beatSnap.value == 0;
 
-				if (measureBeat && time >= point.startTime)
-					measureCount++;
-
 				var line = new SongEditorTimelineTick(state, point, time, i, measureCount, measureBeat);
 				newLines.push(line);
+
+				if (measureBeat && time >= point.startTime)
+					measureCount++;
 
 				i++;
 			}

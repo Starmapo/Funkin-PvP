@@ -35,6 +35,7 @@ class Settings
 	// Editor
 	public static var editorScrollSpeed:BindableInt;
 	public static var editorScaleSpeedWithRate:Bindable<Bool>;
+	public static var editorLongNoteOpacity:BindableFloat;
 
 	public static function loadData()
 	{
@@ -60,6 +61,7 @@ class Settings
 		load('winCondition');
 		loadBindableInt('editorScrollSpeed', 16, 5, 100);
 		loadBindable('editorScaleSpeedWithRate', true);
+		loadBindableFloat('editorLongNoteOpacity', 1, 0.3, 1);
 
 		if (!FlxG.fullscreen)
 		{
@@ -99,6 +101,7 @@ class Settings
 		save('winCondition');
 		saveBindable('editorScrollSpeed');
 		saveBindable('editorScaleSpeedWithRate');
+		saveBindable('editorLongNoteOpacity');
 
 		FlxG.save.flush();
 	}
