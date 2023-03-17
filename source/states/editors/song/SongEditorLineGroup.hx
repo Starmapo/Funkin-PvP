@@ -197,11 +197,8 @@ class SongEditorLine extends FlxSprite
 
 	public function updatePosition()
 	{
-		var x = state.playfieldBG.x + state.playfieldBG.width + 2;
-		var y = state.hitPositionY - getTime() * state.trackSpeed - height;
-
-		if (this.x != x || this.y != y)
-			setPosition(x, y);
+		x = state.playfieldBG.x + state.playfieldBG.width + 2;
+		y = state.hitPositionY - getTime() * state.trackSpeed - height;
 	}
 
 	public function updateSize()
