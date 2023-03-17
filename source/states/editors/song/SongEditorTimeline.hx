@@ -204,7 +204,7 @@ class SongEditorTimeline extends FlxBasic
 	function refreshLines()
 	{
 		for (line in lines)
-			line.setPosition();
+			line.updatePosition();
 
 		initializeLinePool();
 	}

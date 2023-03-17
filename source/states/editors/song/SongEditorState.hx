@@ -120,7 +120,12 @@ class SongEditorState extends FNFState
 
 		FlxG.camera.scroll.y = -trackPositionY;
 
-		super.update(elapsed);
+		// update the seek bar first because it might change the song position
+		seekBar.update(elapsed);
+		timeline.update(elapsed);
+		waveform.update(elapsed);
+		lineGroup.update(elapsed);
+		noteGroup.update(elapsed);
 
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
