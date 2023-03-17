@@ -1,5 +1,6 @@
 package states.editors.song;
 
+import data.Settings;
 import data.song.SliderVelocity;
 import data.song.TimingPoint;
 import flixel.FlxBasic;
@@ -19,7 +20,11 @@ class SongEditorLineGroup extends FlxBasic
 		this.state = state;
 
 		initializeTicks();
+
 		state.songSeeked.add(onSongSeeked);
+		state.rateChanged.add(onRateChanged);
+		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
+		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
 
 	override function update(elapsed:Float)
@@ -51,12 +56,10 @@ class SongEditorLineGroup extends FlxBasic
 		for (i in 0...linePool.length)
 		{
 			var line = linePool[i];
-			if (!line.lineOnScreen())
-				continue;
-			line.updatePosition();
-			line.updateSize();
-			line.cameras = cameras;
-			line.draw();
+			if (line.isOnScreen())
+			{
+				line.draw();
+			}
 		}
 	}
 
@@ -66,6 +69,9 @@ class SongEditorLineGroup extends FlxBasic
 			line.destroy();
 		super.destroy();
 		state.songSeeked.remove(onSongSeeked);
+		state.rateChanged.remove(onRateChanged);
+		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
+		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
 
 	function initializeTicks()
@@ -136,6 +142,33 @@ class SongEditorLineGroup extends FlxBasic
 	{
 		initializeLinePool();
 	}
+
+	function onRateChanged(_, _)
+	{
+		if (Settings.editorScaleSpeedWithRate.value)
+			refreshLines();
+	}
+
+	function onScrollSpeedChanged(_, _)
+	{
+		refreshLines();
+	}
+
+	function onScaleSpeedWithRateChanged(_, _)
+	{
+		if (state.inst.pitch != 1)
+			refreshLines();
+	}
+
+	function refreshLines()
+	{
+		for (line in linePool)
+		{
+			line.updatePosition();
+		}
+
+		initializeLinePool();
+	}
 }
 
 class SongEditorLine extends FlxSprite
@@ -158,6 +191,7 @@ class SongEditorLine extends FlxSprite
 				scrollVelocity = cast data;
 		}
 		makeGraphic(1, 1, getColor());
+		updatePosition();
 		updateSize();
 	}
 

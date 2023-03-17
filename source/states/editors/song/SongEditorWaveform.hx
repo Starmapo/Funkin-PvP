@@ -1,5 +1,6 @@
 package states.editors.song;
 
+import data.Settings;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -14,6 +15,8 @@ class SongEditorWaveform extends FlxBasic
 {
 	var state:SongEditorState;
 	var slices:Array<SongEditorWaveformSlice> = [];
+	var slicePool:Array<SongEditorWaveformSlice> = [];
+	var lastPooledSliceIndex:Int = -1;
 	var sliceSize:Int;
 	var waveformData:Array<Array<Array<Float>>>;
 	var sound:FlxSound;
@@ -26,26 +29,47 @@ class SongEditorWaveform extends FlxBasic
 		this.state = state;
 
 		generateWaveform();
+
+		state.songSeeked.add(onSongSeeked);
+		state.rateChanged.add(onRateChanged);
+		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
+		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (slices.length > 0)
+		var i = slicePool.length - 1;
+		while (i >= 0)
 		{
-			for (slice in slices)
-				slice.update(elapsed);
+			var slice = slicePool[i];
+			if (!slice.sliceOnScreen())
+				slicePool.remove(slice);
+			i--;
 		}
 
-		super.update(elapsed);
+		i = lastPooledSliceIndex + 1;
+		while (i < slices.length)
+		{
+			var slice = slices[i];
+			if (slice.sliceOnScreen())
+			{
+				slicePool.push(slice);
+				lastPooledSliceIndex = i;
+			}
+			i++;
+		}
 	}
 
 	override function draw()
 	{
-		var index = Std.int(sound.time / sound.length * slices.length);
-		var amount = Std.int(Math.max(6, Std.int(2.5 / state.trackSpeed + 0.5)));
-
-		for (i in 0...amount)
-			tryDrawSlice(Std.int(index + (i - amount / 2)));
+		for (i in 0...slicePool.length)
+		{
+			var slice = slicePool[i];
+			if (slice.isOnScreen())
+			{
+				slice.draw();
+			}
+		}
 	}
 
 	override function destroy()
@@ -60,6 +84,10 @@ class SongEditorWaveform extends FlxBasic
 		}
 		slices.resize(0);
 		super.destroy();
+		state.songSeeked.remove(onSongSeeked);
+		state.rateChanged.remove(onRateChanged);
+		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
+		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
 
 	function tryDrawSlice(index:Int)
@@ -87,6 +115,8 @@ class SongEditorWaveform extends FlxBasic
 			slices.push(slice);
 			t += sliceSize;
 		}
+
+		initializeSlicePool();
 	}
 
 	/*
@@ -220,6 +250,53 @@ class SongEditorWaveform extends FlxBasic
 
 		return array;
 	}
+
+	function initializeSlicePool()
+	{
+		slicePool = [];
+		lastPooledSliceIndex = -1;
+		for (i in 0...slices.length)
+		{
+			var slice = slices[i];
+			if (!slice.sliceOnScreen())
+				continue;
+
+			slicePool.push(slice);
+			lastPooledSliceIndex = i;
+		}
+	}
+
+	function onSongSeeked(_, _)
+	{
+		initializeSlicePool();
+	}
+
+	function onRateChanged(_, _)
+	{
+		if (Settings.editorScaleSpeedWithRate.value)
+			refreshSlices();
+	}
+
+	function onScrollSpeedChanged(_, _)
+	{
+		refreshSlices();
+	}
+
+	function onScaleSpeedWithRateChanged(_, _)
+	{
+		if (state.inst.pitch != 1)
+			refreshSlices();
+	}
+
+	function refreshSlices()
+	{
+		for (slice in slices)
+		{
+			slice.updateSlice();
+		}
+
+		initializeSlicePool();
+	}
 }
 
 class SongEditorWaveformSlice extends FlxSprite
@@ -236,15 +313,7 @@ class SongEditorWaveformSlice extends FlxSprite
 		this.sliceTime = sliceTime;
 
 		createSlice(waveformData);
-	}
-
-	override function draw()
-	{
-		scale.y = state.trackSpeed;
-		updateHitbox();
-		x = state.playfieldBG.x;
-		y = state.hitPositionY - sliceTime * state.trackSpeed - height;
-		super.draw();
+		updateSlice();
 	}
 
 	override function destroy()
@@ -252,6 +321,20 @@ class SongEditorWaveformSlice extends FlxSprite
 		FlxG.bitmap.remove(graphic);
 		graphic = null;
 		super.destroy();
+	}
+
+	public function updateSlice()
+	{
+		scale.y = state.trackSpeed;
+		updateHitbox();
+		x = state.playfieldBG.x;
+		y = state.hitPositionY - sliceTime * state.trackSpeed - height;
+	}
+
+	public function sliceOnScreen()
+	{
+		return sliceTime * state.trackSpeed >= state.trackPositionY - state.playfieldBG.height
+			&& sliceTime * state.trackSpeed <= state.trackPositionY + state.playfieldBG.height;
 	}
 
 	function createSlice(data:Array<Array<Array<Float>>>)

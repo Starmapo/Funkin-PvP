@@ -127,7 +127,8 @@ class SongEditorNoteGroup extends FlxBasic
 
 	function onRateChanged(_, _)
 	{
-		refreshNotes();
+		if (Settings.editorScaleSpeedWithRate.value)
+			refreshNotes();
 	}
 
 	function onScrollSpeedChanged(_, _)
@@ -137,7 +138,8 @@ class SongEditorNoteGroup extends FlxBasic
 
 	function onScaleSpeedWithRateChanged(_, _)
 	{
-		refreshNotes();
+		if (state.inst.pitch != 1)
+			refreshNotes();
 	}
 }
 

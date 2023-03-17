@@ -61,11 +61,8 @@ class SongEditorTimeline extends FlxBasic
 		for (i in 0...linePool.length)
 		{
 			var line = linePool[i];
-			line.updatePosition();
-			line.updateColor();
-			if (line.lineOnScreen())
+			if (line.isOnScreen())
 			{
-				line.cameras = cameras;
 				line.draw();
 			}
 		}
@@ -155,7 +152,8 @@ class SongEditorTimeline extends FlxBasic
 
 	function onRateChanged(_, _)
 	{
-		initializeLinePool();
+		if (Settings.editorScaleSpeedWithRate.value)
+			refreshLines();
 	}
 
 	function onBeatSnapChanged(_, _)
@@ -170,7 +168,8 @@ class SongEditorTimeline extends FlxBasic
 
 	function onScaleSpeedWithRateChanged(_, _)
 	{
-		refreshLines();
+		if (state.inst.pitch != 1)
+			refreshLines();
 	}
 
 	function initializeLinePool()
@@ -253,11 +252,8 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 
 	public function updatePosition()
 	{
-		var x = state.playfieldBG.x + 2;
-		var y = state.hitPositionY - time * state.trackSpeed - line.height;
-
-		if (this.x != x || this.y != y)
-			setPosition(x, y);
+		x = state.playfieldBG.x + 2;
+		y = state.hitPositionY - time * state.trackSpeed - line.height;
 	}
 
 	public function updateColor()

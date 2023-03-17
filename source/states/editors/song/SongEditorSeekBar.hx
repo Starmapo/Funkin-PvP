@@ -20,7 +20,6 @@ class SongEditorSeekBar extends FlxSpriteGroup
 	var barsSprite:FlxSprite;
 	var seekLine:FlxSprite;
 	var isHeld:Bool = false;
-	var waitingForClickRelease:Bool = false;
 
 	public function new(state:SongEditorState)
 	{
