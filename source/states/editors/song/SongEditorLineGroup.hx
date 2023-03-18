@@ -11,8 +11,6 @@ class SongEditorLineGroup extends FlxBasic
 {
 	var state:SongEditorState;
 	var lines:Array<SongEditorLine> = [];
-	var linePool:Array<SongEditorLine> = [];
-	var lastPooledLineIndex:Int = -1;
 
 	public function new(state:SongEditorState)
 	{
@@ -21,41 +19,17 @@ class SongEditorLineGroup extends FlxBasic
 
 		initializeTicks();
 
-		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
 
-	override function update(elapsed:Float)
-	{
-		var i = linePool.length - 1;
-		while (i >= 0)
-		{
-			var line = linePool[i];
-			if (!line.lineOnScreen())
-				linePool.remove(line);
-			i--;
-		}
-
-		i = lastPooledLineIndex + 1;
-		while (i < lines.length)
-		{
-			var line = lines[i];
-			if (line.lineOnScreen())
-			{
-				linePool.push(line);
-				lastPooledLineIndex = i;
-			}
-			i++;
-		}
-	}
-
 	override function draw()
 	{
-		for (i in 0...linePool.length)
+		var drewLine = false;
+		for (i in 0...lines.length)
 		{
-			var line = linePool[i];
+			var line = lines[i];
 			if (line.isOnScreen())
 			{
 				line.draw();
@@ -68,7 +42,7 @@ class SongEditorLineGroup extends FlxBasic
 		for (line in lines)
 			line.destroy();
 		super.destroy();
-		state.songSeeked.remove(onSongSeeked);
+
 		state.rateChanged.remove(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
@@ -108,39 +82,6 @@ class SongEditorLineGroup extends FlxBasic
 				svIndex++;
 			}
 		}
-
-		initializeLinePool();
-	}
-
-	function initializeLinePool()
-	{
-		linePool = [];
-		lastPooledLineIndex = -1;
-		for (i in 0...lines.length)
-		{
-			var line = lines[i];
-			if (!line.lineOnScreen())
-				continue;
-			linePool.push(line);
-			lastPooledLineIndex = i;
-		}
-
-		if (lastPooledLineIndex == -1)
-		{
-			lastPooledLineIndex = lines.length - 1;
-			while (lastPooledLineIndex >= 0)
-			{
-				if (lines[lastPooledLineIndex].getTime() < state.inst.time)
-					break;
-
-				lastPooledLineIndex--;
-			}
-		}
-	}
-
-	function onSongSeeked(_, _)
-	{
-		initializeLinePool();
 	}
 
 	function onRateChanged(_, _)
@@ -162,12 +103,10 @@ class SongEditorLineGroup extends FlxBasic
 
 	function refreshLines()
 	{
-		for (line in linePool)
+		for (line in lines)
 		{
 			line.updatePosition();
 		}
-
-		initializeLinePool();
 	}
 }
 

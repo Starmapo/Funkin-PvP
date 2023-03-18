@@ -15,7 +15,6 @@ class SongEditorWaveform extends FlxBasic
 {
 	var state:SongEditorState;
 	var slices:Array<SongEditorWaveformSlice> = [];
-	var lastPooledSliceIndex:Int = -1;
 	var sliceSize:Int;
 	var waveformData:Array<Array<Array<Float>>>;
 	var sound:FlxSound;

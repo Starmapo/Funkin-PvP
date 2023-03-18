@@ -140,20 +140,14 @@ class SongEditorState extends FNFState
 	{
 		handleInput();
 
-		resyncVocals();
-
 		FlxG.camera.scroll.y = -trackPositionY;
 
-		// first update things that might cause a song position change, scroll speed change, etc.
 		seekBar.update(elapsed);
 		zoomInButton.update(elapsed);
 		zoomOutButton.update(elapsed);
 		detailsPanel.update(elapsed);
-		// now the rest of the stuff
-		timeline.update(elapsed);
-		waveform.update(elapsed);
-		lineGroup.update(elapsed);
-		noteGroup.update(elapsed);
+
+		resyncVocals();
 
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
@@ -267,10 +261,8 @@ class SongEditorState extends FNFState
 
 	function resyncVocals()
 	{
-		var timeOutOfThreshold = Math.abs(vocals.time - inst.time) >= MusicTiming.SYNC_THRESHOLD * inst.pitch;
-		if (timeOutOfThreshold)
+		if (Math.abs(vocals.time - inst.time) >= MusicTiming.SYNC_THRESHOLD * inst.pitch)
 		{
-			FlxG.log.notice('Resynced vocals with difference of ' + Math.abs(vocals.time - inst.time));
 			vocals.time = inst.time;
 		}
 	}

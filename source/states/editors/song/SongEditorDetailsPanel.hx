@@ -25,7 +25,7 @@ class SongEditorDetailsPanel extends FlxUITabMenu
 				label: 'Details'
 			}
 		]);
-		resize(250, 158);
+		resize(250, 100);
 		screenCenter(Y);
 		y -= 132;
 		this.state = state;
