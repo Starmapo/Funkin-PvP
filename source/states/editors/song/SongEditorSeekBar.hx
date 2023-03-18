@@ -20,6 +20,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 	var barsSprite:FlxSprite;
 	var seekLine:FlxSprite;
 	var isHeld:Bool = false;
+	var scheduledFunction:Void->Void;
 
 	public function new(state:SongEditorState)
 	{
@@ -50,6 +51,12 @@ class SongEditorSeekBar extends FlxSpriteGroup
 
 	override function update(elapsed:Float)
 	{
+		if (scheduledFunction != null)
+		{
+			scheduledFunction();
+			scheduledFunction = null;
+		}
+
 		if (FlxG.mouse.overlaps(bg) && !isHeld && FlxG.mouse.justPressed)
 			isHeld = true;
 		if (FlxG.mouse.released)
@@ -116,24 +123,27 @@ class SongEditorSeekBar extends FlxSpriteGroup
 			}
 		}
 
-		barsSprite.pixels.lock();
-		for (key => bin in bins)
+		scheduledFunction = function()
 		{
-			var rating:Float = 0;
-			for (data in bin)
-				rating += data.totalStrainValue;
-			rating /= bin.length;
+			barsSprite.pixels.lock();
+			for (key => bin in bins)
+			{
+				var rating:Float = 0;
+				for (data in bin)
+					rating += data.totalStrainValue;
+				rating /= bin.length;
 
-			if (rating < 0.05)
-				continue;
+				if (rating < 0.05)
+					continue;
 
-			var pos = Std.parseFloat(key);
-			var width = FlxMath.bound(rating / highestDiff * bg.width, 4, bg.width);
+				var pos = Std.parseFloat(key);
+				var width = FlxMath.bound(rating / highestDiff * bg.width, 4, bg.width);
 
-			barsSprite.pixels.fillRect(new Rectangle(bg.width - width, rectHeight * (1 - pos) - 2 - barSize, width, barSize),
-				DifficultyProcessor.getDifficultyColor(rating));
+				barsSprite.pixels.fillRect(new Rectangle(bg.width - width, rectHeight * (1 - pos) - 2 - barSize, width, barSize),
+					DifficultyProcessor.getDifficultyColor(rating));
+			}
+			barsSprite.pixels.unlock();
 		}
-		barsSprite.pixels.unlock();
 	}
 
 	function seekToPos(targetPos:Float)

@@ -15,7 +15,6 @@ class SongEditorWaveform extends FlxBasic
 {
 	var state:SongEditorState;
 	var slices:Array<SongEditorWaveformSlice> = [];
-	var slicePool:Array<SongEditorWaveformSlice> = [];
 	var lastPooledSliceIndex:Int = -1;
 	var sliceSize:Int;
 	var waveformData:Array<Array<Array<Float>>>;
@@ -30,41 +29,16 @@ class SongEditorWaveform extends FlxBasic
 
 		generateWaveform();
 
-		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
 
-	override function update(elapsed:Float)
-	{
-		var i = slicePool.length - 1;
-		while (i >= 0)
-		{
-			var slice = slicePool[i];
-			if (!slice.sliceOnScreen())
-				slicePool.remove(slice);
-			i--;
-		}
-
-		i = lastPooledSliceIndex + 1;
-		while (i < slices.length)
-		{
-			var slice = slices[i];
-			if (slice.sliceOnScreen())
-			{
-				slicePool.push(slice);
-				lastPooledSliceIndex = i;
-			}
-			i++;
-		}
-	}
-
 	override function draw()
 	{
-		for (i in 0...slicePool.length)
+		for (i in 0...slices.length)
 		{
-			var slice = slicePool[i];
+			var slice = slices[i];
 			if (slice.isOnScreen())
 			{
 				slice.draw();
@@ -84,16 +58,9 @@ class SongEditorWaveform extends FlxBasic
 		}
 		slices.resize(0);
 		super.destroy();
-		state.songSeeked.remove(onSongSeeked);
 		state.rateChanged.remove(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
-	}
-
-	function tryDrawSlice(index:Int)
-	{
-		if (index >= 0 && index < slices.length && slices[index] != null)
-			slices[index].draw();
 	}
 
 	function generateWaveform()
@@ -115,8 +82,6 @@ class SongEditorWaveform extends FlxBasic
 			slices.push(slice);
 			t += sliceSize;
 		}
-
-		initializeSlicePool();
 	}
 
 	/*
@@ -251,26 +216,6 @@ class SongEditorWaveform extends FlxBasic
 		return array;
 	}
 
-	function initializeSlicePool()
-	{
-		slicePool = [];
-		lastPooledSliceIndex = -1;
-		for (i in 0...slices.length)
-		{
-			var slice = slices[i];
-			if (!slice.sliceOnScreen())
-				continue;
-
-			slicePool.push(slice);
-			lastPooledSliceIndex = i;
-		}
-	}
-
-	function onSongSeeked(_, _)
-	{
-		initializeSlicePool();
-	}
-
 	function onRateChanged(_, _)
 	{
 		if (Settings.editorScaleSpeedWithRate.value)
@@ -294,8 +239,6 @@ class SongEditorWaveform extends FlxBasic
 		{
 			slice.updateSlice();
 		}
-
-		initializeSlicePool();
 	}
 }
 

@@ -83,12 +83,13 @@ class SongEditorTimeline extends FlxBasic
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
 
-	public function initializeLines(forceRefresh:Bool = false)
+	public function initializeLines(initLinePool:Bool = true)
 	{
-		if (cachedLines.exists(state.beatSnap.value) && !forceRefresh)
+		if (cachedLines.exists(state.beatSnap.value))
 		{
 			lines = cachedLines.get(state.beatSnap.value);
-			initializeLinePool();
+			if (initLinePool)
+				initializeLinePool();
 			return;
 		}
 
@@ -142,7 +143,8 @@ class SongEditorTimeline extends FlxBasic
 
 		cachedLines.set(state.beatSnap.value, newLines);
 		lines = newLines;
-		initializeLinePool();
+		if (initLinePool)
+			initializeLinePool();
 	}
 
 	function onSongSeeked(_, _)
@@ -158,7 +160,8 @@ class SongEditorTimeline extends FlxBasic
 
 	function onBeatSnapChanged(_, _)
 	{
-		initializeLines();
+		initializeLines(false);
+		refreshLines();
 	}
 
 	function onScrollSpeedChanged(_, _)

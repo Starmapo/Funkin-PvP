@@ -4,22 +4,18 @@ import data.Settings;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
-import flixel.text.FlxText;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
-import sys.thread.Mutex;
-import sys.thread.Thread;
 import util.MusicTiming;
 import util.bindable.BindableInt;
 
 class SongEditorState extends FNFState
 {
-	public var columns:Int = 8;
+	public var columns:Int = 11;
 	public var columnSize:Int = 40;
 	public var hitPositionY:Int = 545;
 	public var beatSnap:BindableInt = new BindableInt(4, 1, 48);
@@ -45,6 +41,9 @@ class SongEditorState extends FNFState
 	var lineGroup:SongEditorLineGroup;
 	var noteGroup:SongEditorNoteGroup;
 	var seekBar:SongEditorSeekBar;
+	var zoomInButton:FlxUIButton;
+	var zoomOutButton:FlxUIButton;
+	var detailsPanel:SongEditorDetailsPanel;
 
 	override function create()
 	{
@@ -76,9 +75,9 @@ class SongEditorState extends FNFState
 		dividerLines = new FlxTypedGroup();
 		for (i in 1...columns)
 		{
-			var playerDivider = i == 4;
+			var thickDivider = i == 4 || i == 8;
 			var dividerLine = new FlxSprite(playfieldBG.x + (columnSize * i)).makeGraphic(2, Std.int(playfieldBG.height), FlxColor.WHITE);
-			dividerLine.alpha = playerDivider ? 0.7 : 0.35;
+			dividerLine.alpha = thickDivider ? 0.7 : 0.35;
 			dividerLine.scrollFactor.set();
 			dividerLines.add(dividerLine);
 		}
@@ -104,6 +103,31 @@ class SongEditorState extends FNFState
 		seekBar = new SongEditorSeekBar(this);
 		add(seekBar);
 
+		zoomInButton = new FlxUIButton(playfieldBG.x + playfieldBG.width + 10, 10, '+', function()
+		{
+			Settings.editorScrollSpeed.value += 0.05;
+		});
+		zoomInButton.resize(26, 26);
+		zoomInButton.label.size = 16;
+		for (point in zoomInButton.labelOffsets)
+			point.add(1, 1);
+		zoomInButton.autoCenterLabel();
+		add(zoomInButton);
+
+		zoomOutButton = new FlxUIButton(zoomInButton.x, zoomInButton.y + zoomInButton.height + 4, '-', function()
+		{
+			Settings.editorScrollSpeed.value -= 0.05;
+		});
+		zoomOutButton.resize(26, 26);
+		zoomOutButton.label.size = 16;
+		for (point in zoomOutButton.labelOffsets)
+			point.add(1, 1);
+		zoomOutButton.autoCenterLabel();
+		add(zoomOutButton);
+
+		detailsPanel = new SongEditorDetailsPanel(this);
+		add(detailsPanel);
+
 		actionManager = new SongEditorActionManager(this);
 
 		inst.play();
@@ -120,8 +144,12 @@ class SongEditorState extends FNFState
 
 		FlxG.camera.scroll.y = -trackPositionY;
 
-		// update the seek bar first because it might change the song position
+		// first update things that might cause a song position change, scroll speed change, etc.
 		seekBar.update(elapsed);
+		zoomInButton.update(elapsed);
+		zoomOutButton.update(elapsed);
+		detailsPanel.update(elapsed);
+		// now the rest of the stuff
 		timeline.update(elapsed);
 		waveform.update(elapsed);
 		lineGroup.update(elapsed);
@@ -157,8 +185,13 @@ class SongEditorState extends FNFState
 			}
 			else
 			{
+				var lastTime = inst.time;
 				inst.play();
 				vocals.play();
+				if (inst.time != lastTime)
+				{
+					songSeeked.dispatch(inst.time, lastTime);
+				}
 			}
 		}
 
@@ -168,10 +201,12 @@ class SongEditorState extends FNFState
 		if (FlxG.keys.justPressed.PAGEUP)
 		{
 			Settings.editorScrollSpeed.value += 0.05;
+			timeSinceLastPlayfieldZoom = 0;
 		}
 		else if (FlxG.keys.justPressed.PAGEDOWN)
 		{
 			Settings.editorScrollSpeed.value -= 0.05;
+			timeSinceLastPlayfieldZoom = 0;
 		}
 		else if (FlxG.keys.pressed.PAGEUP && canZoom)
 		{

@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxAxes;
+import flixel.util.FlxColor;
 import haxe.io.Path;
 
 class CoolUtil
@@ -143,6 +144,53 @@ class CoolUtil
 	{
 		return (PlayerSettings.anyJustPressed() || FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed || FlxG.mouse.justPressedMiddle
 			|| FlxG.mouse.justPressedRight);
+	}
+
+	public static function formatOrdinal(num:Int)
+	{
+		if (num <= 0)
+			return Std.string(num);
+
+		switch (num % 100)
+		{
+			case 11, 12, 13:
+				return num + "th";
+		}
+
+		return switch (num % 10)
+		{
+			case 1:
+				num + "st";
+			case 2:
+				num + "nd";
+			case 3:
+				num + "rd";
+			default:
+				num + "th";
+		}
+	}
+
+	public static function getBeatSnapColor(snap:Int)
+	{
+		return switch (snap)
+		{
+			case 2:
+				0xFFE10B01;
+			case 3:
+				0xFF9B51E0;
+			case 4:
+				0xFF0587E5;
+			case 6:
+				0xFFBB6BD9;
+			case 8:
+				0xFFE9B736;
+			case 12:
+				0xFFD34B8C;
+			case 16:
+				0xFFFFE76B;
+			default:
+				FlxColor.WHITE;
+		}
 	}
 
 	@:generic
