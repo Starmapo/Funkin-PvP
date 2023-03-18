@@ -1,17 +1,12 @@
 package states.editors.song;
 
-import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUIText;
-import flixel.addons.ui.FlxUITypedButton;
 import flixel.text.FlxText.FlxTextFormat;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
-class SongEditorDetailsPanel extends FlxUITabMenu
+class SongEditorDetailsPanel extends EditorPanel
 {
 	var state:SongEditorState;
-	var detailsTab:FlxUI;
 	var noteCountText:FlxUIText;
 	var playbackSpeedText:FlxUIText;
 	var bpmText:FlxUIText;
@@ -19,51 +14,43 @@ class SongEditorDetailsPanel extends FlxUITabMenu
 
 	public function new(state:SongEditorState)
 	{
-		super(null, null, [
+		super([
 			{
 				name: 'Details',
 				label: 'Details'
 			}
 		]);
 		resize(250, 100);
+		x = 10;
 		screenCenter(Y);
 		y -= 132;
 		this.state = state;
 
-		for (tab in _tabs)
-		{
-			var tab:FlxUITypedButton<FlxText> = cast tab;
-			tab.label.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		}
+		var tab = createTab('Details');
 
-		detailsTab = new FlxUI();
-		detailsTab.name = 'Details';
+		var spacing = 4;
 
 		noteCountText = new FlxUIText(2, 4, width - 8);
 		noteCountText.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		updateNoteCount();
-		detailsTab.add(noteCountText);
-
-		var spacing = 4;
+		tab.add(noteCountText);
 
 		playbackSpeedText = new FlxUIText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, width - 8);
 		playbackSpeedText.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		updatePlaybackSpeed();
-		detailsTab.add(playbackSpeedText);
+		tab.add(playbackSpeedText);
 
 		bpmText = new FlxUIText(playbackSpeedText.x, playbackSpeedText.y + playbackSpeedText.height + spacing, width - 8);
 		bpmText.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		updateBPM();
-		detailsTab.add(bpmText);
+		tab.add(bpmText);
 
 		beatSnapText = new FlxUIText(bpmText.x, bpmText.y + bpmText.height + spacing, width - 8);
 		beatSnapText.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		updateBeatSnap();
-		detailsTab.add(beatSnapText);
+		tab.add(beatSnapText);
 
-		addGroup(detailsTab);
-
-		scrollFactor.set();
+		addGroup(tab);
 
 		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);

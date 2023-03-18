@@ -30,6 +30,7 @@ class SongEditorState extends FNFState
 	public var rateChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 	public var borderLeft:FlxSprite;
 	public var borderRight:FlxSprite;
+	public var currentTool:CompositionTool = SELECT;
 
 	var actionManager:SongEditorActionManager;
 	var dividerLines:FlxTypedGroup<FlxSprite>;
@@ -44,6 +45,8 @@ class SongEditorState extends FNFState
 	var zoomInButton:FlxUIButton;
 	var zoomOutButton:FlxUIButton;
 	var detailsPanel:SongEditorDetailsPanel;
+	var compositionPanel:SongEditorCompositionPanel;
+	var hitsoundNoteIndex:Int = 0;
 
 	override function create()
 	{
@@ -128,10 +131,15 @@ class SongEditorState extends FNFState
 		detailsPanel = new SongEditorDetailsPanel(this);
 		add(detailsPanel);
 
+		compositionPanel = new SongEditorCompositionPanel(this);
+		add(compositionPanel);
+
 		actionManager = new SongEditorActionManager(this);
 
 		inst.play();
 		vocals.play();
+
+		setHitsoundNoteIndex();
 
 		super.create();
 	}
@@ -140,14 +148,30 @@ class SongEditorState extends FNFState
 	{
 		handleInput();
 
-		FlxG.camera.scroll.y = -trackPositionY;
-
 		seekBar.update(elapsed);
 		zoomInButton.update(elapsed);
 		zoomOutButton.update(elapsed);
 		detailsPanel.update(elapsed);
+		compositionPanel.update(elapsed);
+
+		FlxG.camera.scroll.y = -trackPositionY;
 
 		resyncVocals();
+
+		if (inst.playing && Settings.editorHitsoundVolume.value > 0)
+		{
+			for (i in hitsoundNoteIndex...song.notes.length)
+			{
+				var note = song.notes[i];
+				if (inst.time >= note.startTime)
+				{
+					FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
+					hitsoundNoteIndex = i + 1;
+				}
+				else
+					break;
+			}
+		}
 
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
@@ -165,7 +189,14 @@ class SongEditorState extends FNFState
 	{
 		var oldTime = inst.time;
 		vocals.time = inst.time = time;
+		setHitsoundNoteIndex();
 		songSeeked.dispatch(inst.time, oldTime);
+	}
+
+	public function setCurrentTool(tool:CompositionTool)
+	{
+		currentTool = tool;
+		compositionPanel.tools.selectedId = tool;
 	}
 
 	function handleInput()
@@ -179,12 +210,17 @@ class SongEditorState extends FNFState
 			}
 			else
 			{
+				var wasStopped = !inst.playing;
 				var lastTime = inst.time;
 				inst.play();
 				vocals.play();
 				if (inst.time != lastTime)
 				{
 					songSeeked.dispatch(inst.time, lastTime);
+				}
+				if (wasStopped)
+				{
+					setHitsoundNoteIndex();
 				}
 			}
 		}
@@ -317,6 +353,19 @@ class SongEditorState extends FNFState
 		setSongTime();
 	}
 
+	function setHitsoundNoteIndex()
+	{
+		hitsoundNoteIndex = song.notes.length - 1;
+		while (hitsoundNoteIndex >= 0)
+		{
+			if (song.notes[hitsoundNoteIndex].startTime <= inst.time)
+				break;
+
+			hitsoundNoteIndex--;
+		}
+		hitsoundNoteIndex++;
+	}
+
 	function get_trackSpeed()
 	{
 		return Settings.editorScrollSpeed.value / (Settings.editorScaleSpeedWithRate.value ? inst.pitch : 1);
@@ -331,4 +380,11 @@ class SongEditorState extends FNFState
 	{
 		return availableBeatSnaps.indexOf(beatSnap.value);
 	}
+}
+
+@:enum abstract CompositionTool(String) from String to String
+{
+	var SELECT = 'Select';
+	var NOTE = 'Note';
+	var LONG_NOTE = 'Long Note';
 }

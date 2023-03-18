@@ -36,6 +36,7 @@ class Settings
 	public static var editorScrollSpeed:BindableFloat;
 	public static var editorScaleSpeedWithRate:Bindable<Bool>;
 	public static var editorLongNoteOpacity:BindableFloat;
+	public static var editorHitsoundVolume:BindableFloat;
 
 	public static function loadData()
 	{
@@ -62,6 +63,7 @@ class Settings
 		loadBindableFloat('editorScrollSpeed', 0.8, 0.25, 5);
 		loadBindable('editorScaleSpeedWithRate', true);
 		loadBindableFloat('editorLongNoteOpacity', 1, 0.3, 1);
+		loadBindableFloat('editorHitsoundVolume', 1, 0, 1);
 
 		if (!FlxG.fullscreen)
 		{
@@ -102,6 +104,7 @@ class Settings
 		saveBindable('editorScrollSpeed');
 		saveBindable('editorScaleSpeedWithRate');
 		saveBindable('editorLongNoteOpacity');
+		saveBindable('editorHitsoundVolume');
 
 		FlxG.save.flush();
 	}
