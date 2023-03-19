@@ -46,6 +46,7 @@ class SongEditorState extends FNFState
 	var zoomOutButton:FlxUIButton;
 	var detailsPanel:SongEditorDetailsPanel;
 	var compositionPanel:SongEditorCompositionPanel;
+	var editPanel:SongEditorEditPanel;
 	var hitsoundNoteIndex:Int = 0;
 
 	override function create()
@@ -133,6 +134,9 @@ class SongEditorState extends FNFState
 
 		compositionPanel = new SongEditorCompositionPanel(this);
 		add(compositionPanel);
+
+		editPanel = new SongEditorEditPanel(this);
+		add(editPanel);
 
 		actionManager = new SongEditorActionManager(this);
 

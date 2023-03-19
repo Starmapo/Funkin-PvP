@@ -1,6 +1,6 @@
 package states.editors.song;
 
-import util.actions.ActionManager;
+import util.editors.actions.ActionManager;
 
 class SongEditorActionManager extends ActionManager
 {

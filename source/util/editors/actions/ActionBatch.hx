@@ -1,4 +1,4 @@
-package util.actions;
+package util.editors.actions;
 
 class ActionBatch implements IAction
 {

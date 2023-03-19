@@ -1,4 +1,4 @@
-package util.actions;
+package util.editors.actions;
 
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
