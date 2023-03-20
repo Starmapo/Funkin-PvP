@@ -157,6 +157,7 @@ class SongEditorState extends FNFState
 		zoomOutButton.update(elapsed);
 		detailsPanel.update(elapsed);
 		compositionPanel.update(elapsed);
+		editPanel.update(elapsed);
 
 		FlxG.camera.scroll.y = -trackPositionY;
 
@@ -207,7 +208,7 @@ class SongEditorState extends FNFState
 	{
 		if (!checkAllowInput())
 			return;
-		
+
 		if (FlxG.keys.justPressed.SPACE)
 		{
 			if (inst.playing)

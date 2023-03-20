@@ -68,6 +68,8 @@ class Song extends JsonObject
 			],
 			cameraFocuses: [resolveCameraFocus(json.notes[0])],
 			notes: [],
+			bf: json.player1,
+			opponent: json.player2,
 			gf: json.gfVersion
 		};
 
@@ -184,11 +186,6 @@ class Song extends JsonObject
 	public var vocalsFile:String;
 
 	/**
-		The scroll speed for this map.
-	**/
-	public var scrollSpeed:Float;
-
-	/**
 		The list of timing points for this map.
 	**/
 	public var timingPoints:Array<TimingPoint> = [];
@@ -250,8 +247,9 @@ class Song extends JsonObject
 		source = readString(data.source, 'Unknown Source');
 		instFile = readString(data.instFile, 'Inst.ogg');
 		vocalsFile = readString(data.vocalsFile, 'Voices.ogg');
-		scrollSpeed = readFloat(data.scrollSpeed, 1, 0.01, 10, 2);
-		gf = readString(data.gf, 'fnf:gf');
+		bf = readString(data.bf, 'bf');
+		opponent = readString(data.opponent, 'dad');
+		gf = readString(data.gf, 'gf');
 		for (t in readArray(data.timingPoints))
 		{
 			if (t != null)

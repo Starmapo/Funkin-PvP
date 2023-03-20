@@ -1,18 +1,22 @@
-package util.editors;
+package ui.editors;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 
 class EditorInputText extends FlxSpriteGroup
 {
 	public var text(get, set):String;
+	public var onFocusLost:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
 	var textField:EditorInputTextField;
+	var hasFocus:Bool = false;
 
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true)
 	{
@@ -32,9 +36,25 @@ class EditorInputText extends FlxSpriteGroup
 		scrollFactor.set();
 	}
 
+	override function update(elapsed:Float)
+	{
+		var hadFocus = hasFocus;
+		hasFocus = (FlxG.stage.focus == textField.textField);
+		if (hadFocus && !hasFocus)
+		{
+			onFocusLost.dispatch(text);
+		}
+	}
+
+	override function destroy()
+	{
+		FlxDestroyUtil.destroy(onFocusLost);
+		super.destroy();
+	}
+
 	function get_text()
 	{
-		return textField.text;
+		return textField.textField.text;
 	}
 
 	function set_text(value:String)
@@ -51,8 +71,14 @@ class EditorInputTextField extends FlxText
 		scrollFactor.set();
 		textField.selectable = true;
 		textField.type = INPUT;
+		textField.multiline = false;
 		FlxG.game.addChild(textField);
 		FlxG.signals.gameResized.add(onGameResized);
+	}
+
+	override function update(elapsed:Float)
+	{
+		text = textField.text;
 	}
 
 	override function draw()
@@ -72,11 +98,11 @@ class EditorInputTextField extends FlxText
 		if (textField == null)
 			return;
 
-		textField.scaleX = camera.totalScaleX * scale.x;
-		textField.scaleY = camera.totalScaleY * scale.y;
-
 		textField.x = (x - offset.x) * camera.totalScaleX;
 		textField.y = (y - offset.y) * camera.totalScaleY;
+
+		textField.scaleX = camera.totalScaleX * scale.x;
+		textField.scaleY = camera.totalScaleY * scale.y;
 
 		#if !web
 		textField.x -= 1;
@@ -87,5 +113,15 @@ class EditorInputTextField extends FlxText
 	function onGameResized(_, _)
 	{
 		updateTextField();
+	}
+
+	override function set_text(value:String)
+	{
+		text = value;
+		if (textField != null)
+		{
+			textField.text = text;
+		}
+		return value;
 	}
 }
