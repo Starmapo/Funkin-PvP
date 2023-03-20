@@ -31,14 +31,12 @@ class MainMenuState extends FNFState
 		transIn = transOut = null;
 
 		bg = CoolUtil.createMenuBG('menuBG', 1.2);
-		bg.scrollFactor.set();
 		bg.angle = 180;
 		add(bg);
 
 		if (Settings.flashing)
 		{
 			magenta = CoolUtil.createMenuBG('menuBGMagenta', 1.2);
-			magenta.scrollFactor.set();
 			magenta.visible = false;
 			add(magenta);
 		}

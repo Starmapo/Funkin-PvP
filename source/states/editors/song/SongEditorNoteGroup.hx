@@ -126,7 +126,7 @@ class SongEditorNote extends FlxSpriteGroup
 			fps: 0
 		});
 		body.flipY = true;
-		body.antialiasing = false;
+		body.antialiasing = true;
 		add(body);
 
 		tail = new AnimatedSprite(0, 0, noteGraphic);
@@ -151,6 +151,7 @@ class SongEditorNote extends FlxSpriteGroup
 			fps: 0
 		});
 		tail.flipY = true;
+		tail.antialiasing = true;
 		add(tail);
 
 		note = new AnimatedSprite(0, 0, noteGraphic);
@@ -174,6 +175,7 @@ class SongEditorNote extends FlxSpriteGroup
 			atlasName: 'red instance 1',
 			fps: 0
 		});
+		note.antialiasing = true;
 		add(note);
 
 		refresh();

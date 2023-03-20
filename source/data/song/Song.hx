@@ -219,6 +219,16 @@ class Song extends JsonObject
 	public var length(get, never):Float;
 
 	/**
+		Boyfriend (player 2) character for this map.
+	**/
+	public var bf:String;
+
+	/**
+		Opponent (player 1) character for this map.
+	**/
+	public var opponent:String;
+
+	/**
 		Girlfriend character for this map.
 	**/
 	public var gf:String;

@@ -1,6 +1,5 @@
 package states.menus;
 
-import flixel.util.FlxDestroyUtil;
 import data.PlayerSettings;
 import data.Settings;
 import data.song.TimingPoint;
@@ -12,6 +11,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
 import shaders.ColorSwap;
@@ -68,6 +68,7 @@ class TitleState extends FNFState
 		icon = new FlxSprite(FlxG.width, 0, Paths.getImage('menus/title/iconTitle'));
 		icon.screenCenter(Y);
 		icon.shader = colorSwap.shader;
+		icon.antialiasing = true;
 		add(icon);
 
 		logo = new DancingSprite(-100, logoY, Paths.getSpritesheet('menus/title/logoBumpin'));
@@ -80,6 +81,7 @@ class TitleState extends FNFState
 		logo.dance();
 		logo.y -= logo.height;
 		logo.shader = colorSwap.shader;
+		logo.antialiasing = true;
 		timing.addDancingSprite(logo);
 		add(logo);
 
@@ -108,6 +110,7 @@ class TitleState extends FNFState
 			atlasName: 'ENTER PRESSED'
 		});
 		pressEnter.playAnim('idle');
+		pressEnter.antialiasing = true;
 		add(pressEnter);
 
 		textGroup = new FlxTypedGroup();

@@ -36,6 +36,7 @@ class CreditsState extends FNFState
 		add(bg);
 
 		var circleBG = new FlxSprite(0, 0, Paths.getImage('menus/credits/circleBG'));
+		circleBG.antialiasing = true;
 		add(circleBG);
 
 		categoryMenuList = new CreditsMenuList();

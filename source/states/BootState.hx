@@ -39,6 +39,7 @@ class BootState extends FNFState
 		bg.setGraphicSize(0, FlxG.height);
 		bg.updateHitbox();
 		bg.screenCenter();
+		bg.antialiasing = true;
 		add(bg);
 
 		loadingBG = new FlxSprite().makeGraphic(FlxG.width, 1, FlxColor.BLACK);
@@ -104,7 +105,6 @@ class BootState extends FNFState
 		FlxG.sound.volumeDownKeys = [NUMPADMINUS];
 		FlxG.sound.muteKeys = [NUMPADZERO];
 		FlxGraphic.defaultPersist = true; // graphics won't be cleared by default
-		FlxSprite.defaultAntialiasing = true; // set antialiasing to true by default
 		// create custom transitions
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);

@@ -33,6 +33,7 @@ class CoolUtil
 			bg.updateHitbox();
 		}
 		bg.screenCenter();
+		bg.antialiasing = true;
 		return bg;
 	}
 

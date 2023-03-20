@@ -205,6 +205,9 @@ class SongEditorState extends FNFState
 
 	function handleInput()
 	{
+		if (!checkAllowInput())
+			return;
+		
 		if (FlxG.keys.justPressed.SPACE)
 		{
 			if (inst.playing)
