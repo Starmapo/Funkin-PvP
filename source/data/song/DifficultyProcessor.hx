@@ -82,7 +82,7 @@ class DifficultyProcessor
 			if ((!rightSide && note.lane < 4) || (rightSide && note.lane > 3))
 				notes.push(new NoteInfo({
 					startTime: note.startTime,
-					lane: note.lane % 4,
+					lane: note.playerLane,
 					endTime: note.endTime,
 					type: note.type,
 					params: note.params
@@ -92,8 +92,6 @@ class DifficultyProcessor
 		if (notes.length < 2)
 			return;
 
-		trace('Calculating difficulty: ${song.title} [${song.difficultyName}], $rightSide');
-
 		calculateDifficulty(mods);
 	}
 
@@ -101,9 +99,6 @@ class DifficultyProcessor
 	{
 		var rate = mods.playbackRate;
 		overallDifficulty = computeForOverallDifficulty(rate);
-
-		var side = rightSide ? 'right' : 'left';
-		trace('Overall $side side difficulty: $overallDifficulty [${getDifficultyName(overallDifficulty)}]');
 	}
 
 	function computeForOverallDifficulty(rate:Float = 1)

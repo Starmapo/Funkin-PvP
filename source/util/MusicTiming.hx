@@ -121,8 +121,8 @@ class MusicTiming implements IFlxDestroyable
 		@param extraMusic	Extra music objects to sync with the main music.
 		@param onStart		A callback for when the music starts playing.
 	**/
-	public function new(music:FlxSound, ?timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = true, startDelay:Float = 0, ?extraMusic:Array<FlxSound>,
-			?onStart:MusicTiming->Void)
+	public function new(music:FlxSound, ?timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = true, startDelay:Float = 0, ?onBeatHit:Int->Float->Void,
+			?extraMusic:Array<FlxSound>, ?onStart:MusicTiming->Void)
 	{
 		if (music == null)
 			music = new FlxSound();
@@ -137,6 +137,8 @@ class MusicTiming implements IFlxDestroyable
 		this.extraMusic = extraMusic;
 		this.startDelay = startDelay;
 		this.onStart = onStart;
+		if (onBeatHit != null)
+			this.onBeatHit.add(onBeatHit);
 
 		if (music.playing)
 		{

@@ -1,5 +1,6 @@
 package states.editors.song;
 
+import data.Mods;
 import data.Settings;
 import data.song.Song;
 import flixel.FlxG;
@@ -10,12 +11,14 @@ import flixel.sound.FlxSound;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import haxe.io.Path;
+import ui.editors.NotificationManager;
 import util.MusicTiming;
 import util.bindable.BindableInt;
 
 class SongEditorState extends FNFState
 {
-	public var columns:Int = 11;
+	public var columns:Int = 10;
 	public var columnSize:Int = 40;
 	public var hitPositionY:Int = 545;
 	public var beatSnap:BindableInt = new BindableInt(4, 1, 48);
@@ -31,6 +34,7 @@ class SongEditorState extends FNFState
 	public var borderLeft:FlxSprite;
 	public var borderRight:FlxSprite;
 	public var currentTool:CompositionTool = SELECT;
+	public var notificationManager:NotificationManager;
 
 	var actionManager:SongEditorActionManager;
 	var dividerLines:FlxTypedGroup<FlxSprite>;
@@ -138,6 +142,9 @@ class SongEditorState extends FNFState
 		editPanel = new SongEditorEditPanel(this);
 		add(editPanel);
 
+		notificationManager = new NotificationManager();
+		add(notificationManager);
+
 		actionManager = new SongEditorActionManager(this);
 
 		inst.play();
@@ -158,6 +165,7 @@ class SongEditorState extends FNFState
 		detailsPanel.update(elapsed);
 		compositionPanel.update(elapsed);
 		editPanel.update(elapsed);
+		notificationManager.update(elapsed);
 
 		FlxG.camera.scroll.y = -trackPositionY;
 
@@ -202,6 +210,15 @@ class SongEditorState extends FNFState
 	{
 		currentTool = tool;
 		compositionPanel.tools.selectedId = tool;
+	}
+
+	public function save()
+	{
+		song.save(Path.join([song.directory, song.difficultyName + '.json']));
+		notificationManager.showNotification('Song succesfully saved!');
+
+		if (actionManager.undoStack.length != 0)
+			actionManager.lastSaveAction = actionManager.undoStack[0];
 	}
 
 	function handleInput()

@@ -7,11 +7,12 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import openfl.events.FocusEvent;
 
 class EditorInputText extends FlxSpriteGroup
 {
 	public var text(get, set):String;
-	public var onFocusLost:FlxTypedSignal<String->Void> = new FlxTypedSignal();
+	public var focusLost:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
@@ -34,22 +35,22 @@ class EditorInputText extends FlxSpriteGroup
 		add(textField);
 
 		scrollFactor.set();
+
+		textField.textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 	}
 
-	override function update(elapsed:Float)
-	{
-		var hadFocus = hasFocus;
-		hasFocus = (FlxG.stage.focus == textField.textField);
-		if (hadFocus && !hasFocus)
-		{
-			onFocusLost.dispatch(text);
-		}
-	}
+	override function update(elapsed:Float) {}
 
 	override function destroy()
 	{
-		FlxDestroyUtil.destroy(onFocusLost);
+		textField.textField.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
+		FlxDestroyUtil.destroy(focusLost);
 		super.destroy();
+	}
+
+	function onFocusOut(event:FocusEvent)
+	{
+		focusLost.dispatch(text);
 	}
 
 	function get_text()

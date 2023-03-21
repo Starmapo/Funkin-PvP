@@ -1,6 +1,7 @@
 package states.editors.song;
 
 import flixel.FlxG;
+import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIText;
 import flixel.util.FlxColor;
 import ui.editors.EditorInputText;
@@ -18,12 +19,17 @@ class SongEditorEditPanel extends EditorPanel
 				label: 'Song'
 			}
 		]);
-		resize(350, 250);
-		x = FlxG.width - width;
+		resize(390, 250);
+		x = FlxG.width - width - 10;
 		screenCenter(Y);
 		y -= 132;
 		this.state = state;
 
+		createSongTab();
+	}
+
+	function createSongTab()
+	{
 		var songTab = createTab('Song');
 
 		var spacing = 4;
@@ -34,7 +40,7 @@ class SongEditorEditPanel extends EditorPanel
 		songTab.add(titleLabel);
 
 		var titleInput = new EditorInputText(titleLabel.x + inputSpacing, 4, 120, state.song.title);
-		titleInput.onFocusLost.add(function(text)
+		titleInput.focusLost.add(function(text)
 		{
 			state.song.title = text;
 		});
@@ -45,7 +51,7 @@ class SongEditorEditPanel extends EditorPanel
 		songTab.add(artistLabel);
 
 		var artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y, 120, state.song.artist);
-		artistInput.onFocusLost.add(function(text)
+		artistInput.focusLost.add(function(text)
 		{
 			state.song.artist = text;
 		});
@@ -56,18 +62,29 @@ class SongEditorEditPanel extends EditorPanel
 		songTab.add(sourceLabel);
 
 		var sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y, 120, state.song.source);
-		sourceInput.onFocusLost.add(function(text)
+		sourceInput.focusLost.add(function(text)
 		{
 			state.song.source = text;
 		});
 		songTab.add(sourceInput);
 
-		var instLabel = new FlxUIText(sourceLabel.x, sourceLabel.y + sourceLabel.height + spacing, 0, 'Instrumental File:');
+		var difficultyLabel = new FlxUIText(sourceLabel.x, sourceLabel.y + sourceLabel.height + spacing, 0, 'Difficulty Name:');
+		difficultyLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		songTab.add(difficultyLabel);
+
+		var difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y, 120, state.song.difficultyName);
+		difficultyInput.focusLost.add(function(text)
+		{
+			state.song.difficultyName = text;
+		});
+		songTab.add(difficultyInput);
+
+		var instLabel = new FlxUIText(difficultyLabel.x, difficultyLabel.y + difficultyLabel.height + spacing, 0, 'Instrumental File:');
 		instLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(instLabel);
 
 		var instInput = new EditorInputText(instLabel.x + inputSpacing, instLabel.y, 120, state.song.instFile);
-		instInput.onFocusLost.add(function(text)
+		instInput.focusLost.add(function(text)
 		{
 			state.song.instFile = text;
 		});
@@ -78,7 +95,7 @@ class SongEditorEditPanel extends EditorPanel
 		songTab.add(vocalsLabel);
 
 		var vocalsInput = new EditorInputText(vocalsLabel.x + inputSpacing, vocalsLabel.y, 120, state.song.vocalsFile);
-		vocalsInput.onFocusLost.add(function(text)
+		vocalsInput.focusLost.add(function(text)
 		{
 			state.song.vocalsFile = text;
 		});
@@ -89,7 +106,7 @@ class SongEditorEditPanel extends EditorPanel
 		songTab.add(opponentLabel);
 
 		var opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y, 120, state.song.opponent);
-		opponentInput.onFocusLost.add(function(text)
+		opponentInput.focusLost.add(function(text)
 		{
 			state.song.opponent = text;
 		});
@@ -100,7 +117,7 @@ class SongEditorEditPanel extends EditorPanel
 		songTab.add(bfLabel);
 
 		var bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y, 120, state.song.bf);
-		bfInput.onFocusLost.add(function(text)
+		bfInput.focusLost.add(function(text)
 		{
 			state.song.bf = text;
 		});
@@ -111,7 +128,7 @@ class SongEditorEditPanel extends EditorPanel
 		songTab.add(gfLabel);
 
 		var gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y, 120, state.song.gf);
-		gfInput.onFocusLost.add(function(text)
+		gfInput.focusLost.add(function(text)
 		{
 			state.song.gf = text;
 		});
@@ -127,6 +144,13 @@ class SongEditorEditPanel extends EditorPanel
 			state.song.initialScrollVelocity = value;
 		});
 		songTab.add(velocityStepper);
+
+		var saveButton = new FlxUIButton(0, velocityStepper.y + velocityStepper.height + 20, 'Save', function()
+		{
+			state.save();
+		});
+		saveButton.x = (width - saveButton.width) / 2;
+		songTab.add(saveButton);
 
 		addGroup(songTab);
 	}

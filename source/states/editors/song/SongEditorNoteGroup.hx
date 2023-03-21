@@ -126,7 +126,6 @@ class SongEditorNote extends FlxSpriteGroup
 			fps: 0
 		});
 		body.flipY = true;
-		body.antialiasing = true;
 		add(body);
 
 		tail = new AnimatedSprite(0, 0, noteGraphic);

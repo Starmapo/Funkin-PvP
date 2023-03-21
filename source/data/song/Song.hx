@@ -4,7 +4,9 @@ import data.song.CameraFocus.CameraFocusChar;
 import flixel.math.FlxMath;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
+import haxe.Json;
 import haxe.io.Path;
+import sys.io.File;
 
 class Song extends JsonObject
 {
@@ -66,7 +68,7 @@ class Song extends JsonObject
 					bpm: json.bpm
 				}
 			],
-			cameraFocuses: [resolveCameraFocus(json.notes[0])],
+			cameraFocuses: [],
 			notes: [],
 			bf: json.player1,
 			opponent: json.player2,
@@ -75,7 +77,7 @@ class Song extends JsonObject
 
 		var curTime:Float = 0;
 		var curBPM:Float = json.bpm;
-		var curFocus:CameraFocusChar = song.cameraFocuses[0].char;
+		var curFocus:Null<CameraFocusChar> = null;
 		var curNotes:Map<Int, Array<Int>> = new Map();
 		for (i in 0...json.notes.length)
 		{
@@ -88,23 +90,22 @@ class Song extends JsonObject
 				});
 				curBPM = section.bpm;
 			}
-			if (i > 0)
+			var sectionFocus = resolveCameraFocus(section, curTime);
+			if (curFocus == null || curFocus != sectionFocus.char)
 			{
-				var sectionFocus = resolveCameraFocus(section, curTime);
-				if (curFocus != sectionFocus.char)
-				{
-					song.cameraFocuses.push(sectionFocus);
-				}
+				song.cameraFocuses.push(sectionFocus);
+				curFocus = sectionFocus.char;
 			}
 			for (i in 0...section.sectionNotes.length)
 			{
 				var note:Array<Dynamic> = section.sectionNotes[i];
-				var noteInfo = {
+				var noteInfo:Dynamic = {
 					startTime: note[0],
 					lane: note[1],
 					endTime: note[2] > 0 ? note[0] + note[2] : 0,
-					type: ''
 				};
+				if (noteInfo.lane < 0)
+					continue;
 				if (section.mustHitSection)
 				{
 					if (noteInfo.lane >= 4)
@@ -153,9 +154,9 @@ class Song extends JsonObject
 			startTime: startTime,
 			char: 0
 		};
-		if (section.gfSection != null && section.gfSection)
+		if (section.gfSection == true)
 			cameraFocus.char = 2;
-		else if (!section.mustHitSection)
+		else if (section.mustHitSection == true)
 			cameraFocus.char = 1;
 		return cameraFocus;
 	}
@@ -488,6 +489,81 @@ class Song extends JsonObject
 	public function solveDifficulty(rightSide:Bool = false, ?mods:Modifiers)
 	{
 		return new DifficultyProcessor(this, rightSide, mods);
+	}
+
+	/**
+		Writes this song object into a file.
+	**/
+	public function save(path:String)
+	{
+		var timingPoints = [];
+		for (point in this.timingPoints)
+		{
+			var data:Dynamic = {
+				bpm: point.bpm
+			}
+			if (point.startTime != 0)
+				data.startTime = point.startTime;
+			if (point.meter != 4)
+				data.meter = point.meter;
+			timingPoints.push(data);
+		}
+
+		var sliderVelocities = [];
+		for (velocity in this.sliderVelocities)
+		{
+			var data:Dynamic = {};
+			if (velocity.startTime != 0)
+				data.startTime = velocity.startTime;
+			if (velocity.multiplier != 1)
+				data.multiplier = velocity.multiplier;
+			sliderVelocities.push(data);
+		}
+
+		var cameraFocuses = [];
+		for (focus in this.cameraFocuses)
+		{
+			var data:Dynamic = {};
+			if (focus.startTime != 0)
+				data.startTime = focus.startTime;
+			if (focus.char != 0)
+				data.char = focus.char;
+			cameraFocuses.push(data);
+		}
+
+		var notes = [];
+		for (note in this.notes)
+		{
+			var data:Dynamic = {};
+			if (note.startTime != 0)
+				data.startTime = note.startTime;
+			if (note.lane != 0)
+				data.lane = note.lane;
+			if (note.endTime != 0)
+				data.endTime = note.endTime;
+			if (note.type.length > 0)
+				data.type = note.type;
+			if (note.params.length > 0 && note.params[0].length > 0)
+				data.params = note.params.join(',');
+			notes.push(data);
+		}
+
+		var data = {
+			title: title,
+			artist: artist,
+			source: source,
+			instFile: instFile,
+			vocalsFile: vocalsFile,
+			timingPoints: timingPoints,
+			initialScrollVelocity: initialScrollVelocity,
+			sliderVelocities: sliderVelocities,
+			cameraFocuses: cameraFocuses,
+			notes: notes,
+			bf: bf,
+			opponent: opponent,
+			gf: gf
+		};
+		File.saveContent(path, Json.stringify(data, "\t"));
 	}
 
 	/**

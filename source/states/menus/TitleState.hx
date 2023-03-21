@@ -61,7 +61,7 @@ class TitleState extends FNFState
 
 		getIntroText();
 
-		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized);
+		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized, 0, onBeatHit);
 
 		colorSwap = new ColorSwap();
 
@@ -127,8 +127,6 @@ class TitleState extends FNFState
 		{
 			startIntro();
 		}
-
-		timing.onBeatHit.add(onBeatHit);
 
 		CoolUtil.playConfirmSound(0);
 

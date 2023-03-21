@@ -34,7 +34,7 @@ class EditorNumericStepper extends FlxSpriteGroup
 		this.decimals = decimals;
 
 		inputText = new EditorInputText(0, 0, 40);
-		inputText.onFocusLost.add(onFocusLost);
+		inputText.focusLost.add(onFocusLost);
 		add(inputText);
 
 		var btnSize = Std.int(inputText.height);
@@ -91,9 +91,9 @@ class EditorNumericStepper extends FlxSpriteGroup
 		var oldValue = value;
 		newValue = FlxMath.bound(FlxMath.roundDecimal(newValue, decimals), min, max);
 		inputText.text = Std.string(newValue);
-		if (value != oldValue)
+		if (newValue != oldValue)
 		{
-			valueChanged.dispatch(value, oldValue);
+			valueChanged.dispatch(newValue, oldValue);
 		}
 		return newValue;
 	}

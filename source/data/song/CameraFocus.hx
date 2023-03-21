@@ -31,7 +31,7 @@ class CameraFocus extends JsonObject
 
 @:enum abstract CameraFocusChar(Int) from Int to Int
 {
-	var BF = 0;
-	var OPPONENT = 1;
+	var OPPONENT = 0;
+	var BF = 1;
 	var GF = 2;
 }
