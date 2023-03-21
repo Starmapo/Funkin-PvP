@@ -34,12 +34,13 @@ class SongEditorEditPanel extends EditorPanel
 
 		var spacing = 4;
 		var inputSpacing = 125;
+		var inputWidth = 250;
 
 		var titleLabel = new FlxUIText(4, 5, 0, 'Title:');
 		titleLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(titleLabel);
 
-		var titleInput = new EditorInputText(titleLabel.x + inputSpacing, 4, 120, state.song.title);
+		var titleInput = new EditorInputText(titleLabel.x + inputSpacing, 4, inputWidth, state.song.title);
 		titleInput.focusLost.add(function(text)
 		{
 			state.song.title = text;
@@ -50,7 +51,7 @@ class SongEditorEditPanel extends EditorPanel
 		artistLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(artistLabel);
 
-		var artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y, 120, state.song.artist);
+		var artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y, inputWidth, state.song.artist);
 		artistInput.focusLost.add(function(text)
 		{
 			state.song.artist = text;
@@ -61,7 +62,7 @@ class SongEditorEditPanel extends EditorPanel
 		sourceLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(sourceLabel);
 
-		var sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y, 120, state.song.source);
+		var sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y, inputWidth, state.song.source);
 		sourceInput.focusLost.add(function(text)
 		{
 			state.song.source = text;
@@ -72,7 +73,7 @@ class SongEditorEditPanel extends EditorPanel
 		difficultyLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(difficultyLabel);
 
-		var difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y, 120, state.song.difficultyName);
+		var difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y, inputWidth, state.song.difficultyName);
 		difficultyInput.focusLost.add(function(text)
 		{
 			state.song.difficultyName = text;
@@ -83,7 +84,7 @@ class SongEditorEditPanel extends EditorPanel
 		instLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(instLabel);
 
-		var instInput = new EditorInputText(instLabel.x + inputSpacing, instLabel.y, 120, state.song.instFile);
+		var instInput = new EditorInputText(instLabel.x + inputSpacing, instLabel.y, inputWidth, state.song.instFile);
 		instInput.focusLost.add(function(text)
 		{
 			state.song.instFile = text;
@@ -94,7 +95,7 @@ class SongEditorEditPanel extends EditorPanel
 		vocalsLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(vocalsLabel);
 
-		var vocalsInput = new EditorInputText(vocalsLabel.x + inputSpacing, vocalsLabel.y, 120, state.song.vocalsFile);
+		var vocalsInput = new EditorInputText(vocalsLabel.x + inputSpacing, vocalsLabel.y, inputWidth, state.song.vocalsFile);
 		vocalsInput.focusLost.add(function(text)
 		{
 			state.song.vocalsFile = text;
@@ -105,7 +106,7 @@ class SongEditorEditPanel extends EditorPanel
 		opponentLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(opponentLabel);
 
-		var opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y, 120, state.song.opponent);
+		var opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y, inputWidth, state.song.opponent);
 		opponentInput.focusLost.add(function(text)
 		{
 			state.song.opponent = text;
@@ -116,7 +117,7 @@ class SongEditorEditPanel extends EditorPanel
 		bfLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(bfLabel);
 
-		var bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y, 120, state.song.bf);
+		var bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y, inputWidth, state.song.bf);
 		bfInput.focusLost.add(function(text)
 		{
 			state.song.bf = text;
@@ -127,7 +128,7 @@ class SongEditorEditPanel extends EditorPanel
 		gfLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songTab.add(gfLabel);
 
-		var gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y, 120, state.song.gf);
+		var gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y, inputWidth, state.song.gf);
 		gfInput.focusLost.add(function(text)
 		{
 			state.song.gf = text;
