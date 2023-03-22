@@ -116,6 +116,15 @@ class EditorInputTextField extends FlxText
 		updateTextField();
 	}
 
+	override function set_visible(value:Bool)
+	{
+		if (textField != null)
+		{
+			textField.visible = value;
+		}
+		return super.set_visible(value);
+	}
+
 	override function set_text(value:String)
 	{
 		text = value;

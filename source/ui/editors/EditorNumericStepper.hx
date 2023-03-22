@@ -23,6 +23,7 @@ class EditorNumericStepper extends FlxSpriteGroup
 	var inputText:EditorInputText;
 	var buttonPlus:FlxUITypedButton<FlxSprite>;
 	var buttonMinus:FlxUITypedButton<FlxSprite>;
+	var _value:Float;
 
 	public function new(x:Float = 0, y:Float = 0, stepSize:Float = 0, defaultValue:Float = 0, min:Float = -999, max:Float = 999, decimals:Int = 0)
 	{
@@ -62,13 +63,22 @@ class EditorNumericStepper extends FlxSpriteGroup
 		super.destroy();
 	}
 
+	public function changeWithoutTrigger(newValue:Float)
+	{
+		newValue = FlxMath.bound(FlxMath.roundDecimal(newValue, decimals), min, max);
+		inputText.text = Std.string(newValue);
+	}
+
 	function onFocusLost(text)
 	{
 		if (text.length < 1)
 		{
-			inputText.text = Std.string(defaultValue);
+			value = defaultValue;
 		}
-		value = value;
+		else
+		{
+			value = Std.parseFloat(text);
+		}
 	}
 
 	function onPlus()
@@ -83,18 +93,19 @@ class EditorNumericStepper extends FlxSpriteGroup
 
 	function get_value()
 	{
-		return Std.parseFloat(inputText.text);
+		return _value;
 	}
 
 	function set_value(newValue:Float)
 	{
-		var oldValue = value;
+		var oldValue = _value;
 		newValue = FlxMath.bound(FlxMath.roundDecimal(newValue, decimals), min, max);
 		inputText.text = Std.string(newValue);
-		if (newValue != oldValue)
+		_value = newValue;
+		if (_value != oldValue)
 		{
-			valueChanged.dispatch(newValue, oldValue);
+			valueChanged.dispatch(_value, oldValue);
 		}
-		return newValue;
+		return _value;
 	}
 }

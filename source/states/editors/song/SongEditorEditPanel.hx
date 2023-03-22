@@ -1,19 +1,27 @@
 package states.editors.song;
 
+import data.Settings;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.FlxUIText;
-import flixel.util.FlxColor;
+import ui.editors.EditorCheckbox;
 import ui.editors.EditorInputText;
 import ui.editors.EditorNumericStepper;
+import ui.editors.EditorText;
 
 class SongEditorEditPanel extends EditorPanel
 {
 	var state:SongEditorState;
 
+	public var speedStepper:EditorNumericStepper;
+	public var rateStepper:EditorNumericStepper;
+
 	public function new(state:SongEditorState)
 	{
 		super([
+			{
+				name: 'Editor',
+				label: 'Editor'
+			},
 			{
 				name: 'Song',
 				label: 'Song'
@@ -25,134 +33,204 @@ class SongEditorEditPanel extends EditorPanel
 		y -= 132;
 		this.state = state;
 
+		createEditorTab();
 		createSongTab();
+
+		selected_tab_id = 'Song';
+	}
+
+	public function updateSpeedStepper()
+	{
+		speedStepper.changeWithoutTrigger(Settings.editorScrollSpeed.value);
+	}
+
+	public function updateRateStepper()
+	{
+		rateStepper.changeWithoutTrigger(state.inst.pitch);
 	}
 
 	function createSongTab()
 	{
-		var songTab = createTab('Song');
+		var tab = createTab('Song');
 
 		var spacing = 4;
 		var inputSpacing = 125;
 		var inputWidth = 250;
 
-		var titleLabel = new FlxUIText(4, 5, 0, 'Title:');
-		titleLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(titleLabel);
+		var titleLabel = new EditorText(4, 5, 0, 'Title:');
+		tab.add(titleLabel);
 
 		var titleInput = new EditorInputText(titleLabel.x + inputSpacing, 4, inputWidth, state.song.title);
 		titleInput.focusLost.add(function(text)
 		{
 			state.song.title = text;
 		});
-		songTab.add(titleInput);
+		tab.add(titleInput);
 
-		var artistLabel = new FlxUIText(titleLabel.x, titleLabel.y + titleLabel.height + spacing, 0, 'Artist:');
-		artistLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(artistLabel);
+		var artistLabel = new EditorText(titleLabel.x, titleLabel.y + titleLabel.height + spacing, 0, 'Artist:');
+		tab.add(artistLabel);
 
-		var artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y, inputWidth, state.song.artist);
+		var artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y - 1, inputWidth, state.song.artist);
 		artistInput.focusLost.add(function(text)
 		{
 			state.song.artist = text;
 		});
-		songTab.add(artistInput);
+		tab.add(artistInput);
 
-		var sourceLabel = new FlxUIText(artistLabel.x, artistLabel.y + artistLabel.height + spacing, 0, 'Source:');
-		sourceLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(sourceLabel);
+		var sourceLabel = new EditorText(artistLabel.x, artistLabel.y + artistLabel.height + spacing, 0, 'Source:');
+		tab.add(sourceLabel);
 
-		var sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y, inputWidth, state.song.source);
+		var sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y - 1, inputWidth, state.song.source);
 		sourceInput.focusLost.add(function(text)
 		{
 			state.song.source = text;
 		});
-		songTab.add(sourceInput);
+		tab.add(sourceInput);
 
-		var difficultyLabel = new FlxUIText(sourceLabel.x, sourceLabel.y + sourceLabel.height + spacing, 0, 'Difficulty Name:');
-		difficultyLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(difficultyLabel);
+		var difficultyLabel = new EditorText(sourceLabel.x, sourceLabel.y + sourceLabel.height + spacing, 0, 'Difficulty Name:');
+		tab.add(difficultyLabel);
 
-		var difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y, inputWidth, state.song.difficultyName);
+		var difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y - 1, inputWidth, state.song.difficultyName);
 		difficultyInput.focusLost.add(function(text)
 		{
 			state.song.difficultyName = text;
 		});
-		songTab.add(difficultyInput);
+		tab.add(difficultyInput);
 
-		var instLabel = new FlxUIText(difficultyLabel.x, difficultyLabel.y + difficultyLabel.height + spacing, 0, 'Instrumental File:');
-		instLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(instLabel);
+		var instLabel = new EditorText(difficultyLabel.x, difficultyLabel.y + difficultyLabel.height + spacing, 0, 'Instrumental File:');
+		tab.add(instLabel);
 
-		var instInput = new EditorInputText(instLabel.x + inputSpacing, instLabel.y, inputWidth, state.song.instFile);
+		var instInput = new EditorInputText(instLabel.x + inputSpacing, instLabel.y - 1, inputWidth, state.song.instFile);
 		instInput.focusLost.add(function(text)
 		{
 			state.song.instFile = text;
 		});
-		songTab.add(instInput);
+		tab.add(instInput);
 
-		var vocalsLabel = new FlxUIText(instLabel.x, instLabel.y + instLabel.height + spacing, 0, 'Vocals File:');
-		vocalsLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(vocalsLabel);
+		var vocalsLabel = new EditorText(instLabel.x, instLabel.y + instLabel.height + spacing, 0, 'Vocals File:');
+		tab.add(vocalsLabel);
 
-		var vocalsInput = new EditorInputText(vocalsLabel.x + inputSpacing, vocalsLabel.y, inputWidth, state.song.vocalsFile);
+		var vocalsInput = new EditorInputText(vocalsLabel.x + inputSpacing, vocalsLabel.y - 1, inputWidth, state.song.vocalsFile);
 		vocalsInput.focusLost.add(function(text)
 		{
 			state.song.vocalsFile = text;
 		});
-		songTab.add(vocalsInput);
+		tab.add(vocalsInput);
 
-		var opponentLabel = new FlxUIText(vocalsLabel.x, vocalsLabel.y + vocalsLabel.height + spacing, 0, 'P1/Opponent Character:');
-		opponentLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(opponentLabel);
+		var opponentLabel = new EditorText(vocalsLabel.x, vocalsLabel.y + vocalsLabel.height + spacing, 0, 'P1/Opponent Character:');
+		tab.add(opponentLabel);
 
-		var opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y, inputWidth, state.song.opponent);
+		var opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y - 1, inputWidth, state.song.opponent);
 		opponentInput.focusLost.add(function(text)
 		{
 			state.song.opponent = text;
 		});
-		songTab.add(opponentInput);
+		tab.add(opponentInput);
 
-		var bfLabel = new FlxUIText(opponentLabel.x, opponentLabel.y + opponentLabel.height + spacing, 0, 'P2/Boyfriend Character:');
-		bfLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(bfLabel);
+		var bfLabel = new EditorText(opponentLabel.x, opponentLabel.y + opponentLabel.height + spacing, 0, 'P2/Boyfriend Character:');
+		tab.add(bfLabel);
 
-		var bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y, inputWidth, state.song.bf);
+		var bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y - 1, inputWidth, state.song.bf);
 		bfInput.focusLost.add(function(text)
 		{
 			state.song.bf = text;
 		});
-		songTab.add(bfInput);
+		tab.add(bfInput);
 
-		var gfLabel = new FlxUIText(bfLabel.x, bfLabel.y + bfLabel.height + spacing, 0, 'Girlfriend Character:');
-		gfLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(gfLabel);
+		var gfLabel = new EditorText(bfLabel.x, bfLabel.y + bfLabel.height + spacing, 0, 'Girlfriend Character:');
+		tab.add(gfLabel);
 
-		var gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y, inputWidth, state.song.gf);
+		var gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y - 1, inputWidth, state.song.gf);
 		gfInput.focusLost.add(function(text)
 		{
 			state.song.gf = text;
 		});
-		songTab.add(gfInput);
+		tab.add(gfInput);
 
-		var velocityLabel = new FlxUIText(gfLabel.x, gfLabel.y + gfLabel.height + spacing, 0, 'Initial Scroll Velocity:');
-		velocityLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songTab.add(velocityLabel);
+		var velocityLabel = new EditorText(gfLabel.x, gfLabel.y + gfLabel.height + spacing, 0, 'Initial Scroll Velocity:');
+		tab.add(velocityLabel);
 
-		var velocityStepper = new EditorNumericStepper(velocityLabel.x + inputSpacing, velocityLabel.y, 0.1, state.song.initialScrollVelocity, 0, 10, 2);
+		var velocityStepper = new EditorNumericStepper(velocityLabel.x + inputSpacing, velocityLabel.y - 1, 0.1, 1, 0, 10, 2);
+		velocityStepper.value = state.song.initialScrollVelocity;
 		velocityStepper.valueChanged.add(function(value, _)
 		{
 			state.song.initialScrollVelocity = value;
 		});
-		songTab.add(velocityStepper);
+		tab.add(velocityStepper);
 
 		var saveButton = new FlxUIButton(0, velocityStepper.y + velocityStepper.height + 20, 'Save', function()
 		{
 			state.save();
 		});
 		saveButton.x = (width - saveButton.width) / 2;
-		songTab.add(saveButton);
+		tab.add(saveButton);
 
-		addGroup(songTab);
+		addGroup(tab);
+	}
+
+	function createEditorTab()
+	{
+		var tab = createTab('Editor');
+
+		var spacing = 4;
+		var inputSpacing = 100;
+
+		var speedLabel = new EditorText(4, 5, 0, 'Scroll Speed:');
+		tab.add(speedLabel);
+
+		speedStepper = new EditorNumericStepper(speedLabel.x + inputSpacing, speedLabel.y - 1, 0.05, Settings.editorScrollSpeed.defaultValue,
+			Settings.editorScrollSpeed.minValue, Settings.editorScrollSpeed.maxValue, 2);
+		speedStepper.value = Settings.editorScrollSpeed.value;
+		speedStepper.valueChanged.add(function(value, _)
+		{
+			Settings.editorScrollSpeed.value = value;
+		});
+		tab.add(speedStepper);
+
+		var rateLabel = new EditorText(speedLabel.x, speedLabel.y + speedLabel.height + spacing, 0, 'Playback Rate:');
+		tab.add(rateLabel);
+
+		rateStepper = new EditorNumericStepper(rateLabel.x + inputSpacing, rateLabel.y - 1, 0.25, 1, 0.25, 2, 2);
+		rateStepper.value = state.inst.pitch;
+		rateStepper.valueChanged.add(function(value, _)
+		{
+			state.setPlaybackRate(value);
+		});
+		tab.add(rateStepper);
+
+		var scaleSpeedCheckbox = new EditorCheckbox(rateLabel.x, rateLabel.y + rateLabel.height + spacing, 'Scale Speed with Playback Rate', 200);
+		scaleSpeedCheckbox.button.setAllLabelOffsets(0, 8);
+		scaleSpeedCheckbox.checked = Settings.editorScaleSpeedWithRate.value;
+		scaleSpeedCheckbox.callback = function()
+		{
+			Settings.editorScaleSpeedWithRate.value = scaleSpeedCheckbox.checked;
+		};
+		tab.add(scaleSpeedCheckbox);
+
+		var longNoteAlphaLabel = new EditorText(scaleSpeedCheckbox.x, scaleSpeedCheckbox.y + scaleSpeedCheckbox.height + spacing, 0, 'Long Note Opacity:');
+		tab.add(longNoteAlphaLabel);
+
+		var longNoteAlphaStepper = new EditorNumericStepper(longNoteAlphaLabel.x + inputSpacing, longNoteAlphaLabel.y - 1, 10,
+			Settings.editorLongNoteAlpha.defaultValue * 100, Settings.editorLongNoteAlpha.minValue * 100, Settings.editorLongNoteAlpha.maxValue * 100);
+		longNoteAlphaStepper.value = Settings.editorLongNoteAlpha.value * 100;
+		longNoteAlphaStepper.valueChanged.add(function(value, _)
+		{
+			Settings.editorLongNoteAlpha.value = value / 100;
+		});
+		tab.add(longNoteAlphaStepper);
+
+		var hitsoundLabel = new EditorText(longNoteAlphaLabel.x, longNoteAlphaLabel.y + longNoteAlphaLabel.height + spacing, 0, 'Hitsound Volume:');
+		tab.add(hitsoundLabel);
+
+		var hitsoundStepper = new EditorNumericStepper(hitsoundLabel.x + inputSpacing, hitsoundLabel.y - 1, 10,
+			Settings.editorHitsoundVolume.defaultValue * 100, Settings.editorHitsoundVolume.minValue * 100, Settings.editorHitsoundVolume.maxValue * 100);
+		hitsoundStepper.value = Settings.editorHitsoundVolume.value * 100;
+		hitsoundStepper.valueChanged.add(function(value, _)
+		{
+			Settings.editorHitsoundVolume.value = value / 100;
+		});
+		tab.add(hitsoundStepper);
+
+		addGroup(tab);
 	}
 }

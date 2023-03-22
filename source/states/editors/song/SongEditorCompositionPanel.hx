@@ -1,8 +1,8 @@
 package states.editors.song;
 
 import flixel.addons.ui.FlxUIRadioGroup;
-import flixel.util.FlxColor;
 import states.editors.song.SongEditorState.CompositionTool;
+import ui.editors.EditorRadioGroup;
 
 class SongEditorCompositionPanel extends EditorPanel
 {
@@ -27,16 +27,10 @@ class SongEditorCompositionPanel extends EditorPanel
 		var tab = createTab('Composition');
 
 		var toolNames = [CompositionTool.SELECT, CompositionTool.NOTE, CompositionTool.LONG_NOTE];
-		tools = new FlxUIRadioGroup(4, 4, toolNames, toolNames, function(id)
+		tools = new EditorRadioGroup(4, 4, toolNames, toolNames, function(id)
 		{
 			state.currentTool = id;
-		});
-		@:privateAccess {
-			for (radio in tools._list_radios)
-			{
-				radio.button.label.setBorderStyle(OUTLINE, FlxColor.BLACK);
-			}
-		}
+		}, 50);
 		tab.add(tools);
 
 		addGroup(tab);

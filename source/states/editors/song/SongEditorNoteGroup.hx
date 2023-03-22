@@ -24,6 +24,7 @@ class SongEditorNoteGroup extends FlxBasic
 		state.rateChanged.add(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
+		Settings.editorLongNoteAlpha.valueChanged.add(onLongNoteAlphaChanged);
 	}
 
 	override function draw()
@@ -53,6 +54,7 @@ class SongEditorNoteGroup extends FlxBasic
 		state.rateChanged.remove(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
+		Settings.editorLongNoteAlpha.valueChanged.remove(onLongNoteAlphaChanged);
 	}
 
 	function createNote(info:NoteInfo, insertAtIndex:Bool = false)
@@ -84,6 +86,12 @@ class SongEditorNoteGroup extends FlxBasic
 	{
 		if (state.inst.pitch != 1)
 			refreshNotes();
+	}
+
+	function onLongNoteAlphaChanged(_, _)
+	{
+		for (note in notes)
+			note.updateLongNoteAlpha();
 	}
 }
 
@@ -178,6 +186,7 @@ class SongEditorNote extends FlxSpriteGroup
 		add(note);
 
 		refresh();
+		updateLongNoteAlpha();
 	}
 
 	override function draw()
@@ -227,6 +236,14 @@ class SongEditorNote extends FlxSpriteGroup
 		tail.updateHitbox();
 		tail.x = note.x + (note.width / 2) - (tail.width / 2);
 		tail.y = body.y - tail.height;
+	}
+
+	public function updateLongNoteAlpha()
+	{
+		if (!info.isLongNote)
+			return;
+
+		body.alpha = tail.alpha = Settings.editorLongNoteAlpha.value;
 	}
 
 	public function refresh()

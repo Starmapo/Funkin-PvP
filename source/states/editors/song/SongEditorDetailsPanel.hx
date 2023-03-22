@@ -1,8 +1,8 @@
 package states.editors.song;
 
+import ui.editors.EditorText;
 import flixel.addons.ui.FlxUIText;
 import flixel.text.FlxText.FlxTextFormat;
-import flixel.util.FlxColor;
 
 class SongEditorDetailsPanel extends EditorPanel
 {
@@ -30,23 +30,19 @@ class SongEditorDetailsPanel extends EditorPanel
 
 		var spacing = 4;
 
-		noteCountText = new FlxUIText(2, 4, width - 8);
-		noteCountText.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		noteCountText = new EditorText(2, 4, width - 8);
 		updateNoteCount();
 		tab.add(noteCountText);
 
-		playbackSpeedText = new FlxUIText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, width - 8);
-		playbackSpeedText.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		playbackSpeedText = new EditorText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, width - 8);
 		updatePlaybackSpeed();
 		tab.add(playbackSpeedText);
 
-		bpmText = new FlxUIText(playbackSpeedText.x, playbackSpeedText.y + playbackSpeedText.height + spacing, width - 8);
-		bpmText.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		bpmText = new EditorText(playbackSpeedText.x, playbackSpeedText.y + playbackSpeedText.height + spacing, width - 8);
 		updateBPM();
 		tab.add(bpmText);
 
-		beatSnapText = new FlxUIText(bpmText.x, bpmText.y + bpmText.height + spacing, width - 8);
-		beatSnapText.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		beatSnapText = new EditorText(bpmText.x, bpmText.y + bpmText.height + spacing, width - 8);
 		updateBeatSnap();
 		tab.add(beatSnapText);
 

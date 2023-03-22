@@ -1,6 +1,5 @@
 package states.editors.song;
 
-import data.Mods;
 import data.Settings;
 import data.song.Song;
 import flixel.FlxG;
@@ -114,6 +113,7 @@ class SongEditorState extends FNFState
 		zoomInButton = new FlxUIButton(playfieldBG.x + playfieldBG.width + 10, 10, '+', function()
 		{
 			Settings.editorScrollSpeed.value += 0.05;
+			editPanel.updateSpeedStepper();
 		});
 		zoomInButton.resize(26, 26);
 		zoomInButton.label.size = 16;
@@ -125,6 +125,7 @@ class SongEditorState extends FNFState
 		zoomOutButton = new FlxUIButton(zoomInButton.x, zoomInButton.y + zoomInButton.height + 4, '-', function()
 		{
 			Settings.editorScrollSpeed.value -= 0.05;
+			editPanel.updateSpeedStepper();
 		});
 		zoomOutButton.resize(26, 26);
 		zoomOutButton.label.size = 16;
@@ -212,13 +213,20 @@ class SongEditorState extends FNFState
 		compositionPanel.tools.selectedId = tool;
 	}
 
+	public function setPlaybackRate(targetRate:Float)
+	{
+		if (targetRate <= 0 || targetRate > 2)
+			return;
+
+		var oldPitch = inst.pitch;
+		inst.pitch = vocals.pitch = targetRate;
+		rateChanged.dispatch(inst.pitch, oldPitch);
+	}
+
 	public function save()
 	{
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
 		notificationManager.showNotification('Song succesfully saved!');
-
-		if (actionManager.undoStack.length != 0)
-			actionManager.lastSaveAction = actionManager.undoStack[0];
 	}
 
 	function handleInput()
@@ -255,23 +263,19 @@ class SongEditorState extends FNFState
 
 		if (FlxG.keys.justPressed.PAGEUP)
 		{
-			Settings.editorScrollSpeed.value += 0.05;
-			timeSinceLastPlayfieldZoom = 0;
+			changeSpeed(0.05);
 		}
 		else if (FlxG.keys.justPressed.PAGEDOWN)
 		{
-			Settings.editorScrollSpeed.value -= 0.05;
-			timeSinceLastPlayfieldZoom = 0;
+			changeSpeed(-0.05);
 		}
 		else if (FlxG.keys.pressed.PAGEUP && canZoom)
 		{
-			Settings.editorScrollSpeed.value += 0.05;
-			timeSinceLastPlayfieldZoom = 0;
+			changeSpeed(0.05);
 		}
 		else if (FlxG.keys.pressed.PAGEDOWN && canZoom)
 		{
-			Settings.editorScrollSpeed.value -= 0.05;
-			timeSinceLastPlayfieldZoom = 0;
+			changeSpeed(-0.05);
 		}
 
 		if (FlxG.keys.justPressed.HOME)
@@ -305,17 +309,15 @@ class SongEditorState extends FNFState
 			{
 				changeBeatSnap(false);
 			}
-		}
-
-		if (FlxG.keys.pressed.CONTROL)
-		{
 			if (FlxG.keys.justPressed.MINUS)
 			{
-				changePlaybackRate(false);
+				setPlaybackRate(inst.pitch - 0.25);
+				editPanel.updateRateStepper();
 			}
 			if (FlxG.keys.justPressed.PLUS)
 			{
-				changePlaybackRate(true);
+				setPlaybackRate(inst.pitch + 0.25);
+				editPanel.updateRateStepper();
 			}
 		}
 	}
@@ -360,17 +362,6 @@ class SongEditorState extends FNFState
 		}
 	}
 
-	function changePlaybackRate(forward:Bool)
-	{
-		var targetRate:Float = inst.pitch + (forward ? 0.25 : -0.25);
-		if (targetRate <= 0 || targetRate > 2)
-			return;
-
-		var oldPitch = inst.pitch;
-		inst.pitch = vocals.pitch = targetRate;
-		rateChanged.dispatch(inst.pitch, oldPitch);
-	}
-
 	function onSongComplete()
 	{
 		inst.stop();
@@ -389,6 +380,13 @@ class SongEditorState extends FNFState
 			hitsoundNoteIndex--;
 		}
 		hitsoundNoteIndex++;
+	}
+
+	function changeSpeed(amount:Float)
+	{
+		Settings.editorScrollSpeed.value += amount;
+		timeSinceLastPlayfieldZoom = 0;
+		editPanel.updateSpeedStepper();
 	}
 
 	function get_trackSpeed()

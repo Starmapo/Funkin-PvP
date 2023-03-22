@@ -256,8 +256,6 @@ class SongEditorWaveformSlice extends FlxSprite
 
 		createSlice(waveformData);
 		updateSlice();
-
-		antialiasing = true;
 	}
 
 	override function destroy()
