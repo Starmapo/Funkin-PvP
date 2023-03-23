@@ -27,7 +27,7 @@ class SongEditorCompositionPanel extends EditorPanel
 		var tab = createTab('Composition');
 
 		var toolNames = [CompositionTool.SELECT, CompositionTool.NOTE, CompositionTool.LONG_NOTE];
-		tools = new EditorRadioGroup(4, 4, toolNames, toolNames, function(id)
+		tools = new EditorRadioGroup(4, 4, toolNames, function(id)
 		{
 			state.currentTool = id;
 		}, 50);

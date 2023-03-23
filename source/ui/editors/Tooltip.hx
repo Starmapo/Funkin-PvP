@@ -3,6 +3,7 @@ package ui.editors;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUI9SliceSprite;
+import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIText;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
@@ -80,6 +81,12 @@ class Tooltip extends FlxSpriteGroup
 
 	public function addTooltip(sprite:FlxSprite, text:String)
 	{
+		var sprite:FlxSprite = sprite;
+		if (Std.isOfType(sprite, FlxUIDropDownMenu))
+		{
+			var dropdown:FlxUIDropDownMenu = cast sprite;
+			sprite = dropdown.header.background;
+		}
 		addedTooltips.set(sprite, text);
 	}
 

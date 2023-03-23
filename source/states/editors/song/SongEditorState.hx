@@ -369,6 +369,8 @@ class SongEditorState extends FNFState
 		{
 			beatSnap.value = index - 1 >= 0 ? availableBeatSnaps[index - 1] : availableBeatSnaps[availableBeatSnaps.length - 1];
 		}
+
+		editPanel.updateBeatSnapDropdown();
 	}
 
 	function onSongComplete()

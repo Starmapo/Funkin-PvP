@@ -3,7 +3,9 @@ package states.editors.song;
 import data.Settings;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
+import flixel.addons.ui.StrNameLabel;
 import ui.editors.EditorCheckbox;
+import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
 import ui.editors.EditorNumericStepper;
 import ui.editors.EditorText;
@@ -14,6 +16,7 @@ class SongEditorEditPanel extends EditorPanel
 
 	public var speedStepper:EditorNumericStepper;
 	public var rateStepper:EditorNumericStepper;
+	public var beatSnapDropdown:EditorDropdownMenu;
 
 	public function new(state:SongEditorState)
 	{
@@ -47,6 +50,11 @@ class SongEditorEditPanel extends EditorPanel
 	public function updateRateStepper()
 	{
 		rateStepper.changeWithoutTrigger(state.inst.pitch);
+	}
+
+	public function updateBeatSnapDropdown()
+	{
+		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
 	}
 
 	function createSongTab()
@@ -230,6 +238,21 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorHitsoundVolume.value = value / 100;
 		});
 		tab.add(hitsoundStepper);
+
+		var beatSnapLabel = new EditorText(hitsoundLabel.x, hitsoundLabel.y + hitsoundLabel.height + spacing + 3, 0, 'Beat Snap:');
+		tab.add(beatSnapLabel);
+
+		var beatSnaps = [
+			for (snap in state.availableBeatSnaps)
+				new StrNameLabel(Std.string(snap), '1/${CoolUtil.formatOrdinal(snap)}')
+		];
+		beatSnapDropdown = new EditorDropdownMenu(beatSnapLabel.x + inputSpacing, beatSnapLabel.y - 4, beatSnaps, function(id)
+		{
+			state.beatSnap.value = Std.parseInt(id);
+		});
+		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
+		tab.add(beatSnapDropdown);
+		state.tooltip.addTooltip(beatSnapDropdown, 'Hotkeys: CTRL + Up/Down/Mouse Wheel');
 
 		addGroup(tab);
 	}
