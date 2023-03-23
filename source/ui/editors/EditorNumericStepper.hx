@@ -67,6 +67,7 @@ class EditorNumericStepper extends FlxSpriteGroup
 	{
 		newValue = FlxMath.bound(FlxMath.roundDecimal(newValue, decimals), min, max);
 		inputText.text = Std.string(newValue);
+		_value = newValue;
 	}
 
 	function onFocusLost(text)
@@ -99,9 +100,7 @@ class EditorNumericStepper extends FlxSpriteGroup
 	function set_value(newValue:Float)
 	{
 		var oldValue = _value;
-		newValue = FlxMath.bound(FlxMath.roundDecimal(newValue, decimals), min, max);
-		inputText.text = Std.string(newValue);
-		_value = newValue;
+		changeWithoutTrigger(newValue);
 		if (_value != oldValue)
 		{
 			valueChanged.dispatch(_value, oldValue);

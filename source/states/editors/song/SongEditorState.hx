@@ -12,12 +12,13 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.io.Path;
 import ui.editors.NotificationManager;
+import ui.editors.Tooltip;
 import util.MusicTiming;
 import util.bindable.BindableInt;
 
 class SongEditorState extends FNFState
 {
-	public var columns:Int = 10;
+	public var columns:Int = 11;
 	public var columnSize:Int = 40;
 	public var hitPositionY:Int = 545;
 	public var beatSnap:BindableInt = new BindableInt(4, 1, 48);
@@ -34,6 +35,7 @@ class SongEditorState extends FNFState
 	public var borderRight:FlxSprite;
 	public var currentTool:CompositionTool = SELECT;
 	public var notificationManager:NotificationManager;
+	public var tooltip:Tooltip;
 
 	var actionManager:SongEditorActionManager;
 	var dividerLines:FlxTypedGroup<FlxSprite>;
@@ -63,21 +65,17 @@ class SongEditorState extends FNFState
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
-		add(bg);
 
 		playfieldBG = new FlxSprite().makeGraphic(columnSize * columns, FlxG.height, FlxColor.fromRGB(24, 24, 24));
 		playfieldBG.screenCenter(X);
 		playfieldBG.scrollFactor.set();
-		add(playfieldBG);
 
 		borderLeft = new FlxSprite(playfieldBG.x).makeGraphic(2, Std.int(playfieldBG.height), 0xFF808080);
 		borderLeft.scrollFactor.set();
-		add(borderLeft);
 
 		borderRight = new FlxSprite(playfieldBG.x + playfieldBG.width).makeGraphic(2, Std.int(playfieldBG.height), 0xFF808080);
 		borderRight.x -= borderRight.width;
 		borderRight.scrollFactor.set();
-		add(borderRight);
 
 		dividerLines = new FlxTypedGroup();
 		for (i in 1...columns)
@@ -88,27 +86,22 @@ class SongEditorState extends FNFState
 			dividerLine.scrollFactor.set();
 			dividerLines.add(dividerLine);
 		}
-		add(dividerLines);
 
 		hitPositionLine = new FlxSprite(0, hitPositionY).makeGraphic(Std.int(playfieldBG.width - borderLeft.width * 2), 6, FlxColor.fromRGB(9, 165, 200));
 		hitPositionLine.screenCenter(X);
 		hitPositionLine.scrollFactor.set();
-		add(hitPositionLine);
 
 		timeline = new SongEditorTimeline(this);
-		add(timeline);
 
 		waveform = new SongEditorWaveform(this);
-		add(waveform);
 
 		lineGroup = new SongEditorLineGroup(this);
-		add(lineGroup);
 
 		noteGroup = new SongEditorNoteGroup(this);
-		add(noteGroup);
 
 		seekBar = new SongEditorSeekBar(this);
-		add(seekBar);
+
+		tooltip = new Tooltip();
 
 		zoomInButton = new FlxUIButton(playfieldBG.x + playfieldBG.width + 10, 10, '+', function()
 		{
@@ -120,7 +113,7 @@ class SongEditorState extends FNFState
 		for (point in zoomInButton.labelOffsets)
 			point.add(1, 1);
 		zoomInButton.autoCenterLabel();
-		add(zoomInButton);
+		tooltip.addTooltip(zoomInButton, 'Zoom In (Hotkey: Page Up)');
 
 		zoomOutButton = new FlxUIButton(zoomInButton.x, zoomInButton.y + zoomInButton.height + 4, '-', function()
 		{
@@ -132,21 +125,36 @@ class SongEditorState extends FNFState
 		for (point in zoomOutButton.labelOffsets)
 			point.add(1, 1);
 		zoomOutButton.autoCenterLabel();
-		add(zoomOutButton);
+		tooltip.addTooltip(zoomOutButton, 'Zoom Out (Hotkey: Page Down)');
 
 		detailsPanel = new SongEditorDetailsPanel(this);
-		add(detailsPanel);
 
 		compositionPanel = new SongEditorCompositionPanel(this);
-		add(compositionPanel);
 
 		editPanel = new SongEditorEditPanel(this);
-		add(editPanel);
 
 		notificationManager = new NotificationManager();
-		add(notificationManager);
 
 		actionManager = new SongEditorActionManager(this);
+
+		add(bg);
+		add(playfieldBG);
+		add(borderLeft);
+		add(borderRight);
+		add(dividerLines);
+		add(hitPositionLine);
+		add(timeline);
+		add(waveform);
+		add(lineGroup);
+		add(noteGroup);
+		add(seekBar);
+		add(zoomInButton);
+		add(zoomOutButton);
+		add(detailsPanel);
+		add(compositionPanel);
+		add(editPanel);
+		add(notificationManager);
+		add(tooltip);
 
 		inst.play();
 		vocals.play();
@@ -167,6 +175,7 @@ class SongEditorState extends FNFState
 		compositionPanel.update(elapsed);
 		editPanel.update(elapsed);
 		notificationManager.update(elapsed);
+		tooltip.update(elapsed);
 
 		FlxG.camera.scroll.y = -trackPositionY;
 
