@@ -73,8 +73,7 @@ class EditorInputTextField extends FlxText
 		textField.selectable = true;
 		textField.type = INPUT;
 		textField.multiline = false;
-		textField.alpha = 0.00001;
-		FlxG.game.addChild(textField);
+		FlxG.game.addChildAt(textField, FlxG.game.getChildIndex(FlxG.camera.flashSprite) + 1);
 		FlxG.signals.gameResized.add(onGameResized);
 	}
 

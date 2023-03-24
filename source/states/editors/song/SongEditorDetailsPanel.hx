@@ -8,9 +8,10 @@ class SongEditorDetailsPanel extends EditorPanel
 {
 	var state:SongEditorState;
 	var noteCountText:EditorText;
-	var playbackSpeedText:EditorText;
 	var bpmText:EditorText;
 	var timeText:EditorText;
+	var stepText:EditorText;
+	var beatText:EditorText;
 
 	public function new(state:SongEditorState)
 	{
@@ -20,7 +21,7 @@ class SongEditorDetailsPanel extends EditorPanel
 				label: 'Details'
 			}
 		]);
-		resize(250, 100);
+		resize(250, 120);
 		x = 10;
 		screenCenter(Y);
 		y -= 132;
@@ -35,28 +36,28 @@ class SongEditorDetailsPanel extends EditorPanel
 		updateNoteCount();
 		tab.add(noteCountText);
 
-		playbackSpeedText = new EditorText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, fieldWidth);
-		updatePlaybackSpeed();
-		tab.add(playbackSpeedText);
-
-		bpmText = new EditorText(playbackSpeedText.x, playbackSpeedText.y + playbackSpeedText.height + spacing, fieldWidth);
-		updateBPM();
+		bpmText = new EditorText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, fieldWidth);
 		tab.add(bpmText);
 
 		timeText = new EditorText(bpmText.x, bpmText.y + bpmText.height + spacing, fieldWidth);
-		updateTime();
 		tab.add(timeText);
+
+		stepText = new EditorText(timeText.x, timeText.y + timeText.height + spacing, fieldWidth);
+		tab.add(stepText);
+
+		beatText = new EditorText(stepText.x, stepText.y + stepText.height + spacing, fieldWidth);
+		tab.add(beatText);
+
+		updateSongStuff();
 
 		addGroup(tab);
 
 		state.songSeeked.add(onSongSeeked);
-		state.rateChanged.add(onRateChanged);
 	}
 
 	override function update(elapsed:Float)
 	{
-		updateBPM();
-		updateTime();
+		updateSongStuff();
 
 		super.update(elapsed);
 	}
@@ -65,17 +66,11 @@ class SongEditorDetailsPanel extends EditorPanel
 	{
 		super.destroy();
 		state.songSeeked.remove(onSongSeeked);
-		state.rateChanged.remove(onRateChanged);
 	}
 
 	function onSongSeeked(_, _)
 	{
-		updateBPM();
-	}
-
-	function onRateChanged(_, _)
-	{
-		updatePlaybackSpeed();
+		updateSongStuff();
 	}
 
 	function updateNoteCount()
@@ -83,26 +78,25 @@ class SongEditorDetailsPanel extends EditorPanel
 		noteCountText.text = 'Note Count: ${state.song.notes.length}';
 	}
 
-	function updatePlaybackSpeed()
+	function updateSongStuff()
 	{
-		playbackSpeedText.text = 'Playback Speed: ${state.inst.pitch * 100}%';
-	}
-
-	function updateBPM()
-	{
-		var bpm:Float = 0;
 		var point = state.song.getTimingPointAt(state.inst.time);
-		if (point != null)
-		{
-			bpm = point.bpm;
-		}
-		bpmText.text = 'BPM: $bpm';
-	}
 
-	function updateTime()
-	{
+		var bpm:Float = point != null ? point.bpm : 0;
+		bpmText.text = 'BPM: $bpm';
+
 		var time = FlxStringUtil.formatTime(state.inst.time / 1000, true);
 		var length = FlxStringUtil.formatTime(state.inst.length / 1000, true);
 		timeText.text = 'Song Time: $time / $length';
+
+		var step = 0;
+		var beat = 0;
+		if (point != null)
+		{
+			step = Math.floor((state.inst.time - point.startTime) / point.stepLength);
+			beat = Math.floor((state.inst.time - point.startTime) / point.beatLength);
+		}
+		stepText.text = 'Timing Point Step: $step';
+		beatText.text = 'Timing Point Beat: $beat';
 	}
 }

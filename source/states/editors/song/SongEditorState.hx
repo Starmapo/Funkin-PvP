@@ -2,6 +2,7 @@ package states.editors.song;
 
 import data.Settings;
 import data.song.Song;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
@@ -54,10 +55,15 @@ class SongEditorState extends FNFState
 	var compositionPanel:SongEditorCompositionPanel;
 	var editPanel:SongEditorEditPanel;
 	var hitsoundNoteIndex:Int = 0;
+	var camHUD:FlxCamera;
 
 	override function create()
 	{
 		persistentUpdate = true;
+
+		camHUD = new FlxCamera();
+		camHUD.bgColor = 0;
+		FlxG.cameras.add(camHUD, false);
 
 		song = Song.loadSong('mods/fnf/songs/Bopeebo/Hard.json');
 		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
@@ -103,6 +109,7 @@ class SongEditorState extends FNFState
 		seekBar = new SongEditorSeekBar(this);
 
 		tooltip = new Tooltip();
+		tooltip.cameras = [camHUD];
 
 		zoomInButton = new FlxUIButton(playfieldBG.x + playfieldBG.width + 10, 10, '+', function()
 		{
