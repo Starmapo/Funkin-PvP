@@ -39,9 +39,7 @@ class SongEditorNoteGroup extends FlxBasic
 				drewNote = true;
 			}
 			else if (drewNote)
-			{
 				break;
-			}
 		}
 	}
 

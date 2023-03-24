@@ -13,8 +13,11 @@ import openfl.geom.Rectangle;
 
 class SongEditorWaveform extends FlxBasic
 {
+	public var type:WaveformType = VOCALS;
+
 	var state:SongEditorState;
 	var slices:Array<SongEditorWaveformSlice> = [];
+	var cachedSlices:Map<WaveformType, Array<SongEditorWaveformSlice>> = new Map();
 	var sliceSize:Int;
 	var waveformData:Array<Array<Array<Float>>>;
 	var sound:FlxSound;
@@ -25,8 +28,10 @@ class SongEditorWaveform extends FlxBasic
 	{
 		super();
 		this.state = state;
+		sliceSize = Std.int(state.playfieldBG.height);
+		cachedSlices.set(NONE, []);
 
-		generateWaveform();
+		reloadWaveform();
 
 		state.rateChanged.add(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
@@ -35,40 +40,51 @@ class SongEditorWaveform extends FlxBasic
 
 	override function draw()
 	{
+		var drewSlice = false;
 		for (i in 0...slices.length)
 		{
 			var slice = slices[i];
 			if (slice.isOnScreen())
 			{
 				slice.draw();
+				drewSlice = true;
 			}
+			else if (drewSlice)
+				break;
 		}
 	}
 
 	override function destroy()
 	{
-		if (slices.length > 0)
+		for (slices in cachedSlices)
 		{
 			for (slice in slices)
 			{
-				if (slice != null)
-					slice.destroy();
+				slice.destroy();
 			}
 		}
-		slices.resize(0);
 		super.destroy();
 		state.rateChanged.remove(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
 
-	function generateWaveform()
+	public function reloadWaveform()
 	{
-		sliceSize = Std.int(state.playfieldBG.height);
+		if (cachedSlices.exists(type))
+		{
+			slices = cachedSlices.get(type);
+			refreshSlices();
+			return;
+		}
 
-		sound = state.vocals;
+		slices = [];
+		if (type == NONE)
+			return;
+
+		sound = type == INST ? state.inst : state.vocals;
 		@:privateAccess {
-			buffer = state.vocals._sound.__buffer;
+			buffer = sound._sound.__buffer;
 			bytes = buffer.data.toBytes();
 		}
 
@@ -81,6 +97,8 @@ class SongEditorWaveform extends FlxBasic
 			slices.push(slice);
 			t += sliceSize;
 		}
+
+		cachedSlices.set(type, slices);
 	}
 
 	/*
@@ -312,4 +330,11 @@ class SongEditorWaveformSlice extends FlxSprite
 
 		flipY = true; // im too lazy to figure out how to flip it in the actual bitmap
 	}
+}
+
+enum abstract WaveformType(String) from String to String
+{
+	var NONE = 'None';
+	var INST = 'Instrumental';
+	var VOCALS = 'Vocals';
 }

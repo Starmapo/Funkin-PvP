@@ -41,9 +41,7 @@ class SongEditorTimeline extends FlxBasic
 				drewLine = true;
 			}
 			else if (drewLine)
-			{
 				break;
-			}
 		}
 	}
 

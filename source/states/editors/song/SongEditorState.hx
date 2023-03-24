@@ -11,6 +11,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.io.Path;
+import states.editors.song.SongEditorWaveform.WaveformType;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import util.MusicTiming;
@@ -36,6 +37,7 @@ class SongEditorState extends FNFState
 	public var currentTool:CompositionTool = SELECT;
 	public var notificationManager:NotificationManager;
 	public var tooltip:Tooltip;
+	public var waveform:SongEditorWaveform;
 
 	var actionManager:SongEditorActionManager;
 	var dividerLines:FlxTypedGroup<FlxSprite>;
@@ -43,7 +45,6 @@ class SongEditorState extends FNFState
 	var timeline:SongEditorTimeline;
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
-	var waveform:SongEditorWaveform;
 	var lineGroup:SongEditorLineGroup;
 	var noteGroup:SongEditorNoteGroup;
 	var seekBar:SongEditorSeekBar;
@@ -171,9 +172,9 @@ class SongEditorState extends FNFState
 		seekBar.update(elapsed);
 		zoomInButton.update(elapsed);
 		zoomOutButton.update(elapsed);
-		detailsPanel.update(elapsed);
 		compositionPanel.update(elapsed);
 		editPanel.update(elapsed);
+		detailsPanel.update(elapsed);
 		notificationManager.update(elapsed);
 		tooltip.update(elapsed);
 
@@ -416,7 +417,7 @@ class SongEditorState extends FNFState
 	}
 }
 
-@:enum abstract CompositionTool(String) from String to String
+enum abstract CompositionTool(String) from String to String
 {
 	var SELECT = 'Select';
 	var NOTE = 'Note';

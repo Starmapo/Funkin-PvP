@@ -1,8 +1,10 @@
 package states.editors.song;
 
-import ui.editors.EditorText;
 import flixel.addons.ui.FlxUIText;
+import flixel.math.FlxMath;
 import flixel.text.FlxText.FlxTextFormat;
+import flixel.util.FlxStringUtil;
+import ui.editors.EditorText;
 
 class SongEditorDetailsPanel extends EditorPanel
 {
@@ -10,7 +12,7 @@ class SongEditorDetailsPanel extends EditorPanel
 	var noteCountText:FlxUIText;
 	var playbackSpeedText:FlxUIText;
 	var bpmText:FlxUIText;
-	var beatSnapText:FlxUIText;
+	var timeText:FlxUIText;
 
 	public function new(state:SongEditorState)
 	{
@@ -29,33 +31,34 @@ class SongEditorDetailsPanel extends EditorPanel
 		var tab = createTab('Details');
 
 		var spacing = 4;
+		var fieldWidth = width - 8;
 
-		noteCountText = new EditorText(2, 4, width - 8);
+		noteCountText = new EditorText(2, 4, fieldWidth);
 		updateNoteCount();
 		tab.add(noteCountText);
 
-		playbackSpeedText = new EditorText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, width - 8);
+		playbackSpeedText = new EditorText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, fieldWidth);
 		updatePlaybackSpeed();
 		tab.add(playbackSpeedText);
 
-		bpmText = new EditorText(playbackSpeedText.x, playbackSpeedText.y + playbackSpeedText.height + spacing, width - 8);
+		bpmText = new EditorText(playbackSpeedText.x, playbackSpeedText.y + playbackSpeedText.height + spacing, fieldWidth);
 		updateBPM();
 		tab.add(bpmText);
 
-		beatSnapText = new EditorText(bpmText.x, bpmText.y + bpmText.height + spacing, width - 8);
-		updateBeatSnap();
-		tab.add(beatSnapText);
+		timeText = new EditorText(bpmText.x, bpmText.y + bpmText.height + spacing, fieldWidth);
+		updateTime();
+		tab.add(timeText);
 
 		addGroup(tab);
 
 		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);
-		state.beatSnap.valueChanged.add(onBeatSnapChanged);
 	}
 
 	override function update(elapsed:Float)
 	{
 		updateBPM();
+		updateTime();
 
 		super.update(elapsed);
 	}
@@ -65,7 +68,6 @@ class SongEditorDetailsPanel extends EditorPanel
 		super.destroy();
 		state.songSeeked.remove(onSongSeeked);
 		state.rateChanged.remove(onRateChanged);
-		state.beatSnap.valueChanged.remove(onBeatSnapChanged);
 	}
 
 	function onSongSeeked(_, _)
@@ -76,11 +78,6 @@ class SongEditorDetailsPanel extends EditorPanel
 	function onRateChanged(_, _)
 	{
 		updatePlaybackSpeed();
-	}
-
-	function onBeatSnapChanged(_, _)
-	{
-		updateBeatSnap();
 	}
 
 	function updateNoteCount()
@@ -104,10 +101,10 @@ class SongEditorDetailsPanel extends EditorPanel
 		bpmText.text = 'BPM: $bpm';
 	}
 
-	function updateBeatSnap()
+	function updateTime()
 	{
-		beatSnapText.text = 'Beat Snap: 1/${CoolUtil.formatOrdinal(state.beatSnap.value)}';
-		beatSnapText.clearFormats();
-		beatSnapText.addFormat(new FlxTextFormat(CoolUtil.getBeatSnapColor(state.beatSnap.value)), 11, beatSnapText.text.length);
+		var time = FlxStringUtil.formatTime(state.inst.time / 1000, true);
+		var length = FlxStringUtil.formatTime(state.inst.length / 1000, true);
+		timeText.text = 'Song Time: $time / $length';
 	}
 }

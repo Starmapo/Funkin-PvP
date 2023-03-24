@@ -1,8 +1,8 @@
 package sprites;
 
-import flixel.util.FlxDestroyUtil;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 /**
@@ -97,8 +97,7 @@ class DancingSprite extends AnimatedSprite
 	public function danced(name:String) {}
 }
 
-@:enum
-abstract DancePreset(Int) to Int from Int
+enum abstract DancePreset(Int) to Int from Int
 {
 	var SINGLE = 0;
 	var DOUBLE = 1;

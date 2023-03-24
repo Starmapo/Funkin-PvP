@@ -33,7 +33,10 @@ class SongEditorLineGroup extends FlxBasic
 			if (line.isOnScreen())
 			{
 				line.draw();
+				drewLine = true;
 			}
+			else if (drewLine)
+				break;
 		}
 	}
 

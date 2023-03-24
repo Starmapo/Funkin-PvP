@@ -9,6 +9,7 @@ class EditorRadioGroup extends FlxUIRadioGroup
 			labelWidth:Int = 100)
 	{
 		super(x, y, labels, labels, callback, ySpace, width, height, labelWidth);
+		_refreshRadios();
 		for (radio in _list_radios)
 		{
 			radio.button.label.setBorderStyle(OUTLINE, FlxColor.BLACK);

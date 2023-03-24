@@ -10,18 +10,8 @@ class EditorDropdownMenu extends FlxUIDropDownMenu
 		super(x, y, dataList, callback);
 	}
 
-	public static function makeStrIdLabelArray(StringArray:Array<String>, UseIndexID:Bool = false):Array<StrNameLabel>
+	public static function makeStrIdLabelArray(stringArray:Array<String>, useIndexID:Bool = false):Array<StrNameLabel>
 	{
-		var strIdArray:Array<StrNameLabel> = [];
-		for (i in 0...StringArray.length)
-		{
-			var ID:String = StringArray[i];
-			if (UseIndexID)
-			{
-				ID = Std.string(i);
-			}
-			strIdArray[i] = new StrNameLabel(ID, StringArray[i]);
-		}
-		return strIdArray;
+		return FlxUIDropDownMenu.makeStrIdLabelArray(stringArray, useIndexID);
 	}
 }

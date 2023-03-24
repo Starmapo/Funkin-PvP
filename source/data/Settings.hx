@@ -161,7 +161,7 @@ class Settings
 	}
 }
 
-@:enum abstract FilterType(String) from String to String
+enum abstract FilterType(String) from String to String
 {
 	var NONE = "None";
 	// Colorblindness filters come first
@@ -176,7 +176,7 @@ class Settings
 	var VIRTUAL_BOY = "Virtual Boy";
 }
 
-@:enum abstract WinCondition(String) from String to String
+enum abstract WinCondition(String) from String to String
 {
 	var SCORE = 'Highest Score';
 	var ACCURACY = 'Highest Accuracy';

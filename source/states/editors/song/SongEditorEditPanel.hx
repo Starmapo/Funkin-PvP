@@ -4,6 +4,7 @@ import data.Settings;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
+import states.editors.song.SongEditorWaveform.WaveformType;
 import ui.editors.EditorCheckbox;
 import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
@@ -251,8 +252,22 @@ class SongEditorEditPanel extends EditorPanel
 			state.beatSnap.value = Std.parseInt(id);
 		});
 		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
-		tab.add(beatSnapDropdown);
 		state.tooltip.addTooltip(beatSnapDropdown, 'Hotkeys: CTRL + Up/Down/Mouse Wheel');
+
+		var waveformLabel = new EditorText(beatSnapLabel.x, beatSnapLabel.y + beatSnapLabel.height + spacing * 2, 0, 'Waveform:');
+		tab.add(waveformLabel);
+
+		var waveformTypes = [WaveformType.NONE, WaveformType.INST, WaveformType.VOCALS];
+		var waveformDropdown = new EditorDropdownMenu(waveformLabel.x + inputSpacing, waveformLabel.y - 4,
+			EditorDropdownMenu.makeStrIdLabelArray(waveformTypes), function(id)
+		{
+			state.waveform.type = id;
+			state.waveform.reloadWaveform();
+		});
+		waveformDropdown.selectedId = state.waveform.type;
+
+		tab.add(waveformDropdown);
+		tab.add(beatSnapDropdown);
 
 		addGroup(tab);
 	}

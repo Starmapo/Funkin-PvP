@@ -546,7 +546,7 @@ class StrainSolverData
 	}
 }
 
-@:enum abstract FingerState(Int) from Int to Int
+enum abstract FingerState(Int) from Int to Int
 {
 	var NONE = 0;
 	var INDEX = 1 << 0;

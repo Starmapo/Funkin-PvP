@@ -1,8 +1,13 @@
 package states.editors;
 
+import flixel.FlxBasic;
+import flixel.FlxCamera;
+import flixel.FlxG;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIButton;
+import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUITabMenu;
+import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 
 class EditorPanel extends FlxUITabMenu
