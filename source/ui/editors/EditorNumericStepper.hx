@@ -3,14 +3,15 @@ package ui.editors;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
+import flixel.addons.ui.FlxUIGroup;
 import flixel.addons.ui.FlxUITypedButton;
-import flixel.group.FlxSpriteGroup;
+import flixel.addons.ui.interfaces.IFlxUIClickable;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxStringUtil;
 
-class EditorNumericStepper extends FlxSpriteGroup
+class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 {
 	public var stepSize:Float;
 	public var defaultValue:Float;
@@ -19,6 +20,7 @@ class EditorNumericStepper extends FlxSpriteGroup
 	public var decimals:Int;
 	public var value(get, set):Float;
 	public var valueChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
+	public var skipButtonUpdate(default, set):Bool;
 
 	var inputText:EditorInputText;
 	var buttonPlus:FlxUITypedButton<FlxSprite>;
@@ -106,5 +108,13 @@ class EditorNumericStepper extends FlxSpriteGroup
 			valueChanged.dispatch(_value, oldValue);
 		}
 		return _value;
+	}
+
+	function set_skipButtonUpdate(b:Bool)
+	{
+		skipButtonUpdate = b;
+		buttonPlus.skipButtonUpdate = b;
+		buttonMinus.skipButtonUpdate = b;
+		return b;
 	}
 }

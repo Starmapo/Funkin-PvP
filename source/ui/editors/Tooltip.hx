@@ -40,7 +40,7 @@ class Tooltip extends FlxSpriteGroup
 		var show = false;
 		for (sprite => tooltip in addedTooltips)
 		{
-			if (FlxG.mouse.overlaps(sprite))
+			if (sprite != null && sprite.exists && sprite.visible && FlxG.mouse.overlaps(sprite))
 			{
 				if (text.text != tooltip)
 					changeText(tooltip);
@@ -104,7 +104,6 @@ class Tooltip extends FlxSpriteGroup
 		});
 
 		showing = true;
-		trace('showing');
 	}
 
 	function deactivateTooltip()

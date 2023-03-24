@@ -1,13 +1,8 @@
-package states.editors;
+package ui.editors;
 
-import flixel.FlxBasic;
-import flixel.FlxCamera;
-import flixel.FlxG;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUITabMenu;
-import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 
 class EditorPanel extends FlxUITabMenu
@@ -25,7 +20,7 @@ class EditorPanel extends FlxUITabMenu
 
 	function createTab(name:String)
 	{
-		var tab = new FlxUI();
+		var tab = new FlxUI(null, this);
 		tab.name = name;
 		return tab;
 	}

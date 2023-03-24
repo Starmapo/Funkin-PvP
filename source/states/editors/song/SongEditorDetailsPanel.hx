@@ -1,18 +1,16 @@
 package states.editors.song;
 
-import flixel.addons.ui.FlxUIText;
-import flixel.math.FlxMath;
-import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxStringUtil;
+import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 
 class SongEditorDetailsPanel extends EditorPanel
 {
 	var state:SongEditorState;
-	var noteCountText:FlxUIText;
-	var playbackSpeedText:FlxUIText;
-	var bpmText:FlxUIText;
-	var timeText:FlxUIText;
+	var noteCountText:EditorText;
+	var playbackSpeedText:EditorText;
+	var bpmText:EditorText;
+	var timeText:EditorText;
 
 	public function new(state:SongEditorState)
 	{

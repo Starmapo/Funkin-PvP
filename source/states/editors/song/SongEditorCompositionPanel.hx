@@ -2,6 +2,7 @@ package states.editors.song;
 
 import flixel.addons.ui.FlxUIRadioGroup;
 import states.editors.song.SongEditorState.CompositionTool;
+import ui.editors.EditorPanel;
 import ui.editors.EditorRadioGroup;
 
 class SongEditorCompositionPanel extends EditorPanel
@@ -18,7 +19,7 @@ class SongEditorCompositionPanel extends EditorPanel
 				label: 'Composition'
 			}
 		]);
-		resize(250, 95);
+		resize(250, 75);
 		x = 10;
 		screenCenter(Y);
 		y += 132;
@@ -30,7 +31,7 @@ class SongEditorCompositionPanel extends EditorPanel
 		tools = new EditorRadioGroup(4, 4, toolNames, function(id)
 		{
 			state.currentTool = id;
-		}, 50);
+		});
 		tab.add(tools);
 
 		addGroup(tab);

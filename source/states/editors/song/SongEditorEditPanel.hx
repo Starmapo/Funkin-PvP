@@ -9,6 +9,7 @@ import ui.editors.EditorCheckbox;
 import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
 import ui.editors.EditorNumericStepper;
+import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 
 class SongEditorEditPanel extends EditorPanel
@@ -206,6 +207,7 @@ class SongEditorEditPanel extends EditorPanel
 			state.setPlaybackRate(value);
 		});
 		tab.add(rateStepper);
+		state.tooltip.addTooltip(rateStepper, 'Hotkeys: CTRL + -/+');
 
 		var scaleSpeedCheckbox = new EditorCheckbox(rateLabel.x, rateLabel.y + rateLabel.height + spacing, 'Scale Speed with Playback Rate', 200);
 		scaleSpeedCheckbox.button.setAllLabelOffsets(0, 8);
@@ -250,7 +252,7 @@ class SongEditorEditPanel extends EditorPanel
 		beatSnapDropdown = new EditorDropdownMenu(beatSnapLabel.x + inputSpacing, beatSnapLabel.y - 4, beatSnaps, function(id)
 		{
 			state.beatSnap.value = Std.parseInt(id);
-		});
+		}, this);
 		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
 		state.tooltip.addTooltip(beatSnapDropdown, 'Hotkeys: CTRL + Up/Down/Mouse Wheel');
 
@@ -263,7 +265,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			state.waveform.type = id;
 			state.waveform.reloadWaveform();
-		});
+		}, this);
 		waveformDropdown.selectedId = state.waveform.type;
 
 		tab.add(waveformDropdown);
