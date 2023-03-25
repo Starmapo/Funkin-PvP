@@ -7,7 +7,8 @@ class BindableArray<T> extends Bindable<Array<T>>
 {
 	public var itemAdded:FlxTypedSignal<T->Void> = new FlxTypedSignal();
 	public var itemRemoved:FlxTypedSignal<T->Void> = new FlxTypedSignal();
-	public var arrayResized:FlxTypedSignal<Void->Void> = new FlxTypedSignal();
+	public var multipleItemsAdded:FlxTypedSignal<Array<T>->Void> = new FlxTypedSignal();
+	public var arrayCleared:FlxTypedSignal<Void->Void> = new FlxTypedSignal();
 
 	public function new(defaultValue:Array<T>, ?action:Array<T>->Array<T>->Void)
 	{
@@ -19,7 +20,8 @@ class BindableArray<T> extends Bindable<Array<T>>
 		super.destroy();
 		FlxDestroyUtil.destroy(itemAdded);
 		FlxDestroyUtil.destroy(itemRemoved);
-		FlxDestroyUtil.destroy(arrayResized);
+		FlxDestroyUtil.destroy(multipleItemsAdded);
+		FlxDestroyUtil.destroy(arrayCleared);
 	}
 
 	public function push(obj:T)
@@ -34,9 +36,16 @@ class BindableArray<T> extends Bindable<Array<T>>
 		itemRemoved.dispatch(obj);
 	}
 
-	public function resize(len:Int)
+	public function pushMultiple(array:Array<T>)
 	{
-		value.resize(len);
-		arrayResized.dispatch();
+		for (obj in array)
+			value.push(obj);
+		multipleItemsAdded.dispatch(array);
+	}
+
+	public function clear()
+	{
+		value.resize(0);
+		arrayCleared.dispatch();
 	}
 }

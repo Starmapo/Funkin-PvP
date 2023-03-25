@@ -4,6 +4,7 @@ import data.Settings;
 import data.song.NoteInfo;
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSort;
 import sprites.AnimatedSprite;
@@ -24,6 +25,10 @@ class SongEditorNoteGroup extends FlxBasic
 		refreshNotes(); // idk why i need to do this but if i dont then the positions are wrong
 
 		state.rateChanged.add(onRateChanged);
+		state.selectedNotes.itemAdded.add(onSelectedNote);
+		state.selectedNotes.itemRemoved.add(onDeselectedNote);
+		state.selectedNotes.multipleItemsAdded.add(onMultipleNotesSelected);
+		state.selectedNotes.arrayCleared.add(onAllNotesDeselected);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 		Settings.editorLongNoteAlpha.valueChanged.add(onLongNoteAlphaChanged);
@@ -52,6 +57,10 @@ class SongEditorNoteGroup extends FlxBasic
 		super.destroy();
 
 		state.rateChanged.remove(onRateChanged);
+		state.selectedNotes.itemAdded.remove(onSelectedNote);
+		state.selectedNotes.itemRemoved.remove(onDeselectedNote);
+		state.selectedNotes.multipleItemsAdded.remove(onMultipleNotesSelected);
+		state.selectedNotes.arrayCleared.remove(onAllNotesDeselected);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 		Settings.editorLongNoteAlpha.valueChanged.remove(onLongNoteAlphaChanged);
@@ -104,6 +113,50 @@ class SongEditorNoteGroup extends FlxBasic
 		for (note in notes)
 			note.updateLongNoteAlpha();
 	}
+
+	function onSelectedNote(info:NoteInfo)
+	{
+		for (note in notes)
+		{
+			if (note.info == info)
+			{
+				note.selectionSprite.visible = true;
+				break;
+			}
+		}
+	}
+
+	function onDeselectedNote(info:NoteInfo)
+	{
+		for (note in notes)
+		{
+			if (note.info == info)
+			{
+				note.selectionSprite.visible = false;
+				break;
+			}
+		}
+	}
+
+	function onMultipleNotesSelected(array:Array<NoteInfo>)
+	{
+		for (note in notes)
+		{
+			if (array.contains(note.info))
+			{
+				note.selectionSprite.visible = true;
+				break;
+			}
+		}
+	}
+
+	function onAllNotesDeselected()
+	{
+		for (note in notes)
+		{
+			note.selectionSprite.visible = false;
+		}
+	}
 }
 
 class SongEditorNote extends FlxSpriteGroup
@@ -112,6 +165,7 @@ class SongEditorNote extends FlxSpriteGroup
 	public var head:AnimatedSprite;
 	public var body:AnimatedSprite;
 	public var tail:AnimatedSprite;
+	public var selectionSprite:FlxSprite;
 
 	var state:SongEditorState;
 
@@ -196,8 +250,14 @@ class SongEditorNote extends FlxSpriteGroup
 		head.antialiasing = true;
 		add(head);
 
+		selectionSprite = new FlxSprite().makeGraphic(1, 1);
+		selectionSprite.alpha = 0.5;
+		selectionSprite.visible = false;
+		add(selectionSprite);
+
 		refresh();
 		updateLongNoteAlpha();
+		updateSelectionSprite();
 	}
 
 	override function draw()
@@ -208,6 +268,8 @@ class SongEditorNote extends FlxSpriteGroup
 			tail.draw();
 		}
 		head.draw();
+		if (selectionSprite.visible)
+			selectionSprite.draw();
 	}
 
 	public function updateAnims()
@@ -257,6 +319,21 @@ class SongEditorNote extends FlxSpriteGroup
 		body.alpha = tail.alpha = Settings.editorLongNoteAlpha.value;
 	}
 
+	public function updateSelectionSprite()
+	{
+		if (info.isLongNote)
+		{
+			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(getLongNoteHeight() + head.height + tail.height + 20));
+			selectionSprite.y = body.y + (body.height / 2) - (selectionSprite.height / 2);
+		}
+		else
+		{
+			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(head.height + 20));
+			selectionSprite.y = head.y + (head.height / 2) - (selectionSprite.height / 2);
+		}
+		selectionSprite.updateHitbox();
+	}
+
 	public function refresh()
 	{
 		updateAnims();
@@ -284,5 +361,18 @@ class SongEditorNote extends FlxSpriteGroup
 			- ((state.columnSize * tail.frameHeight) / tail.frameWidth) / 2
 			- head.height / 2
 			- y));
+	}
+
+	function onDeselectedNote(note:NoteInfo)
+	{
+		if (info != note)
+			return;
+
+		selectionSprite.visible = false;
+	}
+
+	function onAllNotesDeselected()
+	{
+		selectionSprite.visible = false;
 	}
 }

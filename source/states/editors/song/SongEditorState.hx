@@ -222,7 +222,9 @@ class SongEditorState extends FNFState
 		super.destroy();
 		actionManager = FlxDestroyUtil.destroy(actionManager);
 		beatSnap = FlxDestroyUtil.destroy(beatSnap);
+		selectedNotes = FlxDestroyUtil.destroy(selectedNotes);
 		FlxDestroyUtil.destroy(songSeeked);
+		FlxDestroyUtil.destroy(rateChanged);
 	}
 
 	public function setSongTime(time:Float = 0)
