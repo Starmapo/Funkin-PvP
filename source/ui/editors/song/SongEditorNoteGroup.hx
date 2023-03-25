@@ -130,6 +130,7 @@ class SongEditorNoteGroup extends FlxBasic
 					if (note.info == params.note)
 					{
 						daNote = note;
+						break;
 					}
 				}
 				if (daNote == null)
