@@ -1,4 +1,4 @@
-package states.editors.song;
+package ui.editors.song;
 
 import data.song.NoteInfo;
 import flixel.FlxG;
@@ -6,6 +6,7 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import openfl.geom.Rectangle;
+import states.editors.SongEditorState;
 
 class SongEditorSelector extends FlxUI9SliceSprite
 {
@@ -23,7 +24,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 
 	override function update(elapsed:Float)
 	{
-		if (state.currentTool == SELECT)
+		if (state.currentTool.value == SELECT)
 		{
 			handleSelection();
 		}
@@ -51,7 +52,12 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		if (state.noteGroup.getHoveredNote() != null)
 			return;
 
-		if (FlxG.mouse.overlaps(state.seekBar.bg) || FlxG.mouse.overlaps(state.zoomInButton) || FlxG.mouse.overlaps(state.zoomOutButton))
+		if (FlxG.mouse.overlaps(state.seekBar.bg)
+			|| FlxG.mouse.overlaps(state.zoomInButton)
+			|| FlxG.mouse.overlaps(state.zoomOutButton)
+			|| FlxG.mouse.overlaps(state.detailsPanel)
+			|| FlxG.mouse.overlaps(state.compositionPanel)
+			|| FlxG.mouse.overlaps(state.editPanel))
 			return;
 
 		var mousePos = FlxG.mouse.getGlobalPosition();
@@ -60,7 +66,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			return;
 
 		if (FlxG.keys.released.CONTROL)
-			state.selectedNotes.resize(0);
+			state.selectedNotes.clear();
 
 		isSelecting = true;
 		startingPoint = mousePos;

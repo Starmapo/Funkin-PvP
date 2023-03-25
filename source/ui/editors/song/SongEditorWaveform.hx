@@ -1,4 +1,4 @@
-package states.editors.song;
+package ui.editors.song;
 
 import data.Settings;
 import flixel.FlxBasic;
@@ -10,6 +10,7 @@ import flixel.util.FlxColor;
 import haxe.io.Bytes;
 import lime.media.AudioBuffer;
 import openfl.geom.Rectangle;
+import states.editors.SongEditorState;
 
 class SongEditorWaveform extends FlxBasic
 {

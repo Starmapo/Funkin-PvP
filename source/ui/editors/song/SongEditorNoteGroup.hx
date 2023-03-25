@@ -1,4 +1,4 @@
-package states.editors.song;
+package ui.editors.song;
 
 import data.Settings;
 import data.song.NoteInfo;
@@ -8,6 +8,8 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSort;
 import sprites.AnimatedSprite;
+import states.editors.SongEditorState;
+import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorNoteGroup extends FlxBasic
 {
@@ -22,9 +24,9 @@ class SongEditorNoteGroup extends FlxBasic
 
 		for (note in state.song.notes)
 			createNote(note);
-		refreshNotes(); // idk why i need to do this but if i dont then the positions are wrong
 
 		state.rateChanged.add(onRateChanged);
+		state.actionManager.onEvent.add(onEvent);
 		state.selectedNotes.itemAdded.add(onSelectedNote);
 		state.selectedNotes.itemRemoved.add(onDeselectedNote);
 		state.selectedNotes.multipleItemsAdded.add(onMultipleNotesSelected);
@@ -83,35 +85,58 @@ class SongEditorNoteGroup extends FlxBasic
 		notes.push(note);
 		if (insertAtIndex)
 			notes.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.info.startTime, b.info.startTime));
+		note.refresh();
 	}
 
-	function refreshNotes()
+	function refreshPositionsAndSizes()
 	{
 		for (note in notes)
-			note.refresh();
+			note.refreshPositionAndSize();
 	}
 
 	function onRateChanged(_, _)
 	{
 		if (Settings.editorScaleSpeedWithRate.value)
-			refreshNotes();
+			refreshPositionsAndSizes();
 	}
 
 	function onScrollSpeedChanged(_, _)
 	{
-		refreshNotes();
+		refreshPositionsAndSizes();
 	}
 
 	function onScaleSpeedWithRateChanged(_, _)
 	{
 		if (state.inst.pitch != 1)
-			refreshNotes();
+			refreshPositionsAndSizes();
 	}
 
 	function onLongNoteAlphaChanged(_, _)
 	{
 		for (note in notes)
 			note.updateLongNoteAlpha();
+	}
+
+	function onEvent(type:String, params:Dynamic)
+	{
+		switch (type)
+		{
+			case SongEditorActionManager.PLACE_NOTE:
+				createNote(params.note, true);
+			case SongEditorActionManager.REMOVE_NOTE:
+				var daNote:SongEditorNote = null;
+				for (note in notes)
+				{
+					if (note.info == params.note)
+					{
+						daNote = note;
+					}
+				}
+				if (daNote == null)
+					return;
+				daNote.destroy();
+				notes.remove(daNote);
+		}
 	}
 
 	function onSelectedNote(info:NoteInfo)
@@ -256,8 +281,6 @@ class SongEditorNote extends FlxSpriteGroup
 		add(selectionSprite);
 
 		refresh();
-		updateLongNoteAlpha();
-		updateSelectionSprite();
 	}
 
 	override function draw()
@@ -292,7 +315,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updateSize()
 	{
-		head.setGraphicSize(Std.int(state.columnSize - state.borderLeft.width * 2));
+		head.setGraphicSize(Std.int(state.columnSize - state.borderLeft.width));
 		head.updateHitbox();
 	}
 
@@ -301,12 +324,12 @@ class SongEditorNote extends FlxSpriteGroup
 		if (!info.isLongNote)
 			return;
 
+		tail.scale.copyFrom(head.scale);
+		tail.updateHitbox();
 		body.setGraphicSize(Std.int(body.frameWidth * head.scale.x), getLongNoteHeight());
 		body.updateHitbox();
 		body.x = head.x + (head.width / 2) - (body.width / 2);
-		body.y = head.y + (-body.height + head.height / 2);
-		tail.scale.copyFrom(head.scale);
-		tail.updateHitbox();
+		body.y = head.y + (head.height / 2) - body.height;
 		tail.x = head.x + (head.width / 2) - (tail.width / 2);
 		tail.y = body.y - tail.height;
 	}
@@ -323,23 +346,33 @@ class SongEditorNote extends FlxSpriteGroup
 	{
 		if (info.isLongNote)
 		{
-			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(getLongNoteHeight() + head.height + tail.height + 20));
-			selectionSprite.y = body.y + (body.height / 2) - (selectionSprite.height / 2);
+			remove(selectionSprite); // get the group height excluding the selection sprite
+			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(height + 20));
+			selectionSprite.updateHitbox();
+			add(selectionSprite);
 		}
 		else
 		{
 			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(head.height + 20));
-			selectionSprite.y = head.y + (head.height / 2) - (selectionSprite.height / 2);
+			selectionSprite.updateHitbox();
 		}
-		selectionSprite.updateHitbox();
+
+		selectionSprite.setPosition(head.x, head.y + head.height - selectionSprite.height + 10);
 	}
 
 	public function refresh()
 	{
 		updateAnims();
-		updatePosition();
+		refreshPositionAndSize();
+		updateLongNoteAlpha();
+	}
+
+	public function refreshPositionAndSize()
+	{
 		updateSize();
+		updatePosition();
 		updateLongNote();
+		updateSelectionSprite();
 	}
 
 	public function isHovered()
@@ -356,11 +389,7 @@ class SongEditorNote extends FlxSpriteGroup
 		if (!info.isLongNote)
 			return 0;
 
-		return Std.int(Math.abs(state.hitPositionY
-			- info.endTime * state.trackSpeed
-			- ((state.columnSize * tail.frameHeight) / tail.frameWidth) / 2
-			- head.height / 2
-			- y));
+		return Std.int(Math.abs(state.hitPositionY - info.endTime * state.trackSpeed - tail.height / 2 - head.height / 2 - y));
 	}
 
 	function onDeselectedNote(note:NoteInfo)

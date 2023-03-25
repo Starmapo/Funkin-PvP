@@ -1,16 +1,17 @@
-package states.editors.song;
+package ui.editors.song;
 
 import data.Settings;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
-import states.editors.song.SongEditorWaveform.WaveformType;
+import states.editors.SongEditorState;
 import ui.editors.EditorCheckbox;
 import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
 import ui.editors.EditorNumericStepper;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
+import ui.editors.song.SongEditorWaveform.WaveformType;
 
 class SongEditorEditPanel extends EditorPanel
 {
@@ -209,7 +210,7 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(rateStepper);
 		state.tooltip.addTooltip(rateStepper, 'Hotkeys: CTRL + -/+');
 
-		var scaleSpeedCheckbox = new EditorCheckbox(rateLabel.x, rateLabel.y + rateLabel.height + spacing, 'Scale Speed with Playback Rate', 200);
+		var scaleSpeedCheckbox = new EditorCheckbox(rateLabel.x, rateLabel.y + rateLabel.height + spacing, 'Scale Speed with Playback Rate', 0);
 		scaleSpeedCheckbox.button.setAllLabelOffsets(0, 8);
 		scaleSpeedCheckbox.checked = Settings.editorScaleSpeedWithRate.value;
 		scaleSpeedCheckbox.callback = function()
@@ -257,7 +258,15 @@ class SongEditorEditPanel extends EditorPanel
 		state.tooltip.addTooltip(beatSnapDropdown, 'Hotkeys: CTRL + Up/Down/Mouse Wheel');
 		state.dropdowns.push(beatSnapDropdown);
 
-		var waveformLabel = new EditorText(beatSnapLabel.x, beatSnapLabel.y + beatSnapLabel.height + spacing * 2, 0, 'Waveform:');
+		var liveMappingCheckbox = new EditorCheckbox(beatSnapLabel.x, beatSnapLabel.y + beatSnapLabel.height + spacing, 'Live Mapping', 200);
+		liveMappingCheckbox.checked = Settings.editorLiveMapping.value;
+		liveMappingCheckbox.callback = function()
+		{
+			Settings.editorLiveMapping.value = liveMappingCheckbox.checked;
+		};
+		tab.add(liveMappingCheckbox);
+
+		var waveformLabel = new EditorText(liveMappingCheckbox.x, liveMappingCheckbox.y + liveMappingCheckbox.height + spacing - 1, 0, 'Waveform:');
 		tab.add(waveformLabel);
 
 		var waveformTypes = [WaveformType.NONE, WaveformType.INST, WaveformType.VOCALS];

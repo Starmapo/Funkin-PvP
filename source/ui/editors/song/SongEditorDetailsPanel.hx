@@ -1,5 +1,6 @@
-package states.editors.song;
+package ui.editors.song;
 
+import states.editors.SongEditorState;
 import flixel.util.FlxStringUtil;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;

@@ -1,7 +1,7 @@
-package states.editors.song;
+package ui.editors.song;
 
 import flixel.addons.ui.FlxUIRadioGroup;
-import states.editors.song.SongEditorState.CompositionTool;
+import states.editors.SongEditorState;
 import ui.editors.EditorPanel;
 import ui.editors.EditorRadioGroup;
 
@@ -28,10 +28,11 @@ class SongEditorCompositionPanel extends EditorPanel
 		var tab = createTab('Composition');
 
 		var toolNames = [CompositionTool.SELECT, CompositionTool.NOTE, CompositionTool.LONG_NOTE];
-		tools = new EditorRadioGroup(4, 4, toolNames, function(id)
+		tools = new EditorRadioGroup(4, 4, toolNames, toolNames, function(id)
 		{
-			state.currentTool = id;
+			state.currentTool.value = id;
 		});
+		tools.selectedId = state.currentTool.value;
 		tab.add(tools);
 
 		addGroup(tab);

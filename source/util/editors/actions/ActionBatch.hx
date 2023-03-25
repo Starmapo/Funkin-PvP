@@ -2,7 +2,7 @@ package util.editors.actions;
 
 class ActionBatch implements IAction
 {
-	public var type:String = 'batch';
+	public var type:String = ActionManager.BATCH;
 
 	var manager:ActionManager;
 	var actions:Array<IAction>;

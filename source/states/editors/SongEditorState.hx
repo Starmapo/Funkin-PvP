@@ -1,4 +1,4 @@
-package states.editors.song;
+package states.editors;
 
 import data.Settings;
 import data.song.NoteInfo;
@@ -8,18 +8,29 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.io.Path;
-import states.editors.song.SongEditorWaveform.WaveformType;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
+import ui.editors.song.SongEditorCompositionPanel;
+import ui.editors.song.SongEditorDetailsPanel;
+import ui.editors.song.SongEditorEditPanel;
+import ui.editors.song.SongEditorLineGroup;
+import ui.editors.song.SongEditorNoteGroup;
+import ui.editors.song.SongEditorSeekBar;
+import ui.editors.song.SongEditorSelector;
+import ui.editors.song.SongEditorTimeline;
+import ui.editors.song.SongEditorWaveform;
 import util.MusicTiming;
+import util.bindable.Bindable;
 import util.bindable.BindableArray;
 import util.bindable.BindableInt;
+import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorState extends FNFState
 {
@@ -38,7 +49,7 @@ class SongEditorState extends FNFState
 	public var rateChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 	public var borderLeft:FlxSprite;
 	public var borderRight:FlxSprite;
-	public var currentTool:CompositionTool = SELECT;
+	public var currentTool:Bindable<CompositionTool> = new Bindable(SELECT);
 	public var notificationManager:NotificationManager;
 	public var tooltip:Tooltip;
 	public var waveform:SongEditorWaveform;
@@ -47,17 +58,17 @@ class SongEditorState extends FNFState
 	public var seekBar:SongEditorSeekBar;
 	public var zoomInButton:FlxUIButton;
 	public var zoomOutButton:FlxUIButton;
+	public var detailsPanel:SongEditorDetailsPanel;
+	public var compositionPanel:SongEditorCompositionPanel;
+	public var editPanel:SongEditorEditPanel;
+	public var actionManager:SongEditorActionManager;
 
-	var actionManager:SongEditorActionManager;
 	var dividerLines:FlxTypedGroup<FlxSprite>;
 	var hitPositionLine:FlxSprite;
 	var timeline:SongEditorTimeline;
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
 	var lineGroup:SongEditorLineGroup;
-	var detailsPanel:SongEditorDetailsPanel;
-	var compositionPanel:SongEditorCompositionPanel;
-	var editPanel:SongEditorEditPanel;
 	var hitsoundNoteIndex:Int = 0;
 	var camHUD:FlxCamera;
 	var selector:SongEditorSelector;
@@ -237,7 +248,7 @@ class SongEditorState extends FNFState
 
 	public function setCurrentTool(tool:CompositionTool)
 	{
-		currentTool = tool;
+		currentTool.value = tool;
 		compositionPanel.tools.selectedId = tool;
 	}
 
@@ -336,6 +347,15 @@ class SongEditorState extends FNFState
 			{
 				handleSeeking(true);
 			}
+
+			if (FlxG.keys.justPressed.UP)
+			{
+				changeTool(false);
+			}
+			if (FlxG.keys.justPressed.DOWN)
+			{
+				changeTool(true);
+			}
 		}
 
 		if (FlxG.keys.pressed.CONTROL)
@@ -348,6 +368,19 @@ class SongEditorState extends FNFState
 			{
 				changeBeatSnap(false);
 			}
+		}
+
+		if (!Settings.editorLiveMapping.value)
+		{
+			for (i in 0...3)
+			{
+				if (FlxG.keys.checkStatus(ONE + i, JUST_PRESSED))
+					setCurrentTool(CompositionTool.fromIndex(i));
+			}
+		}
+
+		if (FlxG.keys.pressed.CONTROL)
+		{
 			if (FlxG.keys.justPressed.MINUS)
 			{
 				setPlaybackRate(inst.pitch - 0.25);
@@ -358,6 +391,39 @@ class SongEditorState extends FNFState
 				setPlaybackRate(inst.pitch + 0.25);
 				editPanel.updateRateStepper();
 			}
+		}
+
+		if (Settings.editorLiveMapping.value)
+		{
+			var time = Math.round(inst.time);
+			for (i in 0...8)
+			{
+				if (!FlxG.keys.checkStatus(ONE + i, JUST_PRESSED))
+					continue;
+
+				var notesAtTime:Array<NoteInfo> = [];
+				for (note in song.notes)
+				{
+					if (note.lane == i && note.startTime == time)
+						notesAtTime.push(note);
+				}
+
+				if (notesAtTime.length > 0)
+				{
+					for (note in notesAtTime)
+						actionManager.removeNote(note);
+				}
+				else
+					actionManager.placeNote(i, time);
+			}
+		}
+
+		if (FlxG.keys.pressed.CONTROL)
+		{
+			if (FlxG.keys.justPressed.Z)
+				actionManager.undo();
+			if (FlxG.keys.justPressed.Y)
+				actionManager.redo();
 		}
 	}
 
@@ -430,6 +496,17 @@ class SongEditorState extends FNFState
 		editPanel.updateSpeedStepper();
 	}
 
+	function changeTool(forward:Bool)
+	{
+		var index = currentTool.value.getIndex();
+		if (forward)
+			index++;
+		else
+			index--;
+		if (index >= 0 && index < 3)
+			setCurrentTool(CompositionTool.fromIndex(index));
+	}
+
 	function get_trackSpeed()
 	{
 		return Settings.editorScrollSpeed.value / (Settings.editorScaleSpeedWithRate.value ? inst.pitch : 1);
@@ -451,4 +528,24 @@ enum abstract CompositionTool(String) from String to String
 	var SELECT = 'Select';
 	var NOTE = 'Note';
 	var LONG_NOTE = 'Long Note';
+
+	public function getIndex()
+	{
+		return switch (this)
+		{
+			case NOTE: 1;
+			case LONG_NOTE: 2;
+			default: 0;
+		}
+	}
+
+	public static function fromIndex(index:Int)
+	{
+		return switch (index)
+		{
+			case 1: NOTE;
+			case 2: LONG_NOTE;
+			default: SELECT;
+		}
+	}
 }

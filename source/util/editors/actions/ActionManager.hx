@@ -5,6 +5,8 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 
 class ActionManager implements IFlxDestroyable
 {
+	public static final BATCH:String = 'batch';
+
 	public var undoStack:Array<IAction> = [];
 	public var redoStack:Array<IAction> = [];
 	public var lastSaveAction:IAction;

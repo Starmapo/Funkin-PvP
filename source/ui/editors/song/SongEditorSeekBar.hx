@@ -1,4 +1,4 @@
-package states.editors.song;
+package ui.editors.song;
 
 import data.song.DifficultyProcessor;
 import flixel.FlxG;
@@ -7,11 +7,12 @@ import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
+import states.editors.SongEditorState;
 
 class SongEditorSeekBar extends FlxSpriteGroup
 {
 	public var bg:FlxSprite;
-	
+
 	var state:SongEditorState;
 	var rectWidth = 38;
 	var rectHeight = FlxG.height;

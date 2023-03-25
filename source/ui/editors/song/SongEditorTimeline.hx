@@ -1,4 +1,4 @@
-package states.editors.song;
+package ui.editors.song;
 
 import data.Settings;
 import data.song.TimingPoint;
@@ -8,6 +8,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import states.editors.SongEditorState;
 
 class SongEditorTimeline extends FlxBasic
 {

@@ -1,4 +1,4 @@
-package states.editors.song;
+package ui.editors.song;
 
 import data.Settings;
 import data.song.SliderVelocity;
@@ -6,6 +6,7 @@ import data.song.TimingPoint;
 import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
+import states.editors.SongEditorState;
 
 class SongEditorLineGroup extends FlxBasic
 {
