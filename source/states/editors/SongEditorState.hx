@@ -77,6 +77,8 @@ class SongEditorState extends FNFState
 	{
 		persistentUpdate = true;
 
+		actionManager = new SongEditorActionManager(this);
+
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
@@ -160,8 +162,6 @@ class SongEditorState extends FNFState
 		editPanel = new SongEditorEditPanel(this);
 
 		notificationManager = new NotificationManager();
-
-		actionManager = new SongEditorActionManager(this);
 
 		add(bg);
 		add(playfieldBG);

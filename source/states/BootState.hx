@@ -13,7 +13,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import lime.app.Application;
-import states.editors.song.SongEditorState;
+import states.editors.SongEditorState;
 import sys.FileSystem;
 import sys.thread.Thread;
 import util.WindowsAPI;
