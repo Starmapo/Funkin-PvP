@@ -3,9 +3,12 @@ package states;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
+import ui.editors.EditorDropdownMenu;
 
 class FNFState extends FlxTransitionableState
 {
+	public var dropdowns:Array<EditorDropdownMenu> = [];
+
 	public function new()
 	{
 		super();
@@ -16,6 +19,12 @@ class FNFState extends FlxTransitionableState
 	{
 		if (FlxG.stage.focus != null)
 			return false;
+
+		for (dropdown in dropdowns)
+		{
+			if (dropdown.dropPanel.visible)
+				return false;
+		}
 
 		return true;
 	}

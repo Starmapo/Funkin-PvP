@@ -250,10 +250,10 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 						return FlxColor.RED;
 				}
 			case 3, 6, 12:
-				if (val % 3 == 0)
-					return FlxColor.RED;
-				else if (val == 0)
+				if (val == 0)
 					return FlxColor.WHITE;
+				else if (val % 3 == 0)
+					return FlxColor.RED;
 				else
 					return FlxColor.PURPLE;
 			case 8, 16:

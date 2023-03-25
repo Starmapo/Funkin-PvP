@@ -255,6 +255,7 @@ class SongEditorEditPanel extends EditorPanel
 		}, this);
 		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
 		state.tooltip.addTooltip(beatSnapDropdown, 'Hotkeys: CTRL + Up/Down/Mouse Wheel');
+		state.dropdowns.push(beatSnapDropdown);
 
 		var waveformLabel = new EditorText(beatSnapLabel.x, beatSnapLabel.y + beatSnapLabel.height + spacing * 2, 0, 'Waveform:');
 		tab.add(waveformLabel);
@@ -267,6 +268,7 @@ class SongEditorEditPanel extends EditorPanel
 			state.waveform.reloadWaveform();
 		}, this);
 		waveformDropdown.selectedId = state.waveform.type;
+		state.dropdowns.push(waveformDropdown);
 
 		tab.add(waveformDropdown);
 		tab.add(beatSnapDropdown);

@@ -194,6 +194,11 @@ class CoolUtil
 		}
 	}
 
+	public static function inBetween(num:Float, start:Float, end:Float)
+	{
+		return num >= start && num <= end;
+	}
+
 	@:generic
 	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{

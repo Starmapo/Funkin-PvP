@@ -1,12 +1,14 @@
 package states.editors.song;
 
 import data.Settings;
+import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -16,6 +18,7 @@ import states.editors.song.SongEditorWaveform.WaveformType;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import util.MusicTiming;
+import util.bindable.BindableArray;
 import util.bindable.BindableInt;
 
 class SongEditorState extends FNFState
@@ -39,6 +42,11 @@ class SongEditorState extends FNFState
 	public var notificationManager:NotificationManager;
 	public var tooltip:Tooltip;
 	public var waveform:SongEditorWaveform;
+	public var noteGroup:SongEditorNoteGroup;
+	public var selectedNotes:BindableArray<NoteInfo> = new BindableArray([]);
+	public var seekBar:SongEditorSeekBar;
+	public var zoomInButton:FlxUIButton;
+	public var zoomOutButton:FlxUIButton;
 
 	var actionManager:SongEditorActionManager;
 	var dividerLines:FlxTypedGroup<FlxSprite>;
@@ -47,15 +55,12 @@ class SongEditorState extends FNFState
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
 	var lineGroup:SongEditorLineGroup;
-	var noteGroup:SongEditorNoteGroup;
-	var seekBar:SongEditorSeekBar;
-	var zoomInButton:FlxUIButton;
-	var zoomOutButton:FlxUIButton;
 	var detailsPanel:SongEditorDetailsPanel;
 	var compositionPanel:SongEditorCompositionPanel;
 	var editPanel:SongEditorEditPanel;
 	var hitsoundNoteIndex:Int = 0;
 	var camHUD:FlxCamera;
+	var selector:SongEditorSelector;
 
 	override function create()
 	{
@@ -108,6 +113,8 @@ class SongEditorState extends FNFState
 
 		seekBar = new SongEditorSeekBar(this);
 
+		selector = new SongEditorSelector(this);
+
 		tooltip = new Tooltip();
 		tooltip.cameras = [camHUD];
 
@@ -156,6 +163,7 @@ class SongEditorState extends FNFState
 		add(lineGroup);
 		add(noteGroup);
 		add(seekBar);
+		add(selector);
 		add(zoomInButton);
 		add(zoomOutButton);
 		add(detailsPanel);
@@ -176,6 +184,7 @@ class SongEditorState extends FNFState
 	{
 		handleInput();
 
+		selector.update(elapsed);
 		seekBar.update(elapsed);
 		zoomInButton.update(elapsed);
 		zoomOutButton.update(elapsed);
@@ -244,6 +253,17 @@ class SongEditorState extends FNFState
 	{
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
 		notificationManager.showNotification('Song succesfully saved!');
+	}
+
+	public function getLaneFromX(x:Float)
+	{
+		var percentage = (x - playfieldBG.x) / playfieldBG.width;
+		return FlxMath.boundInt(Std.int(columns * percentage), 0, columns);
+	}
+
+	public function getTimeFromY(y:Float)
+	{
+		return trackPositionY + (hitPositionY - y);
 	}
 
 	function handleInput()

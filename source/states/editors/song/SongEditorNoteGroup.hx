@@ -3,14 +3,16 @@ package states.editors.song;
 import data.Settings;
 import data.song.NoteInfo;
 import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSort;
 import sprites.AnimatedSprite;
 
 class SongEditorNoteGroup extends FlxBasic
 {
+	public var notes:Array<SongEditorNote> = [];
+
 	var state:SongEditorState;
-	var notes:Array<SongEditorNote> = [];
 
 	public function new(state:SongEditorState)
 	{
@@ -55,6 +57,17 @@ class SongEditorNoteGroup extends FlxBasic
 		Settings.editorLongNoteAlpha.valueChanged.remove(onLongNoteAlphaChanged);
 	}
 
+	public function getHoveredNote()
+	{
+		for (note in notes)
+		{
+			if (note.isHovered())
+				return note;
+		}
+
+		return null;
+	}
+
 	function createNote(info:NoteInfo, insertAtIndex:Bool = false)
 	{
 		var note = new SongEditorNote(state, info);
@@ -96,7 +109,7 @@ class SongEditorNoteGroup extends FlxBasic
 class SongEditorNote extends FlxSpriteGroup
 {
 	public var info:NoteInfo;
-	public var note:AnimatedSprite;
+	public var head:AnimatedSprite;
 	public var body:AnimatedSprite;
 	public var tail:AnimatedSprite;
 
@@ -159,29 +172,29 @@ class SongEditorNote extends FlxSpriteGroup
 		tail.antialiasing = true;
 		add(tail);
 
-		note = new AnimatedSprite(0, 0, noteGraphic);
-		note.addAnim({
+		head = new AnimatedSprite(0, 0, noteGraphic);
+		head.addAnim({
 			name: '0',
 			atlasName: 'purple instance 1',
 			fps: 0
 		});
-		note.addAnim({
+		head.addAnim({
 			name: '1',
 			atlasName: 'blue instance 1',
 			fps: 0
 		});
-		note.addAnim({
+		head.addAnim({
 			name: '2',
 			atlasName: 'green instance 1',
 			fps: 0
 		});
-		note.addAnim({
+		head.addAnim({
 			name: '3',
 			atlasName: 'red instance 1',
 			fps: 0
 		});
-		note.antialiasing = true;
-		add(note);
+		head.antialiasing = true;
+		add(head);
 
 		refresh();
 		updateLongNoteAlpha();
@@ -194,13 +207,13 @@ class SongEditorNote extends FlxSpriteGroup
 			body.draw();
 			tail.draw();
 		}
-		note.draw();
+		head.draw();
 	}
 
 	public function updateAnims()
 	{
 		var anim = Std.string(info.playerLane);
-		note.playAnim(anim);
+		head.playAnim(anim);
 
 		if (!info.isLongNote)
 			return;
@@ -212,13 +225,13 @@ class SongEditorNote extends FlxSpriteGroup
 	public function updatePosition()
 	{
 		x = state.playfieldBG.x + state.columnSize * info.lane + state.borderLeft.width;
-		y = state.hitPositionY - info.startTime * state.trackSpeed - note.height;
+		y = state.hitPositionY - info.startTime * state.trackSpeed - head.height;
 	}
 
 	public function updateSize()
 	{
-		note.setGraphicSize(Std.int(state.columnSize - state.borderLeft.width * 2));
-		note.updateHitbox();
+		head.setGraphicSize(Std.int(state.columnSize - state.borderLeft.width * 2));
+		head.updateHitbox();
 	}
 
 	public function updateLongNote()
@@ -226,13 +239,13 @@ class SongEditorNote extends FlxSpriteGroup
 		if (!info.isLongNote)
 			return;
 
-		body.setGraphicSize(Std.int(body.frameWidth * note.scale.x), getLongNoteHeight());
+		body.setGraphicSize(Std.int(body.frameWidth * head.scale.x), getLongNoteHeight());
 		body.updateHitbox();
-		body.x = note.x + (note.width / 2) - (body.width / 2);
-		body.y = note.y + (-body.height + note.height / 2);
-		tail.scale.copyFrom(note.scale);
+		body.x = head.x + (head.width / 2) - (body.width / 2);
+		body.y = head.y + (-body.height + head.height / 2);
+		tail.scale.copyFrom(head.scale);
 		tail.updateHitbox();
-		tail.x = note.x + (note.width / 2) - (tail.width / 2);
+		tail.x = head.x + (head.width / 2) - (tail.width / 2);
 		tail.y = body.y - tail.height;
 	}
 
@@ -252,6 +265,15 @@ class SongEditorNote extends FlxSpriteGroup
 		updateLongNote();
 	}
 
+	public function isHovered()
+	{
+		var headHovered = FlxG.mouse.overlaps(head);
+		if (!info.isLongNote)
+			return headHovered;
+
+		return headHovered || FlxG.mouse.overlaps(body) || FlxG.mouse.overlaps(tail);
+	}
+
 	function getLongNoteHeight()
 	{
 		if (!info.isLongNote)
@@ -260,7 +282,7 @@ class SongEditorNote extends FlxSpriteGroup
 		return Std.int(Math.abs(state.hitPositionY
 			- info.endTime * state.trackSpeed
 			- ((state.columnSize * tail.frameHeight) / tail.frameWidth) / 2
-			- note.height / 2
+			- head.height / 2
 			- y));
 	}
 }

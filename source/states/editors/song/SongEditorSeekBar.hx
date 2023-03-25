@@ -10,13 +10,14 @@ import openfl.geom.Rectangle;
 
 class SongEditorSeekBar extends FlxSpriteGroup
 {
+	public var bg:FlxSprite;
+	
 	var state:SongEditorState;
 	var rectWidth = 38;
 	var rectHeight = FlxG.height;
 	var maxBars:Int = 200;
 	var barSize:Int = 2;
 	var barWidthScale:Float = 0.85;
-	var bg:FlxSprite;
 	var barsSprite:FlxSprite;
 	var seekLine:FlxSprite;
 	var isHeld:Bool = false;
