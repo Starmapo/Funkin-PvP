@@ -38,17 +38,11 @@ class SongEditorNoteGroup extends FlxBasic
 
 	override function draw()
 	{
-		var drewNote = false;
 		for (i in 0...notes.length)
 		{
 			var note = notes[i];
 			if (note.isOnScreen())
-			{
 				note.draw();
-				drewNote = true;
-			}
-			else if (drewNote)
-				break;
 		}
 	}
 
@@ -56,16 +50,10 @@ class SongEditorNoteGroup extends FlxBasic
 	{
 		for (note in notes)
 			note.destroy();
-		super.destroy();
-
-		state.rateChanged.remove(onRateChanged);
-		state.selectedNotes.itemAdded.remove(onSelectedNote);
-		state.selectedNotes.itemRemoved.remove(onDeselectedNote);
-		state.selectedNotes.multipleItemsAdded.remove(onMultipleNotesSelected);
-		state.selectedNotes.arrayCleared.remove(onAllNotesDeselected);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 		Settings.editorLongNoteAlpha.valueChanged.remove(onLongNoteAlphaChanged);
+		super.destroy();
 	}
 
 	public function getHoveredNote()
@@ -85,7 +73,6 @@ class SongEditorNoteGroup extends FlxBasic
 		notes.push(note);
 		if (insertAtIndex)
 			notes.sort(sortNotes);
-		note.refresh();
 	}
 
 	function sortNotes(a:SongEditorNote, b:SongEditorNote)
@@ -96,6 +83,12 @@ class SongEditorNoteGroup extends FlxBasic
 	function sortInfos(a:NoteInfo, b:NoteInfo)
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
+	}
+
+	function refreshPositions()
+	{
+		for (note in notes)
+			note.updatePosition();
 	}
 
 	function refreshPositionsAndSizes()
@@ -166,7 +159,22 @@ class SongEditorNoteGroup extends FlxBasic
 					i--;
 				}
 			case SongEditorActionManager.RESNAP_NOTES:
-				refreshPositionsAndSizes();
+				var batch:Array<NoteInfo> = params.notes;
+				for (note in notes)
+				{
+					if (batch.contains(note.info))
+						note.refreshPositionAndSize();
+				}
+			case SongEditorActionManager.FLIP_NOTES:
+				var batch:Array<NoteInfo> = params.notes;
+				for (note in notes)
+				{
+					if (batch.contains(note.info))
+					{
+						note.updateAnims();
+						note.updatePosition();
+					}
+				}
 		}
 	}
 
@@ -419,7 +427,7 @@ class SongEditorNote extends FlxSpriteGroup
 		if (!info.isLongNote)
 			return 0;
 
-		return Std.int(Math.abs(state.hitPositionY - info.endTime * state.trackSpeed - tail.height / 2 - head.height / 2 - y));
+		return Std.int(Math.abs(state.hitPositionY - info.endTime * state.trackSpeed - head.height / 2 - y));
 	}
 
 	function onDeselectedNote(note:NoteInfo)

@@ -11,6 +11,11 @@ class SongEditorActionManager extends ActionManager
 	public static inline var PLACE_NOTE_BATCH:String = 'place-note-batch';
 	public static inline var REMOVE_NOTE_BATCH:String = 'remove-note-batch';
 	public static inline var RESNAP_NOTES:String = 'resnap-notes';
+	public static inline var FLIP_NOTES:String = 'flip-notes';
+	public static inline var ADD_SCROLL_VELOCITY:String = 'add-sv';
+	public static inline var REMOVE_SCROLL_VELOCITY:String = 'remove-sv';
+	public static inline var ADD_TIMING_POINT:String = 'add-point';
+	public static inline var REMOVE_TIMING_POINT:String = 'remove-point';
 
 	var state:SongEditorState;
 

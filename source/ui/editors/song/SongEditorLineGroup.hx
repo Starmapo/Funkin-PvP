@@ -6,7 +6,9 @@ import data.song.TimingPoint;
 import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
+import flixel.util.FlxSort;
 import states.editors.SongEditorState;
+import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorLineGroup extends FlxBasic
 {
@@ -21,6 +23,7 @@ class SongEditorLineGroup extends FlxBasic
 		initializeTicks();
 
 		state.rateChanged.add(onRateChanged);
+		state.actionManager.onEvent.add(onEvent);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
@@ -45,11 +48,9 @@ class SongEditorLineGroup extends FlxBasic
 	{
 		for (line in lines)
 			line.destroy();
-		super.destroy();
-
-		state.rateChanged.remove(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
+		super.destroy();
 	}
 
 	function initializeTicks()
@@ -94,6 +95,42 @@ class SongEditorLineGroup extends FlxBasic
 			refreshLines();
 	}
 
+	function onEvent(type:String, params:Dynamic)
+	{
+		switch (type)
+		{
+			case SongEditorActionManager.ADD_TIMING_POINT:
+				lines.push(new SongEditorLine(state, TIMING_POINT, params.timingPoint));
+				lines.sort(sortLines);
+			case SongEditorActionManager.REMOVE_TIMING_POINT:
+				var i = lines.length - 1;
+				while (i >= 0)
+				{
+					var line = lines[i];
+					if (line.timingPoint != null && line.timingPoint == params.timingPoint)
+						lines.remove(line);
+					i--;
+				}
+			case SongEditorActionManager.ADD_SCROLL_VELOCITY:
+				lines.push(new SongEditorLine(state, SCROLL_VELOCITY, params.scrollVelocity));
+				lines.sort(sortLines);
+			case SongEditorActionManager.REMOVE_SCROLL_VELOCITY:
+				var i = lines.length - 1;
+				while (i >= 0)
+				{
+					var line = lines[i];
+					if (line.scrollVelocity != null && line.scrollVelocity == params.scrollVelocity)
+						lines.remove(line);
+					i--;
+				}
+		}
+	}
+
+	function sortLines(a:SongEditorLine, b:SongEditorLine)
+	{
+		return FlxSort.byValues(FlxSort.ASCENDING, a.getTime(), b.getTime());
+	}
+
 	function onScrollSpeedChanged(_, _)
 	{
 		refreshLines();
@@ -116,10 +153,11 @@ class SongEditorLineGroup extends FlxBasic
 
 class SongEditorLine extends FlxSprite
 {
+	public var timingPoint:TimingPoint;
+	public var scrollVelocity:SliderVelocity;
+
 	var state:SongEditorState;
 	var type:LineType;
-	var timingPoint:TimingPoint;
-	var scrollVelocity:SliderVelocity;
 
 	public function new(state:SongEditorState, type:LineType, data:Dynamic)
 	{

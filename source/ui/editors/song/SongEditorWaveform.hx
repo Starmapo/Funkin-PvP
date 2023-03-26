@@ -64,10 +64,9 @@ class SongEditorWaveform extends FlxBasic
 				slice.destroy();
 			}
 		}
-		super.destroy();
-		state.rateChanged.remove(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
+		super.destroy();
 	}
 
 	public function reloadWaveform()

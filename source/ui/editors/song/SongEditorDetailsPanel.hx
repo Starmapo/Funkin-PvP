@@ -1,9 +1,10 @@
 package ui.editors.song;
 
-import states.editors.SongEditorState;
 import flixel.util.FlxStringUtil;
+import states.editors.SongEditorState;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
+import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorDetailsPanel extends EditorPanel
 {
@@ -54,6 +55,7 @@ class SongEditorDetailsPanel extends EditorPanel
 		addGroup(tab);
 
 		state.songSeeked.add(onSongSeeked);
+		state.actionManager.onEvent.add(onEvent);
 	}
 
 	override function update(elapsed:Float)
@@ -66,7 +68,6 @@ class SongEditorDetailsPanel extends EditorPanel
 	override function destroy()
 	{
 		super.destroy();
-		state.songSeeked.remove(onSongSeeked);
 	}
 
 	function onSongSeeked(_, _)
@@ -74,9 +75,28 @@ class SongEditorDetailsPanel extends EditorPanel
 		updateSongStuff();
 	}
 
+	function onEvent(type:String, params:Dynamic)
+	{
+		switch (type)
+		{
+			case SongEditorActionManager.PLACE_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.PLACE_NOTE_BATCH,
+				SongEditorActionManager.REMOVE_NOTE_BATCH:
+				updateNoteCount();
+		}
+	}
+
 	function updateNoteCount()
 	{
-		noteCountText.text = 'Note Count: ${state.song.notes.length}';
+		var normalNotes = 0;
+		var longNotes = 0;
+		for (note in state.song.notes)
+		{
+			if (note.isLongNote)
+				longNotes++;
+			else
+				normalNotes++;
+		}
+		noteCountText.text = 'Note Count: ${state.song.notes.length} ($normalNotes Normal, $longNotes Long)';
 	}
 
 	function updateSongStuff()

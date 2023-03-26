@@ -20,6 +20,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		super(0, 0, Paths.getImage('editors/select'), new Rectangle(), [6, 6, 11, 11]);
 		this.state = state;
 		scrollFactor.set();
+		visible = false;
 	}
 
 	override function update(elapsed:Float)
@@ -69,6 +70,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			state.selectedNotes.clear();
 
 		isSelecting = true;
+		visible = true;
 		startingPoint = mousePos;
 		timeDragStart = state.getTimeFromY(mousePos.y) / state.trackSpeed;
 		setPosition(mousePos.x, mousePos.y);
@@ -132,6 +134,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		}
 
 		isSelecting = false;
+		visible = false;
 		setPosition();
 		resize(0, 0);
 		startingPoint = null;

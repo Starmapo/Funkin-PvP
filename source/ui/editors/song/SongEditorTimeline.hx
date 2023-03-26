@@ -9,6 +9,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import states.editors.SongEditorState;
+import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorTimeline extends FlxBasic
 {
@@ -26,38 +27,31 @@ class SongEditorTimeline extends FlxBasic
 
 		state.rateChanged.add(onRateChanged);
 		state.beatSnap.valueChanged.add(onBeatSnapChanged);
+		state.actionManager.onEvent.add(onEvent);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
 
 	override function draw()
 	{
-		var drewLine = false;
 		for (i in 0...lines.length)
 		{
 			var line = lines[i];
 			if (line.isOnScreen())
-			{
 				line.draw();
-				drewLine = true;
-			}
-			else if (drewLine)
-				break;
 		}
 	}
 
 	override function destroy()
 	{
-		super.destroy();
 		for (lines in cachedLines)
 		{
 			for (line in lines)
 				FlxDestroyUtil.destroy(line);
 		}
-		state.rateChanged.remove(onRateChanged);
-		state.beatSnap.valueChanged.remove(onBeatSnapChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
+		super.destroy();
 	}
 
 	public function initializeLines()
@@ -74,7 +68,6 @@ class SongEditorTimeline extends FlxBasic
 		{
 			if (point.startTime > state.inst.length)
 				continue;
-
 			if (!Math.isFinite(point.bpm))
 				continue;
 
@@ -131,6 +124,15 @@ class SongEditorTimeline extends FlxBasic
 		initializeAndRefreshLines();
 	}
 
+	function onEvent(type:String, params:Dynamic)
+	{
+		switch (type)
+		{
+			case SongEditorActionManager.ADD_TIMING_POINT, SongEditorActionManager.REMOVE_TIMING_POINT:
+				reinitialize();
+		}
+	}
+
 	function onScrollSpeedChanged(_, _)
 	{
 		refreshLines();
@@ -147,7 +149,7 @@ class SongEditorTimeline extends FlxBasic
 		for (lines in cachedLines)
 		{
 			for (line in lines)
-				FlxDestroyUtil.destroy(line);
+				line.destroy();
 		}
 
 		lines.resize(0);

@@ -8,6 +8,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
 import states.editors.SongEditorState;
+import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorSeekBar extends FlxSpriteGroup
 {
@@ -49,6 +50,8 @@ class SongEditorSeekBar extends FlxSpriteGroup
 		scrollFactor.set();
 
 		x -= bg.width + 80;
+
+		state.actionManager.onEvent.add(onEvent);
 	}
 
 	override function update(elapsed:Float)
@@ -71,17 +74,13 @@ class SongEditorSeekBar extends FlxSpriteGroup
 		}
 
 		if (seekLine != null)
-			seekLine.y = bg.y + bg.height - (state.inst.time / state.inst.length) * bg.height;
+			seekLine.y = bg.y + bg.height - (state.inst.time / state.inst.length) * bg.height - seekLine.height;
 	}
 
 	function createBars()
 	{
-		barsSprite.pixels.lock();
-		barsSprite.pixels.fillRect(new Rectangle(0, 0, barsSprite.pixels.width, barsSprite.pixels.height), FlxColor.TRANSPARENT);
-		barsSprite.pixels.unlock();
-
 		if (state.song.notes.length == 0)
-			return;
+			return clearBarsSprite();
 
 		var sampleTime = Math.ceil(state.inst.length / maxBars);
 		var regularLength = state.inst.length;
@@ -127,6 +126,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 
 		scheduledFunction = function()
 		{
+			clearBarsSprite();
 			barsSprite.pixels.lock();
 			for (key => bin in bins)
 			{
@@ -148,6 +148,13 @@ class SongEditorSeekBar extends FlxSpriteGroup
 		}
 	}
 
+	function clearBarsSprite()
+	{
+		barsSprite.pixels.lock();
+		barsSprite.pixels.fillRect(new Rectangle(0, 0, barsSprite.pixels.width, barsSprite.pixels.height), FlxColor.TRANSPARENT);
+		barsSprite.pixels.unlock();
+	}
+
 	function seekToPos(targetPos:Float)
 	{
 		if (Std.int(targetPos) != Std.int(state.inst.time) && targetPos >= 0 && targetPos <= state.inst.length)
@@ -156,6 +163,16 @@ class SongEditorSeekBar extends FlxSpriteGroup
 				return;
 
 			state.setSongTime(targetPos);
+		}
+	}
+
+	function onEvent(type:String, params:Dynamic)
+	{
+		switch (type)
+		{
+			case SongEditorActionManager.PLACE_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.PLACE_NOTE_BATCH,
+				SongEditorActionManager.REMOVE_NOTE_BATCH, SongEditorActionManager.RESNAP_NOTES, SongEditorActionManager.FLIP_NOTES:
+				createBars();
 		}
 	}
 }

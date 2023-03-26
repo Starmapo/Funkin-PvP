@@ -2,7 +2,7 @@ package states.editors;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import states.editors.song.SongEditorState;
+import states.editors.SongEditorState;
 import ui.lists.TextMenuList;
 
 class ToolboxState extends FNFState
@@ -12,9 +12,10 @@ class ToolboxState extends FNFState
 	var items:TextMenuList;
 	var camFollow:FlxObject;
 
-	public function new()
+	override function create()
 	{
-		super();
+		if (!FlxG.sound.musicPlaying)
+			CoolUtil.playMenuMusic();
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF353535;
@@ -36,6 +37,8 @@ class ToolboxState extends FNFState
 
 		items.selectItem(lastSelected);
 		FlxG.camera.snapToTarget();
+
+		super.create();
 	}
 
 	function createItem(name:String, callback:Void->Void)

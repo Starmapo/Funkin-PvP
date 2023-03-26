@@ -39,7 +39,6 @@ class ActionResnapNotes implements IAction
 				resnapCount++;
 			}
 		}
-		trace(resnapCount);
 
 		if (resnapCount > 0)
 		{
@@ -71,38 +70,10 @@ class ActionResnapNotes implements IAction
 		var closestTime = FlxMath.MAX_VALUE_INT;
 		for (snap in snaps)
 		{
-			var newTime = closestTickToSnap(time, snap);
+			var newTime = Song.closestTickToSnap(state.song, time, snap);
 			if (Math.abs(time - newTime) < Math.abs(time - closestTime))
 				closestTime = newTime;
 		}
-		return closestTime;
-	}
-
-	function closestTickToSnap(time:Int, snap:Int)
-	{
-		var point = state.song.getTimingPointAt(time);
-		if (point == null)
-			return time;
-
-		var timeFwd = Std.int(Song.getNearestSnapTimeFromTime(state.song, true, snap, time));
-		var timeBwd = Std.int(Song.getNearestSnapTimeFromTime(state.song, false, snap, time));
-
-		var fwdDiff = Std.int(Math.abs(time - timeFwd));
-		var bwdDiff = Std.int(Math.abs(time - timeBwd));
-
-		if (Math.abs(fwdDiff - bwdDiff) <= 2)
-		{
-			var snapTimePerBeat = 60000 / point.bpm / snap;
-			return Std.int(Song.getNearestSnapTimeFromTime(state.song, false, snap, time + snapTimePerBeat));
-		}
-
-		var closestTime = time;
-
-		if (bwdDiff < fwdDiff)
-			closestTime = timeBwd;
-		else if (fwdDiff < bwdDiff)
-			closestTime = timeFwd;
-
 		return closestTime;
 	}
 }

@@ -2,7 +2,9 @@ package states.editors;
 
 import data.Settings;
 import data.song.NoteInfo;
+import data.song.SliderVelocity;
 import data.song.Song;
+import data.song.TimingPoint;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -16,6 +18,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxSort;
 import haxe.io.Path;
+import lime.app.Application;
 import lime.system.Clipboard;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
@@ -32,9 +35,14 @@ import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
 import util.bindable.BindableInt;
+import util.editors.actions.song.ActionAddScrollVelocity;
+import util.editors.actions.song.ActionAddTimingPoint;
+import util.editors.actions.song.ActionFlipNotes;
 import util.editors.actions.song.ActionPlaceNoteBatch;
 import util.editors.actions.song.ActionRemoveNote;
 import util.editors.actions.song.ActionRemoveNoteBatch;
+import util.editors.actions.song.ActionRemoveScrollVelocity;
+import util.editors.actions.song.ActionRemoveTimingPoint;
 import util.editors.actions.song.ActionResnapNotes;
 import util.editors.actions.song.SongEditorActionManager;
 
@@ -195,6 +203,8 @@ class SongEditorState extends FNFState
 
 		setHitsoundNoteIndex();
 
+		Application.current.onExit.add(onExit);
+
 		super.create();
 	}
 
@@ -216,14 +226,15 @@ class SongEditorState extends FNFState
 
 		resyncVocals();
 
-		if (inst.playing && Settings.editorHitsoundVolume.value > 0)
+		if (inst.playing)
 		{
 			for (i in hitsoundNoteIndex...song.notes.length)
 			{
 				var note = song.notes[i];
 				if (inst.time >= note.startTime)
 				{
-					FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
+					if (Settings.editorHitsoundVolume.value > 0)
+						FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
 					hitsoundNoteIndex = i + 1;
 				}
 				else
@@ -241,6 +252,7 @@ class SongEditorState extends FNFState
 		actionManager = FlxDestroyUtil.destroy(actionManager);
 		beatSnap = FlxDestroyUtil.destroy(beatSnap);
 		selectedNotes = FlxDestroyUtil.destroy(selectedNotes);
+		Application.current.onExit.remove(onExit);
 		FlxDestroyUtil.destroy(songSeeked);
 		FlxDestroyUtil.destroy(rateChanged);
 	}
@@ -269,10 +281,11 @@ class SongEditorState extends FNFState
 		rateChanged.dispatch(inst.pitch, oldPitch);
 	}
 
-	public function save()
+	public function save(notif:Bool = true)
 	{
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
-		notificationManager.showNotification('Song succesfully saved!');
+		if (notif)
+			notificationManager.showNotification('Song succesfully saved!');
 	}
 
 	public function getLaneFromX(x:Float)
@@ -431,13 +444,26 @@ class SongEditorState extends FNFState
 				actionManager.undo();
 			if (FlxG.keys.justPressed.Y)
 				actionManager.redo();
+			if (FlxG.keys.justPressed.A)
+				selectAllObjects();
 			if (FlxG.keys.justPressed.C)
-				copySelectedNotes();
-			if (FlxG.keys.justPressed.V)
-				pasteCopiedNotes(FlxG.keys.released.SHIFT, FlxG.keys.pressed.ALT);
+				copySelectedObjects();
 			if (FlxG.keys.justPressed.X)
-				cutSelectedNotes();
+				cutSelectedObjects();
+			if (FlxG.keys.justPressed.V)
+				pasteCopiedObjects(FlxG.keys.released.SHIFT, FlxG.keys.pressed.ALT);
+			if (FlxG.keys.justPressed.H)
+				flipSelectedNotes(FlxG.keys.pressed.SHIFT);
+			if (FlxG.keys.justPressed.I)
+				placeTimingPointOrScrollVelocity();
+			if (FlxG.keys.justPressed.S)
+				save();
 		}
+
+		if (FlxG.keys.justPressed.DELETE)
+			deleteSelectedObjects();
+		if (FlxG.keys.justPressed.ESCAPE)
+			leaveEditor();
 	}
 
 	function resyncVocals()
@@ -520,7 +546,7 @@ class SongEditorState extends FNFState
 			setCurrentTool(CompositionTool.fromIndex(index));
 	}
 
-	function copySelectedNotes()
+	function copySelectedObjects()
 	{
 		if (selectedNotes.value.length == 0)
 			return;
@@ -532,7 +558,7 @@ class SongEditorState extends FNFState
 			copiedNotes.push(note);
 	}
 
-	function pasteCopiedNotes(resnapNotes:Bool, swapLanes:Bool)
+	function pasteCopiedObjects(resnapNotes:Bool, swapLanes:Bool)
 	{
 		if (copiedNotes.length == 0)
 			return;
@@ -570,21 +596,94 @@ class SongEditorState extends FNFState
 		selectedNotes.pushMultiple(clonedNotes);
 	}
 
-	function cutSelectedNotes()
+	function cutSelectedObjects()
 	{
 		if (selectedNotes.value.length == 0)
 			return;
 
-		copySelectedNotes();
-		deleteSelectedNotes();
+		copySelectedObjects();
+		deleteSelectedObjects();
 	}
 
-	function deleteSelectedNotes()
+	function deleteSelectedObjects()
 	{
 		if (selectedNotes.value.length == 0)
 			return;
 
 		actionManager.perform(new ActionRemoveNoteBatch(this, selectedNotes.value.copy()));
+	}
+
+	function selectAllObjects()
+	{
+		selectedNotes.clear();
+		selectedNotes.pushMultiple(song.notes);
+	}
+
+	function flipSelectedNotes(fullFlip:Bool)
+	{
+		if (selectedNotes.value.length == 0)
+			return;
+
+		actionManager.perform(new ActionFlipNotes(this, selectedNotes.value.copy(), fullFlip));
+	}
+
+	function placeTimingPointOrScrollVelocity()
+	{
+		if (FlxG.keys.released.SHIFT)
+		{
+			var place = true;
+			for (sv in song.sliderVelocities)
+			{
+				if (sv.startTime == inst.time)
+				{
+					actionManager.perform(new ActionRemoveScrollVelocity(this, sv));
+					place = false;
+				}
+			}
+			if (place)
+			{
+				var curSV = song.getScrollVelocityAt(inst.time);
+				actionManager.perform(new ActionAddScrollVelocity(this, new SliderVelocity({
+					startTime: inst.time,
+					multiplier: curSV != null ? curSV.multiplier : 1
+				})));
+			}
+		}
+		else if (song.timingPoints.length != 0)
+		{
+			var place = true;
+			for (point in song.timingPoints)
+			{
+				if (point.startTime == inst.time)
+				{
+					actionManager.perform(new ActionRemoveTimingPoint(this, point));
+					place = false;
+				}
+			}
+			if (place)
+			{
+				var curPoint = song.getTimingPointAt(inst.time);
+				actionManager.perform(new ActionAddTimingPoint(this, new TimingPoint({
+					startTime: inst.time,
+					bpm: curPoint != null ? curPoint.bpm : song.timingPoints[0].bpm,
+					meter: curPoint != null ? curPoint.meter : song.timingPoints[0].meter
+				})));
+			}
+		}
+	}
+
+	function leaveEditor()
+	{
+		inst.stop();
+		vocals.stop();
+		save(false);
+		persistentUpdate = false;
+		FlxG.switchState(new ToolboxState());
+	}
+
+	function onExit(_)
+	{
+		save(false);
 	}
 
 	function get_trackSpeed()

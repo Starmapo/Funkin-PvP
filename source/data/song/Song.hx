@@ -46,7 +46,7 @@ class Song extends JsonObject
 		if (point == null)
 			return 0;
 
-		var snapTimePerBeat = 60000 / point.bpm / snap;
+		var snapTimePerBeat = point.beatLength / snap;
 		var pointToSnap:Float = time + (forward ? snapTimePerBeat : -snapTimePerBeat);
 		var nearestTick = Math.round((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
 
@@ -54,6 +54,34 @@ class Song extends JsonObject
 			return nearestTick;
 
 		return (Math.round((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
+	}
+
+	public static function closestTickToSnap(song:Song, time:Int, snap:Int)
+	{
+		var point = song.getTimingPointAt(time);
+		if (point == null)
+			return time;
+
+		var timeFwd = Std.int(Song.getNearestSnapTimeFromTime(song, true, snap, time));
+		var timeBwd = Std.int(Song.getNearestSnapTimeFromTime(song, false, snap, time));
+
+		var fwdDiff = Std.int(Math.abs(time - timeFwd));
+		var bwdDiff = Std.int(Math.abs(time - timeBwd));
+
+		if (Math.abs(fwdDiff - bwdDiff) <= 2)
+		{
+			var snapTimePerBeat = point.beatLength / snap;
+			return Std.int(getNearestSnapTimeFromTime(song, false, snap, time + snapTimePerBeat));
+		}
+
+		var closestTime = time;
+
+		if (bwdDiff < fwdDiff)
+			closestTime = timeBwd;
+		else if (fwdDiff < bwdDiff)
+			closestTime = timeFwd;
+
+		return closestTime;
 	}
 
 	static function convertFNFSong(json:Dynamic)
