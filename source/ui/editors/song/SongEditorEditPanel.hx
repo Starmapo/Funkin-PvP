@@ -266,7 +266,7 @@ class SongEditorEditPanel extends EditorPanel
 		};
 		tab.add(liveMappingCheckbox);
 
-		var waveformLabel = new EditorText(liveMappingCheckbox.x, liveMappingCheckbox.y + liveMappingCheckbox.height + spacing - 1, 0, 'Waveform:');
+		var waveformLabel = new EditorText(liveMappingCheckbox.x, liveMappingCheckbox.y + liveMappingCheckbox.height + spacing + 2, 0, 'Waveform:');
 		tab.add(waveformLabel);
 
 		var waveformTypes = [WaveformType.NONE, WaveformType.INST, WaveformType.VOCALS];

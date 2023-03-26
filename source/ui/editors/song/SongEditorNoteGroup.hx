@@ -84,8 +84,18 @@ class SongEditorNoteGroup extends FlxBasic
 		var note = new SongEditorNote(state, info);
 		notes.push(note);
 		if (insertAtIndex)
-			notes.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.info.startTime, b.info.startTime));
+			notes.sort(sortNotes);
 		note.refresh();
+	}
+
+	function sortNotes(a:SongEditorNote, b:SongEditorNote)
+	{
+		return FlxSort.byValues(FlxSort.ASCENDING, a.info.startTime, b.info.startTime);
+	}
+
+	function sortInfos(a:NoteInfo, b:NoteInfo)
+	{
+		return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
 	}
 
 	function refreshPositionsAndSizes()
@@ -137,6 +147,26 @@ class SongEditorNoteGroup extends FlxBasic
 					return;
 				daNote.destroy();
 				notes.remove(daNote);
+			case SongEditorActionManager.PLACE_NOTE_BATCH:
+				var batch:Array<NoteInfo> = params.notes;
+				for (note in batch)
+					createNote(note);
+				notes.sort(sortNotes);
+			case SongEditorActionManager.REMOVE_NOTE_BATCH:
+				var batch:Array<NoteInfo> = params.notes;
+				var i = notes.length - 1;
+				while (i >= 0)
+				{
+					var note = notes[i];
+					if (batch.contains(note.info))
+					{
+						notes.remove(note);
+						note.destroy();
+					}
+					i--;
+				}
+			case SongEditorActionManager.RESNAP_NOTES:
+				refreshPositionsAndSizes();
 		}
 	}
 
@@ -171,7 +201,6 @@ class SongEditorNoteGroup extends FlxBasic
 			if (array.contains(note.info))
 			{
 				note.selectionSprite.visible = true;
-				break;
 			}
 		}
 	}

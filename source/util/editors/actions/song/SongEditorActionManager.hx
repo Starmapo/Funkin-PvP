@@ -8,6 +8,9 @@ class SongEditorActionManager extends ActionManager
 {
 	public static inline var PLACE_NOTE:String = 'place-note';
 	public static inline var REMOVE_NOTE:String = 'remove-note';
+	public static inline var PLACE_NOTE_BATCH:String = 'place-note-batch';
+	public static inline var REMOVE_NOTE_BATCH:String = 'remove-note-batch';
+	public static inline var RESNAP_NOTES:String = 'resnap-notes';
 
 	var state:SongEditorState;
 
@@ -27,15 +30,5 @@ class SongEditorActionManager extends ActionManager
 		});
 		perform(new ActionPlaceNote(state, note));
 		return note;
-	}
-
-	public function placeNoteInfo(note:NoteInfo)
-	{
-		perform(new ActionPlaceNote(state, note));
-	}
-
-	public function removeNote(note:NoteInfo)
-	{
-		perform(new ActionRemoveNote(state, note));
 	}
 }

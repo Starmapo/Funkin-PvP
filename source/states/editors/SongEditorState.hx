@@ -14,7 +14,9 @@ import flixel.sound.FlxSound;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import flixel.util.FlxSort;
 import haxe.io.Path;
+import lime.system.Clipboard;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import ui.editors.song.SongEditorCompositionPanel;
@@ -30,6 +32,10 @@ import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
 import util.bindable.BindableInt;
+import util.editors.actions.song.ActionPlaceNoteBatch;
+import util.editors.actions.song.ActionRemoveNote;
+import util.editors.actions.song.ActionRemoveNoteBatch;
+import util.editors.actions.song.ActionResnapNotes;
 import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorState extends FNFState
@@ -62,6 +68,7 @@ class SongEditorState extends FNFState
 	public var compositionPanel:SongEditorCompositionPanel;
 	public var editPanel:SongEditorEditPanel;
 	public var actionManager:SongEditorActionManager;
+	public var copiedNotes:Array<NoteInfo> = [];
 
 	var dividerLines:FlxTypedGroup<FlxSprite>;
 	var hitPositionLine:FlxSprite;
@@ -411,7 +418,7 @@ class SongEditorState extends FNFState
 				if (notesAtTime.length > 0)
 				{
 					for (note in notesAtTime)
-						actionManager.removeNote(note);
+						actionManager.perform(new ActionRemoveNote(this, note));
 				}
 				else
 					actionManager.placeNote(i, time);
@@ -424,6 +431,12 @@ class SongEditorState extends FNFState
 				actionManager.undo();
 			if (FlxG.keys.justPressed.Y)
 				actionManager.redo();
+			if (FlxG.keys.justPressed.C)
+				copySelectedNotes();
+			if (FlxG.keys.justPressed.V)
+				pasteCopiedNotes(FlxG.keys.released.SHIFT, FlxG.keys.pressed.ALT);
+			if (FlxG.keys.justPressed.X)
+				cutSelectedNotes();
 		}
 	}
 
@@ -505,6 +518,73 @@ class SongEditorState extends FNFState
 			index--;
 		if (index >= 0 && index < 3)
 			setCurrentTool(CompositionTool.fromIndex(index));
+	}
+
+	function copySelectedNotes()
+	{
+		if (selectedNotes.value.length == 0)
+			return;
+
+		copiedNotes.resize(0);
+		var orderedNotes = selectedNotes.value.copy();
+		orderedNotes.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
+		for (note in orderedNotes)
+			copiedNotes.push(note);
+	}
+
+	function pasteCopiedNotes(resnapNotes:Bool, swapLanes:Bool)
+	{
+		if (copiedNotes.length == 0)
+			return;
+
+		var clonedNotes:Array<NoteInfo> = [];
+		var difference = Math.round(inst.time - copiedNotes[0].startTime);
+		for (note in copiedNotes)
+		{
+			var info = new NoteInfo({
+				startTime: note.startTime + difference,
+				lane: note.lane,
+				type: note.type,
+				params: note.params.join(',')
+			});
+			if (swapLanes)
+			{
+				if (info.lane >= 4)
+					info.lane -= 4;
+				else
+					info.lane += 4;
+			}
+			if (note.isLongNote)
+				info.endTime = note.endTime + difference;
+			if (info.startTime > inst.length || info.endTime > inst.length)
+				return;
+			clonedNotes.push(info);
+		}
+
+		if (resnapNotes)
+			new ActionResnapNotes(this, [16, 12], clonedNotes).perform();
+
+		actionManager.perform(new ActionPlaceNoteBatch(this, clonedNotes));
+
+		selectedNotes.clear();
+		selectedNotes.pushMultiple(clonedNotes);
+	}
+
+	function cutSelectedNotes()
+	{
+		if (selectedNotes.value.length == 0)
+			return;
+
+		copySelectedNotes();
+		deleteSelectedNotes();
+	}
+
+	function deleteSelectedNotes()
+	{
+		if (selectedNotes.value.length == 0)
+			return;
+
+		actionManager.perform(new ActionRemoveNoteBatch(this, selectedNotes.value.copy()));
 	}
 
 	function get_trackSpeed()
