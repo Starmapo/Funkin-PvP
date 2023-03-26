@@ -674,8 +674,8 @@ class SongEditorState extends FNFState
 
 	function leaveEditor()
 	{
-		inst.stop();
-		vocals.stop();
+		inst.pause();
+		vocals.pause();
 		save(false);
 		persistentUpdate = false;
 		FlxG.switchState(new ToolboxState());
