@@ -20,6 +20,10 @@ class SongEditorActionManager extends ActionManager
 	public static inline var CHANGE_ARTIST:String = 'change-artist';
 	public static inline var CHANGE_SOURCE:String = 'change-source';
 	public static inline var CHANGE_DIFFICULTY_NAME:String = 'change-difficulty-name';
+	public static inline var CHANGE_OPPONENT:String = 'change-opponent';
+	public static inline var CHANGE_BF:String = 'change-bf';
+	public static inline var CHANGE_GF:String = 'change-gf';
+	public static inline var CHANGE_INITIAL_SV:String = 'change-initial-sv';
 
 	var state:SongEditorState;
 

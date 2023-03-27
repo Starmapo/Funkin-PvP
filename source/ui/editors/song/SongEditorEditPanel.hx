@@ -13,7 +13,11 @@ import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 import ui.editors.song.SongEditorWaveform.WaveformType;
 import util.editors.actions.song.ActionChangeArtist;
+import util.editors.actions.song.ActionChangeBF;
 import util.editors.actions.song.ActionChangeDifficultyName;
+import util.editors.actions.song.ActionChangeGF;
+import util.editors.actions.song.ActionChangeInitialSV;
+import util.editors.actions.song.ActionChangeOpponent;
 import util.editors.actions.song.ActionChangeSource;
 import util.editors.actions.song.ActionChangeTitle;
 import util.editors.actions.song.SongEditorActionManager;
@@ -25,6 +29,10 @@ class SongEditorEditPanel extends EditorPanel
 	var artistInput:EditorInputText;
 	var sourceInput:EditorInputText;
 	var difficultyInput:EditorInputText;
+	var opponentInput:EditorInputText;
+	var bfInput:EditorInputText;
+	var gfInput:EditorInputText;
+	var velocityStepper:EditorNumericStepper;
 	var speedStepper:EditorNumericStepper;
 	var rateStepper:EditorNumericStepper;
 	var beatSnapDropdown:EditorDropdownMenu;
@@ -137,41 +145,62 @@ class SongEditorEditPanel extends EditorPanel
 		var opponentLabel = new EditorText(difficultyLabel.x, difficultyLabel.y + difficultyLabel.height + spacing, 0, 'P1/Opponent Character:');
 		tab.add(opponentLabel);
 
-		var opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y - 1, inputWidth, state.song.opponent);
-		opponentInput.focusLost.add(function(text)
+		opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y - 1, inputWidth, state.song.opponent);
+		opponentInput.textChanged.add(function(text, lastText)
 		{
-			state.song.opponent = text;
+			if (text.length == 0)
+			{
+				state.notificationManager.showNotification("You can't have an empty character name!", WARNING);
+				opponentInput.text = lastText;
+				return;
+			}
+
+			state.actionManager.perform(new ActionChangeOpponent(state, text, lastText));
 		});
 		tab.add(opponentInput);
 
 		var bfLabel = new EditorText(opponentLabel.x, opponentLabel.y + opponentLabel.height + spacing, 0, 'P2/Boyfriend Character:');
 		tab.add(bfLabel);
 
-		var bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y - 1, inputWidth, state.song.bf);
-		bfInput.focusLost.add(function(text)
+		bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y - 1, inputWidth, state.song.bf);
+		bfInput.textChanged.add(function(text, lastText)
 		{
-			state.song.bf = text;
+			if (text.length == 0)
+			{
+				state.notificationManager.showNotification("You can't have an empty character name!", WARNING);
+				bfInput.text = lastText;
+				return;
+			}
+
+			state.actionManager.perform(new ActionChangeBF(state, text, lastText));
 		});
 		tab.add(bfInput);
 
 		var gfLabel = new EditorText(bfLabel.x, bfLabel.y + bfLabel.height + spacing, 0, 'Girlfriend Character:');
 		tab.add(gfLabel);
 
-		var gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y - 1, inputWidth, state.song.gf);
-		gfInput.focusLost.add(function(text)
+		gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y - 1, inputWidth, state.song.gf);
+		gfInput.textChanged.add(function(text, lastText)
 		{
-			state.song.gf = text;
+			if (text.length == 0)
+			{
+				state.notificationManager.showNotification("You can't have an empty character name!", WARNING);
+				gfInput.text = lastText;
+				return;
+			}
+
+			state.actionManager.perform(new ActionChangeGF(state, text, lastText));
 		});
 		tab.add(gfInput);
 
 		var velocityLabel = new EditorText(gfLabel.x, gfLabel.y + gfLabel.height + spacing, 0, 'Initial Scroll Velocity:');
 		tab.add(velocityLabel);
 
-		var velocityStepper = new EditorNumericStepper(velocityLabel.x + inputSpacing, velocityLabel.y - 1, 0.1, 1, 0, 10, 2);
+		velocityStepper = new EditorNumericStepper(velocityLabel.x + inputSpacing, velocityLabel.y - 1, 0.1, 1, 0, 10, 2);
 		velocityStepper.value = state.song.initialScrollVelocity;
-		velocityStepper.valueChanged.add(function(value, _)
+		velocityStepper.valueChanged.add(function(value, lastValue)
 		{
-			state.song.initialScrollVelocity = value;
+			state.actionManager.perform(new ActionChangeInitialSV(state, value, lastValue));
 		});
 		tab.add(velocityStepper);
 
@@ -303,6 +332,14 @@ class SongEditorEditPanel extends EditorPanel
 				sourceInput.text = params.source;
 			case SongEditorActionManager.CHANGE_DIFFICULTY_NAME:
 				difficultyInput.text = params.difficultyName;
+			case SongEditorActionManager.CHANGE_OPPONENT:
+				opponentInput.text = params.opponent;
+			case SongEditorActionManager.CHANGE_BF:
+				bfInput.text = params.bf;
+			case SongEditorActionManager.CHANGE_GF:
+				gfInput.text = params.gf;
+			case SongEditorActionManager.CHANGE_INITIAL_SV:
+				velocityStepper.changeWithoutTrigger(params.initialScrollVelocity);
 		}
 	}
 }
