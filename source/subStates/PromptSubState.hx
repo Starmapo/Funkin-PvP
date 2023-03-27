@@ -93,5 +93,5 @@ class YesNoPrompt extends PromptSubState
 typedef ButtonData =
 {
 	var name:String;
-	var callback:Void->Void;
+	var ?callback:Void->Void;
 }

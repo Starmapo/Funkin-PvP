@@ -67,9 +67,12 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 
 	public function changeWithoutTrigger(newValue:Float)
 	{
-		newValue = FlxMath.bound(FlxMath.roundDecimal(newValue, decimals), min, max);
-		inputText.text = Std.string(newValue);
-		_value = newValue;
+		if (_value != newValue)
+		{
+			newValue = FlxMath.bound(FlxMath.roundDecimal(newValue, decimals), min, max);
+			inputText.text = Std.string(newValue);
+			_value = newValue;
+		}
 	}
 
 	function onFocusLost(text)
@@ -101,11 +104,12 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 
 	function set_value(newValue:Float)
 	{
-		var oldValue = _value;
-		changeWithoutTrigger(newValue);
-		if (_value != oldValue)
+		if (_value != newValue)
 		{
-			valueChanged.dispatch(_value, oldValue);
+			var oldValue = _value;
+			changeWithoutTrigger(newValue);
+			if (_value != oldValue)
+				valueChanged.dispatch(_value, oldValue);
 		}
 		return _value;
 	}

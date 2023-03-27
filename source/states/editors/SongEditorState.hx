@@ -20,6 +20,7 @@ import flixel.util.FlxSort;
 import haxe.io.Path;
 import lime.app.Application;
 import lime.system.Clipboard;
+import subStates.editors.song.SongEditorSavePrompt;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import ui.editors.song.SongEditorCompositionPanel;
@@ -87,10 +88,12 @@ class SongEditorState extends FNFState
 	var hitsoundNoteIndex:Int = 0;
 	var camHUD:FlxCamera;
 	var selector:SongEditorSelector;
+	var savePrompt:SongEditorSavePrompt;
 
 	override function create()
 	{
 		persistentUpdate = true;
+		destroySubStates = false;
 
 		actionManager = new SongEditorActionManager(this);
 
@@ -175,6 +178,8 @@ class SongEditorState extends FNFState
 		compositionPanel = new SongEditorCompositionPanel(this);
 
 		editPanel = new SongEditorEditPanel(this);
+
+		savePrompt = new SongEditorSavePrompt(this, onSavePrompt);
 
 		notificationManager = new NotificationManager();
 
@@ -281,9 +286,16 @@ class SongEditorState extends FNFState
 		rateChanged.dispatch(inst.pitch, oldPitch);
 	}
 
-	public function save(notif:Bool = true)
+	public function save(notif:Bool = true, forceSave:Bool = false)
 	{
+		if (!actionManager.hasUnsavedChanges && !forceSave)
+			return;
+
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
+
+		if (actionManager.undoStack.length > 0)
+			actionManager.lastSaveAction = actionManager.undoStack[0];
+
 		if (notif)
 			notificationManager.showNotification('Song succesfully saved!', SUCCESS);
 	}
@@ -676,14 +688,28 @@ class SongEditorState extends FNFState
 	{
 		inst.pause();
 		vocals.pause();
-		save(false);
 		persistentUpdate = false;
-		FlxG.switchState(new ToolboxState());
+		if (actionManager.hasUnsavedChanges)
+			openSubState(savePrompt);
+		else
+			onSavePrompt('No');
 	}
 
 	function onExit(_)
 	{
 		save(false);
+	}
+
+	function onSavePrompt(option:String)
+	{
+		if (option == 'Cancel')
+			persistentUpdate = true;
+		else
+		{
+			if (option == 'Yes')
+				save();
+			FlxG.switchState(new ToolboxState());
+		}
 	}
 
 	function get_trackSpeed()
