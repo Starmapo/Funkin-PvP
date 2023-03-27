@@ -16,6 +16,10 @@ class SongEditorActionManager extends ActionManager
 	public static inline var REMOVE_SCROLL_VELOCITY:String = 'remove-sv';
 	public static inline var ADD_TIMING_POINT:String = 'add-point';
 	public static inline var REMOVE_TIMING_POINT:String = 'remove-point';
+	public static inline var CHANGE_TITLE:String = 'change-title';
+	public static inline var CHANGE_ARTIST:String = 'change-artist';
+	public static inline var CHANGE_SOURCE:String = 'change-source';
+	public static inline var CHANGE_DIFFICULTY_NAME:String = 'change-difficulty-name';
 
 	var state:SongEditorState;
 

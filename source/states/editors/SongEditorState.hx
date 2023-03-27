@@ -285,7 +285,7 @@ class SongEditorState extends FNFState
 	{
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
 		if (notif)
-			notificationManager.showNotification('Song succesfully saved!');
+			notificationManager.showNotification('Song succesfully saved!', SUCCESS);
 	}
 
 	public function getLaneFromX(x:Float)

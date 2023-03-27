@@ -13,11 +13,13 @@ class EditorInputText extends FlxSpriteGroup
 {
 	public var text(get, set):String;
 	public var focusLost:FlxTypedSignal<String->Void> = new FlxTypedSignal();
+	public var textChanged:FlxTypedSignal<String->String->Void> = new FlxTypedSignal();
 
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
 	var textField:EditorInputTextField;
 	var hasFocus:Bool = false;
+	var lastText:String;
 
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true)
 	{
@@ -37,6 +39,7 @@ class EditorInputText extends FlxSpriteGroup
 		scrollFactor.set();
 
 		textField.textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
+		lastText = textField.text;
 	}
 
 	override function update(elapsed:Float) {}
@@ -45,12 +48,18 @@ class EditorInputText extends FlxSpriteGroup
 	{
 		textField.textField.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 		FlxDestroyUtil.destroy(focusLost);
+		FlxDestroyUtil.destroy(textChanged);
 		super.destroy();
 	}
 
 	function onFocusOut(event:FocusEvent)
 	{
 		focusLost.dispatch(text);
+		if (lastText != text)
+		{
+			textChanged.dispatch(text, lastText);
+			lastText = text;
+		}
 	}
 
 	function get_text()
@@ -60,7 +69,7 @@ class EditorInputText extends FlxSpriteGroup
 
 	function set_text(value:String)
 	{
-		return textField.text = value;
+		return lastText = textField.text = value;
 	}
 }
 
@@ -75,6 +84,7 @@ class EditorInputTextField extends FlxText
 		textField.multiline = false;
 		FlxG.game.addChildAt(textField, FlxG.game.getChildIndex(FlxG.camera.flashSprite) + 1);
 		FlxG.signals.gameResized.add(onGameResized);
+		text = textField.text;
 	}
 
 	override function update(elapsed:Float)

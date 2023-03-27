@@ -12,14 +12,22 @@ import ui.editors.EditorNumericStepper;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 import ui.editors.song.SongEditorWaveform.WaveformType;
+import util.editors.actions.song.ActionChangeArtist;
+import util.editors.actions.song.ActionChangeDifficultyName;
+import util.editors.actions.song.ActionChangeSource;
+import util.editors.actions.song.ActionChangeTitle;
+import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorEditPanel extends EditorPanel
 {
 	var state:SongEditorState;
-
-	public var speedStepper:EditorNumericStepper;
-	public var rateStepper:EditorNumericStepper;
-	public var beatSnapDropdown:EditorDropdownMenu;
+	var titleInput:EditorInputText;
+	var artistInput:EditorInputText;
+	var sourceInput:EditorInputText;
+	var difficultyInput:EditorInputText;
+	var speedStepper:EditorNumericStepper;
+	var rateStepper:EditorNumericStepper;
+	var beatSnapDropdown:EditorDropdownMenu;
 
 	public function new(state:SongEditorState)
 	{
@@ -43,6 +51,8 @@ class SongEditorEditPanel extends EditorPanel
 		createSongTab();
 
 		selected_tab_id = 'Song';
+
+		state.actionManager.onEvent.add(onEvent);
 	}
 
 	public function updateSpeedStepper()
@@ -71,64 +81,60 @@ class SongEditorEditPanel extends EditorPanel
 		var titleLabel = new EditorText(4, 5, 0, 'Title:');
 		tab.add(titleLabel);
 
-		var titleInput = new EditorInputText(titleLabel.x + inputSpacing, 4, inputWidth, state.song.title);
-		titleInput.focusLost.add(function(text)
+		titleInput = new EditorInputText(titleLabel.x + inputSpacing, 4, inputWidth, state.song.title);
+		titleInput.textChanged.add(function(text, lastText)
 		{
-			state.song.title = text;
+			if (text.length == 0)
+				titleInput.text = text = 'Untitled Song';
+
+			state.actionManager.perform(new ActionChangeTitle(state, text, lastText));
 		});
 		tab.add(titleInput);
 
 		var artistLabel = new EditorText(titleLabel.x, titleLabel.y + titleLabel.height + spacing, 0, 'Artist:');
 		tab.add(artistLabel);
 
-		var artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y - 1, inputWidth, state.song.artist);
-		artistInput.focusLost.add(function(text)
+		artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y - 1, inputWidth, state.song.artist);
+		artistInput.textChanged.add(function(text, lastText)
 		{
-			state.song.artist = text;
+			if (text.length == 0)
+				artistInput.text = text = 'Unknown Artist';
+
+			state.actionManager.perform(new ActionChangeArtist(state, text, lastText));
 		});
 		tab.add(artistInput);
 
 		var sourceLabel = new EditorText(artistLabel.x, artistLabel.y + artistLabel.height + spacing, 0, 'Source:');
 		tab.add(sourceLabel);
 
-		var sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y - 1, inputWidth, state.song.source);
-		sourceInput.focusLost.add(function(text)
+		sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y - 1, inputWidth, state.song.source);
+		sourceInput.textChanged.add(function(text, lastText)
 		{
-			state.song.source = text;
+			if (text.length == 0)
+				sourceInput.text = text = 'Unknown Source';
+
+			state.actionManager.perform(new ActionChangeSource(state, text, lastText));
 		});
 		tab.add(sourceInput);
 
 		var difficultyLabel = new EditorText(sourceLabel.x, sourceLabel.y + sourceLabel.height + spacing, 0, 'Difficulty Name:');
 		tab.add(difficultyLabel);
 
-		var difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y - 1, inputWidth, state.song.difficultyName);
-		difficultyInput.focusLost.add(function(text)
+		difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y - 1, inputWidth, state.song.difficultyName);
+		difficultyInput.textChanged.add(function(text, lastText)
 		{
-			state.song.difficultyName = text;
+			if (text.length == 0)
+			{
+				state.notificationManager.showNotification("You can't have an empty difficulty name!", WARNING);
+				difficultyInput.text = lastText;
+				return;
+			}
+
+			state.actionManager.perform(new ActionChangeDifficultyName(state, text, lastText));
 		});
 		tab.add(difficultyInput);
 
-		var instLabel = new EditorText(difficultyLabel.x, difficultyLabel.y + difficultyLabel.height + spacing, 0, 'Instrumental File:');
-		tab.add(instLabel);
-
-		var instInput = new EditorInputText(instLabel.x + inputSpacing, instLabel.y - 1, inputWidth, state.song.instFile);
-		instInput.focusLost.add(function(text)
-		{
-			state.song.instFile = text;
-		});
-		tab.add(instInput);
-
-		var vocalsLabel = new EditorText(instLabel.x, instLabel.y + instLabel.height + spacing, 0, 'Vocals File:');
-		tab.add(vocalsLabel);
-
-		var vocalsInput = new EditorInputText(vocalsLabel.x + inputSpacing, vocalsLabel.y - 1, inputWidth, state.song.vocalsFile);
-		vocalsInput.focusLost.add(function(text)
-		{
-			state.song.vocalsFile = text;
-		});
-		tab.add(vocalsInput);
-
-		var opponentLabel = new EditorText(vocalsLabel.x, vocalsLabel.y + vocalsLabel.height + spacing, 0, 'P1/Opponent Character:');
+		var opponentLabel = new EditorText(difficultyLabel.x, difficultyLabel.y + difficultyLabel.height + spacing, 0, 'P1/Opponent Character:');
 		tab.add(opponentLabel);
 
 		var opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y - 1, inputWidth, state.song.opponent);
@@ -283,5 +289,20 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(beatSnapDropdown);
 
 		addGroup(tab);
+	}
+
+	function onEvent(type:String, params:Dynamic)
+	{
+		switch (type)
+		{
+			case SongEditorActionManager.CHANGE_TITLE:
+				titleInput.text = params.title;
+			case SongEditorActionManager.CHANGE_ARTIST:
+				artistInput.text = params.artist;
+			case SongEditorActionManager.CHANGE_SOURCE:
+				sourceInput.text = params.source;
+			case SongEditorActionManager.CHANGE_DIFFICULTY_NAME:
+				difficultyInput.text = params.difficultyName;
+		}
 	}
 }
