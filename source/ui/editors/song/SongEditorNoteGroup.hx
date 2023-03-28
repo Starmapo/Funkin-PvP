@@ -347,13 +347,13 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updatePosition()
 	{
-		x = state.playfieldBG.x + state.columnSize * info.lane + state.borderLeft.width;
+		x = state.playfieldBG.x + state.columnSize * info.lane + 2;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - head.height;
 	}
 
 	public function updateSize()
 	{
-		head.setGraphicSize(Std.int(state.columnSize - state.borderLeft.width));
+		head.setGraphicSize(state.columnSize - 2);
 		head.updateHitbox();
 	}
 

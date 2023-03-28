@@ -23,6 +23,7 @@ import lime.system.Clipboard;
 import subStates.editors.song.SongEditorSavePrompt;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
+import ui.editors.song.SongEditorCamFocusGroup;
 import ui.editors.song.SongEditorCompositionPanel;
 import ui.editors.song.SongEditorDetailsPanel;
 import ui.editors.song.SongEditorEditPanel;
@@ -89,6 +90,7 @@ class SongEditorState extends FNFState
 	var camHUD:FlxCamera;
 	var selector:SongEditorSelector;
 	var savePrompt:SongEditorSavePrompt;
+	var camFocusGroup:SongEditorCamFocusGroup;
 
 	override function create()
 	{
@@ -142,6 +144,8 @@ class SongEditorState extends FNFState
 
 		noteGroup = new SongEditorNoteGroup(this);
 
+		camFocusGroup = new SongEditorCamFocusGroup(this);
+
 		seekBar = new SongEditorSeekBar(this);
 
 		selector = new SongEditorSelector(this);
@@ -193,6 +197,7 @@ class SongEditorState extends FNFState
 		add(waveform);
 		add(lineGroup);
 		add(noteGroup);
+		add(camFocusGroup);
 		add(seekBar);
 		add(selector);
 		add(zoomInButton);
@@ -731,14 +736,14 @@ class SongEditorState extends FNFState
 enum abstract CompositionTool(String) from String to String
 {
 	var SELECT = 'Select';
-	var NOTE = 'Note';
+	var OBJECT = 'Object';
 	var LONG_NOTE = 'Long Note';
 
 	public function getIndex()
 	{
 		return switch (this)
 		{
-			case NOTE: 1;
+			case OBJECT: 1;
 			case LONG_NOTE: 2;
 			default: 0;
 		}
@@ -748,7 +753,7 @@ enum abstract CompositionTool(String) from String to String
 	{
 		return switch (index)
 		{
-			case 1: NOTE;
+			case 1: OBJECT;
 			case 2: LONG_NOTE;
 			default: SELECT;
 		}
