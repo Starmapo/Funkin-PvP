@@ -3,9 +3,9 @@ package util.editors.actions.song;
 import data.song.NoteInfo;
 import states.editors.SongEditorState;
 
-class ActionPlaceNote implements IAction
+class ActionAddNote implements IAction
 {
-	public var type:String = SongEditorActionManager.PLACE_NOTE;
+	public var type:String = SongEditorActionManager.ADD_NOTE;
 
 	var state:SongEditorState;
 	var note:NoteInfo;

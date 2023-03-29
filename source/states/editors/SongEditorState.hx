@@ -1,6 +1,7 @@
 package states.editors;
 
 import data.Settings;
+import data.song.CameraFocus;
 import data.song.NoteInfo;
 import data.song.SliderVelocity;
 import data.song.Song;
@@ -23,6 +24,7 @@ import lime.system.Clipboard;
 import subStates.editors.song.SongEditorSavePrompt;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
+import ui.editors.song.SongEditorCamFocusDisplay;
 import ui.editors.song.SongEditorCamFocusGroup;
 import ui.editors.song.SongEditorCompositionPanel;
 import ui.editors.song.SongEditorDetailsPanel;
@@ -37,15 +39,18 @@ import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
 import util.bindable.BindableInt;
+import util.editors.actions.ActionBatch;
+import util.editors.actions.song.ActionAddCameraFocusBatch;
+import util.editors.actions.song.ActionAddNoteBatch;
 import util.editors.actions.song.ActionAddScrollVelocity;
 import util.editors.actions.song.ActionAddTimingPoint;
 import util.editors.actions.song.ActionFlipNotes;
-import util.editors.actions.song.ActionPlaceNoteBatch;
+import util.editors.actions.song.ActionRemoveCameraFocusBatch;
 import util.editors.actions.song.ActionRemoveNote;
 import util.editors.actions.song.ActionRemoveNoteBatch;
 import util.editors.actions.song.ActionRemoveScrollVelocity;
 import util.editors.actions.song.ActionRemoveTimingPoint;
-import util.editors.actions.song.ActionResnapNotes;
+import util.editors.actions.song.ActionResnapObjects;
 import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorState extends FNFState
@@ -71,6 +76,7 @@ class SongEditorState extends FNFState
 	public var waveform:SongEditorWaveform;
 	public var noteGroup:SongEditorNoteGroup;
 	public var selectedNotes:BindableArray<NoteInfo> = new BindableArray([]);
+	public var selectedCamFocuses:BindableArray<CameraFocus> = new BindableArray([]);
 	public var seekBar:SongEditorSeekBar;
 	public var zoomInButton:FlxUIButton;
 	public var zoomOutButton:FlxUIButton;
@@ -79,6 +85,7 @@ class SongEditorState extends FNFState
 	public var editPanel:SongEditorEditPanel;
 	public var actionManager:SongEditorActionManager;
 	public var copiedNotes:Array<NoteInfo> = [];
+	public var copiedCamFocuses:Array<CameraFocus> = [];
 
 	var dividerLines:FlxTypedGroup<FlxSprite>;
 	var hitPositionLine:FlxSprite;
@@ -91,6 +98,7 @@ class SongEditorState extends FNFState
 	var selector:SongEditorSelector;
 	var savePrompt:SongEditorSavePrompt;
 	var camFocusGroup:SongEditorCamFocusGroup;
+	var camFocusDisplay:SongEditorCamFocusDisplay;
 
 	override function create()
 	{
@@ -150,6 +158,9 @@ class SongEditorState extends FNFState
 
 		selector = new SongEditorSelector(this);
 
+		camFocusDisplay = new SongEditorCamFocusDisplay(10, 0, this);
+		camFocusDisplay.screenCenter(Y);
+
 		tooltip = new Tooltip();
 		tooltip.cameras = [camHUD];
 
@@ -200,6 +211,7 @@ class SongEditorState extends FNFState
 		add(camFocusGroup);
 		add(seekBar);
 		add(selector);
+		add(camFocusDisplay);
 		add(zoomInButton);
 		add(zoomOutButton);
 		add(detailsPanel);
@@ -224,6 +236,7 @@ class SongEditorState extends FNFState
 
 		selector.update(elapsed);
 		seekBar.update(elapsed);
+		camFocusDisplay.update(elapsed);
 		zoomInButton.update(elapsed);
 		zoomOutButton.update(elapsed);
 		compositionPanel.update(elapsed);
@@ -262,6 +275,7 @@ class SongEditorState extends FNFState
 		actionManager = FlxDestroyUtil.destroy(actionManager);
 		beatSnap = FlxDestroyUtil.destroy(beatSnap);
 		selectedNotes = FlxDestroyUtil.destroy(selectedNotes);
+		selectedCamFocuses = FlxDestroyUtil.destroy(selectedCamFocuses);
 		Application.current.onExit.remove(onExit);
 		FlxDestroyUtil.destroy(songSeeked);
 		FlxDestroyUtil.destroy(rateChanged);
@@ -451,7 +465,7 @@ class SongEditorState extends FNFState
 						actionManager.perform(new ActionRemoveNote(this, note));
 				}
 				else
-					actionManager.placeNote(i, time);
+					actionManager.addNote(i, time);
 			}
 		}
 
@@ -565,30 +579,57 @@ class SongEditorState extends FNFState
 
 	function copySelectedObjects()
 	{
-		if (selectedNotes.value.length == 0)
+		if (selectedNotes.value.length == 0 && selectedCamFocuses.value.length == 0)
 			return;
 
 		copiedNotes.resize(0);
-		var orderedNotes = selectedNotes.value.copy();
-		orderedNotes.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
-		for (note in orderedNotes)
-			copiedNotes.push(note);
+		copiedCamFocuses.resize(0);
+
+		if (selectedNotes.value.length > 0)
+		{
+			var orderedNotes = selectedNotes.value.copy();
+			orderedNotes.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
+			for (obj in orderedNotes)
+				copiedNotes.push(obj);
+		}
+
+		if (selectedCamFocuses.value.length > 0)
+		{
+			var orderedCamFocuses = selectedCamFocuses.value.copy();
+			orderedCamFocuses.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
+			for (obj in orderedCamFocuses)
+				copiedCamFocuses.push(obj);
+		}
 	}
 
 	function pasteCopiedObjects(resnapNotes:Bool, swapLanes:Bool)
 	{
-		if (copiedNotes.length == 0)
+		if (copiedNotes.length == 0 && copiedCamFocuses.length == 0)
 			return;
 
 		var clonedNotes:Array<NoteInfo> = [];
-		var difference = Math.round(inst.time - copiedNotes[0].startTime);
-		for (note in copiedNotes)
+		var clonedCamFocuses:Array<CameraFocus> = [];
+
+		var lowestTime = inst.time;
+		for (obj in copiedNotes)
+		{
+			if (obj.startTime < lowestTime)
+				lowestTime = obj.startTime;
+		}
+		for (obj in copiedCamFocuses)
+		{
+			if (obj.startTime < lowestTime)
+				lowestTime = obj.startTime;
+		}
+		var difference = Math.round(inst.time - lowestTime);
+
+		for (obj in copiedNotes)
 		{
 			var info = new NoteInfo({
-				startTime: note.startTime + difference,
-				lane: note.lane,
-				type: note.type,
-				params: note.params.join(',')
+				startTime: obj.startTime + difference,
+				lane: obj.lane,
+				type: obj.type,
+				params: obj.params.join(',')
 			});
 			if (swapLanes)
 			{
@@ -597,25 +638,40 @@ class SongEditorState extends FNFState
 				else
 					info.lane += 4;
 			}
-			if (note.isLongNote)
-				info.endTime = note.endTime + difference;
+			if (obj.isLongNote)
+				info.endTime = obj.endTime + difference;
 			if (info.startTime > inst.length || info.endTime > inst.length)
-				return;
+				continue;
 			clonedNotes.push(info);
+		}
+		for (obj in copiedCamFocuses)
+		{
+			var info = new CameraFocus({
+				startTime: obj.startTime,
+				char: obj.char
+			});
+			if (info.startTime > inst.length)
+				continue;
+			clonedCamFocuses.push(info);
 		}
 
 		if (resnapNotes)
-			new ActionResnapNotes(this, [16, 12], clonedNotes).perform();
+			new ActionResnapObjects(this, [16, 12], clonedNotes, clonedCamFocuses).perform();
 
-		actionManager.perform(new ActionPlaceNoteBatch(this, clonedNotes));
+		actionManager.performBatch([
+			new ActionAddNoteBatch(this, clonedNotes),
+			new ActionAddCameraFocusBatch(this, clonedCamFocuses)
+		]);
 
 		selectedNotes.clear();
 		selectedNotes.pushMultiple(clonedNotes);
+		selectedCamFocuses.clear();
+		selectedCamFocuses.pushMultiple(clonedCamFocuses);
 	}
 
 	function cutSelectedObjects()
 	{
-		if (selectedNotes.value.length == 0)
+		if (selectedNotes.value.length == 0 && selectedCamFocuses.value.length == 0)
 			return;
 
 		copySelectedObjects();
@@ -624,16 +680,21 @@ class SongEditorState extends FNFState
 
 	function deleteSelectedObjects()
 	{
-		if (selectedNotes.value.length == 0)
+		if (selectedNotes.value.length == 0 && selectedCamFocuses.value.length == 0)
 			return;
 
-		actionManager.perform(new ActionRemoveNoteBatch(this, selectedNotes.value.copy()));
+		actionManager.performBatch([
+			new ActionRemoveNoteBatch(this, selectedNotes.value.copy()),
+			new ActionRemoveCameraFocusBatch(this, selectedCamFocuses.value.copy())
+		]);
 	}
 
 	function selectAllObjects()
 	{
 		selectedNotes.clear();
 		selectedNotes.pushMultiple(song.notes);
+		selectedCamFocuses.clear();
+		selectedCamFocuses.pushMultiple(song.cameraFocuses);
 	}
 
 	function flipSelectedNotes(fullFlip:Bool)
@@ -736,8 +797,8 @@ class SongEditorState extends FNFState
 enum abstract CompositionTool(String) from String to String
 {
 	var SELECT = 'Select';
-	var OBJECT = 'Object';
-	var LONG_NOTE = 'Long Note';
+	var OBJECT = 'Add Object';
+	var LONG_NOTE = 'Add Long Note';
 
 	public function getIndex()
 	{

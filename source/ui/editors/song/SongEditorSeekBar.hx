@@ -157,7 +157,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 
 	function seekToPos(targetPos:Float)
 	{
-		if (Std.int(targetPos) != Std.int(state.inst.time) && targetPos >= 0 && targetPos <= state.inst.length)
+		if (Math.round(targetPos) != Math.round(state.inst.time) && targetPos >= 0 && targetPos <= state.inst.length)
 		{
 			if (Math.abs(state.inst.time - targetPos) < 500)
 				return;
@@ -170,8 +170,8 @@ class SongEditorSeekBar extends FlxSpriteGroup
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.PLACE_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.PLACE_NOTE_BATCH,
-				SongEditorActionManager.REMOVE_NOTE_BATCH, SongEditorActionManager.RESNAP_NOTES, SongEditorActionManager.FLIP_NOTES:
+			case SongEditorActionManager.ADD_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.ADD_NOTE_BATCH,
+				SongEditorActionManager.REMOVE_NOTE_BATCH, SongEditorActionManager.RESNAP_OBJECTS, SongEditorActionManager.FLIP_NOTES:
 				createBars();
 		}
 	}

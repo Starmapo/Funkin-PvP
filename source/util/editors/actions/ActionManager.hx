@@ -22,7 +22,7 @@ class ActionManager implements IFlxDestroyable
 
 	public function performBatch(actions:Array<IAction>)
 	{
-		perform(new ActionBatch(this, actions));
+		perform(new ActionBatch(actions));
 	}
 
 	public function undo()

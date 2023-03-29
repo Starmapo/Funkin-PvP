@@ -28,6 +28,6 @@ class ActionRemoveNote implements IAction
 
 	public function undo()
 	{
-		new ActionPlaceNote(state, note).perform();
+		new ActionAddNote(state, note).perform();
 	}
 }

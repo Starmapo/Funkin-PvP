@@ -79,7 +79,7 @@ class SongEditorDetailsPanel extends EditorPanel
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.PLACE_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.PLACE_NOTE_BATCH,
+			case SongEditorActionManager.ADD_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.ADD_NOTE_BATCH,
 				SongEditorActionManager.REMOVE_NOTE_BATCH:
 				updateNoteCount();
 		}

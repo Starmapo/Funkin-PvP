@@ -29,6 +29,6 @@ class ActionRemoveNoteBatch implements IAction
 
 	public function undo()
 	{
-		new ActionPlaceNoteBatch(state, notes).perform();
+		new ActionAddNoteBatch(state, notes).perform();
 	}
 }

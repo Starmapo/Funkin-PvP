@@ -4,12 +4,10 @@ class ActionBatch implements IAction
 {
 	public var type:String = ActionManager.BATCH;
 
-	var manager:ActionManager;
 	var actions:Array<IAction>;
 
-	public function new(manager:ActionManager, actions:Array<IAction>)
+	public function new(actions:Array<IAction>)
 	{
-		this.manager = manager;
 		this.actions = actions;
 	}
 

@@ -56,14 +56,14 @@ class Song extends JsonObject
 		return (Math.round((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
 	}
 
-	public static function closestTickToSnap(song:Song, time:Int, snap:Int)
+	public static function closestTickToSnap(song:Song, time:Float, snap:Int)
 	{
 		var point = song.getTimingPointAt(time);
 		if (point == null)
 			return time;
 
-		var timeFwd = Std.int(Song.getNearestSnapTimeFromTime(song, true, snap, time));
-		var timeBwd = Std.int(Song.getNearestSnapTimeFromTime(song, false, snap, time));
+		var timeFwd = Math.round(Song.getNearestSnapTimeFromTime(song, true, snap, time));
+		var timeBwd = Math.round(Song.getNearestSnapTimeFromTime(song, false, snap, time));
 
 		var fwdDiff = Std.int(Math.abs(time - timeFwd));
 		var bwdDiff = Std.int(Math.abs(time - timeBwd));
@@ -71,7 +71,7 @@ class Song extends JsonObject
 		if (Math.abs(fwdDiff - bwdDiff) <= 2)
 		{
 			var snapTimePerBeat = point.beatLength / snap;
-			return Std.int(getNearestSnapTimeFromTime(song, false, snap, time + snapTimePerBeat));
+			return Math.round(getNearestSnapTimeFromTime(song, false, snap, time + snapTimePerBeat));
 		}
 
 		var closestTime = time;
@@ -339,6 +339,10 @@ class Song extends JsonObject
 		{
 			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
 		});
+		cameraFocuses.sort(function(a, b)
+		{
+			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
+		});
 	}
 
 	/**
@@ -427,7 +431,7 @@ class Song extends JsonObject
 			var point = timingPoints[i];
 			if (point.startTime <= lastTime)
 			{
-				var duration = Std.int(lastTime - (i == 0 ? 0 : point.startTime));
+				var duration = Math.round(lastTime - (i == 0 ? 0 : point.startTime));
 				lastTime = point.startTime;
 
 				var bpm = Std.string(point.bpm);
@@ -493,6 +497,27 @@ class Song extends JsonObject
 			return null;
 
 		return sliderVelocities[index];
+	}
+
+	/**
+		Gets the camera focus at a particular point in the map.
+		@param time The time to find a camera focus at.
+	**/
+	public function getCameraFocusAt(time:Float)
+	{
+		var index = cameraFocuses.length - 1;
+		while (index >= 0)
+		{
+			if (cameraFocuses[index].startTime <= time)
+				break;
+
+			index--;
+		}
+
+		if (index == -1)
+			return cameraFocuses[0];
+
+		return cameraFocuses[index];
 	}
 
 	/**

@@ -124,23 +124,19 @@ class SongEditorNoteGroup extends FlxBasic
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.PLACE_NOTE:
+			case SongEditorActionManager.ADD_NOTE:
 				createNote(params.note, true);
 			case SongEditorActionManager.REMOVE_NOTE:
-				var daNote:SongEditorNote = null;
 				for (note in notes)
 				{
 					if (note.info == params.note)
 					{
-						daNote = note;
+						note.destroy();
+						notes.remove(note);
 						break;
 					}
 				}
-				if (daNote == null)
-					return;
-				daNote.destroy();
-				notes.remove(daNote);
-			case SongEditorActionManager.PLACE_NOTE_BATCH:
+			case SongEditorActionManager.ADD_NOTE_BATCH:
 				var batch:Array<NoteInfo> = params.notes;
 				for (note in batch)
 					createNote(note);
@@ -158,7 +154,7 @@ class SongEditorNoteGroup extends FlxBasic
 					}
 					i--;
 				}
-			case SongEditorActionManager.RESNAP_NOTES:
+			case SongEditorActionManager.RESNAP_OBJECTS:
 				var batch:Array<NoteInfo> = params.notes;
 				for (note in notes)
 				{
@@ -427,7 +423,7 @@ class SongEditorNote extends FlxSpriteGroup
 		if (!info.isLongNote)
 			return 0;
 
-		return Std.int(Math.abs(state.hitPositionY - info.endTime * state.trackSpeed - head.height / 2 - y));
+		return Math.round(Math.abs(state.hitPositionY - info.endTime * state.trackSpeed - head.height / 2 - y));
 	}
 
 	function onDeselectedNote(note:NoteInfo)
