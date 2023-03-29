@@ -1,6 +1,5 @@
 package ui.editors.song;
 
-import flixel.FlxSprite;
 import sprites.AnimatedSprite;
 import states.editors.SongEditorState;
 

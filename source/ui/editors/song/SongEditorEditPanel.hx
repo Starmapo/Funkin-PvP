@@ -12,14 +12,6 @@ import ui.editors.EditorNumericStepper;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 import ui.editors.song.SongEditorWaveform.WaveformType;
-import util.editors.actions.song.ActionChangeArtist;
-import util.editors.actions.song.ActionChangeBF;
-import util.editors.actions.song.ActionChangeDifficultyName;
-import util.editors.actions.song.ActionChangeGF;
-import util.editors.actions.song.ActionChangeInitialSV;
-import util.editors.actions.song.ActionChangeOpponent;
-import util.editors.actions.song.ActionChangeSource;
-import util.editors.actions.song.ActionChangeTitle;
 import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorEditPanel extends EditorPanel

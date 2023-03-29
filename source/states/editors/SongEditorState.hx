@@ -40,17 +40,6 @@ import util.bindable.Bindable;
 import util.bindable.BindableArray;
 import util.bindable.BindableInt;
 import util.editors.actions.ActionBatch;
-import util.editors.actions.song.ActionAddCameraFocusBatch;
-import util.editors.actions.song.ActionAddNoteBatch;
-import util.editors.actions.song.ActionAddScrollVelocity;
-import util.editors.actions.song.ActionAddTimingPoint;
-import util.editors.actions.song.ActionFlipNotes;
-import util.editors.actions.song.ActionRemoveCameraFocusBatch;
-import util.editors.actions.song.ActionRemoveNote;
-import util.editors.actions.song.ActionRemoveNoteBatch;
-import util.editors.actions.song.ActionRemoveScrollVelocity;
-import util.editors.actions.song.ActionRemoveTimingPoint;
-import util.editors.actions.song.ActionResnapObjects;
 import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorState extends FNFState
