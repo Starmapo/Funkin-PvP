@@ -19,7 +19,10 @@ class ActionRemoveCameraFocusBatch implements IAction
 	public function perform()
 	{
 		for (camFocus in camFocuses)
+		{
 			state.song.cameraFocuses.remove(camFocus);
+			state.selectedCamFocuses.remove(camFocus);
+		}
 		state.actionManager.triggerEvent(type, {camFocuses: camFocuses});
 	}
 

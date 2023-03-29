@@ -74,7 +74,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 		}
 
 		if (seekLine != null)
-			seekLine.y = bg.y + bg.height - (state.inst.time / state.inst.length) * bg.height - seekLine.height;
+			seekLine.y = FlxMath.remapToRange(state.inst.time, 0, state.inst.length, bg.y + bg.height - seekLine.height, bg.y);
 	}
 
 	function createBars()

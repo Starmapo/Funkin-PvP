@@ -26,8 +26,13 @@ class SongEditorCamFocusDisplay extends AnimatedSprite
 
 	public function updateDisplay()
 	{
-		var anim = Std.string(state.song.getCameraFocusAt(state.inst.time).char);
-		if (animation.name != anim)
+		var anim:String = null;
+		var camFocus = state.song.getCameraFocusAt(state.inst.time);
+		if (camFocus == null)
+			anim = '0';
+		else
+			anim = Std.string(camFocus.char);
+		if (anim != null && animation.name != anim)
 			playAnim(anim);
 	}
 }

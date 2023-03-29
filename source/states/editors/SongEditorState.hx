@@ -610,7 +610,7 @@ class SongEditorState extends FNFState
 		var clonedNotes:Array<NoteInfo> = [];
 		var clonedCamFocuses:Array<CameraFocus> = [];
 
-		var lowestTime = inst.time;
+		var lowestTime = FlxMath.MAX_VALUE_FLOAT;
 		for (obj in copiedNotes)
 		{
 			if (obj.startTime < lowestTime)
@@ -621,6 +621,8 @@ class SongEditorState extends FNFState
 			if (obj.startTime < lowestTime)
 				lowestTime = obj.startTime;
 		}
+		if (lowestTime == FlxMath.MAX_VALUE_FLOAT)
+			lowestTime = inst.time;
 		var difference = Math.round(inst.time - lowestTime);
 
 		for (obj in copiedNotes)
@@ -647,7 +649,7 @@ class SongEditorState extends FNFState
 		for (obj in copiedCamFocuses)
 		{
 			var info = new CameraFocus({
-				startTime: obj.startTime,
+				startTime: obj.startTime + difference,
 				char: obj.char
 			});
 			if (info.startTime > inst.length)

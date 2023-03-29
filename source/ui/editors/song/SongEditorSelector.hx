@@ -1,5 +1,6 @@
 package ui.editors.song;
 
+import data.song.CameraFocus;
 import data.song.NoteInfo;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUI9SliceSprite;
@@ -67,7 +68,10 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			return;
 
 		if (FlxG.keys.released.CONTROL)
+		{
 			state.selectedNotes.clear();
+			state.selectedCamFocuses.clear();
+		}
 
 		isSelecting = true;
 		visible = true;
@@ -130,7 +134,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			var startLane = state.getLaneFromX(startingPoint.x);
 			var endLane = state.getLaneFromX(mousePos.x);
 
-			selectNotes(timeDragEnd, startLane, endLane);
+			selectObjects(timeDragEnd, startLane, endLane);
 		}
 
 		isSelecting = false;
@@ -141,22 +145,40 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		timeDragStart = 0;
 	}
 
-	function selectNotes(timeDragEnd:Float, startLane:Int, endLane:Int)
+	function selectObjects(timeDragEnd:Float, startLane:Int, endLane:Int)
 	{
+		var dragStart = Math.min(timeDragStart, timeDragEnd);
+		var dragEnd = Math.max(timeDragStart, timeDragEnd);
+		var realStartLane = Math.min(startLane, endLane);
+		var realEndLane = Math.max(startLane, endLane);
+
 		var foundNotes:Array<NoteInfo> = [];
-		for (note in state.song.notes)
+		var foundCamFocuses:Array<CameraFocus> = [];
+
+		for (obj in state.song.notes)
 		{
-			var yInbetween = timeDragStart > timeDragEnd ? CoolUtil.inBetween(note.startTime, timeDragEnd,
-				timeDragStart) : CoolUtil.inBetween(note.startTime, timeDragStart, timeDragEnd);
-			var laneInbetween = startLane > endLane ? CoolUtil.inBetween(note.lane, endLane, startLane) : CoolUtil.inBetween(note.lane, startLane, endLane);
+			var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
+			var laneInbetween = CoolUtil.inBetween(obj.lane, realStartLane, realEndLane);
 			if (yInbetween && laneInbetween)
-				foundNotes.push(note);
+				foundNotes.push(obj);
+		}
+		for (obj in state.song.cameraFocuses)
+		{
+			var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
+			var laneInbetween = CoolUtil.inBetween(8, realStartLane, realEndLane);
+			if (yInbetween && laneInbetween)
+				foundCamFocuses.push(obj);
 		}
 
-		for (note in foundNotes)
+		for (obj in foundNotes)
 		{
-			if (!state.selectedNotes.value.contains(note))
-				state.selectedNotes.push(note);
+			if (!state.selectedNotes.value.contains(obj))
+				state.selectedNotes.push(obj);
+		}
+		for (obj in foundCamFocuses)
+		{
+			if (!state.selectedCamFocuses.value.contains(obj))
+				state.selectedCamFocuses.push(obj);
 		}
 	}
 }

@@ -32,8 +32,11 @@ class BindableArray<T> extends Bindable<Array<T>>
 
 	public function remove(obj:T)
 	{
-		value.remove(obj);
-		itemRemoved.dispatch(obj);
+		if (value.contains(obj))
+		{
+			value.remove(obj);
+			itemRemoved.dispatch(obj);
+		}
 	}
 
 	public function pushMultiple(array:Array<T>)
@@ -45,7 +48,10 @@ class BindableArray<T> extends Bindable<Array<T>>
 
 	public function clear()
 	{
-		value.resize(0);
-		arrayCleared.dispatch();
+		if (value.length > 0)
+		{
+			value.resize(0);
+			arrayCleared.dispatch();
+		}
 	}
 }
