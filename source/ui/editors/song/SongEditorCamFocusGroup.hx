@@ -3,6 +3,7 @@ package ui.editors.song;
 import data.Settings;
 import data.song.CameraFocus;
 import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSort;
@@ -47,6 +48,17 @@ class SongEditorCamFocusGroup extends FlxBasic
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 		super.destroy();
+	}
+
+	public function getHoveredCamFocus()
+	{
+		for (camFocus in camFocuses)
+		{
+			if (camFocus.isHovered())
+				return camFocus;
+		}
+
+		return null;
 	}
 
 	function createCamFocus(info:CameraFocus, insertAtIndex:Bool = false)
@@ -207,6 +219,11 @@ class SongEditorCamFocus extends FlxSpriteGroup
 	public function updateColor()
 	{
 		line.color = getColor();
+	}
+
+	public function isHovered()
+	{
+		return FlxG.mouse.overlaps(line);
 	}
 
 	function getColor()

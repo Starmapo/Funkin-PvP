@@ -51,7 +51,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		if (isSelecting || !FlxG.mouse.justPressed)
 			return;
 
-		if (state.noteGroup.getHoveredNote() != null)
+		if (state.isHoveringObject())
 			return;
 
 		if (FlxG.mouse.overlaps(state.seekBar.bg)
@@ -69,8 +69,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 
 		if (FlxG.keys.released.CONTROL)
 		{
-			state.selectedNotes.clear();
-			state.selectedCamFocuses.clear();
+			state.clearSelection();
 		}
 
 		isSelecting = true;

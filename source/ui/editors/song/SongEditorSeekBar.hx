@@ -62,7 +62,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 			scheduledFunction = null;
 		}
 
-		if (FlxG.mouse.overlaps(bg) && !isHeld && FlxG.mouse.justPressed)
+		if (!isHeld && FlxG.mouse.overlaps(bg) && FlxG.mouse.justPressed)
 			isHeld = true;
 		if (FlxG.mouse.released)
 			isHeld = false;

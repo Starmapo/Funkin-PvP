@@ -31,6 +31,7 @@ import ui.editors.song.SongEditorDetailsPanel;
 import ui.editors.song.SongEditorEditPanel;
 import ui.editors.song.SongEditorLineGroup;
 import ui.editors.song.SongEditorNoteGroup;
+import ui.editors.song.SongEditorPlayfieldButton;
 import ui.editors.song.SongEditorSeekBar;
 import ui.editors.song.SongEditorSelector;
 import ui.editors.song.SongEditorTimeline;
@@ -75,6 +76,7 @@ class SongEditorState extends FNFState
 	public var actionManager:SongEditorActionManager;
 	public var copiedNotes:Array<NoteInfo> = [];
 	public var copiedCamFocuses:Array<CameraFocus> = [];
+	public var camFocusGroup:SongEditorCamFocusGroup;
 
 	var dividerLines:FlxTypedGroup<FlxSprite>;
 	var hitPositionLine:FlxSprite;
@@ -86,8 +88,8 @@ class SongEditorState extends FNFState
 	var camHUD:FlxCamera;
 	var selector:SongEditorSelector;
 	var savePrompt:SongEditorSavePrompt;
-	var camFocusGroup:SongEditorCamFocusGroup;
 	var camFocusDisplay:SongEditorCamFocusDisplay;
+	var playfieldButton:SongEditorPlayfieldButton;
 
 	override function create()
 	{
@@ -142,6 +144,9 @@ class SongEditorState extends FNFState
 		noteGroup = new SongEditorNoteGroup(this);
 
 		camFocusGroup = new SongEditorCamFocusGroup(this);
+
+		playfieldButton = new SongEditorPlayfieldButton(0, 0, this);
+		playfieldButton.screenCenter(X);
 
 		seekBar = new SongEditorSeekBar(this);
 
@@ -198,6 +203,7 @@ class SongEditorState extends FNFState
 		add(lineGroup);
 		add(noteGroup);
 		add(camFocusGroup);
+		add(playfieldButton);
 		add(seekBar);
 		add(selector);
 		add(camFocusDisplay);
@@ -231,6 +237,7 @@ class SongEditorState extends FNFState
 		compositionPanel.update(elapsed);
 		editPanel.update(elapsed);
 		detailsPanel.update(elapsed);
+		playfieldButton.update(elapsed);
 		notificationManager.update(elapsed);
 		tooltip.update(elapsed);
 
@@ -317,6 +324,23 @@ class SongEditorState extends FNFState
 	public function getTimeFromY(y:Float)
 	{
 		return trackPositionY + (hitPositionY - y);
+	}
+
+	public function isHoveringObject()
+	{
+		if (noteGroup.getHoveredNote() != null)
+			return true;
+
+		if (camFocusGroup.getHoveredCamFocus() != null)
+			return true;
+
+		return false;
+	}
+
+	public function clearSelection()
+	{
+		selectedNotes.clear();
+		selectedCamFocuses.clear();
 	}
 
 	function handleInput()
@@ -654,9 +678,8 @@ class SongEditorState extends FNFState
 			new ActionAddCameraFocusBatch(this, clonedCamFocuses)
 		]);
 
-		selectedNotes.clear();
+		clearSelection();
 		selectedNotes.pushMultiple(clonedNotes);
-		selectedCamFocuses.clear();
 		selectedCamFocuses.pushMultiple(clonedCamFocuses);
 	}
 
@@ -682,9 +705,8 @@ class SongEditorState extends FNFState
 
 	function selectAllObjects()
 	{
-		selectedNotes.clear();
+		clearSelection();
 		selectedNotes.pushMultiple(song.notes);
-		selectedCamFocuses.clear();
 		selectedCamFocuses.pushMultiple(song.cameraFocuses);
 	}
 

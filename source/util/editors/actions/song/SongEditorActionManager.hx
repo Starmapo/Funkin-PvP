@@ -15,6 +15,8 @@ class SongEditorActionManager extends ActionManager
 	public static inline var REMOVE_NOTE:String = 'remove-note';
 	public static inline var ADD_NOTE_BATCH:String = 'add-note-batch';
 	public static inline var REMOVE_NOTE_BATCH:String = 'remove-note-batch';
+	public static inline var RESIZE_LONG_NOTE:String = 'resize-long-note';
+	public static inline var MOVE_OBJECTS:String = 'move-objects';
 	public static inline var RESNAP_OBJECTS:String = 'resnap-objects';
 	public static inline var FLIP_NOTES:String = 'flip-notes';
 	public static inline var ADD_TIMING_POINT:String = 'add-point';
@@ -52,6 +54,16 @@ class SongEditorActionManager extends ActionManager
 		});
 		perform(new ActionAddNote(state, note));
 		return note;
+	}
+
+	public function addCamFocus(startTime:Float, char:CameraFocusChar = OPPONENT)
+	{
+		var camFocus = new CameraFocus({
+			startTime: startTime,
+			char: char
+		});
+		perform(new ActionAddCameraFocus(state, camFocus));
+		return camFocus;
 	}
 }
 
@@ -166,6 +178,82 @@ class ActionRemoveNoteBatch implements IAction
 	public function undo()
 	{
 		new ActionAddNoteBatch(state, notes).perform();
+	}
+}
+
+class ActionResizeLongNote implements IAction
+{
+	public var type:String = SongEditorActionManager.RESIZE_LONG_NOTE;
+
+	var state:SongEditorState;
+	var note:NoteInfo;
+	var originalTime:Int;
+	var newTime:Int;
+
+	public function new(state:SongEditorState, note:NoteInfo, originalTime:Int, newTime:Int)
+	{
+		this.state = state;
+		this.note = note;
+		this.originalTime = originalTime;
+		this.newTime = newTime;
+	}
+
+	public function perform()
+	{
+		note.endTime = newTime;
+		state.actionManager.triggerEvent(type, {note: note, originalTime: originalTime, newTime: newTime});
+	}
+
+	public function undo()
+	{
+		new ActionResizeLongNote(state, note, newTime, originalTime).perform();
+	}
+}
+
+class ActionMoveObjects implements IAction
+{
+	public var type:String = SongEditorActionManager.MOVE_OBJECTS;
+
+	var state:SongEditorState;
+	var notes:Array<NoteInfo>;
+	var camFocuses:Array<CameraFocus>;
+	var laneOffset:Int;
+	var dragOffset:Int;
+	var shouldPerform:Bool;
+
+	public function new(state:SongEditorState, ?notes:Array<NoteInfo>, ?camFocuses:Array<CameraFocus>, laneOffset:Int, dragOffset:Int,
+			shouldPerform:Bool = true)
+	{
+		this.state = state;
+		this.notes = notes;
+		this.camFocuses = camFocuses;
+		this.laneOffset = laneOffset;
+		this.dragOffset = dragOffset;
+		this.shouldPerform = shouldPerform;
+	}
+
+	public function perform()
+	{
+		if (shouldPerform)
+		{
+			for (obj in notes)
+			{
+				obj.startTime += dragOffset;
+				if (obj.isLongNote)
+					obj.endTime += dragOffset;
+				obj.lane += laneOffset;
+			}
+			for (obj in camFocuses)
+				obj.startTime += dragOffset;
+		}
+
+		state.actionManager.triggerEvent(type, {notes: notes, camFocuses: camFocuses});
+	}
+
+	public function undo()
+	{
+		new ActionMoveObjects(state, notes, camFocuses, -laneOffset, -dragOffset).perform();
+		shouldPerform = true;
 	}
 }
 
