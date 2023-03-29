@@ -121,9 +121,10 @@ class SongEditorPlayfieldButton extends FlxSprite
 			{
 				if (camFocus != null)
 					handleCamFocusSelectTool(camFocus);
-
-				return;
 			}
+
+			if (state.currentTool.value == SELECT)
+				return;
 		}
 
 		handleObjectPlacement();
@@ -137,7 +138,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 		var lane = state.getLaneFromX(FlxG.mouse.globalX);
 		if (existsObjectAtTimeAndLane(time, lane))
 		{
-			state.notificationManager.showNotification("You can't place there, there's already an object at that time.");
+			state.notificationManager.showNotification("You can't place there, there's already an object at that time.", ERROR);
 			return;
 		}
 
