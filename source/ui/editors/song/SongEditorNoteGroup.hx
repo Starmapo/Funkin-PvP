@@ -155,11 +155,14 @@ class SongEditorNoteGroup extends FlxBasic
 					i--;
 				}
 			case SongEditorActionManager.RESNAP_OBJECTS:
-				var batch:Array<NoteInfo> = params.notes;
-				for (note in notes)
+				if (params.notes != null)
 				{
-					if (batch.contains(note.info))
-						note.refreshPositionAndSize();
+					var batch:Array<NoteInfo> = params.notes;
+					for (note in notes)
+					{
+						if (batch.contains(note.info))
+							note.refreshPositionAndSize();
+					}
 				}
 			case SongEditorActionManager.FLIP_NOTES:
 				var batch:Array<NoteInfo> = params.notes;

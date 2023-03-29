@@ -28,31 +28,37 @@ class ActionResnapObjects implements IAction
 	public function perform()
 	{
 		var resnapCount = 0;
-		for (obj in notes)
+		if (notes != null)
 		{
-			var originalStartTime = obj.startTime;
-			var originalEndTime = obj.endTime;
-			obj.startTime = Math.round(closestTickOverall(obj.startTime));
-			if (obj.isLongNote)
-				obj.endTime = Math.round(closestTickOverall(obj.endTime));
-
-			var adjustment = new NoteAdjustment(originalStartTime, originalEndTime, obj);
-			if (adjustment.wasMoved)
+			for (obj in notes)
 			{
-				noteTimeAdjustments.set(obj, adjustment);
-				resnapCount++;
+				var originalStartTime = obj.startTime;
+				var originalEndTime = obj.endTime;
+				obj.startTime = Math.round(closestTickOverall(obj.startTime));
+				if (obj.isLongNote)
+					obj.endTime = Math.round(closestTickOverall(obj.endTime));
+
+				var adjustment = new NoteAdjustment(originalStartTime, originalEndTime, obj);
+				if (adjustment.wasMoved)
+				{
+					noteTimeAdjustments.set(obj, adjustment);
+					resnapCount++;
+				}
 			}
 		}
-		for (obj in camFocuses)
+		if (camFocuses != null)
 		{
-			var originalStartTime = obj.startTime;
-			obj.startTime = closestTickOverall(obj.startTime);
-
-			var adjustment = new CamFocusAdjustment(originalStartTime, obj);
-			if (adjustment.wasMoved)
+			for (obj in camFocuses)
 			{
-				camFocusTimeAdjustments.set(obj, adjustment);
-				resnapCount++;
+				var originalStartTime = obj.startTime;
+				obj.startTime = closestTickOverall(obj.startTime);
+
+				var adjustment = new CamFocusAdjustment(originalStartTime, obj);
+				if (adjustment.wasMoved)
+				{
+					camFocusTimeAdjustments.set(obj, adjustment);
+					resnapCount++;
+				}
 			}
 		}
 
@@ -68,18 +74,22 @@ class ActionResnapObjects implements IAction
 
 	public function undo()
 	{
-		for (note => adjustment in noteTimeAdjustments)
+		for (obj => adjustment in noteTimeAdjustments)
 		{
-			note.startTime = adjustment.originalStartTime;
-			note.endTime = adjustment.originalEndTime;
+			obj.startTime = adjustment.originalStartTime;
+			obj.endTime = adjustment.originalEndTime;
 		}
+		for (obj => adjustment in camFocusTimeAdjustments)
+			obj.startTime = adjustment.originalStartTime;
 
 		state.actionManager.triggerEvent(type, {
 			snaps: snaps,
-			notes: notes
+			notes: notes,
+			camFocuses: camFocuses
 		});
 
 		noteTimeAdjustments.clear();
+		camFocusTimeAdjustments.clear();
 	}
 
 	function closestTickOverall(time:Float)

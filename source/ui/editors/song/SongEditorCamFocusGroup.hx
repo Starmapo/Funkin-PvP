@@ -114,11 +114,14 @@ class SongEditorCamFocusGroup extends FlxBasic
 					i--;
 				}
 			case SongEditorActionManager.RESNAP_OBJECTS:
-				var batch:Array<CameraFocus> = params.camFocuses;
-				for (camFocus in camFocuses)
+				if (params.camFocuses != null)
 				{
-					if (batch.contains(camFocus.info))
-						camFocus.updatePosition();
+					var batch:Array<CameraFocus> = params.camFocuses;
+					for (camFocus in camFocuses)
+					{
+						if (batch.contains(camFocus.info))
+							camFocus.updatePosition();
+					}
 				}
 		}
 	}
