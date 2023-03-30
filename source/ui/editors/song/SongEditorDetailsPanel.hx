@@ -11,6 +11,7 @@ class SongEditorDetailsPanel extends EditorPanel
 	var state:SongEditorState;
 	var noteCountText:EditorText;
 	var bpmText:EditorText;
+	var scrollVelocityText:EditorText;
 	var timeText:EditorText;
 	var stepText:EditorText;
 	var beatText:EditorText;
@@ -23,7 +24,7 @@ class SongEditorDetailsPanel extends EditorPanel
 				label: 'Details'
 			}
 		]);
-		resize(250, 120);
+		resize(250, 140);
 		x = 10;
 		screenCenter(Y);
 		y -= 132;
@@ -41,7 +42,10 @@ class SongEditorDetailsPanel extends EditorPanel
 		bpmText = new EditorText(noteCountText.x, noteCountText.y + noteCountText.height + spacing, fieldWidth);
 		tab.add(bpmText);
 
-		timeText = new EditorText(bpmText.x, bpmText.y + bpmText.height + spacing, fieldWidth);
+		scrollVelocityText = new EditorText(bpmText.x, bpmText.y + bpmText.height + spacing, fieldWidth);
+		tab.add(scrollVelocityText);
+
+		timeText = new EditorText(scrollVelocityText.x, scrollVelocityText.y + scrollVelocityText.height + spacing, fieldWidth);
 		tab.add(timeText);
 
 		stepText = new EditorText(timeText.x, timeText.y + timeText.height + spacing, fieldWidth);
@@ -102,9 +106,11 @@ class SongEditorDetailsPanel extends EditorPanel
 	function updateSongStuff()
 	{
 		var point = state.song.getTimingPointAt(state.inst.time);
+		var sv = state.song.getScrollVelocityAt(state.inst.time);
 
-		var bpm:Float = point != null ? point.bpm : 0;
-		bpmText.text = 'BPM: $bpm';
+		bpmText.text = 'BPM: ${point != null ? point.bpm : 0}';
+
+		scrollVelocityText.text = 'Scroll Velocity: ${sv != null ? sv.multiplier : state.song.initialScrollVelocity}';
 
 		var time = FlxStringUtil.formatTime(state.inst.time / 1000, true);
 		var length = FlxStringUtil.formatTime(state.inst.length / 1000, true);
