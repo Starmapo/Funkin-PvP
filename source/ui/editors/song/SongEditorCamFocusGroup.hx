@@ -15,11 +15,13 @@ class SongEditorCamFocusGroup extends FlxBasic
 	public var camFocuses:Array<SongEditorCamFocus> = [];
 
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 
-	public function new(state:SongEditorState)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
 		this.state = state;
+		this.playfield = playfield;
 		for (info in state.song.cameraFocuses)
 			createCamFocus(info);
 
@@ -53,6 +55,9 @@ class SongEditorCamFocusGroup extends FlxBasic
 
 	public function getHoveredCamFocus()
 	{
+		if (FlxG.mouse.overlaps(state.playfieldTabs))
+			return null;
+
 		for (camFocus in camFocuses)
 		{
 			if (camFocus.isHovered())
@@ -64,7 +69,7 @@ class SongEditorCamFocusGroup extends FlxBasic
 
 	function createCamFocus(info:CameraFocus, insertAtIndex:Bool = false)
 	{
-		var camFocus = new SongEditorCamFocus(state, info);
+		var camFocus = new SongEditorCamFocus(state, playfield, info);
 		camFocuses.push(camFocus);
 		if (insertAtIndex)
 			camFocuses.sort(sortCamFocuses);
@@ -192,14 +197,16 @@ class SongEditorCamFocus extends FlxSpriteGroup
 	public var selectionSprite:FlxSprite;
 
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 
-	public function new(state:SongEditorState, info:CameraFocus)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:CameraFocus)
 	{
 		super();
 		this.state = state;
+		this.playfield = playfield;
 		this.info = info;
 
-		line = new FlxSprite().makeGraphic(state.columnSize - 2, 10);
+		line = new FlxSprite().makeGraphic(playfield.columnSize - 2, 10);
 		add(line);
 
 		selectionSprite = new FlxSprite(0, -10).makeGraphic(Std.int(line.width), Std.int(line.height + 20));
@@ -213,7 +220,7 @@ class SongEditorCamFocus extends FlxSpriteGroup
 
 	public function updatePosition()
 	{
-		x = state.playfieldBG.x + state.columnSize * 8 + 2;
+		x = playfield.bg.x + playfield.columnSize * 2 + 2;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - line.height;
 	}
 

@@ -19,6 +19,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 	public var isHeld:Bool = false;
 
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 	var longNoteInDrag:SongEditorNote;
 	var longNoteResizeOriginalEndTime:Int = -1;
 	var isDraggingLongNoteBackwards:Bool = false;
@@ -31,12 +32,14 @@ class SongEditorPlayfieldButton extends FlxSprite
 	var previousLaneDragOffset:Int;
 	var columnOffset:Int;
 
-	public function new(x:Float = 0, y:Float = 0, state:SongEditorState)
+	public function new(x:Float = 0, y:Float = 0, state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super(x, y);
 		this.state = state;
+		this.playfield = playfield;
 
-		makeGraphic(Std.int(state.playfieldBG.width - state.borderLeft.width * 2), Std.int(state.playfieldBG.height), FlxColor.TRANSPARENT);
+		makeGraphic(Std.int(playfield.bg.width - playfield.borderLeft.width * 2), Std.int(playfield.bg.height - state.playfieldTabs.height),
+			FlxColor.TRANSPARENT);
 		visible = false;
 		scrollFactor.set();
 	}
@@ -54,6 +57,9 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 		if (FlxG.mouse.released)
 			isHeld = false;
+
+		if (isHeld && !state.selector.isSelecting)
+			state.handleMouseSeek();
 
 		handleInput();
 	}
@@ -109,8 +115,8 @@ class SongEditorPlayfieldButton extends FlxSprite
 			return;
 		}
 
-		var note = state.noteGroup.getHoveredNote();
-		var camFocus = state.camFocusGroup.getHoveredCamFocus();
+		var note = playfield.type == NOTES ? playfield.noteGroup.getHoveredNote() : null;
+		var camFocus = playfield.type == OTHER ? playfield.camFocusGroup.getHoveredCamFocus() : null;
 
 		if (note == null && camFocus == null && FlxG.keys.released.CONTROL)
 		{
@@ -139,7 +145,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 		var time = Math.round(state.getTimeFromY(FlxG.mouse.globalY) / state.trackSpeed);
 		time = getNearestTickFromTime(time, state.beatSnap.value);
 
-		var lane = state.getLaneFromX(FlxG.mouse.globalX);
+		var lane = playfield.getLaneFromX(FlxG.mouse.globalX);
 		if (existsObjectAtTimeAndLane(time, lane))
 		{
 			state.notificationManager.showNotification("You can't place there, there's already an object at that time.", ERROR);
@@ -149,24 +155,25 @@ class SongEditorPlayfieldButton extends FlxSprite
 		switch (state.currentTool.value)
 		{
 			case OBJECT:
-				if (lane == 8) // Camera Focuses
+				if (playfield.type == OTHER)
 				{
-					var char:CameraFocusChar = OPPONENT;
-					var curFocus = state.song.getCameraFocusAt(time);
-					if (curFocus != null)
-						char = (curFocus.char == OPPONENT ? BF : OPPONENT);
-					state.actionManager.addCamFocus(time, char);
+					if (lane == 2) // Camera Focus
+					{
+						var char:CameraFocusChar = OPPONENT;
+						var curFocus = state.song.getCameraFocusAt(time);
+						if (curFocus != null)
+							char = (curFocus.char == OPPONENT ? BF : OPPONENT);
+						state.actionManager.addCamFocus(time, char);
+					}
 				}
-				else if (lane == 9) {} // Events
-				else if (lane == 10) {} // Lyrics
 				else
 					state.actionManager.addNote(lane, time);
 			case LONG_NOTE:
-				if (lane < 8)
+				if (playfield.type == NOTES)
 				{
 					var info = state.actionManager.addNote(lane, time);
 					var longNote = null;
-					for (note in state.noteGroup.notes)
+					for (note in playfield.noteGroup.notes)
 					{
 						if (note.info == info)
 						{
@@ -316,26 +323,31 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 	function removeHoveredObject()
 	{
-		var note = state.noteGroup.getHoveredNote();
-		if (note != null)
+		if (playfield.type == NOTES)
 		{
-			if (state.selectedNotes.value.contains(note.info))
-				state.deleteSelectedObjects();
-			else
-				state.actionManager.perform(new ActionRemoveNote(state, note.info));
+			var note = playfield.noteGroup.getHoveredNote();
+			if (note != null)
+			{
+				if (state.selectedNotes.value.contains(note.info))
+					state.deleteSelectedObjects();
+				else
+					state.actionManager.perform(new ActionRemoveNote(state, note.info));
 
-			return;
+				return;
+			}
 		}
-
-		var camFocus = state.camFocusGroup.getHoveredCamFocus();
-		if (camFocus != null)
+		else
 		{
-			if (state.selectedCamFocuses.value.contains(camFocus.info))
-				state.deleteSelectedObjects();
-			else
-				state.actionManager.perform(new ActionRemoveCameraFocus(state, camFocus.info));
+			var camFocus = playfield.camFocusGroup != null ? playfield.camFocusGroup.getHoveredCamFocus() : null;
+			if (camFocus != null)
+			{
+				if (state.selectedCamFocuses.value.contains(camFocus.info))
+					state.deleteSelectedObjects();
+				else
+					state.actionManager.perform(new ActionRemoveCameraFocus(state, camFocus.info));
 
-			return;
+				return;
+			}
 		}
 	}
 
@@ -388,12 +400,10 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if ((state.selectedNotes.value.length == 0 && state.selectedCamFocuses.value.length == 0) || !isHeld)
 			return;
 
-		state.handleMouseSeek();
-
 		if (objectMoveInitialMousePosition == null && noteInDrag == null && camFocusInDrag == null)
 		{
-			var hoveredNote = state.noteGroup.getHoveredNote();
-			var hoveredCamFocus = state.camFocusGroup.getHoveredCamFocus();
+			var hoveredNote = playfield.type == NOTES ? playfield.noteGroup.getHoveredNote() : null;
+			var hoveredCamFocus = playfield.type == OTHER ? playfield.camFocusGroup.getHoveredCamFocus() : null;
 			if (hoveredNote == null && hoveredCamFocus == null)
 				return;
 
@@ -401,7 +411,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 			camFocusInDrag = hoveredCamFocus;
 			objectMoveInitialMousePosition = FlxG.mouse.getGlobalPosition();
 
-			if (noteInDrag != null && noteInDrag.info.isLongNote)
+			if (noteInDrag != null && noteInDrag.info.isLongNote && !FlxG.mouse.overlaps(noteInDrag.head))
 			{
 				var relativeMouseY = state.hitPositionY - Math.round(state.getTimeFromY(FlxG.mouse.globalY));
 				objectMoveGrabOffset = relativeMouseY - noteInDrag.y;
@@ -423,8 +433,8 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 		var time = getNearestTickFromTime(Math.round(state.getTimeFromY(FlxG.mouse.globalY - objectMoveGrabOffset) / state.trackSpeed), state.beatSnap.value);
 		var offset = Math.round(time - timeDragStart);
-		var laneOffset = FlxMath.boundInt(state.getLaneFromX(FlxG.mouse.globalX), 0, 7)
-			- FlxMath.boundInt(state.getLaneFromX(objectMoveInitialMousePosition.x), 0, 7);
+		var laneOffset = FlxMath.boundInt(playfield.getLaneFromX(FlxG.mouse.globalX), 0, 7)
+			- FlxMath.boundInt(playfield.getLaneFromX(objectMoveInitialMousePosition.x), 0, 7);
 
 		if (longNoteInDrag != null || time < 0)
 			return;
@@ -479,19 +489,25 @@ class SongEditorPlayfieldButton extends FlxSprite
 			}
 		}
 
-		for (obj in state.noteGroup.notes)
+		if (playfield.type == NOTES)
 		{
-			if (state.selectedNotes.value.contains(obj.info))
+			for (obj in playfield.noteGroup.notes)
 			{
-				obj.updateAnims();
-				obj.refreshPositionAndSize();
+				if (state.selectedNotes.value.contains(obj.info))
+				{
+					obj.updateAnims();
+					obj.refreshPositionAndSize();
+				}
 			}
 		}
-		for (obj in state.camFocusGroup.camFocuses)
+		else
 		{
-			if (state.selectedCamFocuses.value.contains(obj.info))
+			for (obj in playfield.camFocusGroup.camFocuses)
 			{
-				obj.updatePosition();
+				if (state.selectedCamFocuses.value.contains(obj.info))
+				{
+					obj.updatePosition();
+				}
 			}
 		}
 

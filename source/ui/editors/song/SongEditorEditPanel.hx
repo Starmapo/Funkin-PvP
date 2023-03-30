@@ -301,10 +301,12 @@ class SongEditorEditPanel extends EditorPanel
 		var waveformDropdown = new EditorDropdownMenu(waveformLabel.x + inputSpacing, waveformLabel.y - 4,
 			EditorDropdownMenu.makeStrIdLabelArray(waveformTypes), function(id)
 		{
-			state.waveform.type = id;
-			state.waveform.reloadWaveform();
+			state.playfieldNotes.waveform.type = id;
+			state.playfieldNotes.waveform.reloadWaveform();
+			state.playfieldOther.waveform.type = id;
+			state.playfieldOther.waveform.reloadWaveform();
 		}, this);
-		waveformDropdown.selectedId = state.waveform.type;
+		waveformDropdown.selectedId = state.playfieldNotes.waveform.type;
 		state.dropdowns.push(waveformDropdown);
 
 		var placeOnNearestTickCheckbox = new EditorCheckbox(waveformLabel.x, waveformLabel.y + waveformLabel.height + spacing, 'Place on Nearest Tick', 0);

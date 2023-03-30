@@ -332,9 +332,7 @@ class ActionResnapObjects implements IAction
 			obj.endTime = adjustment.originalEndTime;
 		}
 		for (obj => adjustment in camFocusTimeAdjustments)
-		{
 			obj.startTime = adjustment.originalStartTime;
-		}
 
 		state.actionManager.triggerEvent(type, {
 			snaps: snaps,

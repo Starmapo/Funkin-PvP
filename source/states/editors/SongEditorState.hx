@@ -29,13 +29,11 @@ import ui.editors.song.SongEditorCamFocusGroup;
 import ui.editors.song.SongEditorCompositionPanel;
 import ui.editors.song.SongEditorDetailsPanel;
 import ui.editors.song.SongEditorEditPanel;
-import ui.editors.song.SongEditorLineGroup;
-import ui.editors.song.SongEditorNoteGroup;
+import ui.editors.song.SongEditorPlayfield;
 import ui.editors.song.SongEditorPlayfieldButton;
+import ui.editors.song.SongEditorPlayfieldTabs;
 import ui.editors.song.SongEditorSeekBar;
 import ui.editors.song.SongEditorSelector;
-import ui.editors.song.SongEditorTimeline;
-import ui.editors.song.SongEditorWaveform;
 import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
@@ -45,12 +43,11 @@ import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorState extends FNFState
 {
-	public var columns:Int = 11;
-	public var columnSize:Int = 40;
 	public var hitPositionY:Int = 545;
+	public var playfieldNotes:SongEditorPlayfield;
+	public var playfieldOther:SongEditorPlayfield;
 	public var beatSnap:BindableInt = new BindableInt(4, 1, 48);
 	public var trackSpeed(get, never):Float;
-	public var playfieldBG:FlxSprite;
 	public var trackPositionY(get, never):Float;
 	public var song:Song;
 	public var inst:FlxSound;
@@ -58,13 +55,9 @@ class SongEditorState extends FNFState
 	public var availableBeatSnaps:Array<Int> = [1, 2, 3, 4, 6, 8, 12, 16];
 	public var songSeeked:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 	public var rateChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
-	public var borderLeft:FlxSprite;
-	public var borderRight:FlxSprite;
 	public var currentTool:Bindable<CompositionTool> = new Bindable(SELECT);
 	public var notificationManager:NotificationManager;
 	public var tooltip:Tooltip;
-	public var waveform:SongEditorWaveform;
-	public var noteGroup:SongEditorNoteGroup;
 	public var selectedNotes:BindableArray<NoteInfo> = new BindableArray([]);
 	public var selectedCamFocuses:BindableArray<CameraFocus> = new BindableArray([]);
 	public var seekBar:SongEditorSeekBar;
@@ -76,20 +69,16 @@ class SongEditorState extends FNFState
 	public var actionManager:SongEditorActionManager;
 	public var copiedNotes:Array<NoteInfo> = [];
 	public var copiedCamFocuses:Array<CameraFocus> = [];
-	public var camFocusGroup:SongEditorCamFocusGroup;
+	public var playfield(get, never):SongEditorPlayfield;
+	public var playfieldTabs:SongEditorPlayfieldTabs;
+	public var selector:SongEditorSelector;
 
-	var dividerLines:FlxTypedGroup<FlxSprite>;
-	var hitPositionLine:FlxSprite;
-	var timeline:SongEditorTimeline;
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
-	var lineGroup:SongEditorLineGroup;
 	var hitsoundNoteIndex:Int = 0;
 	var camHUD:FlxCamera;
-	var selector:SongEditorSelector;
 	var savePrompt:SongEditorSavePrompt;
 	var camFocusDisplay:SongEditorCamFocusDisplay;
-	var playfieldButton:SongEditorPlayfieldButton;
 
 	override function create()
 	{
@@ -110,43 +99,13 @@ class SongEditorState extends FNFState
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
 
-		playfieldBG = new FlxSprite().makeGraphic(columnSize * columns, FlxG.height, FlxColor.fromRGB(24, 24, 24));
-		playfieldBG.screenCenter(X);
-		playfieldBG.scrollFactor.set();
+		playfieldTabs = new SongEditorPlayfieldTabs(this);
+		playfieldTabs.screenCenter(X);
 
-		borderLeft = new FlxSprite(playfieldBG.x).makeGraphic(2, Std.int(playfieldBG.height), 0xFF808080);
-		borderLeft.scrollFactor.set();
+		playfieldNotes = new SongEditorPlayfield(this, NOTES, 8);
 
-		borderRight = new FlxSprite(playfieldBG.x + playfieldBG.width).makeGraphic(2, Std.int(playfieldBG.height), 0xFF808080);
-		borderRight.x -= borderRight.width;
-		borderRight.scrollFactor.set();
-
-		dividerLines = new FlxTypedGroup();
-		for (i in 1...columns)
-		{
-			var thickDivider = i == 4 || i == 8;
-			var dividerLine = new FlxSprite(playfieldBG.x + (columnSize * i)).makeGraphic(2, Std.int(playfieldBG.height), FlxColor.WHITE);
-			dividerLine.alpha = thickDivider ? 0.7 : 0.35;
-			dividerLine.scrollFactor.set();
-			dividerLines.add(dividerLine);
-		}
-
-		hitPositionLine = new FlxSprite(0, hitPositionY).makeGraphic(Std.int(playfieldBG.width - borderLeft.width * 2), 6, FlxColor.fromRGB(9, 165, 200));
-		hitPositionLine.screenCenter(X);
-		hitPositionLine.scrollFactor.set();
-
-		timeline = new SongEditorTimeline(this);
-
-		waveform = new SongEditorWaveform(this);
-
-		lineGroup = new SongEditorLineGroup(this);
-
-		noteGroup = new SongEditorNoteGroup(this);
-
-		camFocusGroup = new SongEditorCamFocusGroup(this);
-
-		playfieldButton = new SongEditorPlayfieldButton(0, 0, this);
-		playfieldButton.screenCenter(X);
+		playfieldOther = new SongEditorPlayfield(this, OTHER, 5);
+		playfieldOther.exists = false;
 
 		seekBar = new SongEditorSeekBar(this);
 
@@ -158,7 +117,7 @@ class SongEditorState extends FNFState
 		tooltip = new Tooltip();
 		tooltip.cameras = [camHUD];
 
-		zoomInButton = new FlxUIButton(playfieldBG.x + playfieldBG.width + 10, 10, '+', function()
+		zoomInButton = new FlxUIButton(playfieldNotes.bg.x + playfieldNotes.bg.width + 10, 10, '+', function()
 		{
 			Settings.editorScrollSpeed.value += 0.05;
 			editPanel.updateSpeedStepper();
@@ -193,17 +152,9 @@ class SongEditorState extends FNFState
 		notificationManager = new NotificationManager();
 
 		add(bg);
-		add(playfieldBG);
-		add(borderLeft);
-		add(borderRight);
-		add(dividerLines);
-		add(hitPositionLine);
-		add(timeline);
-		add(waveform);
-		add(lineGroup);
-		add(noteGroup);
-		add(camFocusGroup);
-		add(playfieldButton);
+		add(playfieldNotes);
+		add(playfieldOther);
+		add(playfieldTabs);
 		add(seekBar);
 		add(selector);
 		add(camFocusDisplay);
@@ -229,6 +180,7 @@ class SongEditorState extends FNFState
 	{
 		handleInput();
 
+		playfieldTabs.update(elapsed);
 		selector.update(elapsed);
 		seekBar.update(elapsed);
 		camFocusDisplay.update(elapsed);
@@ -237,7 +189,10 @@ class SongEditorState extends FNFState
 		compositionPanel.update(elapsed);
 		editPanel.update(elapsed);
 		detailsPanel.update(elapsed);
-		playfieldButton.update(elapsed);
+		if (playfieldNotes.exists)
+			playfieldNotes.update(elapsed);
+		if (playfieldOther.exists)
+			playfieldOther.update(elapsed);
 		notificationManager.update(elapsed);
 		tooltip.update(elapsed);
 
@@ -315,26 +270,9 @@ class SongEditorState extends FNFState
 			notificationManager.showNotification('Song succesfully saved!', SUCCESS);
 	}
 
-	public function getLaneFromX(x:Float)
-	{
-		var percentage = (x - playfieldBG.x) / playfieldBG.width;
-		return FlxMath.boundInt(Std.int(columns * percentage), 0, columns);
-	}
-
 	public function getTimeFromY(y:Float)
 	{
 		return trackPositionY + (hitPositionY - y);
-	}
-
-	public function isHoveringObject()
-	{
-		if (noteGroup.getHoveredNote() != null)
-			return true;
-
-		if (camFocusGroup.getHoveredCamFocus() != null)
-			return true;
-
-		return false;
 	}
 
 	public function clearSelection()
@@ -741,8 +679,12 @@ class SongEditorState extends FNFState
 	function selectAllObjects()
 	{
 		clearSelection();
-		selectedNotes.pushMultiple(song.notes);
-		selectedCamFocuses.pushMultiple(song.cameraFocuses);
+		if (playfield.type == NOTES)
+			selectedNotes.pushMultiple(song.notes);
+		else
+		{
+			selectedCamFocuses.pushMultiple(song.cameraFocuses);
+		}
 	}
 
 	function flipSelectedNotes(fullFlip:Bool)
@@ -839,6 +781,11 @@ class SongEditorState extends FNFState
 	function get_beatSnapIndex()
 	{
 		return availableBeatSnaps.indexOf(beatSnap.value);
+	}
+
+	function get_playfield()
+	{
+		return playfieldOther.exists ? playfieldOther : playfieldNotes;
 	}
 }
 

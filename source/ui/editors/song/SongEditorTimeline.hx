@@ -16,12 +16,14 @@ class SongEditorTimeline extends FlxBasic
 	public var lines:Array<SongEditorTimelineTick>;
 
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 	var cachedLines:Map<Int, Array<SongEditorTimelineTick>> = new Map();
 
-	public function new(state:SongEditorState)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
 		this.state = state;
+		this.playfield = playfield;
 
 		initializeLines();
 
@@ -99,7 +101,7 @@ class SongEditorTimeline extends FlxBasic
 				var time = startTime + point.beatLength / state.beatSnap.value * i;
 				var measureBeat = (i / state.beatSnap.value) % point.meter == 0 && i % state.beatSnap.value == 0;
 
-				var line = new SongEditorTimelineTick(state, point, time, i, measureCount, measureBeat);
+				var line = new SongEditorTimelineTick(state, playfield, point, time, i, measureCount, measureBeat);
 				newLines.push(line);
 
 				if (measureBeat && time >= point.startTime)
@@ -174,6 +176,7 @@ class SongEditorTimeline extends FlxBasic
 class SongEditorTimelineTick extends FlxSpriteGroup
 {
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 	var timingPoint:TimingPoint;
 	var time:Float;
 	var index:Int;
@@ -183,10 +186,12 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 	var measureText:FlxText;
 	var extendedHeight:Bool;
 
-	public function new(state:SongEditorState, timingPoint:TimingPoint, time:Float, index:Int, measureCount:Int, isMeasureLine:Bool)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield, timingPoint:TimingPoint, time:Float, index:Int, measureCount:Int,
+			isMeasureLine:Bool)
 	{
 		super();
 		this.state = state;
+		this.playfield = playfield;
 		this.timingPoint = timingPoint;
 		this.time = time;
 		this.index = index;
@@ -195,7 +200,7 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 
 		extendedHeight = isMeasureLine && time >= timingPoint.startTime;
 
-		line = new FlxSprite().makeGraphic(Std.int(state.playfieldBG.width - 4), extendedHeight ? 5 : 2);
+		line = new FlxSprite().makeGraphic(Std.int(playfield.bg.width - 4), extendedHeight ? 5 : 2);
 		updateColor();
 		add(line);
 
@@ -213,7 +218,7 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 
 	public function updatePosition()
 	{
-		x = state.playfieldBG.x + 2;
+		x = playfield.bg.x + 2;
 		y = state.hitPositionY - time * state.trackSpeed - line.height;
 	}
 
@@ -224,8 +229,8 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 
 	public function lineOnScreen()
 	{
-		return time * state.trackSpeed >= state.trackPositionY - state.playfieldBG.height
-			&& time * state.trackSpeed <= state.trackPositionY + state.playfieldBG.height;
+		return time * state.trackSpeed >= state.trackPositionY - playfield.bg.height
+			&& time * state.trackSpeed <= state.trackPositionY + playfield.bg.height;
 	}
 
 	function getLineColor(val:Int, i:Int)

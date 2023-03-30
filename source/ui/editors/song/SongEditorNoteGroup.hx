@@ -16,11 +16,13 @@ class SongEditorNoteGroup extends FlxBasic
 	public var notes:Array<SongEditorNote> = [];
 
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 
-	public function new(state:SongEditorState)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
 		this.state = state;
+		this.playfield = playfield;
 
 		for (note in state.song.notes)
 			createNote(note);
@@ -58,6 +60,9 @@ class SongEditorNoteGroup extends FlxBasic
 
 	public function getHoveredNote()
 	{
+		if (FlxG.mouse.overlaps(state.playfieldTabs))
+			return null;
+
 		for (note in notes)
 		{
 			if (note.isHovered())
@@ -69,7 +74,7 @@ class SongEditorNoteGroup extends FlxBasic
 
 	function createNote(info:NoteInfo, insertAtIndex:Bool = false)
 	{
-		var note = new SongEditorNote(state, info);
+		var note = new SongEditorNote(state, playfield, info);
 		notes.push(note);
 		if (insertAtIndex)
 			notes.sort(sortNotes);
@@ -252,11 +257,13 @@ class SongEditorNote extends FlxSpriteGroup
 	public var selectionSprite:FlxSprite;
 
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 
-	public function new(state:SongEditorState, info:NoteInfo)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:NoteInfo)
 	{
 		super();
 		this.state = state;
+		this.playfield = playfield;
 		this.info = info;
 
 		var noteGraphic = Paths.getSpritesheet('notes/NOTE_assets');
@@ -364,13 +371,13 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updatePosition()
 	{
-		x = state.playfieldBG.x + state.columnSize * info.lane + 2;
+		x = playfield.bg.x + playfield.columnSize * info.lane + 2;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - head.height;
 	}
 
 	public function updateSize()
 	{
-		head.setGraphicSize(state.columnSize - 2);
+		head.setGraphicSize(playfield.columnSize - 2);
 		head.updateHitbox();
 	}
 

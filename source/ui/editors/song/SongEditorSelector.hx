@@ -11,8 +11,9 @@ import states.editors.SongEditorState;
 
 class SongEditorSelector extends FlxUI9SliceSprite
 {
+	public var isSelecting:Bool = false;
+
 	var state:SongEditorState;
-	var isSelecting:Bool = false;
 	var startingPoint:FlxPoint;
 	var timeDragStart:Float;
 
@@ -51,7 +52,9 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		if (isSelecting || !FlxG.mouse.justPressed)
 			return;
 
-		if (state.isHoveringObject())
+		var playfield = state.playfield;
+
+		if (playfield.isHoveringObject())
 			return;
 
 		if (FlxG.mouse.overlaps(state.seekBar.bg)
@@ -59,11 +62,12 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			|| FlxG.mouse.overlaps(state.zoomOutButton)
 			|| FlxG.mouse.overlaps(state.detailsPanel)
 			|| FlxG.mouse.overlaps(state.compositionPanel)
-			|| FlxG.mouse.overlaps(state.editPanel))
+			|| FlxG.mouse.overlaps(state.editPanel)
+			|| FlxG.mouse.overlaps(state.playfieldTabs))
 			return;
 
 		var mousePos = FlxG.mouse.getGlobalPosition();
-		var clickArea = new FlxRect(state.playfieldBG.x - 200, state.playfieldBG.y, state.playfieldBG.width + 400, state.playfieldBG.height);
+		var clickArea = new FlxRect(playfield.bg.x - 200, playfield.bg.y, playfield.bg.width + 400, playfield.bg.height);
 		if (!clickArea.containsPoint(mousePos))
 			return;
 
@@ -95,13 +99,14 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		if (startingPoint == null)
 			return;
 
+		var playfield = state.playfield;
 		var mousePos = FlxG.mouse.getGlobalPosition();
 		var difference = startingPoint - mousePos;
 		if (isSelecting && !difference.isZero())
 		{
 			var timeDragEnd = state.getTimeFromY(mousePos.y) / state.trackSpeed;
-			var startLane = state.getLaneFromX(startingPoint.x);
-			var endLane = state.getLaneFromX(mousePos.x);
+			var startLane = playfield.getLaneFromX(startingPoint.x);
+			var endLane = playfield.getLaneFromX(mousePos.x);
 
 			selectObjects(timeDragEnd, startLane, endLane);
 		}
@@ -121,33 +126,41 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		var realStartLane = Math.min(startLane, endLane);
 		var realEndLane = Math.max(startLane, endLane);
 
-		var foundNotes:Array<NoteInfo> = [];
-		var foundCamFocuses:Array<CameraFocus> = [];
+		if (state.playfield.type == NOTES)
+		{
+			var foundNotes:Array<NoteInfo> = [];
 
-		for (obj in state.song.notes)
-		{
-			var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
-			var laneInbetween = CoolUtil.inBetween(obj.lane, realStartLane, realEndLane);
-			if (yInbetween && laneInbetween)
-				foundNotes.push(obj);
-		}
-		for (obj in state.song.cameraFocuses)
-		{
-			var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
-			var laneInbetween = CoolUtil.inBetween(8, realStartLane, realEndLane);
-			if (yInbetween && laneInbetween)
-				foundCamFocuses.push(obj);
-		}
+			for (obj in state.song.notes)
+			{
+				var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
+				var laneInbetween = CoolUtil.inBetween(obj.lane, realStartLane, realEndLane);
+				if (yInbetween && laneInbetween)
+					foundNotes.push(obj);
+			}
 
-		for (obj in foundNotes)
-		{
-			if (!state.selectedNotes.value.contains(obj))
-				state.selectedNotes.push(obj);
+			for (obj in foundNotes)
+			{
+				if (!state.selectedNotes.value.contains(obj))
+					state.selectedNotes.push(obj);
+			}
 		}
-		for (obj in foundCamFocuses)
+		else
 		{
-			if (!state.selectedCamFocuses.value.contains(obj))
-				state.selectedCamFocuses.push(obj);
+			var foundCamFocuses:Array<CameraFocus> = [];
+
+			for (obj in state.song.cameraFocuses)
+			{
+				var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
+				var laneInbetween = CoolUtil.inBetween(2, realStartLane, realEndLane);
+				if (yInbetween && laneInbetween)
+					foundCamFocuses.push(obj);
+			}
+
+			for (obj in foundCamFocuses)
+			{
+				if (!state.selectedCamFocuses.value.contains(obj))
+					state.selectedCamFocuses.push(obj);
+			}
 		}
 	}
 }

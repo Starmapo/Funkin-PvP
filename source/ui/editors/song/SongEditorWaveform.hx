@@ -17,6 +17,7 @@ class SongEditorWaveform extends FlxBasic
 	public var type:WaveformType = VOCALS;
 
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 	var slices:Array<SongEditorWaveformSlice> = [];
 	var cachedSlices:Map<WaveformType, Array<SongEditorWaveformSlice>> = new Map();
 	var sliceSize:Int;
@@ -25,11 +26,12 @@ class SongEditorWaveform extends FlxBasic
 	var buffer:AudioBuffer;
 	var bytes:Bytes;
 
-	public function new(state:SongEditorState)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
 		this.state = state;
-		sliceSize = Std.int(state.playfieldBG.height);
+		this.playfield = playfield;
+		sliceSize = Std.int(playfield.bg.height);
 		cachedSlices.set(NONE, []);
 
 		reloadWaveform();
@@ -93,7 +95,7 @@ class SongEditorWaveform extends FlxBasic
 		{
 			var endTime = Math.min(t + sliceSize, sound.length);
 			var data = getWaveformData(buffer, bytes, t, endTime, sliceSize);
-			var slice = new SongEditorWaveformSlice(state, data, sliceSize, t);
+			var slice = new SongEditorWaveformSlice(state, playfield, data, sliceSize, t);
 			slices.push(slice);
 			t += sliceSize;
 		}
@@ -262,13 +264,15 @@ class SongEditorWaveform extends FlxBasic
 class SongEditorWaveformSlice extends FlxSprite
 {
 	var state:SongEditorState;
+	var playfield:SongEditorPlayfield;
 	var sliceSize:Int;
 	var sliceTime:Float;
 
-	public function new(state:SongEditorState, waveformData:Array<Array<Array<Float>>>, sliceSize:Int, sliceTime:Float)
+	public function new(state:SongEditorState, playfield:SongEditorPlayfield, waveformData:Array<Array<Array<Float>>>, sliceSize:Int, sliceTime:Float)
 	{
 		super();
 		this.state = state;
+		this.playfield = playfield;
 		this.sliceSize = sliceSize;
 		this.sliceTime = sliceTime;
 
@@ -287,19 +291,19 @@ class SongEditorWaveformSlice extends FlxSprite
 	{
 		scale.y = state.trackSpeed;
 		updateHitbox();
-		x = state.playfieldBG.x;
+		x = playfield.bg.x;
 		y = state.hitPositionY - sliceTime * state.trackSpeed - height;
 	}
 
 	public function sliceOnScreen()
 	{
-		return sliceTime * state.trackSpeed >= state.trackPositionY - state.playfieldBG.height
-			&& sliceTime * state.trackSpeed <= state.trackPositionY + state.playfieldBG.height;
+		return sliceTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
+			&& sliceTime * state.trackSpeed <= state.trackPositionY + playfield.bg.height;
 	}
 
 	function createSlice(data:Array<Array<Array<Float>>>)
 	{
-		makeGraphic(Std.int(state.playfieldBG.width), sliceSize, FlxColor.TRANSPARENT, true, 'waveform');
+		makeGraphic(Std.int(playfield.bg.width), sliceSize, FlxColor.TRANSPARENT, true, 'waveform');
 
 		var gSize:Int = Std.int(width);
 		var hSize:Int = Std.int(gSize / 2);

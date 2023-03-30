@@ -27,7 +27,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 
 	public function new(state:SongEditorState)
 	{
-		super(state.playfieldBG.x, 0);
+		super(state.playfieldNotes.bg.x, 0);
 		this.state = state;
 
 		bg = new FlxSprite().makeGraphic(rectWidth, rectHeight, 0xFF181818);
