@@ -286,6 +286,7 @@ class SongEditorEditPanel extends EditorPanel
 		state.dropdowns.push(beatSnapDropdown);
 
 		var liveMappingCheckbox = new EditorCheckbox(beatSnapLabel.x, beatSnapLabel.y + beatSnapLabel.height + spacing, 'Live Mapping', 200);
+		liveMappingCheckbox.button.setAllLabelOffsets(0, -2);
 		liveMappingCheckbox.checked = Settings.editorLiveMapping.value;
 		liveMappingCheckbox.callback = function()
 		{
@@ -305,6 +306,15 @@ class SongEditorEditPanel extends EditorPanel
 		}, this);
 		waveformDropdown.selectedId = state.waveform.type;
 		state.dropdowns.push(waveformDropdown);
+
+		var placeOnNearestTickCheckbox = new EditorCheckbox(waveformLabel.x, waveformLabel.y + waveformLabel.height + spacing, 'Place on Nearest Tick', 0);
+		placeOnNearestTickCheckbox.button.setAllLabelOffsets(0, 4);
+		placeOnNearestTickCheckbox.checked = Settings.editorPlaceOnNearestTick.value;
+		placeOnNearestTickCheckbox.callback = function()
+		{
+			Settings.editorPlaceOnNearestTick.value = placeOnNearestTickCheckbox.checked;
+		};
+		tab.add(placeOnNearestTickCheckbox);
 
 		tab.add(waveformDropdown);
 		tab.add(beatSnapDropdown);

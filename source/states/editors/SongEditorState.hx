@@ -343,6 +343,41 @@ class SongEditorState extends FNFState
 		selectedCamFocuses.clear();
 	}
 
+	public function handleMouseSeek()
+	{
+		var seekTime:Float = 0;
+		var startScrollY = (FlxG.height - 30);
+		if (FlxG.mouse.globalY >= startScrollY && !inst.playing)
+		{
+			if (FlxG.mouse.globalY - startScrollY <= 10)
+				seekTime = inst.time - 2;
+			else if (FlxG.mouse.globalY - startScrollY <= 20)
+				seekTime = inst.time - 6;
+			else
+				seekTime = inst.time - 50;
+
+			if (seekTime < 0 || seekTime > inst.length)
+				return;
+
+			setSongTime(seekTime);
+		}
+
+		if (FlxG.mouse.globalY > 30 || inst.playing)
+			return;
+
+		if (30 - FlxG.mouse.globalY <= 10)
+			seekTime = inst.time + 2;
+		else if (30 - FlxG.mouse.globalY <= 20)
+			seekTime = inst.time + 6;
+		else
+			seekTime = inst.time + 50;
+
+		if (seekTime < 0 || seekTime > inst.length)
+			return;
+
+		setSongTime(seekTime);
+	}
+
 	function handleInput()
 	{
 		if (!checkAllowInput())
@@ -692,7 +727,7 @@ class SongEditorState extends FNFState
 		deleteSelectedObjects();
 	}
 
-	function deleteSelectedObjects()
+	public function deleteSelectedObjects()
 	{
 		if (selectedNotes.value.length == 0 && selectedCamFocuses.value.length == 0)
 			return;

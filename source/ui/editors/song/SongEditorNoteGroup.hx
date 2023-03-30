@@ -154,6 +154,28 @@ class SongEditorNoteGroup extends FlxBasic
 					}
 					i--;
 				}
+			case SongEditorActionManager.RESIZE_LONG_NOTE:
+				for (note in notes)
+				{
+					if (note.info == params.note)
+					{
+						note.refreshPositionAndSize();
+						break;
+					}
+				}
+			case SongEditorActionManager.MOVE_OBJECTS:
+				if (params.notes != null)
+				{
+					var batch:Array<NoteInfo> = params.notes;
+					for (note in notes)
+					{
+						if (batch.contains(note.info))
+						{
+							note.updateAnims();
+							note.refreshPositionAndSize();
+						}
+					}
+				}
 			case SongEditorActionManager.RESNAP_OBJECTS:
 				if (params.notes != null)
 				{
@@ -336,10 +358,6 @@ class SongEditorNote extends FlxSpriteGroup
 	{
 		var anim = Std.string(info.playerLane);
 		head.playAnim(anim);
-
-		if (!info.isLongNote)
-			return;
-
 		body.playAnim(anim);
 		tail.playAnim(anim);
 	}

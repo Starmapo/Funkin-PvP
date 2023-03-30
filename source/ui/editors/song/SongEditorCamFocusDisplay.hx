@@ -16,6 +16,7 @@ class SongEditorCamFocusDisplay extends AnimatedSprite
 			animation.add(Std.string(i), [i], 0, false);
 		updateDisplay();
 		scrollFactor.set();
+		antialiasing = true;
 	}
 
 	override function update(elapsed:Float)

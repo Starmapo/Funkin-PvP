@@ -87,37 +87,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		resize(Math.abs(FlxG.mouse.globalX - startingPoint.x), Math.abs(FlxG.mouse.globalY - startingPoint.y));
 		setPosition(Math.min(startingPoint.x, FlxG.mouse.globalX), Math.min(startingPoint.y, FlxG.mouse.globalY));
 
-		var seekTime:Float = 0;
-		var startScrollY = (FlxG.height - 30);
-		if (FlxG.mouse.globalY >= startScrollY && !state.inst.playing)
-		{
-			if (FlxG.mouse.globalY - startScrollY <= 10)
-				seekTime = state.inst.time - 2;
-			else if (FlxG.mouse.globalY - startScrollY <= 20)
-				seekTime = state.inst.time - 6;
-			else
-				seekTime = state.inst.time - 50;
-
-			if (seekTime < 0 || seekTime > state.inst.length)
-				return;
-
-			state.setSongTime(seekTime);
-		}
-
-		if (FlxG.mouse.globalY > 30 || state.inst.playing)
-			return;
-
-		if (30 - FlxG.mouse.globalY <= 10)
-			seekTime = state.inst.time + 2;
-		else if (30 - FlxG.mouse.globalY <= 20)
-			seekTime = state.inst.time + 6;
-		else
-			seekTime = state.inst.time + 50;
-
-		if (seekTime < 0 || seekTime > state.inst.length)
-			return;
-
-		state.setSongTime(seekTime);
+		state.handleMouseSeek();
 	}
 
 	function handleButtonReleased()

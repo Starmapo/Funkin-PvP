@@ -171,9 +171,9 @@ class SongEditorSeekBar extends FlxSpriteGroup
 		switch (type)
 		{
 			case SongEditorActionManager.ADD_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.ADD_NOTE_BATCH,
-				SongEditorActionManager.REMOVE_NOTE_BATCH, SongEditorActionManager.FLIP_NOTES:
+				SongEditorActionManager.REMOVE_NOTE_BATCH, SongEditorActionManager.RESIZE_LONG_NOTE, SongEditorActionManager.FLIP_NOTES:
 				createBars();
-			case SongEditorActionManager.RESNAP_OBJECTS:
+			case SongEditorActionManager.MOVE_OBJECTS, SongEditorActionManager.RESNAP_OBJECTS:
 				if (params.notes != null && params.notes.length > 0)
 					createBars();
 		}

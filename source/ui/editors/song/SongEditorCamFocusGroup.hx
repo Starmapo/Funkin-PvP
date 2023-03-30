@@ -12,7 +12,8 @@ import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorCamFocusGroup extends FlxBasic
 {
-	var camFocuses:Array<SongEditorCamFocus> = [];
+	public var camFocuses:Array<SongEditorCamFocus> = [];
+
 	var state:SongEditorState;
 
 	public function new(state:SongEditorState)
@@ -125,7 +126,7 @@ class SongEditorCamFocusGroup extends FlxBasic
 					}
 					i--;
 				}
-			case SongEditorActionManager.RESNAP_OBJECTS:
+			case SongEditorActionManager.MOVE_OBJECTS, SongEditorActionManager.RESNAP_OBJECTS:
 				if (params.camFocuses != null)
 				{
 					var batch:Array<CameraFocus> = params.camFocuses;

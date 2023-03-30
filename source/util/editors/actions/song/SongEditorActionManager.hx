@@ -141,6 +141,7 @@ class ActionAddNoteBatch implements IAction
 	{
 		for (note in notes)
 			state.song.notes.push(note);
+
 		state.song.sort();
 		state.actionManager.triggerEvent(type, {notes: notes});
 	}
@@ -331,7 +332,9 @@ class ActionResnapObjects implements IAction
 			obj.endTime = adjustment.originalEndTime;
 		}
 		for (obj => adjustment in camFocusTimeAdjustments)
+		{
 			obj.startTime = adjustment.originalStartTime;
+		}
 
 		state.actionManager.triggerEvent(type, {
 			snaps: snaps,
@@ -569,8 +572,8 @@ class ActionAddCameraFocusBatch implements IAction
 
 	public function perform()
 	{
-		for (cameraFocus in camFocuses)
-			state.song.cameraFocuses.push(cameraFocus);
+		for (camFocus in camFocuses)
+			state.song.cameraFocuses.push(camFocus);
 		state.song.sort();
 		state.actionManager.triggerEvent(type, {camFocuses: camFocuses});
 	}
