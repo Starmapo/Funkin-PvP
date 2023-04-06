@@ -40,9 +40,11 @@ class SongEditorPlayfield extends FlxGroup
 		createDividerLines();
 		createHitPositionLine();
 		createTimeline();
-		createWaveform();
 		if (type == NOTES)
+		{
+			createWaveform();
 			createNoteGroup();
+		}
 		else
 			createCamFocusGroup();
 		createPlayfieldButton();

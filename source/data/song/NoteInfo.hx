@@ -47,6 +47,11 @@ class NoteInfo extends JsonObject implements ITimingObject
 	**/
 	public var playerLane(get, never):Int;
 
+	/**
+		Gets the player who must hit this note.
+	**/
+	public var player(get, never):Int;
+
 	public function new(data:Dynamic)
 	{
 		startTime = readInt(data.startTime, 0, 0);
@@ -101,5 +106,10 @@ class NoteInfo extends JsonObject implements ITimingObject
 	function get_playerLane()
 	{
 		return lane % 4;
+	}
+
+	function get_player()
+	{
+		return Math.floor(lane / 4);
 	}
 }

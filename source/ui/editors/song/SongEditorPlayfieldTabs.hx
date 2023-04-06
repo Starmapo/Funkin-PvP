@@ -38,12 +38,12 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 			fb.name = name;
 
 			var graphic_names:Array<FlxGraphicAsset> = [
-				FlxUIAssets.IMG_TAB_BACK,
-				FlxUIAssets.IMG_TAB_BACK,
-				FlxUIAssets.IMG_TAB_BACK,
-				FlxUIAssets.IMG_TAB,
-				FlxUIAssets.IMG_TAB,
-				FlxUIAssets.IMG_TAB
+				Paths.getImage('editors/tab_back'),
+				Paths.getImage('editors/tab_back'),
+				Paths.getImage('editors/tab_back'),
+				Paths.getImage('editors/tab'),
+				Paths.getImage('editors/tab'),
+				Paths.getImage('editors/tab')
 			];
 			var slice9tab:Array<Int> = FlxStringUtil.toIntArray(FlxUIAssets.SLICE9_TAB);
 			var slice9_names:Array<Array<Int>> = [slice9tab, slice9tab, slice9tab, slice9tab, slice9tab, slice9tab];

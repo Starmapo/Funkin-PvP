@@ -204,7 +204,10 @@ class SongEditorState extends FNFState
 				var note = song.notes[i];
 				if (inst.time >= note.startTime)
 				{
-					if (Settings.editorHitsoundVolume.value > 0 && !playedHitsound)
+					if (Settings.editorHitsoundVolume.value > 0
+						&& !playedHitsound
+						&& ((note.player == 0 && Settings.editorOpponentHitsounds.value)
+							|| (note.player == 1 && Settings.editorBFHitsounds.value)))
 					{
 						FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
 						playedHitsound = true;

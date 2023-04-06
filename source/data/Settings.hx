@@ -37,6 +37,8 @@ class Settings
 	public static var editorScaleSpeedWithRate:Bindable<Bool>;
 	public static var editorLongNoteAlpha:BindableFloat;
 	public static var editorHitsoundVolume:BindableFloat;
+	public static var editorOpponentHitsounds:Bindable<Bool>;
+	public static var editorBFHitsounds:Bindable<Bool>;
 	public static var editorLiveMapping:Bindable<Bool>;
 	public static var editorPlaceOnNearestTick:Bindable<Bool>;
 
@@ -66,6 +68,8 @@ class Settings
 		loadBindable('editorScaleSpeedWithRate', true);
 		loadBindableFloat('editorLongNoteAlpha', 1, 0.3, 1);
 		loadBindableFloat('editorHitsoundVolume', 1, 0, 1);
+		loadBindable('editorOpponentHitsounds', true);
+		loadBindable('editorBFHitsounds', true);
 		loadBindable('editorLiveMapping', true);
 		loadBindable('editorPlaceOnNearestTick', true);
 
@@ -109,6 +113,8 @@ class Settings
 		saveBindable('editorScaleSpeedWithRate');
 		saveBindable('editorLongNoteAlpha');
 		saveBindable('editorHitsoundVolume');
+		saveBindable('editorOpponentHitsounds');
+		saveBindable('editorBFHitsounds');
 		saveBindable('editorLiveMapping');
 		saveBindable('editorPlaceOnNearestTick');
 

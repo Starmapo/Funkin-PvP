@@ -11,6 +11,7 @@ import haxe.io.Bytes;
 import lime.media.AudioBuffer;
 import openfl.geom.Rectangle;
 import states.editors.SongEditorState;
+import sys.thread.Thread;
 
 class SongEditorWaveform extends FlxBasic
 {
@@ -46,13 +47,17 @@ class SongEditorWaveform extends FlxBasic
 		if (slices.length == 0)
 			return;
 
-		var index = Std.int(state.inst.time / state.inst.length * slices.length);
-		var amount = FlxMath.maxInt(6, Std.int(2.5 / state.trackSpeed + 0.5));
-		for (i in 0...amount)
+		var drewSlice = false;
+		for (i in 0...slices.length)
 		{
-			var sliceIndex = Std.int(index + (i - amount / 2));
-			if (CoolUtil.inBetween(sliceIndex, 0, slices.length - 1) && slices[sliceIndex].isOnScreen())
-				slices[sliceIndex].draw();
+			var slice = slices[i];
+			if (slice.isOnScreen())
+			{
+				slice.draw();
+				drewSlice = true;
+			}
+			else if (drewSlice)
+				return;
 		}
 	}
 
@@ -81,7 +86,10 @@ class SongEditorWaveform extends FlxBasic
 
 		slices = [];
 		if (type == NONE)
+		{
+			cachedSlices.set(type, slices);
 			return;
+		}
 
 		sound = type == INST ? state.inst : state.vocals;
 		@:privateAccess {

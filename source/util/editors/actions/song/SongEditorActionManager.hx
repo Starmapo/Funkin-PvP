@@ -226,6 +226,7 @@ class ActionMoveObjects implements IAction
 			for (obj in objects)
 			{
 				obj.startTime += dragOffset;
+				trace(obj.startTime);
 				if (Std.isOfType(obj, NoteInfo))
 				{
 					var obj:NoteInfo = cast obj;

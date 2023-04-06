@@ -28,6 +28,7 @@ class SongEditorEditPanel extends EditorPanel
 	var speedStepper:EditorNumericStepper;
 	var rateStepper:EditorNumericStepper;
 	var beatSnapDropdown:EditorDropdownMenu;
+	var waveformDropdown:EditorDropdownMenu;
 
 	public function new(state:SongEditorState)
 	{
@@ -270,6 +271,24 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(hitsoundStepper);
 
+		var opponentHitsoundsCheckbox = new EditorCheckbox(hitsoundStepper.x + hitsoundStepper.width + spacing, hitsoundStepper.y - 10, 'Opponent Hitsounds');
+		// opponentHitsoundsCheckbox.button.setAllLabelOffsets(0, -2);
+		opponentHitsoundsCheckbox.checked = Settings.editorOpponentHitsounds.value;
+		opponentHitsoundsCheckbox.callback = function()
+		{
+			Settings.editorOpponentHitsounds.value = opponentHitsoundsCheckbox.checked;
+		};
+		tab.add(opponentHitsoundsCheckbox);
+
+		var bfHitsoundsCheckbox = new EditorCheckbox(opponentHitsoundsCheckbox.x + 80 + spacing, opponentHitsoundsCheckbox.y, 'BF Hitsounds');
+		bfHitsoundsCheckbox.button.setAllLabelOffsets(0, -2);
+		bfHitsoundsCheckbox.checked = Settings.editorBFHitsounds.value;
+		bfHitsoundsCheckbox.callback = function()
+		{
+			Settings.editorBFHitsounds.value = bfHitsoundsCheckbox.checked;
+		};
+		tab.add(bfHitsoundsCheckbox);
+
 		var beatSnapLabel = new EditorText(hitsoundLabel.x, hitsoundLabel.y + hitsoundLabel.height + spacing + 3, 0, 'Beat Snap:');
 		tab.add(beatSnapLabel);
 
@@ -298,14 +317,14 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(waveformLabel);
 
 		var waveformTypes = [WaveformType.NONE, WaveformType.INST, WaveformType.VOCALS];
-		var waveformDropdown = new EditorDropdownMenu(waveformLabel.x + inputSpacing, waveformLabel.y - 4,
-			EditorDropdownMenu.makeStrIdLabelArray(waveformTypes), function(id)
-		{
-			state.playfieldNotes.waveform.type = id;
-			state.playfieldNotes.waveform.reloadWaveform();
-			state.playfieldOther.waveform.type = id;
-			state.playfieldOther.waveform.reloadWaveform();
-		}, this);
+		waveformDropdown = new EditorDropdownMenu(waveformLabel.x + inputSpacing, waveformLabel.y - 4, EditorDropdownMenu.makeStrIdLabelArray(waveformTypes),
+			function(id)
+			{
+				state.inst.pause();
+				state.vocals.pause();
+				state.playfieldNotes.waveform.type = id;
+				state.playfieldNotes.waveform.reloadWaveform();
+			}, this);
 		waveformDropdown.selectedId = state.playfieldNotes.waveform.type;
 		state.dropdowns.push(waveformDropdown);
 
