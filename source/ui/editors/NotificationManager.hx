@@ -35,7 +35,7 @@ class NotificationManager extends FlxTypedGroup<Notification>
 		FlxTween.tween(notification, {alpha: 1}, 0.5, {
 			onComplete: function(_)
 			{
-				FlxTimer.startTimer(3, function(_)
+				FlxTimer.startTimer(5, function(_)
 				{
 					FlxTween.tween(notification, {alpha: 0}, 0.5, {
 						onComplete: function(_)

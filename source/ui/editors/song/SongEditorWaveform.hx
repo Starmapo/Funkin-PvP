@@ -14,7 +14,7 @@ import states.editors.SongEditorState;
 
 class SongEditorWaveform extends FlxBasic
 {
-	public var type:WaveformType = VOCALS;
+	public var type:WaveformType = NONE;
 
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;

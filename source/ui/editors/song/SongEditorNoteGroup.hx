@@ -155,6 +155,7 @@ class SongEditorNoteGroup extends FlxBasic
 				var note = notes[lastPooledNoteIndex];
 				if (note.info.startTime < state.inst.time)
 					break;
+				lastPooledNoteIndex--;
 			}
 		}
 	}

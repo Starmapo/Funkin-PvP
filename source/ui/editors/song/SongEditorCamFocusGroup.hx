@@ -132,6 +132,7 @@ class SongEditorCamFocusGroup extends FlxBasic
 				var obj = camFocuses[lastPooledObjectIndex];
 				if (obj.info.startTime < state.inst.time)
 					break;
+				lastPooledObjectIndex--;
 			}
 		}
 	}

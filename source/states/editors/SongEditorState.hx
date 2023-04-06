@@ -87,7 +87,7 @@ class SongEditorState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		song = Song.loadSong('mods/fnf/songs/Bopeebo/Hard.json');
+		song = Song.loadSong('mods/fnf/songs/SO LONG/Not Specified.json');
 		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
 		inst.onComplete = onSongComplete;
 		vocals = FlxG.sound.load(Paths.getSongVocals(song), 1, false, FlxG.sound.defaultMusicGroup);
@@ -196,6 +196,7 @@ class SongEditorState extends FNFState
 
 		resyncVocals();
 
+		var playedHitsound = false;
 		if (inst.playing)
 		{
 			for (i in hitsoundNoteIndex...song.notes.length)
@@ -203,8 +204,11 @@ class SongEditorState extends FNFState
 				var note = song.notes[i];
 				if (inst.time >= note.startTime)
 				{
-					if (Settings.editorHitsoundVolume.value > 0)
+					if (Settings.editorHitsoundVolume.value > 0 && !playedHitsound)
+					{
 						FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
+						playedHitsound = true;
+					}
 					hitsoundNoteIndex = i + 1;
 				}
 				else
