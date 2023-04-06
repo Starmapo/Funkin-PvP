@@ -1,6 +1,7 @@
 package ui.editors.song;
 
 import data.Settings;
+import data.song.ITimingObject;
 import data.song.TimingPoint;
 import flixel.FlxBasic;
 import flixel.FlxSprite;
@@ -130,8 +131,22 @@ class SongEditorTimeline extends FlxBasic
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.ADD_TIMING_POINT, SongEditorActionManager.REMOVE_TIMING_POINT:
-				reinitialize();
+			case SongEditorActionManager.ADD_OBJECT, SongEditorActionManager.REMOVE_OBJECT:
+				if (Std.isOfType(params.object, TimingPoint))
+					reinitialize();
+			case SongEditorActionManager.ADD_OBJECT_BATCH, SongEditorActionManager.REMOVE_OBJECT_BATCH:
+				var hasTP = false;
+				var batch:Array<ITimingObject> = params.objects;
+				for (obj in batch)
+				{
+					if (Std.isOfType(obj, TimingPoint))
+					{
+						hasTP = true;
+						break;
+					}
+				}
+				if (hasTP)
+					reinitialize();
 		}
 	}
 

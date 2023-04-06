@@ -2,7 +2,7 @@ package data.song;
 
 import flixel.util.FlxStringUtil;
 
-class CameraFocus extends JsonObject
+class CameraFocus extends JsonObject implements ITimingObject
 {
 	/**
 		The time in milliseconds for when the camera focus begins.

@@ -1,6 +1,8 @@
 package ui.editors.song;
 
 import data.song.DifficultyProcessor;
+import data.song.ITimingObject;
+import data.song.NoteInfo;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
@@ -170,12 +172,25 @@ class SongEditorSeekBar extends FlxSpriteGroup
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.ADD_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.ADD_NOTE_BATCH,
-				SongEditorActionManager.REMOVE_NOTE_BATCH, SongEditorActionManager.RESIZE_LONG_NOTE, SongEditorActionManager.FLIP_NOTES:
-				createBars();
-			case SongEditorActionManager.MOVE_OBJECTS, SongEditorActionManager.RESNAP_OBJECTS:
-				if (params.notes != null && params.notes.length > 0)
+			case SongEditorActionManager.ADD_OBJECT, SongEditorActionManager.REMOVE_OBJECT:
+				if (Std.isOfType(params.object, NoteInfo))
 					createBars();
+			case SongEditorActionManager.ADD_OBJECT_BATCH, SongEditorActionManager.REMOVE_OBJECT_BATCH, SongEditorActionManager.MOVE_OBJECTS,
+				SongEditorActionManager.RESNAP_OBJECTS:
+				var hasNote = false;
+				var batch:Array<ITimingObject> = params.objects;
+				for (obj in batch)
+				{
+					if (Std.isOfType(obj, NoteInfo))
+					{
+						hasNote = true;
+						break;
+					}
+				}
+				if (hasNote)
+					createBars();
+			case SongEditorActionManager.RESIZE_LONG_NOTE, SongEditorActionManager.FLIP_NOTES:
+				createBars();
 		}
 	}
 }

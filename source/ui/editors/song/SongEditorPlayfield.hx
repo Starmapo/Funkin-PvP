@@ -59,23 +59,30 @@ class SongEditorPlayfield extends FlxGroup
 		return FlxMath.boundInt(Std.int(columns * percentage), 0, columns);
 	}
 
-	public function isHoveringObject()
+	public function getHoveredObject():ISongEditorTimingObject
 	{
-		if (FlxG.mouse.overlaps(state.playfieldTabs))
-			return false;
+		if (!exists || FlxG.mouse.overlaps(state.playfieldTabs))
+			return null;
 
 		if (type == NOTES)
 		{
-			if (noteGroup.getHoveredNote() != null)
-				return true;
+			var obj = noteGroup.getHoveredNote();
+			if (obj != null)
+				return obj;
 		}
 		else
 		{
-			if (camFocusGroup.getHoveredCamFocus() != null)
-				return true;
+			var obj = camFocusGroup.getHoveredCamFocus();
+			if (obj != null)
+				return obj;
 		}
 
-		return false;
+		return null;
+	}
+
+	public function isHoveringObject()
+	{
+		return getHoveredObject() != null;
 	}
 
 	function createBG()

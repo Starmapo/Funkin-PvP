@@ -1,6 +1,7 @@
 package ui.editors.song;
 
 import data.Settings;
+import data.song.ITimingObject;
 import data.song.NoteInfo;
 import flixel.FlxBasic;
 import flixel.FlxG;
@@ -29,10 +30,10 @@ class SongEditorNoteGroup extends FlxBasic
 
 		state.rateChanged.add(onRateChanged);
 		state.actionManager.onEvent.add(onEvent);
-		state.selectedNotes.itemAdded.add(onSelectedNote);
-		state.selectedNotes.itemRemoved.add(onDeselectedNote);
-		state.selectedNotes.multipleItemsAdded.add(onMultipleNotesSelected);
-		state.selectedNotes.arrayCleared.add(onAllNotesDeselected);
+		state.selectedObjects.itemAdded.add(onSelectedNote);
+		state.selectedObjects.itemRemoved.add(onDeselectedNote);
+		state.selectedObjects.multipleItemsAdded.add(onMultipleNotesSelected);
+		state.selectedObjects.arrayCleared.add(onAllNotesDeselected);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 		Settings.editorLongNoteAlpha.valueChanged.add(onLongNoteAlphaChanged);
@@ -129,25 +130,37 @@ class SongEditorNoteGroup extends FlxBasic
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.ADD_NOTE:
-				createNote(params.note, true);
-			case SongEditorActionManager.REMOVE_NOTE:
-				for (note in notes)
+			case SongEditorActionManager.ADD_OBJECT:
+				if (Std.isOfType(params.object, NoteInfo))
+					createNote(params.object, true);
+			case SongEditorActionManager.REMOVE_OBJECT:
+				if (Std.isOfType(params.object, NoteInfo))
 				{
-					if (note.info == params.note)
+					for (note in notes)
 					{
-						note.destroy();
-						notes.remove(note);
-						break;
+						if (note.info == params.object)
+						{
+							note.destroy();
+							notes.remove(note);
+							break;
+						}
 					}
 				}
-			case SongEditorActionManager.ADD_NOTE_BATCH:
-				var batch:Array<NoteInfo> = params.notes;
-				for (note in batch)
-					createNote(note);
-				notes.sort(sortNotes);
-			case SongEditorActionManager.REMOVE_NOTE_BATCH:
-				var batch:Array<NoteInfo> = params.notes;
+			case SongEditorActionManager.ADD_OBJECT_BATCH:
+				var batch:Array<ITimingObject> = params.objects;
+				var added = false;
+				for (obj in batch)
+				{
+					if (Std.isOfType(obj, NoteInfo))
+					{
+						createNote(cast obj);
+						added = true;
+					}
+				}
+				if (added)
+					notes.sort(sortNotes);
+			case SongEditorActionManager.REMOVE_OBJECT_BATCH:
+				var batch:Array<ITimingObject> = params.objects;
 				var i = notes.length - 1;
 				while (i >= 0)
 				{
@@ -169,33 +182,27 @@ class SongEditorNoteGroup extends FlxBasic
 					}
 				}
 			case SongEditorActionManager.MOVE_OBJECTS:
-				if (params.notes != null)
+				var batch:Array<ITimingObject> = params.objects;
+				for (note in notes)
 				{
-					var batch:Array<NoteInfo> = params.notes;
-					for (note in notes)
+					if (batch.contains(note.info))
 					{
-						if (batch.contains(note.info))
-						{
-							note.updateAnims();
-							note.refreshPositionAndSize();
-						}
+						note.updateAnims();
+						note.refreshPositionAndSize();
 					}
 				}
 			case SongEditorActionManager.RESNAP_OBJECTS:
-				if (params.notes != null)
+				var batch:Array<ITimingObject> = params.objects;
+				for (note in notes)
 				{
-					var batch:Array<NoteInfo> = params.notes;
-					for (note in notes)
-					{
-						if (batch.contains(note.info))
-							note.refreshPositionAndSize();
-					}
+					if (batch.contains(note.info))
+						note.refreshPositionAndSize();
 				}
 			case SongEditorActionManager.FLIP_NOTES:
 				var batch:Array<NoteInfo> = params.notes;
 				for (note in notes)
 				{
-					if (batch.contains(note.info))
+					if (batch.contains(note.noteInfo))
 					{
 						note.updateAnims();
 						note.updatePosition();
@@ -204,7 +211,7 @@ class SongEditorNoteGroup extends FlxBasic
 		}
 	}
 
-	function onSelectedNote(info:NoteInfo)
+	function onSelectedNote(info:ITimingObject)
 	{
 		for (note in notes)
 		{
@@ -216,7 +223,7 @@ class SongEditorNoteGroup extends FlxBasic
 		}
 	}
 
-	function onDeselectedNote(info:NoteInfo)
+	function onDeselectedNote(info:ITimingObject)
 	{
 		for (note in notes)
 		{
@@ -228,29 +235,26 @@ class SongEditorNoteGroup extends FlxBasic
 		}
 	}
 
-	function onMultipleNotesSelected(array:Array<NoteInfo>)
+	function onMultipleNotesSelected(array:Array<ITimingObject>)
 	{
 		for (note in notes)
 		{
 			if (array.contains(note.info))
-			{
 				note.selectionSprite.visible = true;
-			}
 		}
 	}
 
 	function onAllNotesDeselected()
 	{
 		for (note in notes)
-		{
 			note.selectionSprite.visible = false;
-		}
 	}
 }
 
-class SongEditorNote extends FlxSpriteGroup
+class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 {
-	public var info:NoteInfo;
+	public var info:ITimingObject;
+	public var noteInfo:NoteInfo;
 	public var head:AnimatedSprite;
 	public var body:AnimatedSprite;
 	public var tail:AnimatedSprite;
@@ -265,6 +269,7 @@ class SongEditorNote extends FlxSpriteGroup
 		this.state = state;
 		this.playfield = playfield;
 		this.info = info;
+		noteInfo = info;
 
 		var noteGraphic = Paths.getSpritesheet('notes/NOTE_assets');
 
@@ -351,7 +356,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	override function draw()
 	{
-		if (info.isLongNote)
+		if (noteInfo.isLongNote)
 		{
 			body.draw();
 			tail.draw();
@@ -363,7 +368,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updateAnims()
 	{
-		var anim = Std.string(info.playerLane);
+		var anim = Std.string(noteInfo.playerLane);
 		head.playAnim(anim);
 		body.playAnim(anim);
 		tail.playAnim(anim);
@@ -371,7 +376,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updatePosition()
 	{
-		x = playfield.bg.x + playfield.columnSize * info.lane + 2;
+		x = playfield.bg.x + playfield.columnSize * noteInfo.lane + 2;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - head.height;
 	}
 
@@ -383,7 +388,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updateLongNote()
 	{
-		if (!info.isLongNote)
+		if (!noteInfo.isLongNote)
 			return;
 
 		tail.scale.copyFrom(head.scale);
@@ -398,7 +403,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updateLongNoteAlpha()
 	{
-		if (!info.isLongNote)
+		if (!noteInfo.isLongNote)
 			return;
 
 		body.alpha = tail.alpha = Settings.editorLongNoteAlpha.value;
@@ -406,7 +411,7 @@ class SongEditorNote extends FlxSpriteGroup
 
 	public function updateSelectionSprite()
 	{
-		if (info.isLongNote)
+		if (noteInfo.isLongNote)
 		{
 			remove(selectionSprite); // get the group height excluding the selection sprite
 			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(height + 20));
@@ -440,7 +445,7 @@ class SongEditorNote extends FlxSpriteGroup
 	public function isHovered()
 	{
 		var headHovered = FlxG.mouse.overlaps(head);
-		if (!info.isLongNote)
+		if (!noteInfo.isLongNote)
 			return headHovered;
 
 		return headHovered || FlxG.mouse.overlaps(body) || FlxG.mouse.overlaps(tail);
@@ -448,10 +453,10 @@ class SongEditorNote extends FlxSpriteGroup
 
 	function getLongNoteHeight()
 	{
-		if (!info.isLongNote)
+		if (!noteInfo.isLongNote)
 			return 0;
 
-		return Math.round(Math.abs(state.hitPositionY - info.endTime * state.trackSpeed - head.height / 2 - y));
+		return Math.round(Math.abs(state.hitPositionY - noteInfo.endTime * state.trackSpeed - head.height / 2 - y));
 	}
 
 	function onDeselectedNote(note:NoteInfo)

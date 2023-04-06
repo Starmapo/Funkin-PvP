@@ -2,7 +2,7 @@ package data.song;
 
 import flixel.util.FlxStringUtil;
 
-class TimingPoint extends JsonObject
+class TimingPoint extends JsonObject implements ITimingObject
 {
 	public static function getMusicTimingPoints(music:String)
 	{

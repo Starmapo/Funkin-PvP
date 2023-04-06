@@ -1,32 +1,23 @@
 package util.editors.actions.song;
 
 import data.song.CameraFocus;
+import data.song.ITimingObject;
 import data.song.NoteInfo;
-import data.song.SliderVelocity;
 import data.song.Song;
-import data.song.TimingPoint;
 import flixel.math.FlxMath;
 import states.editors.SongEditorState;
 import util.editors.actions.ActionManager;
 
 class SongEditorActionManager extends ActionManager
 {
-	public static inline var ADD_NOTE:String = 'add-note';
-	public static inline var REMOVE_NOTE:String = 'remove-note';
-	public static inline var ADD_NOTE_BATCH:String = 'add-note-batch';
-	public static inline var REMOVE_NOTE_BATCH:String = 'remove-note-batch';
+	public static inline var ADD_OBJECT:String = 'add-object';
+	public static inline var REMOVE_OBJECT:String = 'remove-object';
+	public static inline var ADD_OBJECT_BATCH:String = 'add-object-batch';
+	public static inline var REMOVE_OBJECT_BATCH:String = 'remove-object-batch';
 	public static inline var RESIZE_LONG_NOTE:String = 'resize-long-note';
 	public static inline var MOVE_OBJECTS:String = 'move-objects';
 	public static inline var RESNAP_OBJECTS:String = 'resnap-objects';
 	public static inline var FLIP_NOTES:String = 'flip-notes';
-	public static inline var ADD_TIMING_POINT:String = 'add-point';
-	public static inline var REMOVE_TIMING_POINT:String = 'remove-point';
-	public static inline var ADD_SCROLL_VELOCITY:String = 'add-sv';
-	public static inline var REMOVE_SCROLL_VELOCITY:String = 'remove-sv';
-	public static inline var ADD_CAMERA_FOCUS:String = 'add-camera-focus';
-	public static inline var REMOVE_CAMERA_FOCUS:String = 'remove-camera-focus';
-	public static inline var ADD_CAMERA_FOCUS_BATCH:String = 'add-camera-focus-batch';
-	public static inline var REMOVE_CAMERA_FOCUS_BATCH:String = 'remove-camera-focus-batch';
 	public static inline var CHANGE_TITLE:String = 'change-title';
 	public static inline var CHANGE_ARTIST:String = 'change-artist';
 	public static inline var CHANGE_SOURCE:String = 'change-source';
@@ -43,7 +34,7 @@ class SongEditorActionManager extends ActionManager
 		this.state = state;
 	}
 
-	public function addNote(lane:Int, startTime:Int, endTime:Int = 0, type:String = '', params:String = '')
+	public function addNote(lane:Int, startTime:Float, endTime:Float = 0, type:String = '', params:String = '')
 	{
 		var note = new NoteInfo({
 			startTime: startTime,
@@ -52,7 +43,7 @@ class SongEditorActionManager extends ActionManager
 			type: type,
 			params: params
 		});
-		perform(new ActionAddNote(state, note));
+		perform(new ActionAddObject(state, note));
 		return note;
 	}
 
@@ -62,123 +53,121 @@ class SongEditorActionManager extends ActionManager
 			startTime: startTime,
 			char: char
 		});
-		perform(new ActionAddCameraFocus(state, camFocus));
+		perform(new ActionAddObject(state, camFocus));
 		return camFocus;
 	}
 }
 
-class ActionAddNote implements IAction
+class ActionAddObject implements IAction
 {
-	public var type:String = SongEditorActionManager.ADD_NOTE;
+	public var type:String = SongEditorActionManager.ADD_OBJECT;
 
 	var state:SongEditorState;
-	var note:NoteInfo;
+	var object:ITimingObject;
 
-	public function new(state:SongEditorState, note:NoteInfo)
+	public function new(state:SongEditorState, object:ITimingObject)
 	{
 		this.state = state;
-		this.note = note;
+		this.object = object;
 	}
 
 	public function perform()
 	{
-		state.song.notes.push(note);
+		state.song.addObject(object);
 		state.song.sort();
 		state.actionManager.triggerEvent(type, {
-			note: note
+			object: object
 		});
 	}
 
 	public function undo()
 	{
-		new ActionRemoveNote(state, note).perform();
+		new ActionRemoveObject(state, object).perform();
 	}
 }
 
-class ActionRemoveNote implements IAction
+class ActionRemoveObject implements IAction
 {
-	public var type:String = SongEditorActionManager.REMOVE_NOTE;
+	public var type:String = SongEditorActionManager.REMOVE_OBJECT;
 
 	var state:SongEditorState;
-	var note:NoteInfo;
+	var object:ITimingObject;
 
-	public function new(state:SongEditorState, note:NoteInfo)
+	public function new(state:SongEditorState, object:ITimingObject)
 	{
 		this.state = state;
-		this.note = note;
+		this.object = object;
 	}
 
 	public function perform()
 	{
-		state.song.notes.remove(note);
-		state.song.sort();
-		state.selectedNotes.remove(note);
+		state.song.removeObject(object);
+		state.selectedObjects.remove(object);
 		state.actionManager.triggerEvent(type, {
-			note: note
+			object: object
 		});
 	}
 
 	public function undo()
 	{
-		new ActionAddNote(state, note).perform();
+		new ActionAddObject(state, object).perform();
 	}
 }
 
-class ActionAddNoteBatch implements IAction
+class ActionAddObjectBatch implements IAction
 {
-	public var type:String = SongEditorActionManager.ADD_NOTE_BATCH;
+	public var type:String = SongEditorActionManager.ADD_OBJECT_BATCH;
 
 	var state:SongEditorState;
-	var notes:Array<NoteInfo>;
+	var objects:Array<ITimingObject>;
 
-	public function new(state:SongEditorState, notes:Array<NoteInfo>)
+	public function new(state:SongEditorState, objects:Array<ITimingObject>)
 	{
 		this.state = state;
-		this.notes = notes;
+		this.objects = objects;
 	}
 
 	public function perform()
 	{
-		for (note in notes)
-			state.song.notes.push(note);
-
+		for (obj in objects)
+			state.song.addObject(obj);
 		state.song.sort();
-		state.actionManager.triggerEvent(type, {notes: notes});
+		state.actionManager.triggerEvent(type, {objects: objects});
 	}
 
 	public function undo()
 	{
-		new ActionRemoveNoteBatch(state, notes).perform();
+		new ActionRemoveObjectBatch(state, objects).perform();
 	}
 }
 
-class ActionRemoveNoteBatch implements IAction
+class ActionRemoveObjectBatch implements IAction
 {
-	public var type:String = SongEditorActionManager.REMOVE_NOTE_BATCH;
+	public var type:String = SongEditorActionManager.REMOVE_OBJECT_BATCH;
 
 	var state:SongEditorState;
-	var notes:Array<NoteInfo>;
+	var objects:Array<ITimingObject>;
 
-	public function new(state:SongEditorState, notes:Array<NoteInfo>)
+	public function new(state:SongEditorState, objects:Array<ITimingObject>)
 	{
 		this.state = state;
-		this.notes = notes;
+		this.objects = objects;
 	}
 
 	public function perform()
 	{
-		for (note in notes)
+		for (obj in objects)
 		{
-			state.song.notes.remove(note);
-			state.selectedNotes.remove(note);
+			state.song.removeObject(obj);
+			state.selectedObjects.remove(obj);
 		}
 		state.song.sort();
-		state.actionManager.triggerEvent(type, {notes: notes});
+		state.actionManager.triggerEvent(type, {objects: objects});
 	}
 
 	public function undo()
 	{
-		new ActionAddNoteBatch(state, notes).perform();
+		new ActionAddObjectBatch(state, objects).perform();
 	}
 }
 
@@ -188,10 +177,10 @@ class ActionResizeLongNote implements IAction
 
 	var state:SongEditorState;
 	var note:NoteInfo;
-	var originalTime:Int;
-	var newTime:Int;
+	var originalTime:Float;
+	var newTime:Float;
 
-	public function new(state:SongEditorState, note:NoteInfo, originalTime:Int, newTime:Int)
+	public function new(state:SongEditorState, note:NoteInfo, originalTime:Float, newTime:Float)
 	{
 		this.state = state;
 		this.note = note;
@@ -216,18 +205,15 @@ class ActionMoveObjects implements IAction
 	public var type:String = SongEditorActionManager.MOVE_OBJECTS;
 
 	var state:SongEditorState;
-	var notes:Array<NoteInfo>;
-	var camFocuses:Array<CameraFocus>;
+	var objects:Array<ITimingObject>;
 	var laneOffset:Int;
 	var dragOffset:Int;
 	var shouldPerform:Bool;
 
-	public function new(state:SongEditorState, ?notes:Array<NoteInfo>, ?camFocuses:Array<CameraFocus>, laneOffset:Int, dragOffset:Int,
-			shouldPerform:Bool = true)
+	public function new(state:SongEditorState, ?objects:Array<ITimingObject>, laneOffset:Int, dragOffset:Int, shouldPerform:Bool = true)
 	{
 		this.state = state;
-		this.notes = notes;
-		this.camFocuses = camFocuses;
+		this.objects = objects;
 		this.laneOffset = laneOffset;
 		this.dragOffset = dragOffset;
 		this.shouldPerform = shouldPerform;
@@ -237,23 +223,25 @@ class ActionMoveObjects implements IAction
 	{
 		if (shouldPerform)
 		{
-			for (obj in notes)
+			for (obj in objects)
 			{
 				obj.startTime += dragOffset;
-				if (obj.isLongNote)
-					obj.endTime += dragOffset;
-				obj.lane += laneOffset;
+				if (Std.isOfType(obj, NoteInfo))
+				{
+					var obj:NoteInfo = cast obj;
+					if (obj.isLongNote)
+						obj.endTime += dragOffset;
+					obj.lane += laneOffset;
+				}
 			}
-			for (obj in camFocuses)
-				obj.startTime += dragOffset;
 		}
 
-		state.actionManager.triggerEvent(type, {notes: notes, camFocuses: camFocuses});
+		state.actionManager.triggerEvent(type, {objects: objects});
 	}
 
 	public function undo()
 	{
-		new ActionMoveObjects(state, notes, camFocuses, -laneOffset, -dragOffset).perform();
+		new ActionMoveObjects(state, objects, -laneOffset, -dragOffset).perform();
 		shouldPerform = true;
 	}
 }
@@ -264,52 +252,51 @@ class ActionResnapObjects implements IAction
 
 	var state:SongEditorState;
 	var snaps:Array<Int>;
-	var notes:Array<NoteInfo>;
-	var camFocuses:Array<CameraFocus>;
+	var objects:Array<ITimingObject>;
 	var noteTimeAdjustments:Map<NoteInfo, NoteAdjustment> = new Map();
-	var camFocusTimeAdjustments:Map<CameraFocus, CamFocusAdjustment> = new Map();
+	var timeAdjustments:Map<ITimingObject, TimingAdjustment> = new Map();
 
-	public function new(state:SongEditorState, snaps:Array<Int>, ?notes:Array<NoteInfo>, ?camFocuses:Array<CameraFocus>)
+	public function new(state:SongEditorState, snaps:Array<Int>, ?objects:Array<ITimingObject>)
 	{
 		this.state = state;
 		this.snaps = snaps;
-		this.notes = notes;
-		this.camFocuses = camFocuses;
+		this.objects = objects;
 	}
 
 	public function perform()
 	{
 		var resnapCount = 0;
-		if (notes != null)
+		if (objects != null)
 		{
-			for (obj in notes)
+			for (obj in objects)
 			{
-				var originalStartTime = obj.startTime;
-				var originalEndTime = obj.endTime;
-				obj.startTime = Math.round(closestTickOverall(obj.startTime));
-				if (obj.isLongNote)
-					obj.endTime = Math.round(closestTickOverall(obj.endTime));
-
-				var adjustment = new NoteAdjustment(originalStartTime, originalEndTime, obj);
-				if (adjustment.wasMoved)
+				if (Std.isOfType(obj, NoteInfo))
 				{
-					noteTimeAdjustments.set(obj, adjustment);
-					resnapCount++;
+					var obj:NoteInfo = cast obj;
+					var originalStartTime = obj.startTime;
+					var originalEndTime = obj.endTime;
+					obj.startTime = closestTickOverall(obj.startTime);
+					if (obj.isLongNote)
+						obj.endTime = closestTickOverall(obj.endTime);
+
+					var adjustment = new NoteAdjustment(originalStartTime, originalEndTime, obj);
+					if (adjustment.wasMoved)
+					{
+						noteTimeAdjustments.set(obj, adjustment);
+						resnapCount++;
+					}
 				}
-			}
-		}
-		if (camFocuses != null)
-		{
-			for (obj in camFocuses)
-			{
-				var originalStartTime = obj.startTime;
-				obj.startTime = closestTickOverall(obj.startTime);
-
-				var adjustment = new CamFocusAdjustment(originalStartTime, obj);
-				if (adjustment.wasMoved)
+				else
 				{
-					camFocusTimeAdjustments.set(obj, adjustment);
-					resnapCount++;
+					var originalStartTime = obj.startTime;
+					obj.startTime = closestTickOverall(obj.startTime);
+
+					var adjustment = new TimingAdjustment(originalStartTime, obj);
+					if (adjustment.wasMoved)
+					{
+						timeAdjustments.set(obj, adjustment);
+						resnapCount++;
+					}
 				}
 			}
 		}
@@ -318,8 +305,7 @@ class ActionResnapObjects implements IAction
 		{
 			state.actionManager.triggerEvent(type, {
 				snaps: snaps,
-				notes: notes,
-				camFocuses: camFocuses
+				objects: objects
 			});
 		}
 	}
@@ -331,17 +317,16 @@ class ActionResnapObjects implements IAction
 			obj.startTime = adjustment.originalStartTime;
 			obj.endTime = adjustment.originalEndTime;
 		}
-		for (obj => adjustment in camFocusTimeAdjustments)
+		for (obj => adjustment in timeAdjustments)
 			obj.startTime = adjustment.originalStartTime;
 
 		state.actionManager.triggerEvent(type, {
 			snaps: snaps,
-			notes: notes,
-			camFocuses: camFocuses
+			objects: objects
 		});
 
 		noteTimeAdjustments.clear();
-		camFocusTimeAdjustments.clear();
+		timeAdjustments.clear();
 	}
 
 	function closestTickOverall(time:Float)
@@ -399,215 +384,6 @@ class ActionFlipNotes implements IAction
 	public function undo()
 	{
 		perform();
-	}
-}
-
-class ActionAddTimingPoint implements IAction
-{
-	public var type:String = SongEditorActionManager.ADD_TIMING_POINT;
-
-	var state:SongEditorState;
-	var timingPoint:TimingPoint;
-
-	public function new(state:SongEditorState, timingPoint:TimingPoint)
-	{
-		this.state = state;
-		this.timingPoint = timingPoint;
-	}
-
-	public function perform()
-	{
-		state.song.timingPoints.push(timingPoint);
-		state.song.sort();
-		state.actionManager.triggerEvent(type, {timingPoint: timingPoint});
-	}
-
-	public function undo()
-	{
-		new ActionRemoveTimingPoint(state, timingPoint).perform();
-	}
-}
-
-class ActionRemoveTimingPoint implements IAction
-{
-	public var type:String = SongEditorActionManager.REMOVE_TIMING_POINT;
-
-	var state:SongEditorState;
-	var timingPoint:TimingPoint;
-
-	public function new(state:SongEditorState, timingPoint:TimingPoint)
-	{
-		this.state = state;
-		this.timingPoint = timingPoint;
-	}
-
-	public function perform()
-	{
-		state.song.timingPoints.remove(timingPoint);
-		state.actionManager.triggerEvent(type, {timingPoint: timingPoint});
-	}
-
-	public function undo()
-	{
-		new ActionAddTimingPoint(state, timingPoint).perform();
-	}
-}
-
-class ActionAddScrollVelocity implements IAction
-{
-	public var type:String = SongEditorActionManager.ADD_SCROLL_VELOCITY;
-
-	var state:SongEditorState;
-	var scrollVelocity:SliderVelocity;
-
-	public function new(state:SongEditorState, scrollVelocity:SliderVelocity)
-	{
-		this.state = state;
-		this.scrollVelocity = scrollVelocity;
-	}
-
-	public function perform()
-	{
-		state.song.sliderVelocities.push(scrollVelocity);
-		state.song.sort();
-		state.actionManager.triggerEvent(type, {scrollVelocity: scrollVelocity});
-	}
-
-	public function undo()
-	{
-		new ActionRemoveScrollVelocity(state, scrollVelocity).perform();
-	}
-}
-
-class ActionRemoveScrollVelocity implements IAction
-{
-	public var type:String = SongEditorActionManager.REMOVE_SCROLL_VELOCITY;
-
-	var state:SongEditorState;
-	var scrollVelocity:SliderVelocity;
-
-	public function new(state:SongEditorState, scrollVelocity:SliderVelocity)
-	{
-		this.state = state;
-		this.scrollVelocity = scrollVelocity;
-	}
-
-	public function perform()
-	{
-		state.song.sliderVelocities.remove(scrollVelocity);
-		state.actionManager.triggerEvent(type, {scrollVelocity: scrollVelocity});
-	}
-
-	public function undo()
-	{
-		new ActionAddScrollVelocity(state, scrollVelocity).perform();
-	}
-}
-
-class ActionAddCameraFocus implements IAction
-{
-	public var type:String = SongEditorActionManager.ADD_CAMERA_FOCUS;
-
-	var state:SongEditorState;
-	var camFocus:CameraFocus;
-
-	public function new(state:SongEditorState, camFocus:CameraFocus)
-	{
-		this.state = state;
-		this.camFocus = camFocus;
-	}
-
-	public function perform()
-	{
-		state.song.cameraFocuses.push(camFocus);
-		state.song.sort();
-		state.actionManager.triggerEvent(type, {camFocus: camFocus});
-	}
-
-	public function undo()
-	{
-		new ActionRemoveCameraFocus(state, camFocus).perform();
-	}
-}
-
-class ActionRemoveCameraFocus implements IAction
-{
-	public var type:String = SongEditorActionManager.REMOVE_CAMERA_FOCUS;
-
-	var state:SongEditorState;
-	var camFocus:CameraFocus;
-
-	public function new(state:SongEditorState, camFocus:CameraFocus)
-	{
-		this.state = state;
-		this.camFocus = camFocus;
-	}
-
-	public function perform()
-	{
-		state.song.cameraFocuses.remove(camFocus);
-		state.actionManager.triggerEvent(type, {camFocus: camFocus});
-	}
-
-	public function undo()
-	{
-		new ActionAddCameraFocus(state, camFocus).perform();
-	}
-}
-
-class ActionAddCameraFocusBatch implements IAction
-{
-	public var type:String = SongEditorActionManager.ADD_CAMERA_FOCUS_BATCH;
-
-	var state:SongEditorState;
-	var camFocuses:Array<CameraFocus>;
-
-	public function new(state:SongEditorState, camFocuses:Array<CameraFocus>)
-	{
-		this.state = state;
-		this.camFocuses = camFocuses;
-	}
-
-	public function perform()
-	{
-		for (camFocus in camFocuses)
-			state.song.cameraFocuses.push(camFocus);
-		state.song.sort();
-		state.actionManager.triggerEvent(type, {camFocuses: camFocuses});
-	}
-
-	public function undo()
-	{
-		new ActionRemoveCameraFocusBatch(state, camFocuses).perform();
-	}
-}
-
-class ActionRemoveCameraFocusBatch implements IAction
-{
-	public var type:String = SongEditorActionManager.REMOVE_CAMERA_FOCUS_BATCH;
-
-	var state:SongEditorState;
-	var camFocuses:Array<CameraFocus>;
-
-	public function new(state:SongEditorState, camFocuses:Array<CameraFocus>)
-	{
-		this.state = state;
-		this.camFocuses = camFocuses;
-	}
-
-	public function perform()
-	{
-		for (camFocus in camFocuses)
-		{
-			state.song.cameraFocuses.remove(camFocus);
-			state.selectedCamFocuses.remove(camFocus);
-		}
-		state.actionManager.triggerEvent(type, {camFocuses: camFocuses});
-	}
-
-	public function undo()
-	{
-		new ActionAddCameraFocusBatch(state, camFocuses).perform();
 	}
 }
 
@@ -877,15 +653,15 @@ class ActionChangeInitialSV implements IAction
 
 class NoteAdjustment
 {
-	public var originalStartTime:Int;
-	public var originalEndTime:Int;
-	public var newStartTime:Int;
-	public var newEndTime:Int;
+	public var originalStartTime:Float;
+	public var originalEndTime:Float;
+	public var newStartTime:Float;
+	public var newEndTime:Float;
 	public var startTimeWasChanged(get, never):Bool;
 	public var endTimeWasChanged(get, never):Bool;
 	public var wasMoved(get, never):Bool;
 
-	public function new(originalStartTime:Int, originalEndTime:Int, info:NoteInfo)
+	public function new(originalStartTime:Float, originalEndTime:Float, info:NoteInfo)
 	{
 		this.originalStartTime = originalStartTime;
 		this.originalEndTime = originalEndTime;
@@ -909,13 +685,13 @@ class NoteAdjustment
 	}
 }
 
-class CamFocusAdjustment
+class TimingAdjustment
 {
 	public var originalStartTime:Float;
 	public var newStartTime:Float;
 	public var wasMoved(get, never):Bool;
 
-	public function new(originalStartTime:Float, info:CameraFocus)
+	public function new(originalStartTime:Float, info:ITimingObject)
 	{
 		this.originalStartTime = originalStartTime;
 		newStartTime = info.startTime;

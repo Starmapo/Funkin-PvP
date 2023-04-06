@@ -2,6 +2,7 @@ package ui.editors.song;
 
 import data.Settings;
 import data.song.CameraFocus.CameraFocusChar;
+import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -21,12 +22,11 @@ class SongEditorPlayfieldButton extends FlxSprite
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
 	var longNoteInDrag:SongEditorNote;
-	var longNoteResizeOriginalEndTime:Int = -1;
+	var longNoteResizeOriginalEndTime:Float = -1;
 	var isDraggingLongNoteBackwards:Bool = false;
 	var objectMoveInitialMousePosition:FlxPoint;
 	var objectMoveGrabOffset:Float;
-	var noteInDrag:SongEditorNote;
-	var camFocusInDrag:SongEditorCamFocus;
+	var objectInDrag:ISongEditorTimingObject;
 	var timeDragStart:Float;
 	var previousDragOffset:Int;
 	var previousLaneDragOffset:Int;
@@ -69,25 +69,24 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if (!isHeld)
 		{
 			if (longNoteInDrag != null
-				&& longNoteResizeOriginalEndTime != longNoteInDrag.info.endTime
+				&& longNoteResizeOriginalEndTime != longNoteInDrag.noteInfo.endTime
 				&& longNoteResizeOriginalEndTime != -1)
-				state.actionManager.perform(new ActionResizeLongNote(state, longNoteInDrag.info, longNoteResizeOriginalEndTime, longNoteInDrag.info.endTime));
+				state.actionManager.perform(new ActionResizeLongNote(state, longNoteInDrag.noteInfo, longNoteResizeOriginalEndTime,
+					longNoteInDrag.noteInfo.endTime));
 			else if (longNoteInDrag != null)
 				state.actionManager.triggerEvent(SongEditorActionManager.RESIZE_LONG_NOTE,
-					{note: longNoteInDrag.info, originalTime: longNoteInDrag.info.endTime, newTime: longNoteInDrag.info.endTime});
+					{note: longNoteInDrag.info, originalTime: longNoteInDrag.noteInfo.endTime, newTime: longNoteInDrag.noteInfo.endTime});
 
 			longNoteInDrag = null;
 			longNoteResizeOriginalEndTime = -1;
 			isDraggingLongNoteBackwards = false;
 
 			if ((objectMoveInitialMousePosition != null && previousLaneDragOffset != 0)
-				|| ((noteInDrag != null || camFocusInDrag != null) && previousDragOffset != 0))
-				state.actionManager.perform(new ActionMoveObjects(state, state.selectedNotes.value.copy(), state.selectedCamFocuses.value.copy(),
-					columnOffset, previousDragOffset, false));
+				|| (objectInDrag != null && previousDragOffset != 0))
+				state.actionManager.perform(new ActionMoveObjects(state, state.selectedObjects.value.copy(), columnOffset, previousDragOffset, false));
 
 			objectMoveInitialMousePosition = null;
-			noteInDrag = null;
-			camFocusInDrag = null;
+			objectInDrag = null;
 			timeDragStart = 0;
 			previousDragOffset = 0;
 			previousLaneDragOffset = 0;
@@ -115,22 +114,21 @@ class SongEditorPlayfieldButton extends FlxSprite
 			return;
 		}
 
-		var note = playfield.type == NOTES ? playfield.noteGroup.getHoveredNote() : null;
-		var camFocus = playfield.type == OTHER ? playfield.camFocusGroup.getHoveredCamFocus() : null;
+		var object = playfield.getHoveredObject();
 
-		if (note == null && camFocus == null && FlxG.keys.released.CONTROL)
+		if (object == null && FlxG.keys.released.CONTROL)
 		{
 			state.clearSelection();
 		}
 
 		if (state.currentTool.value == SELECT || state.currentTool.value == LONG_NOTE)
 		{
-			if (note != null)
-				handleNoteSelectTool(note);
-			else if (state.currentTool.value == SELECT)
+			if (object != null)
 			{
-				if (camFocus != null)
-					handleCamFocusSelectTool(camFocus);
+				if (Std.isOfType(object, SongEditorNote))
+					handleObjectSelectTool(object);
+				else if (state.currentTool.value == SELECT)
+					handleObjectSelectTool(object);
 			}
 
 			if (state.currentTool.value == SELECT)
@@ -142,7 +140,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 	function handleObjectPlacement()
 	{
-		var time = Math.round(state.getTimeFromY(FlxG.mouse.globalY) / state.trackSpeed);
+		var time = state.getTimeFromY(FlxG.mouse.globalY) / state.trackSpeed;
 		time = getNearestTickFromTime(time, state.beatSnap.value);
 
 		var lane = playfield.getLaneFromX(FlxG.mouse.globalX);
@@ -189,25 +187,25 @@ class SongEditorPlayfieldButton extends FlxSprite
 		}
 	}
 
-	function getNearestTickFromTime(time:Int, snap:Int)
+	function getNearestTickFromTime(time:Float, snap:Int)
 	{
 		var point = state.song.getTimingPointAt(time);
 		if (point == null)
 			return time;
 
-		var timeFwd = Math.round(Song.getNearestSnapTimeFromTime(state.song, true, snap, time));
-		var timeBwd = Math.round(Song.getNearestSnapTimeFromTime(state.song, false, snap, time));
+		var timeFwd = Song.getNearestSnapTimeFromTime(state.song, true, snap, time);
+		var timeBwd = Song.getNearestSnapTimeFromTime(state.song, false, snap, time);
 
-		var fwdDiff = Math.round(Math.abs(time - timeFwd));
-		var bwdDiff = Math.round(Math.abs(time - timeBwd));
+		var fwdDiff = Math.abs(time - timeFwd);
+		var bwdDiff = Math.abs(time - timeBwd);
 
 		if (Math.abs(fwdDiff - bwdDiff) <= 2)
 		{
 			var snapTimePerBeat = point.beatLength / snap;
 			if (Settings.editorPlaceOnNearestTick.value)
-				return Math.round(Song.getNearestSnapTimeFromTime(state.song, false, snap, time + snapTimePerBeat));
+				return Song.getNearestSnapTimeFromTime(state.song, false, snap, time + snapTimePerBeat);
 
-			return Math.round(Song.getNearestSnapTimeFromTime(state.song, true, snap, time - snapTimePerBeat));
+			return Song.getNearestSnapTimeFromTime(state.song, true, snap, time - snapTimePerBeat);
 		}
 
 		if (!Settings.editorPlaceOnNearestTick.value)
@@ -221,7 +219,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 		return time;
 	}
 
-	function existsObjectAtTimeAndLane(time:Int, lane:Int)
+	function existsObjectAtTimeAndLane(time:Float, lane:Int)
 	{
 		if (lane == 8)
 		{
@@ -251,16 +249,20 @@ class SongEditorPlayfieldButton extends FlxSprite
 		return false;
 	}
 
-	function handleNoteSelectTool(obj:SongEditorNote)
+	function handleObjectSelectTool(obj:ISongEditorTimingObject)
 	{
 		if (obj == null)
 			return;
 
-		if (obj.info.isLongNote && FlxG.mouse.overlaps(obj.tail))
+		if (Std.isOfType(obj, SongEditorNote))
 		{
-			longNoteInDrag = obj;
-			longNoteResizeOriginalEndTime = obj.info.endTime;
-			return;
+			var obj:SongEditorNote = cast obj;
+			if (obj.noteInfo.isLongNote && FlxG.mouse.overlaps(obj.tail))
+			{
+				longNoteInDrag = obj;
+				longNoteResizeOriginalEndTime = obj.noteInfo.endTime;
+				return;
+			}
 		}
 
 		if (state.currentTool.value != SELECT)
@@ -268,43 +270,18 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 		if (FlxG.keys.pressed.CONTROL)
 		{
-			if (state.selectedNotes.value.contains(obj.info))
-				state.selectedNotes.remove(obj.info);
+			if (state.selectedObjects.value.contains(obj.info))
+				state.selectedObjects.remove(obj.info);
 			else
-				state.selectedNotes.push(obj.info);
+				state.selectedObjects.push(obj.info);
 
 			return;
 		}
 
-		if (!state.selectedNotes.value.contains(obj.info))
+		if (!state.selectedObjects.value.contains(obj.info))
 		{
 			state.clearSelection();
-			state.selectedNotes.push(obj.info);
-		}
-	}
-
-	function handleCamFocusSelectTool(obj:SongEditorCamFocus)
-	{
-		if (obj == null)
-			return;
-
-		if (state.currentTool.value != SELECT)
-			return;
-
-		if (FlxG.keys.pressed.CONTROL)
-		{
-			if (state.selectedCamFocuses.value.contains(obj.info))
-				state.selectedCamFocuses.remove(obj.info);
-			else
-				state.selectedCamFocuses.push(obj.info);
-
-			return;
-		}
-
-		if (!state.selectedCamFocuses.value.contains(obj.info))
-		{
-			state.clearSelection();
-			state.selectedCamFocuses.push(obj.info);
+			state.selectedObjects.push(obj.info);
 		}
 	}
 
@@ -328,11 +305,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 			var note = playfield.noteGroup.getHoveredNote();
 			if (note != null)
 			{
-				if (state.selectedNotes.value.contains(note.info))
-					state.deleteSelectedObjects();
-				else
-					state.actionManager.perform(new ActionRemoveNote(state, note.info));
-
+				removeObject(note);
 				return;
 			}
 		}
@@ -341,14 +314,18 @@ class SongEditorPlayfieldButton extends FlxSprite
 			var camFocus = playfield.camFocusGroup != null ? playfield.camFocusGroup.getHoveredCamFocus() : null;
 			if (camFocus != null)
 			{
-				if (state.selectedCamFocuses.value.contains(camFocus.info))
-					state.deleteSelectedObjects();
-				else
-					state.actionManager.perform(new ActionRemoveCameraFocus(state, camFocus.info));
-
+				removeObject(camFocus);
 				return;
 			}
 		}
+	}
+
+	function removeObject(object:ISongEditorTimingObject)
+	{
+		if (state.selectedObjects.value.contains(object.info))
+			state.deleteSelectedObjects();
+		else
+			state.actionManager.perform(new ActionRemoveObject(state, object.info));
 	}
 
 	function handleLongNoteDragging()
@@ -356,14 +333,14 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if (longNoteInDrag == null || !isHeld)
 			return;
 
-		var time = Math.round(state.getTimeFromY(FlxG.mouse.globalY) / state.trackSpeed);
+		var time = state.getTimeFromY(FlxG.mouse.globalY) / state.trackSpeed;
 		time = getNearestTickFromTime(time, state.beatSnap.value);
 
 		if (time <= longNoteInDrag.info.startTime)
 		{
 			if (!isDraggingLongNoteBackwards && time < longNoteInDrag.info.startTime)
 			{
-				longNoteInDrag.info.endTime = longNoteInDrag.info.startTime;
+				longNoteInDrag.noteInfo.endTime = longNoteInDrag.info.startTime;
 				isDraggingLongNoteBackwards = true;
 			}
 
@@ -371,7 +348,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 			if (time == longNoteInDrag.info.startTime && !isDraggingLongNoteBackwards)
 			{
-				longNoteInDrag.info.endTime = 0;
+				longNoteInDrag.noteInfo.endTime = 0;
 				longNoteInDrag.refreshPositionAndSize();
 				return;
 			}
@@ -383,46 +360,47 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if (isDraggingLongNoteBackwards && time > longNoteInDrag.info.startTime)
 			longNoteInDrag.info.startTime = time;
 
-		if (longNoteInDrag.info.startTime == longNoteInDrag.info.endTime)
+		if (longNoteInDrag.info.startTime == longNoteInDrag.noteInfo.endTime)
 		{
-			longNoteInDrag.info.endTime = 0;
+			longNoteInDrag.noteInfo.endTime = 0;
 			isDraggingLongNoteBackwards = false;
 		}
 
 		if (!isDraggingLongNoteBackwards)
-			longNoteInDrag.info.endTime = time;
+			longNoteInDrag.noteInfo.endTime = time;
 
 		longNoteInDrag.refreshPositionAndSize();
 	}
 
 	function handleMovingObjects()
 	{
-		if ((state.selectedNotes.value.length == 0 && state.selectedCamFocuses.value.length == 0) || !isHeld)
+		if (state.selectedObjects.value.length == 0 || !isHeld)
 			return;
 
-		if (objectMoveInitialMousePosition == null && noteInDrag == null && camFocusInDrag == null)
+		if (objectMoveInitialMousePosition == null && objectInDrag == null)
 		{
-			var hoveredNote = playfield.type == NOTES ? playfield.noteGroup.getHoveredNote() : null;
-			var hoveredCamFocus = playfield.type == OTHER ? playfield.camFocusGroup.getHoveredCamFocus() : null;
-			if (hoveredNote == null && hoveredCamFocus == null)
+			var hoveredObject = playfield.getHoveredObject();
+			if (hoveredObject == null)
 				return;
 
-			noteInDrag = hoveredNote;
-			camFocusInDrag = hoveredCamFocus;
+			objectInDrag = hoveredObject;
 			objectMoveInitialMousePosition = FlxG.mouse.getGlobalPosition();
 
-			if (noteInDrag != null && noteInDrag.info.isLongNote && !FlxG.mouse.overlaps(noteInDrag.head))
+			if (Std.isOfType(objectInDrag, SongEditorNote))
 			{
-				var relativeMouseY = state.hitPositionY - Math.round(state.getTimeFromY(FlxG.mouse.globalY));
-				objectMoveGrabOffset = relativeMouseY - noteInDrag.y;
+				var noteInDrag:SongEditorNote = cast objectInDrag;
+				if (noteInDrag.noteInfo.isLongNote && !FlxG.mouse.overlaps(noteInDrag.head))
+				{
+					var relativeMouseY = state.hitPositionY - Math.round(state.getTimeFromY(FlxG.mouse.globalY));
+					objectMoveGrabOffset = relativeMouseY - objectInDrag.y;
+				}
+				else
+					objectMoveGrabOffset = 0;
 			}
 			else
 				objectMoveGrabOffset = 0;
 
-			if (hoveredNote != null)
-				timeDragStart = hoveredNote.info.startTime;
-			else
-				timeDragStart = camFocusInDrag.info.startTime;
+			timeDragStart = hoveredObject.info.startTime;
 			previousDragOffset = 0;
 			previousLaneDragOffset = 0;
 			columnOffset = 0;
@@ -441,59 +419,65 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 		var dragXAllowed = true;
 
-		if (state.selectedNotes.value.length > 1 && previousLaneDragOffset != laneOffset)
+		if (state.selectedObjects.value.length > 1 && previousLaneDragOffset != laneOffset)
 		{
-			var columnOffset = laneOffset - previousLaneDragOffset;
-			var leftColumn = FlxMath.MAX_VALUE_INT;
-			var rightColumn = 0;
-
-			for (note in state.selectedNotes.value)
+			var notes:Array<NoteInfo> = [];
+			for (obj in state.selectedObjects.value)
 			{
-				leftColumn = FlxMath.minInt(note.lane, leftColumn);
-				rightColumn = FlxMath.maxInt(note.lane, rightColumn);
+				if (Std.isOfType(obj, NoteInfo))
+					notes.push(cast obj);
 			}
 
-			if (laneOffset > previousLaneDragOffset)
-				dragXAllowed = rightColumn + columnOffset <= 7;
-			else if (laneOffset < previousLaneDragOffset)
-				dragXAllowed = leftColumn + columnOffset >= 0;
+			if (notes.length > 0)
+			{
+				var columnOffset = laneOffset - previousLaneDragOffset;
+				var leftColumn = FlxMath.MAX_VALUE_INT;
+				var rightColumn = 0;
+
+				for (note in notes)
+				{
+					leftColumn = FlxMath.minInt(note.lane, leftColumn);
+					rightColumn = FlxMath.maxInt(note.lane, rightColumn);
+				}
+
+				if (laneOffset > previousLaneDragOffset)
+					dragXAllowed = rightColumn + columnOffset <= 7;
+				else if (laneOffset < previousLaneDragOffset)
+					dragXAllowed = leftColumn + columnOffset >= 0;
+			}
 		}
 
-		for (i in 0...state.selectedNotes.value.length)
+		for (i in 0...state.selectedObjects.value.length)
 		{
-			var obj = state.selectedNotes.value[i];
+			var obj = state.selectedObjects.value[i];
 			if (previousDragOffset != offset)
 			{
 				var startTime = obj.startTime + (offset - previousDragOffset);
-				obj.startTime = FlxMath.boundInt(startTime, 0, Math.round(state.inst.length));
-				if (obj.isLongNote && startTime >= 0)
-					obj.endTime = FlxMath.boundInt(obj.endTime + (offset - previousDragOffset), 0, Math.round(state.inst.length));
+				obj.startTime = FlxMath.bound(startTime, 0, state.inst.length);
+				if (Std.isOfType(obj, NoteInfo))
+				{
+					var obj:NoteInfo = cast obj;
+					if (obj.isLongNote && startTime >= 0)
+						obj.endTime = FlxMath.bound(obj.endTime + (offset - previousDragOffset), 0, state.inst.length);
+				}
 			}
 
-			if (previousLaneDragOffset == laneOffset || !dragXAllowed)
+			if (!Std.isOfType(obj, NoteInfo) || previousLaneDragOffset == laneOffset || !dragXAllowed)
 				continue;
 
+			var obj:NoteInfo = cast obj;
 			var column = obj.lane;
 			obj.lane = FlxMath.boundInt(obj.lane + (laneOffset - previousLaneDragOffset), 0, 7);
 
 			if (i == 0)
 				columnOffset += obj.lane - column;
 		}
-		if (previousDragOffset != offset)
-		{
-			for (i in 0...state.selectedCamFocuses.value.length)
-			{
-				var obj = state.selectedCamFocuses.value[i];
-				var startTime = obj.startTime + (offset - previousDragOffset);
-				obj.startTime = FlxMath.bound(startTime, 0, Math.round(state.inst.length));
-			}
-		}
 
 		if (playfield.type == NOTES)
 		{
 			for (obj in playfield.noteGroup.notes)
 			{
-				if (state.selectedNotes.value.contains(obj.info))
+				if (state.selectedObjects.value.contains(obj.info))
 				{
 					obj.updateAnims();
 					obj.refreshPositionAndSize();
@@ -504,10 +488,8 @@ class SongEditorPlayfieldButton extends FlxSprite
 		{
 			for (obj in playfield.camFocusGroup.camFocuses)
 			{
-				if (state.selectedCamFocuses.value.contains(obj.info))
-				{
+				if (state.selectedObjects.value.contains(obj.info))
 					obj.updatePosition();
-				}
 			}
 		}
 

@@ -1,5 +1,7 @@
 package ui.editors.song;
 
+import data.song.ITimingObject;
+import data.song.NoteInfo;
 import flixel.util.FlxStringUtil;
 import states.editors.SongEditorState;
 import ui.editors.EditorPanel;
@@ -83,9 +85,22 @@ class SongEditorDetailsPanel extends EditorPanel
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.ADD_NOTE, SongEditorActionManager.REMOVE_NOTE, SongEditorActionManager.ADD_NOTE_BATCH,
-				SongEditorActionManager.REMOVE_NOTE_BATCH:
-				updateNoteCount();
+			case SongEditorActionManager.ADD_OBJECT, SongEditorActionManager.REMOVE_OBJECT:
+				if (Std.isOfType(params.object, NoteInfo))
+					updateNoteCount();
+			case SongEditorActionManager.ADD_OBJECT_BATCH, SongEditorActionManager.REMOVE_OBJECT_BATCH:
+				var hasNote = false;
+				var batch:Array<ITimingObject> = params.objects;
+				for (obj in batch)
+				{
+					if (Std.isOfType(obj, NoteInfo))
+					{
+						hasNote = true;
+						break;
+					}
+				}
+				if (hasNote)
+					updateNoteCount();
 		}
 	}
 

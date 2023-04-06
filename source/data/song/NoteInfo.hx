@@ -5,12 +5,12 @@ import flixel.util.FlxStringUtil;
 /**
 	Note info from a song file.
 **/
-class NoteInfo extends JsonObject
+class NoteInfo extends JsonObject implements ITimingObject
 {
 	/**
 		The time in milliseconds when the note is supposed to be hit.
 	**/
-	public var startTime:Int;
+	public var startTime:Float;
 
 	/**
 		The lane the note falls in.
@@ -20,7 +20,7 @@ class NoteInfo extends JsonObject
 	/**
 		The time in milliseconds when the note ends (if greater than 0, it's considered a hold note).
 	**/
-	public var endTime:Int;
+	public var endTime:Float;
 
 	/**
 		The type of the note. If empty, the default type is used.
@@ -40,7 +40,7 @@ class NoteInfo extends JsonObject
 	/**
 		Gets the maximum time of this note, returning `endTime` if it's a long note and `startTime` if not.
 	**/
-	public var maxTime(get, never):Int;
+	public var maxTime(get, never):Float;
 
 	/**
 		Gets this note's lane relative to the player that will hit it. This equates to `lane` mod 4.

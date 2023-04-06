@@ -2,6 +2,7 @@ package states.editors;
 
 import data.Settings;
 import data.song.CameraFocus;
+import data.song.ITimingObject;
 import data.song.NoteInfo;
 import data.song.SliderVelocity;
 import data.song.Song;
@@ -25,12 +26,10 @@ import subStates.editors.song.SongEditorSavePrompt;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import ui.editors.song.SongEditorCamFocusDisplay;
-import ui.editors.song.SongEditorCamFocusGroup;
 import ui.editors.song.SongEditorCompositionPanel;
 import ui.editors.song.SongEditorDetailsPanel;
 import ui.editors.song.SongEditorEditPanel;
 import ui.editors.song.SongEditorPlayfield;
-import ui.editors.song.SongEditorPlayfieldButton;
 import ui.editors.song.SongEditorPlayfieldTabs;
 import ui.editors.song.SongEditorSeekBar;
 import ui.editors.song.SongEditorSelector;
@@ -38,7 +37,6 @@ import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
 import util.bindable.BindableInt;
-import util.editors.actions.ActionBatch;
 import util.editors.actions.song.SongEditorActionManager;
 
 class SongEditorState extends FNFState
@@ -58,8 +56,7 @@ class SongEditorState extends FNFState
 	public var currentTool:Bindable<CompositionTool> = new Bindable(SELECT);
 	public var notificationManager:NotificationManager;
 	public var tooltip:Tooltip;
-	public var selectedNotes:BindableArray<NoteInfo> = new BindableArray([]);
-	public var selectedCamFocuses:BindableArray<CameraFocus> = new BindableArray([]);
+	public var selectedObjects:BindableArray<ITimingObject> = new BindableArray([]);
 	public var seekBar:SongEditorSeekBar;
 	public var zoomInButton:FlxUIButton;
 	public var zoomOutButton:FlxUIButton;
@@ -67,8 +64,7 @@ class SongEditorState extends FNFState
 	public var compositionPanel:SongEditorCompositionPanel;
 	public var editPanel:SongEditorEditPanel;
 	public var actionManager:SongEditorActionManager;
-	public var copiedNotes:Array<NoteInfo> = [];
-	public var copiedCamFocuses:Array<CameraFocus> = [];
+	public var copiedObjects:Array<ITimingObject> = [];
 	public var playfield(get, never):SongEditorPlayfield;
 	public var playfieldTabs:SongEditorPlayfieldTabs;
 	public var selector:SongEditorSelector;
@@ -225,8 +221,7 @@ class SongEditorState extends FNFState
 		super.destroy();
 		actionManager = FlxDestroyUtil.destroy(actionManager);
 		beatSnap = FlxDestroyUtil.destroy(beatSnap);
-		selectedNotes = FlxDestroyUtil.destroy(selectedNotes);
-		selectedCamFocuses = FlxDestroyUtil.destroy(selectedCamFocuses);
+		selectedObjects = FlxDestroyUtil.destroy(selectedObjects);
 		Application.current.onExit.remove(onExit);
 		FlxDestroyUtil.destroy(songSeeked);
 		FlxDestroyUtil.destroy(rateChanged);
@@ -277,8 +272,7 @@ class SongEditorState extends FNFState
 
 	public function clearSelection()
 	{
-		selectedNotes.clear();
-		selectedCamFocuses.clear();
+		selectedObjects.clear();
 	}
 
 	public function handleMouseSeek()
@@ -448,7 +442,7 @@ class SongEditorState extends FNFState
 				if (notesAtTime.length > 0)
 				{
 					for (note in notesAtTime)
-						actionManager.perform(new ActionRemoveNote(this, note));
+						actionManager.perform(new ActionRemoveObject(this, note));
 				}
 				else
 					actionManager.addNote(i, time);
@@ -565,100 +559,83 @@ class SongEditorState extends FNFState
 
 	function copySelectedObjects()
 	{
-		if (selectedNotes.value.length == 0 && selectedCamFocuses.value.length == 0)
+		if (selectedObjects.value.length == 0)
 			return;
 
-		copiedNotes.resize(0);
-		copiedCamFocuses.resize(0);
+		copiedObjects.resize(0);
 
-		if (selectedNotes.value.length > 0)
-		{
-			var orderedNotes = selectedNotes.value.copy();
-			orderedNotes.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
-			for (obj in orderedNotes)
-				copiedNotes.push(obj);
-		}
-
-		if (selectedCamFocuses.value.length > 0)
-		{
-			var orderedCamFocuses = selectedCamFocuses.value.copy();
-			orderedCamFocuses.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
-			for (obj in orderedCamFocuses)
-				copiedCamFocuses.push(obj);
-		}
+		var orderedObjects = selectedObjects.value.copy();
+		orderedObjects.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
+		for (obj in orderedObjects)
+			copiedObjects.push(obj);
 	}
 
 	function pasteCopiedObjects(resnapNotes:Bool, swapLanes:Bool)
 	{
-		if (copiedNotes.length == 0 && copiedCamFocuses.length == 0)
+		if (copiedObjects.length == 0)
 			return;
 
-		var clonedNotes:Array<NoteInfo> = [];
-		var clonedCamFocuses:Array<CameraFocus> = [];
+		var clonedObjects:Array<ITimingObject> = [];
 
 		var lowestTime = FlxMath.MAX_VALUE_FLOAT;
-		for (obj in copiedNotes)
-		{
-			if (obj.startTime < lowestTime)
-				lowestTime = obj.startTime;
-		}
-		for (obj in copiedCamFocuses)
+		for (obj in copiedObjects)
 		{
 			if (obj.startTime < lowestTime)
 				lowestTime = obj.startTime;
 		}
 		if (lowestTime == FlxMath.MAX_VALUE_FLOAT)
 			lowestTime = inst.time;
-		var difference = Math.round(inst.time - lowestTime);
+		var difference = inst.time - lowestTime;
 
-		for (obj in copiedNotes)
+		for (obj in copiedObjects)
 		{
-			var info = new NoteInfo({
-				startTime: obj.startTime + difference,
-				lane: obj.lane,
-				type: obj.type,
-				params: obj.params.join(',')
-			});
-			if (swapLanes)
+			if (Std.isOfType(obj, NoteInfo))
 			{
-				if (info.lane >= 4)
-					info.lane -= 4;
-				else
-					info.lane += 4;
+				var obj:NoteInfo = cast obj;
+				var info = new NoteInfo({
+					startTime: obj.startTime + difference,
+					lane: obj.lane,
+					type: obj.type,
+					params: obj.params.join(',')
+				});
+				if (swapLanes)
+				{
+					if (info.lane >= 4)
+						info.lane -= 4;
+					else
+						info.lane += 4;
+				}
+				if (obj.isLongNote)
+					info.endTime = obj.endTime + difference;
+				if (info.startTime > inst.length || info.endTime > inst.length)
+					continue;
+				clonedObjects.push(info);
 			}
-			if (obj.isLongNote)
-				info.endTime = obj.endTime + difference;
-			if (info.startTime > inst.length || info.endTime > inst.length)
-				continue;
-			clonedNotes.push(info);
-		}
-		for (obj in copiedCamFocuses)
-		{
-			var info = new CameraFocus({
-				startTime: obj.startTime + difference,
-				char: obj.char
-			});
-			if (info.startTime > inst.length)
-				continue;
-			clonedCamFocuses.push(info);
+			else if (Std.isOfType(obj, CameraFocus))
+			{
+				var obj:CameraFocus = cast obj;
+				var info = new CameraFocus({
+					startTime: obj.startTime + difference,
+					char: obj.char
+				});
+				if (info.startTime > inst.length)
+					continue;
+				clonedObjects.push(info);
+			}
 		}
 
 		if (resnapNotes)
-			new ActionResnapObjects(this, [16, 12], clonedNotes, clonedCamFocuses).perform();
+			new ActionResnapObjects(this, [16, 12], clonedObjects).perform();
 
-		actionManager.performBatch([
-			new ActionAddNoteBatch(this, clonedNotes),
-			new ActionAddCameraFocusBatch(this, clonedCamFocuses)
-		]);
+		actionManager.perform(new ActionAddObjectBatch(this, clonedObjects));
 
 		clearSelection();
-		selectedNotes.pushMultiple(clonedNotes);
-		selectedCamFocuses.pushMultiple(clonedCamFocuses);
+		selectedObjects.pushMultiple(clonedObjects);
 	}
 
 	function cutSelectedObjects()
 	{
-		if (selectedNotes.value.length == 0 && selectedCamFocuses.value.length == 0)
+		if (selectedObjects.value.length == 0)
 			return;
 
 		copySelectedObjects();
@@ -667,32 +644,36 @@ class SongEditorState extends FNFState
 
 	public function deleteSelectedObjects()
 	{
-		if (selectedNotes.value.length == 0 && selectedCamFocuses.value.length == 0)
+		if (selectedObjects.value.length == 0)
 			return;
 
-		actionManager.performBatch([
-			new ActionRemoveNoteBatch(this, selectedNotes.value.copy()),
-			new ActionRemoveCameraFocusBatch(this, selectedCamFocuses.value.copy())
-		]);
+		actionManager.perform(new ActionRemoveObjectBatch(this, selectedObjects.value.copy()));
 	}
 
 	function selectAllObjects()
 	{
 		clearSelection();
 		if (playfield.type == NOTES)
-			selectedNotes.pushMultiple(song.notes);
+			selectedObjects.pushMultiple(cast song.notes);
 		else
-		{
-			selectedCamFocuses.pushMultiple(song.cameraFocuses);
-		}
+			selectedObjects.pushMultiple(cast song.cameraFocuses);
 	}
 
 	function flipSelectedNotes(fullFlip:Bool)
 	{
-		if (selectedNotes.value.length == 0)
+		if (selectedObjects.value.length == 0)
 			return;
 
-		actionManager.perform(new ActionFlipNotes(this, selectedNotes.value.copy(), fullFlip));
+		var notes:Array<NoteInfo> = [];
+		for (obj in selectedObjects.value)
+		{
+			if (Std.isOfType(obj, NoteInfo))
+				notes.push(cast obj);
+		}
+		if (notes.length == 0)
+			return;
+
+		actionManager.perform(new ActionFlipNotes(this, notes, fullFlip));
 	}
 
 	function placeTimingPointOrScrollVelocity()
@@ -704,14 +685,14 @@ class SongEditorState extends FNFState
 			{
 				if (sv.startTime == inst.time)
 				{
-					actionManager.perform(new ActionRemoveScrollVelocity(this, sv));
+					actionManager.perform(new ActionRemoveObject(this, sv));
 					place = false;
 				}
 			}
 			if (place)
 			{
 				var curSV = song.getScrollVelocityAt(inst.time);
-				actionManager.perform(new ActionAddScrollVelocity(this, new SliderVelocity({
+				actionManager.perform(new ActionAddObject(this, new SliderVelocity({
 					startTime: inst.time,
 					multiplier: curSV != null ? curSV.multiplier : 1
 				})));
@@ -724,14 +705,14 @@ class SongEditorState extends FNFState
 			{
 				if (point.startTime == inst.time)
 				{
-					actionManager.perform(new ActionRemoveTimingPoint(this, point));
+					actionManager.perform(new ActionRemoveObject(this, point));
 					place = false;
 				}
 			}
 			if (place)
 			{
 				var curPoint = song.getTimingPointAt(inst.time);
-				actionManager.perform(new ActionAddTimingPoint(this, new TimingPoint({
+				actionManager.perform(new ActionAddObject(this, new TimingPoint({
 					startTime: inst.time,
 					bpm: curPoint != null ? curPoint.bpm : song.timingPoints[0].bpm,
 					meter: curPoint != null ? curPoint.meter : song.timingPoints[0].meter

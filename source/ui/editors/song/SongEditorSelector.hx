@@ -1,9 +1,11 @@
 package ui.editors.song;
 
 import data.song.CameraFocus;
+import data.song.ITimingObject;
 import data.song.NoteInfo;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUI9SliceSprite;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import openfl.geom.Rectangle;
@@ -123,44 +125,37 @@ class SongEditorSelector extends FlxUI9SliceSprite
 	{
 		var dragStart = Math.min(timeDragStart, timeDragEnd);
 		var dragEnd = Math.max(timeDragStart, timeDragEnd);
-		var realStartLane = Math.min(startLane, endLane);
-		var realEndLane = Math.max(startLane, endLane);
+		var realStartLane = FlxMath.minInt(startLane, endLane);
+		var realEndLane = FlxMath.maxInt(startLane, endLane);
+
+		var foundObjects:Array<ITimingObject> = [];
 
 		if (state.playfield.type == NOTES)
 		{
-			var foundNotes:Array<NoteInfo> = [];
-
 			for (obj in state.song.notes)
 			{
-				var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
-				var laneInbetween = CoolUtil.inBetween(obj.lane, realStartLane, realEndLane);
-				if (yInbetween && laneInbetween)
-					foundNotes.push(obj);
-			}
-
-			for (obj in foundNotes)
-			{
-				if (!state.selectedNotes.value.contains(obj))
-					state.selectedNotes.push(obj);
+				if (canSelectObject(obj.startTime, dragStart, dragEnd, obj.lane, realStartLane, realEndLane))
+					foundObjects.push(obj);
 			}
 		}
 		else
 		{
-			var foundCamFocuses:Array<CameraFocus> = [];
-
 			for (obj in state.song.cameraFocuses)
 			{
-				var yInbetween = CoolUtil.inBetween(obj.startTime, dragStart, dragEnd);
-				var laneInbetween = CoolUtil.inBetween(2, realStartLane, realEndLane);
-				if (yInbetween && laneInbetween)
-					foundCamFocuses.push(obj);
-			}
-
-			for (obj in foundCamFocuses)
-			{
-				if (!state.selectedCamFocuses.value.contains(obj))
-					state.selectedCamFocuses.push(obj);
+				if (canSelectObject(obj.startTime, dragStart, dragEnd, 2, realStartLane, realEndLane))
+					foundObjects.push(obj);
 			}
 		}
+
+		for (obj in foundObjects)
+		{
+			if (!state.selectedObjects.value.contains(obj))
+				state.selectedObjects.push(obj);
+		}
+	}
+
+	function canSelectObject(startTime:Float, dragStart:Float, dragEnd:Float, lane:Int, startLane:Int, endLane:Int)
+	{
+		return CoolUtil.inBetween(startTime, dragStart, dragEnd) && CoolUtil.inBetween(lane, startLane, endLane);
 	}
 }

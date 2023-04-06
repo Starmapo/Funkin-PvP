@@ -47,13 +47,13 @@ class Song extends JsonObject
 			return 0;
 
 		var snapTimePerBeat = point.beatLength / snap;
-		var pointToSnap:Float = time + (forward ? snapTimePerBeat : -snapTimePerBeat);
-		var nearestTick = Math.round((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
+		var pointToSnap = time + (forward ? snapTimePerBeat : -snapTimePerBeat);
+		var nearestTick = ((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
 
 		if (Math.abs(nearestTick - time) <= snapTimePerBeat)
 			return nearestTick;
 
-		return (Math.round((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
+		return (((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
 	}
 
 	public static function closestTickToSnap(song:Song, time:Float, snap:Int)
@@ -62,16 +62,16 @@ class Song extends JsonObject
 		if (point == null)
 			return time;
 
-		var timeFwd = Math.round(Song.getNearestSnapTimeFromTime(song, true, snap, time));
-		var timeBwd = Math.round(Song.getNearestSnapTimeFromTime(song, false, snap, time));
+		var timeFwd = getNearestSnapTimeFromTime(song, true, snap, time);
+		var timeBwd = getNearestSnapTimeFromTime(song, false, snap, time);
 
-		var fwdDiff = Std.int(Math.abs(time - timeFwd));
-		var bwdDiff = Std.int(Math.abs(time - timeBwd));
+		var fwdDiff = Math.abs(time - timeFwd);
+		var bwdDiff = Math.abs(time - timeBwd);
 
 		if (Math.abs(fwdDiff - bwdDiff) <= 2)
 		{
 			var snapTimePerBeat = point.beatLength / snap;
-			return Math.round(getNearestSnapTimeFromTime(song, false, snap, time + snapTimePerBeat));
+			return getNearestSnapTimeFromTime(song, false, snap, time + snapTimePerBeat);
 		}
 
 		var closestTime = time;
@@ -371,7 +371,7 @@ class Song extends JsonObject
 		if (notes.length == 0)
 			return 0;
 
-		var actions:Array<Int> = [];
+		var actions:Array<Float> = [];
 		for (note in notes)
 		{
 			actions.push(note.startTime);
@@ -544,6 +544,30 @@ class Song extends JsonObject
 		return new DifficultyProcessor(this, rightSide, mods);
 	}
 
+	public function addObject(object:ITimingObject)
+	{
+		if (Std.isOfType(object, NoteInfo))
+			notes.push(cast object);
+		else if (Std.isOfType(object, TimingPoint))
+			timingPoints.push(cast object);
+		else if (Std.isOfType(object, SliderVelocity))
+			sliderVelocities.push(cast object);
+		else if (Std.isOfType(object, CameraFocus))
+			cameraFocuses.push(cast object);
+	}
+
+	public function removeObject(object:ITimingObject)
+	{
+		if (Std.isOfType(object, NoteInfo))
+			notes.remove(cast object);
+		else if (Std.isOfType(object, TimingPoint))
+			timingPoints.remove(cast object);
+		else if (Std.isOfType(object, SliderVelocity))
+			sliderVelocities.remove(cast object);
+		else if (Std.isOfType(object, CameraFocus))
+			cameraFocuses.remove(cast object);
+	}
+
 	/**
 		Writes this song object into a file.
 	**/
@@ -632,15 +656,15 @@ class Song extends JsonObject
 		]);
 	}
 
-	function get_length()
+	function get_length():Float
 	{
 		if (notes.length == 0)
 			return 0;
 
-		var max:Int = 0;
+		var max:Float = 0;
 		for (note in notes)
 		{
-			var time = FlxMath.maxInt(note.startTime, note.endTime);
+			var time = Math.max(note.startTime, note.endTime);
 			if (time > max)
 				max = time;
 		}

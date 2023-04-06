@@ -2,6 +2,7 @@ package ui.editors.song;
 
 import data.Settings;
 import data.song.CameraFocus;
+import data.song.ITimingObject;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -27,10 +28,10 @@ class SongEditorCamFocusGroup extends FlxBasic
 
 		state.rateChanged.add(onRateChanged);
 		state.actionManager.onEvent.add(onEvent);
-		state.selectedCamFocuses.itemAdded.add(onSelectedCameraFocus);
-		state.selectedCamFocuses.itemRemoved.add(onDeselectedCameraFocus);
-		state.selectedCamFocuses.multipleItemsAdded.add(onMultipleCameraFocusesSelected);
-		state.selectedCamFocuses.arrayCleared.add(onAllCameraFocusesDeselected);
+		state.selectedObjects.itemAdded.add(onSelectedCameraFocus);
+		state.selectedObjects.itemRemoved.add(onDeselectedCameraFocus);
+		state.selectedObjects.multipleItemsAdded.add(onMultipleCameraFocusesSelected);
+		state.selectedObjects.arrayCleared.add(onAllCameraFocusesDeselected);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
@@ -101,25 +102,37 @@ class SongEditorCamFocusGroup extends FlxBasic
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.ADD_CAMERA_FOCUS:
-				createCamFocus(params.camFocus, true);
-			case SongEditorActionManager.REMOVE_CAMERA_FOCUS:
-				for (camFocus in camFocuses)
+			case SongEditorActionManager.ADD_OBJECT:
+				if (Std.isOfType(params.object, CameraFocus))
+					createCamFocus(cast params.object, true);
+			case SongEditorActionManager.REMOVE_OBJECT:
+				if (Std.isOfType(params.object, CameraFocus))
 				{
-					if (camFocus.info == params.camFocus)
+					for (camFocus in camFocuses)
 					{
-						camFocuses.remove(camFocus);
-						camFocus.destroy();
-						break;
+						if (camFocus.info == params.object)
+						{
+							camFocuses.remove(camFocus);
+							camFocus.destroy();
+							break;
+						}
 					}
 				}
-			case SongEditorActionManager.ADD_CAMERA_FOCUS_BATCH:
-				var batch:Array<CameraFocus> = params.camFocuses;
-				for (camFocus in batch)
-					createCamFocus(camFocus);
-				camFocuses.sort(sortCamFocuses);
-			case SongEditorActionManager.REMOVE_CAMERA_FOCUS_BATCH:
-				var batch:Array<CameraFocus> = params.camFocuses;
+			case SongEditorActionManager.ADD_OBJECT_BATCH:
+				var batch:Array<ITimingObject> = params.objects;
+				var added = false;
+				for (obj in batch)
+				{
+					if (Std.isOfType(obj, CameraFocus))
+					{
+						createCamFocus(cast obj);
+						added = true;
+					}
+				}
+				if (added)
+					camFocuses.sort(sortCamFocuses);
+			case SongEditorActionManager.REMOVE_OBJECT_BATCH:
+				var batch:Array<ITimingObject> = params.objects;
 				var i = camFocuses.length - 1;
 				while (i >= 0)
 				{
@@ -132,19 +145,16 @@ class SongEditorCamFocusGroup extends FlxBasic
 					i--;
 				}
 			case SongEditorActionManager.MOVE_OBJECTS, SongEditorActionManager.RESNAP_OBJECTS:
-				if (params.camFocuses != null)
+				var batch:Array<ITimingObject> = params.objects;
+				for (camFocus in camFocuses)
 				{
-					var batch:Array<CameraFocus> = params.camFocuses;
-					for (camFocus in camFocuses)
-					{
-						if (batch.contains(camFocus.info))
-							camFocus.updatePosition();
-					}
+					if (batch.contains(camFocus.info))
+						camFocus.updatePosition();
 				}
 		}
 	}
 
-	function onSelectedCameraFocus(info:CameraFocus)
+	function onSelectedCameraFocus(info:ITimingObject)
 	{
 		for (camFocus in camFocuses)
 		{
@@ -156,7 +166,7 @@ class SongEditorCamFocusGroup extends FlxBasic
 		}
 	}
 
-	function onDeselectedCameraFocus(info:CameraFocus)
+	function onDeselectedCameraFocus(info:ITimingObject)
 	{
 		for (camFocus in camFocuses)
 		{
@@ -168,7 +178,7 @@ class SongEditorCamFocusGroup extends FlxBasic
 		}
 	}
 
-	function onMultipleCameraFocusesSelected(array:Array<CameraFocus>)
+	function onMultipleCameraFocusesSelected(array:Array<ITimingObject>)
 	{
 		for (camFocus in camFocuses)
 		{
@@ -190,9 +200,10 @@ class SongEditorCamFocusGroup extends FlxBasic
 	}
 }
 
-class SongEditorCamFocus extends FlxSpriteGroup
+class SongEditorCamFocus extends FlxSpriteGroup implements ISongEditorTimingObject
 {
-	public var info:CameraFocus;
+	public var info:ITimingObject;
+	public var camFocusInfo:CameraFocus;
 	public var line:FlxSprite;
 	public var selectionSprite:FlxSprite;
 
@@ -205,8 +216,9 @@ class SongEditorCamFocus extends FlxSpriteGroup
 		this.state = state;
 		this.playfield = playfield;
 		this.info = info;
+		camFocusInfo = info;
 
-		line = new FlxSprite().makeGraphic(playfield.columnSize - 2, 10);
+		line = new FlxSprite().makeGraphic(Std.int(playfield.columnSize - playfield.borderLeft.width), 10);
 		add(line);
 
 		selectionSprite = new FlxSprite(0, -10).makeGraphic(Std.int(line.width), Std.int(line.height + 20));
@@ -220,7 +232,7 @@ class SongEditorCamFocus extends FlxSpriteGroup
 
 	public function updatePosition()
 	{
-		x = playfield.bg.x + playfield.columnSize * 2 + 2;
+		x = playfield.bg.x + playfield.columnSize * 2 + playfield.borderLeft.width;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - line.height;
 	}
 
@@ -236,7 +248,7 @@ class SongEditorCamFocus extends FlxSpriteGroup
 
 	function getColor()
 	{
-		return switch (info.char)
+		return switch (camFocusInfo.char)
 		{
 			case OPPONENT:
 				0xFF8E00CC;

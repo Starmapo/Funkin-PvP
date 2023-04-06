@@ -2,7 +2,7 @@ package data.song;
 
 import flixel.util.FlxStringUtil;
 
-class SliderVelocity extends JsonObject
+class SliderVelocity extends JsonObject implements ITimingObject
 {
 	/**
 		The time in milliseconds for when this slider velocity begins.
