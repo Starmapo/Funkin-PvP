@@ -207,10 +207,10 @@ class ActionMoveObjects implements IAction
 	var state:SongEditorState;
 	var objects:Array<ITimingObject>;
 	var laneOffset:Int;
-	var dragOffset:Int;
+	var dragOffset:Float;
 	var shouldPerform:Bool;
 
-	public function new(state:SongEditorState, ?objects:Array<ITimingObject>, laneOffset:Int, dragOffset:Int, shouldPerform:Bool = true)
+	public function new(state:SongEditorState, ?objects:Array<ITimingObject>, laneOffset:Int, dragOffset:Float, shouldPerform:Bool = true)
 	{
 		this.state = state;
 		this.objects = objects;

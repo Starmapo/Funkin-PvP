@@ -146,34 +146,46 @@ class SongEditorCamFocusGroup extends FlxBasic
 				}
 			case SongEditorActionManager.MOVE_OBJECTS, SongEditorActionManager.RESNAP_OBJECTS:
 				var batch:Array<ITimingObject> = params.objects;
+				var hasCamFocus = false;
 				for (camFocus in camFocuses)
 				{
 					if (batch.contains(camFocus.info))
+					{
 						camFocus.updatePosition();
+						hasCamFocus = true;
+					}
 				}
+				if (hasCamFocus)
+					camFocuses.sort(sortCamFocuses);
 		}
 	}
 
 	function onSelectedCameraFocus(info:ITimingObject)
 	{
-		for (camFocus in camFocuses)
+		if (Std.isOfType(info, CameraFocus))
 		{
-			if (camFocus.info == info)
+			for (camFocus in camFocuses)
 			{
-				camFocus.selectionSprite.visible = true;
-				break;
+				if (camFocus.info == info)
+				{
+					camFocus.selectionSprite.visible = true;
+					break;
+				}
 			}
 		}
 	}
 
 	function onDeselectedCameraFocus(info:ITimingObject)
 	{
-		for (camFocus in camFocuses)
+		if (Std.isOfType(info, CameraFocus))
 		{
-			if (camFocus.info == info)
+			for (camFocus in camFocuses)
 			{
-				camFocus.selectionSprite.visible = false;
-				break;
+				if (camFocus.info == info)
+				{
+					camFocus.selectionSprite.visible = false;
+					break;
+				}
 			}
 		}
 	}

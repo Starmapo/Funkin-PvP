@@ -9,6 +9,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.util.FlxSort;
 import states.editors.SongEditorState;
 import ui.editors.song.SongEditorCamFocusGroup.SongEditorCamFocus;
 import ui.editors.song.SongEditorNoteGroup.SongEditorNote;
@@ -28,7 +29,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 	var objectMoveGrabOffset:Float;
 	var objectInDrag:ISongEditorTimingObject;
 	var timeDragStart:Float;
-	var previousDragOffset:Int;
+	var previousDragOffset:Float;
 	var previousLaneDragOffset:Int;
 	var columnOffset:Int;
 
@@ -391,7 +392,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 				var noteInDrag:SongEditorNote = cast objectInDrag;
 				if (noteInDrag.noteInfo.isLongNote && !FlxG.mouse.overlaps(noteInDrag.head))
 				{
-					var relativeMouseY = state.hitPositionY - Math.round(state.getTimeFromY(FlxG.mouse.globalY));
+					var relativeMouseY = state.hitPositionY - state.getTimeFromY(FlxG.mouse.globalY);
 					objectMoveGrabOffset = relativeMouseY - objectInDrag.y;
 				}
 				else
@@ -409,14 +410,23 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if ((objectMoveInitialMousePosition - FlxG.mouse.getGlobalPosition()).isZero())
 			return;
 
-		var time = getNearestTickFromTime(Math.round(state.getTimeFromY(FlxG.mouse.globalY - objectMoveGrabOffset) / state.trackSpeed), state.beatSnap.value);
-		var offset = Math.round(time - timeDragStart);
-		var laneOffset = FlxMath.boundInt(playfield.getLaneFromX(FlxG.mouse.globalX), 0, 7)
-			- FlxMath.boundInt(playfield.getLaneFromX(objectMoveInitialMousePosition.x), 0, 7);
-
-		if (longNoteInDrag != null || time < 0)
+		if (longNoteInDrag != null)
 			return;
 
+		var time = FlxMath.bound(getNearestTickFromTime(state.getTimeFromY(FlxG.mouse.globalY - objectMoveGrabOffset) / state.trackSpeed,
+			state.beatSnap.value), 0,
+			state.inst.length);
+		var offset = time - timeDragStart;
+		var difference = offset - previousDragOffset;
+		if (difference != 0)
+		{
+			state.selectedObjects.value.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
+			if (!CoolUtil.inBetween(state.selectedObjects.value[0].startTime + difference, 0, state.inst.length))
+				offset = previousDragOffset;
+		}
+
+		var laneOffset = FlxMath.boundInt(playfield.getLaneFromX(FlxG.mouse.globalX), 0, 7)
+			- FlxMath.boundInt(playfield.getLaneFromX(objectMoveInitialMousePosition.x), 0, 7);
 		var dragXAllowed = true;
 
 		if (state.selectedObjects.value.length > 1 && previousLaneDragOffset != laneOffset)
@@ -428,7 +438,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 					notes.push(cast obj);
 			}
 
-			if (notes.length > 0)
+			if (notes.length > 1)
 			{
 				var columnOffset = laneOffset - previousLaneDragOffset;
 				var leftColumn = FlxMath.MAX_VALUE_INT;

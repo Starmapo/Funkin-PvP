@@ -48,12 +48,12 @@ class Song extends JsonObject
 
 		var snapTimePerBeat = point.beatLength / snap;
 		var pointToSnap = time + (forward ? snapTimePerBeat : -snapTimePerBeat);
-		var nearestTick = ((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
+		var nearestTick = Math.round((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
 
 		if (Math.abs(nearestTick - time) <= snapTimePerBeat)
 			return nearestTick;
 
-		return (((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
+		return (Math.round((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
 	}
 
 	public static function closestTickToSnap(song:Song, time:Float, snap:Int)
@@ -421,17 +421,16 @@ class Song extends JsonObject
 			return FlxSort.byValues(FlxSort.DESCENDING, a.maxTime, b.maxTime);
 		});
 		var lastObject = copiedNotes[0];
-		var lastTime:Float = lastObject.maxTime;
+		var lastTime = lastObject.maxTime;
 
-		// for whatever reason, float maps aren't supported, so I have to make it a string map
-		var durations:Map<String, Int> = [];
+		var durations:Map<String, Float> = [];
 		var i = timingPoints.length - 1;
 		while (i >= 0)
 		{
 			var point = timingPoints[i];
 			if (point.startTime <= lastTime)
 			{
-				var duration = Math.round(lastTime - (i == 0 ? 0 : point.startTime));
+				var duration = lastTime - (i == 0 ? 0 : point.startTime);
 				lastTime = point.startTime;
 
 				var bpm = Std.string(point.bpm);
@@ -444,7 +443,7 @@ class Song extends JsonObject
 		}
 
 		var commonBPM:Float = 0;
-		var maxDuration:Int = 0;
+		var maxDuration:Float = 0;
 		for (bpm => duration in durations)
 		{
 			if (duration > maxDuration)

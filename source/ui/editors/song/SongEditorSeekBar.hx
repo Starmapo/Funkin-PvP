@@ -159,7 +159,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 
 	function seekToPos(targetPos:Float)
 	{
-		if (Math.round(targetPos) != Math.round(state.inst.time) && targetPos >= 0 && targetPos <= state.inst.length)
+		if (targetPos != state.inst.time && targetPos >= 0 && targetPos <= state.inst.length)
 		{
 			if (Math.abs(state.inst.time - targetPos) < 500)
 				return;

@@ -183,21 +183,31 @@ class SongEditorNoteGroup extends FlxBasic
 				}
 			case SongEditorActionManager.MOVE_OBJECTS:
 				var batch:Array<ITimingObject> = params.objects;
+				var hasNote = false;
 				for (note in notes)
 				{
 					if (batch.contains(note.info))
 					{
 						note.updateAnims();
 						note.refreshPositionAndSize();
+						hasNote = true;
 					}
 				}
+				if (hasNote)
+					notes.sort(sortNotes);
 			case SongEditorActionManager.RESNAP_OBJECTS:
 				var batch:Array<ITimingObject> = params.objects;
+				var hasNote = false;
 				for (note in notes)
 				{
 					if (batch.contains(note.info))
+					{
 						note.refreshPositionAndSize();
+						hasNote = true;
+					}
 				}
+				if (hasNote)
+					notes.sort(sortNotes);
 			case SongEditorActionManager.FLIP_NOTES:
 				var batch:Array<NoteInfo> = params.notes;
 				for (note in notes)
@@ -213,24 +223,30 @@ class SongEditorNoteGroup extends FlxBasic
 
 	function onSelectedNote(info:ITimingObject)
 	{
-		for (note in notes)
+		if (Std.isOfType(info, NoteInfo))
 		{
-			if (note.info == info)
+			for (note in notes)
 			{
-				note.selectionSprite.visible = true;
-				break;
+				if (note.info == info)
+				{
+					note.selectionSprite.visible = true;
+					break;
+				}
 			}
 		}
 	}
 
 	function onDeselectedNote(info:ITimingObject)
 	{
-		for (note in notes)
+		if (Std.isOfType(info, NoteInfo))
 		{
-			if (note.info == info)
+			for (note in notes)
 			{
-				note.selectionSprite.visible = false;
-				break;
+				if (note.info == info)
+				{
+					note.selectionSprite.visible = false;
+					break;
+				}
 			}
 		}
 	}
