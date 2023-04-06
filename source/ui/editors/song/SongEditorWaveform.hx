@@ -43,17 +43,16 @@ class SongEditorWaveform extends FlxBasic
 
 	override function draw()
 	{
-		var drewSlice = false;
-		for (i in 0...slices.length)
+		if (slices.length == 0)
+			return;
+
+		var index = Std.int(state.inst.time / state.inst.length * slices.length);
+		var amount = FlxMath.maxInt(6, Std.int(2.5 / state.trackSpeed + 0.5));
+		for (i in 0...amount)
 		{
-			var slice = slices[i];
-			if (slice.isOnScreen())
-			{
-				slice.draw();
-				drewSlice = true;
-			}
-			else if (drewSlice)
-				break;
+			var sliceIndex = Std.int(index + (i - amount / 2));
+			if (CoolUtil.inBetween(sliceIndex, 0, slices.length - 1) && slices[sliceIndex].isOnScreen())
+				slices[sliceIndex].draw();
 		}
 	}
 

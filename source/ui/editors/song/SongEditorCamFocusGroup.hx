@@ -17,15 +17,20 @@ class SongEditorCamFocusGroup extends FlxBasic
 
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
+	var objectPool:Array<SongEditorCamFocus>;
+	var lastPooledObjectIndex:Int = -1;
 
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
 		this.state = state;
 		this.playfield = playfield;
+
 		for (info in state.song.cameraFocuses)
 			createCamFocus(info);
+		initializeObjectPool();
 
+		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);
 		state.actionManager.onEvent.add(onEvent);
 		state.selectedObjects.itemAdded.add(onSelectedCameraFocus);
@@ -36,13 +41,37 @@ class SongEditorCamFocusGroup extends FlxBasic
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
 
+	override function update(elapsed:Float)
+	{
+		var i = objectPool.length - 1;
+		while (i >= 0)
+		{
+			var obj = objectPool[i];
+			if (!obj.objectOnScreen())
+				objectPool.remove(obj);
+			i--;
+		}
+
+		var i = lastPooledObjectIndex + 1;
+		while (i < camFocuses.length)
+		{
+			var obj = camFocuses[i];
+			if (obj.objectOnScreen())
+			{
+				objectPool.push(obj);
+				lastPooledObjectIndex = i;
+			}
+			i++;
+		}
+	}
+
 	override function draw()
 	{
-		for (i in 0...camFocuses.length)
+		for (i in 0...objectPool.length)
 		{
-			var camFocus = camFocuses[i];
-			if (camFocus.isOnScreen())
-				camFocus.draw();
+			var obj = objectPool[i];
+			if (obj.isOnScreen())
+				obj.draw();
 		}
 	}
 
@@ -81,6 +110,37 @@ class SongEditorCamFocusGroup extends FlxBasic
 		return FlxSort.byValues(FlxSort.ASCENDING, a.info.startTime, b.info.startTime);
 	}
 
+	function initializeObjectPool()
+	{
+		objectPool = [];
+		lastPooledObjectIndex = -1;
+
+		for (i in 0...camFocuses.length)
+		{
+			var obj = camFocuses[i];
+			if (!obj.objectOnScreen())
+				continue;
+			objectPool.push(obj);
+			lastPooledObjectIndex = i;
+		}
+
+		if (lastPooledObjectIndex == -1)
+		{
+			lastPooledObjectIndex = camFocuses.length - 1;
+			while (lastPooledObjectIndex >= 0)
+			{
+				var obj = camFocuses[lastPooledObjectIndex];
+				if (obj.info.startTime < state.inst.time)
+					break;
+			}
+		}
+	}
+
+	function onSongSeeked(_, _)
+	{
+		initializeObjectPool();
+	}
+
 	function onRateChanged(_, _)
 	{
 		if (Settings.editorScaleSpeedWithRate.value)
@@ -104,7 +164,10 @@ class SongEditorCamFocusGroup extends FlxBasic
 		{
 			case SongEditorActionManager.ADD_OBJECT:
 				if (Std.isOfType(params.object, CameraFocus))
+				{
 					createCamFocus(cast params.object, true);
+					initializeObjectPool();
+				}
 			case SongEditorActionManager.REMOVE_OBJECT:
 				if (Std.isOfType(params.object, CameraFocus))
 				{
@@ -114,6 +177,7 @@ class SongEditorCamFocusGroup extends FlxBasic
 						{
 							camFocuses.remove(camFocus);
 							camFocus.destroy();
+							initializeObjectPool();
 							break;
 						}
 					}
@@ -130,9 +194,13 @@ class SongEditorCamFocusGroup extends FlxBasic
 					}
 				}
 				if (added)
+				{
 					camFocuses.sort(sortCamFocuses);
+					initializeObjectPool();
+				}
 			case SongEditorActionManager.REMOVE_OBJECT_BATCH:
 				var batch:Array<ITimingObject> = params.objects;
+				var hasObject = false;
 				var i = camFocuses.length - 1;
 				while (i >= 0)
 				{
@@ -141,9 +209,12 @@ class SongEditorCamFocusGroup extends FlxBasic
 					{
 						camFocuses.remove(camFocus);
 						camFocus.destroy();
+						hasObject = true;
 					}
 					i--;
 				}
+				if (hasObject)
+					initializeObjectPool();
 			case SongEditorActionManager.MOVE_OBJECTS, SongEditorActionManager.RESNAP_OBJECTS:
 				var batch:Array<ITimingObject> = params.objects;
 				var hasCamFocus = false;
@@ -156,7 +227,10 @@ class SongEditorCamFocusGroup extends FlxBasic
 					}
 				}
 				if (hasCamFocus)
+				{
 					camFocuses.sort(sortCamFocuses);
+					initializeObjectPool();
+				}
 		}
 	}
 
@@ -209,6 +283,7 @@ class SongEditorCamFocusGroup extends FlxBasic
 	{
 		for (camFocus in camFocuses)
 			camFocus.updatePosition();
+		initializeObjectPool();
 	}
 }
 
@@ -256,6 +331,12 @@ class SongEditorCamFocus extends FlxSpriteGroup implements ISongEditorTimingObje
 	public function isHovered()
 	{
 		return FlxG.mouse.overlaps(line);
+	}
+
+	public function objectOnScreen()
+	{
+		return info.startTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
+			&& info.startTime * state.trackSpeed <= state.trackPositionY + playfield.bg.height;
 	}
 
 	function getColor()

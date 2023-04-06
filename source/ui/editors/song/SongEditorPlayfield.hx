@@ -54,6 +54,8 @@ class SongEditorPlayfield extends FlxGroup
 		timeline.update(elapsed);
 		if (type == NOTES)
 			noteGroup.update(elapsed);
+		else
+			camFocusGroup.update(elapsed);
 	}
 
 	public function getLaneFromX(x:Float)
