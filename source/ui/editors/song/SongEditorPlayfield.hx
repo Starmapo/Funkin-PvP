@@ -51,6 +51,9 @@ class SongEditorPlayfield extends FlxGroup
 	override function update(elapsed:Float)
 	{
 		playfieldButton.update(elapsed);
+		timeline.update(elapsed);
+		if (type == NOTES)
+			noteGroup.update(elapsed);
 	}
 
 	public function getLaneFromX(x:Float)

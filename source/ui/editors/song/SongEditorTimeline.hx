@@ -19,6 +19,8 @@ class SongEditorTimeline extends FlxBasic
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
 	var cachedLines:Map<Int, Array<SongEditorTimelineTick>> = new Map();
+	var linePool:Array<SongEditorTimelineTick>;
+	var lastPooledLineIndex:Int = -1;
 
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
@@ -28,6 +30,7 @@ class SongEditorTimeline extends FlxBasic
 
 		initializeLines();
 
+		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);
 		state.beatSnap.valueChanged.add(onBeatSnapChanged);
 		state.actionManager.onEvent.add(onEvent);
@@ -35,11 +38,35 @@ class SongEditorTimeline extends FlxBasic
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
 
-	override function draw()
+	override function update(elapsed:Float)
 	{
-		for (i in 0...lines.length)
+		var i = linePool.length - 1;
+		while (i >= 0)
+		{
+			var line = linePool[i];
+			if (!line.objectOnScreen())
+				linePool.remove(line);
+			i--;
+		}
+
+		var i = lastPooledLineIndex + 1;
+		while (i < lines.length)
 		{
 			var line = lines[i];
+			if (line.objectOnScreen())
+			{
+				linePool.push(line);
+				lastPooledLineIndex = i;
+			}
+			i++;
+		}
+	}
+
+	override function draw()
+	{
+		for (i in 0...linePool.length)
+		{
+			var line = linePool[i];
 			if (line.isOnScreen())
 				line.draw();
 		}
@@ -62,6 +89,8 @@ class SongEditorTimeline extends FlxBasic
 		if (cachedLines.exists(state.beatSnap.value))
 		{
 			lines = cachedLines.get(state.beatSnap.value);
+			refreshLines();
+			initializeLinePool();
 			return;
 		}
 
@@ -114,6 +143,27 @@ class SongEditorTimeline extends FlxBasic
 
 		cachedLines.set(state.beatSnap.value, newLines);
 		lines = newLines;
+		initializeLinePool();
+	}
+
+	function initializeLinePool()
+	{
+		linePool = [];
+		lastPooledLineIndex = -1;
+
+		for (i in 0...lines.length)
+		{
+			var line = lines[i];
+			if (!line.objectOnScreen())
+				continue;
+			linePool.push(line);
+			lastPooledLineIndex = i;
+		}
+	}
+
+	function onSongSeeked(_, _)
+	{
+		initializeLinePool();
 	}
 
 	function onRateChanged(_, _)
@@ -124,7 +174,7 @@ class SongEditorTimeline extends FlxBasic
 
 	function onBeatSnapChanged(_, _)
 	{
-		initializeAndRefreshLines();
+		initializeLines();
 	}
 
 	function onEvent(type:String, params:Dynamic)
@@ -179,12 +229,7 @@ class SongEditorTimeline extends FlxBasic
 	{
 		for (line in lines)
 			line.updatePosition();
-	}
-
-	function initializeAndRefreshLines()
-	{
-		initializeLines();
-		refreshLines();
+		initializeLinePool();
 	}
 }
 
@@ -242,7 +287,7 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 		line.color = getLineColor(index % state.beatSnap.value, index);
 	}
 
-	public function lineOnScreen()
+	public function objectOnScreen()
 	{
 		return time * state.trackSpeed >= state.trackPositionY - playfield.bg.height
 			&& time * state.trackSpeed <= state.trackPositionY + playfield.bg.height;
