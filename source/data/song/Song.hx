@@ -50,7 +50,7 @@ class Song extends JsonObject
 		var pointToSnap = time + (forward ? snapTimePerBeat : -snapTimePerBeat);
 		var nearestTick = Math.round((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
 
-		if (Math.abs(nearestTick - time) <= snapTimePerBeat)
+		if (Std.int(Math.abs(nearestTick - time)) <= Std.int(snapTimePerBeat))
 			return nearestTick;
 
 		return (Math.round((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;

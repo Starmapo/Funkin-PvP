@@ -105,25 +105,9 @@ class SongEditorTimeline extends FlxBasic
 
 			var pointLength = state.song.getTimingPointLength(point);
 			var startTime = point.startTime;
-			var numBeatsOffsetted = 0;
 
-			if (point == state.song.timingPoints[0])
-			{
-				while (true)
-				{
-					if ((numBeatsOffsetted / state.beatSnap.value) % point.meter == 0
-						&& numBeatsOffsetted % state.beatSnap.value == 0
-						&& startTime <= -2000)
-						break;
-
-					numBeatsOffsetted++;
-					startTime -= point.beatLength;
-					pointLength += point.beatLength;
-				}
-			}
-
-			if (point == state.song.timingPoints[state.song.timingPoints.length - 1])
-				pointLength = state.inst.length + point.beatLength * numBeatsOffsetted + 2000;
+			if (state.song.timingPoints.length == 1)
+				pointLength = state.inst.length - startTime;
 
 			var i = 0;
 			while (i < pointLength / point.beatLength * state.beatSnap.value)
@@ -184,7 +168,8 @@ class SongEditorTimeline extends FlxBasic
 			case SongEditorActionManager.ADD_OBJECT, SongEditorActionManager.REMOVE_OBJECT:
 				if (Std.isOfType(params.object, TimingPoint))
 					reinitialize();
-			case SongEditorActionManager.ADD_OBJECT_BATCH, SongEditorActionManager.REMOVE_OBJECT_BATCH:
+			case SongEditorActionManager.ADD_OBJECT_BATCH, SongEditorActionManager.REMOVE_OBJECT_BATCH, SongEditorActionManager.MOVE_OBJECTS,
+				SongEditorActionManager.RESNAP_OBJECTS:
 				var hasTP = false;
 				var batch:Array<ITimingObject> = params.objects;
 				for (obj in batch)

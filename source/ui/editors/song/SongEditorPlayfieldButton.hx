@@ -11,7 +11,6 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import states.editors.SongEditorState;
-import ui.editors.song.SongEditorCamFocusGroup.SongEditorCamFocus;
 import ui.editors.song.SongEditorNoteGroup.SongEditorNote;
 import util.editors.actions.song.SongEditorActionManager;
 
@@ -124,12 +123,10 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 		if (state.currentTool.value == SELECT || state.currentTool.value == LONG_NOTE)
 		{
-			if (object != null)
+			if (object != null && (state.currentTool.value == SELECT || Std.isOfType(object, SongEditorNote)))
 			{
-				if (Std.isOfType(object, SongEditorNote))
-					handleObjectSelectTool(object);
-				else if (state.currentTool.value == SELECT)
-					handleObjectSelectTool(object);
+				handleObjectSelectTool(object);
+				return;
 			}
 
 			if (state.currentTool.value == SELECT)
@@ -170,7 +167,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 			case LONG_NOTE:
 				if (playfield.type == NOTES)
 				{
-					var info = state.actionManager.addNote(lane, time);
+					var info = state.actionManager.addNote(lane, time, time);
 					var longNote = null;
 					for (note in playfield.noteGroup.notes)
 					{
@@ -181,6 +178,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 						}
 					}
 					longNoteInDrag = longNote;
+					longNoteResizeOriginalEndTime = info.endTime;
 				}
 				else
 					state.notificationManager.showNotification("You can't place a long note there!", ERROR);
@@ -222,29 +220,40 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 	function existsObjectAtTimeAndLane(time:Float, lane:Int)
 	{
-		if (lane == 8)
+		time = Std.int(time);
+		if (playfield.type == NOTES)
 		{
-			for (i in 0...state.song.cameraFocuses.length)
+			for (i in 0...state.song.notes.length)
 			{
-				var camFocus = state.song.cameraFocuses[i];
-				if (camFocus.startTime == time)
+				var note = state.song.notes[i];
+
+				if (note.lane != lane)
+					continue;
+
+				if (!note.isLongNote && Std.int(note.startTime) == time)
+					return true;
+
+				if (note.isLongNote && time >= Std.int(note.startTime) && time <= Std.int(note.endTime))
 					return true;
 			}
-			return false;
 		}
-
-		for (i in 0...state.song.notes.length)
+		else
 		{
-			var note = state.song.notes[i];
-
-			if (note.lane != lane)
-				continue;
-
-			if (!note.isLongNote && note.startTime == time)
-				return true;
-
-			if (note.isLongNote && time >= note.startTime && time <= note.endTime)
-				return true;
+			switch (lane)
+			{
+				case 0:
+					for (i in 0...state.song.timingPoints.length)
+					{
+						if (Std.int(state.song.timingPoints[i].startTime) == time)
+							return true;
+					}
+				case 2:
+					for (i in 0...state.song.cameraFocuses.length)
+					{
+						if (Std.int(state.song.cameraFocuses[i].startTime) == time)
+							return true;
+					}
+			}
 		}
 
 		return false;
@@ -312,10 +321,10 @@ class SongEditorPlayfieldButton extends FlxSprite
 		}
 		else
 		{
-			var camFocus = playfield.camFocusGroup != null ? playfield.camFocusGroup.getHoveredCamFocus() : null;
-			if (camFocus != null)
+			var obj = playfield.getHoveredObject();
+			if (obj != null)
 			{
-				removeObject(camFocus);
+				removeObject(obj);
 				return;
 			}
 		}
@@ -496,7 +505,12 @@ class SongEditorPlayfieldButton extends FlxSprite
 		}
 		else
 		{
-			for (obj in playfield.camFocusGroup.camFocuses)
+			for (obj in playfield.otherGroup.timingPoints)
+			{
+				if (state.selectedObjects.value.contains(obj.info))
+					obj.updatePosition();
+			}
+			for (obj in playfield.otherGroup.camFocuses)
 			{
 				if (state.selectedObjects.value.contains(obj.info))
 					obj.updatePosition();

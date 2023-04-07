@@ -87,7 +87,7 @@ class SongEditorState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		song = Song.loadSong('mods/fnf/songs/SO LONG/Not Specified.json');
+		song = Song.loadSong('mods/fnf/songs/Reminisce/Hard.json');
 		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
 		inst.onComplete = onSongComplete;
 		vocals = FlxG.sound.load(Paths.getSongVocals(song), 1, false, FlxG.sound.defaultMusicGroup);
@@ -184,11 +184,11 @@ class SongEditorState extends FNFState
 		zoomOutButton.update(elapsed);
 		compositionPanel.update(elapsed);
 		editPanel.update(elapsed);
-		detailsPanel.update(elapsed);
 		if (playfieldNotes.exists)
 			playfieldNotes.update(elapsed);
 		if (playfieldOther.exists)
 			playfieldOther.update(elapsed);
+		detailsPanel.update(elapsed);
 		notificationManager.update(elapsed);
 		tooltip.update(elapsed);
 
@@ -433,7 +433,7 @@ class SongEditorState extends FNFState
 
 		if (Settings.editorLiveMapping.value)
 		{
-			var time = Math.round(inst.time);
+			var time = inst.time;
 			for (i in 0...8)
 			{
 				if (!FlxG.keys.checkStatus(ONE + i, JUST_PRESSED))
@@ -442,7 +442,7 @@ class SongEditorState extends FNFState
 				var notesAtTime:Array<NoteInfo> = [];
 				for (note in song.notes)
 				{
-					if (note.lane == i && note.startTime == time)
+					if (note.lane == i && Std.int(note.startTime) == Std.int(time))
 						notesAtTime.push(note);
 				}
 
@@ -506,6 +506,8 @@ class SongEditorState extends FNFState
 			time = 0;
 		if (time > inst.length)
 			time = inst.length - 100;
+
+		trace(inst.time, time, forward);
 
 		setSongTime(time);
 	}
@@ -653,6 +655,18 @@ class SongEditorState extends FNFState
 	{
 		if (selectedObjects.value.length == 0)
 			return;
+
+		var tpCount = 0;
+		for (i in 0...selectedObjects.value.length)
+		{
+			if (Std.isOfType(selectedObjects.value[i], TimingPoint))
+				tpCount++;
+		}
+		if (tpCount >= song.timingPoints.length)
+		{
+			notificationManager.showNotification('You must have atleast 1 timing point in your map!', WARNING);
+			return;
+		}
 
 		actionManager.perform(new ActionRemoveObjectBatch(this, selectedObjects.value.copy()));
 	}

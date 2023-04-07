@@ -320,10 +320,13 @@ class SongEditorEditPanel extends EditorPanel
 		waveformDropdown = new EditorDropdownMenu(waveformLabel.x + inputSpacing, waveformLabel.y - 4, EditorDropdownMenu.makeStrIdLabelArray(waveformTypes),
 			function(id)
 			{
-				state.inst.pause();
-				state.vocals.pause();
-				state.playfieldNotes.waveform.type = id;
-				state.playfieldNotes.waveform.reloadWaveform();
+				if (state.playfieldNotes.waveform.type != id)
+				{
+					state.inst.pause();
+					state.vocals.pause();
+					state.playfieldNotes.waveform.type = id;
+					state.playfieldNotes.waveform.reloadWaveform();
+				}
 			}, this);
 		waveformDropdown.selectedId = state.playfieldNotes.waveform.type;
 		state.dropdowns.push(waveformDropdown);

@@ -20,7 +20,7 @@ class SongEditorPlayfield extends FlxGroup
 	public var timeline:SongEditorTimeline;
 	public var waveform:SongEditorWaveform;
 	public var noteGroup:SongEditorNoteGroup;
-	public var camFocusGroup:SongEditorCamFocusGroup;
+	public var otherGroup:SongEditorOtherGroup;
 	public var playfieldButton:SongEditorPlayfieldButton;
 
 	var bgColor:FlxColor = FlxColor.fromRGB(24, 24, 24);
@@ -46,7 +46,7 @@ class SongEditorPlayfield extends FlxGroup
 			createNoteGroup();
 		}
 		else
-			createCamFocusGroup();
+			createOtherGroup();
 		createPlayfieldButton();
 	}
 
@@ -57,7 +57,7 @@ class SongEditorPlayfield extends FlxGroup
 		if (type == NOTES)
 			noteGroup.update(elapsed);
 		else
-			camFocusGroup.update(elapsed);
+			otherGroup.update(elapsed);
 	}
 
 	public function getLaneFromX(x:Float)
@@ -79,7 +79,7 @@ class SongEditorPlayfield extends FlxGroup
 		}
 		else
 		{
-			var obj = camFocusGroup.getHoveredCamFocus();
+			var obj = otherGroup.getHoveredObject();
 			if (obj != null)
 				return obj;
 		}
@@ -153,10 +153,10 @@ class SongEditorPlayfield extends FlxGroup
 		add(noteGroup);
 	}
 
-	function createCamFocusGroup()
+	function createOtherGroup()
 	{
-		camFocusGroup = new SongEditorCamFocusGroup(state, this);
-		add(camFocusGroup);
+		otherGroup = new SongEditorOtherGroup(state, this);
+		add(otherGroup);
 	}
 
 	function createPlayfieldButton()
