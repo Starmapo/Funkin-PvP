@@ -3,6 +3,7 @@ package ui.editors;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -129,19 +130,23 @@ class EditorInputTextField extends FlxText
 	override function set_visible(value:Bool)
 	{
 		if (textField != null)
-		{
 			textField.visible = value;
-		}
 		return super.set_visible(value);
+	}
+
+	override function set_alpha(value:Float)
+	{
+		value = FlxMath.bound(value, 0, 1);
+		if (textField != null)
+			textField.alpha = value;
+		return super.set_alpha(value);
 	}
 
 	override function set_text(value:String)
 	{
 		text = value;
 		if (textField != null)
-		{
 			textField.text = text;
-		}
 		return value;
 	}
 }

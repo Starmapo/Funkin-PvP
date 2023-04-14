@@ -1,6 +1,8 @@
 package ui.editors.song;
 
 import data.Settings;
+import data.song.ITimingObject;
+import data.song.NoteInfo;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
@@ -29,6 +31,10 @@ class SongEditorEditPanel extends EditorPanel
 	var rateStepper:EditorNumericStepper;
 	var beatSnapDropdown:EditorDropdownMenu;
 	var waveformDropdown:EditorDropdownMenu;
+	var instVolumeStepper:EditorNumericStepper;
+	var vocalsVolumeStepper:EditorNumericStepper;
+	var typeInput:EditorInputText;
+	var selectedNotes:Array<NoteInfo> = [];
 
 	public function new(state:SongEditorState)
 	{
@@ -38,22 +44,30 @@ class SongEditorEditPanel extends EditorPanel
 				label: 'Editor'
 			},
 			{
+				name: 'Notes',
+				label: 'Notes'
+			},
+			{
 				name: 'Song',
 				label: 'Song'
 			}
 		]);
-		resize(390, 250);
+		resize(390, 500);
 		x = FlxG.width - width - 10;
 		screenCenter(Y);
-		y -= 132;
 		this.state = state;
 
 		createEditorTab();
+		createNotesTab();
 		createSongTab();
 
 		selected_tab_id = 'Song';
 
 		state.actionManager.onEvent.add(onEvent);
+		state.selectedObjects.itemAdded.add(onSelectedObject);
+		state.selectedObjects.itemRemoved.add(onDeselectedObject);
+		state.selectedObjects.multipleItemsAdded.add(onMultipleObjectsSelected);
+		state.selectedObjects.arrayCleared.add(onAllObjectsDeselected);
 	}
 
 	public function updateSpeedStepper()
@@ -197,7 +211,7 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(velocityStepper);
 
-		var saveButton = new FlxUIButton(0, velocityStepper.y + velocityStepper.height + 20, 'Save', function()
+		var saveButton = new FlxUIButton(0, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
 		{
 			state.save();
 		});
@@ -237,30 +251,6 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(rateStepper);
 		state.tooltip.addTooltip(rateStepper, 'Hotkeys: CTRL + -/+');
-
-		var instVolumeLabel = new EditorText(speedStepper.x + speedStepper.width + spacing, speedStepper.y, 0, 'Instrumental Volume:');
-		tab.add(instVolumeLabel);
-
-		var instVolumeStepper = new EditorNumericStepper(instVolumeLabel.x + inputSpacing, instVolumeLabel.y - 1, 10,
-			Settings.editorInstVolume.defaultValue * 100, Settings.editorInstVolume.minValue * 100, Settings.editorInstVolume.maxValue * 100);
-		instVolumeStepper.value = Settings.editorInstVolume.value * 100;
-		instVolumeStepper.valueChanged.add(function(value, _)
-		{
-			state.inst.volume = value / 100;
-		});
-		tab.add(instVolumeStepper);
-
-		var vocalsVolumeLabel = new EditorText(rateStepper.x + rateStepper.width + spacing, rateStepper.y, 0, 'Vocals Volume:');
-		tab.add(vocalsVolumeLabel);
-
-		var vocalsVolumeStepper = new EditorNumericStepper(vocalsVolumeLabel.x + inputSpacing, vocalsVolumeLabel.y - 1, 10,
-			Settings.editorVocalsVolume.defaultValue * 100, Settings.editorVocalsVolume.minValue * 100, Settings.editorVocalsVolume.maxValue * 100);
-		vocalsVolumeStepper.value = Settings.editorVocalsVolume.value * 100;
-		vocalsVolumeStepper.valueChanged.add(function(value, _)
-		{
-			state.vocals.volume = value / 100;
-		});
-		tab.add(vocalsVolumeStepper);
 
 		var scaleSpeedCheckbox = new EditorCheckbox(rateLabel.x, rateLabel.y + rateLabel.height + spacing, 'Scale Speed with Playback Rate', 0);
 		scaleSpeedCheckbox.button.setAllLabelOffsets(0, 8);
@@ -364,10 +354,59 @@ class SongEditorEditPanel extends EditorPanel
 		};
 		tab.add(placeOnNearestTickCheckbox);
 
+		var instVolumeLabel = new EditorText(placeOnNearestTickCheckbox.x, placeOnNearestTickCheckbox.y + placeOnNearestTickCheckbox.height + spacing, 0,
+			'Instrumental Volume:');
+		tab.add(instVolumeLabel);
+
+		instVolumeStepper = new EditorNumericStepper(instVolumeLabel.x + inputSpacing, instVolumeLabel.y - 1, 10,
+			Settings.editorInstVolume.defaultValue * 100, Settings.editorInstVolume.minValue * 100, Settings.editorInstVolume.maxValue * 100);
+		instVolumeStepper.value = Settings.editorInstVolume.value * 100;
+		instVolumeStepper.valueChanged.add(function(value, _)
+		{
+			state.inst.volume = value / 100;
+		});
+		tab.add(instVolumeStepper);
+
+		var vocalsVolumeLabel = new EditorText(instVolumeLabel.x, instVolumeLabel.y + instVolumeLabel.height + spacing, 0, 'Vocals Volume:');
+		tab.add(vocalsVolumeLabel);
+
+		vocalsVolumeStepper = new EditorNumericStepper(vocalsVolumeLabel.x + inputSpacing, vocalsVolumeLabel.y - 1, 10,
+			Settings.editorVocalsVolume.defaultValue * 100, Settings.editorVocalsVolume.minValue * 100, Settings.editorVocalsVolume.maxValue * 100);
+		vocalsVolumeStepper.value = Settings.editorVocalsVolume.value * 100;
+		vocalsVolumeStepper.valueChanged.add(function(value, _)
+		{
+			state.vocals.volume = value / 100;
+		});
+		tab.add(vocalsVolumeStepper);
+
 		tab.add(waveformDropdown);
 		tab.add(beatSnapDropdown);
 
 		addGroup(tab);
+	}
+
+	function createNotesTab()
+	{
+		var tab = createTab('Notes');
+
+		var spacing = 4;
+		var inputSpacing = 100;
+
+		var typeLabel = new EditorText(4, 5, 0, 'Type:');
+		tab.add(typeLabel);
+
+		typeInput = new EditorInputText(typeLabel.x + inputSpacing, 4, inputSpacing);
+		typeInput.textChanged.add(function(text, lastText) {});
+		tab.add(typeInput);
+
+		addGroup(tab);
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		var hideSteppers = beatSnapDropdown.dropPanel.visible || waveformDropdown.dropPanel.visible;
+		vocalsVolumeStepper.alpha = instVolumeStepper.alpha = hideSteppers ? 0 : 1;
 	}
 
 	function onEvent(type:String, params:Dynamic)
@@ -391,5 +430,63 @@ class SongEditorEditPanel extends EditorPanel
 			case SongEditorActionManager.CHANGE_INITIAL_SV:
 				velocityStepper.changeWithoutTrigger(params.initialScrollVelocity);
 		}
+	}
+
+	function onSelectedObject(obj:ITimingObject)
+	{
+		if (Std.isOfType(obj, NoteInfo))
+		{
+			selectedNotes.push(cast obj);
+			updateSelectedNotes();
+		}
+	}
+
+	function onDeselectedObject(obj:ITimingObject)
+	{
+		if (Std.isOfType(obj, NoteInfo))
+		{
+			selectedNotes.remove(cast obj);
+			updateSelectedNotes();
+		}
+	}
+
+	function onMultipleObjectsSelected(objects:Array<ITimingObject>)
+	{
+		var foundNote = false;
+		for (obj in objects)
+		{
+			if (Std.isOfType(obj, NoteInfo))
+			{
+				selectedNotes.push(cast obj);
+				foundNote = true;
+			}
+		}
+		if (foundNote)
+			updateSelectedNotes();
+	}
+
+	function onAllObjectsDeselected()
+	{
+		selectedNotes.resize(0);
+		updateSelectedNotes();
+	}
+
+	function updateSelectedNotes()
+	{
+		if (selectedNotes.length > 0)
+		{
+			var type = selectedNotes[0].type;
+			for (i in 1...selectedNotes.length)
+			{
+				if (selectedNotes[i].type != type)
+				{
+					type = '...';
+					break;
+				}
+			}
+			typeInput.text = type;
+		}
+		else
+			typeInput.text = '';
 	}
 }

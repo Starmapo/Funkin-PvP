@@ -149,9 +149,7 @@ class MusicTiming implements IFlxDestroyable
 			updateCurStep();
 		}
 		else
-		{
 			time = -startDelay * music.pitch;
-		}
 	}
 
 	public function update(elapsed:Float)
@@ -171,9 +169,7 @@ class MusicTiming implements IFlxDestroyable
 
 			music.play(true, time);
 			for (extra in extraMusic)
-			{
 				extra.play(true, time);
-			}
 
 			if (onStart != null)
 				onStart(this);

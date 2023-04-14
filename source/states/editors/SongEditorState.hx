@@ -338,13 +338,9 @@ class SongEditorState extends FNFState
 				inst.play();
 				vocals.play();
 				if (inst.time != lastTime)
-				{
 					songSeeked.dispatch(inst.time, lastTime);
-				}
 				if (wasStopped)
-				{
 					setHitsoundNoteIndex();
-				}
 			}
 		}
 
