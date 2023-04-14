@@ -41,6 +41,8 @@ class Settings
 	public static var editorBFHitsounds:Bindable<Bool>;
 	public static var editorLiveMapping:Bindable<Bool>;
 	public static var editorPlaceOnNearestTick:Bindable<Bool>;
+	public static var editorInstVolume:BindableFloat;
+	public static var editorVocalsVolume:BindableFloat;
 
 	public static function loadData()
 	{
@@ -72,6 +74,8 @@ class Settings
 		loadBindable('editorBFHitsounds', true);
 		loadBindable('editorLiveMapping', true);
 		loadBindable('editorPlaceOnNearestTick', true);
+		loadBindableFloat('editorInstVolume', 1, 0, 1);
+		loadBindableFloat('editorVocalsVolume', 1, 0, 1);
 
 		if (!FlxG.fullscreen)
 		{
@@ -117,6 +121,8 @@ class Settings
 		saveBindable('editorBFHitsounds');
 		saveBindable('editorLiveMapping');
 		saveBindable('editorPlaceOnNearestTick');
+		saveBindable('editorInstVolume');
+		saveBindable('editorVocalsVolume');
 
 		FlxG.save.flush();
 	}

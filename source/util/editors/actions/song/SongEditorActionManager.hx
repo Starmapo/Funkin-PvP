@@ -4,6 +4,7 @@ import data.song.CameraFocus;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
 import data.song.Song;
+import data.song.TimingPoint;
 import flixel.math.FlxMath;
 import states.editors.SongEditorState;
 import util.editors.actions.ActionManager;
@@ -45,6 +46,17 @@ class SongEditorActionManager extends ActionManager
 		});
 		perform(new ActionAddObject(state, note));
 		return note;
+	}
+
+	public function addTimingPoint(startTime:Float, bpm:Float, meter:Int = 4)
+	{
+		var timingPoint = new TimingPoint({
+			startTime: startTime,
+			bpm: bpm,
+			meter: meter
+		});
+		perform(new ActionAddObject(state, timingPoint));
+		return timingPoint;
 	}
 
 	public function addCamFocus(startTime:Float, char:CameraFocusChar = OPPONENT)

@@ -212,7 +212,7 @@ class SongEditorEditPanel extends EditorPanel
 		var tab = createTab('Editor');
 
 		var spacing = 4;
-		var inputSpacing = 100;
+		var inputSpacing = 125;
 
 		var speedLabel = new EditorText(4, 5, 0, 'Scroll Speed:');
 		tab.add(speedLabel);
@@ -237,6 +237,30 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(rateStepper);
 		state.tooltip.addTooltip(rateStepper, 'Hotkeys: CTRL + -/+');
+
+		var instVolumeLabel = new EditorText(speedStepper.x + speedStepper.width + spacing, speedStepper.y, 0, 'Instrumental Volume:');
+		tab.add(instVolumeLabel);
+
+		var instVolumeStepper = new EditorNumericStepper(instVolumeLabel.x + inputSpacing, instVolumeLabel.y - 1, 10,
+			Settings.editorInstVolume.defaultValue * 100, Settings.editorInstVolume.minValue * 100, Settings.editorInstVolume.maxValue * 100);
+		instVolumeStepper.value = Settings.editorInstVolume.value * 100;
+		instVolumeStepper.valueChanged.add(function(value, _)
+		{
+			state.inst.volume = value / 100;
+		});
+		tab.add(instVolumeStepper);
+
+		var vocalsVolumeLabel = new EditorText(rateStepper.x + rateStepper.width + spacing, rateStepper.y, 0, 'Vocals Volume:');
+		tab.add(vocalsVolumeLabel);
+
+		var vocalsVolumeStepper = new EditorNumericStepper(vocalsVolumeLabel.x + inputSpacing, vocalsVolumeLabel.y - 1, 10,
+			Settings.editorVocalsVolume.defaultValue * 100, Settings.editorVocalsVolume.minValue * 100, Settings.editorVocalsVolume.maxValue * 100);
+		vocalsVolumeStepper.value = Settings.editorVocalsVolume.value * 100;
+		vocalsVolumeStepper.valueChanged.add(function(value, _)
+		{
+			state.vocals.volume = value / 100;
+		});
+		tab.add(vocalsVolumeStepper);
 
 		var scaleSpeedCheckbox = new EditorCheckbox(rateLabel.x, rateLabel.y + rateLabel.height + spacing, 'Scale Speed with Playback Rate', 0);
 		scaleSpeedCheckbox.button.setAllLabelOffsets(0, 8);

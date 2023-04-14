@@ -2,6 +2,7 @@ package ui.editors.song;
 
 import data.Settings;
 import data.song.CameraFocus.CameraFocusChar;
+import data.song.ITimingObject;
 import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxG;
@@ -153,13 +154,24 @@ class SongEditorPlayfieldButton extends FlxSprite
 			case OBJECT:
 				if (playfield.type == OTHER)
 				{
-					if (lane == 2) // Camera Focus
+					switch (lane)
 					{
-						var char:CameraFocusChar = OPPONENT;
-						var curFocus = state.song.getCameraFocusAt(time);
-						if (curFocus != null)
-							char = (curFocus.char == OPPONENT ? BF : OPPONENT);
-						state.actionManager.addCamFocus(time, char);
+						case 0: // Timing Point
+							var bpm:Float = 120;
+							var meter = 4;
+							var curTimingPoint = state.song.getTimingPointAt(time);
+							if (curTimingPoint != null)
+							{
+								bpm = curTimingPoint.bpm;
+								meter = curTimingPoint.meter;
+							}
+							state.actionManager.addTimingPoint(time, bpm, meter);
+						case 2: // Camera Focus
+							var char:CameraFocusChar = OPPONENT;
+							var curFocus = state.song.getCameraFocusAt(time);
+							if (curFocus != null && curFocus.char == OPPONENT)
+								char = BF;
+							state.actionManager.addCamFocus(time, char);
 					}
 				}
 				else
@@ -181,7 +193,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 					longNoteResizeOriginalEndTime = info.endTime;
 				}
 				else
-					state.notificationManager.showNotification("You can't place a long note there!", ERROR);
+					state.notificationManager.showNotification("You can't place a long note there! Switch to the 'Notes' section.", ERROR);
 			default:
 		}
 	}
@@ -239,20 +251,19 @@ class SongEditorPlayfieldButton extends FlxSprite
 		}
 		else
 		{
-			switch (lane)
+			var objects:Array<ITimingObject> = switch (lane)
 			{
 				case 0:
-					for (i in 0...state.song.timingPoints.length)
-					{
-						if (Std.int(state.song.timingPoints[i].startTime) == time)
-							return true;
-					}
+					cast state.song.timingPoints;
 				case 2:
-					for (i in 0...state.song.cameraFocuses.length)
-					{
-						if (Std.int(state.song.cameraFocuses[i].startTime) == time)
-							return true;
-					}
+					cast state.song.cameraFocuses;
+				default:
+					[];
+			}
+			for (i in 0...objects.length)
+			{
+				if (Std.int(objects[i].startTime) == time)
+					return true;
 			}
 		}
 

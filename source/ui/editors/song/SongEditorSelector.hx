@@ -140,6 +140,11 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		}
 		else
 		{
+			for (obj in state.song.timingPoints)
+			{
+				if (canSelectObject(obj.startTime, dragStart, dragEnd, 0, realStartLane, realEndLane))
+					foundObjects.push(obj);
+			}
 			for (obj in state.song.cameraFocuses)
 			{
 				if (canSelectObject(obj.startTime, dragStart, dragEnd, 2, realStartLane, realEndLane))

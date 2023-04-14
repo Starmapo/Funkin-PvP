@@ -88,9 +88,11 @@ class SongEditorState extends FNFState
 		FlxG.cameras.add(camHUD, false);
 
 		song = Song.loadSong('mods/fnf/songs/Reminisce/Hard.json');
-		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
+		inst = FlxG.sound.load(Paths.getSongInst(song), Settings.editorInstVolume.value, false, FlxG.sound.defaultMusicGroup);
 		inst.onComplete = onSongComplete;
-		vocals = FlxG.sound.load(Paths.getSongVocals(song), 1, false, FlxG.sound.defaultMusicGroup);
+		vocals = FlxG.sound.load(Paths.getSongVocals(song), Settings.editorVocalsVolume.value, false, FlxG.sound.defaultMusicGroup);
+		if (vocals == null)
+			vocals = FlxG.sound.list.add(new FlxSound());
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
@@ -431,7 +433,7 @@ class SongEditorState extends FNFState
 			}
 		}
 
-		if (Settings.editorLiveMapping.value)
+		if (Settings.editorLiveMapping.value && playfieldNotes.exists)
 		{
 			var time = inst.time;
 			for (i in 0...8)
@@ -677,7 +679,10 @@ class SongEditorState extends FNFState
 		if (playfield.type == NOTES)
 			selectedObjects.pushMultiple(cast song.notes);
 		else
+		{
+			selectedObjects.pushMultiple(cast song.timingPoints);
 			selectedObjects.pushMultiple(cast song.cameraFocuses);
+		}
 	}
 
 	function flipSelectedNotes(fullFlip:Bool)

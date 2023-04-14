@@ -137,13 +137,9 @@ class Song extends JsonObject
 				if (section.mustHitSection)
 				{
 					if (noteInfo.lane >= 4)
-					{
 						noteInfo.lane -= 4;
-					}
 					else
-					{
 						noteInfo.lane += 4;
-					}
 				}
 
 				if (curNotes.exists(noteInfo.startTime) && curNotes.get(noteInfo.startTime).contains(noteInfo.lane))
