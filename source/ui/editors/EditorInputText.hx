@@ -127,6 +127,13 @@ class EditorInputTextField extends FlxText
 		updateTextField();
 	}
 
+	override function set_active(value:Bool)
+	{
+		if (textField != null)
+			textField.type = value ? INPUT : DYNAMIC;
+		return super.set_active(value);
+	}
+
 	override function set_visible(value:Bool)
 	{
 		if (textField != null)

@@ -211,7 +211,8 @@ class SongEditorState extends FNFState
 						&& ((note.player == 0 && Settings.editorOpponentHitsounds.value)
 							|| (note.player == 1 && Settings.editorBFHitsounds.value)))
 					{
-						FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
+						var hitsound = FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
+						hitsound.pan = (note.player == 0 ? -0.5 : 0.5);
 						playedHitsound = true;
 					}
 					hitsoundNoteIndex = i + 1;

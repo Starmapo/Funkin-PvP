@@ -4,6 +4,7 @@ import data.Settings;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
 import states.editors.SongEditorState;
@@ -35,6 +36,7 @@ class SongEditorEditPanel extends EditorPanel
 	var vocalsVolumeStepper:EditorNumericStepper;
 	var typeInput:EditorInputText;
 	var selectedNotes:Array<NoteInfo> = [];
+	var notePropertiesGroup:Array<FlxSprite> = [];
 
 	public function new(state:SongEditorState)
 	{
@@ -62,6 +64,8 @@ class SongEditorEditPanel extends EditorPanel
 		createSongTab();
 
 		selected_tab_id = 'Song';
+		updateSelectedNotes();
+		onClick = onClickTab;
 
 		state.actionManager.onEvent.add(onEvent);
 		state.selectedObjects.itemAdded.add(onSelectedObject);
@@ -390,14 +394,19 @@ class SongEditorEditPanel extends EditorPanel
 		var tab = createTab('Notes');
 
 		var spacing = 4;
-		var inputSpacing = 100;
+		var inputWidth = 200;
 
-		var typeLabel = new EditorText(4, 5, 0, 'Type:');
+		var typeLabel = new EditorText(4, 4, 0, 'Type:');
 		tab.add(typeLabel);
+		notePropertiesGroup.push(typeLabel);
 
-		typeInput = new EditorInputText(typeLabel.x + inputSpacing, 4, inputSpacing);
-		typeInput.textChanged.add(function(text, lastText) {});
+		typeInput = new EditorInputText(typeLabel.x, typeLabel.y + typeLabel.height + spacing, inputWidth);
+		typeInput.textChanged.add(function(text, lastText)
+		{
+			state.actionManager.perform(new ActionChangeNoteType(state, selectedNotes.copy(), text));
+		});
 		tab.add(typeInput);
+		notePropertiesGroup.push(typeInput);
 
 		addGroup(tab);
 	}
@@ -413,6 +422,8 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		switch (type)
 		{
+			case SongEditorActionManager.CHANGE_NOTE_TYPE:
+				updateSelectedNotes();
 			case SongEditorActionManager.CHANGE_TITLE:
 				titleInput.text = params.title;
 			case SongEditorActionManager.CHANGE_ARTIST:
@@ -485,8 +496,27 @@ class SongEditorEditPanel extends EditorPanel
 				}
 			}
 			typeInput.text = type;
+			for (obj in notePropertiesGroup)
+			{
+				if (selected_tab_id == 'Notes')
+					obj.active = true;
+				obj.alpha = 1;
+			}
 		}
 		else
+		{
 			typeInput.text = '';
+			for (obj in notePropertiesGroup)
+			{
+				obj.active = false;
+				obj.alpha = 0.5;
+			}
+		}
+	}
+
+	function onClickTab(name:String)
+	{
+		if (selectedNotes.length == 0)
+			updateSelectedNotes();
 	}
 }

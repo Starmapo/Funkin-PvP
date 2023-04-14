@@ -16,6 +16,7 @@ class SongEditorActionManager extends ActionManager
 	public static inline var ADD_OBJECT_BATCH:String = 'add-object-batch';
 	public static inline var REMOVE_OBJECT_BATCH:String = 'remove-object-batch';
 	public static inline var RESIZE_LONG_NOTE:String = 'resize-long-note';
+	public static inline var CHANGE_NOTE_TYPE:String = 'change-note-type';
 	public static inline var MOVE_OBJECTS:String = 'move-objects';
 	public static inline var RESNAP_OBJECTS:String = 'resnap-objects';
 	public static inline var FLIP_NOTES:String = 'flip-notes';
@@ -209,6 +210,41 @@ class ActionResizeLongNote implements IAction
 	public function undo()
 	{
 		new ActionResizeLongNote(state, note, newTime, originalTime).perform();
+	}
+}
+
+class ActionChangeNoteType implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_NOTE_TYPE;
+
+	var state:SongEditorState;
+	var notes:Array<NoteInfo>;
+	var noteType:String;
+	var lastTypes:Map<NoteInfo, String> = new Map();
+
+	public function new(state:SongEditorState, notes:Array<NoteInfo>, noteType:String)
+	{
+		this.state = state;
+		this.notes = notes;
+		this.noteType = noteType;
+	}
+
+	public function perform()
+	{
+		for (note in notes)
+		{
+			lastTypes.set(note, note.type);
+			note.type = noteType;
+		}
+
+		state.actionManager.triggerEvent(type, {notes: notes, noteType: noteType});
+	}
+
+	public function undo()
+	{
+		for (note in notes)
+			note.type = lastTypes.get(note);
+		lastTypes.clear();
 	}
 }
 
