@@ -239,6 +239,13 @@ class SongEditorState extends FNFState
 		FlxDestroyUtil.destroy(rateChanged);
 	}
 
+	override function openSubState(subState)
+	{
+		inst.pause();
+		vocals.pause();
+		super.openSubState(subState);
+	}
+
 	public function setSongTime(time:Float = 0)
 	{
 		var oldTime = inst.time;

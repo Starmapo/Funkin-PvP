@@ -16,7 +16,7 @@ class CameraFocus extends JsonObject implements ITimingObject
 
 	public function new(data:Dynamic)
 	{
-		startTime = readFloat(data.startTime, 0, 0, null, 3);
+		startTime = readFloat(data.startTime, 0, 0);
 		char = readInt(data.char, 0, 0, 2);
 	}
 

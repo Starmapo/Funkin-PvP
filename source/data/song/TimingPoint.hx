@@ -58,7 +58,7 @@ class TimingPoint extends JsonObject implements ITimingObject
 
 	public function new(data:Dynamic)
 	{
-		startTime = readFloat(data.startTime, 0, 0, null, 3);
+		startTime = readFloat(data.startTime, 0, 0);
 		bpm = readFloat(data.bpm, 120, 1, 1000, 3);
 		meter = readInt(data.meter, 4, 1, 16);
 	}

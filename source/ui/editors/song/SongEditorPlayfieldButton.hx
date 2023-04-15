@@ -144,10 +144,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 		var lane = playfield.getLaneFromX(FlxG.mouse.globalX);
 		if (existsObjectAtTimeAndLane(time, lane))
-		{
-			state.notificationManager.showNotification("You can't place there, there's already an object at that time.", ERROR);
 			return;
-		}
 
 		switch (state.currentTool.value)
 		{
@@ -179,7 +176,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 			case LONG_NOTE:
 				if (playfield.type == NOTES)
 				{
-					var info = state.actionManager.addNote(lane, time, time);
+					var info = state.actionManager.addNote(lane, time);
 					var longNote = null;
 					for (note in playfield.noteGroup.notes)
 					{
@@ -190,7 +187,6 @@ class SongEditorPlayfieldButton extends FlxSprite
 						}
 					}
 					longNoteInDrag = longNote;
-					longNoteResizeOriginalEndTime = info.endTime;
 				}
 				else
 					state.notificationManager.showNotification("You can't place a long note there! Switch to the 'Notes' section.", ERROR);
@@ -232,7 +228,6 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 	function existsObjectAtTimeAndLane(time:Float, lane:Int)
 	{
-		time = Std.int(time);
 		if (playfield.type == NOTES)
 		{
 			for (i in 0...state.song.notes.length)
@@ -242,10 +237,10 @@ class SongEditorPlayfieldButton extends FlxSprite
 				if (note.lane != lane)
 					continue;
 
-				if (!note.isLongNote && Std.int(note.startTime) == time)
+				if (!note.isLongNote && Std.int(note.startTime) == Std.int(time))
 					return true;
 
-				if (note.isLongNote && time >= Std.int(note.startTime) && time <= Std.int(note.endTime))
+				if (note.isLongNote && Std.int(time) >= Std.int(note.startTime) && Std.int(time) <= Std.int(note.endTime))
 					return true;
 			}
 		}
@@ -262,7 +257,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 			}
 			for (i in 0...objects.length)
 			{
-				if (Std.int(objects[i].startTime) == time)
+				if (Std.int(objects[i].startTime) == Std.int(time))
 					return true;
 			}
 		}
@@ -368,13 +363,11 @@ class SongEditorPlayfieldButton extends FlxSprite
 			longNoteInDrag.info.startTime = time;
 
 			if (time == longNoteInDrag.info.startTime && !isDraggingLongNoteBackwards)
-			{
 				longNoteInDrag.noteInfo.endTime = 0;
-				longNoteInDrag.refreshPositionAndSize();
-				return;
-			}
 
 			longNoteInDrag.refreshPositionAndSize();
+			FlxG.watch.addQuick('startTime', longNoteInDrag.info.startTime);
+			FlxG.watch.addQuick('endTime', longNoteInDrag.noteInfo.endTime);
 			return;
 		}
 
@@ -391,6 +384,8 @@ class SongEditorPlayfieldButton extends FlxSprite
 			longNoteInDrag.noteInfo.endTime = time;
 
 		longNoteInDrag.refreshPositionAndSize();
+		FlxG.watch.addQuick('startTime', longNoteInDrag.info.startTime);
+		FlxG.watch.addQuick('endTime', longNoteInDrag.noteInfo.endTime);
 	}
 
 	function handleMovingObjects()

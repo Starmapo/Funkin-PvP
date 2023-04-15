@@ -438,6 +438,58 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(paramsInput);
 		notePropertiesGroup.push(paramsInput);
 
+		var resnapAllToCurrentButton = new FlxUIButton(0, paramsInput.y + paramsInput.height + spacing, 'Resnap all notes to currently selected snap',
+			function()
+			{
+				if (state.song.notes.length > 0)
+					state.actionManager.perform(new ActionResnapObjects(state, [state.beatSnap.value], cast state.song.notes.copy()));
+			});
+		resnapAllToCurrentButton.resize(230, resnapAllToCurrentButton.height);
+		resnapAllToCurrentButton.x = (width - resnapAllToCurrentButton.width) / 2;
+		tab.add(resnapAllToCurrentButton);
+
+		var resnapAllToDefaultButton = new FlxUIButton(0, resnapAllToCurrentButton.y + resnapAllToCurrentButton.height + spacing,
+			'Resnap all notes to 1/16 and 1/12 snaps', function()
+		{
+			if (state.song.notes.length > 0)
+				state.actionManager.perform(new ActionResnapObjects(state, [16, 12], cast state.song.notes.copy()));
+		});
+		resnapAllToDefaultButton.resize(200, resnapAllToDefaultButton.height);
+		resnapAllToDefaultButton.x = (width - resnapAllToDefaultButton.width) / 2;
+		tab.add(resnapAllToDefaultButton);
+
+		var resnapSelectedToCurrentButton = new FlxUIButton(0, resnapAllToDefaultButton.y + resnapAllToDefaultButton.height + spacing,
+			'Resnap selected notes to currently selected snap', function()
+		{
+			var selectedNotes:Array<ITimingObject> = [];
+			for (obj in state.selectedObjects.value)
+			{
+				if (Std.isOfType(obj, NoteInfo))
+					selectedNotes.push(obj);
+			}
+			if (selectedNotes.length > 0)
+				state.actionManager.perform(new ActionResnapObjects(state, [state.beatSnap.value], selectedNotes));
+		});
+		resnapSelectedToCurrentButton.resize(250, resnapSelectedToCurrentButton.height);
+		resnapSelectedToCurrentButton.x = (width - resnapSelectedToCurrentButton.width) / 2;
+		tab.add(resnapSelectedToCurrentButton);
+
+		var resnapSelectedToDefaultButton = new FlxUIButton(0, resnapSelectedToCurrentButton.y + resnapSelectedToCurrentButton.height + spacing,
+			'Resnap selected notes to 1/16 and 1/12 snaps', function()
+		{
+			var selectedNotes:Array<ITimingObject> = [];
+			for (obj in state.selectedObjects.value)
+			{
+				if (Std.isOfType(obj, NoteInfo))
+					selectedNotes.push(obj);
+			}
+			if (selectedNotes.length > 0)
+				state.actionManager.perform(new ActionResnapObjects(state, [16, 12], selectedNotes));
+		});
+		resnapSelectedToDefaultButton.resize(230, resnapSelectedToDefaultButton.height);
+		resnapSelectedToDefaultButton.x = (width - resnapSelectedToDefaultButton.width) / 2;
+		tab.add(resnapSelectedToDefaultButton);
+
 		addGroup(tab);
 	}
 

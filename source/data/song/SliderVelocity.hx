@@ -16,7 +16,7 @@ class SliderVelocity extends JsonObject implements ITimingObject
 
 	public function new(data:Dynamic)
 	{
-		startTime = readFloat(data.startTime, 0, 0, null, 3);
+		startTime = readFloat(data.startTime, 0, 0);
 		multiplier = readFloat(data.multiplier, 1, -100, 100, 2);
 	}
 

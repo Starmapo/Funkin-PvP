@@ -54,9 +54,9 @@ class NoteInfo extends JsonObject implements ITimingObject
 
 	public function new(data:Dynamic)
 	{
-		startTime = readInt(data.startTime, 0, 0);
+		startTime = readFloat(data.startTime, 0, 0);
 		lane = readInt(data.lane, 0, 0) % 8;
-		endTime = readInt(data.endTime, 0, 0);
+		endTime = readFloat(data.endTime, 0, 0);
 		type = readString(data.type);
 		params = readString(data.params).split(',');
 	}
