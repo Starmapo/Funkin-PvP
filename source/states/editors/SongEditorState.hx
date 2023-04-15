@@ -22,6 +22,7 @@ import flixel.util.FlxSort;
 import haxe.io.Path;
 import lime.app.Application;
 import lime.system.Clipboard;
+import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorSavePrompt;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
@@ -74,11 +75,11 @@ class SongEditorState extends FNFState
 	var hitsoundNoteIndex:Int = 0;
 	var camHUD:FlxCamera;
 	var savePrompt:SongEditorSavePrompt;
+	var applyOffsetPrompt:SongEditorApplyOffsetPrompt;
 	var camFocusDisplay:SongEditorCamFocusDisplay;
 
 	override function create()
 	{
-		persistentUpdate = true;
 		destroySubStates = false;
 
 		actionManager = new SongEditorActionManager(this);
@@ -145,7 +146,8 @@ class SongEditorState extends FNFState
 
 		editPanel = new SongEditorEditPanel(this);
 
-		savePrompt = new SongEditorSavePrompt(this, onSavePrompt);
+		savePrompt = new SongEditorSavePrompt(onSavePrompt);
+		applyOffsetPrompt = new SongEditorApplyOffsetPrompt(onApplyOffsetPrompt);
 
 		notificationManager = new NotificationManager();
 
@@ -320,6 +322,11 @@ class SongEditorState extends FNFState
 		setSongTime(seekTime);
 	}
 
+	public function openApplyOffsetPrompt()
+	{
+		openSubState(applyOffsetPrompt);
+	}
+
 	function handleInput()
 	{
 		if (!checkAllowInput())
@@ -349,62 +356,38 @@ class SongEditorState extends FNFState
 		var canZoom = timeSinceLastPlayfieldZoom >= 0.1;
 
 		if (FlxG.keys.justPressed.PAGEUP)
-		{
 			changeSpeed(0.05);
-		}
 		else if (FlxG.keys.justPressed.PAGEDOWN)
-		{
 			changeSpeed(-0.05);
-		}
 		else if (FlxG.keys.pressed.PAGEUP && canZoom)
-		{
 			changeSpeed(0.05);
-		}
 		else if (FlxG.keys.pressed.PAGEDOWN && canZoom)
-		{
 			changeSpeed(-0.05);
-		}
 
 		if (FlxG.keys.justPressed.HOME)
-		{
 			setSongTime(song.notes.length == 0 ? 0 : song.notes[0].startTime);
-		}
 		if (FlxG.keys.justPressed.END)
-		{
 			setSongTime(song.notes.length == 0 ? inst.length - 1 : song.notes[song.notes.length - 1].startTime);
-		}
 
 		if (!FlxG.keys.pressed.CONTROL)
 		{
 			if (FlxG.keys.justPressed.LEFT || FlxG.mouse.wheel < 0)
-			{
 				handleSeeking(false);
-			}
 			if (FlxG.keys.justPressed.RIGHT || FlxG.mouse.wheel > 0)
-			{
 				handleSeeking(true);
-			}
 
 			if (FlxG.keys.justPressed.UP)
-			{
 				changeTool(false);
-			}
 			if (FlxG.keys.justPressed.DOWN)
-			{
 				changeTool(true);
-			}
 		}
 
 		if (FlxG.keys.pressed.CONTROL)
 		{
 			if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.DOWN)
-			{
 				changeBeatSnap(true);
-			}
 			if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.UP)
-			{
 				changeBeatSnap(false);
-			}
 		}
 
 		if (!Settings.editorLiveMapping.value)
@@ -486,9 +469,7 @@ class SongEditorState extends FNFState
 	function resyncVocals()
 	{
 		if (Math.abs(vocals.time - inst.time) >= MusicTiming.SYNC_THRESHOLD * inst.pitch)
-		{
 			vocals.time = inst.time;
-		}
 	}
 
 	function handleSeeking(forward:Bool)
@@ -748,7 +729,6 @@ class SongEditorState extends FNFState
 	{
 		inst.pause();
 		vocals.pause();
-		persistentUpdate = false;
 		if (actionManager.hasUnsavedChanges)
 			openSubState(savePrompt);
 		else
@@ -757,18 +737,39 @@ class SongEditorState extends FNFState
 
 	function onExit(_)
 	{
-		save(false);
+		if (Settings.editorSaveOnExit.value)
+			save(false);
 	}
 
 	function onSavePrompt(option:String)
 	{
-		if (option == 'Cancel')
-			persistentUpdate = true;
-		else
+		if (option != 'Cancel')
 		{
 			if (option == 'Yes')
 				save();
 			FlxG.switchState(new ToolboxState());
+		}
+	}
+
+	function onApplyOffsetPrompt(text:String)
+	{
+		trace(text);
+		if (text != null && text.length > 0)
+		{
+			var offset = Std.parseFloat(text);
+			if (offset != 0 && Math.isFinite(offset))
+			{
+				var objects:Array<ITimingObject> = [];
+				for (obj in song.notes)
+					objects.push(obj);
+				for (obj in song.timingPoints)
+					objects.push(obj);
+				for (obj in song.sliderVelocities)
+					objects.push(obj);
+				for (obj in song.cameraFocuses)
+					objects.push(obj);
+				actionManager.perform(new ActionMoveObjects(this, objects, 0, offset));
+			}
 		}
 	}
 

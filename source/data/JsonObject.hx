@@ -65,7 +65,7 @@ class JsonObject
 	function readFloat(value:Null<Float>, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int):Float
 	{
 		var float:Float = readProperty(value, defaultValue);
-		if (Math.isNaN(float))
+		if (!Math.isFinite(float))
 			float = 0;
 
 		if (min != null && float < min)

@@ -1,5 +1,6 @@
 package ui.editors;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
@@ -15,6 +16,9 @@ class EditorInputText extends FlxSpriteGroup
 	public var text(get, set):String;
 	public var focusLost:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 	public var textChanged:FlxTypedSignal<String->String->Void> = new FlxTypedSignal();
+	public var forceCase(default, set):LetterCase = ALL_CASES;
+	public var filterMode(default, set):FilterMode = NO_FILTER;
+	public var maxLength(default, set):Int = 0;
 
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
@@ -22,11 +26,13 @@ class EditorInputText extends FlxSpriteGroup
 	var hasFocus:Bool = false;
 	var lastText:String;
 
-	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true)
+	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, ?textFieldCamera:FlxCamera)
 	{
 		super(x, y);
+		if (textFieldCamera == null)
+			textFieldCamera = FlxG.camera;
 
-		textField = new EditorInputTextField(1, 1, fieldWidth, text, size, embeddedFont);
+		textField = new EditorInputTextField(1, 1, fieldWidth, text, size, embeddedFont, textFieldCamera);
 		textField.color = FlxColor.BLACK;
 
 		textBorder = new FlxSprite().makeGraphic(Std.int(textField.width) + 2, Std.int(textField.height) + 2, FlxColor.BLACK);
@@ -40,7 +46,7 @@ class EditorInputText extends FlxSpriteGroup
 		scrollFactor.set();
 
 		textField.textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
-		lastText = textField.text;
+		lastText = text;
 	}
 
 	override function update(elapsed:Float) {}
@@ -55,12 +61,42 @@ class EditorInputText extends FlxSpriteGroup
 
 	function onFocusOut(event:FocusEvent)
 	{
+		text = text;
 		focusLost.dispatch(text);
 		if (lastText != text)
 		{
 			textChanged.dispatch(text, lastText);
 			lastText = text;
 		}
+	}
+
+	function filter(text:String)
+	{
+		if (forceCase == UPPER_CASE)
+			text = text.toUpperCase();
+		else if (forceCase == LOWER_CASE)
+			text = text.toLowerCase();
+
+		var pattern:EReg = switch (filterMode)
+		{
+			case ONLY_ALPHA:
+				~/[^a-zA-Z]*/g;
+			case ONLY_NUMERIC:
+				~/[^0-9.]*/g;
+			case ONLY_ALPHANUMERIC:
+				~/[^a-zA-Z0-9.]*/g;
+			case CUSTOM_FILTER(p):
+				p;
+			default:
+				null;
+		};
+		if (pattern != null)
+			text = pattern.replace(text, "");
+
+		if (maxLength > 0)
+			text = text.substr(0, maxLength);
+
+		return text;
 	}
 
 	function get_text()
@@ -70,20 +106,51 @@ class EditorInputText extends FlxSpriteGroup
 
 	function set_text(value:String)
 	{
-		return lastText = textField.text = value;
+		return lastText = textField.text = filter(value);
+	}
+
+	function set_forceCase(value:LetterCase)
+	{
+		if (forceCase != value)
+		{
+			forceCase = value;
+			text = text;
+		}
+		return value;
+	}
+
+	function set_filterMode(value:FilterMode)
+	{
+		if (filterMode != value)
+		{
+			filterMode = value;
+			text = text;
+		}
+		return value;
+	}
+
+	function set_maxLength(value:Int)
+	{
+		if (maxLength != value)
+		{
+			maxLength = value;
+			if (maxLength > 0)
+				text = text.substr(0, maxLength);
+		}
+		return value;
 	}
 }
 
 class EditorInputTextField extends FlxText
 {
-	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true)
+	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, textFieldCamera:FlxCamera)
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
 		scrollFactor.set();
 		textField.selectable = true;
 		textField.type = INPUT;
 		textField.multiline = false;
-		FlxG.game.addChildAt(textField, FlxG.game.getChildIndex(FlxG.camera.flashSprite) + 1);
+		FlxG.game.addChildAt(textField, FlxG.game.getChildIndex(textFieldCamera.flashSprite) + 1);
 		FlxG.signals.gameResized.add(onGameResized);
 		text = textField.text;
 	}
@@ -156,4 +223,20 @@ class EditorInputTextField extends FlxText
 			textField.text = text;
 		return value;
 	}
+}
+
+enum LetterCase
+{
+	ALL_CASES;
+	UPPER_CASE;
+	LOWER_CASE;
+}
+
+enum FilterMode
+{
+	NO_FILTER;
+	ONLY_ALPHA;
+	ONLY_NUMERIC;
+	ONLY_ALPHANUMERIC;
+	CUSTOM_FILTER(pattern:EReg);
 }

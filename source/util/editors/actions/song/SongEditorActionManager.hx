@@ -9,6 +9,8 @@ import flixel.math.FlxMath;
 import states.editors.SongEditorState;
 import util.editors.actions.ActionManager;
 
+using StringTools;
+
 class SongEditorActionManager extends ActionManager
 {
 	public static inline var ADD_OBJECT:String = 'add-object';
@@ -17,6 +19,7 @@ class SongEditorActionManager extends ActionManager
 	public static inline var REMOVE_OBJECT_BATCH:String = 'remove-object-batch';
 	public static inline var RESIZE_LONG_NOTE:String = 'resize-long-note';
 	public static inline var CHANGE_NOTE_TYPE:String = 'change-note-type';
+	public static inline var CHANGE_NOTE_PARAMS:String = 'change-note-params';
 	public static inline var MOVE_OBJECTS:String = 'move-objects';
 	public static inline var RESNAP_OBJECTS:String = 'resnap-objects';
 	public static inline var FLIP_NOTES:String = 'flip-notes';
@@ -245,6 +248,45 @@ class ActionChangeNoteType implements IAction
 		for (note in notes)
 			note.type = lastTypes.get(note);
 		lastTypes.clear();
+
+		state.actionManager.triggerEvent(type, {notes: notes, noteType: noteType});
+	}
+}
+
+class ActionChangeNoteParams implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_NOTE_PARAMS;
+
+	var state:SongEditorState;
+	var notes:Array<NoteInfo>;
+	var params:Array<String>;
+	var lastParams:Map<NoteInfo, Array<String>> = new Map();
+
+	public function new(state:SongEditorState, notes:Array<NoteInfo>, params:String)
+	{
+		this.state = state;
+		this.notes = notes;
+		this.params = params.trim().split(',');
+	}
+
+	public function perform()
+	{
+		for (note in notes)
+		{
+			lastParams.set(note, note.params.copy());
+			note.params = params.copy();
+		}
+
+		state.actionManager.triggerEvent(type, {notes: notes, params: params});
+	}
+
+	public function undo()
+	{
+		for (note in notes)
+			note.params = lastParams.get(note);
+		lastParams.clear();
+
+		state.actionManager.triggerEvent(type, {notes: notes, params: params});
 	}
 }
 
@@ -415,13 +457,9 @@ class ActionFlipNotes implements IAction
 			else
 			{
 				if (note.lane >= 4)
-				{
-					note.lane = 7 - (note.lane - 4);
-				}
+					note.lane = 7 - note.playerLane;
 				else
-				{
 					note.lane = 3 - note.lane;
-				}
 			}
 		}
 
@@ -700,40 +738,6 @@ class ActionChangeInitialSV implements IAction
 	}
 }
 
-class NoteAdjustment
-{
-	public var originalStartTime:Float;
-	public var originalEndTime:Float;
-	public var newStartTime:Float;
-	public var newEndTime:Float;
-	public var startTimeWasChanged(get, never):Bool;
-	public var endTimeWasChanged(get, never):Bool;
-	public var wasMoved(get, never):Bool;
-
-	public function new(originalStartTime:Float, originalEndTime:Float, info:NoteInfo)
-	{
-		this.originalStartTime = originalStartTime;
-		this.originalEndTime = originalEndTime;
-		newStartTime = info.startTime;
-		newEndTime = info.endTime;
-	}
-
-	function get_startTimeWasChanged()
-	{
-		return originalStartTime != newStartTime;
-	}
-
-	function get_endTimeWasChanged()
-	{
-		return originalEndTime != newEndTime;
-	}
-
-	function get_wasMoved()
-	{
-		return startTimeWasChanged || endTimeWasChanged;
-	}
-}
-
 class TimingAdjustment
 {
 	public var originalStartTime:Float;
@@ -749,5 +753,35 @@ class TimingAdjustment
 	function get_wasMoved()
 	{
 		return originalStartTime != newStartTime;
+	}
+}
+
+class NoteAdjustment extends TimingAdjustment
+{
+	public var originalEndTime:Float;
+	public var newEndTime:Float;
+	public var startTimeWasChanged(get, never):Bool;
+	public var endTimeWasChanged(get, never):Bool;
+
+	public function new(originalStartTime:Float, originalEndTime:Float, info:NoteInfo)
+	{
+		super(originalStartTime, info);
+		this.originalEndTime = originalEndTime;
+		newEndTime = info.endTime;
+	}
+
+	function get_startTimeWasChanged()
+	{
+		return originalStartTime != newStartTime;
+	}
+
+	function get_endTimeWasChanged()
+	{
+		return originalEndTime != newEndTime;
+	}
+
+	override function get_wasMoved()
+	{
+		return startTimeWasChanged || endTimeWasChanged;
 	}
 }

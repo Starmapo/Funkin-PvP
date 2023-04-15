@@ -35,6 +35,7 @@ class SongEditorEditPanel extends EditorPanel
 	var instVolumeStepper:EditorNumericStepper;
 	var vocalsVolumeStepper:EditorNumericStepper;
 	var typeInput:EditorInputText;
+	var paramsInput:EditorInputText;
 	var selectedNotes:Array<NoteInfo> = [];
 	var notePropertiesGroup:Array<FlxSprite> = [];
 
@@ -221,6 +222,15 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		saveButton.x = (width - saveButton.width) / 2;
 		tab.add(saveButton);
+		state.tooltip.addTooltip(saveButton, 'Hotkey: CTRL + S');
+
+		var applyOffsetButton = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Apply Offset to Song', function()
+		{
+			state.openApplyOffsetPrompt();
+		});
+		applyOffsetButton.resize(120, applyOffsetButton.height);
+		applyOffsetButton.x = (width - applyOffsetButton.width) / 2;
+		tab.add(applyOffsetButton);
 
 		addGroup(tab);
 	}
@@ -383,6 +393,14 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(vocalsVolumeStepper);
 
+		var saveOnExitCheckbox = new EditorCheckbox(vocalsVolumeLabel.x, vocalsVolumeLabel.y + vocalsVolumeLabel.height + spacing, 'Save on Exit', 0);
+		saveOnExitCheckbox.checked = Settings.editorSaveOnExit.value;
+		saveOnExitCheckbox.callback = function()
+		{
+			Settings.editorSaveOnExit.value = saveOnExitCheckbox.checked;
+		};
+		tab.add(saveOnExitCheckbox);
+
 		tab.add(waveformDropdown);
 		tab.add(beatSnapDropdown);
 
@@ -394,7 +412,7 @@ class SongEditorEditPanel extends EditorPanel
 		var tab = createTab('Notes');
 
 		var spacing = 4;
-		var inputWidth = 200;
+		var inputWidth = width - 10;
 
 		var typeLabel = new EditorText(4, 4, 0, 'Type:');
 		tab.add(typeLabel);
@@ -407,6 +425,18 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(typeInput);
 		notePropertiesGroup.push(typeInput);
+
+		var paramsLabel = new EditorText(typeInput.x, typeInput.y + typeInput.height + spacing, 0, 'Extra parameters:');
+		tab.add(paramsLabel);
+		notePropertiesGroup.push(paramsLabel);
+
+		paramsInput = new EditorInputText(paramsLabel.x, paramsLabel.y + paramsLabel.height + spacing, inputWidth);
+		paramsInput.textChanged.add(function(text, lastText)
+		{
+			state.actionManager.perform(new ActionChangeNoteParams(state, selectedNotes.copy(), text));
+		});
+		tab.add(paramsInput);
+		notePropertiesGroup.push(paramsInput);
 
 		addGroup(tab);
 	}
@@ -422,7 +452,7 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		switch (type)
 		{
-			case SongEditorActionManager.CHANGE_NOTE_TYPE:
+			case SongEditorActionManager.CHANGE_NOTE_TYPE, SongEditorActionManager.CHANGE_NOTE_PARAMS:
 				updateSelectedNotes();
 			case SongEditorActionManager.CHANGE_TITLE:
 				titleInput.text = params.title;
@@ -487,15 +517,20 @@ class SongEditorEditPanel extends EditorPanel
 		if (selectedNotes.length > 0)
 		{
 			var type = selectedNotes[0].type;
+			var params = selectedNotes[0].params.join(',');
 			for (i in 1...selectedNotes.length)
 			{
 				if (selectedNotes[i].type != type)
-				{
 					type = '...';
+
+				if (selectedNotes[i].params.join(',') != params)
+					params = '...';
+
+				if (type == '...' && params == '...')
 					break;
-				}
 			}
 			typeInput.text = type;
+			paramsInput.text = params;
 			for (obj in notePropertiesGroup)
 			{
 				if (selected_tab_id == 'Notes')
@@ -505,7 +540,7 @@ class SongEditorEditPanel extends EditorPanel
 		}
 		else
 		{
-			typeInput.text = '';
+			paramsInput.text = typeInput.text = '';
 			for (obj in notePropertiesGroup)
 			{
 				obj.active = false;

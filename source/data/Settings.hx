@@ -43,6 +43,7 @@ class Settings
 	public static var editorPlaceOnNearestTick:Bindable<Bool>;
 	public static var editorInstVolume:BindableFloat;
 	public static var editorVocalsVolume:BindableFloat;
+	public static var editorSaveOnExit:Bindable<Bool>;
 
 	public static function loadData()
 	{
@@ -76,6 +77,7 @@ class Settings
 		loadBindable('editorPlaceOnNearestTick', true);
 		loadBindableFloat('editorInstVolume', 1, 0, 1);
 		loadBindableFloat('editorVocalsVolume', 1, 0, 1);
+		loadBindable('editorSaveOnExit', true);
 
 		if (!FlxG.fullscreen)
 		{
@@ -123,6 +125,7 @@ class Settings
 		saveBindable('editorPlaceOnNearestTick');
 		saveBindable('editorInstVolume');
 		saveBindable('editorVocalsVolume');
+		saveBindable('editorSaveOnExit');
 
 		FlxG.save.flush();
 	}

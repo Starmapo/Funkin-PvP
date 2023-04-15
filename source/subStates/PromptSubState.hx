@@ -32,11 +32,10 @@ class PromptSubState extends FlxSubState
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGBFloat(0, 0, 0, 0.8)));
 
 		promptText = new FlxUIText(0, 0, FlxG.width / 2, message);
-		promptText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		promptText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		promptText.screenCenter();
 
-		promptBG = new FlxUI9SliceSprite(promptText.x - 5, promptText.y - 5, FlxUIAssets.IMG_CHROME_FLAT,
-			new Rectangle(0, 0, (FlxG.width / 2) + 10, promptText.height + 60));
+		promptBG = new FlxUI9SliceSprite(promptText.x - 5, promptText.y - 5, FlxUIAssets.IMG_CHROME_FLAT, new Rectangle(0, 0, (FlxG.width / 2) + 10, 0));
 		add(promptBG);
 		add(promptText);
 
@@ -53,23 +52,28 @@ class PromptSubState extends FlxSubState
 
 				close();
 			});
-			button.resize(button.width * 2, button.height * 2);
-			button.label.size = 24;
-			button.label.font = 'PhantomMuff 1.5';
+			button.label.size = 16;
+			button.resize(button.width, button.label.height);
 			button.autoCenterLabel();
 			buttonGroup.add(button);
 			curX += button.width + 5;
 		}
 		CoolUtil.screenCenterGroup(buttonGroup, X);
 
-		openCallback = function()
-		{
-			camSubState.visible = true;
-		}
-		closeCallback = function()
-		{
-			camSubState.visible = false;
-		}
+		openCallback = onOpen;
+		closeCallback = onClose;
+
+		promptBG.resize(promptBG.width, promptText.height + 5 + buttonGroup.members[0].height + 10);
+	}
+
+	function onOpen()
+	{
+		camSubState.visible = true;
+	}
+
+	function onClose()
+	{
+		camSubState.visible = false;
 	}
 }
 

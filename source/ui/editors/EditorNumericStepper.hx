@@ -37,6 +37,7 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 		this.decimals = decimals;
 
 		inputText = new EditorInputText(0, 0, 40);
+		inputText.filterMode = ONLY_NUMERIC;
 		inputText.focusLost.add(onFocusLost);
 		add(inputText);
 
@@ -77,14 +78,11 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 
 	function onFocusLost(text)
 	{
-		if (text.length < 1)
-		{
+		var parsedText = Std.parseFloat(text);
+		if (text.length < 1 || !Math.isFinite(parsedText))
 			value = defaultValue;
-		}
 		else
-		{
-			value = Std.parseFloat(text);
-		}
+			value = parsedText;
 	}
 
 	function onPlus()
