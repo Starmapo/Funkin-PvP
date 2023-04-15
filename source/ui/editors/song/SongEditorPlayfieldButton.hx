@@ -13,7 +13,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import states.editors.SongEditorState;
 import ui.editors.song.SongEditorNoteGroup.SongEditorNote;
-import util.editors.actions.song.SongEditorActionManager;
+import util.editors.song.SongEditorActionManager;
 
 class SongEditorPlayfieldButton extends FlxSprite
 {

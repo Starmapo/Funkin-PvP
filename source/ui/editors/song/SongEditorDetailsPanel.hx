@@ -6,7 +6,7 @@ import flixel.util.FlxStringUtil;
 import states.editors.SongEditorState;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
-import util.editors.actions.song.SongEditorActionManager;
+import util.editors.song.SongEditorActionManager;
 
 class SongEditorDetailsPanel extends EditorPanel
 {

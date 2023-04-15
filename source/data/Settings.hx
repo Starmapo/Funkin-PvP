@@ -44,6 +44,7 @@ class Settings
 	public static var editorInstVolume:BindableFloat;
 	public static var editorVocalsVolume:BindableFloat;
 	public static var editorSaveOnExit:Bindable<Bool>;
+	public static var editorMetronome:Bindable<MetronomeType>;
 
 	public static function loadData()
 	{
@@ -78,11 +79,10 @@ class Settings
 		loadBindableFloat('editorInstVolume', 1, 0, 1);
 		loadBindableFloat('editorVocalsVolume', 1, 0, 1);
 		loadBindable('editorSaveOnExit', true);
+		loadBindable('editorMetronome', MetronomeType.NONE);
 
 		if (!FlxG.fullscreen)
-		{
 			FlxG.resizeWindow(Math.round(FlxG.width * resolution), Math.round(FlxG.height * resolution));
-		}
 		FlxG.setFramerate(fpsCap);
 		FlxG.forceNoAntialiasing = !antialiasing;
 		Main.updateFilters();
@@ -126,6 +126,7 @@ class Settings
 		saveBindable('editorInstVolume');
 		saveBindable('editorVocalsVolume');
 		saveBindable('editorSaveOnExit');
+		saveBindable('editorMetronome');
 
 		FlxG.save.flush();
 	}
@@ -202,4 +203,11 @@ enum abstract WinCondition(String) from String to String
 	var SCORE = 'Highest Score';
 	var ACCURACY = 'Highest Accuracy';
 	var MISSES = 'Least Misses';
+}
+
+enum abstract MetronomeType(String) from String to String
+{
+	var NONE = 'None';
+	var EVERY_BEAT = 'Every Beat';
+	var EVERY_HALF_BEAT = 'Every Half Beat';
 }

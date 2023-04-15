@@ -10,7 +10,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import states.editors.SongEditorState;
-import util.editors.actions.song.SongEditorActionManager;
+import util.editors.song.SongEditorActionManager;
 
 class SongEditorTimeline extends FlxBasic
 {

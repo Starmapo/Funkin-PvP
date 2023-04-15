@@ -1,4 +1,4 @@
-package util.editors.actions.song;
+package util.editors.song;
 
 import data.song.CameraFocus;
 import data.song.ITimingObject;
@@ -8,6 +8,7 @@ import data.song.TimingPoint;
 import flixel.math.FlxMath;
 import states.editors.SongEditorState;
 import util.editors.actions.ActionManager;
+import util.editors.actions.IAction;
 
 using StringTools;
 

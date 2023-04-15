@@ -38,7 +38,8 @@ import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
 import util.bindable.BindableInt;
-import util.editors.actions.song.SongEditorActionManager;
+import util.editors.song.SongEditorActionManager;
+import util.editors.song.SongEditorMetronome;
 
 class SongEditorState extends FNFState
 {
@@ -77,6 +78,7 @@ class SongEditorState extends FNFState
 	var savePrompt:SongEditorSavePrompt;
 	var applyOffsetPrompt:SongEditorApplyOffsetPrompt;
 	var camFocusDisplay:SongEditorCamFocusDisplay;
+	var metronome:SongEditorMetronome;
 
 	override function create()
 	{
@@ -141,6 +143,8 @@ class SongEditorState extends FNFState
 		zoomOutButton.autoCenterLabel();
 		tooltip.addTooltip(zoomOutButton, 'Zoom Out (Hotkey: Page Down)');
 
+		metronome = new SongEditorMetronome(this);
+
 		detailsPanel = new SongEditorDetailsPanel(this);
 
 		compositionPanel = new SongEditorCompositionPanel(this);
@@ -167,9 +171,6 @@ class SongEditorState extends FNFState
 		add(notificationManager);
 		add(tooltip);
 
-		inst.play();
-		vocals.play();
-
 		setHitsoundNoteIndex();
 
 		Application.current.onExit.add(onExit);
@@ -193,6 +194,7 @@ class SongEditorState extends FNFState
 			playfieldNotes.update(elapsed);
 		if (playfieldOther.exists)
 			playfieldOther.update(elapsed);
+		metronome.update();
 		detailsPanel.update(elapsed);
 		notificationManager.update(elapsed);
 		tooltip.update(elapsed);

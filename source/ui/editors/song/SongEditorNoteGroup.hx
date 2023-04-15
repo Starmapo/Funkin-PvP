@@ -10,7 +10,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSort;
 import sprites.AnimatedSprite;
 import states.editors.SongEditorState;
-import util.editors.actions.song.SongEditorActionManager;
+import util.editors.song.SongEditorActionManager;
 
 class SongEditorNoteGroup extends FlxBasic
 {

@@ -10,7 +10,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
 import states.editors.SongEditorState;
-import util.editors.actions.song.SongEditorActionManager;
+import util.editors.song.SongEditorActionManager;
 
 class SongEditorSeekBar extends FlxSpriteGroup
 {

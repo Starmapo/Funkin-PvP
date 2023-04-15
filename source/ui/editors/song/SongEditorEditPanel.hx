@@ -15,7 +15,7 @@ import ui.editors.EditorNumericStepper;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 import ui.editors.song.SongEditorWaveform.WaveformType;
-import util.editors.actions.song.SongEditorActionManager;
+import util.editors.song.SongEditorActionManager;
 
 class SongEditorEditPanel extends EditorPanel
 {
@@ -300,7 +300,6 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(hitsoundStepper);
 
 		var opponentHitsoundsCheckbox = new EditorCheckbox(hitsoundStepper.x + hitsoundStepper.width + spacing, hitsoundStepper.y - 10, 'Opponent Hitsounds');
-		// opponentHitsoundsCheckbox.button.setAllLabelOffsets(0, -2);
 		opponentHitsoundsCheckbox.checked = Settings.editorOpponentHitsounds.value;
 		opponentHitsoundsCheckbox.callback = function()
 		{
@@ -317,7 +316,19 @@ class SongEditorEditPanel extends EditorPanel
 		};
 		tab.add(bfHitsoundsCheckbox);
 
-		var beatSnapLabel = new EditorText(hitsoundLabel.x, hitsoundLabel.y + hitsoundLabel.height + spacing + 3, 0, 'Beat Snap:');
+		var metronomeLabel = new EditorText(hitsoundLabel.x, hitsoundLabel.y + hitsoundLabel.height + spacing + 3, 0, 'Metronome:');
+		tab.add(metronomeLabel);
+
+		var metronomeTypes:Array<MetronomeType> = [NONE, EVERY_BEAT, EVERY_HALF_BEAT];
+		var metronomeDropdown = new EditorDropdownMenu(metronomeLabel.x + inputSpacing, metronomeLabel.y - 4,
+			EditorDropdownMenu.makeStrIdLabelArray(metronomeTypes), function(id)
+		{
+			Settings.editorMetronome.value = id;
+		}, this);
+		metronomeDropdown.selectedId = Settings.editorMetronome.value;
+		state.dropdowns.push(metronomeDropdown);
+
+		var beatSnapLabel = new EditorText(metronomeLabel.x, metronomeLabel.y + metronomeLabel.height + spacing + 3, 0, 'Beat Snap:');
 		tab.add(beatSnapLabel);
 
 		var beatSnaps = [
@@ -377,7 +388,7 @@ class SongEditorEditPanel extends EditorPanel
 		instVolumeStepper.value = Settings.editorInstVolume.value * 100;
 		instVolumeStepper.valueChanged.add(function(value, _)
 		{
-			state.inst.volume = value / 100;
+			Settings.editorInstVolume.value = state.inst.volume = value / 100;
 		});
 		tab.add(instVolumeStepper);
 
@@ -389,7 +400,7 @@ class SongEditorEditPanel extends EditorPanel
 		vocalsVolumeStepper.value = Settings.editorVocalsVolume.value * 100;
 		vocalsVolumeStepper.valueChanged.add(function(value, _)
 		{
-			state.vocals.volume = value / 100;
+			Settings.editorVocalsVolume.value = state.vocals.volume = value / 100;
 		});
 		tab.add(vocalsVolumeStepper);
 
@@ -403,6 +414,7 @@ class SongEditorEditPanel extends EditorPanel
 
 		tab.add(waveformDropdown);
 		tab.add(beatSnapDropdown);
+		tab.add(metronomeDropdown);
 
 		addGroup(tab);
 	}
@@ -535,7 +547,7 @@ class SongEditorEditPanel extends EditorPanel
 		super.update(elapsed);
 		var hideSteppers = beatSnapDropdown.dropPanel.visible || waveformDropdown.dropPanel.visible;
 		vocalsVolumeStepper.alpha = instVolumeStepper.alpha = hideSteppers ? 0 : 1;
-		vocalsVolumeStepper.active = instVolumeStepper.active = selected_tab_id == 'Editor' && !hideSteppers;
+		vocalsVolumeStepper.active = instVolumeStepper.active = (selected_tab_id == 'Editor' && !hideSteppers);
 	}
 
 	function onEvent(type:String, params:Dynamic)
