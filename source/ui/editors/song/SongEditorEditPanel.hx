@@ -490,6 +490,43 @@ class SongEditorEditPanel extends EditorPanel
 		resnapSelectedToDefaultButton.x = (width - resnapSelectedToDefaultButton.width) / 2;
 		tab.add(resnapSelectedToDefaultButton);
 
+		var mirrorNotesButton = new FlxUIButton(0, resnapSelectedToDefaultButton.y + resnapSelectedToDefaultButton.height + spacing, 'Mirror All Notes',
+			function()
+			{
+				if (state.song.notes.length > 0)
+					state.actionManager.perform(new ActionApplyModifier(state, MIRROR));
+			});
+		mirrorNotesButton.resize(100, mirrorNotesButton.height);
+		mirrorNotesButton.x = (width - mirrorNotesButton.width) / 2;
+		tab.add(mirrorNotesButton);
+
+		var noLongNotesButton = new FlxUIButton(0, mirrorNotesButton.y + mirrorNotesButton.height + spacing, 'No Long Notes', function()
+		{
+			if (state.song.notes.length > 0)
+				state.actionManager.perform(new ActionApplyModifier(state, NO_LONG_NOTES));
+		});
+		noLongNotesButton.resize(100, noLongNotesButton.height);
+		noLongNotesButton.x = (width - noLongNotesButton.width) / 2;
+		tab.add(noLongNotesButton);
+
+		var fullLongNotesButton = new FlxUIButton(0, noLongNotesButton.y + noLongNotesButton.height + spacing, 'Full Long Notes', function()
+		{
+			if (state.song.notes.length > 0)
+				state.actionManager.perform(new ActionApplyModifier(state, FULL_LONG_NOTES));
+		});
+		fullLongNotesButton.resize(100, fullLongNotesButton.height);
+		fullLongNotesButton.x = (width - fullLongNotesButton.width) / 2;
+		tab.add(fullLongNotesButton);
+
+		var inverseButton = new FlxUIButton(0, fullLongNotesButton.y + fullLongNotesButton.height + spacing, 'Invert Notes', function()
+		{
+			if (state.song.notes.length > 0)
+				state.actionManager.perform(new ActionApplyModifier(state, INVERSE));
+		});
+		inverseButton.resize(100, inverseButton.height);
+		inverseButton.x = (width - inverseButton.width) / 2;
+		tab.add(inverseButton);
+
 		addGroup(tab);
 	}
 
@@ -498,6 +535,7 @@ class SongEditorEditPanel extends EditorPanel
 		super.update(elapsed);
 		var hideSteppers = beatSnapDropdown.dropPanel.visible || waveformDropdown.dropPanel.visible;
 		vocalsVolumeStepper.alpha = instVolumeStepper.alpha = hideSteppers ? 0 : 1;
+		vocalsVolumeStepper.active = instVolumeStepper.active = selected_tab_id == 'Editor' && !hideSteppers;
 	}
 
 	function onEvent(type:String, params:Dynamic)

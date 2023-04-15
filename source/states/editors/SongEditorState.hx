@@ -80,6 +80,7 @@ class SongEditorState extends FNFState
 
 	override function create()
 	{
+		persistentUpdate = true;
 		destroySubStates = false;
 
 		actionManager = new SongEditorActionManager(this);

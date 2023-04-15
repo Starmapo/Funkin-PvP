@@ -62,20 +62,13 @@ class DifficultyProcessor
 	var rollInaccuracyConfidence:Int = 0;
 	var vibroInaccuracyConfidence:Int = 0;
 
-	public function new(song:Song, rightSide:Bool = false, ?mods:Modifiers)
+	public function new(song:Song, rightSide:Bool = false, rate:Float = 1)
 	{
 		this.song = song;
 		this.rightSide = rightSide;
 
 		if (song == null)
 			return;
-
-		if (mods == null)
-		{
-			mods = {
-				playbackRate: 1
-			};
-		}
 
 		for (note in song.notes)
 		{
@@ -92,16 +85,15 @@ class DifficultyProcessor
 		if (notes.length < 2)
 			return;
 
-		calculateDifficulty(mods);
+		calculateDifficulty(rate);
 	}
 
-	function calculateDifficulty(mods:Modifiers)
+	function calculateDifficulty(rate:Float)
 	{
-		var rate = mods.playbackRate;
 		overallDifficulty = computeForOverallDifficulty(rate);
 	}
 
-	function computeForOverallDifficulty(rate:Float = 1)
+	function computeForOverallDifficulty(rate:Float)
 	{
 		computeNoteDensityData(rate);
 		computeBaseStrainStates(rate);

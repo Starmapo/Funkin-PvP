@@ -189,7 +189,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 				}
 				if (hasNote)
 					createBars();
-			case SongEditorActionManager.RESIZE_LONG_NOTE, SongEditorActionManager.FLIP_NOTES:
+			case SongEditorActionManager.RESIZE_LONG_NOTE, SongEditorActionManager.FLIP_NOTES, SongEditorActionManager.APPLY_MODIFIER:
 				createBars();
 		}
 	}

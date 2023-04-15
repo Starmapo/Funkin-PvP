@@ -101,7 +101,7 @@ class SongEditorDetailsPanel extends EditorPanel
 				}
 				if (hasNote)
 					updateNoteCount();
-			case SongEditorActionManager.RESIZE_LONG_NOTE:
+			case SongEditorActionManager.RESIZE_LONG_NOTE, SongEditorActionManager.APPLY_MODIFIER:
 				updateNoteCount();
 		}
 	}

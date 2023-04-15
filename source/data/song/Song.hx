@@ -1,7 +1,6 @@
 package data.song;
 
 import data.song.CameraFocus.CameraFocusChar;
-import flixel.math.FlxMath;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import haxe.Json;
@@ -317,22 +316,15 @@ class Song extends JsonObject
 	**/
 	public function sort()
 	{
-		notes.sort(function(a, b)
-		{
-			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
-		});
-		timingPoints.sort(function(a, b)
-		{
-			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
-		});
-		sliderVelocities.sort(function(a, b)
-		{
-			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
-		});
-		cameraFocuses.sort(function(a, b)
-		{
-			return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
-		});
+		notes.sort(sortObjects);
+		timingPoints.sort(sortObjects);
+		sliderVelocities.sort(sortObjects);
+		cameraFocuses.sort(sortObjects);
+	}
+
+	function sortObjects(a:ITimingObject, b:ITimingObject)
+	{
+		return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
 	}
 
 	/**
@@ -528,9 +520,9 @@ class Song extends JsonObject
 	/**
 		Solves the difficulty of the map and returns the data for it.
 	**/
-	public function solveDifficulty(rightSide:Bool = false, ?mods:Modifiers)
+	public function solveDifficulty(rightSide:Bool = false, rate:Float = 1)
 	{
-		return new DifficultyProcessor(this, rightSide, mods);
+		return new DifficultyProcessor(this, rightSide, rate);
 	}
 
 	public function addObject(object:ITimingObject)
@@ -555,6 +547,182 @@ class Song extends JsonObject
 			sliderVelocities.remove(cast object);
 		else if (Std.isOfType(object, CameraFocus))
 			cameraFocuses.remove(cast object);
+	}
+
+	/** Clones this song into a new object.**/
+	public function deepClone()
+	{
+		var timingPoints:Array<TimingPoint> = [];
+		for (point in this.timingPoints)
+		{
+			timingPoints.push(new TimingPoint({
+				startTime: point.startTime,
+				bpm: point.bpm,
+				meter: point.meter
+			}));
+		}
+
+		var sliderVelocities:Array<SliderVelocity> = [];
+		for (velocity in this.sliderVelocities)
+		{
+			sliderVelocities.push(new SliderVelocity({
+				startTime: velocity.startTime,
+				multiplier: velocity.multiplier
+			}));
+		}
+
+		var cameraFocuses:Array<CameraFocus> = [];
+		for (focus in this.cameraFocuses)
+		{
+			cameraFocuses.push(new CameraFocus({
+				startTime: focus.startTime,
+				char: focus.char
+			}));
+		}
+
+		var notes:Array<NoteInfo> = [];
+		for (note in this.notes)
+		{
+			notes.push(new NoteInfo({
+				startTime: note.startTime,
+				lane: note.lane,
+				endTime: note.endTime,
+				type: note.type,
+				params: note.params.join(',')
+			}));
+		}
+
+		var data = {
+			title: title,
+			artist: artist,
+			source: source,
+			instFile: instFile,
+			vocalsFile: vocalsFile,
+			timingPoints: timingPoints,
+			initialScrollVelocity: initialScrollVelocity,
+			sliderVelocities: sliderVelocities,
+			cameraFocuses: cameraFocuses,
+			notes: notes,
+			bf: bf,
+			opponent: opponent,
+			gf: gf
+		};
+		return new Song(data);
+	}
+
+	public function replaceLongNotesWithRegularNotes()
+	{
+		for (note in notes)
+			note.endTime = 0;
+	}
+
+	public function applyInverse()
+	{
+		final MINIMAL_LN_LENGTH = 36;
+		final MINIMAL_GAP_LENGTH = 36;
+
+		var newNotes:Array<NoteInfo> = [];
+		var firstInLane:Array<Bool> = [];
+		for (i in 0...8)
+			firstInLane[i] = true;
+
+		for (i in 0...notes.length)
+		{
+			var currentNote = notes[i];
+			var nextNoteInLane:NoteInfo = null;
+			var secondNextNoteInLane:NoteInfo = null;
+			for (j in i + 1...notes.length)
+			{
+				if (notes[j].lane == currentNote.lane)
+				{
+					if (nextNoteInLane == null)
+						nextNoteInLane = notes[j];
+					else
+					{
+						secondNextNoteInLane = notes[j];
+						break;
+					}
+				}
+			}
+
+			var isFirstInLane = firstInLane[currentNote.lane];
+			firstInLane[currentNote.lane] = false;
+
+			if (nextNoteInLane == null && isFirstInLane)
+			{
+				newNotes.push(currentNote);
+				continue;
+			}
+
+			var timeGap:Float = MINIMAL_GAP_LENGTH;
+			if (nextNoteInLane != null)
+			{
+				var timingPoint = getTimingPointAt(nextNoteInLane.startTime);
+				var bpm:Float;
+				if (Std.int(timingPoint.startTime) == Std.int(nextNoteInLane.startTime))
+				{
+					var prevTimingPointIndex = timingPoints.length - 1;
+					while (prevTimingPointIndex >= 0)
+					{
+						var x = timingPoints[prevTimingPointIndex];
+						if (x.startTime < timingPoint.startTime)
+							break;
+						prevTimingPointIndex--;
+					}
+					if (prevTimingPointIndex == -1)
+						prevTimingPointIndex = 0;
+					bpm = timingPoints[prevTimingPointIndex].bpm;
+				}
+				else
+					bpm = timingPoint.bpm;
+
+				timeGap = Math.max(15000 / bpm, MINIMAL_GAP_LENGTH);
+			}
+
+			if (currentNote.isLongNote)
+			{
+				if (nextNoteInLane != null)
+				{
+					currentNote.startTime = currentNote.endTime;
+					currentNote.endTime = nextNoteInLane.startTime - timeGap;
+
+					if ((secondNextNoteInLane == null) != nextNoteInLane.isLongNote)
+						currentNote.endTime = nextNoteInLane.startTime;
+
+					if (currentNote.endTime - currentNote.startTime < MINIMAL_LN_LENGTH)
+						continue;
+				}
+			}
+			else
+			{
+				if (nextNoteInLane == null)
+					continue;
+
+				currentNote.endTime = nextNoteInLane.startTime - timeGap;
+
+				if ((secondNextNoteInLane == null) == (nextNoteInLane.endTime == 0))
+					currentNote.endTime = nextNoteInLane.startTime;
+
+				if (currentNote.endTime - currentNote.startTime < MINIMAL_LN_LENGTH)
+					currentNote.endTime = 0;
+			}
+
+			newNotes.push(currentNote);
+		}
+
+		newNotes.sort(sortObjects);
+		notes = newNotes;
+	}
+
+	public function mirrorNotes()
+	{
+		for (note in notes)
+		{
+			if (note.lane >= 4)
+				note.lane = 7 - note.playerLane;
+			else
+				note.lane = 3 - note.lane;
+		}
 	}
 
 	/**

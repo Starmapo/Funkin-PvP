@@ -23,6 +23,7 @@ class SongEditorActionManager extends ActionManager
 	public static inline var MOVE_OBJECTS:String = 'move-objects';
 	public static inline var RESNAP_OBJECTS:String = 'resnap-objects';
 	public static inline var FLIP_NOTES:String = 'flip-notes';
+	public static inline var APPLY_MODIFIER:String = 'apply-modifier';
 	public static inline var CHANGE_TITLE:String = 'change-title';
 	public static inline var CHANGE_ARTIST:String = 'change-artist';
 	public static inline var CHANGE_SOURCE:String = 'change-source';
@@ -474,6 +475,56 @@ class ActionFlipNotes implements IAction
 	}
 }
 
+class ActionApplyModifier implements IAction
+{
+	public var type:String = SongEditorActionManager.APPLY_MODIFIER;
+
+	var state:SongEditorState;
+	var modifier:Modifier;
+	var originalNotes:Array<NoteInfo> = [];
+
+	public function new(state:SongEditorState, modifier:Modifier)
+	{
+		this.state = state;
+		this.modifier = modifier;
+	}
+
+	public function perform()
+	{
+		for (note in state.song.notes)
+			originalNotes.push(new NoteInfo({
+				startTime: note.startTime,
+				lane: note.lane,
+				endTime: note.endTime,
+				type: note.type,
+				params: note.params.join(',')
+			}));
+
+		switch (modifier)
+		{
+			case MIRROR:
+				state.song.mirrorNotes();
+			case NO_LONG_NOTES:
+				state.song.replaceLongNotesWithRegularNotes();
+			case FULL_LONG_NOTES:
+				state.song.replaceLongNotesWithRegularNotes();
+				state.song.applyInverse();
+			case INVERSE:
+				state.song.applyInverse();
+		}
+
+		state.actionManager.triggerEvent(type, {modifier: modifier});
+	}
+
+	public function undo()
+	{
+		state.song.notes = originalNotes.copy();
+		originalNotes.resize(0);
+
+		state.actionManager.triggerEvent(type, {modifier: modifier});
+	}
+}
+
 class ActionChangeTitle implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_TITLE;
@@ -784,4 +835,12 @@ class NoteAdjustment extends TimingAdjustment
 	{
 		return startTimeWasChanged || endTimeWasChanged;
 	}
+}
+
+enum Modifier
+{
+	MIRROR;
+	NO_LONG_NOTES;
+	FULL_LONG_NOTES;
+	INVERSE;
 }

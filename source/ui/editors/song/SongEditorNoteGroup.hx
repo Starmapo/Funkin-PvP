@@ -298,6 +298,13 @@ class SongEditorNoteGroup extends FlxBasic
 						note.updatePosition();
 					}
 				}
+			case SongEditorActionManager.APPLY_MODIFIER:
+				for (note in notes)
+					note.destroy();
+				notes.resize(0);
+				for (note in state.song.notes)
+					createNote(note);
+				initializeNotePool();
 		}
 	}
 
