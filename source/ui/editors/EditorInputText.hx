@@ -19,12 +19,14 @@ class EditorInputText extends FlxSpriteGroup
 	public var forceCase(default, set):LetterCase = ALL_CASES;
 	public var filterMode(default, set):FilterMode = NO_FILTER;
 	public var maxLength(default, set):Int = 0;
+	public var displayText(get, set):String;
 
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
 	var textField:EditorInputTextField;
 	var hasFocus:Bool = false;
 	var lastText:String;
+	var _displayText:String;
 
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, ?textFieldCamera:FlxCamera)
 	{
@@ -45,6 +47,7 @@ class EditorInputText extends FlxSpriteGroup
 
 		scrollFactor.set();
 
+		textField.textField.addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		textField.textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 		lastText = text;
 	}
@@ -57,6 +60,15 @@ class EditorInputText extends FlxSpriteGroup
 		FlxDestroyUtil.destroy(focusLost);
 		FlxDestroyUtil.destroy(textChanged);
 		super.destroy();
+	}
+
+	function onFocusIn(event:FocusEvent)
+	{
+		if (_displayText != null)
+		{
+			lastText = textField.text = '';
+			_displayText = null;
+		}
 	}
 
 	function onFocusOut(event:FocusEvent)
@@ -138,6 +150,18 @@ class EditorInputText extends FlxSpriteGroup
 			if (maxLength > 0)
 				text = text.substr(0, maxLength);
 		}
+		return value;
+	}
+
+	function get_displayText()
+	{
+		return _displayText;
+	}
+
+	function set_displayText(value:String)
+	{
+		_displayText = value;
+		textField.text = _displayText;
 		return value;
 	}
 }

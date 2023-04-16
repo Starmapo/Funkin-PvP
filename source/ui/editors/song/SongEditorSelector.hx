@@ -145,9 +145,24 @@ class SongEditorSelector extends FlxUI9SliceSprite
 				if (canSelectObject(obj.startTime, dragStart, dragEnd, 0, realStartLane, realEndLane))
 					foundObjects.push(obj);
 			}
+			for (obj in state.song.scrollVelocities)
+			{
+				if (canSelectObject(obj.startTime, dragStart, dragEnd, 1, realStartLane, realEndLane))
+					foundObjects.push(obj);
+			}
 			for (obj in state.song.cameraFocuses)
 			{
 				if (canSelectObject(obj.startTime, dragStart, dragEnd, 2, realStartLane, realEndLane))
+					foundObjects.push(obj);
+			}
+			for (obj in state.song.events)
+			{
+				if (canSelectObject(obj.startTime, dragStart, dragEnd, 3, realStartLane, realEndLane))
+					foundObjects.push(obj);
+			}
+			for (obj in state.song.lyricSteps)
+			{
+				if (canSelectObject(obj.startTime, dragStart, dragEnd, 4, realStartLane, realEndLane))
 					foundObjects.push(obj);
 			}
 		}

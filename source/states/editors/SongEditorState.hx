@@ -4,7 +4,7 @@ import data.Settings;
 import data.song.CameraFocus;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
-import data.song.SliderVelocity;
+import data.song.ScrollVelocity;
 import data.song.Song;
 import data.song.TimingPoint;
 import flixel.FlxCamera;
@@ -669,7 +669,10 @@ class SongEditorState extends FNFState
 		else
 		{
 			selectedObjects.pushMultiple(cast song.timingPoints);
+			selectedObjects.pushMultiple(cast song.scrollVelocities);
 			selectedObjects.pushMultiple(cast song.cameraFocuses);
+			selectedObjects.pushMultiple(cast song.events);
+			selectedObjects.pushMultiple(cast song.lyricSteps);
 		}
 	}
 
@@ -695,7 +698,7 @@ class SongEditorState extends FNFState
 		if (FlxG.keys.released.SHIFT)
 		{
 			var place = true;
-			for (sv in song.sliderVelocities)
+			for (sv in song.scrollVelocities)
 			{
 				if (sv.startTime == inst.time)
 				{
@@ -706,10 +709,7 @@ class SongEditorState extends FNFState
 			if (place)
 			{
 				var curSV = song.getScrollVelocityAt(inst.time);
-				actionManager.perform(new ActionAddObject(this, new SliderVelocity({
-					startTime: inst.time,
-					multiplier: curSV != null ? curSV.multiplier : 1
-				})));
+				actionManager.addScrollVelocity(inst.time, curSV != null ? curSV.multipliers.copy() : [1.0, 1.0], curSV != null ? curSV.linked : true);
 			}
 		}
 		else if (song.timingPoints.length != 0)
@@ -719,18 +719,16 @@ class SongEditorState extends FNFState
 			{
 				if (point.startTime == inst.time)
 				{
-					actionManager.perform(new ActionRemoveObject(this, point));
+					if (song.timingPoints.length > 1)
+						actionManager.perform(new ActionRemoveObject(this, point));
 					place = false;
 				}
 			}
 			if (place)
 			{
 				var curPoint = song.getTimingPointAt(inst.time);
-				actionManager.perform(new ActionAddObject(this, new TimingPoint({
-					startTime: inst.time,
-					bpm: curPoint != null ? curPoint.bpm : song.timingPoints[0].bpm,
-					meter: curPoint != null ? curPoint.meter : song.timingPoints[0].meter
-				})));
+				actionManager.addTimingPoint(inst.time, curPoint != null ? curPoint.bpm : song.timingPoints[0].bpm,
+					curPoint != null ? curPoint.meter : song.timingPoints[0].meter);
 			}
 		}
 	}
@@ -774,9 +772,13 @@ class SongEditorState extends FNFState
 					objects.push(obj);
 				for (obj in song.timingPoints)
 					objects.push(obj);
-				for (obj in song.sliderVelocities)
+				for (obj in song.scrollVelocities)
 					objects.push(obj);
 				for (obj in song.cameraFocuses)
+					objects.push(obj);
+				for (obj in song.events)
+					objects.push(obj);
+				for (obj in song.lyricSteps)
 					objects.push(obj);
 				actionManager.perform(new ActionMoveObjects(this, objects, 0, offset));
 			}

@@ -3,6 +3,7 @@ package ui.editors.song;
 import data.Settings;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
+import data.song.ScrollVelocity;
 import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -21,6 +22,7 @@ import util.editors.song.SongEditorActionManager;
 class SongEditorEditPanel extends EditorPanel
 {
 	var state:SongEditorState;
+	var spacing:Int = 4;
 	var titleInput:EditorInputText;
 	var artistInput:EditorInputText;
 	var sourceInput:EditorInputText;
@@ -44,6 +46,11 @@ class SongEditorEditPanel extends EditorPanel
 	var meterStepper:EditorNumericStepper;
 	var selectedTimingPoints:Array<TimingPoint> = [];
 	var timingPointPropertiesGroup:Array<FlxSprite> = [];
+	var multiplierStepper1:EditorNumericStepper;
+	var multiplierStepper2:EditorNumericStepper;
+	var linkedCheckbox:EditorCheckbox;
+	var selectedScrollVelocities:Array<ScrollVelocity> = [];
+	var scrollVelocitiesPropertiesGroup:Array<FlxSprite> = [];
 
 	public function new(state:SongEditorState)
 	{
@@ -55,6 +62,10 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				name: 'Notes',
 				label: 'Notes'
+			},
+			{
+				name: 'Scroll Velocities',
+				label: 'Scroll Velocities'
 			},
 			{
 				name: 'Song',
@@ -72,6 +83,7 @@ class SongEditorEditPanel extends EditorPanel
 
 		createEditorTab();
 		createNotesTab();
+		createScrollVelocitiesTab();
 		createSongTab();
 		createTimingPointsTab();
 
@@ -105,8 +117,6 @@ class SongEditorEditPanel extends EditorPanel
 	function createSongTab()
 	{
 		var tab = createTab('Song');
-
-		var spacing = 4;
 		var inputSpacing = 125;
 		var inputWidth = 250;
 
@@ -251,7 +261,6 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		var tab = createTab('Editor');
 
-		var spacing = 4;
 		var inputSpacing = 125;
 
 		var speedLabel = new EditorText(4, 5, 0, 'Scroll Speed:');
@@ -435,7 +444,6 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		var tab = createTab('Notes');
 
-		var spacing = 4;
 		var inputWidth = width - 10;
 
 		var typeLabel = new EditorText(4, 4, 0, 'Type:');
@@ -558,8 +566,6 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		var tab = createTab('Timing Points');
 
-		var spacing = 4;
-
 		var timingPointTimeLabel = new EditorText(4, 4, 0, 'Time:');
 		tab.add(timingPointTimeLabel);
 		timingPointPropertiesGroup.push(timingPointTimeLabel);
@@ -618,6 +624,89 @@ class SongEditorEditPanel extends EditorPanel
 		addGroup(tab);
 	}
 
+	function createScrollVelocitiesTab()
+	{
+		var tab = createTab('Scroll Velocities');
+
+		var multiplierLabel1 = new EditorText(4, 4, 0, 'P1 Multiplier:');
+		tab.add(multiplierLabel1);
+		scrollVelocitiesPropertiesGroup.push(multiplierLabel1);
+
+		multiplierStepper1 = new EditorNumericStepper(multiplierLabel1.x, multiplierLabel1.y + multiplierLabel1.height + spacing, 0.1, 1, -100, 100, 2);
+		multiplierStepper1.valueChanged.add(function(value, lastValue)
+		{
+			var linked = true;
+			for (sv in selectedScrollVelocities)
+			{
+				if (!sv.linked)
+				{
+					linked = false;
+					break;
+				}
+			}
+			trace(value, lastValue, linked);
+			if (linked)
+				state.actionManager.perform(new ActionChangeSVMultipliers(state, selectedScrollVelocities.copy(), [value, value]));
+			else
+				state.actionManager.perform(new ActionChangeSVMultiplier(state, selectedScrollVelocities.copy(), 0, value));
+		});
+		tab.add(multiplierStepper1);
+		scrollVelocitiesPropertiesGroup.push(multiplierStepper1);
+
+		var multiplierLabel2 = new EditorText(multiplierStepper1.x + multiplierStepper1.width + spacing, multiplierLabel1.y, 0, 'P2 Multiplier:');
+		tab.add(multiplierLabel2);
+		scrollVelocitiesPropertiesGroup.push(multiplierLabel2);
+
+		multiplierStepper2 = new EditorNumericStepper(multiplierLabel2.x, multiplierLabel2.y + multiplierLabel2.height + spacing, 0.1, 1, -100, 100, 2);
+		multiplierStepper2.valueChanged.add(function(value, _)
+		{
+			var linked = true;
+			for (sv in selectedScrollVelocities)
+			{
+				if (!sv.linked)
+				{
+					linked = false;
+					break;
+				}
+			}
+			if (linked)
+				state.actionManager.perform(new ActionChangeSVMultipliers(state, selectedScrollVelocities.copy(), [value, value]));
+			else
+				state.actionManager.perform(new ActionChangeSVMultiplier(state, selectedScrollVelocities.copy(), 1, value));
+		});
+		tab.add(multiplierStepper2);
+		scrollVelocitiesPropertiesGroup.push(multiplierStepper2);
+
+		linkedCheckbox = new EditorCheckbox(multiplierStepper2.x + multiplierStepper2.width + spacing, multiplierStepper2.y, 'Linked');
+		linkedCheckbox.callback = function()
+		{
+			state.actionManager.perform(new ActionChangeSVLinked(state, selectedScrollVelocities.copy(), linkedCheckbox.checked));
+		};
+		tab.add(linkedCheckbox);
+		scrollVelocitiesPropertiesGroup.push(linkedCheckbox);
+
+		var selectCurrentButton = new FlxUIButton(0, linkedCheckbox.y + linkedCheckbox.height + spacing, 'Select current scroll velocity', function()
+		{
+			var sv = state.song.getScrollVelocityAt(state.inst.time);
+			if (sv != null)
+			{
+				for (obj in state.selectedObjects.value)
+				{
+					if (Std.isOfType(obj, ScrollVelocity))
+						state.selectedObjects.remove(obj);
+				}
+				state.selectedObjects.push(sv);
+				if (state.inst.time != sv.startTime)
+					state.setSongTime(sv.startTime);
+			}
+		});
+		selectCurrentButton.resize(150, selectCurrentButton.height);
+		selectCurrentButton.x = (width - selectCurrentButton.width) / 2;
+		tab.add(selectCurrentButton);
+
+		addGroup(tab);
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -634,6 +723,8 @@ class SongEditorEditPanel extends EditorPanel
 				updateSelectedNotes();
 			case SongEditorActionManager.CHANGE_TIMING_POINT_BPM, SongEditorActionManager.CHANGE_TIMING_POINT_METER:
 				updateSelectedTimingPoints();
+			case SongEditorActionManager.CHANGE_SV_MULTIPLIER, SongEditorActionManager.CHANGE_SV_MULTIPLIERS, SongEditorActionManager.CHANGE_SV_LINKED:
+				updateSelectedScrollVelocities();
 			case SongEditorActionManager.CHANGE_TITLE:
 				titleInput.text = params.title;
 			case SongEditorActionManager.CHANGE_ARTIST:
@@ -665,6 +756,11 @@ class SongEditorEditPanel extends EditorPanel
 			selectedTimingPoints.push(cast obj);
 			updateSelectedTimingPoints();
 		}
+		else if (Std.isOfType(obj, ScrollVelocity))
+		{
+			selectedScrollVelocities.push(cast obj);
+			updateSelectedScrollVelocities();
+		}
 	}
 
 	function onDeselectedObject(obj:ITimingObject)
@@ -679,12 +775,18 @@ class SongEditorEditPanel extends EditorPanel
 			selectedTimingPoints.remove(cast obj);
 			updateSelectedTimingPoints();
 		}
+		else if (Std.isOfType(obj, ScrollVelocity))
+		{
+			selectedScrollVelocities.remove(cast obj);
+			updateSelectedScrollVelocities();
+		}
 	}
 
 	function onMultipleObjectsSelected(objects:Array<ITimingObject>)
 	{
 		var foundNote = false;
 		var foundTP = false;
+		var foundSV = false;
 		for (obj in objects)
 		{
 			if (Std.isOfType(obj, NoteInfo))
@@ -697,20 +799,39 @@ class SongEditorEditPanel extends EditorPanel
 				selectedTimingPoints.push(cast obj);
 				foundTP = true;
 			}
+			else if (Std.isOfType(obj, ScrollVelocity))
+			{
+				selectedScrollVelocities.push(cast obj);
+				foundSV = true;
+			}
 		}
 		if (foundNote)
 			updateSelectedNotes();
 		if (foundTP)
 			updateSelectedTimingPoints();
+		if (foundSV)
+			updateSelectedScrollVelocities();
 	}
 
 	function onAllObjectsDeselected()
 	{
-		selectedNotes.resize(0);
-		selectedTimingPoints.resize(0);
+		if (selectedNotes.length > 0)
+		{
+			selectedNotes.resize(0);
+			updateSelectedNotes();
+		}
 
-		updateSelectedNotes();
-		updateSelectedTimingPoints();
+		if (selectedTimingPoints.length > 0)
+		{
+			selectedTimingPoints.resize(0);
+			updateSelectedTimingPoints();
+		}
+
+		if (selectedScrollVelocities.length > 0)
+		{
+			selectedScrollVelocities.resize(0);
+			updateSelectedScrollVelocities();
+		}
 	}
 
 	function updateSelectedNotes()
@@ -753,26 +874,39 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		if (selectedTimingPoints.length > 0)
 		{
-			var time = selectedTimingPoints[0].startTime;
-			var bpm = selectedTimingPoints[0].bpm;
-			var meter = selectedTimingPoints[0].meter;
+			var multipleTime = false;
+			var multipleBPM = false;
+			var multipleMeter = false;
 			for (i in 1...selectedTimingPoints.length)
 			{
-				if (selectedTimingPoints[i].startTime != time)
-					time = 0;
+				if (selectedTimingPoints[i].startTime != selectedTimingPoints[0].startTime)
+					multipleTime = true;
 
-				if (selectedTimingPoints[i].bpm != bpm)
-					bpm = 0;
+				if (selectedTimingPoints[i].bpm != selectedTimingPoints[0].bpm)
+					multipleBPM = true;
 
-				if (selectedTimingPoints[i].meter != meter)
-					meter = 0;
+				if (selectedTimingPoints[i].meter != selectedTimingPoints[0].meter)
+					multipleMeter = true;
 
-				if (time == 0 && bpm == 0 && meter == 0)
+				if (multipleTime && multipleBPM && multipleMeter)
 					break;
 			}
-			timingPointTimeStepper.changeWithoutTrigger(time);
-			bpmStepper.changeWithoutTrigger(bpm);
-			meterStepper.changeWithoutTrigger(meter);
+
+			if (multipleTime)
+				timingPointTimeStepper.setDisplayText('...');
+			else
+				timingPointTimeStepper.changeWithoutTrigger(selectedTimingPoints[0].startTime);
+
+			if (multipleBPM)
+				bpmStepper.setDisplayText('...');
+			else
+				bpmStepper.changeWithoutTrigger(selectedTimingPoints[0].bpm);
+
+			if (multipleMeter)
+				meterStepper.setDisplayText('...');
+			else
+				meterStepper.changeWithoutTrigger(selectedTimingPoints[0].meter);
+
 			for (obj in timingPointPropertiesGroup)
 			{
 				if (selected_tab_id == 'Timing Points')
@@ -790,11 +924,64 @@ class SongEditorEditPanel extends EditorPanel
 		}
 	}
 
+	function updateSelectedScrollVelocities()
+	{
+		if (selectedScrollVelocities.length > 0)
+		{
+			var multipleMult1 = false;
+			var multipleMult2 = false;
+			var multipleLinked = false;
+			for (i in 1...selectedScrollVelocities.length)
+			{
+				if (selectedScrollVelocities[i].multipliers[0] != selectedScrollVelocities[0].multipliers[0])
+					multipleMult1 = true;
+
+				if (selectedScrollVelocities[i].multipliers[1] != selectedScrollVelocities[0].multipliers[1])
+					multipleMult2 = true;
+
+				if (selectedScrollVelocities[i].linked != selectedScrollVelocities[0].linked)
+					multipleLinked = true;
+			}
+
+			if (multipleMult1)
+				multiplierStepper1.setDisplayText('...');
+			else
+				multiplierStepper1.changeWithoutTrigger(selectedScrollVelocities[0].multipliers[0]);
+
+			if (multipleMult2)
+				multiplierStepper2.setDisplayText('...');
+			else
+				multiplierStepper2.changeWithoutTrigger(selectedScrollVelocities[0].multipliers[1]);
+
+			if (multipleLinked)
+				linkedCheckbox.checked = false;
+			else
+				linkedCheckbox.checked = selectedScrollVelocities[0].linked;
+
+			for (obj in scrollVelocitiesPropertiesGroup)
+			{
+				if (selected_tab_id == 'Scroll Velocities')
+					obj.active = true;
+				obj.alpha = 1;
+			}
+		}
+		else
+		{
+			for (obj in scrollVelocitiesPropertiesGroup)
+			{
+				obj.active = false;
+				obj.alpha = 0.5;
+			}
+		}
+	}
+
 	function onClickTab(name:String)
 	{
 		if (selectedNotes.length == 0)
 			updateSelectedNotes();
 		if (selectedTimingPoints.length == 0)
 			updateSelectedTimingPoints();
+		if (selectedScrollVelocities.length == 0)
+			updateSelectedScrollVelocities();
 	}
 }

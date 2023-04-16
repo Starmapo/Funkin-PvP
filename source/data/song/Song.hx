@@ -1,6 +1,8 @@
 package data.song;
 
 import data.song.CameraFocus.CameraFocusChar;
+import data.song.EventObject.Event;
+import flixel.sound.FlxSound;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import haxe.Json;
@@ -214,9 +216,9 @@ class Song extends JsonObject
 	public var initialScrollVelocity:Float;
 
 	/**
-		The list of slider velocities for this map.
+		The list of scroll velocities for this map.
 	**/
-	public var sliderVelocities:Array<SliderVelocity> = [];
+	public var scrollVelocities:Array<ScrollVelocity> = [];
 
 	/**
 		The list of camera focuses for this map.
@@ -284,15 +286,25 @@ class Song extends JsonObject
 				timingPoints.push(new TimingPoint(t));
 		}
 		initialScrollVelocity = readFloat(data.initialScrollVelocity, 1, -100, 100, 2);
-		for (s in readArray(data.sliderVelocities))
+		for (s in readArray(data.scrollVelocities))
 		{
 			if (s != null)
-				sliderVelocities.push(new SliderVelocity(s));
+				scrollVelocities.push(new ScrollVelocity(s));
 		}
 		for (c in readArray(data.cameraFocuses))
 		{
 			if (c != null)
 				cameraFocuses.push(new CameraFocus(c));
+		}
+		for (e in readArray(data.events))
+		{
+			if (e != null)
+				events.push(new EventObject(e));
+		}
+		for (l in readArray(data.lyricSteps))
+		{
+			if (l != null)
+				lyricSteps.push(new LyricStep(l));
 		}
 		for (n in readArray(data.notes))
 		{
@@ -322,14 +334,16 @@ class Song extends JsonObject
 	}
 
 	/**
-		Sorts the notes, timing points and slider velocities.
+		Sorts the notes, timing points and scroll velocities.
 	**/
 	public function sort()
 	{
 		notes.sort(sortObjects);
 		timingPoints.sort(sortObjects);
-		sliderVelocities.sort(sortObjects);
+		scrollVelocities.sort(sortObjects);
 		cameraFocuses.sort(sortObjects);
+		events.sort(sortObjects);
+		lyricSteps.sort(sortObjects);
 	}
 
 	function sortObjects(a:ITimingObject, b:ITimingObject)
@@ -345,6 +359,7 @@ class Song extends JsonObject
 	{
 		if (notes.length == 0)
 			return 0;
+
 		if (length == 0)
 			return notes.length;
 
@@ -475,10 +490,10 @@ class Song extends JsonObject
 	**/
 	public function getScrollVelocityAt(time:Float)
 	{
-		var index = sliderVelocities.length - 1;
+		var index = scrollVelocities.length - 1;
 		while (index >= 0)
 		{
-			if (sliderVelocities[index].startTime <= time)
+			if (scrollVelocities[index].startTime <= time)
 				break;
 
 			index--;
@@ -487,7 +502,7 @@ class Song extends JsonObject
 		if (index == -1)
 			return null;
 
-		return sliderVelocities[index];
+		return scrollVelocities[index];
 	}
 
 	/**
@@ -512,10 +527,53 @@ class Song extends JsonObject
 	}
 
 	/**
-		Finds the length of a timing point.
-		@param point The timing point.
+		Gets the most recent event object at a particular point in the map.
+		@param time The time to find an event object at.
 	**/
-	public function getTimingPointLength(point:TimingPoint):Float
+	public function getEventAt(time:Float)
+	{
+		var index = events.length - 1;
+		while (index >= 0)
+		{
+			if (events[index].startTime <= time)
+				break;
+
+			index--;
+		}
+
+		if (index == -1)
+			return events[0];
+
+		return events[index];
+	}
+
+	/**
+		Gets the current lyric step at a particular point in the map.
+		@param time The time to find a lyric step at.
+	**/
+	public function getLyricAt(time:Float)
+	{
+		var index = lyricSteps.length - 1;
+		while (index >= 0)
+		{
+			if (lyricSteps[index].startTime <= time)
+				break;
+
+			index--;
+		}
+
+		if (index == -1)
+			return lyricSteps[0];
+
+		return lyricSteps[index];
+	}
+
+	/**
+		Finds the length of a timing point.
+		@param point 	The timing point.
+		@param inst		The sound object for the instrumental. If the timing point is the last one in the map, it will use this to get its length.
+	**/
+	public function getTimingPointLength(point:TimingPoint, ?inst:FlxSound):Float
 	{
 		var index = timingPoints.indexOf(point);
 		if (index == -1)
@@ -523,6 +581,9 @@ class Song extends JsonObject
 
 		if (index + 1 < timingPoints.length)
 			return timingPoints[index + 1].startTime - timingPoints[index].startTime;
+
+		if (inst != null)
+			return inst.length - point.startTime;
 
 		return length - point.startTime;
 	}
@@ -541,10 +602,14 @@ class Song extends JsonObject
 			notes.push(cast object);
 		else if (Std.isOfType(object, TimingPoint))
 			timingPoints.push(cast object);
-		else if (Std.isOfType(object, SliderVelocity))
-			sliderVelocities.push(cast object);
+		else if (Std.isOfType(object, ScrollVelocity))
+			scrollVelocities.push(cast object);
 		else if (Std.isOfType(object, CameraFocus))
 			cameraFocuses.push(cast object);
+		else if (Std.isOfType(object, EventObject))
+			events.push(cast object);
+		else if (Std.isOfType(object, LyricStep))
+			lyricSteps.push(cast object);
 	}
 
 	public function removeObject(object:ITimingObject)
@@ -553,40 +618,68 @@ class Song extends JsonObject
 			notes.remove(cast object);
 		else if (Std.isOfType(object, TimingPoint))
 			timingPoints.remove(cast object);
-		else if (Std.isOfType(object, SliderVelocity))
-			sliderVelocities.remove(cast object);
+		else if (Std.isOfType(object, ScrollVelocity))
+			scrollVelocities.remove(cast object);
 		else if (Std.isOfType(object, CameraFocus))
 			cameraFocuses.remove(cast object);
+		else if (Std.isOfType(object, EventObject))
+			events.remove(cast object);
+		else if (Std.isOfType(object, LyricStep))
+			lyricSteps.remove(cast object);
 	}
 
 	/** Clones this song into a new object.**/
 	public function deepClone()
 	{
 		var timingPoints:Array<TimingPoint> = [];
-		for (point in this.timingPoints)
+		for (obj in this.timingPoints)
 		{
 			timingPoints.push(new TimingPoint({
-				startTime: point.startTime,
-				bpm: point.bpm,
-				meter: point.meter
+				startTime: obj.startTime,
+				bpm: obj.bpm,
+				meter: obj.meter
 			}));
 		}
 
-		var sliderVelocities:Array<SliderVelocity> = [];
-		for (velocity in this.sliderVelocities)
+		var scrollVelocities:Array<ScrollVelocity> = [];
+		for (obj in this.scrollVelocities)
 		{
-			sliderVelocities.push(new SliderVelocity({
-				startTime: velocity.startTime,
-				multiplier: velocity.multiplier
+			scrollVelocities.push(new ScrollVelocity({
+				startTime: obj.startTime,
+				multipliers: obj.multipliers
 			}));
 		}
 
 		var cameraFocuses:Array<CameraFocus> = [];
-		for (focus in this.cameraFocuses)
+		for (obj in this.cameraFocuses)
 		{
 			cameraFocuses.push(new CameraFocus({
-				startTime: focus.startTime,
-				char: focus.char
+				startTime: obj.startTime,
+				char: obj.char
+			}));
+		}
+
+		var events:Array<EventObject> = [];
+		for (obj in this.events)
+		{
+			var subEvents:Array<Event> = [];
+			for (sub in obj.events)
+				subEvents.push(new Event({
+					event: sub.event,
+					params: sub.params.join(',')
+				}));
+
+			events.push(new EventObject({
+				startTime: obj.startTime,
+				events: subEvents
+			}));
+		}
+
+		var lyricSteps:Array<LyricStep> = [];
+		for (obj in this.lyricSteps)
+		{
+			lyricSteps.push(new LyricStep({
+				startTime: obj.startTime
 			}));
 		}
 
@@ -610,8 +703,10 @@ class Song extends JsonObject
 			vocalsFile: vocalsFile,
 			timingPoints: timingPoints,
 			initialScrollVelocity: initialScrollVelocity,
-			sliderVelocities: sliderVelocities,
+			scrollVelocities: scrollVelocities,
 			cameraFocuses: cameraFocuses,
+			events: events,
+			lyricSteps: lyricSteps,
 			notes: notes,
 			bf: bf,
 			opponent: opponent,
@@ -741,38 +836,61 @@ class Song extends JsonObject
 	public function save(path:String)
 	{
 		var timingPoints = [];
-		for (point in this.timingPoints)
+		for (obj in this.timingPoints)
 		{
 			var data:Dynamic = {
-				bpm: point.bpm
+				bpm: obj.bpm
 			}
-			if (point.startTime != 0)
-				data.startTime = point.startTime;
-			if (point.meter != 4)
-				data.meter = point.meter;
+			if (obj.startTime != 0)
+				data.startTime = obj.startTime;
+			if (obj.meter != 4)
+				data.meter = obj.meter;
 			timingPoints.push(data);
 		}
 
-		var sliderVelocities = [];
-		for (velocity in this.sliderVelocities)
+		var scrollVelocities = [];
+		for (obj in this.scrollVelocities)
 		{
 			var data:Dynamic = {};
-			if (velocity.startTime != 0)
-				data.startTime = velocity.startTime;
-			if (velocity.multiplier != 1)
-				data.multiplier = velocity.multiplier;
-			sliderVelocities.push(data);
+			if (obj.startTime != 0)
+				data.startTime = obj.startTime;
+			if (obj.multipliers[0] != 1 || obj.multipliers[1] != 1)
+				data.multipliers = obj.multipliers;
+			scrollVelocities.push(data);
 		}
 
 		var cameraFocuses = [];
-		for (focus in this.cameraFocuses)
+		for (obj in this.cameraFocuses)
 		{
 			var data:Dynamic = {};
-			if (focus.startTime != 0)
-				data.startTime = focus.startTime;
-			if (focus.char != 0)
-				data.char = focus.char;
+			if (obj.startTime != 0)
+				data.startTime = obj.startTime;
+			if (obj.char != 0)
+				data.char = obj.char;
 			cameraFocuses.push(data);
+		}
+
+		var events = [];
+		for (obj in this.events)
+		{
+			var data:Dynamic = {events: []};
+			if (obj.startTime != 0)
+				data.startTime = obj.startTime;
+			for (sub in obj.events)
+				data.events.push({
+					event: sub.event,
+					params: sub.params.join(',')
+				});
+			events.push(data);
+		}
+
+		var lyricSteps = [];
+		for (obj in this.lyricSteps)
+		{
+			var data:Dynamic = {};
+			if (obj.startTime != 0)
+				data.startTime = obj.startTime;
+			lyricSteps.push(data);
 		}
 
 		var notes = [];
@@ -800,8 +918,10 @@ class Song extends JsonObject
 			vocalsFile: vocalsFile,
 			timingPoints: timingPoints,
 			initialScrollVelocity: initialScrollVelocity,
-			sliderVelocities: sliderVelocities,
+			scrollVelocities: scrollVelocities,
 			cameraFocuses: cameraFocuses,
+			events: events,
+			lyricSteps: lyricSteps,
 			notes: notes,
 			bf: bf,
 			opponent: opponent,
@@ -818,7 +938,7 @@ class Song extends JsonObject
 		return FlxStringUtil.getDebugString([
 			LabelValuePair.weak("title", title),
 			LabelValuePair.weak("timingPoints", timingPoints),
-			LabelValuePair.weak("sliderVelocities", sliderVelocities),
+			LabelValuePair.weak("scrollVelocities", scrollVelocities),
 			LabelValuePair.weak("notes", notes)
 		]);
 	}

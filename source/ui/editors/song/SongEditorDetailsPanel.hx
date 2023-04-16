@@ -127,7 +127,8 @@ class SongEditorDetailsPanel extends EditorPanel
 
 		bpmText.text = 'BPM: ${point != null ? point.bpm : 0}';
 
-		scrollVelocityText.text = 'Scroll Velocity: ${sv != null ? sv.multiplier : state.song.initialScrollVelocity}';
+		var multipliers = (sv != null) ? sv.multipliers : [state.song.initialScrollVelocity, state.song.initialScrollVelocity];
+		scrollVelocityText.text = 'Scroll Velocity: ${multipliers[0]} | ${multipliers[1]}';
 
 		var time = FlxStringUtil.formatTime(state.inst.time / 1000, true);
 		var length = FlxStringUtil.formatTime(state.inst.length / 1000, true);

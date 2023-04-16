@@ -103,11 +103,8 @@ class SongEditorTimeline extends FlxBasic
 			if (!Math.isFinite(point.bpm))
 				continue;
 
-			var pointLength = state.song.getTimingPointLength(point);
+			var pointLength = state.song.getTimingPointLength(point, state.inst);
 			var startTime = point.startTime;
-
-			if (state.song.timingPoints.length == 1)
-				pointLength = state.inst.length - startTime;
 
 			var i = 0;
 			while (i < pointLength / point.beatLength * state.beatSnap.value)

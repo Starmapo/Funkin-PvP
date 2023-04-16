@@ -3,6 +3,7 @@ package util.editors.song;
 import data.song.CameraFocus;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
+import data.song.ScrollVelocity;
 import data.song.Song;
 import data.song.TimingPoint;
 import flixel.math.FlxMath;
@@ -28,6 +29,9 @@ class SongEditorActionManager extends ActionManager
 	public static inline var CHANGE_TIMING_POINT_TIME:String = 'change-timing-point-time';
 	public static inline var CHANGE_TIMING_POINT_BPM:String = 'change-timing-point-bpm';
 	public static inline var CHANGE_TIMING_POINT_METER:String = 'change-timing-point-meter';
+	public static inline var CHANGE_SV_MULTIPLIER:String = 'change-sv-multiplier';
+	public static inline var CHANGE_SV_MULTIPLIERS:String = 'change-sv-multipliers';
+	public static inline var CHANGE_SV_LINKED:String = 'change-sv-linked';
 	public static inline var CHANGE_TITLE:String = 'change-title';
 	public static inline var CHANGE_ARTIST:String = 'change-artist';
 	public static inline var CHANGE_SOURCE:String = 'change-source';
@@ -59,23 +63,34 @@ class SongEditorActionManager extends ActionManager
 
 	public function addTimingPoint(startTime:Float, bpm:Float, meter:Int = 4)
 	{
-		var timingPoint = new TimingPoint({
+		var obj = new TimingPoint({
 			startTime: startTime,
 			bpm: bpm,
 			meter: meter
 		});
-		perform(new ActionAddObject(state, timingPoint));
-		return timingPoint;
+		perform(new ActionAddObject(state, obj));
+		return obj;
+	}
+
+	public function addScrollVelocity(startTime:Float, multipliers:Array<Float>, linked:Bool = true)
+	{
+		var obj = new ScrollVelocity({
+			startTime: startTime,
+			multipliers: multipliers,
+			linked: linked
+		});
+		perform(new ActionAddObject(state, obj));
+		return obj;
 	}
 
 	public function addCamFocus(startTime:Float, char:CameraFocusChar = OPPONENT)
 	{
-		var camFocus = new CameraFocus({
+		var obj = new CameraFocus({
 			startTime: startTime,
 			char: char
 		});
-		perform(new ActionAddObject(state, camFocus));
-		return camFocus;
+		perform(new ActionAddObject(state, obj));
+		return obj;
 	}
 }
 
@@ -637,6 +652,119 @@ class ActionChangeTimingPointMeter implements IAction
 		lastMeters.clear();
 
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, meter: meter});
+	}
+}
+
+class ActionChangeSVMultiplier implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_SV_MULTIPLIER;
+
+	var state:SongEditorState;
+	var scrollVelocities:Array<ScrollVelocity>;
+	var player:Int;
+	var multiplier:Float;
+	var lastMultipliers:Map<ScrollVelocity, Float> = new Map();
+
+	public function new(state:SongEditorState, scrollVelocities:Array<ScrollVelocity>, player:Int, multiplier:Float)
+	{
+		this.state = state;
+		this.scrollVelocities = scrollVelocities;
+		this.player = player;
+		this.multiplier = multiplier;
+	}
+
+	public function perform()
+	{
+		for (obj in scrollVelocities)
+		{
+			lastMultipliers.set(obj, obj.multipliers[player]);
+			obj.multipliers[player] = multiplier;
+		}
+
+		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, player: player, multiplier: multiplier});
+	}
+
+	public function undo()
+	{
+		for (obj in scrollVelocities)
+			obj.multipliers[player] = lastMultipliers.get(obj);
+		lastMultipliers.clear();
+
+		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, player: player, multiplier: multiplier});
+	}
+}
+
+class ActionChangeSVMultipliers implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_SV_MULTIPLIERS;
+
+	var state:SongEditorState;
+	var scrollVelocities:Array<ScrollVelocity>;
+	var multipliers:Array<Float>;
+	var lastMultipliers:Map<ScrollVelocity, Array<Float>> = new Map();
+
+	public function new(state:SongEditorState, scrollVelocities:Array<ScrollVelocity>, multipliers:Array<Float>)
+	{
+		this.state = state;
+		this.scrollVelocities = scrollVelocities;
+		this.multipliers = multipliers;
+	}
+
+	public function perform()
+	{
+		for (obj in scrollVelocities)
+		{
+			lastMultipliers.set(obj, obj.multipliers.copy());
+			obj.multipliers = multipliers.copy();
+		}
+
+		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, multipliers: multipliers});
+	}
+
+	public function undo()
+	{
+		for (obj in scrollVelocities)
+			obj.multipliers = lastMultipliers.get(obj);
+		lastMultipliers.clear();
+
+		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, multipliers: multipliers});
+	}
+}
+
+class ActionChangeSVLinked implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_SV_LINKED;
+
+	var state:SongEditorState;
+	var scrollVelocities:Array<ScrollVelocity>;
+	var linked:Bool;
+	var lastLinked:Map<ScrollVelocity, Bool> = new Map();
+
+	public function new(state:SongEditorState, scrollVelocities:Array<ScrollVelocity>, linked:Bool)
+	{
+		this.state = state;
+		this.scrollVelocities = scrollVelocities;
+		this.linked = linked;
+	}
+
+	public function perform()
+	{
+		for (obj in scrollVelocities)
+		{
+			lastLinked.set(obj, obj.linked);
+			obj.linked = linked;
+		}
+
+		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, linked: linked});
+	}
+
+	public function undo()
+	{
+		for (obj in scrollVelocities)
+			obj.linked = lastLinked.get(obj);
+		lastLinked.clear();
+
+		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, linked: linked});
 	}
 }
 

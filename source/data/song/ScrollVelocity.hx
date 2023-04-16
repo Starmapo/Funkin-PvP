@@ -2,22 +2,25 @@ package data.song;
 
 import flixel.util.FlxStringUtil;
 
-class SliderVelocity extends JsonObject implements ITimingObject
+class ScrollVelocity extends JsonObject implements ITimingObject
 {
 	/**
-		The time in milliseconds for when this slider velocity begins.
+		The time in milliseconds for when this scroll velocity begins.
 	**/
 	public var startTime:Float;
 
 	/**
-		The velocity multiplier for this slider velocity.
+		The velocity multipliers for this scroll velocity.
 	**/
-	public var multiplier:Float;
+	public var multipliers:Array<Float>;
+
+	public var linked:Bool;
 
 	public function new(data:Dynamic)
 	{
 		startTime = readFloat(data.startTime, 0, 0);
-		multiplier = readFloat(data.multiplier, 1, -100, 100, 2);
+		multipliers = readFloatArray(data.multipliers, [1, 1], null, 2, -100, 100, 2);
+		linked = readBool(data.linked, true);
 	}
 
 	/**
@@ -27,7 +30,7 @@ class SliderVelocity extends JsonObject implements ITimingObject
 	{
 		return FlxStringUtil.getDebugString([
 			LabelValuePair.weak("startTime", startTime),
-			LabelValuePair.weak("multiplier", multiplier)
+			LabelValuePair.weak("multipliers", multipliers)
 		]);
 	}
 }

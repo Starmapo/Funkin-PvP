@@ -163,6 +163,11 @@ class SongEditorPlayfieldButton extends FlxSprite
 								meter = curTimingPoint.meter;
 							}
 							state.actionManager.addTimingPoint(time, bpm, meter);
+						case 1: // Scroll Velocity
+							var curSV = state.song.getScrollVelocityAt(time);
+							var multipliers:Array<Float> = curSV != null ? curSV.multipliers.copy() : [1, 1];
+							var linked = curSV != null ? curSV.linked : true;
+							state.actionManager.addScrollVelocity(time, multipliers, linked);
 						case 2: // Camera Focus
 							var char:CameraFocusChar = OPPONENT;
 							var curFocus = state.song.getCameraFocusAt(time);
@@ -250,6 +255,8 @@ class SongEditorPlayfieldButton extends FlxSprite
 			{
 				case 0:
 					cast state.song.timingPoints;
+				case 1:
+					cast state.song.scrollVelocities;
 				case 2:
 					cast state.song.cameraFocuses;
 				default:
@@ -316,23 +323,11 @@ class SongEditorPlayfieldButton extends FlxSprite
 
 	function removeHoveredObject()
 	{
-		if (playfield.type == NOTES)
+		var obj = playfield.getHoveredObject();
+		if (obj != null)
 		{
-			var note = playfield.noteGroup.getHoveredNote();
-			if (note != null)
-			{
-				removeObject(note);
-				return;
-			}
-		}
-		else
-		{
-			var obj = playfield.getHoveredObject();
-			if (obj != null)
-			{
-				removeObject(obj);
-				return;
-			}
+			removeObject(obj);
+			return;
 		}
 	}
 
@@ -366,8 +361,6 @@ class SongEditorPlayfieldButton extends FlxSprite
 				longNoteInDrag.noteInfo.endTime = 0;
 
 			longNoteInDrag.refreshPositionAndSize();
-			FlxG.watch.addQuick('startTime', longNoteInDrag.info.startTime);
-			FlxG.watch.addQuick('endTime', longNoteInDrag.noteInfo.endTime);
 			return;
 		}
 
@@ -384,8 +377,6 @@ class SongEditorPlayfieldButton extends FlxSprite
 			longNoteInDrag.noteInfo.endTime = time;
 
 		longNoteInDrag.refreshPositionAndSize();
-		FlxG.watch.addQuick('startTime', longNoteInDrag.info.startTime);
-		FlxG.watch.addQuick('endTime', longNoteInDrag.noteInfo.endTime);
 	}
 
 	function handleMovingObjects()
@@ -511,15 +502,13 @@ class SongEditorPlayfieldButton extends FlxSprite
 		}
 		else
 		{
-			for (obj in playfield.otherGroup.timingPoints)
+			for (objects in playfield.otherGroup.getAllObjects())
 			{
-				if (state.selectedObjects.value.contains(obj.info))
-					obj.updatePosition();
-			}
-			for (obj in playfield.otherGroup.camFocuses)
-			{
-				if (state.selectedObjects.value.contains(obj.info))
-					obj.updatePosition();
+				for (obj in objects)
+				{
+					if (state.selectedObjects.value.contains(obj.info))
+						obj.updatePosition();
+				}
 			}
 		}
 

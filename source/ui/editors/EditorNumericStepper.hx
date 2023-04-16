@@ -79,6 +79,12 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 		}
 	}
 
+	public function setDisplayText(value:String)
+	{
+		_value = Math.POSITIVE_INFINITY;
+		return inputText.displayText = value;
+	}
+
 	function onTextChanged(text, _)
 	{
 		var parsedText = Std.parseFloat(text);
