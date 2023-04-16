@@ -224,6 +224,16 @@ class Song extends JsonObject
 	public var cameraFocuses:Array<CameraFocus> = [];
 
 	/**
+		The list of events for this map.
+	**/
+	public var events:Array<EventObject> = [];
+
+	/**
+		The list of lyric steps for this map.
+	**/
+	public var lyricSteps:Array<LyricStep> = [];
+
+	/**
 		The list of notes for this map.
 	**/
 	public var notes:Array<NoteInfo> = [];

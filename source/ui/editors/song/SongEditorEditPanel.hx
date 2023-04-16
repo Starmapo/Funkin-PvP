@@ -3,6 +3,7 @@ package ui.editors.song;
 import data.Settings;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
+import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
@@ -38,6 +39,11 @@ class SongEditorEditPanel extends EditorPanel
 	var paramsInput:EditorInputText;
 	var selectedNotes:Array<NoteInfo> = [];
 	var notePropertiesGroup:Array<FlxSprite> = [];
+	var timingPointTimeStepper:EditorNumericStepper;
+	var bpmStepper:EditorNumericStepper;
+	var meterStepper:EditorNumericStepper;
+	var selectedTimingPoints:Array<TimingPoint> = [];
+	var timingPointPropertiesGroup:Array<FlxSprite> = [];
 
 	public function new(state:SongEditorState)
 	{
@@ -53,8 +59,12 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				name: 'Song',
 				label: 'Song'
+			},
+			{
+				name: 'Timing Points',
+				label: 'Timing Points'
 			}
-		]);
+		], 3);
 		resize(390, 500);
 		x = FlxG.width - width - 10;
 		screenCenter(Y);
@@ -63,9 +73,11 @@ class SongEditorEditPanel extends EditorPanel
 		createEditorTab();
 		createNotesTab();
 		createSongTab();
+		createTimingPointsTab();
 
 		selected_tab_id = 'Song';
 		updateSelectedNotes();
+		updateSelectedTimingPoints();
 		onClick = onClickTab;
 
 		state.actionManager.onEvent.add(onEvent);
@@ -279,7 +291,7 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(longNoteAlphaLabel);
 
 		var longNoteAlphaStepper = new EditorNumericStepper(longNoteAlphaLabel.x + inputSpacing, longNoteAlphaLabel.y - 1, 10,
-			Settings.editorLongNoteAlpha.defaultValue * 100, Settings.editorLongNoteAlpha.minValue * 100, Settings.editorLongNoteAlpha.maxValue * 100);
+			Settings.editorLongNoteAlpha.defaultValue * 100, Settings.editorLongNoteAlpha.minValue * 100, Settings.editorLongNoteAlpha.maxValue * 100, 0);
 		longNoteAlphaStepper.value = Settings.editorLongNoteAlpha.value * 100;
 		longNoteAlphaStepper.valueChanged.add(function(value, _)
 		{
@@ -291,7 +303,7 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(hitsoundLabel);
 
 		var hitsoundStepper = new EditorNumericStepper(hitsoundLabel.x + inputSpacing, hitsoundLabel.y - 1, 10,
-			Settings.editorHitsoundVolume.defaultValue * 100, Settings.editorHitsoundVolume.minValue * 100, Settings.editorHitsoundVolume.maxValue * 100);
+			Settings.editorHitsoundVolume.defaultValue * 100, Settings.editorHitsoundVolume.minValue * 100, Settings.editorHitsoundVolume.maxValue * 100, 0);
 		hitsoundStepper.value = Settings.editorHitsoundVolume.value * 100;
 		hitsoundStepper.valueChanged.add(function(value, _)
 		{
@@ -384,7 +396,7 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(instVolumeLabel);
 
 		instVolumeStepper = new EditorNumericStepper(instVolumeLabel.x + inputSpacing, instVolumeLabel.y - 1, 10,
-			Settings.editorInstVolume.defaultValue * 100, Settings.editorInstVolume.minValue * 100, Settings.editorInstVolume.maxValue * 100);
+			Settings.editorInstVolume.defaultValue * 100, Settings.editorInstVolume.minValue * 100, Settings.editorInstVolume.maxValue * 100, 0);
 		instVolumeStepper.value = Settings.editorInstVolume.value * 100;
 		instVolumeStepper.valueChanged.add(function(value, _)
 		{
@@ -396,7 +408,7 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(vocalsVolumeLabel);
 
 		vocalsVolumeStepper = new EditorNumericStepper(vocalsVolumeLabel.x + inputSpacing, vocalsVolumeLabel.y - 1, 10,
-			Settings.editorVocalsVolume.defaultValue * 100, Settings.editorVocalsVolume.minValue * 100, Settings.editorVocalsVolume.maxValue * 100);
+			Settings.editorVocalsVolume.defaultValue * 100, Settings.editorVocalsVolume.minValue * 100, Settings.editorVocalsVolume.maxValue * 100, 0);
 		vocalsVolumeStepper.value = Settings.editorVocalsVolume.value * 100;
 		vocalsVolumeStepper.valueChanged.add(function(value, _)
 		{
@@ -542,6 +554,70 @@ class SongEditorEditPanel extends EditorPanel
 		addGroup(tab);
 	}
 
+	function createTimingPointsTab()
+	{
+		var tab = createTab('Timing Points');
+
+		var spacing = 4;
+
+		var timingPointTimeLabel = new EditorText(4, 4, 0, 'Time:');
+		tab.add(timingPointTimeLabel);
+		timingPointPropertiesGroup.push(timingPointTimeLabel);
+
+		timingPointTimeStepper = new EditorNumericStepper(timingPointTimeLabel.x, timingPointTimeLabel.y + timingPointTimeLabel.height + spacing, 1, 0, 0);
+		timingPointTimeStepper.valueChanged.add(function(value, _)
+		{
+			state.actionManager.perform(new ActionChangeTimingPointTime(state, selectedTimingPoints.copy(), value));
+		});
+		tab.add(timingPointTimeStepper);
+		timingPointPropertiesGroup.push(timingPointTimeStepper);
+
+		var bpmLabel = new EditorText(timingPointTimeStepper.x + timingPointTimeStepper.width + spacing, timingPointTimeLabel.y, 0, 'BPM:');
+		tab.add(bpmLabel);
+		timingPointPropertiesGroup.push(bpmLabel);
+
+		bpmStepper = new EditorNumericStepper(bpmLabel.x, bpmLabel.y + bpmLabel.height + spacing, 1, 120, 1, 1000, 3);
+		bpmStepper.valueChanged.add(function(value, _)
+		{
+			state.actionManager.perform(new ActionChangeTimingPointBPM(state, selectedTimingPoints.copy(), value));
+		});
+		tab.add(bpmStepper);
+		timingPointPropertiesGroup.push(bpmStepper);
+
+		var meterLabel = new EditorText(bpmStepper.x + bpmStepper.width + spacing, bpmLabel.y, 0, 'Meter:');
+		tab.add(meterLabel);
+		timingPointPropertiesGroup.push(meterLabel);
+
+		meterStepper = new EditorNumericStepper(meterLabel.x, meterLabel.y + meterLabel.height + spacing, 1, 4, 1, 16, 0);
+		meterStepper.valueChanged.add(function(value, _)
+		{
+			state.actionManager.perform(new ActionChangeTimingPointMeter(state, selectedTimingPoints.copy(), Std.int(value)));
+		});
+		tab.add(meterStepper);
+		timingPointPropertiesGroup.push(meterStepper);
+
+		var selectCurrentButton = new FlxUIButton(0, meterStepper.y + meterStepper.height + spacing, 'Select current timing point', function()
+		{
+			var point = state.song.getTimingPointAt(state.inst.time);
+			if (point != null)
+			{
+				for (obj in state.selectedObjects.value)
+				{
+					if (Std.isOfType(obj, TimingPoint))
+						state.selectedObjects.remove(obj);
+				}
+				state.selectedObjects.push(point);
+				if (state.inst.time != point.startTime)
+					state.setSongTime(point.startTime);
+			}
+		});
+		selectCurrentButton.resize(150, selectCurrentButton.height);
+		selectCurrentButton.x = (width - selectCurrentButton.width) / 2;
+		tab.add(selectCurrentButton);
+
+		addGroup(tab);
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -556,6 +632,8 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			case SongEditorActionManager.CHANGE_NOTE_TYPE, SongEditorActionManager.CHANGE_NOTE_PARAMS:
 				updateSelectedNotes();
+			case SongEditorActionManager.CHANGE_TIMING_POINT_BPM, SongEditorActionManager.CHANGE_TIMING_POINT_METER:
+				updateSelectedTimingPoints();
 			case SongEditorActionManager.CHANGE_TITLE:
 				titleInput.text = params.title;
 			case SongEditorActionManager.CHANGE_ARTIST:
@@ -582,6 +660,11 @@ class SongEditorEditPanel extends EditorPanel
 			selectedNotes.push(cast obj);
 			updateSelectedNotes();
 		}
+		else if (Std.isOfType(obj, TimingPoint))
+		{
+			selectedTimingPoints.push(cast obj);
+			updateSelectedTimingPoints();
+		}
 	}
 
 	function onDeselectedObject(obj:ITimingObject)
@@ -591,11 +674,17 @@ class SongEditorEditPanel extends EditorPanel
 			selectedNotes.remove(cast obj);
 			updateSelectedNotes();
 		}
+		else if (Std.isOfType(obj, TimingPoint))
+		{
+			selectedTimingPoints.remove(cast obj);
+			updateSelectedTimingPoints();
+		}
 	}
 
 	function onMultipleObjectsSelected(objects:Array<ITimingObject>)
 	{
 		var foundNote = false;
+		var foundTP = false;
 		for (obj in objects)
 		{
 			if (Std.isOfType(obj, NoteInfo))
@@ -603,15 +692,25 @@ class SongEditorEditPanel extends EditorPanel
 				selectedNotes.push(cast obj);
 				foundNote = true;
 			}
+			else if (Std.isOfType(obj, TimingPoint))
+			{
+				selectedTimingPoints.push(cast obj);
+				foundTP = true;
+			}
 		}
 		if (foundNote)
 			updateSelectedNotes();
+		if (foundTP)
+			updateSelectedTimingPoints();
 	}
 
 	function onAllObjectsDeselected()
 	{
 		selectedNotes.resize(0);
+		selectedTimingPoints.resize(0);
+
 		updateSelectedNotes();
+		updateSelectedTimingPoints();
 	}
 
 	function updateSelectedNotes()
@@ -642,8 +741,48 @@ class SongEditorEditPanel extends EditorPanel
 		}
 		else
 		{
-			paramsInput.text = typeInput.text = '';
 			for (obj in notePropertiesGroup)
+			{
+				obj.active = false;
+				obj.alpha = 0.5;
+			}
+		}
+	}
+
+	function updateSelectedTimingPoints()
+	{
+		if (selectedTimingPoints.length > 0)
+		{
+			var time = selectedTimingPoints[0].startTime;
+			var bpm = selectedTimingPoints[0].bpm;
+			var meter = selectedTimingPoints[0].meter;
+			for (i in 1...selectedTimingPoints.length)
+			{
+				if (selectedTimingPoints[i].startTime != time)
+					time = 0;
+
+				if (selectedTimingPoints[i].bpm != bpm)
+					bpm = 0;
+
+				if (selectedTimingPoints[i].meter != meter)
+					meter = 0;
+
+				if (time == 0 && bpm == 0 && meter == 0)
+					break;
+			}
+			timingPointTimeStepper.changeWithoutTrigger(time);
+			bpmStepper.changeWithoutTrigger(bpm);
+			meterStepper.changeWithoutTrigger(meter);
+			for (obj in timingPointPropertiesGroup)
+			{
+				if (selected_tab_id == 'Timing Points')
+					obj.active = true;
+				obj.alpha = 1;
+			}
+		}
+		else
+		{
+			for (obj in timingPointPropertiesGroup)
 			{
 				obj.active = false;
 				obj.alpha = 0.5;
@@ -655,5 +794,7 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		if (selectedNotes.length == 0)
 			updateSelectedNotes();
+		if (selectedTimingPoints.length == 0)
+			updateSelectedTimingPoints();
 	}
 }

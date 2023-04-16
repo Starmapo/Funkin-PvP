@@ -61,8 +61,9 @@ class EditorInputText extends FlxSpriteGroup
 
 	function onFocusOut(event:FocusEvent)
 	{
-		text = text;
+		textField.text = filter(text);
 		focusLost.dispatch(text);
+
 		if (lastText != text)
 		{
 			textChanged.dispatch(text, lastText);
@@ -106,7 +107,7 @@ class EditorInputText extends FlxSpriteGroup
 
 	function set_text(value:String)
 	{
-		return lastText = textField.text = filter(value);
+		return textField.text = filter(value);
 	}
 
 	function set_forceCase(value:LetterCase)

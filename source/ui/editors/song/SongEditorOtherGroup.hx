@@ -378,6 +378,14 @@ class SongEditorOtherGroup extends FlxBasic
 					camFocuses.sort(sortObjects);
 					initializeCamFocusPool();
 				}
+			case SongEditorActionManager.CHANGE_TIMING_POINT_TIME:
+				for (obj in timingPoints)
+				{
+					if (params.timingPoints.contains(obj.info))
+						obj.updatePosition();
+				}
+				timingPoints.sort(sortObjects);
+				initializeTimingPointPool();
 		}
 	}
 

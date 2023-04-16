@@ -25,6 +25,9 @@ class SongEditorActionManager extends ActionManager
 	public static inline var RESNAP_OBJECTS:String = 'resnap-objects';
 	public static inline var FLIP_NOTES:String = 'flip-notes';
 	public static inline var APPLY_MODIFIER:String = 'apply-modifier';
+	public static inline var CHANGE_TIMING_POINT_TIME:String = 'change-timing-point-time';
+	public static inline var CHANGE_TIMING_POINT_BPM:String = 'change-timing-point-bpm';
+	public static inline var CHANGE_TIMING_POINT_METER:String = 'change-timing-point-meter';
 	public static inline var CHANGE_TITLE:String = 'change-title';
 	public static inline var CHANGE_ARTIST:String = 'change-artist';
 	public static inline var CHANGE_SOURCE:String = 'change-source';
@@ -523,6 +526,117 @@ class ActionApplyModifier implements IAction
 		originalNotes.resize(0);
 
 		state.actionManager.triggerEvent(type, {modifier: modifier});
+	}
+}
+
+class ActionChangeTimingPointTime implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_TIMING_POINT_TIME;
+
+	var state:SongEditorState;
+	var timingPoints:Array<TimingPoint>;
+	var time:Float;
+	var lastTimes:Map<TimingPoint, Float> = new Map();
+
+	public function new(state:SongEditorState, timingPoints:Array<TimingPoint>, time:Float)
+	{
+		this.state = state;
+		this.timingPoints = timingPoints;
+		this.time = time;
+	}
+
+	public function perform()
+	{
+		for (obj in timingPoints)
+		{
+			lastTimes.set(obj, obj.startTime);
+			obj.startTime = time;
+		}
+
+		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, time: time});
+	}
+
+	public function undo()
+	{
+		for (obj in timingPoints)
+			obj.startTime = lastTimes.get(obj);
+		lastTimes.clear();
+
+		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, time: time});
+	}
+}
+
+class ActionChangeTimingPointBPM implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_TIMING_POINT_BPM;
+
+	var state:SongEditorState;
+	var timingPoints:Array<TimingPoint>;
+	var bpm:Float;
+	var lastBPMs:Map<TimingPoint, Float> = new Map();
+
+	public function new(state:SongEditorState, timingPoints:Array<TimingPoint>, bpm:Float)
+	{
+		this.state = state;
+		this.timingPoints = timingPoints;
+		this.bpm = bpm;
+	}
+
+	public function perform()
+	{
+		for (obj in timingPoints)
+		{
+			lastBPMs.set(obj, obj.bpm);
+			obj.bpm = bpm;
+		}
+
+		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, bpm: bpm});
+	}
+
+	public function undo()
+	{
+		for (obj in timingPoints)
+			obj.bpm = lastBPMs.get(obj);
+		lastBPMs.clear();
+
+		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, bpm: bpm});
+	}
+}
+
+class ActionChangeTimingPointMeter implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_TIMING_POINT_METER;
+
+	var state:SongEditorState;
+	var timingPoints:Array<TimingPoint>;
+	var meter:Int;
+	var lastMeters:Map<TimingPoint, Int> = new Map();
+
+	public function new(state:SongEditorState, timingPoints:Array<TimingPoint>, meter:Int)
+	{
+		this.state = state;
+		this.timingPoints = timingPoints;
+		this.meter = meter;
+	}
+
+	public function perform()
+	{
+		for (obj in timingPoints)
+		{
+			lastMeters.set(obj, obj.meter);
+			obj.meter = meter;
+		}
+
+		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, meter: meter});
+	}
+
+	public function undo()
+	{
+		for (obj in timingPoints)
+			obj.meter = lastMeters.get(obj);
+		lastMeters.clear();
+
+		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, meter: meter});
 	}
 }
 

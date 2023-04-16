@@ -182,6 +182,9 @@ class SongEditorTimeline extends FlxBasic
 				}
 				if (hasTP)
 					reinitialize();
+			case SongEditorActionManager.CHANGE_TIMING_POINT_BPM, SongEditorActionManager.CHANGE_TIMING_POINT_METER,
+				SongEditorActionManager.CHANGE_TIMING_POINT_TIME:
+				reinitialize();
 		}
 	}
 
