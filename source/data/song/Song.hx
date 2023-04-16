@@ -24,7 +24,23 @@ class Song extends JsonObject
 		var json:Dynamic = Paths.getJson(path, mod);
 
 		if (json.song != null)
+		{
+			var sliderVelocities:Array<Dynamic> = json.sliderVelocities;
+
 			json = convertFNFSong(json.song);
+
+			if (sliderVelocities != null)
+			{
+				json.scrollVelocities = [];
+				for (sv in sliderVelocities)
+				{
+					json.scrollVelocities.push(new ScrollVelocity({
+						startTime: sv.startTime,
+						multipliers: [sv.multiplier, sv.multiplier]
+					}));
+				}
+			}
+		}
 
 		var song = new Song(json);
 		song.directory = Path.directory(path);
@@ -98,6 +114,7 @@ class Song extends JsonObject
 				}
 			],
 			cameraFocuses: [],
+			events: [],
 			notes: [],
 			bf: json.player1,
 			opponent: json.player2,
@@ -134,7 +151,18 @@ class Song extends JsonObject
 					endTime: note[2] > 0 ? note[0] + note[2] : 0,
 				};
 				if (noteInfo.lane < 0)
+				{
+					song.events.push(new EventObject({
+						startTime: note[0],
+						events: [
+							{
+								event: note[2],
+								params: note[3] + (note[4].length > 0 ? ',' + note[4] : '')
+							}
+						]
+					}));
 					continue;
+				}
 				if (section.mustHitSection)
 				{
 					if (noteInfo.lane >= 4)
@@ -164,6 +192,27 @@ class Song extends JsonObject
 			}
 			curTime += section.lengthInSteps * (15000 / curBPM);
 		}
+		if (json.events != null)
+		{
+			var events:Array<Array<Dynamic>> = json.events;
+			for (event in events)
+			{
+				var subEvents = [];
+				var subs:Array<Array<String>> = event[1];
+				for (sub in subs)
+				{
+					subEvents.push(new Event({
+						event: sub[0],
+						params: sub[1] + (sub[2].length > 0 ? ',' + sub[2] : '')
+					}));
+				}
+				song.events.push(new EventObject({
+					startTime: event[0],
+					events: subEvents
+				}));
+			}
+		}
+
 		return song;
 	}
 

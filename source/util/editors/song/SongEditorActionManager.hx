@@ -1,6 +1,7 @@
 package util.editors.song;
 
 import data.song.CameraFocus;
+import data.song.EventObject;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
 import data.song.ScrollVelocity;
@@ -32,6 +33,11 @@ class SongEditorActionManager extends ActionManager
 	public static inline var CHANGE_SV_MULTIPLIER:String = 'change-sv-multiplier';
 	public static inline var CHANGE_SV_MULTIPLIERS:String = 'change-sv-multipliers';
 	public static inline var CHANGE_SV_LINKED:String = 'change-sv-linked';
+	public static inline var CHANGE_CAMERA_FOCUS_CHAR:String = 'change-camera-focus-char';
+	public static inline var CHANGE_EVENT:String = 'change-event';
+	public static inline var CHANGE_EVENT_PARAMS:String = 'change-event-params';
+	public static inline var ADD_EVENT:String = 'add-event';
+	public static inline var REMOVE_EVENT:String = 'remove-event';
 	public static inline var CHANGE_TITLE:String = 'change-title';
 	public static inline var CHANGE_ARTIST:String = 'change-artist';
 	public static inline var CHANGE_SOURCE:String = 'change-source';
@@ -88,6 +94,21 @@ class SongEditorActionManager extends ActionManager
 		var obj = new CameraFocus({
 			startTime: startTime,
 			char: char
+		});
+		perform(new ActionAddObject(state, obj));
+		return obj;
+	}
+
+	public function addEvent(startTime:Float, event:String, params:String)
+	{
+		var obj = new EventObject({
+			startTime: startTime,
+			events: [
+				{
+					event: event,
+					params: params
+				}
+			]
 		});
 		perform(new ActionAddObject(state, obj));
 		return obj;
@@ -765,6 +786,163 @@ class ActionChangeSVLinked implements IAction
 		lastLinked.clear();
 
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, linked: linked});
+	}
+}
+
+class ActionChangeCameraFocusChar implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_CAMERA_FOCUS_CHAR;
+
+	var state:SongEditorState;
+	var cameraFocuses:Array<CameraFocus>;
+	var char:CameraFocusChar;
+	var lastChars:Map<CameraFocus, CameraFocusChar> = new Map();
+
+	public function new(state:SongEditorState, cameraFocuses:Array<CameraFocus>, char:CameraFocusChar)
+	{
+		this.state = state;
+		this.cameraFocuses = cameraFocuses;
+		this.char = char;
+	}
+
+	public function perform()
+	{
+		for (obj in cameraFocuses)
+		{
+			lastChars.set(obj, obj.char);
+			obj.char = char;
+		}
+
+		state.actionManager.triggerEvent(type, {cameraFocuses: cameraFocuses, char: char});
+	}
+
+	public function undo()
+	{
+		for (obj in cameraFocuses)
+			obj.char = lastChars.get(obj);
+		lastChars.clear();
+
+		state.actionManager.triggerEvent(type, {cameraFocuses: cameraFocuses, char: char});
+	}
+}
+
+class ActionChangeEvent implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_EVENT;
+
+	var state:SongEditorState;
+	var eventInfo:Event;
+	var event:String;
+	var lastEvent:String;
+
+	public function new(state:SongEditorState, eventInfo:Event, event:String)
+	{
+		this.state = state;
+		this.eventInfo = eventInfo;
+		this.event = event;
+	}
+
+	public function perform()
+	{
+		lastEvent = eventInfo.event;
+		eventInfo.event = event;
+
+		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, event: event});
+	}
+
+	public function undo()
+	{
+		eventInfo.event = lastEvent;
+
+		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, event: event});
+	}
+}
+
+class ActionChangeEventParams implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_EVENT_PARAMS;
+
+	var state:SongEditorState;
+	var eventInfo:Event;
+	var params:String;
+	var lastParams:String;
+
+	public function new(state:SongEditorState, eventInfo:Event, params:String)
+	{
+		this.state = state;
+		this.eventInfo = eventInfo;
+		this.params = params;
+	}
+
+	public function perform()
+	{
+		lastParams = eventInfo.params.join(',');
+		eventInfo.params = params.split(',');
+
+		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, params: params});
+	}
+
+	public function undo()
+	{
+		eventInfo.params = lastParams.split(',');
+
+		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, evparamsent: params});
+	}
+}
+
+class ActionAddEvent implements IAction
+{
+	public var type:String = SongEditorActionManager.ADD_EVENT;
+
+	var state:SongEditorState;
+	var eventObject:EventObject;
+	var event:Event;
+
+	public function new(state:SongEditorState, eventObject:EventObject, event:Event)
+	{
+		this.state = state;
+		this.eventObject = eventObject;
+		this.event = event;
+	}
+
+	public function perform()
+	{
+		eventObject.events.push(event);
+
+		state.actionManager.triggerEvent(type, {eventObject: eventObject, event: event});
+	}
+
+	public function undo()
+	{
+		new ActionRemoveEvent(state, eventObject, event).perform();
+	}
+}
+
+class ActionRemoveEvent implements IAction
+{
+	public var type:String = SongEditorActionManager.REMOVE_EVENT;
+
+	var state:SongEditorState;
+	var eventObject:EventObject;
+	var event:Event;
+
+	public function new(state:SongEditorState, eventObject:EventObject, event:Event)
+	{
+		this.state = state;
+		this.eventObject = eventObject;
+		this.event = event;
+	}
+
+	public function perform()
+	{
+		eventObject.events.remove(event);
+
+		state.actionManager.triggerEvent(type, {eventObject: eventObject, event: event});
+	}
+
+	public function undo()
+	{
+		new ActionAddEvent(state, eventObject, event).perform();
 	}
 }
 

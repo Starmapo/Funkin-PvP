@@ -242,7 +242,7 @@ class JsonObject
 					float = minValue;
 				if (maxValue != null && float > maxValue)
 					float = maxValue;
-				if (decimals != null && FlxMath.getDecimals(float) > decimals)
+				if (decimals != null)
 					float = FlxMath.roundDecimal(float, decimals);
 			}
 		}

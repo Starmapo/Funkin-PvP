@@ -174,6 +174,12 @@ class SongEditorPlayfieldButton extends FlxSprite
 							if (curFocus != null && curFocus.char == OPPONENT)
 								char = BF;
 							state.actionManager.addCamFocus(time, char);
+						case 3: // Event
+							var curEventObject = state.song.getEventAt(time);
+							var curEvent = curEventObject != null ? curEventObject.events[0] : null;
+							var event = curEvent != null ? curEvent.event : '';
+							var params = curEvent != null ? curEvent.params.join(',') : '';
+							state.actionManager.addEvent(time, event, params);
 					}
 				}
 				else

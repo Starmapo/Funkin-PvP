@@ -1,6 +1,9 @@
 package ui.editors.song;
 
 import data.Settings;
+import data.song.CameraFocus.CameraFocusChar;
+import data.song.CameraFocus;
+import data.song.EventObject;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
 import data.song.ScrollVelocity;
@@ -40,7 +43,7 @@ class SongEditorEditPanel extends EditorPanel
 	var instVolumeStepper:EditorNumericStepper;
 	var vocalsVolumeStepper:EditorNumericStepper;
 	var typeInput:EditorInputText;
-	var paramsInput:EditorInputText;
+	var noteParamsInput:EditorInputText;
 	var selectedNotes:Array<NoteInfo> = [];
 	var notePropertiesGroup:Array<FlxSprite> = [];
 	var timingPointTimeStepper:EditorNumericStepper;
@@ -53,6 +56,15 @@ class SongEditorEditPanel extends EditorPanel
 	var linkedCheckbox:EditorCheckbox;
 	var selectedScrollVelocities:Array<ScrollVelocity> = [];
 	var scrollVelocitiesPropertiesGroup:Array<FlxSprite> = [];
+	var charDropdown:EditorDropdownMenu;
+	var selectedCameraFocuses:Array<CameraFocus> = [];
+	var cameraFocusesPropertiesGroup:Array<FlxSprite> = [];
+	var eventIndexLabel:EditorText;
+	var eventInput:EditorInputText;
+	var eventParamsInput:EditorInputText;
+	var selectedEvents:Array<EventObject> = [];
+	var eventsPropertiesGroup:Array<FlxSprite> = [];
+	var eventIndex:Int = 0;
 	var removeAllNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
 	var removeSelectedNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
 	var normalizeAllNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
@@ -62,8 +74,16 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		super([
 			{
+				name: 'Camera Focuses',
+				label: 'Camera Focuses'
+			},
+			{
 				name: 'Editor',
 				label: 'Editor'
+			},
+			{
+				name: 'Events',
+				label: 'Events'
 			},
 			{
 				name: 'Notes',
@@ -87,13 +107,17 @@ class SongEditorEditPanel extends EditorPanel
 		screenCenter(Y);
 		this.state = state;
 
+		createCameraFocusesTab();
 		createEditorTab();
+		createEventsTab();
 		createNotesTab();
 		createScrollVelocitiesTab();
 		createSongTab();
 		createTimingPointsTab();
 
 		selected_tab_id = 'Song';
+		updateSelectedCameraFocuses();
+		updateSelectedEvents();
 		updateSelectedNotes();
 		updateSelectedScrollVelocities();
 		updateSelectedTimingPoints();
@@ -517,7 +541,6 @@ class SongEditorEditPanel extends EditorPanel
 		typeInput = new EditorInputText(typeLabel.x, typeLabel.y + typeLabel.height + spacing, inputWidth);
 		typeInput.textChanged.add(function(text, lastText)
 		{
-			trace(text);
 			state.actionManager.perform(new ActionChangeNoteType(state, selectedNotes.copy(), text));
 		});
 		tab.add(typeInput);
@@ -527,15 +550,15 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(paramsLabel);
 		notePropertiesGroup.push(paramsLabel);
 
-		paramsInput = new EditorInputText(paramsLabel.x, paramsLabel.y + paramsLabel.height + spacing, inputWidth);
-		paramsInput.textChanged.add(function(text, lastText)
+		noteParamsInput = new EditorInputText(paramsLabel.x, paramsLabel.y + paramsLabel.height + spacing, inputWidth);
+		noteParamsInput.textChanged.add(function(text, lastText)
 		{
 			state.actionManager.perform(new ActionChangeNoteParams(state, selectedNotes.copy(), text));
 		});
-		tab.add(paramsInput);
-		notePropertiesGroup.push(paramsInput);
+		tab.add(noteParamsInput);
+		notePropertiesGroup.push(noteParamsInput);
 
-		var selectP1NotesButton = new FlxUIButton(0, paramsInput.y + paramsInput.height + spacing, 'Select P1 notes', function()
+		var selectP1NotesButton = new FlxUIButton(0, noteParamsInput.y + noteParamsInput.height + spacing, 'Select P1 notes', function()
 		{
 			var notes:Array<NoteInfo> = [];
 			for (note in state.song.notes)
@@ -775,7 +798,7 @@ class SongEditorEditPanel extends EditorPanel
 						state.selectedObjects.remove(obj);
 				}
 				state.selectedObjects.push(point);
-				if (state.inst.time != point.startTime)
+				if (!state.inst.playing && state.inst.time != point.startTime)
 					state.setSongTime(point.startTime);
 			}
 		});
@@ -806,7 +829,6 @@ class SongEditorEditPanel extends EditorPanel
 					break;
 				}
 			}
-			trace(value, lastValue, linked);
 			if (linked)
 				state.actionManager.perform(new ActionChangeSVMultipliers(state, selectedScrollVelocities.copy(), [value, value]));
 			else
@@ -858,13 +880,61 @@ class SongEditorEditPanel extends EditorPanel
 						state.selectedObjects.remove(obj);
 				}
 				state.selectedObjects.push(sv);
-				if (state.inst.time != sv.startTime)
+				if (!state.inst.playing && state.inst.time != sv.startTime)
 					state.setSongTime(sv.startTime);
 			}
 		});
 		selectCurrentButton.resize(150, selectCurrentButton.height);
 		selectCurrentButton.x = (width - selectCurrentButton.width) / 2;
 		tab.add(selectCurrentButton);
+
+		addGroup(tab);
+	}
+
+	function createCameraFocusesTab()
+	{
+		var tab = createTab('Camera Focuses');
+
+		var charLabel = new EditorText(4, 4, 0, 'Character:');
+		tab.add(charLabel);
+		cameraFocusesPropertiesGroup.push(charLabel);
+
+		var chars = ['Opponent', 'Boyfriend', 'Girlfriend'];
+		charDropdown = new EditorDropdownMenu(charLabel.x, charLabel.y + charLabel.height + spacing, EditorDropdownMenu.makeStrIdLabelArray(chars, true),
+			function(id)
+			{
+				state.actionManager.perform(new ActionChangeCameraFocusChar(state, selectedCameraFocuses.copy(), Std.parseInt(id)));
+			}, this);
+		state.dropdowns.push(charDropdown);
+		cameraFocusesPropertiesGroup.push(charDropdown);
+
+		var selectCurrentButton = new FlxUIButton(0, charDropdown.y + charDropdown.height + spacing, 'Select current camera focus', function()
+		{
+			var focus = state.song.getCameraFocusAt(state.inst.time);
+			if (focus != null)
+			{
+				for (obj in state.selectedObjects.value)
+				{
+					if (Std.isOfType(obj, CameraFocus))
+						state.selectedObjects.remove(obj);
+				}
+				state.selectedObjects.push(focus);
+				if (!state.inst.playing && state.inst.time != focus.startTime)
+					state.setSongTime(focus.startTime);
+			}
+		});
+		selectCurrentButton.resize(150, selectCurrentButton.height);
+		selectCurrentButton.x = (width - selectCurrentButton.width) / 2;
+		tab.add(selectCurrentButton);
+
+		tab.add(charDropdown);
+
+		addGroup(tab);
+	}
+
+	function createEventsTab()
+	{
+		var tab = createTab('Events');
 
 		addGroup(tab);
 	}
@@ -887,6 +957,11 @@ class SongEditorEditPanel extends EditorPanel
 				updateSelectedTimingPoints();
 			case SongEditorActionManager.CHANGE_SV_MULTIPLIER, SongEditorActionManager.CHANGE_SV_MULTIPLIERS, SongEditorActionManager.CHANGE_SV_LINKED:
 				updateSelectedScrollVelocities();
+			case SongEditorActionManager.CHANGE_CAMERA_FOCUS_CHAR:
+				updateSelectedCameraFocuses();
+			case SongEditorActionManager.CHANGE_EVENT, SongEditorActionManager.CHANGE_EVENT_PARAMS, SongEditorActionManager.ADD_EVENT,
+				SongEditorActionManager.REMOVE_EVENT:
+				updateEventDisplay();
 			case SongEditorActionManager.CHANGE_TITLE:
 				titleInput.text = params.title;
 			case SongEditorActionManager.CHANGE_ARTIST:
@@ -923,6 +998,11 @@ class SongEditorEditPanel extends EditorPanel
 			selectedScrollVelocities.push(cast obj);
 			updateSelectedScrollVelocities();
 		}
+		else if (Std.isOfType(obj, CameraFocus))
+		{
+			selectedCameraFocuses.push(cast obj);
+			updateSelectedCameraFocuses();
+		}
 	}
 
 	function onDeselectedObject(obj:ITimingObject)
@@ -942,6 +1022,11 @@ class SongEditorEditPanel extends EditorPanel
 			selectedScrollVelocities.remove(cast obj);
 			updateSelectedScrollVelocities();
 		}
+		else if (Std.isOfType(obj, CameraFocus))
+		{
+			selectedCameraFocuses.remove(cast obj);
+			updateSelectedCameraFocuses();
+		}
 	}
 
 	function onMultipleObjectsSelected(objects:Array<ITimingObject>)
@@ -949,6 +1034,7 @@ class SongEditorEditPanel extends EditorPanel
 		var foundNote = false;
 		var foundTP = false;
 		var foundSV = false;
+		var foundFocus = false;
 		for (obj in objects)
 		{
 			if (Std.isOfType(obj, NoteInfo))
@@ -966,6 +1052,11 @@ class SongEditorEditPanel extends EditorPanel
 				selectedScrollVelocities.push(cast obj);
 				foundSV = true;
 			}
+			else if (Std.isOfType(obj, CameraFocus))
+			{
+				selectedCameraFocuses.push(cast obj);
+				foundFocus = true;
+			}
 		}
 		if (foundNote)
 			updateSelectedNotes();
@@ -973,6 +1064,8 @@ class SongEditorEditPanel extends EditorPanel
 			updateSelectedTimingPoints();
 		if (foundSV)
 			updateSelectedScrollVelocities();
+		if (foundFocus)
+			updateSelectedCameraFocuses();
 	}
 
 	function onAllObjectsDeselected()
@@ -993,6 +1086,12 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			selectedScrollVelocities.resize(0);
 			updateSelectedScrollVelocities();
+		}
+
+		if (selectedCameraFocuses.length > 0)
+		{
+			selectedCameraFocuses.resize(0);
+			updateSelectedCameraFocuses();
 		}
 	}
 
@@ -1020,9 +1119,9 @@ class SongEditorEditPanel extends EditorPanel
 				typeInput.text = type;
 
 			if (params == '...')
-				paramsInput.displayText = params;
+				noteParamsInput.displayText = params;
 			else
-				paramsInput.text = params;
+				noteParamsInput.text = params;
 
 			for (obj in notePropertiesGroup)
 			{
@@ -1146,6 +1245,77 @@ class SongEditorEditPanel extends EditorPanel
 		}
 	}
 
+	function updateSelectedCameraFocuses()
+	{
+		if (selectedCameraFocuses.length > 0)
+		{
+			var multipleChars = false;
+			for (i in 1...selectedCameraFocuses.length)
+			{
+				if (selectedCameraFocuses[i].char != selectedCameraFocuses[0].char)
+				{
+					multipleChars = true;
+					break;
+				}
+			}
+
+			if (!multipleChars)
+				charDropdown.selectedId = Std.string(selectedCameraFocuses[0].char);
+
+			for (obj in cameraFocusesPropertiesGroup)
+			{
+				if (selected_tab_id == 'Camera Focuses')
+					obj.active = true;
+				obj.alpha = 1;
+			}
+		}
+		else
+		{
+			if (charDropdown.dropPanel.visible)
+				charDropdown.header.button.onUp.callback();
+			for (obj in cameraFocusesPropertiesGroup)
+			{
+				obj.active = false;
+				obj.alpha = 0.5;
+			}
+		}
+	}
+
+	function updateSelectedEvents()
+	{
+		if (selectedEvents.length == 1)
+		{
+			updateEventDisplay();
+			for (obj in eventsPropertiesGroup)
+			{
+				if (selected_tab_id == 'Events')
+					obj.active = true;
+				obj.alpha = 1;
+			}
+		}
+		else
+		{
+			for (obj in eventsPropertiesGroup)
+			{
+				obj.active = false;
+				obj.alpha = 0.5;
+			}
+		}
+	}
+
+	function updateEventDisplay()
+	{
+		var eventObject = selectedEvents[0];
+		if (eventIndex >= eventObject.events.length)
+			eventIndex = eventObject.events.length - 1;
+
+		eventIndexLabel.text = 'Selected Event: $eventIndex / ${eventObject.events.length}';
+
+		var event = eventObject.events[eventIndex];
+		eventInput.text = event.event;
+		eventParamsInput.text = event.params.join(',');
+	}
+
 	function onClickTab(name:String)
 	{
 		if (selectedNotes.length == 0)
@@ -1154,5 +1324,9 @@ class SongEditorEditPanel extends EditorPanel
 			updateSelectedTimingPoints();
 		if (selectedScrollVelocities.length == 0)
 			updateSelectedScrollVelocities();
+		if (selectedCameraFocuses.length == 0)
+			updateSelectedCameraFocuses();
+		if (selectedEvents.length == 0)
+			updateSelectedEvents();
 	}
 }

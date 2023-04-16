@@ -21,7 +21,7 @@ class SongEditorOtherGroup extends FlxBasic
 {
 	public var timingPoints:Array<SongEditorTimingPoint> = [];
 	public var scrollVelocities:Array<SongEditorScrollVelocity> = [];
-	public var camFocuses:Array<SongEditorCamFocus> = [];
+	public var cameraFocuses:Array<SongEditorCamFocus> = [];
 	public var events:Array<SongEditorEvent> = [];
 	public var lyricSteps:Array<SongEditorLyricStep> = [];
 
@@ -136,9 +136,9 @@ class SongEditorOtherGroup extends FlxBasic
 		}
 
 		var i = lastPooledCamFocusIndex + 1;
-		while (i < camFocuses.length)
+		while (i < cameraFocuses.length)
 		{
-			var obj = camFocuses[i];
+			var obj = cameraFocuses[i];
 			if (obj.objectOnScreen())
 			{
 				camFocusPool.push(obj);
@@ -267,9 +267,9 @@ class SongEditorOtherGroup extends FlxBasic
 	function createCamFocus(info:CameraFocus, insertAtIndex:Bool = false)
 	{
 		var obj = new SongEditorCamFocus(state, playfield, info);
-		camFocuses.push(obj);
+		cameraFocuses.push(obj);
 		if (insertAtIndex)
-			camFocuses.sort(sortObjects);
+			cameraFocuses.sort(sortObjects);
 	}
 
 	function createEvent(info:EventObject, insertAtIndex:Bool = false)
@@ -361,9 +361,9 @@ class SongEditorOtherGroup extends FlxBasic
 		camFocusPool = [];
 		lastPooledCamFocusIndex = -1;
 
-		for (i in 0...camFocuses.length)
+		for (i in 0...cameraFocuses.length)
 		{
-			var obj = camFocuses[i];
+			var obj = cameraFocuses[i];
 			if (!obj.objectOnScreen())
 				continue;
 			camFocusPool.push(obj);
@@ -372,10 +372,10 @@ class SongEditorOtherGroup extends FlxBasic
 
 		if (lastPooledCamFocusIndex == -1)
 		{
-			lastPooledCamFocusIndex = camFocuses.length - 1;
+			lastPooledCamFocusIndex = cameraFocuses.length - 1;
 			while (lastPooledCamFocusIndex >= 0)
 			{
-				var obj = camFocuses[lastPooledCamFocusIndex];
+				var obj = cameraFocuses[lastPooledCamFocusIndex];
 				if (obj.info.startTime < state.inst.time)
 					break;
 				lastPooledCamFocusIndex--;
@@ -518,11 +518,11 @@ class SongEditorOtherGroup extends FlxBasic
 				}
 				else if (Std.isOfType(params.object, CameraFocus))
 				{
-					for (obj in camFocuses)
+					for (obj in cameraFocuses)
 					{
 						if (obj.info == params.object)
 						{
-							camFocuses.remove(obj);
+							cameraFocuses.remove(obj);
 							obj.destroy();
 							initializeCamFocusPool();
 							break;
@@ -602,7 +602,7 @@ class SongEditorOtherGroup extends FlxBasic
 				}
 				if (addedCamFocus)
 				{
-					camFocuses.sort(sortObjects);
+					cameraFocuses.sort(sortObjects);
 					initializeCamFocusPool();
 				}
 				if (addedEvent)
@@ -646,13 +646,13 @@ class SongEditorOtherGroup extends FlxBasic
 					}
 					i--;
 				}
-				i = camFocuses.length - 1;
+				i = cameraFocuses.length - 1;
 				while (i >= 0)
 				{
-					var obj = camFocuses[i];
+					var obj = cameraFocuses[i];
 					if (batch.contains(obj.info))
 					{
-						camFocuses.remove(obj);
+						cameraFocuses.remove(obj);
 						obj.destroy();
 						hasCamFocus = true;
 					}
@@ -727,7 +727,7 @@ class SongEditorOtherGroup extends FlxBasic
 						hasSV = true;
 					}
 				}
-				for (obj in camFocuses)
+				for (obj in cameraFocuses)
 				{
 					if (batch.contains(obj.info))
 					{
@@ -764,7 +764,7 @@ class SongEditorOtherGroup extends FlxBasic
 				}
 				if (hasCamFocus)
 				{
-					camFocuses.sort(sortObjects);
+					cameraFocuses.sort(sortObjects);
 					initializeCamFocusPool();
 				}
 				if (hasEvent)
@@ -785,6 +785,12 @@ class SongEditorOtherGroup extends FlxBasic
 				}
 				timingPoints.sort(sortObjects);
 				initializeTimingPointPool();
+			case SongEditorActionManager.CHANGE_CAMERA_FOCUS_CHAR:
+				for (obj in cameraFocuses)
+				{
+					if (params.cameraFocuses.contains(obj.info))
+						obj.updateColor();
+				}
 		}
 	}
 
@@ -814,7 +820,7 @@ class SongEditorOtherGroup extends FlxBasic
 		}
 		else if (Std.isOfType(info, CameraFocus))
 		{
-			for (obj in camFocuses)
+			for (obj in cameraFocuses)
 			{
 				if (obj.info == info)
 				{
@@ -873,7 +879,7 @@ class SongEditorOtherGroup extends FlxBasic
 		}
 		else if (Std.isOfType(info, CameraFocus))
 		{
-			for (obj in camFocuses)
+			for (obj in cameraFocuses)
 			{
 				if (obj.info == info)
 				{
@@ -911,7 +917,7 @@ class SongEditorOtherGroup extends FlxBasic
 		return [
 			cast timingPoints,
 			cast scrollVelocities,
-			cast camFocuses,
+			cast cameraFocuses,
 			cast events,
 			cast lyricSteps
 		];

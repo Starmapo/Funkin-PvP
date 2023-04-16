@@ -91,7 +91,7 @@ class SongEditorState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		song = Song.loadSong('mods/fnf/songs/Reminisce/Hard.json');
+		song = Song.loadSong('mods/fnf/songs/Die Batsards/Normal.json');
 		inst = FlxG.sound.load(Paths.getSongInst(song), Settings.editorInstVolume.value, false, FlxG.sound.defaultMusicGroup);
 		inst.onComplete = onSongComplete;
 		vocals = FlxG.sound.load(Paths.getSongVocals(song), Settings.editorVocalsVolume.value, false, FlxG.sound.defaultMusicGroup);
@@ -203,7 +203,8 @@ class SongEditorState extends FNFState
 
 		resyncVocals();
 
-		var playedHitsound = false;
+		var playedNotes = 0;
+		final maxNotes = 8;
 		if (inst.playing)
 		{
 			for (i in hitsoundNoteIndex...song.notes.length)
@@ -212,13 +213,13 @@ class SongEditorState extends FNFState
 				if (inst.time >= note.startTime)
 				{
 					if (Settings.editorHitsoundVolume.value > 0
-						&& !playedHitsound
+						&& playedNotes < maxNotes
 						&& ((note.player == 0 && Settings.editorOpponentHitsounds.value)
 							|| (note.player == 1 && Settings.editorBFHitsounds.value)))
 					{
 						var hitsound = FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
 						hitsound.pan = (note.player == 0 ? -0.5 : 0.5);
-						playedHitsound = true;
+						playedNotes++;
 					}
 					hitsoundNoteIndex = i + 1;
 				}
@@ -376,9 +377,9 @@ class SongEditorState extends FNFState
 			changeSpeed(-0.05);
 
 		if (FlxG.keys.justPressed.HOME)
-			setSongTime(song.notes.length == 0 ? 0 : song.notes[0].startTime);
+			setSongTime((song.notes.length == 0 || FlxG.keys.pressed.SHIFT) ? 0 : song.notes[0].startTime);
 		if (FlxG.keys.justPressed.END)
-			setSongTime(song.notes.length == 0 ? inst.length - 1 : song.notes[song.notes.length - 1].startTime);
+			setSongTime((song.notes.length == 0 || FlxG.keys.pressed.SHIFT) ? inst.length - 1 : song.notes[song.notes.length - 1].startTime);
 
 		if (!FlxG.keys.pressed.CONTROL)
 		{
@@ -497,8 +498,6 @@ class SongEditorState extends FNFState
 			time = 0;
 		if (time > inst.length)
 			time = inst.length - 100;
-
-		trace(inst.time, time, forward);
 
 		setSongTime(time);
 	}
@@ -762,7 +761,6 @@ class SongEditorState extends FNFState
 
 	function onApplyOffsetPrompt(text:String)
 	{
-		trace(text);
 		if (text != null && text.length > 0)
 		{
 			var offset = Std.parseFloat(text);
