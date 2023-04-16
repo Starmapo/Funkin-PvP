@@ -41,9 +41,12 @@ class BindableArray<T> extends Bindable<Array<T>>
 
 	public function pushMultiple(array:Array<T>)
 	{
-		for (obj in array)
-			value.push(obj);
-		multipleItemsAdded.dispatch(array);
+		if (array != null && array.length > 0)
+		{
+			for (obj in array)
+				value.push(obj);
+			multipleItemsAdded.dispatch(array);
+		}
 	}
 
 	public function clear()

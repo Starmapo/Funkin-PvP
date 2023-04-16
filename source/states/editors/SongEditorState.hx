@@ -246,6 +246,7 @@ class SongEditorState extends FNFState
 	{
 		inst.pause();
 		vocals.pause();
+		persistentUpdate = false;
 		super.openSubState(subState);
 	}
 

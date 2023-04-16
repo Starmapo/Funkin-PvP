@@ -10,6 +10,8 @@ import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
 import states.editors.SongEditorState;
+import subStates.editors.song.SongEditorNormalizeNoteTypePrompt;
+import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
 import ui.editors.EditorCheckbox;
 import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
@@ -51,6 +53,10 @@ class SongEditorEditPanel extends EditorPanel
 	var linkedCheckbox:EditorCheckbox;
 	var selectedScrollVelocities:Array<ScrollVelocity> = [];
 	var scrollVelocitiesPropertiesGroup:Array<FlxSprite> = [];
+	var removeAllNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
+	var removeSelectedNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
+	var normalizeAllNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
+	var normalizeSelectedNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
 
 	public function new(state:SongEditorState)
 	{
@@ -89,8 +95,66 @@ class SongEditorEditPanel extends EditorPanel
 
 		selected_tab_id = 'Song';
 		updateSelectedNotes();
+		updateSelectedScrollVelocities();
 		updateSelectedTimingPoints();
 		onClick = onClickTab;
+
+		removeAllNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in state.song.notes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
+			}
+		});
+		removeSelectedNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in selectedNotes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
+			}
+		});
+		normalizeAllNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in state.song.notes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
+			}
+		});
+		normalizeSelectedNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in selectedNotes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
+			}
+		});
 
 		state.actionManager.onEvent.add(onEvent);
 		state.selectedObjects.itemAdded.add(onSelectedObject);
@@ -453,6 +517,7 @@ class SongEditorEditPanel extends EditorPanel
 		typeInput = new EditorInputText(typeLabel.x, typeLabel.y + typeLabel.height + spacing, inputWidth);
 		typeInput.textChanged.add(function(text, lastText)
 		{
+			trace(text);
 			state.actionManager.perform(new ActionChangeNoteType(state, selectedNotes.copy(), text));
 		});
 		tab.add(typeInput);
@@ -470,12 +535,40 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(paramsInput);
 		notePropertiesGroup.push(paramsInput);
 
-		var resnapAllToCurrentButton = new FlxUIButton(0, paramsInput.y + paramsInput.height + spacing, 'Resnap all notes to currently selected snap',
-			function()
+		var selectP1NotesButton = new FlxUIButton(0, paramsInput.y + paramsInput.height + spacing, 'Select P1 notes', function()
+		{
+			var notes:Array<NoteInfo> = [];
+			for (note in state.song.notes)
 			{
-				if (state.song.notes.length > 0)
-					state.actionManager.perform(new ActionResnapObjects(state, [state.beatSnap.value], cast state.song.notes.copy()));
-			});
+				if (note.player == 0 && !state.selectedObjects.value.contains(note))
+					notes.push(note);
+			}
+			state.selectedObjects.pushMultiple(cast notes);
+		});
+		selectP1NotesButton.resize(90, selectP1NotesButton.height);
+		selectP1NotesButton.x = (width - selectP1NotesButton.width) / 2;
+		tab.add(selectP1NotesButton);
+
+		var selectP2NotesButton = new FlxUIButton(0, selectP1NotesButton.y + selectP1NotesButton.height + spacing, 'Select P2 notes', function()
+		{
+			var notes:Array<NoteInfo> = [];
+			for (note in state.song.notes)
+			{
+				if (note.player == 1 && !state.selectedObjects.value.contains(note))
+					notes.push(note);
+			}
+			state.selectedObjects.pushMultiple(cast notes);
+		});
+		selectP2NotesButton.resize(90, selectP2NotesButton.height);
+		selectP2NotesButton.x = (width - selectP2NotesButton.width) / 2;
+		tab.add(selectP2NotesButton);
+
+		var resnapAllToCurrentButton = new FlxUIButton(0, selectP2NotesButton.y + selectP2NotesButton.height + spacing,
+			'Resnap all notes to currently selected snap', function()
+		{
+			if (state.song.notes.length > 0)
+				state.actionManager.perform(new ActionResnapObjects(state, [state.beatSnap.value], cast state.song.notes.copy()));
+		});
 		resnapAllToCurrentButton.resize(230, resnapAllToCurrentButton.height);
 		resnapAllToCurrentButton.x = (width - resnapAllToCurrentButton.width) / 2;
 		tab.add(resnapAllToCurrentButton);
@@ -522,7 +615,7 @@ class SongEditorEditPanel extends EditorPanel
 		resnapSelectedToDefaultButton.x = (width - resnapSelectedToDefaultButton.width) / 2;
 		tab.add(resnapSelectedToDefaultButton);
 
-		var mirrorNotesButton = new FlxUIButton(0, resnapSelectedToDefaultButton.y + resnapSelectedToDefaultButton.height + spacing, 'Mirror All Notes',
+		var mirrorNotesButton = new FlxUIButton(0, resnapSelectedToDefaultButton.y + resnapSelectedToDefaultButton.height + spacing, 'Mirror all notes',
 			function()
 			{
 				if (state.song.notes.length > 0)
@@ -532,7 +625,7 @@ class SongEditorEditPanel extends EditorPanel
 		mirrorNotesButton.x = (width - mirrorNotesButton.width) / 2;
 		tab.add(mirrorNotesButton);
 
-		var noLongNotesButton = new FlxUIButton(0, mirrorNotesButton.y + mirrorNotesButton.height + spacing, 'No Long Notes', function()
+		var noLongNotesButton = new FlxUIButton(0, mirrorNotesButton.y + mirrorNotesButton.height + spacing, 'No long notes', function()
 		{
 			if (state.song.notes.length > 0)
 				state.actionManager.perform(new ActionApplyModifier(state, NO_LONG_NOTES));
@@ -541,7 +634,7 @@ class SongEditorEditPanel extends EditorPanel
 		noLongNotesButton.x = (width - noLongNotesButton.width) / 2;
 		tab.add(noLongNotesButton);
 
-		var fullLongNotesButton = new FlxUIButton(0, noLongNotesButton.y + noLongNotesButton.height + spacing, 'Full Long Notes', function()
+		var fullLongNotesButton = new FlxUIButton(0, noLongNotesButton.y + noLongNotesButton.height + spacing, 'Full long notes', function()
 		{
 			if (state.song.notes.length > 0)
 				state.actionManager.perform(new ActionApplyModifier(state, FULL_LONG_NOTES));
@@ -550,7 +643,7 @@ class SongEditorEditPanel extends EditorPanel
 		fullLongNotesButton.x = (width - fullLongNotesButton.width) / 2;
 		tab.add(fullLongNotesButton);
 
-		var inverseButton = new FlxUIButton(0, fullLongNotesButton.y + fullLongNotesButton.height + spacing, 'Invert Notes', function()
+		var inverseButton = new FlxUIButton(0, fullLongNotesButton.y + fullLongNotesButton.height + spacing, 'Invert notes', function()
 		{
 			if (state.song.notes.length > 0)
 				state.actionManager.perform(new ActionApplyModifier(state, INVERSE));
@@ -558,6 +651,75 @@ class SongEditorEditPanel extends EditorPanel
 		inverseButton.resize(100, inverseButton.height);
 		inverseButton.x = (width - inverseButton.width) / 2;
 		tab.add(inverseButton);
+
+		var duetButton = new FlxUIButton(0, inverseButton.y + inverseButton.height + spacing, 'Duet selected notes', function()
+		{
+			if (selectedNotes.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in selectedNotes)
+				{
+					var info = new NoteInfo({
+						startTime: note.startTime,
+						lane: (note.lane + 4) % 8,
+						endTime: note.endTime,
+						type: note.type,
+						params: note.params.join(',')
+					});
+					var accept = true;
+					for (songNote in state.song.notes)
+					{
+						if (Std.int(songNote.startTime) == Std.int(info.startTime) && songNote.lane == info.lane)
+						{
+							accept = false;
+							break;
+						}
+					}
+					if (accept)
+						notes.push(info);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionAddObjectBatch(state, cast notes));
+			}
+		});
+		duetButton.resize(120, duetButton.height);
+		duetButton.x = (width - duetButton.width) / 2;
+		tab.add(duetButton);
+
+		var removeAllNoteTypesButton = new FlxUIButton(0, duetButton.y + duetButton.height + spacing, 'Remove all notes of type', function()
+		{
+			state.openSubState(removeAllNoteTypePrompt);
+		});
+		removeAllNoteTypesButton.resize(140, removeAllNoteTypesButton.height);
+		removeAllNoteTypesButton.x = (width - removeAllNoteTypesButton.width) / 2;
+		tab.add(removeAllNoteTypesButton);
+
+		var removeSelectedNoteTypesButton = new FlxUIButton(0, removeAllNoteTypesButton.y + removeAllNoteTypesButton.height + spacing,
+			'Remove selected notes of type', function()
+		{
+			state.openSubState(removeSelectedNoteTypePrompt);
+		});
+		removeSelectedNoteTypesButton.resize(160, removeSelectedNoteTypesButton.height);
+		removeSelectedNoteTypesButton.x = (width - removeSelectedNoteTypesButton.width) / 2;
+		tab.add(removeSelectedNoteTypesButton);
+
+		var normalizeAllNoteTypesButton = new FlxUIButton(0, removeSelectedNoteTypesButton.y + removeSelectedNoteTypesButton.height + spacing,
+			'Normalize all notes of type', function()
+		{
+			state.openSubState(normalizeAllNoteTypePrompt);
+		});
+		normalizeAllNoteTypesButton.resize(150, normalizeAllNoteTypesButton.height);
+		normalizeAllNoteTypesButton.x = (width - normalizeAllNoteTypesButton.width) / 2;
+		tab.add(normalizeAllNoteTypesButton);
+
+		var normalizeSelectedNoteTypesButton = new FlxUIButton(0, normalizeAllNoteTypesButton.y + normalizeAllNoteTypesButton.height + spacing,
+			'Normalize selected notes of type', function()
+		{
+			state.openSubState(normalizeSelectedNoteTypePrompt);
+		});
+		normalizeSelectedNoteTypesButton.resize(170, normalizeSelectedNoteTypesButton.height);
+		normalizeSelectedNoteTypesButton.x = (width - normalizeSelectedNoteTypesButton.width) / 2;
+		tab.add(normalizeSelectedNoteTypesButton);
 
 		addGroup(tab);
 	}
@@ -851,8 +1013,17 @@ class SongEditorEditPanel extends EditorPanel
 				if (type == '...' && params == '...')
 					break;
 			}
-			typeInput.text = type;
-			paramsInput.text = params;
+
+			if (type == '...')
+				typeInput.displayText = type;
+			else
+				typeInput.text = type;
+
+			if (params == '...')
+				paramsInput.displayText = params;
+			else
+				paramsInput.text = params;
+
 			for (obj in notePropertiesGroup)
 			{
 				if (selected_tab_id == 'Notes')

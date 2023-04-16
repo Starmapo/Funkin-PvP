@@ -31,8 +31,11 @@ class EditorInputText extends FlxSpriteGroup
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, ?textFieldCamera:FlxCamera)
 	{
 		super(x, y);
+		if (text == null)
+			text = '';
 		if (textFieldCamera == null)
 			textFieldCamera = FlxG.camera;
+		lastText = text;
 
 		textField = new EditorInputTextField(1, 1, fieldWidth, text, size, embeddedFont, textFieldCamera);
 		textField.color = FlxColor.BLACK;
@@ -49,13 +52,13 @@ class EditorInputText extends FlxSpriteGroup
 
 		textField.textField.addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		textField.textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
-		lastText = text;
 	}
 
 	override function update(elapsed:Float) {}
 
 	override function destroy()
 	{
+		textField.textField.removeEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		textField.textField.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 		FlxDestroyUtil.destroy(focusLost);
 		FlxDestroyUtil.destroy(textChanged);
@@ -66,7 +69,7 @@ class EditorInputText extends FlxSpriteGroup
 	{
 		if (_displayText != null)
 		{
-			lastText = textField.text = '';
+			text = '';
 			_displayText = null;
 		}
 	}
@@ -119,7 +122,7 @@ class EditorInputText extends FlxSpriteGroup
 
 	function set_text(value:String)
 	{
-		return textField.text = filter(value);
+		return lastText = textField.text = filter(value);
 	}
 
 	function set_forceCase(value:LetterCase)
@@ -172,12 +175,13 @@ class EditorInputTextField extends FlxText
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
 		scrollFactor.set();
+		textField.text = text;
 		textField.selectable = true;
 		textField.type = INPUT;
 		textField.multiline = false;
 		FlxG.game.addChildAt(textField, FlxG.game.getChildIndex(textFieldCamera.flashSprite) + 1);
 		FlxG.signals.gameResized.add(onGameResized);
-		text = textField.text;
+		this.text = textField.text;
 	}
 
 	override function update(elapsed:Float)
