@@ -226,6 +226,7 @@ class EditorInputTextField extends FlxText
 		textField.type = INPUT;
 		textField.multiline = false;
 		textField.wordWrap = false;
+		textField.tabEnabled = false;
 		FlxG.game.addChildAt(textField, FlxG.game.getChildIndex(textFieldCamera.flashSprite) + 1);
 		FlxG.signals.gameResized.add(onGameResized);
 		this.text = textField.text;

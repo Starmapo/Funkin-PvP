@@ -126,7 +126,7 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 		}
 	}
 
-	function onTabEvent(name:String):Void
+	public function onTabEvent(name:String):Void
 	{
 		if (state.playfieldNotes != null)
 		{

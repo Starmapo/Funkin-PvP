@@ -21,8 +21,8 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 	public var value(get, set):Float;
 	public var valueChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 	public var skipButtonUpdate(default, set):Bool;
+	public var inputText:EditorInputText;
 
-	var inputText:EditorInputText;
 	var buttonPlus:FlxUITypedButton<FlxSprite>;
 	var buttonMinus:FlxUITypedButton<FlxSprite>;
 	var _value:Float;
@@ -83,6 +83,15 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 	{
 		_value = Math.POSITIVE_INFINITY;
 		return inputText.displayText = value;
+	}
+
+	public function resizeInput(width:Float)
+	{
+		if (width <= 0)
+			width = 40;
+		inputText.resize(width, inputText.height);
+		buttonPlus.x = inputText.x + inputText.width;
+		buttonMinus.x = buttonPlus.x + buttonPlus.width;
 	}
 
 	function onTextChanged(text, _)

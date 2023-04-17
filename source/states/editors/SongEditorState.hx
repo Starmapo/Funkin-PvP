@@ -85,6 +85,14 @@ class SongEditorState extends FNFState
 	var camFocusDisplay:SongEditorCamFocusDisplay;
 	var metronome:SongEditorMetronome;
 
+	public function new(?song:Song)
+	{
+		super();
+		if (song == null)
+			song = new Song({});
+		this.song = song;
+	}
+
 	override function create()
 	{
 		persistentUpdate = true;
@@ -96,8 +104,9 @@ class SongEditorState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		song = Song.loadSong('mods/fnf/songs/Monster/Hard.json');
 		inst = FlxG.sound.load(Paths.getSongInst(song), Settings.editorInstVolume.value, false, FlxG.sound.defaultMusicGroup);
+		if (inst == null)
+			inst = FlxG.sound.list.add(new FlxSound());
 		inst.onComplete = onSongComplete;
 		vocals = FlxG.sound.load(Paths.getSongVocals(song), Settings.editorVocalsVolume.value, false, FlxG.sound.defaultMusicGroup);
 		if (vocals == null)
@@ -488,6 +497,8 @@ class SongEditorState extends FNFState
 
 		if (FlxG.keys.justPressed.DELETE)
 			deleteSelectedObjects();
+		if (FlxG.keys.justPressed.TAB)
+			playfieldTabs.onTabEvent(playfieldNotes.exists ? 'Other' : 'Notes');
 		if (FlxG.keys.justPressed.ESCAPE)
 			leaveEditor();
 	}

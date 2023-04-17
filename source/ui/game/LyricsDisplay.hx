@@ -56,6 +56,7 @@ class LyricsDisplay extends FlxText
 		lines.resize(0);
 		var splitLyrics = lyrics.split('\n');
 		var currentStep = 0;
+		var addedSteps:Array<LyricStep> = [];
 		for (lyric in splitLyrics)
 		{
 			lyric = lyric.trim();
@@ -91,11 +92,18 @@ class LyricsDisplay extends FlxText
 				if (step != null)
 				{
 					line.steps.push(step);
+					addedSteps.push(step);
 					currentStep++;
 				}
 			}
 			lines.push(line);
 		}
+		var finalStep = song.lyricSteps[song.lyricSteps.length - 1];
+		if (finalStep != null && !addedSteps.contains(finalStep))
+			lines.push({
+				splitWords: [''],
+				steps: [finalStep]
+			});
 		updateLyrics(time);
 	}
 

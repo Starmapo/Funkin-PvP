@@ -7,7 +7,10 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import haxe.Json;
 import haxe.io.Path;
+import sys.FileSystem;
 import sys.io.File;
+
+using StringTools;
 
 class Song extends JsonObject
 {
@@ -100,6 +103,20 @@ class Song extends JsonObject
 			closestTime = timeFwd;
 
 		return closestTime;
+	}
+
+	public static function getSongDifficulties(directory:String)
+	{
+		var difficulties:Array<String> = [];
+		if (FileSystem.exists(directory) && FileSystem.isDirectory(directory))
+		{
+			for (file in FileSystem.readDirectory(directory))
+			{
+				if (file.endsWith('.json') && !file.startsWith('!'))
+					difficulties.push(Path.withoutExtension(file));
+			}
+		}
+		return difficulties;
 	}
 
 	static function convertFNFSong(json:Dynamic)

@@ -5,8 +5,10 @@ import data.song.CameraFocus.CameraFocusChar;
 import data.song.CameraFocus;
 import data.song.EventObject;
 import data.song.ITimingObject;
+import data.song.LyricStep;
 import data.song.NoteInfo;
 import data.song.ScrollVelocity;
+import data.song.Song;
 import data.song.TimingPoint;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -15,6 +17,7 @@ import flixel.addons.ui.StrNameLabel;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import states.editors.SongEditorState;
+import subStates.PromptSubState.YesNoPrompt;
 import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorNormalizeNoteTypePrompt;
 import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
@@ -75,6 +78,11 @@ class SongEditorEditPanel extends EditorPanel
 	var removeSelectedNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
 	var normalizeAllNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
 	var normalizeSelectedNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
+	var pasteTimingPointsPrompt:YesNoPrompt;
+	var pasteScrollVelocitiesPrompt:YesNoPrompt;
+	var pasteCameraFocusesPrompt:YesNoPrompt;
+	var pasteEventsPrompt:YesNoPrompt;
+	var pasteLyricStepsPrompt:YesNoPrompt;
 
 	public function new(state:SongEditorState)
 	{
@@ -207,6 +215,97 @@ class SongEditorEditPanel extends EditorPanel
 				}
 				if (notes.length > 0)
 					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
+			}
+		});
+		pasteTimingPointsPrompt = new YesNoPrompt("Are you sure you want to paste this map's timing points into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = Song.getSongDifficulties(state.song.directory);
+			difficulties.remove(state.song.difficultyName);
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.timingPoints.resize(0);
+				for (obj in state.song.timingPoints)
+					song.timingPoints.push(new TimingPoint({
+						startTime: obj.startTime,
+						bpm: obj.bpm,
+						meter: obj.meter
+					}));
+				song.save(path);
+			}
+		});
+		pasteScrollVelocitiesPrompt = new YesNoPrompt("Are you sure you want to paste this map's scroll velocities into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = Song.getSongDifficulties(state.song.directory);
+			difficulties.remove(state.song.difficultyName);
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.scrollVelocities.resize(0);
+				for (obj in state.song.scrollVelocities)
+					song.scrollVelocities.push(new ScrollVelocity({
+						startTime: obj.startTime,
+						multipliers: obj.multipliers.copy(),
+						linked: obj.linked
+					}));
+				song.save(path);
+			}
+		});
+		pasteCameraFocusesPrompt = new YesNoPrompt("Are you sure you want to paste this map's camera focuses into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = Song.getSongDifficulties(state.song.directory);
+			difficulties.remove(state.song.difficultyName);
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.cameraFocuses.resize(0);
+				for (obj in state.song.cameraFocuses)
+					song.cameraFocuses.push(new CameraFocus({
+						startTime: obj.startTime,
+						char: obj.char
+					}));
+				song.save(path);
+			}
+		});
+		pasteEventsPrompt = new YesNoPrompt("Are you sure you want to paste this map's events into all other difficulties? This action is irreversible.",
+			function()
+			{
+				var difficulties = Song.getSongDifficulties(state.song.directory);
+				difficulties.remove(state.song.difficultyName);
+				for (difficulty in difficulties)
+				{
+					var path = Path.join([state.song.directory, difficulty + '.json']);
+					var song = Song.loadSong(path);
+					song.events.resize(0);
+					for (obj in state.song.events)
+						song.events.push(new EventObject({
+							startTime: obj.startTime,
+							events: obj.events.copy()
+						}));
+					song.save(path);
+				}
+			});
+		pasteLyricStepsPrompt = new YesNoPrompt("Are you sure you want to paste this map's lyric steps into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = Song.getSongDifficulties(state.song.directory);
+			difficulties.remove(state.song.difficultyName);
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.lyricSteps.resize(0);
+				for (obj in state.song.lyricSteps)
+					song.lyricSteps.push(new LyricStep({
+						startTime: obj.startTime
+					}));
+				song.save(path);
 			}
 		});
 
@@ -379,6 +478,51 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		refreshLyricsButton.x = (width - refreshLyricsButton.width) / 2;
 		tab.add(refreshLyricsButton);
+
+		var pasteTimingPointsButton = new FlxUIButton(0, refreshLyricsButton.y + refreshLyricsButton.height + spacing,
+			'Paste timing points into all difficulties', function()
+		{
+			state.openSubState(pasteTimingPointsPrompt);
+		});
+		pasteTimingPointsButton.resize(200, pasteTimingPointsButton.height);
+		pasteTimingPointsButton.x = (width - pasteTimingPointsButton.width) / 2;
+		tab.add(pasteTimingPointsButton);
+
+		var pasteScrollVelocitiesButton = new FlxUIButton(0, pasteTimingPointsButton.y + pasteTimingPointsButton.height + spacing,
+			'Paste scroll velocities into all difficulties', function()
+		{
+			state.openSubState(pasteScrollVelocitiesPrompt);
+		});
+		pasteScrollVelocitiesButton.resize(210, pasteScrollVelocitiesButton.height);
+		pasteScrollVelocitiesButton.x = (width - pasteScrollVelocitiesButton.width) / 2;
+		tab.add(pasteScrollVelocitiesButton);
+
+		var pasteCameraFocusesButton = new FlxUIButton(0, pasteScrollVelocitiesButton.y + pasteScrollVelocitiesButton.height + spacing,
+			'Paste camera focuses into all difficulties', function()
+		{
+			state.openSubState(pasteCameraFocusesPrompt);
+		});
+		pasteCameraFocusesButton.resize(210, pasteCameraFocusesButton.height);
+		pasteCameraFocusesButton.x = (width - pasteCameraFocusesButton.width) / 2;
+		tab.add(pasteCameraFocusesButton);
+
+		var pasteEventsButton = new FlxUIButton(0, pasteCameraFocusesButton.y + pasteCameraFocusesButton.height + spacing,
+			'Paste events into all difficulties', function()
+		{
+			state.openSubState(pasteEventsPrompt);
+		});
+		pasteEventsButton.resize(180, pasteEventsButton.height);
+		pasteEventsButton.x = (width - pasteEventsButton.width) / 2;
+		tab.add(pasteEventsButton);
+
+		var pasteLyricStepsButton = new FlxUIButton(0, pasteEventsButton.y + pasteEventsButton.height + spacing, 'Paste lyric steps into all difficulties',
+			function()
+			{
+				state.openSubState(pasteLyricStepsPrompt);
+			});
+		pasteLyricStepsButton.resize(190, pasteLyricStepsButton.height);
+		pasteLyricStepsButton.x = (width - pasteLyricStepsButton.width) / 2;
+		tab.add(pasteLyricStepsButton);
 
 		addGroup(tab);
 	}

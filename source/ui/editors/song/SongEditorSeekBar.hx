@@ -46,7 +46,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 
 		createBars();
 
-		seekLine = new FlxSprite(0, (state.inst.time / state.inst.length) * bg.height).makeGraphic(Std.int(bg.width), 4);
+		seekLine = new FlxSprite().makeGraphic(Std.int(bg.width), 4);
 		add(seekLine);
 
 		scrollFactor.set();
@@ -76,7 +76,12 @@ class SongEditorSeekBar extends FlxSpriteGroup
 		}
 
 		if (seekLine != null)
-			seekLine.y = FlxMath.remapToRange(state.inst.time, 0, state.inst.length, bg.y + bg.height - seekLine.height, bg.y);
+		{
+			if (state.inst.length > 0)
+				seekLine.y = FlxMath.remapToRange(state.inst.time, 0, state.inst.length, bg.y + bg.height - seekLine.height, bg.y);
+			else
+				seekLine.y = bg.y + bg.height - seekLine.height;
+		}
 	}
 
 	function createBars()
