@@ -32,10 +32,12 @@ import ui.editors.song.SongEditorCamFocusDisplay;
 import ui.editors.song.SongEditorCompositionPanel;
 import ui.editors.song.SongEditorDetailsPanel;
 import ui.editors.song.SongEditorEditPanel;
+import ui.editors.song.SongEditorLyricsDisplay;
 import ui.editors.song.SongEditorPlayfield;
 import ui.editors.song.SongEditorPlayfieldTabs;
 import ui.editors.song.SongEditorSeekBar;
 import ui.editors.song.SongEditorSelector;
+import ui.game.LyricsDisplay;
 import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
@@ -73,6 +75,7 @@ class SongEditorState extends FNFState
 	public var playfieldTabs:SongEditorPlayfieldTabs;
 	public var selector:SongEditorSelector;
 	public var lyrics:String;
+	public var lyricsDisplay:SongEditorLyricsDisplay;
 
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
@@ -93,7 +96,7 @@ class SongEditorState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		song = Song.loadSong('mods/fnf/songs/Die Batsards/Normal.json');
+		song = Song.loadSong('mods/fnf/songs/Monster/Hard.json');
 		inst = FlxG.sound.load(Paths.getSongInst(song), Settings.editorInstVolume.value, false, FlxG.sound.defaultMusicGroup);
 		inst.onComplete = onSongComplete;
 		vocals = FlxG.sound.load(Paths.getSongVocals(song), Settings.editorVocalsVolume.value, false, FlxG.sound.defaultMusicGroup);
@@ -147,6 +150,8 @@ class SongEditorState extends FNFState
 
 		refreshLyrics();
 
+		lyricsDisplay = new SongEditorLyricsDisplay(this);
+
 		metronome = new SongEditorMetronome(this);
 
 		detailsPanel = new SongEditorDetailsPanel(this);
@@ -171,6 +176,7 @@ class SongEditorState extends FNFState
 		add(detailsPanel);
 		add(compositionPanel);
 		add(editPanel);
+		add(lyricsDisplay);
 		add(notificationManager);
 		add(tooltip);
 
@@ -199,6 +205,7 @@ class SongEditorState extends FNFState
 			playfieldOther.update(elapsed);
 		metronome.update();
 		detailsPanel.update(elapsed);
+		lyricsDisplay.updateLyrics(inst.time);
 		notificationManager.update(elapsed);
 		tooltip.update(elapsed);
 

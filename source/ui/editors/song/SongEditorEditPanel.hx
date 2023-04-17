@@ -375,6 +375,7 @@ class SongEditorEditPanel extends EditorPanel
 		var refreshLyricsButton = new FlxUIButton(0, applyOffsetButton.y + applyOffsetButton.height + spacing, 'Refresh Lyrics', function()
 		{
 			state.refreshLyrics();
+			state.lyricsDisplay.lyrics = state.lyrics;
 		});
 		refreshLyricsButton.x = (width - refreshLyricsButton.width) / 2;
 		tab.add(refreshLyricsButton);

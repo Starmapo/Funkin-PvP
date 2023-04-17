@@ -96,13 +96,15 @@ class SongEditorTimeline extends FlxBasic
 
 		var newLines:Array<SongEditorTimelineTick> = [];
 		var measureCount = 0;
-		for (point in state.song.timingPoints)
+		for (i in 0...state.song.timingPoints.length)
 		{
+			var point = state.song.timingPoints[i];
 			if (point.startTime > state.inst.length)
 				continue;
 			if (!Math.isFinite(point.bpm))
 				continue;
 
+			var nextPoint = state.song.timingPoints[i + 1];
 			var pointLength = state.song.getTimingPointLength(point, state.inst);
 			var startTime = point.startTime;
 
@@ -110,6 +112,12 @@ class SongEditorTimeline extends FlxBasic
 			while (i < pointLength / point.beatLength * state.beatSnap.value)
 			{
 				var time = startTime + point.beatLength / state.beatSnap.value * i;
+				if (nextPoint != null && Math.abs(nextPoint.startTime - time) <= 2)
+				{
+					i++;
+					continue;
+				}
+
 				var measureBeat = (i / state.beatSnap.value) % point.meter == 0 && i % state.beatSnap.value == 0;
 
 				var line = new SongEditorTimelineTick(state, playfield, point, time, i, measureCount, measureBeat);

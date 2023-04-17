@@ -11,6 +11,7 @@ import sys.io.File;
 
 class Song extends JsonObject
 {
+	public static var CURRENT_VERSION:String = '1.0.0';
 	public static var scrollSpeedMult:Float = 0.32;
 
 	/**
@@ -319,6 +320,11 @@ class Song extends JsonObject
 	**/
 	public var difficultyName:String = '';
 
+	/**
+		The chart version that this map was made with.
+	**/
+	public var version:String = '';
+
 	public function new(?data:Dynamic)
 	{
 		title = readString(data.title, 'Untitled Song');
@@ -360,6 +366,7 @@ class Song extends JsonObject
 			if (n != null)
 				notes.push(new NoteInfo(n));
 		}
+		version = readString(data.version, CURRENT_VERSION);
 	}
 
 	/**
