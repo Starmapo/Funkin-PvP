@@ -3,6 +3,7 @@ package util.editors.song;
 import data.song.CameraFocus;
 import data.song.EventObject;
 import data.song.ITimingObject;
+import data.song.LyricStep;
 import data.song.NoteInfo;
 import data.song.ScrollVelocity;
 import data.song.Song;
@@ -109,6 +110,15 @@ class SongEditorActionManager extends ActionManager
 					params: params
 				}
 			]
+		});
+		perform(new ActionAddObject(state, obj));
+		return obj;
+	}
+
+	public function addLyricStep(startTime:Float)
+	{
+		var obj = new LyricStep({
+			startTime: startTime
 		});
 		perform(new ActionAddObject(state, obj));
 		return obj;

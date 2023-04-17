@@ -180,6 +180,8 @@ class SongEditorPlayfieldButton extends FlxSprite
 							var event = curEvent != null ? curEvent.event : '';
 							var params = curEvent != null ? curEvent.params.join(',') : '';
 							state.actionManager.addEvent(time, event, params);
+						case 4: // Lyric Step
+							state.actionManager.addLyricStep(time);
 					}
 				}
 				else
@@ -265,6 +267,10 @@ class SongEditorPlayfieldButton extends FlxSprite
 					cast state.song.scrollVelocities;
 				case 2:
 					cast state.song.cameraFocuses;
+				case 3:
+					cast state.song.events;
+				case 4:
+					cast state.song.lyricSteps;
 				default:
 					[];
 			}

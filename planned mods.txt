@@ -1,5 +1,6 @@
 B3 Remixed
 B-Sides
+Baldi's Basics in Funkin'
 Corruption Reimagined
 D-Sides
 Friday Night Incident
@@ -9,6 +10,7 @@ Mario FNF Port
 Mario's Madness
 Ourple Guy
 Plantoids Plus
+Rose Criminal
 Shaggy
 Sonic.exe
 Tails Gets Trolled

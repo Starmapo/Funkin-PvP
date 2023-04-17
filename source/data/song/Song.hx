@@ -600,7 +600,7 @@ class Song extends JsonObject
 		Gets the current lyric step at a particular point in the map.
 		@param time The time to find a lyric step at.
 	**/
-	public function getLyricAt(time:Float)
+	public function getLyricStepAt(time:Float)
 	{
 		var index = lyricSteps.length - 1;
 		while (index >= 0)

@@ -24,6 +24,8 @@ import lime.app.Application;
 import lime.system.Clipboard;
 import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorSavePrompt;
+import sys.FileSystem;
+import sys.io.File;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import ui.editors.song.SongEditorCamFocusDisplay;
@@ -70,13 +72,13 @@ class SongEditorState extends FNFState
 	public var playfield(get, never):SongEditorPlayfield;
 	public var playfieldTabs:SongEditorPlayfieldTabs;
 	public var selector:SongEditorSelector;
+	public var lyrics:String;
 
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
 	var hitsoundNoteIndex:Int = 0;
 	var camHUD:FlxCamera;
 	var savePrompt:SongEditorSavePrompt;
-	var applyOffsetPrompt:SongEditorApplyOffsetPrompt;
 	var camFocusDisplay:SongEditorCamFocusDisplay;
 	var metronome:SongEditorMetronome;
 
@@ -143,6 +145,8 @@ class SongEditorState extends FNFState
 		zoomOutButton.autoCenterLabel();
 		tooltip.addTooltip(zoomOutButton, 'Zoom Out (Hotkey: Page Down)');
 
+		refreshLyrics();
+
 		metronome = new SongEditorMetronome(this);
 
 		detailsPanel = new SongEditorDetailsPanel(this);
@@ -152,7 +156,6 @@ class SongEditorState extends FNFState
 		editPanel = new SongEditorEditPanel(this);
 
 		savePrompt = new SongEditorSavePrompt(onSavePrompt);
-		applyOffsetPrompt = new SongEditorApplyOffsetPrompt(onApplyOffsetPrompt);
 
 		notificationManager = new NotificationManager();
 
@@ -334,9 +337,13 @@ class SongEditorState extends FNFState
 		setSongTime(seekTime);
 	}
 
-	public function openApplyOffsetPrompt()
+	public function refreshLyrics()
 	{
-		openSubState(applyOffsetPrompt);
+		var path = Path.join([song.directory, 'lyrics.txt']);
+		if (FileSystem.exists(path))
+			lyrics = File.getContent(path);
+		else
+			lyrics = '';
 	}
 
 	function handleInput()
@@ -756,31 +763,6 @@ class SongEditorState extends FNFState
 			if (option == 'Yes')
 				save();
 			FlxG.switchState(new ToolboxState());
-		}
-	}
-
-	function onApplyOffsetPrompt(text:String)
-	{
-		if (text != null && text.length > 0)
-		{
-			var offset = Std.parseFloat(text);
-			if (offset != 0 && Math.isFinite(offset))
-			{
-				var objects:Array<ITimingObject> = [];
-				for (obj in song.notes)
-					objects.push(obj);
-				for (obj in song.timingPoints)
-					objects.push(obj);
-				for (obj in song.scrollVelocities)
-					objects.push(obj);
-				for (obj in song.cameraFocuses)
-					objects.push(obj);
-				for (obj in song.events)
-					objects.push(obj);
-				for (obj in song.lyricSteps)
-					objects.push(obj);
-				actionManager.perform(new ActionMoveObjects(this, objects, 0, offset));
-			}
 		}
 	}
 

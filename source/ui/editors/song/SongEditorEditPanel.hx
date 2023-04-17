@@ -12,9 +12,13 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
+import flixel.util.FlxColor;
+import haxe.io.Path;
 import states.editors.SongEditorState;
+import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorNormalizeNoteTypePrompt;
 import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
+import sys.io.File;
 import ui.editors.EditorCheckbox;
 import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
@@ -65,6 +69,8 @@ class SongEditorEditPanel extends EditorPanel
 	var selectedEvents:Array<EventObject> = [];
 	var eventsPropertiesGroup:Array<FlxSprite> = [];
 	var eventIndex:Int = 0;
+	var lastEvent:EventObject = null;
+	var applyOffsetPrompt:SongEditorApplyOffsetPrompt;
 	var removeAllNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
 	var removeSelectedNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
 	var normalizeAllNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
@@ -123,6 +129,30 @@ class SongEditorEditPanel extends EditorPanel
 		updateSelectedTimingPoints();
 		onClick = onClickTab;
 
+		applyOffsetPrompt = new SongEditorApplyOffsetPrompt(function(text)
+		{
+			if (text != null && text.length > 0)
+			{
+				var offset = Std.parseFloat(text);
+				if (offset != 0 && Math.isFinite(offset))
+				{
+					var objects:Array<ITimingObject> = [];
+					for (obj in state.song.notes)
+						objects.push(obj);
+					for (obj in state.song.timingPoints)
+						objects.push(obj);
+					for (obj in state.song.scrollVelocities)
+						objects.push(obj);
+					for (obj in state.song.cameraFocuses)
+						objects.push(obj);
+					for (obj in state.song.events)
+						objects.push(obj);
+					for (obj in state.song.lyricSteps)
+						objects.push(obj);
+					state.actionManager.perform(new ActionMoveObjects(state, objects, 0, offset));
+				}
+			}
+		});
 		removeAllNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
 		{
 			if (text.length > 0)
@@ -336,11 +366,18 @@ class SongEditorEditPanel extends EditorPanel
 
 		var applyOffsetButton = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Apply Offset to Song', function()
 		{
-			state.openApplyOffsetPrompt();
+			state.openSubState(applyOffsetPrompt);
 		});
 		applyOffsetButton.resize(120, applyOffsetButton.height);
 		applyOffsetButton.x = (width - applyOffsetButton.width) / 2;
 		tab.add(applyOffsetButton);
+
+		var refreshLyricsButton = new FlxUIButton(0, applyOffsetButton.y + applyOffsetButton.height + spacing, 'Refresh Lyrics', function()
+		{
+			state.refreshLyrics();
+		});
+		refreshLyricsButton.x = (width - refreshLyricsButton.width) / 2;
+		tab.add(refreshLyricsButton);
 
 		addGroup(tab);
 	}
@@ -936,6 +973,96 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		var tab = createTab('Events');
 
+		var inputWidth = width - 10;
+
+		eventIndexLabel = new EditorText(4, 4, 0, 'Selected Event: 0 / 0');
+		tab.add(eventIndexLabel);
+		eventsPropertiesGroup.push(eventIndexLabel);
+
+		var eventLabel = new EditorText(eventIndexLabel.x, eventIndexLabel.y + eventIndexLabel.height + spacing, 0, 'Event Name:');
+		tab.add(eventLabel);
+		eventsPropertiesGroup.push(eventLabel);
+
+		eventInput = new EditorInputText(eventLabel.x, eventLabel.y + eventLabel.height + spacing, inputWidth);
+		eventInput.textChanged.add(function(text, _)
+		{
+			state.actionManager.perform(new ActionChangeEvent(state, selectedEvents[0].events[eventIndex], text));
+		});
+		tab.add(eventInput);
+		eventsPropertiesGroup.push(eventInput);
+
+		var eventParamsLabel = new EditorText(eventInput.x, eventInput.y + eventInput.height + spacing, 0, 'Event Parameters:');
+		tab.add(eventParamsLabel);
+		eventsPropertiesGroup.push(eventParamsLabel);
+
+		eventParamsInput = new EditorInputText(eventParamsLabel.x, eventParamsLabel.y + eventParamsLabel.height + spacing, inputWidth);
+		eventParamsInput.textChanged.add(function(text, _)
+		{
+			state.actionManager.perform(new ActionChangeEventParams(state, selectedEvents[0].events[eventIndex], text));
+		});
+		tab.add(eventParamsInput);
+		eventsPropertiesGroup.push(eventParamsInput);
+
+		var removeButton = new FlxUIButton(0, 4, '-', function()
+		{
+			var eventObject = selectedEvents[0];
+			if (eventObject.events.length > 1)
+				state.actionManager.perform(new ActionRemoveEvent(state, eventObject, eventObject.events[eventObject.events.length - 1]));
+			else
+				state.actionManager.perform(new ActionRemoveObject(state, eventObject));
+		});
+		removeButton.resize(removeButton.height, removeButton.height);
+		removeButton.label.size = 12;
+		removeButton.autoCenterLabel();
+		removeButton.color = FlxColor.RED;
+		removeButton.label.color = FlxColor.WHITE;
+		eventsPropertiesGroup.push(removeButton);
+
+		var addButton = new FlxUIButton(0, 4, '+', function()
+		{
+			var eventObject = selectedEvents[0];
+			state.actionManager.perform(new ActionAddEvent(state, eventObject, new Event({})));
+		});
+		addButton.resize(addButton.height, addButton.height);
+		addButton.label.size = 12;
+		addButton.autoCenterLabel();
+		addButton.color = FlxColor.GREEN;
+		addButton.label.color = FlxColor.WHITE;
+		eventsPropertiesGroup.push(addButton);
+
+		var moveLeftButton = new FlxUIButton(0, 4, '<', function()
+		{
+			eventIndex--;
+			if (eventIndex < 0)
+				eventIndex = selectedEvents[0].events.length - 1;
+			updateEventDisplay();
+		});
+		moveLeftButton.resize(moveLeftButton.height, moveLeftButton.height);
+		moveLeftButton.label.size = 12;
+		moveLeftButton.autoCenterLabel();
+		eventsPropertiesGroup.push(moveLeftButton);
+
+		var moveRightButton = new FlxUIButton(0, 4, '>', function()
+		{
+			eventIndex++;
+			if (eventIndex >= selectedEvents[0].events.length)
+				eventIndex = 0;
+			updateEventDisplay();
+		});
+		moveRightButton.resize(moveRightButton.height, moveRightButton.height);
+		moveRightButton.label.size = 12;
+		moveRightButton.autoCenterLabel();
+		eventsPropertiesGroup.push(moveRightButton);
+
+		moveRightButton.x = width - moveRightButton.width - 4;
+		moveLeftButton.x = moveRightButton.x - moveLeftButton.width - 4;
+		addButton.x = moveLeftButton.x - addButton.width - 4;
+		removeButton.x = addButton.x - removeButton.width - 4;
+		tab.add(removeButton);
+		tab.add(addButton);
+		tab.add(moveLeftButton);
+		tab.add(moveRightButton);
+
 		addGroup(tab);
 	}
 
@@ -1003,6 +1130,11 @@ class SongEditorEditPanel extends EditorPanel
 			selectedCameraFocuses.push(cast obj);
 			updateSelectedCameraFocuses();
 		}
+		else if (Std.isOfType(obj, EventObject))
+		{
+			selectedEvents.push(cast obj);
+			updateSelectedEvents();
+		}
 	}
 
 	function onDeselectedObject(obj:ITimingObject)
@@ -1027,6 +1159,11 @@ class SongEditorEditPanel extends EditorPanel
 			selectedCameraFocuses.remove(cast obj);
 			updateSelectedCameraFocuses();
 		}
+		else if (Std.isOfType(obj, EventObject))
+		{
+			selectedEvents.remove(cast obj);
+			updateSelectedEvents();
+		}
 	}
 
 	function onMultipleObjectsSelected(objects:Array<ITimingObject>)
@@ -1035,6 +1172,7 @@ class SongEditorEditPanel extends EditorPanel
 		var foundTP = false;
 		var foundSV = false;
 		var foundFocus = false;
+		var foundEvent = false;
 		for (obj in objects)
 		{
 			if (Std.isOfType(obj, NoteInfo))
@@ -1057,6 +1195,11 @@ class SongEditorEditPanel extends EditorPanel
 				selectedCameraFocuses.push(cast obj);
 				foundFocus = true;
 			}
+			else if (Std.isOfType(obj, EventObject))
+			{
+				selectedEvents.push(cast obj);
+				foundEvent = true;
+			}
 		}
 		if (foundNote)
 			updateSelectedNotes();
@@ -1066,6 +1209,8 @@ class SongEditorEditPanel extends EditorPanel
 			updateSelectedScrollVelocities();
 		if (foundFocus)
 			updateSelectedCameraFocuses();
+		if (foundEvent)
+			updateSelectedEvents();
 	}
 
 	function onAllObjectsDeselected()
@@ -1092,6 +1237,12 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			selectedCameraFocuses.resize(0);
 			updateSelectedCameraFocuses();
+		}
+
+		if (selectedEvents.length > 0)
+		{
+			selectedEvents.resize(0);
+			updateSelectedEvents();
 		}
 	}
 
@@ -1285,7 +1436,6 @@ class SongEditorEditPanel extends EditorPanel
 	{
 		if (selectedEvents.length == 1)
 		{
-			updateEventDisplay();
 			for (obj in eventsPropertiesGroup)
 			{
 				if (selected_tab_id == 'Events')
@@ -1301,19 +1451,32 @@ class SongEditorEditPanel extends EditorPanel
 				obj.alpha = 0.5;
 			}
 		}
+		updateEventDisplay();
 	}
 
 	function updateEventDisplay()
 	{
-		var eventObject = selectedEvents[0];
-		if (eventIndex >= eventObject.events.length)
-			eventIndex = eventObject.events.length - 1;
+		if (selectedEvents.length == 1)
+		{
+			var eventObject = selectedEvents[0];
+			if (lastEvent != eventObject)
+				eventIndex = 0;
+			else if (eventIndex >= eventObject.events.length)
+				eventIndex = eventObject.events.length - 1;
 
-		eventIndexLabel.text = 'Selected Event: $eventIndex / ${eventObject.events.length}';
+			eventIndexLabel.text = 'Selected Event: ${eventIndex + 1} / ${eventObject.events.length}';
 
-		var event = eventObject.events[eventIndex];
-		eventInput.text = event.event;
-		eventParamsInput.text = event.params.join(',');
+			var event = eventObject.events[eventIndex];
+			eventInput.text = event.event;
+			eventParamsInput.text = event.params.join(',');
+
+			lastEvent = eventObject;
+		}
+		else
+		{
+			eventIndex = 0;
+			eventIndexLabel.text = 'Selected Event: 0 / 0';
+		}
 	}
 
 	function onClickTab(name:String)

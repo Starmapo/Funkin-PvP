@@ -3,7 +3,7 @@ package data.song;
 class EventObject extends JsonObject implements ITimingObject
 {
 	public var startTime:Float;
-	public var events:Array<Event>;
+	public var events:Array<Event> = [];
 
 	public function new(data:Dynamic)
 	{

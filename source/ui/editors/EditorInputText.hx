@@ -20,6 +20,8 @@ class EditorInputText extends FlxSpriteGroup
 	public var filterMode(default, set):FilterMode = NO_FILTER;
 	public var maxLength(default, set):Int = 0;
 	public var displayText(get, set):String;
+	public var multiline(get, set):Bool;
+	public var size(get, set):Int;
 
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
@@ -31,6 +33,8 @@ class EditorInputText extends FlxSpriteGroup
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, ?textFieldCamera:FlxCamera)
 	{
 		super(x, y);
+		if (fieldWidth <= 0)
+			fieldWidth = 150;
 		if (text == null)
 			text = '';
 		if (textFieldCamera == null)
@@ -40,9 +44,11 @@ class EditorInputText extends FlxSpriteGroup
 		textField = new EditorInputTextField(1, 1, fieldWidth, text, size, embeddedFont, textFieldCamera);
 		textField.color = FlxColor.BLACK;
 
-		textBorder = new FlxSprite().makeGraphic(Std.int(textField.width) + 2, Std.int(textField.height) + 2, FlxColor.BLACK);
+		textBorder = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 
-		textBG = new FlxSprite(1, 1).makeGraphic(Std.int(textField.width), Std.int(textField.height), FlxColor.WHITE);
+		textBG = new FlxSprite(1, 1).makeGraphic(1, 1, FlxColor.WHITE);
+
+		updateBGSize();
 
 		add(textBorder);
 		add(textBG);
@@ -63,6 +69,21 @@ class EditorInputText extends FlxSpriteGroup
 		FlxDestroyUtil.destroy(focusLost);
 		FlxDestroyUtil.destroy(textChanged);
 		super.destroy();
+	}
+
+	public function updateBGSize()
+	{
+		textBorder.setGraphicSize(Std.int(textField.width + 2), Std.int(textField.height + 2));
+		textBorder.updateHitbox();
+		textBG.setGraphicSize(Std.int(textField.width), Std.int(textField.height));
+		textBG.updateHitbox();
+	}
+
+	public function resize(width:Float, height:Float)
+	{
+		textField.width = width;
+		textField.height = height;
+		updateBGSize();
 	}
 
 	function onFocusIn(event:FocusEvent)
@@ -167,6 +188,31 @@ class EditorInputText extends FlxSpriteGroup
 		textField.text = _displayText;
 		return value;
 	}
+
+	function get_multiline()
+	{
+		return textField.textField.multiline;
+	}
+
+	function set_multiline(value:Bool)
+	{
+		textField.textField.multiline = value;
+		textField.textField.autoSize = value ? LEFT : NONE;
+		textField.textField.wordWrap = value;
+		return value;
+	}
+
+	function get_size()
+	{
+		return textField.size;
+	}
+
+	function set_size(value:Int)
+	{
+		textField.size = value;
+		updateBGSize();
+		return textField.size;
+	}
 }
 
 class EditorInputTextField extends FlxText
@@ -179,6 +225,7 @@ class EditorInputTextField extends FlxText
 		textField.selectable = true;
 		textField.type = INPUT;
 		textField.multiline = false;
+		textField.wordWrap = false;
 		FlxG.game.addChildAt(textField, FlxG.game.getChildIndex(textFieldCamera.flashSprite) + 1);
 		FlxG.signals.gameResized.add(onGameResized);
 		this.text = textField.text;
