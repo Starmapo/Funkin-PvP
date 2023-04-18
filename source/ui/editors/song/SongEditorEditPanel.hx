@@ -457,7 +457,7 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(velocityStepper);
 
-		var saveButton = new FlxUIButton(4, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
+		var saveButton = new FlxUIButton(115, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
 		{
 			state.save();
 		});
