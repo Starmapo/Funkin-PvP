@@ -21,7 +21,7 @@ import subStates.PromptSubState.YesNoPrompt;
 import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorNormalizeNoteTypePrompt;
 import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
-import sys.io.File;
+import systools.Dialogs;
 import ui.editors.EditorCheckbox;
 import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
@@ -30,6 +30,8 @@ import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 import ui.editors.song.SongEditorWaveform.WaveformType;
 import util.editors.song.SongEditorActionManager;
+
+using StringTools;
 
 class SongEditorEditPanel extends EditorPanel
 {
@@ -455,13 +457,41 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(velocityStepper);
 
-		var saveButton = new FlxUIButton(0, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
+		var saveButton = new FlxUIButton(4, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
 		{
 			state.save();
 		});
-		saveButton.x = (width - saveButton.width) / 2;
 		tab.add(saveButton);
 		state.tooltip.addTooltip(saveButton, 'Hotkey: CTRL + S');
+
+		var loadButton = new FlxUIButton(saveButton.x + saveButton.width + spacing, saveButton.y, 'Load', function()
+		{
+			state.save(false);
+			var result = Dialogs.openFile("Select chart inside the game's directory to load", '', {
+				count: 1,
+				descriptions: ['JSON files'],
+				extensions: ['*.json']
+			});
+			if (result == null || result[0] == null)
+				return;
+
+			var path = Path.normalize(result[0]);
+			var cwd = Path.normalize(Sys.getCwd());
+			if (!path.startsWith(cwd))
+			{
+				state.notificationManager.showNotification("You must select a map inside of the game's directory!", ERROR);
+				return;
+			}
+			var song = Song.loadSong(path.substr(cwd.length + 1));
+			if (song == null)
+			{
+				state.notificationManager.showNotification("You must select a valid song file!", ERROR);
+				return;
+			}
+
+			FlxG.switchState(new SongEditorState(song));
+		});
+		tab.add(loadButton);
 
 		var applyOffsetButton = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Apply Offset to Song', function()
 		{

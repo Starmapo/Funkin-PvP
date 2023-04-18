@@ -26,6 +26,8 @@ class Song extends JsonObject
 			return null;
 
 		var json:Dynamic = Paths.getJson(path, mod);
+		if (json == null)
+			return null;
 
 		if (json.song != null)
 		{

@@ -118,8 +118,6 @@ class Paths
 
 	public static function getSound(path:String, ?mod:String):Sound
 	{
-		var originalPath = path;
-
 		if (!path.endsWith('.ogg') && !path.endsWith('.mp3') && !path.endsWith('.wav'))
 			path += '.ogg';
 
@@ -144,7 +142,6 @@ class Paths
 		}
 		#end
 
-		FlxG.log.warn('Sound \"$originalPath\" not found.');
 		return null;
 	}
 
@@ -158,12 +155,12 @@ class Paths
 
 	public static function getSongInst(song:Song, ?mod:String)
 	{
-		return getSound('${song.directory}/${song.instFile}', mod);
+		return getSound('${song.directory}/Inst.ogg', mod);
 	}
 
 	public static function getSongVocals(song:Song, ?mod:String)
 	{
-		return getSound('${song.directory}/${song.vocalsFile}', mod);
+		return getSound('${song.directory}/Voices.ogg', mod);
 	}
 
 	public static function getText(path:String, ?mod:String)
@@ -187,7 +184,17 @@ class Paths
 			path = getPath('data/$path', mod);
 
 		if (exists(path))
-			return Json.parse(getContent(path));
+		{
+			try
+			{
+				var json = Json.parse(getContent(path));
+				return json;
+			}
+			catch (e)
+			{
+				trace(e);
+			}
+		}
 
 		return null;
 	}

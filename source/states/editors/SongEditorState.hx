@@ -89,7 +89,7 @@ class SongEditorState extends FNFState
 	{
 		super();
 		if (song == null)
-			song = new Song({});
+			song = Song.loadSong('mods/fnf/songs/Tutorial/Hard.json');
 		this.song = song;
 	}
 
@@ -106,11 +106,14 @@ class SongEditorState extends FNFState
 
 		inst = FlxG.sound.load(Paths.getSongInst(song), Settings.editorInstVolume.value, false, FlxG.sound.defaultMusicGroup);
 		if (inst == null)
-			inst = FlxG.sound.list.add(new FlxSound());
+			inst = new FlxSound();
 		inst.onComplete = onSongComplete;
-		vocals = FlxG.sound.load(Paths.getSongVocals(song), Settings.editorVocalsVolume.value, false, FlxG.sound.defaultMusicGroup);
-		if (vocals == null)
-			vocals = FlxG.sound.list.add(new FlxSound());
+
+		var vocalsSound = Paths.getSongVocals(song);
+		if (vocalsSound != null)
+			vocals = FlxG.sound.load(vocalsSound, Settings.editorVocalsVolume.value, false, FlxG.sound.defaultMusicGroup);
+		else
+			vocals = new FlxSound();
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
@@ -222,10 +225,10 @@ class SongEditorState extends FNFState
 
 		resyncVocals();
 
-		var playedNotes = 0;
-		final maxNotes = 8;
 		if (inst.playing)
 		{
+			var playedNotes = 0;
+			final maxNotes = 1;
 			for (i in hitsoundNoteIndex...song.notes.length)
 			{
 				var note = song.notes[i];

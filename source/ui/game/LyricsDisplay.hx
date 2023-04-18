@@ -42,8 +42,6 @@ class LyricsDisplay extends FlxText
 			}
 			i--;
 		}
-		FlxG.watch.addQuick('time', time);
-		FlxG.watch.addQuick('i', i);
 		if (i == -1)
 		{
 			text = '';
