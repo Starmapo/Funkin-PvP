@@ -35,6 +35,10 @@ class NoteSkin extends JsonObject
 	**/
 	public var receptorsCenterAnimation:Bool;
 
+	public var notes:Array<NoteData> = [];
+	public var notesImage:String;
+	public var notesScale:Float;
+
 	/**
 		Whether or not the sprites have antialiasing.
 	**/
@@ -48,10 +52,17 @@ class NoteSkin extends JsonObject
 				receptors.push(new ReceptorData(r));
 		}
 		receptorsCenterAnimation = readBool(data.receptorsCenterAnimation, true);
-		receptorsImage = readString(data.receptorsImage, 'NOTE_assets');
+		receptorsImage = readString(data.receptorsImage, 'notes/NOTE_assets');
 		receptorsOffset = readFloatArray(data.receptorsOffset, [0, 0], null, 2, -1000, 1000, 2);
 		receptorsPadding = readFloat(data.receptorsPadding, 0, -1000, 1000, 2);
 		receptorsScale = readFloat(data.receptorsScale, 1, 0.01, 100, 2);
+		for (n in readArray(data.notes, null, null, 4))
+		{
+			if (n != null)
+				notes.push(new NoteData(n));
+		}
+		notesImage = readString(data.notesImage, 'notes/NOTE_assets');
+		notesScale = readFloat(data.notesScale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}
 }
@@ -114,5 +125,19 @@ class ReceptorData extends JsonObject
 		staticOffset = readFloatArray(data.staticOffset, [], null, 2, -1000, 1000, 2);
 		pressedOffset = readFloatArray(data.pressedOffset, [], null, 2, -1000, 1000, 2);
 		confirmOffset = readFloatArray(data.confirmOffset, [], null, 2, -1000, 1000, 2);
+	}
+}
+
+class NoteData extends JsonObject
+{
+	public var headAnim:String;
+	public var bodyAnim:String;
+	public var tailAnim:String;
+
+	public function new(data:Dynamic)
+	{
+		headAnim = readString(data.headAnim);
+		bodyAnim = readString(data.bodyAnim);
+		tailAnim = readString(data.tailAnim);
 	}
 }

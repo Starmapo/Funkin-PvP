@@ -90,43 +90,12 @@ class PlayState extends FNFState
 
 	function initPlayfields()
 	{
-		var skin = new NoteSkin({
-			receptors: [
-				{
-					staticAnim: 'arrow static instance 1',
-					pressedAnim: 'left press',
-					confirmAnim: 'left confirm'
-				},
-				{
-					staticAnim: 'arrow static instance 2',
-					pressedAnim: 'down press',
-					confirmAnim: 'down confirm'
-				},
-				{
-					staticAnim: 'arrow static instance 4',
-					pressedAnim: 'up press',
-					confirmAnim: 'up confirm'
-				},
-				{
-					staticAnim: 'arrow static instance 3',
-					pressedAnim: 'right press',
-					confirmAnim: 'right confirm'
-				}
-			],
-			receptorsCenterAnimation: true,
-			receptorsImage: 'notes/NOTE_assets',
-			receptorsOffset: [0, 5],
-			receptorsPadding: 0,
-			receptorsScale: 0.5,
-			antialiasing: true
-		});
-
 		playfields = new FlxTypedGroup();
 		playfields.cameras = [camHUD];
 		add(playfields);
 
-		createPlayfield(0, skin);
-		createPlayfield(1, skin);
+		createPlayfield(0);
+		createPlayfield(1);
 	}
 
 	function createPlayfield(player:Int = 0, ?skin:NoteSkin)

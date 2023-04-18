@@ -1,5 +1,6 @@
 package states.editors;
 
+import data.game.GameplayRuleset;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.sound.FlxSound;
@@ -9,16 +10,22 @@ class SongEditorPlayState extends FNFState
 {
 	var song:Song;
 	var originalSong:Song;
+	var player:Int;
 	var startTime:Float;
 	var timing:MusicTiming;
 	var inst:FlxSound;
 	var vocals:FlxSound;
+	var ruleset:GameplayRuleset;
+	var startDelay:Int = 3000;
+	var isPaused:Bool = false;
+	var isPlayComplete:Bool = false;
 
-	public function new(map:Song, startTime:Float = 0)
+	public function new(map:Song, player:Int, startTime:Float = 0)
 	{
 		super();
 		song = map.deepClone();
 		originalSong = map;
+		this.player = player;
 		this.startTime = startTime;
 
 		var i = song.notes.length - 1;
@@ -37,10 +44,49 @@ class SongEditorPlayState extends FNFState
 		else
 			vocals = new FlxSound();
 
-		timing = new MusicTiming(inst, song.timingPoints, true, null, [vocals]);
+		timing = new MusicTiming(inst, song.timingPoints, true, startDelay, null, [vocals]);
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
 		add(bg);
+
+		ruleset = new GameplayRuleset(song, timing);
+	}
+
+	override function update(elapsed:Float)
+	{
+		timing.update(elapsed);
+
+		handleInput(elapsed);
+	}
+
+	function handleInput(elapsed:Float)
+	{
+		if (isPaused)
+			return;
+
+		if (!isPlayComplete)
+		{
+			if (FlxG.keys.justPressed.F2)
+			{
+				if (inst.playing)
+					inst.pause();
+
+				FlxG.switchState(new SongEditorState(originalSong));
+			}
+
+			handleAutoplayInput();
+		}
+
+		ruleset.handleInput(elapsed);
+	}
+
+	function handleAutoplayInput()
+	{
+		if (FlxG.keys.justPressed.TAB)
+		{
+			var inputManager = ruleset.inputManagers[player];
+			inputManager.autoplay = !inputManager.autoplay;
+		}
 	}
 }

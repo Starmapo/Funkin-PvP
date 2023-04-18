@@ -5,10 +5,6 @@ import data.skin.NoteSkin;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 
-/**
-	Playfield contains everything for a player to see: receptors, splashes, ratings, score display,
-	and of course, the notes themselves.
-**/
 class Playfield extends FlxGroup
 {
 	public var player(default, null):Int = 0;
@@ -16,9 +12,64 @@ class Playfield extends FlxGroup
 	public var noteSkin(default, null):NoteSkin;
 	public var receptors(default, null):FlxTypedGroup<Receptor>;
 
-	public function new(player:Int = 0, noteSkin:NoteSkin)
+	public function new(player:Int = 0, ?noteSkin:NoteSkin)
 	{
 		super();
+		if (noteSkin == null)
+			noteSkin = new NoteSkin({
+				receptors: [
+					{
+						staticAnim: 'arrow static instance 1',
+						pressedAnim: 'left press',
+						confirmAnim: 'left confirm'
+					},
+					{
+						staticAnim: 'arrow static instance 2',
+						pressedAnim: 'down press',
+						confirmAnim: 'down confirm'
+					},
+					{
+						staticAnim: 'arrow static instance 4',
+						pressedAnim: 'up press',
+						confirmAnim: 'up confirm'
+					},
+					{
+						staticAnim: 'arrow static instance 3',
+						pressedAnim: 'right press',
+						confirmAnim: 'right confirm'
+					}
+				],
+				receptorsCenterAnimation: true,
+				receptorsImage: 'notes/NOTE_assets',
+				receptorsOffset: [0, 0],
+				receptorsPadding: 0,
+				receptorsScale: 0.5,
+				notes: [
+					{
+						headAnim: 'purple instance 1',
+						bodyAnim: 'purple hold piece instance 1',
+						tailAnim: 'pruple end hold instance 1'
+					},
+					{
+						headAnim: 'blue instance 1',
+						bodyAnim: 'blue hold piece instance 1',
+						tailAnim: 'blue hold end instance 1'
+					},
+					{
+						headAnim: 'green instance 1',
+						bodyAnim: 'green hold piece instance 1',
+						tailAnim: 'green hold end instance 1'
+					},
+					{
+						headAnim: 'red instance 1',
+						bodyAnim: 'red hold piece instance 1',
+						tailAnim: 'red hold end instance 1'
+					}
+				],
+				notesImage: 'notes/NOTE_assets',
+				antialiasing: true
+			});
+
 		this.player = player;
 		this.noteSkin = noteSkin;
 		playerConfig = FlxG.save.data.playerConfigs[player];
@@ -38,7 +89,7 @@ class Playfield extends FlxGroup
 		}
 		for (i in 0...4)
 		{
-			var receptor = new Receptor(curX, noteSkin.receptorsOffset[1], i, noteSkin);
+			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1], i, noteSkin);
 			receptors.add(receptor);
 
 			curX += receptor.width + noteSkin.receptorsPadding;
