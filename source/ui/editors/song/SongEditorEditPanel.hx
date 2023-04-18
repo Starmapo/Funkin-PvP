@@ -457,11 +457,10 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(velocityStepper);
 
-		var saveButton = new FlxUIButton(115, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
+		var saveButton = new FlxUIButton(0, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
 		{
 			state.save();
 		});
-		tab.add(saveButton);
 		state.tooltip.addTooltip(saveButton, 'Hotkey: CTRL + S');
 
 		var loadButton = new FlxUIButton(saveButton.x + saveButton.width + spacing, saveButton.y, 'Load', function()
@@ -491,7 +490,24 @@ class SongEditorEditPanel extends EditorPanel
 
 			FlxG.switchState(new SongEditorState(song));
 		});
+
+		saveButton.x = (width - CoolUtil.getArrayWidth([saveButton, loadButton])) / 2;
+		loadButton.x = saveButton.x + saveButton.width + spacing;
+		tab.add(saveButton);
 		tab.add(loadButton);
+
+		var playtestP1Button = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Playtest P1', function()
+		{
+			state.save();
+		});
+
+		var playtestP2Button = new FlxUIButton(playtestP1Button.x + playtestP1Button.width + spacing, saveButton.y + saveButton.height + spacing,
+			'Playtest P2', function() {});
+
+		playtestP1Button.x = (width - CoolUtil.getArrayWidth([playtestP1Button, playtestP2Button])) / 2;
+		playtestP2Button.x = playtestP1Button.x + playtestP1Button.width + spacing;
+		tab.add(playtestP1Button);
+		tab.add(playtestP2Button);
 
 		var applyOffsetButton = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Apply Offset to Song', function()
 		{

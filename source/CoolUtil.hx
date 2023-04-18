@@ -127,6 +127,15 @@ class CoolUtil
 		return getGroupMaxY(group) - getGroupMinY(group);
 	}
 
+	@:generic
+	public static function getArrayWidth<T:FlxObject>(array:Array<T>):Float
+	{
+		if (array.length == 0)
+			return 0;
+
+		return getArrayMaxX(array) - getArrayMinX(array);
+	}
+
 	/**
 		Returns an array containing all the values of this map.
 		@param map The map.
@@ -263,6 +272,40 @@ class CoolUtil
 
 			if (minY < value)
 				value = minY;
+		}
+		return value;
+	}
+
+	@:generic
+	static function getArrayMaxX<T:FlxObject>(array:Array<T>):Float
+	{
+		var value = Math.NEGATIVE_INFINITY;
+		for (member in array)
+		{
+			if (member == null)
+				continue;
+
+			var maxX:Float = member.x + member.width;
+
+			if (maxX > value)
+				value = maxX;
+		}
+		return value;
+	}
+
+	@:generic
+	static function getArrayMinX<T:FlxObject>(array:Array<T>):Float
+	{
+		var value = Math.POSITIVE_INFINITY;
+		for (member in array)
+		{
+			if (member == null)
+				continue;
+
+			var minX:Float = member.x;
+
+			if (minX < value)
+				value = minX;
 		}
 		return value;
 	}

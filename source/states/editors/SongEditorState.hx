@@ -365,6 +365,38 @@ class SongEditorState extends FNFState
 			lyrics = '';
 	}
 
+	public function exitToTestPlay(player:Int, fromStart:Bool = false)
+	{
+		inst.pause();
+		vocals.pause();
+
+		var time = fromStart ? 0 : inst.time;
+
+		var hasNote = false;
+		for (note in song.notes)
+		{
+			if (note.startTime >= time)
+			{
+				hasNote = true;
+				break;
+			}
+		}
+		if (!hasNote)
+		{
+			notificationManager.showNotification("There aren't any notes to play past this point!", ERROR);
+			return;
+		}
+
+		if (song.timingPoints.length == 0)
+		{
+			notificationManager.showNotification("A timing point must be added to your map before test playing!", ERROR);
+			return;
+		}
+
+		save();
+		FlxG.switchState(new SongEditorPlayState(song, time));
+	}
+
 	function handleInput()
 	{
 		if (!checkAllowInput())

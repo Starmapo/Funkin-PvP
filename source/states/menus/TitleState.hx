@@ -55,8 +55,7 @@ class TitleState extends FNFState
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playMenuMusic(initialized ? 1 : 0);
-			if (!initialized)
-				FlxG.sound.music.stop();
+			FlxG.sound.music.stop();
 		}
 
 		getIntroText();
@@ -125,6 +124,7 @@ class TitleState extends FNFState
 		}
 		else
 		{
+			FlxG.sound.music.play();
 			startIntro();
 		}
 

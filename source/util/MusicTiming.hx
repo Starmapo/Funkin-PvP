@@ -140,16 +140,7 @@ class MusicTiming implements IFlxDestroyable
 		if (onBeatHit != null)
 			this.onBeatHit.add(onBeatHit);
 
-		if (music.playing)
-		{
-			hasStarted = true;
-			time = music.time;
-			resyncExtraMusic();
-			updateAudioPosition();
-			updateCurStep();
-		}
-		else
-			time = -startDelay * music.pitch;
+		time = -startDelay * music.pitch;
 	}
 
 	public function update(elapsed:Float)
