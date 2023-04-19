@@ -13,6 +13,8 @@ class Receptor extends AnimatedSprite
 	public var lane(default, null):Int;
 	public var skin(default, null):NoteSkin;
 	public var alphaTween(default, null):FlxTween;
+	public var staticWidth:Float;
+	public var staticHeight:Float;
 
 	public function new(x:Float = 0, y:Float = 0, lane:Int = 0, ?skin:NoteSkin)
 	{
@@ -33,6 +35,10 @@ class Receptor extends AnimatedSprite
 				fps: data.staticFPS,
 				offset: data.staticOffset
 			}, true);
+			updateHitbox();
+			staticWidth = width;
+			staticHeight = height;
+
 			addAnim({
 				name: 'pressed',
 				atlasName: data.pressedAnim,
@@ -40,6 +46,7 @@ class Receptor extends AnimatedSprite
 				loop: false,
 				offset: data.pressedOffset
 			});
+
 			addAnim({
 				name: 'confirm',
 				atlasName: data.confirmAnim,
@@ -56,9 +63,7 @@ class Receptor extends AnimatedSprite
 	override public function animPlayed(name:String)
 	{
 		if (skin.receptorsCenterAnimation)
-		{
-			centerOffsets();
-		}
+			offset.add((width - staticWidth) * 0.5, (height - staticHeight) * 0.5);
 	}
 
 	public function startAlphaTween(alpha:Float, duration:Float = 1, ?options:TweenOptions)

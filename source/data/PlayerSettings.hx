@@ -177,9 +177,7 @@ class PlayerSettings
 				}
 			}
 			if (!foundGamepad)
-			{
 				playerConfigs.push(createDefaultConfig(NONE, defaultNoControls.copy()));
-			}
 
 			Settings.playerConfigs = playerConfigs;
 			Settings.saveData();

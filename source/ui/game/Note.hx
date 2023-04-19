@@ -14,18 +14,16 @@ class Note extends FlxSpriteGroup
 	public var currentlyBeingHeld:Bool = false;
 	public var info:NoteInfo;
 	public var tint:FlxColor;
-	public var hitPosition:Float;
-	public var holdEndHitPosition:Float;
 	public var initialTrackPosition:Float;
 	public var endTrackPosition:Float;
 	public var earliestTrackPosition:Float;
 	public var latestTrackPosition:Float;
+	public var head:AnimatedSprite;
+	public var body:AnimatedSprite;
+	public var tail:AnimatedSprite;
 
 	var manager:NoteManager;
 	var playfield:Playfield;
-	var head:AnimatedSprite;
-	var body:AnimatedSprite;
-	var tail:AnimatedSprite;
 	var noteSkin:NoteSkin;
 	var config:PlayerConfig;
 	var bodyOffset:Float;
@@ -48,7 +46,6 @@ class Note extends FlxSpriteGroup
 	public function initializeObject(info:NoteInfo)
 	{
 		this.info = info;
-		hitPosition = playfield.receptors.members[info.playerLane].y;
 
 		tint = FlxColor.WHITE;
 
@@ -104,6 +101,9 @@ class Note extends FlxSpriteGroup
 
 	public function updateSpritePositions(offset:Float, curTime:Float)
 	{
+		x = playfield.receptors.members[info.playerLane].x;
+
+		var hitPosition = playfield.receptors.members[info.playerLane].y;
 		var spritePosition;
 		if (currentlyBeingHeld)
 		{
@@ -111,33 +111,34 @@ class Note extends FlxSpriteGroup
 			if (curTime > info.startTime)
 				spritePosition = hitPosition;
 			else
-				spritePosition = getSpritePosition(offset, initialTrackPosition);
+				spritePosition = hitPosition + getSpritePosition(offset, initialTrackPosition);
 		}
 		else
-			spritePosition = getSpritePosition(offset, initialTrackPosition);
+			spritePosition = hitPosition + getSpritePosition(offset, initialTrackPosition);
 
-		head.y = spritePosition;
+		y = spritePosition;
 
 		if (!info.isLongNote)
 			return;
 
 		body.setGraphicSize(Std.int(body.width), currentBodySize);
+		body.updateHitbox();
+
 		var earliestSpritePosition = getSpritePosition(offset, earliestTrackPosition);
 		if (config.downScroll)
 		{
-			body.y = earliestSpritePosition + bodyOffset - body.height;
+			body.y = hitPosition + earliestSpritePosition + bodyOffset - body.height;
 			tail.y = body.y - tail.height;
 		}
 		else
 		{
-			body.y = earliestSpritePosition + bodyOffset;
+			body.y = hitPosition + earliestSpritePosition + bodyOffset;
 			tail.y = body.y + body.height;
 		}
 
 		if (currentBodySize + longNoteSizeDifference <= head.height / 2
 			|| currentBodySize <= 0
-			|| curTime >= info.endTime
-			&& currentlyBeingHeld)
+			|| (curTime >= info.endTime && currentlyBeingHeld))
 			tail.visible = body.visible = false;
 	}
 
@@ -166,7 +167,6 @@ class Note extends FlxSpriteGroup
 		head.updateHitbox();
 		bodyOffset = head.height / 2;
 		longNoteSizeDifference = head.height / 2;
-		add(head);
 
 		body = new AnimatedSprite();
 		body.frames = frames;
@@ -178,7 +178,7 @@ class Note extends FlxSpriteGroup
 		}, true);
 		body.scale.copyFrom(head.scale);
 		body.updateHitbox();
-		add(body);
+		body.x = (head.width / 2) - (body.width / 2);
 
 		tail = new AnimatedSprite();
 		tail.frames = frames;
@@ -191,11 +191,15 @@ class Note extends FlxSpriteGroup
 		tail.antialiasing = noteSkin.antialiasing;
 		tail.scale.copyFrom(head.scale);
 		tail.updateHitbox();
+		tail.x = (head.width / 2) - (tail.width / 2);
+
+		add(body);
 		add(tail);
+		add(head);
 	}
 
 	function getSpritePosition(offset:Float, initialPos:Float)
 	{
-		return hitPosition + ((initialPos - offset) * (config.downScroll ? -manager.scrollSpeed : manager.scrollSpeed));
+		return ((initialPos - offset) * (config.downScroll ? -manager.scrollSpeed : manager.scrollSpeed));
 	}
 }

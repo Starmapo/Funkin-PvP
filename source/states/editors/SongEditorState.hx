@@ -89,7 +89,7 @@ class SongEditorState extends FNFState
 	{
 		super();
 		if (song == null)
-			song = Song.loadSong('mods/fnf/songs/Tutorial/Hard.json');
+			song = Song.loadSong('mods/fnf/songs/Die Batsards/Normal.json');
 		this.song = song;
 	}
 
@@ -227,22 +227,19 @@ class SongEditorState extends FNFState
 
 		if (inst.playing)
 		{
-			var playedNotes = 0;
-			final maxNotes = 1;
+			var playedNote = [false, false];
 			for (i in hitsoundNoteIndex...song.notes.length)
 			{
 				var note = song.notes[i];
 				if (inst.time >= note.startTime)
 				{
 					if (Settings.editorHitsoundVolume.value > 0
-						&& playedNotes < maxNotes
+						&& !playedNote[note.player]
 						&& ((note.player == 0 && Settings.editorOpponentHitsounds.value)
 							|| (note.player == 1 && Settings.editorBFHitsounds.value)))
 					{
-						var hitsound = FlxG.sound.load(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
-						hitsound.pan = (note.player == 0 ? -1 : 1);
-						hitsound.play();
-						playedNotes++;
+						FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value).pan = (note.player == 0 ? -1 : 1);
+						playedNote[note.player] = true;
 					}
 					hitsoundNoteIndex = i + 1;
 				}

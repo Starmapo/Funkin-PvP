@@ -1,6 +1,8 @@
 package data.game;
 
 import data.song.Song;
+import flixel.util.FlxSignal.FlxTypedSignal;
+import ui.game.Note;
 import ui.game.Playfield;
 import util.MusicTiming;
 
@@ -10,6 +12,12 @@ class GameplayRuleset
 	public var inputManagers:Array<InputManager> = [];
 	public var playfields:Array<Playfield> = [];
 	public var noteManagers:Array<NoteManager> = [];
+	public var lanePressed:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
+	public var ghostTap:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
+	public var noteHit:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
+	public var noteMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
+	public var noteReleased:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
+	public var noteReleaseMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 
 	var song:Song;
 
@@ -28,10 +36,18 @@ class GameplayRuleset
 		}
 	}
 
-	public function update()
+	public function update(elapsed:Float)
 	{
 		for (manager in noteManagers)
 			manager.update();
+		for (playfield in playfields)
+			playfield.update(elapsed);
+	}
+
+	public function updateCurrentTrackPosition()
+	{
+		for (manager in noteManagers)
+			manager.updateCurrentTrackPosition();
 	}
 
 	public function handleInput(elapsed:Float)

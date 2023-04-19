@@ -20,23 +20,24 @@ class Playfield extends FlxGroup
 				receptors: [
 					{
 						staticAnim: 'arrow static instance 1',
-						pressedAnim: 'left press',
-						confirmAnim: 'left confirm'
+						pressedAnim: 'left press instance 1',
+						confirmAnim: 'left confirm instance 1'
 					},
 					{
 						staticAnim: 'arrow static instance 2',
-						pressedAnim: 'down press',
-						confirmAnim: 'down confirm'
+						pressedAnim: 'down press instance 1',
+						confirmAnim: 'down confirm instance 1',
+						confirmOffset: [-3, 0]
 					},
 					{
 						staticAnim: 'arrow static instance 4',
-						pressedAnim: 'up press',
-						confirmAnim: 'up confirm'
+						pressedAnim: 'up press instance 1',
+						confirmAnim: 'up confirm instance 1'
 					},
 					{
 						staticAnim: 'arrow static instance 3',
-						pressedAnim: 'right press',
-						confirmAnim: 'right confirm'
+						pressedAnim: 'right press instance 1',
+						confirmAnim: 'right confirm instance 1'
 					}
 				],
 				receptorsCenterAnimation: true,
@@ -76,6 +77,33 @@ class Playfield extends FlxGroup
 		playerConfig = FlxG.save.data.playerConfigs[player];
 
 		initReceptors();
+	}
+
+	public function onLanePressed(lane:Int)
+	{
+		receptors.members[lane].playAnim('pressed');
+	}
+
+	public function onNoteHit(note:Note)
+	{
+		var receptor = receptors.members[note.info.playerLane];
+		receptor.animation.finishCallback = null;
+
+		receptor.playAnim('confirm', true);
+
+		receptor.animation.finishCallback = function(anim)
+		{
+			if (anim == 'confirm')
+			{
+				if (note.currentlyBeingHeld)
+					receptor.playAnim('confirm', true);
+				else
+				{
+					receptor.playAnim('static', true);
+					receptor.animation.finishCallback = null;
+				}
+			}
+		}
 	}
 
 	function initReceptors()

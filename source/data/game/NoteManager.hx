@@ -2,6 +2,7 @@ package data.game;
 
 import data.song.NoteInfo;
 import data.song.Song;
+import flixel.FlxG;
 import flixel.math.FlxMath;
 import ui.game.Note;
 
@@ -51,7 +52,6 @@ class NoteManager
 
 	public function update()
 	{
-		updateCurrentTrackPosition();
 		updateAndScoreActiveObjects();
 		updateAndScoreHeldObjects();
 		updateDeadObjects();
@@ -77,6 +77,8 @@ class NoteManager
 		{
 			if (time < song.scrollVelocities[i].startTime)
 				break;
+
+			i++;
 		}
 
 		return getPositionFromTimeIndex(time, i);
@@ -122,10 +124,16 @@ class NoteManager
 		{
 			var multiplier = song.scrollVelocities[i].multipliers[player];
 			if (multiplier == 0)
+			{
+				i++;
 				continue;
+			}
 
 			if (forward == (multiplier > 0))
+			{
+				i++;
 				continue;
+			}
 
 			forward = multiplier > 0;
 			changes.push({
@@ -169,6 +177,16 @@ class NoteManager
 		return song.scrollVelocities[i].multipliers[player] < 0;
 	}
 
+	public function getClosestTap(lane:Int)
+	{
+		return activeNoteLanes[lane].length > 0 ? activeNoteLanes[lane][0] : null;
+	}
+
+	public function getClosestRelease(lane:Int)
+	{
+		return heldLongNoteLanes[lane].length > 0 ? heldLongNoteLanes[lane][0] : null;
+	}
+
 	function updatePoolingPositions()
 	{
 		recycleObjectPositionTreshold = objectPositionMagnitude / scrollSpeed;
@@ -190,7 +208,7 @@ class NoteManager
 		}
 	}
 
-	function updateCurrentTrackPosition()
+	public function updateCurrentTrackPosition()
 	{
 		currentAudioPosition = currentVisualPosition = ruleset.timing.audioPosition;
 		while (currentSvIndex < song.scrollVelocities.length && currentVisualPosition >= song.scrollVelocities[currentSvIndex].startTime)
@@ -244,28 +262,48 @@ class NoteManager
 		}
 	}
 
-	function createPoolObject(info:NoteInfo)
+	public function createPoolObject(info:NoteInfo)
 	{
 		activeNoteLanes[info.playerLane].push(new Note(info, this, ruleset.playfields[player]));
 	}
 
-	function killPoolObject(note:Note)
+	public function killPoolObject(note:Note)
 	{
 		note.killNote();
-		deadNoteLanes[note.info.lane].push(note);
+		deadNoteLanes[note.info.playerLane].push(note);
 	}
 
-	function recyclePoolObject(note:Note)
+	public function killHoldPoolObject(note:Note, setTint:Bool = true)
 	{
-		var lane = noteQueueLanes[note.info.lane];
+		note.initialTrackPosition = getPositionFromTime(currentVisualPosition);
+		note.currentlyBeingHeld = false;
+		note.updateLongNoteSize(currentTrackPosition, currentVisualPosition);
+
+		if (setTint)
+			note.killNote();
+
+		deadNoteLanes[note.info.playerLane].push(note);
+	}
+
+	public function recyclePoolObject(note:Note)
+	{
+		note.currentlyBeingHeld = false;
+		var lane = noteQueueLanes[note.info.playerLane];
 		if (lane.length > 0)
 		{
 			var info = lane.shift();
 			note.initializeObject(info);
-			activeNoteLanes[info.lane].push(note);
+			activeNoteLanes[info.playerLane].push(note);
 		}
 		else
 			note.destroy();
+	}
+
+	public function changePoolObjectStatusToHeld(note:Note)
+	{
+		heldLongNoteLanes[note.info.playerLane].push(note);
+		note.currentlyBeingHeld = true;
+		note.head.visible = false;
 	}
 
 	function updateAndScoreActiveObjects()
@@ -283,7 +321,10 @@ class NoteManager
 		for (lane in activeNoteLanes)
 		{
 			for (note in lane)
+			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
+				note.update(FlxG.elapsed);
+			}
 		}
 	}
 
@@ -321,7 +362,10 @@ class NoteManager
 		for (lane in heldLongNoteLanes)
 		{
 			for (note in lane)
+			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
+				note.update(FlxG.elapsed);
+			}
 		}
 	}
 
@@ -359,7 +403,10 @@ class NoteManager
 		for (lane in deadNoteLanes)
 		{
 			for (note in lane)
+			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
+				note.update(FlxG.elapsed);
+			}
 		}
 	}
 

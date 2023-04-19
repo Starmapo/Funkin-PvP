@@ -91,6 +91,12 @@ class Settings
 		FlxG.sound.defaultSoundGroup.volume = effectVolume;
 
 		FlxG.autoPause = autoPause;
+
+		for (config in playerConfigs)
+		{
+			if (config.scrollSpeed == null)
+				config.scrollSpeed = 0.75;
+		}
 	}
 
 	public static function saveData()

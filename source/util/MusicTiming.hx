@@ -183,10 +183,10 @@ class MusicTiming implements IFlxDestroyable
 	**/
 	public function setTime(newTime:Float)
 	{
+		time = newTime;
 		music.time = newTime;
 		for (extra in extraMusic)
 			extra.time = newTime;
-		time = newTime;
 		updateAudioPosition();
 		updateCurStep();
 	}

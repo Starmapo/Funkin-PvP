@@ -38,23 +38,15 @@ class AnimatedSprite extends FlxSprite
 		data = resolveAnimData(data);
 
 		if (data.indices != null && data.indices.length > 0)
-		{
 			animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
-		}
 		else
-		{
 			animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
-		}
 
 		if (data.offset != null && data.offset.length >= 2)
-		{
 			offsets.set(data.name, data.offset.copy());
-		}
 
 		if (baseAnim)
-		{
 			playAnim(data.name, true);
-		}
 	}
 
 	/**
@@ -85,9 +77,7 @@ class AnimatedSprite extends FlxSprite
 		updateHitbox();
 		var animOffset = offsets.get(animation.name);
 		if (animOffset != null)
-		{
 			offset.add(animOffset[0], animOffset[1]);
-		}
 	}
 
 	function resolveAnimData(data:AnimData)
