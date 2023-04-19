@@ -84,6 +84,13 @@ class Playfield extends FlxGroup
 		receptors.members[lane].playAnim('pressed');
 	}
 
+	public function onLaneReleased(lane:Int)
+	{
+		var receptor = receptors.members[lane];
+		receptor.animation.finishCallback = null;
+		receptor.playAnim('static');
+	}
+
 	public function onNoteHit(note:Note)
 	{
 		var receptor = receptors.members[note.info.playerLane];

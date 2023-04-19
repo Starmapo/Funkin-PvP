@@ -4,9 +4,11 @@ import data.game.GameplayRuleset;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import ui.game.Note;
+import ui.game.PlayerStatsDisplay;
 import util.MusicTiming;
 
 class SongEditorPlayState extends FNFState
@@ -23,6 +25,7 @@ class SongEditorPlayState extends FNFState
 	var isPaused:Bool = false;
 	var isPlayComplete:Bool = false;
 	var bg:FlxSprite;
+	var statsDisplay:FlxTypedGroup<PlayerStatsDisplay>;
 
 	public function new(map:Song, player:Int, startTime:Float = 0)
 	{
@@ -75,7 +78,12 @@ class SongEditorPlayState extends FNFState
 		}
 
 		ruleset.lanePressed.add(onLanePressed);
+		ruleset.laneReleased.add(onLaneReleased);
 		ruleset.noteHit.add(onNoteHit);
+
+		statsDisplay = new FlxTypedGroup();
+		for (i in 0...2)
+			statsDisplay.add(new PlayerStatsDisplay(i, ruleset.scoreProcessors[i]));
 
 		super.create();
 	}
@@ -89,6 +97,7 @@ class SongEditorPlayState extends FNFState
 		handleInput(elapsed);
 
 		ruleset.update(elapsed);
+		statsDisplay.update(elapsed);
 	}
 
 	override function draw()
@@ -98,6 +107,10 @@ class SongEditorPlayState extends FNFState
 			playfield.draw();
 		for (manager in ruleset.noteManagers)
 			manager.draw();
+		statsDisplay.draw();
+
+		if (_trans != null)
+			_trans.draw();
 	}
 
 	function handleInput(elapsed:Float)
@@ -140,6 +153,11 @@ class SongEditorPlayState extends FNFState
 	function onLanePressed(lane:Int, player:Int)
 	{
 		ruleset.playfields[player].onLanePressed(lane);
+	}
+
+	function onLaneReleased(lane:Int, player:Int)
+	{
+		ruleset.playfields[player].onLaneReleased(lane);
 	}
 
 	function onNoteHit(note:Note)

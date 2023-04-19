@@ -80,6 +80,7 @@ class InputManager
 			}
 			else
 			{
+				ruleset.laneReleased.dispatch(lane, player);
 				var note = manager.getClosestRelease(lane);
 				if (note != null)
 					handleKeyRelease(manager, note);

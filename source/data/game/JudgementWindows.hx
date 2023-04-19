@@ -2,12 +2,12 @@ package data.game;
 
 class JudgementWindows
 {
-	public var marvelous:Float = 18;
-	public var sick:Float = 43;
-	public var good:Float = 76;
-	public var bad:Float = 106;
-	public var shit:Float = 127;
-	public var miss:Float = 164;
+	public var marvelous:Float = 23;
+	public var sick:Float = 57;
+	public var good:Float = 101;
+	public var bad:Float = 141;
+	public var shit:Float = 169;
+	public var miss:Float = 218;
 	public var comboBreakJudgement:Judgement = MISS;
 
 	public function new() {}
