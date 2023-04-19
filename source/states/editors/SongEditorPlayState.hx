@@ -3,6 +3,7 @@ package states.editors;
 import data.game.GameplayRuleset;
 import data.song.Song;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.sound.FlxSound;
 import util.MusicTiming;
 
@@ -19,6 +20,7 @@ class SongEditorPlayState extends FNFState
 	var startDelay:Int = 3000;
 	var isPaused:Bool = false;
 	var isPlayComplete:Bool = false;
+	var bg:FlxSprite;
 
 	public function new(map:Song, player:Int, startTime:Float = 0)
 	{
@@ -27,6 +29,8 @@ class SongEditorPlayState extends FNFState
 		originalSong = map;
 		this.player = player;
 		this.startTime = startTime;
+
+		persistentUpdate = true;
 
 		var i = song.notes.length - 1;
 		while (i >= 0)
@@ -44,9 +48,9 @@ class SongEditorPlayState extends FNFState
 		else
 			vocals = new FlxSound();
 
-		timing = new MusicTiming(inst, song.timingPoints, true, startDelay, null, [vocals]);
+		timing = new MusicTiming(inst, song.timingPoints, false, startDelay, null, [vocals]);
 
-		var bg = CoolUtil.createMenuBG('menuBGDesat');
+		bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
 		add(bg);
 
@@ -58,6 +62,17 @@ class SongEditorPlayState extends FNFState
 		timing.update(elapsed);
 
 		handleInput(elapsed);
+
+		ruleset.update();
+	}
+
+	override function draw()
+	{
+		bg.draw();
+		for (playfield in ruleset.playfields)
+			playfield.draw();
+		for (manager in ruleset.noteManagers)
+			manager.draw();
 	}
 
 	function handleInput(elapsed:Float)

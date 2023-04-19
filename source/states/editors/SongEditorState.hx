@@ -239,8 +239,9 @@ class SongEditorState extends FNFState
 						&& ((note.player == 0 && Settings.editorOpponentHitsounds.value)
 							|| (note.player == 1 && Settings.editorBFHitsounds.value)))
 					{
-						var hitsound = FlxG.sound.play(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
-						hitsound.pan = (note.player == 0 ? -0.5 : 0.5);
+						var hitsound = FlxG.sound.load(Paths.getSound('editor/hitsound'), Settings.editorHitsoundVolume.value);
+						hitsound.pan = (note.player == 0 ? -1 : 1);
+						hitsound.play();
 						playedNotes++;
 					}
 					hitsoundNoteIndex = i + 1;
@@ -394,7 +395,7 @@ class SongEditorState extends FNFState
 		}
 
 		save();
-		FlxG.switchState(new SongEditorPlayState(song, time));
+		FlxG.switchState(new SongEditorPlayState(song, player, time));
 	}
 
 	function handleInput()
@@ -567,13 +568,9 @@ class SongEditorState extends FNFState
 		var index = beatSnapIndex;
 
 		if (forward)
-		{
 			beatSnap.value = index + 1 < availableBeatSnaps.length ? availableBeatSnaps[index + 1] : availableBeatSnaps[0];
-		}
 		else
-		{
 			beatSnap.value = index - 1 >= 0 ? availableBeatSnaps[index - 1] : availableBeatSnaps[availableBeatSnaps.length - 1];
-		}
 
 		editPanel.updateBeatSnapDropdown();
 	}

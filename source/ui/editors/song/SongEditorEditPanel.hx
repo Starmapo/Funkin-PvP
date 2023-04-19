@@ -498,18 +498,21 @@ class SongEditorEditPanel extends EditorPanel
 
 		var playtestP1Button = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Playtest P1', function()
 		{
-			state.save();
+			state.exitToTestPlay(0, true);
 		});
 
 		var playtestP2Button = new FlxUIButton(playtestP1Button.x + playtestP1Button.width + spacing, saveButton.y + saveButton.height + spacing,
-			'Playtest P2', function() {});
+			'Playtest P2', function()
+		{
+			state.exitToTestPlay(1, true);
+		});
 
 		playtestP1Button.x = (width - CoolUtil.getArrayWidth([playtestP1Button, playtestP2Button])) / 2;
 		playtestP2Button.x = playtestP1Button.x + playtestP1Button.width + spacing;
 		tab.add(playtestP1Button);
 		tab.add(playtestP2Button);
 
-		var applyOffsetButton = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Apply Offset to Song', function()
+		var applyOffsetButton = new FlxUIButton(0, playtestP2Button.y + playtestP2Button.height + spacing, 'Apply Offset to Song', function()
 		{
 			state.openSubState(applyOffsetPrompt);
 		});

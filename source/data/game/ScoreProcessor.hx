@@ -1,5 +1,6 @@
 package data.game;
 
+import data.game.HitStat.KeyPressType;
 import data.song.Song;
 import flixel.math.FlxMath;
 
@@ -20,11 +21,14 @@ class ScoreProcessor
 	public var judgementScoreWeighting:Map<Judgement, Int> = [MARV => 100, SICK => 50, GOOD => 25, BAD => 10, SHIT => 5, MISS => 0];
 	public var judgementHealthWeighting:Map<Judgement, Float> = [MARV => 0.5, SICK => 0.4, GOOD => 0.2, BAD => -3, SHIT => -4.5, MISS => -6];
 	public var judgementAccuracyWeighting:Map<Judgement, Float> = [MARV => 100, SICK => 98.25, GOOD => 65, BAD => 25, SHIT => -100, MISS => -50];
+	public var windowReleaseMultiplier:Map<Judgement, Float> = [MARV => 1.5, SICK => 1.5, GOOD => 1.5, BAD => 1.5, SHIT => 1.5];
+	public var totalJudgementCount(get, never):Int;
 
 	var song:Song;
 	var playbackRate:Float;
 	var noFail:Bool;
 	var autoplay:Bool;
+	var noMiss:Bool;
 	var totalJudgements:Int;
 	var summedScore:Int;
 	var multiplierCount:Int;
@@ -34,13 +38,15 @@ class ScoreProcessor
 	var maxMultiplierCount(get, never):Int;
 	var scoreCount:Int;
 
-	public function new(song:Song, player:Int, ?windows:JudgementWindows, playbackRate:Float = 1, noFail:Bool = false, autoplay:Bool = false)
+	public function new(song:Song, player:Int, ?windows:JudgementWindows, playbackRate:Float = 1, noFail:Bool = false, autoplay:Bool = false,
+			noMiss:Bool = false)
 	{
 		this.song = song;
 		this.player = player;
 		this.playbackRate = playbackRate;
 		this.noFail = noFail;
 		this.autoplay = autoplay;
+		this.noMiss = noMiss;
 
 		initializeJudgementWindows(windows);
 		initializeMods();
@@ -48,6 +54,90 @@ class ScoreProcessor
 		totalJudgements = getTotalJudgementCount();
 		summedScore = calculateSummedScore();
 		initializeHealthWeighting();
+	}
+
+	public function calculateScore(hitDifference:Float, keyPressType:KeyPressType, calculateAllStats:Bool = true)
+	{
+		var absoluteDifference:Float;
+		if (hitDifference != FlxMath.MIN_VALUE_FLOAT)
+			absoluteDifference = Math.abs(hitDifference);
+		else
+			return Judgement.MISS;
+
+		var judgement = Judgement.GHOST;
+
+		for (j => window in judgementWindow)
+		{
+			if (keyPressType == RELEASE && j == MISS)
+				break;
+
+			var window = keyPressType == RELEASE ? window * windowReleaseMultiplier[j] : window;
+			if (absoluteDifference > window)
+				continue;
+
+			if (keyPressType == RELEASE && j == SHIT)
+			{
+				judgement = BAD;
+				break;
+			}
+
+			judgement = j;
+			break;
+		}
+
+		if (judgement == GHOST)
+			return judgement;
+
+		if (calculateAllStats)
+			registerScore(judgement, keyPressType == RELEASE);
+
+		return judgement;
+	}
+
+	public function registerScore(judgement:Judgement, isLongNoteRelease:Bool = false)
+	{
+		currentJudgements[judgement]++;
+
+		accuracy = calculateAccuracy();
+
+		var comboBreakJudgement = windows.comboBreakJudgement;
+		if (comboBreakJudgement == MARV || comboBreakJudgement == GHOST)
+			comboBreakJudgement = MISS;
+
+		if ((judgement : Int) < (comboBreakJudgement : Int))
+		{
+			if (judgement == GOOD)
+				multiplierCount -= multiplierCountToIncreaseIndex;
+			else
+				multiplierCount++;
+
+			combo++;
+
+			if (combo > maxCombo)
+				maxCombo = combo;
+		}
+		else
+		{
+			multiplierCount -= multiplierCountToIncreaseIndex * 2;
+			combo = 0;
+
+			if (noMiss)
+			{
+				health = 0;
+				forceFail = true;
+				return;
+			}
+		}
+
+		multiplierCount = FlxMath.boundInt(multiplierCount, 0, maxMultiplierCount);
+
+		multiplierIndex = Math.floor(multiplierCount / multiplierCountToIncreaseIndex);
+		scoreCount += judgementScoreWeighting[judgement] + multiplierIndex * multiplierCountToIncreaseIndex;
+
+		final standardizedMaxScore = 1000000;
+		score = Std.int(standardizedMaxScore * (scoreCount / summedScore));
+
+		health = FlxMath.bound(health + judgementHealthWeighting[judgement], 0, 100);
 	}
 
 	function initializeJudgementWindows(?windows:JudgementWindows)
@@ -126,6 +216,16 @@ class ScoreProcessor
 		}
 	}
 
+	function calculateAccuracy()
+	{
+		var accuracy:Float = 0;
+
+		for (judgement => value in currentJudgements)
+			accuracy += value * judgementAccuracyWeighting[judgement];
+
+		return Math.max(accuracy / (totalJudgementCount * judgementAccuracyWeighting[Judgement.MARV]), 0) * judgementAccuracyWeighting[Judgement.MARV];
+	}
+
 	function get_failed()
 	{
 		return health <= 0 && (!noFail || forceFail);
@@ -134,5 +234,13 @@ class ScoreProcessor
 	function get_maxMultiplierCount()
 	{
 		return multiplierMaxIndex * multiplierCountToIncreaseIndex;
+	}
+
+	function get_totalJudgementCount()
+	{
+		var sum = 0;
+		for (_ => value in currentJudgements)
+			sum += value;
+		return sum;
 	}
 }

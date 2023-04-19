@@ -9,7 +9,7 @@ class GameplayRuleset
 	public var scoreProcessors:Array<ScoreProcessor> = [];
 	public var inputManagers:Array<InputManager> = [];
 	public var playfields:Array<Playfield> = [];
-	public var noteManagers:Array<NoteManager>;
+	public var noteManagers:Array<NoteManager> = [];
 
 	var song:Song;
 
@@ -26,6 +26,12 @@ class GameplayRuleset
 			playfields.push(new Playfield(i));
 			noteManagers.push(new NoteManager(this, song, i));
 		}
+	}
+
+	public function update()
+	{
+		for (manager in noteManagers)
+			manager.update();
 	}
 
 	public function handleInput(elapsed:Float)

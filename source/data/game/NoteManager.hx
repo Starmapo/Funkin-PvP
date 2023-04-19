@@ -2,6 +2,7 @@ package data.game;
 
 import data.song.NoteInfo;
 import data.song.Song;
+import flixel.math.FlxMath;
 import ui.game.Note;
 
 class NoteManager
@@ -12,6 +13,10 @@ class NoteManager
 	public var currentTrackPosition:Float = 0;
 	public var config:PlayerConfig;
 	public var scrollSpeed(get, never):Float;
+	public var noteQueueLanes:Array<Array<NoteInfo>> = [];
+	public var activeNoteLanes:Array<Array<Note>> = [];
+	public var deadNoteLanes:Array<Array<Note>> = [];
+	public var heldLongNoteLanes:Array<Array<Note>> = [];
 
 	var ruleset:GameplayRuleset;
 	var song:Song;
@@ -25,10 +30,6 @@ class NoteManager
 	var objectPositionMagnitude:Int = 3000;
 	var velocityPositionMarkers:Array<Float> = [];
 	var currentSvIndex:Int = 0;
-	var noteQueueLanes:Array<Array<NoteInfo>> = [];
-	var activeNoteLanes:Array<Array<Note>> = [];
-	var deadNoteLanes:Array<Array<Note>> = [];
-	var heldLongNoteLanes:Array<Array<Note>> = [];
 	var initialPoolSizePerLane:Int = 2;
 
 	public function new(ruleset:GameplayRuleset, song:Song, player:Int, playbackRate:Float = 1, noSliderVelocity:Bool = false)
@@ -46,6 +47,27 @@ class NoteManager
 		updateCurrentTrackPosition();
 		initializeInfoPools();
 		initializeObjectPool();
+	}
+
+	public function update()
+	{
+		updateCurrentTrackPosition();
+		updateAndScoreActiveObjects();
+		updateAndScoreHeldObjects();
+		updateDeadObjects();
+	}
+
+	public function draw()
+	{
+		var groups = [activeNoteLanes, deadNoteLanes, heldLongNoteLanes];
+		for (lanes in groups)
+		{
+			for (lane in lanes)
+			{
+				for (note in lane)
+					note.draw();
+			}
+		}
 	}
 
 	public function getPositionFromTime(time:Float)
@@ -117,6 +139,36 @@ class NoteManager
 		return changes;
 	}
 
+	public function isSVNegative(time:Float)
+	{
+		if (noSliderVelocity)
+			return false;
+
+		var i = 0;
+		while (i < song.scrollVelocities.length)
+		{
+			if (time < song.scrollVelocities[i].startTime)
+				break;
+
+			i++;
+		}
+
+		i--;
+
+		while (i >= 0)
+		{
+			if (song.scrollVelocities[i].multipliers[player] != 0)
+				break;
+
+			i--;
+		}
+
+		if (i == -1)
+			return song.initialScrollVelocity < 0;
+
+		return song.scrollVelocities[i].multipliers[player] < 0;
+	}
+
 	function updatePoolingPositions()
 	{
 		recycleObjectPositionTreshold = objectPositionMagnitude / scrollSpeed;
@@ -160,6 +212,7 @@ class NoteManager
 		{
 			if (note.player != player)
 				continue;
+
 			if (skipObjects)
 			{
 				if (!note.isLongNote)
@@ -193,7 +246,121 @@ class NoteManager
 
 	function createPoolObject(info:NoteInfo)
 	{
-		activeNoteLanes[info.lane].push(new Note(info, this, ruleset.playfields[player]));
+		activeNoteLanes[info.playerLane].push(new Note(info, this, ruleset.playfields[player]));
+	}
+
+	function killPoolObject(note:Note)
+	{
+		note.killNote();
+		deadNoteLanes[note.info.lane].push(note);
+	}
+
+	function recyclePoolObject(note:Note)
+	{
+		var lane = noteQueueLanes[note.info.lane];
+		if (lane.length > 0)
+		{
+			var info = lane.shift();
+			note.initializeObject(info);
+			activeNoteLanes[info.lane].push(note);
+		}
+		else
+			note.destroy();
+	}
+
+	function updateAndScoreActiveObjects()
+	{
+		for (lane in noteQueueLanes)
+		{
+			while (lane.length > 0
+				&& ((Math.abs(currentTrackPosition - getPositionFromTime(lane[0].startTime)) < createObjectPositionTreshold)
+					|| (lane[0].startTime - currentAudioPosition < createObjectTimeTreshold)))
+				createPoolObject(lane.shift());
+		}
+
+		scoreActiveObjects();
+
+		for (lane in activeNoteLanes)
+		{
+			for (note in lane)
+				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
+		}
+	}
+
+	function scoreActiveObjects()
+	{
+		for (lane in activeNoteLanes)
+		{
+			while (lane.length > 0
+				&& currentAudioPosition > lane[0].info.startTime + ruleset.scoreProcessors[player].judgementWindow[Judgement.SHIT])
+			{
+				var note = lane.shift();
+
+				var stat = new HitStat(MISS, NONE, note.info, note.info.startTime, MISS, FlxMath.MIN_VALUE_FLOAT, ruleset.scoreProcessors[player].accuracy,
+					ruleset.scoreProcessors[player].health);
+				ruleset.scoreProcessors[player].stats.push(stat);
+
+				ruleset.scoreProcessors[player].registerScore(MISS);
+
+				if (note.info.isLongNote)
+				{
+					killPoolObject(note);
+					ruleset.scoreProcessors[player].registerScore(MISS, true);
+					ruleset.scoreProcessors[player].stats.push(stat);
+				}
+				else
+					killPoolObject(note);
+			}
+		}
+	}
+
+	function updateAndScoreHeldObjects()
+	{
+		scoreHeldObjects();
+
+		for (lane in heldLongNoteLanes)
+		{
+			for (note in lane)
+				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
+		}
+	}
+
+	function scoreHeldObjects()
+	{
+		var window = ruleset.scoreProcessors[player].judgementWindow[Judgement.SHIT] * ruleset.scoreProcessors[player].windowReleaseMultiplier[Judgement.SHIT];
+
+		for (lane in heldLongNoteLanes)
+		{
+			while (lane.length > 0 && currentAudioPosition > lane[0].info.endTime + window)
+			{
+				var note = lane.shift();
+
+				var missedReleaseJudgement = Judgement.BAD;
+
+				var stat = new HitStat(MISS, NONE, note.info, note.info.endTime, missedReleaseJudgement, FlxMath.MIN_VALUE_INT,
+					ruleset.scoreProcessors[player].accuracy, ruleset.scoreProcessors[player].health);
+				ruleset.scoreProcessors[player].stats.push(stat);
+
+				ruleset.scoreProcessors[player].registerScore(missedReleaseJudgement, true);
+
+				recyclePoolObject(note);
+			}
+		}
+	}
+
+	function updateDeadObjects()
+	{
+		for (lane in deadNoteLanes)
+		{
+			while (lane.length > 0 && Math.abs(currentTrackPosition - lane[0].latestTrackPosition) > recycleObjectPositionTreshold)
+				recyclePoolObject(lane.shift());
+		}
+
+		for (lane in deadNoteLanes)
+		{
+			for (note in lane)
+				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
+		}
 	}
 
 	function get_scrollSpeed()

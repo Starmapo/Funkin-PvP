@@ -45,7 +45,7 @@ class InputManager
 			var manager = ruleset.noteManagers[player];
 			if (bind.pressed)
 			{
-				var note = manager.getClosestTap(lane);
+				
 			}
 		}
 	}

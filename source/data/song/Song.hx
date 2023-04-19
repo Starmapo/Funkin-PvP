@@ -785,9 +785,13 @@ class Song extends JsonObject
 			notes: notes,
 			bf: bf,
 			opponent: opponent,
-			gf: gf
+			gf: gf,
+			version: version
 		};
-		return new Song(data);
+		var song = new Song(data);
+		song.directory = directory;
+		song.difficultyName = difficultyName;
+		return song;
 	}
 
 	public function replaceLongNotesWithRegularNotes()

@@ -7,12 +7,14 @@ class HitStat
 	public var type:HitStatType;
 	public var keyPressType:KeyPressType;
 	public var note:NoteInfo;
-	public var songPosition:Int;
+	public var songPosition:Float;
 	public var judgement:Judgement;
-	public var hitDifference:Int;
+	public var hitDifference:Float;
 	public var accuracy:Float;
+	public var health:Float;
 
-	public function new(type:HitStatType, keyPressType:KeyPressType, note:NoteInfo, songPosition:Int, judgement:Judgement, hitDifference:Int, accuracy:Float)
+	public function new(type:HitStatType, keyPressType:KeyPressType, note:NoteInfo, songPosition:Float, judgement:Judgement, hitDifference:Float,
+			accuracy:Float, health:Float)
 	{
 		this.type = type;
 		this.keyPressType = keyPressType;
@@ -21,6 +23,7 @@ class HitStat
 		this.judgement = judgement;
 		this.hitDifference = hitDifference;
 		this.accuracy = accuracy;
+		this.health = health;
 	}
 }
 

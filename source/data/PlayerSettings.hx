@@ -191,7 +191,8 @@ class PlayerSettings
 		return {
 			device: device,
 			controls: controls,
-			downScroll: false
+			downScroll: false,
+			scrollSpeed: 0.75
 		};
 	}
 }
