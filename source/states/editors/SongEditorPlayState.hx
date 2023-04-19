@@ -66,8 +66,13 @@ class SongEditorPlayState extends FNFState
 		add(bg);
 
 		ruleset = new GameplayRuleset(song, timing);
-		for (manager in ruleset.inputManagers)
-			manager.autoplay = true;
+		if (player == 0)
+			ruleset.inputManagers[1].autoplay = true;
+		else
+		{
+			ruleset.inputManagers[0].autoplay = true;
+			ruleset.inputManagers[1].changePlayer(0);
+		}
 
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.noteHit.add(onNoteHit);
@@ -102,13 +107,8 @@ class SongEditorPlayState extends FNFState
 
 		if (!isPlayComplete)
 		{
-			if (FlxG.keys.justPressed.F2)
-			{
-				if (inst.playing)
-					inst.pause();
-
-				FlxG.switchState(new SongEditorState(originalSong));
-			}
+			if (FlxG.keys.justPressed.ESCAPE)
+				exit();
 
 			handleAutoplayInput();
 		}
@@ -126,6 +126,11 @@ class SongEditorPlayState extends FNFState
 	}
 
 	function onSongComplete()
+	{
+		exit();
+	}
+
+	function exit()
 	{
 		inst.stop();
 		vocals.stop();
