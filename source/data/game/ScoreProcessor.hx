@@ -18,7 +18,7 @@ class ScoreProcessor
 	public var windows:JudgementWindows;
 	public var currentJudgements:Map<Judgement, Int> = [MARV => 0, SICK => 0, GOOD => 0, BAD => 0, SHIT => 0, MISS => 0];
 	public var judgementWindow:Map<Judgement, Float> = new Map();
-	public var judgementScoreWeighting:Map<Judgement, Int> = [MARV => 100, SICK => 100, GOOD => 50, BAD => 25, SHIT => 10, MISS => 0];
+	public var judgementScoreWeighting:Map<Judgement, Int> = [MARV => 100, SICK => 50, GOOD => 25, BAD => 10, SHIT => 5, MISS => 0];
 	public var judgementHealthWeighting:Map<Judgement, Float> = [MARV => 0.5, SICK => 0.4, GOOD => 0.2, BAD => 0.1, SHIT => 0, MISS => -3];
 	public var judgementAccuracyWeighting:Map<Judgement, Float> = [MARV => 100, SICK => 100, GOOD => 70, BAD => 40, SHIT => 0, MISS => -50];
 	public var windowReleaseMultiplier:Map<Judgement, Float> = [MARV => 1.5, SICK => 1.5, GOOD => 1.5, BAD => 1.5, SHIT => 1.5];
@@ -110,7 +110,7 @@ class ScoreProcessor
 
 		if ((judgement : Int) < (comboBreakJudgement : Int))
 		{
-			if (judgement == GOOD)
+			if (judgement == BAD || judgement == SHIT)
 				multiplierCount -= multiplierCountToIncreaseIndex;
 			else
 				multiplierCount++;
@@ -171,6 +171,9 @@ class ScoreProcessor
 		var judgements = 0;
 		for (note in song.notes)
 		{
+			if (note.player != player)
+				continue;
+
 			if (note.isLongNote)
 				judgements += 2;
 			else

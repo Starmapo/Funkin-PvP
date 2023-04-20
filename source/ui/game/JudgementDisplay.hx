@@ -10,6 +10,7 @@ class JudgementDisplay extends FlxSprite
 {
 	var player:Int;
 	var noteSkin:NoteSkin;
+	var posTween:FlxTween;
 	var alphaTween:FlxTween;
 
 	public function new(player:Int, noteSkin:NoteSkin)
@@ -38,19 +39,21 @@ class JudgementDisplay extends FlxSprite
 
 		x = (((FlxG.width / 2) - width) / 2) + (FlxG.width / 2) * player;
 		screenCenter(Y);
+		y -= 5;
 
-		acceleration.y = 550;
-		velocity.set(FlxG.random.int(0, -10), FlxG.random.int(-140, -175));
+		if (posTween != null)
+			posTween.cancel();
+		posTween = FlxTween.tween(this, {y: y + 5}, 0.2);
 
 		if (alphaTween != null)
 			alphaTween.cancel();
 		alpha = 1;
-		alphaTween = FlxTween.tween(this, {alpha: 0}, {
+		alphaTween = FlxTween.tween(this, {alpha: 0}, 0.2, {
 			onComplete: function(_)
 			{
 				kill();
 			},
-			startDelay: 0.5
+			startDelay: 0.2
 		});
 	}
 

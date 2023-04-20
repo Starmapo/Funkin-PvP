@@ -69,7 +69,7 @@ class Playfield extends FlxGroup
 				],
 				notesImage: 'notes/NOTE_assets',
 				notesScale: 0.5,
-				judgementsScale: 0.7,
+				judgementsScale: 0.3,
 				antialiasing: true
 			});
 

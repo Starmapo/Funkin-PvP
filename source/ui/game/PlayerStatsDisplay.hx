@@ -26,19 +26,19 @@ class PlayerStatsDisplay extends FlxGroup
 		var pos = 5 + (FlxG.width / 2) * player;
 
 		scoreText = new FlxText(pos, FlxG.height * 0.8, (FlxG.width / 2) - 10);
-		scoreText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		scoreText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(scoreText);
 
 		gradeText = new FlxText(pos, scoreText.y + scoreText.height + 2, (FlxG.width / 2) - 10);
-		gradeText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		gradeText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(gradeText);
 
 		comboText = new FlxText(pos, gradeText.y + gradeText.height + 2, (FlxG.width / 2) - 10);
-		comboText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		comboText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(comboText);
 
 		missText = new FlxText(pos, comboText.y + comboText.height + 2, (FlxG.width / 2) - 10);
-		missText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		missText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(missText);
 	}
 
