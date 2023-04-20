@@ -1,12 +1,14 @@
 package states.editors;
 
 import data.game.GameplayRuleset;
+import data.game.Judgement;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
+import ui.game.JudgementDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
 import util.MusicTiming;
@@ -26,6 +28,7 @@ class SongEditorPlayState extends FNFState
 	var isPlayComplete:Bool = false;
 	var bg:FlxSprite;
 	var statsDisplay:FlxTypedGroup<PlayerStatsDisplay>;
+	var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
 
 	public function new(map:Song, player:Int, startTime:Float = 0)
 	{
@@ -80,6 +83,11 @@ class SongEditorPlayState extends FNFState
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.laneReleased.add(onLaneReleased);
 		ruleset.noteHit.add(onNoteHit);
+		ruleset.judgementAdded.add(onJudgementAdded);
+
+		judgementDisplay = new FlxTypedGroup();
+		for (i in 0...2)
+			judgementDisplay.add(new JudgementDisplay(i, ruleset.playfields[i].noteSkin));
 
 		statsDisplay = new FlxTypedGroup();
 		for (i in 0...2)
@@ -97,6 +105,7 @@ class SongEditorPlayState extends FNFState
 		handleInput(elapsed);
 
 		ruleset.update(elapsed);
+		judgementDisplay.update(elapsed);
 		statsDisplay.update(elapsed);
 	}
 
@@ -107,6 +116,7 @@ class SongEditorPlayState extends FNFState
 			playfield.draw();
 		for (manager in ruleset.noteManagers)
 			manager.draw();
+		judgementDisplay.draw();
 		statsDisplay.draw();
 
 		if (_trans != null)
@@ -164,5 +174,10 @@ class SongEditorPlayState extends FNFState
 	{
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note);
+	}
+
+	function onJudgementAdded(judgement:Judgement, player:Int)
+	{
+		judgementDisplay.members[player].showJudgement(judgement);
 	}
 }

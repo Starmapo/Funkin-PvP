@@ -38,6 +38,8 @@ class NoteSkin extends JsonObject
 	public var notes:Array<NoteData> = [];
 	public var notesImage:String;
 	public var notesScale:Float;
+	public var judgementsSkin:String;
+	public var judgementsScale:Float;
 
 	/**
 		Whether or not the sprites have antialiasing.
@@ -63,6 +65,8 @@ class NoteSkin extends JsonObject
 		}
 		notesImage = readString(data.notesImage, 'notes/NOTE_assets');
 		notesScale = readFloat(data.notesScale, 1, 0.01, 100, 2);
+		judgementsSkin = readString(data.judgementsSkin, 'base');
+		judgementsScale = readFloat(data.judgementsScale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}
 }

@@ -146,7 +146,8 @@ class InputManager
 	{
 		var lane = note.info.playerLane;
 		var time = manager.currentAudioPosition;
-		var hitDifference = autoplay ? 0 : manager.heldLongNoteLanes[lane][0].info.endTime - time;
+		var endTime = manager.heldLongNoteLanes[lane][0].info.endTime;
+		var hitDifference = (autoplay || time >= endTime) ? 0 : endTime - time;
 
 		var judgement = ruleset.scoreProcessors[player].calculateScore(hitDifference, RELEASE);
 

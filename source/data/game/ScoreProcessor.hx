@@ -24,6 +24,7 @@ class ScoreProcessor
 	public var windowReleaseMultiplier:Map<Judgement, Float> = [MARV => 1.5, SICK => 1.5, GOOD => 1.5, BAD => 1.5, SHIT => 1.5];
 	public var totalJudgementCount(get, never):Int;
 
+	var ruleset:GameplayRuleset;
 	var song:Song;
 	var playbackRate:Float;
 	var noFail:Bool;
@@ -38,9 +39,10 @@ class ScoreProcessor
 	var maxMultiplierCount(get, never):Int;
 	var scoreCount:Int;
 
-	public function new(song:Song, player:Int, ?windows:JudgementWindows, playbackRate:Float = 1, noFail:Bool = false, autoplay:Bool = false,
-			noMiss:Bool = false)
+	public function new(ruleset:GameplayRuleset, song:Song, player:Int, ?windows:JudgementWindows, playbackRate:Float = 1, noFail:Bool = false,
+			autoplay:Bool = false, noMiss:Bool = false)
 	{
+		this.ruleset = ruleset;
 		this.song = song;
 		this.player = player;
 		this.playbackRate = playbackRate;
@@ -101,7 +103,6 @@ class ScoreProcessor
 		currentJudgements[judgement]++;
 
 		accuracy = calculateAccuracy();
-		trace(player, judgement, currentJudgements[judgement], accuracy);
 
 		var comboBreakJudgement = windows.comboBreakJudgement;
 		if (comboBreakJudgement == MARV || comboBreakJudgement == GHOST)
@@ -141,6 +142,8 @@ class ScoreProcessor
 		score = Std.int(standardizedMaxScore * (scoreCount / summedScore));
 
 		health = FlxMath.bound(health + judgementHealthWeighting[judgement], 0, 100);
+
+		ruleset.judgementAdded.dispatch(judgement, player);
 	}
 
 	function initializeJudgementWindows(?windows:JudgementWindows)
