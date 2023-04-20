@@ -6,12 +6,12 @@ import ui.game.Note;
 class InputManager
 {
 	public var autoplay:Bool;
+	public var bindingStore:Array<InputBinding>;
 
 	var ruleset:GameplayRuleset;
 	var player:Int;
 	var realPlayer:Int;
 	var controls:Controls;
-	var bindingStore:Array<InputBinding>;
 
 	public function new(ruleset:GameplayRuleset, player:Int, autoplay:Bool = false)
 	{

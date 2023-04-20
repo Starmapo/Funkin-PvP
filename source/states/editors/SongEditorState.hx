@@ -2,7 +2,9 @@ package states.editors;
 
 import data.Settings;
 import data.song.CameraFocus;
+import data.song.EventObject;
 import data.song.ITimingObject;
+import data.song.LyricStep;
 import data.song.NoteInfo;
 import data.song.ScrollVelocity;
 import data.song.Song;
@@ -664,12 +666,60 @@ class SongEditorState extends FNFState
 					continue;
 				clonedObjects.push(info);
 			}
+			else if (Std.isOfType(obj, TimingPoint))
+			{
+				var obj:TimingPoint = cast obj;
+				var info = new TimingPoint({
+					startTime: obj.startTime + difference,
+					bpm: obj.bpm,
+					meter: obj.meter
+				});
+				if (info.startTime > inst.length)
+					continue;
+				clonedObjects.push(info);
+			}
+			else if (Std.isOfType(obj, ScrollVelocity))
+			{
+				var obj:ScrollVelocity = cast obj;
+				var info = new ScrollVelocity({
+					startTime: obj.startTime + difference,
+					multipliers: obj.multipliers.copy(),
+					linked: obj.linked
+				});
+				if (info.startTime > inst.length)
+					continue;
+				clonedObjects.push(info);
+			}
 			else if (Std.isOfType(obj, CameraFocus))
 			{
 				var obj:CameraFocus = cast obj;
 				var info = new CameraFocus({
 					startTime: obj.startTime + difference,
 					char: obj.char
+				});
+				if (info.startTime > inst.length)
+					continue;
+				clonedObjects.push(info);
+			}
+			else if (Std.isOfType(obj, EventObject))
+			{
+				var obj:EventObject = cast obj;
+				var subEvents:Array<Event> = [];
+				for (event in obj.events)
+					subEvents.push(new Event({event: event.event, params: event.params.join(',')}));
+				var info = new EventObject({
+					startTime: obj.startTime + difference,
+					events: subEvents
+				});
+				if (info.startTime > inst.length)
+					continue;
+				clonedObjects.push(info);
+			}
+			else if (Std.isOfType(obj, LyricStep))
+			{
+				var obj:LyricStep = cast obj;
+				var info = new LyricStep({
+					startTime: obj.startTime + difference
 				});
 				if (info.startTime > inst.length)
 					continue;

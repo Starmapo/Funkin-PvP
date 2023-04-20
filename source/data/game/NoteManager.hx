@@ -2,11 +2,12 @@ package data.game;
 
 import data.song.NoteInfo;
 import data.song.Song;
+import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import ui.game.Note;
 
-class NoteManager
+class NoteManager extends FlxBasic
 {
 	public var nextNote:NoteInfo;
 	public var currentAudioPosition:Float = 0;
@@ -35,6 +36,7 @@ class NoteManager
 
 	public function new(ruleset:GameplayRuleset, song:Song, player:Int, playbackRate:Float = 1, noSliderVelocity:Bool = false)
 	{
+		super();
 		this.ruleset = ruleset;
 		this.song = song;
 		this.player = player;
@@ -50,14 +52,14 @@ class NoteManager
 		initializeObjectPool();
 	}
 
-	public function update()
+	override function update(elapsed:Float)
 	{
 		updateAndScoreActiveObjects();
 		updateAndScoreHeldObjects();
 		updateDeadObjects();
 	}
 
-	public function draw()
+	override function draw()
 	{
 		var groups = [activeNoteLanes, deadNoteLanes, heldLongNoteLanes];
 		for (lanes in groups)

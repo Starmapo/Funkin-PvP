@@ -151,6 +151,8 @@ class MusicTiming implements IFlxDestroyable
 		if (time < 0)
 		{
 			time += elapsed * 1000 * music.pitch;
+			updateAudioPosition();
+			updateCurStep();
 			return;
 		}
 

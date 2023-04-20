@@ -41,7 +41,7 @@ class GameplayRuleset
 	public function update(elapsed:Float)
 	{
 		for (manager in noteManagers)
-			manager.update();
+			manager.update(elapsed);
 		for (playfield in playfields)
 			playfield.update(elapsed);
 	}

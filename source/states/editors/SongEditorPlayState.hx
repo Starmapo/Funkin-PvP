@@ -11,6 +11,7 @@ import flixel.sound.FlxSound;
 import ui.game.JudgementDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
+import ui.game.SongInfoDisplay;
 import util.MusicTiming;
 
 class SongEditorPlayState extends FNFState
@@ -29,6 +30,7 @@ class SongEditorPlayState extends FNFState
 	var bg:FlxSprite;
 	var statsDisplay:FlxTypedGroup<PlayerStatsDisplay>;
 	var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
+	var songInfoDisplay:SongInfoDisplay;
 
 	public function new(map:Song, player:Int, startTime:Float = 0)
 	{
@@ -79,6 +81,10 @@ class SongEditorPlayState extends FNFState
 			ruleset.inputManagers[0].autoplay = true;
 			ruleset.inputManagers[1].changePlayer(0);
 		}
+		for (playfield in ruleset.playfields)
+			add(playfield);
+		for (manager in ruleset.noteManagers)
+			add(manager);
 
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.laneReleased.add(onLaneReleased);
@@ -88,10 +94,15 @@ class SongEditorPlayState extends FNFState
 		judgementDisplay = new FlxTypedGroup();
 		for (i in 0...2)
 			judgementDisplay.add(new JudgementDisplay(i, ruleset.playfields[i].noteSkin));
+		add(judgementDisplay);
 
 		statsDisplay = new FlxTypedGroup();
 		for (i in 0...2)
 			statsDisplay.add(new PlayerStatsDisplay(i, ruleset.scoreProcessors[i]));
+		add(statsDisplay);
+
+		songInfoDisplay = new SongInfoDisplay(song, inst);
+		add(songInfoDisplay);
 
 		super.create();
 	}
@@ -107,20 +118,7 @@ class SongEditorPlayState extends FNFState
 		ruleset.update(elapsed);
 		judgementDisplay.update(elapsed);
 		statsDisplay.update(elapsed);
-	}
-
-	override function draw()
-	{
-		bg.draw();
-		for (playfield in ruleset.playfields)
-			playfield.draw();
-		for (manager in ruleset.noteManagers)
-			manager.draw();
-		judgementDisplay.draw();
-		statsDisplay.draw();
-
-		if (_trans != null)
-			_trans.draw();
+		songInfoDisplay.update(elapsed);
 	}
 
 	function handleInput(elapsed:Float)
@@ -145,6 +143,8 @@ class SongEditorPlayState extends FNFState
 		{
 			var inputManager = ruleset.inputManagers[player];
 			inputManager.autoplay = !inputManager.autoplay;
+			for (bind in inputManager.bindingStore)
+				bind.pressed = false;
 		}
 	}
 
@@ -157,6 +157,7 @@ class SongEditorPlayState extends FNFState
 	{
 		inst.stop();
 		vocals.stop();
+		persistentUpdate = false;
 		FlxG.switchState(new SongEditorState(originalSong));
 	}
 
