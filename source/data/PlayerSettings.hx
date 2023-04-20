@@ -190,7 +190,8 @@ class PlayerSettings
 			device: device,
 			controls: controls,
 			downScroll: false,
-			scrollSpeed: 0.75
+			scrollSpeed: 0.75,
+			noteSplashes: true
 		};
 	}
 }

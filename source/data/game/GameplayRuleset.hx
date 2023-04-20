@@ -15,7 +15,7 @@ class GameplayRuleset
 	public var lanePressed:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
 	public var laneReleased:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
 	public var ghostTap:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
-	public var noteHit:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
+	public var noteHit:FlxTypedSignal<Note->Judgement->Void> = new FlxTypedSignal();
 	public var noteMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 	public var noteReleased:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 	public var noteReleaseMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();

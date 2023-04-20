@@ -96,6 +96,8 @@ class Settings
 		{
 			if (config.scrollSpeed == null)
 				config.scrollSpeed = 0.75;
+			if (config.noteSplashes == null)
+				config.noteSplashes = true;
 		}
 	}
 

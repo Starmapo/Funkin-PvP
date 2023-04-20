@@ -32,21 +32,19 @@ class InputManager
 		{
 			for (lane in manager.activeNoteLanes)
 			{
-				for (note in lane)
+				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.startTime)
 				{
-					if (manager.currentAudioPosition >= note.info.startTime)
-					{
-						ruleset.lanePressed.dispatch(note.info.playerLane, player);
-						handleKeyPress(manager, note);
-					}
+					var note = lane[0];
+					ruleset.lanePressed.dispatch(note.info.playerLane, player);
+					handleKeyPress(manager, note);
 				}
 			}
 			for (lane in manager.heldLongNoteLanes)
 			{
-				for (note in lane)
+				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.endTime)
 				{
-					if (manager.currentAudioPosition >= note.info.endTime)
-						handleKeyRelease(manager, note);
+					var note = lane[0];
+					handleKeyRelease(manager, note);
 				}
 			}
 			return;
@@ -134,7 +132,7 @@ class InputManager
 				ruleset.noteMissed.dispatch(note);
 				manager.recyclePoolObject(note);
 			default:
-				ruleset.noteHit.dispatch(note);
+				ruleset.noteHit.dispatch(note, judgement);
 				if (note.info.isLongNote)
 					manager.changePoolObjectStatusToHeld(note);
 				else

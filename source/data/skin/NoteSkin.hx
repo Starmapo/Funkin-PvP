@@ -40,6 +40,9 @@ class NoteSkin extends JsonObject
 	public var notesScale:Float;
 	public var judgementsSkin:String;
 	public var judgementsScale:Float;
+	public var splashes:Array<SplashData> = [];
+	public var splashesImage:String;
+	public var splashesScale:Float;
 
 	/**
 		Whether or not the sprites have antialiasing.
@@ -67,6 +70,13 @@ class NoteSkin extends JsonObject
 		notesScale = readFloat(data.notesScale, 1, 0.01, 100, 2);
 		judgementsSkin = readString(data.judgementsSkin, 'base');
 		judgementsScale = readFloat(data.judgementsScale, 1, 0.01, 100, 2);
+		for (s in readArray(data.splashes, null, null, 4))
+		{
+			if (s != null)
+				splashes.push(new SplashData(s));
+		}
+		splashesImage = readString(data.splashesImage, 'splashes/noteSplashes');
+		splashesScale = readFloat(data.splashesScale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}
 }
@@ -143,5 +153,19 @@ class NoteData extends JsonObject
 		headAnim = readString(data.headAnim);
 		bodyAnim = readString(data.bodyAnim);
 		tailAnim = readString(data.tailAnim);
+	}
+}
+
+class SplashData extends JsonObject
+{
+	public var anim:String;
+	public var fps:Float;
+	public var offset:Array<Float>;
+
+	public function new(data:Dynamic)
+	{
+		anim = readString(data.anim);
+		fps = readFloat(data.fps, 24, 0, 1000, 2);
+		offset = readFloatArray(data.offset, [], null, 2, -1000, 1000, 2);
 	}
 }

@@ -33,6 +33,7 @@ class NoteManager extends FlxBasic
 	var velocityPositionMarkers:Array<Float> = [];
 	var currentSvIndex:Int = 0;
 	var initialPoolSizePerLane:Int = 2;
+	var autoplay(get, never):Bool;
 
 	public function new(ruleset:GameplayRuleset, song:Song, player:Int, playbackRate:Float = 1, noSliderVelocity:Bool = false)
 	{
@@ -332,6 +333,9 @@ class NoteManager extends FlxBasic
 
 	function scoreActiveObjects()
 	{
+		if (autoplay)
+			return;
+
 		for (lane in activeNoteLanes)
 		{
 			while (lane.length > 0
@@ -373,6 +377,9 @@ class NoteManager extends FlxBasic
 
 	function scoreHeldObjects()
 	{
+		if (autoplay)
+			return;
+		
 		var window = ruleset.scoreProcessors[player].judgementWindow[Judgement.SHIT] * ruleset.scoreProcessors[player].windowReleaseMultiplier[Judgement.SHIT];
 
 		for (lane in heldLongNoteLanes)
@@ -415,5 +422,10 @@ class NoteManager extends FlxBasic
 	function get_scrollSpeed()
 	{
 		return config.scrollSpeed / playbackRate;
+	}
+
+	function get_autoplay()
+	{
+		return ruleset.inputManagers[player].autoplay;
 	}
 }

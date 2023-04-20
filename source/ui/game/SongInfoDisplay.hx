@@ -21,7 +21,7 @@ class SongInfoDisplay extends FlxText
 		length = FlxStringUtil.formatTime((inst.length / 1000) / inst.pitch);
 
 		fieldWidth = FlxG.width - 10;
-		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, FlxColor.BLACK);
+		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		x = 5;
 	}
 

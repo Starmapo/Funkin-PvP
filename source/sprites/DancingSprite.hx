@@ -22,6 +22,8 @@ class DancingSprite extends AnimatedSprite
 	**/
 	public var danceBeats:Int = 1;
 
+	public var canDance:Bool = true;
+
 	/**
 		Whether to force a dance animation to restart if it's still playing when a new beat is reached.
 	**/

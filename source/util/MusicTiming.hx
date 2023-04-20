@@ -367,10 +367,8 @@ class MusicTiming implements IFlxDestroyable
 	{
 		for (sprite in dancingSprites)
 		{
-			if (beat % sprite.danceBeats == 0)
-			{
+			if (sprite.canDance && beat % sprite.danceBeats == 0)
 				sprite.dance();
-			}
 		}
 
 		onBeatHit.dispatch(beat, decBeat);

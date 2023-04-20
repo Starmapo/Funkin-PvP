@@ -8,6 +8,7 @@ typedef PlayerConfig =
 	var controls:Map<Control, Array<Int>>;
 	var ?scrollSpeed:Float;
 	var downScroll:Bool;
+	var ?noteSplashes:Bool;
 }
 
 enum PlayerConfigDevice

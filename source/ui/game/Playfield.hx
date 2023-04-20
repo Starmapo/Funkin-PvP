@@ -1,6 +1,7 @@
 package ui.game;
 
 import data.PlayerConfig;
+import data.game.Judgement;
 import data.skin.NoteSkin;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
@@ -8,9 +9,10 @@ import flixel.group.FlxGroup;
 class Playfield extends FlxGroup
 {
 	public var player(default, null):Int = 0;
-	public var playerConfig(default, null):PlayerConfig;
+	public var config(default, null):PlayerConfig;
 	public var noteSkin(default, null):NoteSkin;
 	public var receptors(default, null):FlxTypedGroup<Receptor>;
+	public var splashes(default, null):FlxTypedGroup<NoteSplash>;
 
 	public function new(player:Int = 0, ?noteSkin:NoteSkin)
 	{
@@ -27,7 +29,7 @@ class Playfield extends FlxGroup
 						staticAnim: 'arrow static instance 2',
 						pressedAnim: 'down press instance 1',
 						confirmAnim: 'down confirm instance 1',
-						confirmOffset: [-3, 0]
+						confirmOffset: [-2, 0]
 					},
 					{
 						staticAnim: 'arrow static instance 4',
@@ -41,7 +43,6 @@ class Playfield extends FlxGroup
 					}
 				],
 				receptorsCenterAnimation: true,
-				receptorsImage: 'notes/NOTE_assets',
 				receptorsOffset: [0, 0],
 				receptorsPadding: 0,
 				receptorsScale: 0.5,
@@ -67,17 +68,36 @@ class Playfield extends FlxGroup
 						tailAnim: 'red hold end instance 1'
 					}
 				],
-				notesImage: 'notes/NOTE_assets',
 				notesScale: 0.5,
 				judgementsScale: 0.3,
+				splashes: [
+					{
+						anim: 'note impact 1 purple',
+						offset: [25, 25]
+					},
+					{
+						anim: 'note impact 1  blue',
+						offset: [25, 25]
+					},
+					{
+						anim: 'note impact 1 green',
+						offset: [25, 25]
+					},
+					{
+						anim: 'note impact 1 red',
+						offset: [25, 25]
+					}
+				],
+				splashesScale: 0.71,
 				antialiasing: true
 			});
 
 		this.player = player;
 		this.noteSkin = noteSkin;
-		playerConfig = FlxG.save.data.playerConfigs[player];
+		config = FlxG.save.data.playerConfigs[player];
 
 		initReceptors();
+		initSplashes();
 	}
 
 	public function onLanePressed(lane:Int)
@@ -92,7 +112,7 @@ class Playfield extends FlxGroup
 		receptor.playAnim('static');
 	}
 
-	public function onNoteHit(note:Note)
+	public function onNoteHit(note:Note, judgement:Judgement)
 	{
 		var receptor = receptors.members[note.info.playerLane];
 		receptor.animation.finishCallback = null;
@@ -112,6 +132,9 @@ class Playfield extends FlxGroup
 				}
 			}
 		}
+
+		if (config.noteSplashes && (judgement == MARV || judgement == SICK))
+			splashes.members[note.info.playerLane].startSplash();
 	}
 
 	function initReceptors()
@@ -121,9 +144,8 @@ class Playfield extends FlxGroup
 
 		var curX:Float = noteSkin.receptorsOffset[0];
 		if (player == 1)
-		{
 			curX += FlxG.width / 2;
-		}
+
 		for (i in 0...4)
 		{
 			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1], i, noteSkin);
@@ -134,8 +156,18 @@ class Playfield extends FlxGroup
 
 		var newX = ((FlxG.width / 2) - CoolUtil.getGroupWidth(receptors)) / 2;
 		for (receptor in receptors)
-		{
 			receptor.x += newX;
-		}
+	}
+
+	function initSplashes()
+	{
+		splashes = new FlxTypedGroup();
+		add(splashes);
+
+		if (!config.noteSplashes)
+			return;
+
+		for (i in 0...4)
+			splashes.add(new NoteSplash(i, noteSkin, receptors.members[i]));
 	}
 }
