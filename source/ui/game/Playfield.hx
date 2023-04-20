@@ -29,7 +29,7 @@ class Playfield extends FlxGroup
 						staticAnim: 'arrow static instance 2',
 						pressedAnim: 'down press instance 1',
 						confirmAnim: 'down confirm instance 1',
-						confirmOffset: [-2, 0]
+						confirmOffset: [-3, 0]
 					},
 					{
 						staticAnim: 'arrow static instance 4',

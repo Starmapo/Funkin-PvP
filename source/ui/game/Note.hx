@@ -13,7 +13,7 @@ class Note extends FlxSpriteGroup
 {
 	public var currentlyBeingHeld:Bool = false;
 	public var info:NoteInfo;
-	public var tint:FlxColor;
+	public var tint(default, set):FlxColor;
 	public var initialTrackPosition:Float;
 	public var endTrackPosition:Float;
 	public var earliestTrackPosition:Float;
@@ -50,7 +50,6 @@ class Note extends FlxSpriteGroup
 		tint = FlxColor.WHITE;
 
 		head.visible = true;
-		head.color = tint;
 		initialTrackPosition = manager.getPositionFromTime(info.startTime);
 		currentlyBeingHeld = false;
 
@@ -63,7 +62,6 @@ class Note extends FlxSpriteGroup
 		{
 			svDirectionChanges = manager.getSVDirectionChanges(info.startTime, info.endTime);
 			tail.visible = body.visible = true;
-			tail.color = body.color = tint;
 			endTrackPosition = manager.getPositionFromTime(info.endTime);
 			updateLongNoteSize(initialTrackPosition, info.startTime);
 
@@ -124,15 +122,15 @@ class Note extends FlxSpriteGroup
 		body.setGraphicSize(Std.int(body.width), currentBodySize);
 		body.updateHitbox();
 
-		var earliestSpritePosition = getSpritePosition(offset, earliestTrackPosition);
+		var earliestSpritePosition = hitPosition + getSpritePosition(offset, earliestTrackPosition);
 		if (config.downScroll)
 		{
-			body.y = hitPosition + earliestSpritePosition + bodyOffset - body.height;
+			body.y = earliestSpritePosition + bodyOffset - body.height;
 			tail.y = body.y - tail.height;
 		}
 		else
 		{
-			body.y = hitPosition + earliestSpritePosition + bodyOffset;
+			body.y = earliestSpritePosition + bodyOffset;
 			tail.y = body.y + body.height;
 		}
 
@@ -144,10 +142,7 @@ class Note extends FlxSpriteGroup
 
 	public function killNote()
 	{
-		tint = FlxColor.fromRGB(200, 200, 200);
-		head.color = tint;
-		if (info.isLongNote)
-			tail.color = body.color = tint;
+		tint = FlxColor.fromRGBFloat(0.3, 0.3, 0.3);
 	}
 
 	function initializeSprites(info:NoteInfo)
@@ -201,5 +196,15 @@ class Note extends FlxSpriteGroup
 	function getSpritePosition(offset:Float, initialPos:Float)
 	{
 		return ((initialPos - offset) * (config.downScroll ? -manager.scrollSpeed : manager.scrollSpeed));
+	}
+
+	function set_tint(value:FlxColor)
+	{
+		if (tint != value)
+		{
+			tint = value;
+			tail.color = body.color = head.color = tint;
+		}
+		return value;
 	}
 }
