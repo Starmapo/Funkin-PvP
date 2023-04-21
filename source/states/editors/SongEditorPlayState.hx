@@ -119,6 +119,9 @@ class SongEditorPlayState extends FNFState
 		judgementDisplay.update(elapsed);
 		statsDisplay.update(elapsed);
 		songInfoDisplay.update(elapsed);
+
+		if (FlxG.mouse.visible)
+			FlxG.mouse.visible = false;
 	}
 
 	function handleInput(elapsed:Float)

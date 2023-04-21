@@ -91,7 +91,7 @@ class SongEditorState extends FNFState
 	{
 		super();
 		if (song == null)
-			song = Song.loadSong('mods/fnf/songs/Die Batsards/Normal.json');
+			song = Song.loadSong('mods/fnf/songs/Tutorial/Hard.json');
 		this.song = song;
 	}
 
