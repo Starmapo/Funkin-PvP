@@ -9,7 +9,7 @@ import ui.game.Note;
 
 class NoteManager extends FlxBasic
 {
-	public var nextNote:NoteInfo;
+	public var nextNote(get, never):NoteInfo;
 	public var currentAudioPosition:Float = 0;
 	public var currentVisualPosition:Float = 0;
 	public var currentTrackPosition:Float = 0;
@@ -19,6 +19,8 @@ class NoteManager extends FlxBasic
 	public var activeNoteLanes:Array<Array<Note>> = [];
 	public var deadNoteLanes:Array<Array<Note>> = [];
 	public var heldLongNoteLanes:Array<Array<Note>> = [];
+	public var onBreak(get, never):Bool;
+	public var alpha:Float = 1;
 
 	var ruleset:GameplayRuleset;
 	var song:Song;
@@ -34,6 +36,7 @@ class NoteManager extends FlxBasic
 	var currentSvIndex:Int = 0;
 	var initialPoolSizePerLane:Int = 2;
 	var autoplay(get, never):Bool;
+	var breakAlpha:Float = 0.2;
 
 	public function new(ruleset:GameplayRuleset, song:Song, player:Int, playbackRate:Float = 1, noSliderVelocity:Bool = false)
 	{
@@ -51,10 +54,17 @@ class NoteManager extends FlxBasic
 		updateCurrentTrackPosition();
 		initializeInfoPools();
 		initializeObjectPool();
+
+		if (onBreak)
+		{
+			alpha = breakAlpha;
+			ruleset.playfields[player].alpha = alpha;
+		}
 	}
 
 	override function update(elapsed:Float)
 	{
+		updateAlpha();
 		updateAndScoreActiveObjects();
 		updateAndScoreHeldObjects();
 		updateDeadObjects();
@@ -68,7 +78,17 @@ class NoteManager extends FlxBasic
 			for (lane in lanes)
 			{
 				for (note in lane)
-					note.draw();
+				{
+					if (note.canDraw())
+					{
+						var lastAlpha = note.alpha;
+						note.alpha *= alpha;
+
+						note.draw();
+
+						note.alpha = lastAlpha;
+					}
+				}
 			}
 		}
 	}
@@ -379,7 +399,7 @@ class NoteManager extends FlxBasic
 	{
 		if (autoplay)
 			return;
-		
+
 		var window = ruleset.scoreProcessors[player].judgementWindow[Judgement.SHIT] * ruleset.scoreProcessors[player].windowReleaseMultiplier[Judgement.SHIT];
 
 		for (lane in heldLongNoteLanes)
@@ -419,6 +439,23 @@ class NoteManager extends FlxBasic
 		}
 	}
 
+	function updateAlpha()
+	{
+		if (onBreak && alpha > breakAlpha)
+		{
+			alpha -= CoolUtil.getLerp(0.05);
+			if (alpha < breakAlpha)
+				alpha = breakAlpha;
+		}
+		else if (!onBreak && alpha < 1)
+		{
+			alpha += CoolUtil.getLerp(0.05);
+			if (alpha > 1)
+				alpha = 1;
+		}
+		ruleset.playfields[player].alpha = alpha;
+	}
+
 	function get_scrollSpeed()
 	{
 		return config.scrollSpeed / playbackRate;
@@ -427,5 +464,53 @@ class NoteManager extends FlxBasic
 	function get_autoplay()
 	{
 		return ruleset.inputManagers[player].autoplay;
+	}
+
+	function get_nextNote()
+	{
+		var nextNote:NoteInfo = null;
+		var earliestNoteTime = FlxMath.MAX_VALUE_FLOAT;
+
+		for (notesInLane in activeNoteLanes)
+		{
+			if (notesInLane.length == 0)
+				continue;
+
+			var note = notesInLane[0];
+			if (note.info.startTime >= earliestNoteTime)
+				continue;
+
+			earliestNoteTime = note.info.startTime;
+			nextNote = note.info;
+		}
+
+		for (notesInLane in noteQueueLanes)
+		{
+			if (notesInLane.length == 0)
+				continue;
+
+			var note = notesInLane[0];
+			if (note.startTime >= earliestNoteTime)
+				continue;
+
+			earliestNoteTime = note.startTime;
+			nextNote = note;
+		}
+
+		return nextNote;
+	}
+
+	function get_onBreak()
+	{
+		if (nextNote == null)
+			return false;
+
+		for (laneNotes in heldLongNoteLanes)
+		{
+			if (laneNotes.length > 0)
+				return false;
+		}
+
+		return (nextNote.startTime - currentAudioPosition >= 2000);
 	}
 }

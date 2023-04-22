@@ -4,6 +4,7 @@ import data.PlayerConfig;
 import data.game.Judgement;
 import data.skin.NoteSkin;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 
 class Playfield extends FlxGroup
@@ -13,6 +14,7 @@ class Playfield extends FlxGroup
 	public var noteSkin(default, null):NoteSkin;
 	public var receptors(default, null):FlxTypedGroup<Receptor>;
 	public var splashes(default, null):FlxTypedGroup<NoteSplash>;
+	public var alpha:Float = 1;
 
 	public function new(player:Int = 0, ?noteSkin:NoteSkin)
 	{
@@ -135,6 +137,24 @@ class Playfield extends FlxGroup
 
 		if (config.noteSplashes && (judgement == MARV || judgement == SICK))
 			splashes.members[note.info.playerLane].startSplash();
+	}
+
+	override function draw()
+	{
+		var lastSpriteAlphas = new Map<FlxSprite, Float>();
+		if (alpha != 1)
+		{
+			for (obj in receptors)
+			{
+				lastSpriteAlphas.set(obj, obj.alpha);
+				obj.alpha *= alpha;
+			}
+		}
+
+		super.draw();
+
+		for (obj => objAlpha in lastSpriteAlphas)
+			obj.alpha = objAlpha;
 	}
 
 	function initReceptors()

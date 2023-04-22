@@ -151,9 +151,7 @@ class BootState extends FNFState
 				{
 					var pvpMusicList = Paths.getText(pvpMusicPath).split('\n');
 					for (i in 0...pvpMusicList.length)
-					{
 						Mods.pvpMusic.push(Path.join([fullPath, 'music', pvpMusicList[i]]));
-					}
 				}
 
 				var songSelectPath = Path.join([fullPath, 'data/songSelect.json']);
@@ -195,9 +193,7 @@ class BootState extends FNFState
 							Mods.songGroups.set(group.name, songGroup);
 						}
 						for (song in songs)
-						{
 							songGroup.songs.push(song);
-						}
 					}
 				}
 			}
@@ -211,7 +207,7 @@ class BootState extends FNFState
 
 	function exit()
 	{
-		FlxG.switchState(new CharacterEditorState());
+		FlxG.switchState(new SongEditorState());
 	}
 
 	function updateText(text:String)

@@ -9,6 +9,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import ui.game.JudgementDisplay;
+import ui.game.LyricsDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
 import ui.game.SongInfoDisplay;
@@ -31,6 +32,7 @@ class SongEditorPlayState extends FNFState
 	var statsDisplay:FlxTypedGroup<PlayerStatsDisplay>;
 	var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
 	var songInfoDisplay:SongInfoDisplay;
+	var lyricsDisplay:LyricsDisplay;
 
 	public function new(map:Song, player:Int, startTime:Float = 0)
 	{
@@ -104,6 +106,9 @@ class SongEditorPlayState extends FNFState
 		songInfoDisplay = new SongInfoDisplay(song, inst);
 		add(songInfoDisplay);
 
+		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
+		add(lyricsDisplay);
+
 		super.create();
 	}
 
@@ -119,6 +124,7 @@ class SongEditorPlayState extends FNFState
 		judgementDisplay.update(elapsed);
 		statsDisplay.update(elapsed);
 		songInfoDisplay.update(elapsed);
+		lyricsDisplay.updateLyrics(timing.audioPosition);
 
 		if (FlxG.mouse.visible)
 			FlxG.mouse.visible = false;

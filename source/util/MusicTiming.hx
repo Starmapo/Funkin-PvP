@@ -105,8 +105,9 @@ class MusicTiming implements IFlxDestroyable
 	**/
 	public var checkSkippedSteps:Bool = true;
 
+	public var startDelay:Float;
+
 	var music:FlxSound;
-	var startDelay:Float;
 	var extraMusic:Array<FlxSound>;
 	var previousTime:Float = 0;
 	var storedSteps:Array<Int> = [];

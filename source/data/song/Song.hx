@@ -121,6 +121,15 @@ class Song extends JsonObject
 		return difficulties;
 	}
 
+	public static function getSongLyrics(song:Song)
+	{
+		var path = Path.join([song.directory, 'lyrics.txt']);
+		if (FileSystem.exists(path))
+			return File.getContent(path);
+		else
+			return '';
+	}
+
 	static function convertFNFSong(json:Dynamic)
 	{
 		var song:Dynamic = {

@@ -20,6 +20,7 @@ class GameplayRuleset
 	public var noteReleased:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 	public var noteReleaseMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 	public var judgementAdded:FlxTypedSignal<Judgement->Int->Void> = new FlxTypedSignal();
+	public var startDelay:Float;
 
 	var song:Song;
 
@@ -29,6 +30,7 @@ class GameplayRuleset
 	{
 		this.song = song;
 		this.timing = timing;
+		startDelay = timing.startDelay;
 		for (i in 0...2)
 		{
 			scoreProcessors.push(new ScoreProcessor(this, song, i));

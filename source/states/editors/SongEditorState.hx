@@ -358,11 +358,7 @@ class SongEditorState extends FNFState
 
 	public function refreshLyrics()
 	{
-		var path = Path.join([song.directory, 'lyrics.txt']);
-		if (FileSystem.exists(path))
-			lyrics = File.getContent(path);
-		else
-			lyrics = '';
+		lyrics = Song.getSongLyrics(song);
 	}
 
 	public function exitToTestPlay(player:Int, fromStart:Bool = false)
