@@ -409,8 +409,8 @@ class SongEditorState extends FNFState
 			{
 				var wasStopped = !inst.playing;
 				var lastTime = inst.time;
-				inst.play();
-				vocals.play();
+				inst.play(false, inst.time);
+				vocals.play(false, inst.time);
 				if (inst.time != lastTime)
 					songSeeked.dispatch(inst.time, lastTime);
 				if (wasStopped)

@@ -1,4 +1,5 @@
 {
+	"stage": "spooky",
 	"timingPoints": [
 		{
 			"bpm": 95
@@ -1946,7 +1947,7 @@
 			"startTime": 171920.688
 		}
 	],
-	"artist": "Unknown Artist",
+	"artist": "Bassetfilms",
 	"opponent": "monster",
 	"bf": "bf",
 	"gf": "gf",
@@ -2569,7 +2570,7 @@
 	],
 	"title": "Monster",
 	"initialScrollVelocity": 1,
-	"source": "Unknown Source",
+	"source": "Friday Night Funkin'",
 	"instFile": "Inst.ogg",
 	"cameraFocuses": [
 		{

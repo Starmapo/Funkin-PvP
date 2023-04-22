@@ -1,0 +1,15 @@
+Left, right,
+left, right
+
+That's how you do it!
+Up, down,
+up, down
+
+That's how you do it!
+Left, up,
+down, right
+
+Down, down, up
+Down, down, right
+
+Down, up, right, up, right

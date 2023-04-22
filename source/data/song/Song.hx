@@ -107,14 +107,14 @@ class Song extends JsonObject
 		return closestTime;
 	}
 
-	public static function getSongDifficulties(directory:String)
+	public static function getSongDifficulties(directory:String, ?excludeDifficulty:String)
 	{
 		var difficulties:Array<String> = [];
 		if (FileSystem.exists(directory) && FileSystem.isDirectory(directory))
 		{
 			for (file in FileSystem.readDirectory(directory))
 			{
-				if (file.endsWith('.json') && !file.startsWith('!'))
+				if (file.endsWith('.json') && !file.startsWith('!') && file != excludeDifficulty)
 					difficulties.push(Path.withoutExtension(file));
 			}
 		}
@@ -124,8 +124,8 @@ class Song extends JsonObject
 	public static function getSongLyrics(song:Song)
 	{
 		var path = Path.join([song.directory, 'lyrics.txt']);
-		if (FileSystem.exists(path))
-			return File.getContent(path);
+		if (Paths.exists(path))
+			return Paths.getContent(path);
 		else
 			return '';
 	}
@@ -339,6 +339,11 @@ class Song extends JsonObject
 	public var gf:String;
 
 	/**
+		Stage for this map.
+	**/
+	public var stage:String;
+
+	/**
 		The directory of this map. Set automatically with `Song.loadSong()`.
 	**/
 	public var directory:String = '';
@@ -363,6 +368,7 @@ class Song extends JsonObject
 		bf = readString(data.bf, 'bf');
 		opponent = readString(data.opponent, 'dad');
 		gf = readString(data.gf, 'gf');
+		stage = readString(data.stage, 'stage');
 		for (t in readArray(data.timingPoints))
 		{
 			if (t != null)
@@ -795,6 +801,7 @@ class Song extends JsonObject
 			bf: bf,
 			opponent: opponent,
 			gf: gf,
+			stage: stage,
 			version: version
 		};
 		var song = new Song(data);
@@ -1013,7 +1020,8 @@ class Song extends JsonObject
 			notes: notes,
 			bf: bf,
 			opponent: opponent,
-			gf: gf
+			gf: gf,
+			stage: stage
 		};
 		File.saveContent(path, Json.stringify(data, "\t"));
 	}

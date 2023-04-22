@@ -44,6 +44,7 @@ class SongEditorEditPanel extends EditorPanel
 	var opponentInput:EditorInputText;
 	var bfInput:EditorInputText;
 	var gfInput:EditorInputText;
+	var stageInput:EditorInputText;
 	var velocityStepper:EditorNumericStepper;
 	var speedStepper:EditorNumericStepper;
 	var rateStepper:EditorNumericStepper;
@@ -75,16 +76,6 @@ class SongEditorEditPanel extends EditorPanel
 	var eventsPropertiesGroup:Array<FlxSprite> = [];
 	var eventIndex:Int = 0;
 	var lastEvent:EventObject = null;
-	var applyOffsetPrompt:SongEditorApplyOffsetPrompt;
-	var removeAllNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
-	var removeSelectedNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
-	var normalizeAllNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
-	var normalizeSelectedNoteTypePrompt:SongEditorNormalizeNoteTypePrompt;
-	var pasteTimingPointsPrompt:YesNoPrompt;
-	var pasteScrollVelocitiesPrompt:YesNoPrompt;
-	var pasteCameraFocusesPrompt:YesNoPrompt;
-	var pasteEventsPrompt:YesNoPrompt;
-	var pasteLyricStepsPrompt:YesNoPrompt;
 
 	public function new(state:SongEditorState)
 	{
@@ -139,178 +130,6 @@ class SongEditorEditPanel extends EditorPanel
 		updateSelectedTimingPoints();
 		onClick = onClickTab;
 
-		applyOffsetPrompt = new SongEditorApplyOffsetPrompt(function(text)
-		{
-			if (text != null && text.length > 0)
-			{
-				var offset = Std.parseFloat(text);
-				if (offset != 0 && Math.isFinite(offset))
-				{
-					var objects:Array<ITimingObject> = [];
-					for (obj in state.song.notes)
-						objects.push(obj);
-					for (obj in state.song.timingPoints)
-						objects.push(obj);
-					for (obj in state.song.scrollVelocities)
-						objects.push(obj);
-					for (obj in state.song.cameraFocuses)
-						objects.push(obj);
-					for (obj in state.song.events)
-						objects.push(obj);
-					for (obj in state.song.lyricSteps)
-						objects.push(obj);
-					state.actionManager.perform(new ActionMoveObjects(state, objects, 0, offset));
-				}
-			}
-		});
-		removeAllNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
-		{
-			if (text.length > 0)
-			{
-				var notes:Array<NoteInfo> = [];
-				for (note in state.song.notes)
-				{
-					if (note.type == text)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
-			}
-		});
-		removeSelectedNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
-		{
-			if (text.length > 0)
-			{
-				var notes:Array<NoteInfo> = [];
-				for (note in selectedNotes)
-				{
-					if (note.type == text)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
-			}
-		});
-		normalizeAllNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
-		{
-			if (text.length > 0)
-			{
-				var notes:Array<NoteInfo> = [];
-				for (note in state.song.notes)
-				{
-					if (note.type == text)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
-			}
-		});
-		normalizeSelectedNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
-		{
-			if (text.length > 0)
-			{
-				var notes:Array<NoteInfo> = [];
-				for (note in selectedNotes)
-				{
-					if (note.type == text)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
-			}
-		});
-		pasteTimingPointsPrompt = new YesNoPrompt("Are you sure you want to paste this map's timing points into all other difficulties? This action is irreversible.",
-			function()
-		{
-			var difficulties = Song.getSongDifficulties(state.song.directory);
-			difficulties.remove(state.song.difficultyName);
-			for (difficulty in difficulties)
-			{
-				var path = Path.join([state.song.directory, difficulty + '.json']);
-				var song = Song.loadSong(path);
-				song.timingPoints.resize(0);
-				for (obj in state.song.timingPoints)
-					song.timingPoints.push(new TimingPoint({
-						startTime: obj.startTime,
-						bpm: obj.bpm,
-						meter: obj.meter
-					}));
-				song.save(path);
-			}
-		});
-		pasteScrollVelocitiesPrompt = new YesNoPrompt("Are you sure you want to paste this map's scroll velocities into all other difficulties? This action is irreversible.",
-			function()
-		{
-			var difficulties = Song.getSongDifficulties(state.song.directory);
-			difficulties.remove(state.song.difficultyName);
-			for (difficulty in difficulties)
-			{
-				var path = Path.join([state.song.directory, difficulty + '.json']);
-				var song = Song.loadSong(path);
-				song.scrollVelocities.resize(0);
-				for (obj in state.song.scrollVelocities)
-					song.scrollVelocities.push(new ScrollVelocity({
-						startTime: obj.startTime,
-						multipliers: obj.multipliers.copy(),
-						linked: obj.linked
-					}));
-				song.save(path);
-			}
-		});
-		pasteCameraFocusesPrompt = new YesNoPrompt("Are you sure you want to paste this map's camera focuses into all other difficulties? This action is irreversible.",
-			function()
-		{
-			var difficulties = Song.getSongDifficulties(state.song.directory);
-			difficulties.remove(state.song.difficultyName);
-			for (difficulty in difficulties)
-			{
-				var path = Path.join([state.song.directory, difficulty + '.json']);
-				var song = Song.loadSong(path);
-				song.cameraFocuses.resize(0);
-				for (obj in state.song.cameraFocuses)
-					song.cameraFocuses.push(new CameraFocus({
-						startTime: obj.startTime,
-						char: obj.char
-					}));
-				song.save(path);
-			}
-		});
-		pasteEventsPrompt = new YesNoPrompt("Are you sure you want to paste this map's events into all other difficulties? This action is irreversible.",
-			function()
-			{
-				var difficulties = Song.getSongDifficulties(state.song.directory);
-				difficulties.remove(state.song.difficultyName);
-				for (difficulty in difficulties)
-				{
-					var path = Path.join([state.song.directory, difficulty + '.json']);
-					var song = Song.loadSong(path);
-					song.events.resize(0);
-					for (obj in state.song.events)
-						song.events.push(new EventObject({
-							startTime: obj.startTime,
-							events: obj.events.copy()
-						}));
-					song.save(path);
-				}
-			});
-		pasteLyricStepsPrompt = new YesNoPrompt("Are you sure you want to paste this map's lyric steps into all other difficulties? This action is irreversible.",
-			function()
-		{
-			var difficulties = Song.getSongDifficulties(state.song.directory);
-			difficulties.remove(state.song.difficultyName);
-			for (difficulty in difficulties)
-			{
-				var path = Path.join([state.song.directory, difficulty + '.json']);
-				var song = Song.loadSong(path);
-				song.lyricSteps.resize(0);
-				for (obj in state.song.lyricSteps)
-					song.lyricSteps.push(new LyricStep({
-						startTime: obj.startTime
-					}));
-				song.save(path);
-			}
-		});
-
 		state.actionManager.onEvent.add(onEvent);
 		state.selectedObjects.itemAdded.add(onSelectedObject);
 		state.selectedObjects.itemRemoved.add(onDeselectedObject);
@@ -335,6 +154,145 @@ class SongEditorEditPanel extends EditorPanel
 
 	function createSongTab()
 	{
+		var applyOffsetPrompt = new SongEditorApplyOffsetPrompt(function(text)
+		{
+			if (text != null && text.length > 0)
+			{
+				var offset = Std.parseFloat(text);
+				if (offset != 0 && Math.isFinite(offset))
+				{
+					var objects:Array<ITimingObject> = [];
+					for (obj in state.song.notes)
+						objects.push(obj);
+					for (obj in state.song.timingPoints)
+						objects.push(obj);
+					for (obj in state.song.scrollVelocities)
+						objects.push(obj);
+					for (obj in state.song.cameraFocuses)
+						objects.push(obj);
+					for (obj in state.song.events)
+						objects.push(obj);
+					for (obj in state.song.lyricSteps)
+						objects.push(obj);
+					state.actionManager.perform(new ActionMoveObjects(state, objects, 0, offset));
+				}
+			}
+		});
+		var pasteMetadataPrompt = new YesNoPrompt("Are you sure you want to paste this map's artist and source into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = getDifficulties();
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.artist = state.song.artist;
+				song.source = state.song.source;
+				song.save(path);
+			}
+		});
+		var pasteCharactersPrompt = new YesNoPrompt("Are you sure you want to paste this map's characters and stage into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = getDifficulties();
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.opponent = state.song.opponent;
+				song.bf = state.song.bf;
+				song.gf = state.song.gf;
+				song.stage = state.song.stage;
+				song.save(path);
+			}
+		});
+		var pasteTimingPointsPrompt = new YesNoPrompt("Are you sure you want to paste this map's timing points into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = getDifficulties();
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.timingPoints.resize(0);
+				for (obj in state.song.timingPoints)
+					song.timingPoints.push(new TimingPoint({
+						startTime: obj.startTime,
+						bpm: obj.bpm,
+						meter: obj.meter
+					}));
+				song.save(path);
+			}
+		});
+		var pasteScrollVelocitiesPrompt = new YesNoPrompt("Are you sure you want to paste this map's scroll velocities into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = getDifficulties();
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.scrollVelocities.resize(0);
+				for (obj in state.song.scrollVelocities)
+					song.scrollVelocities.push(new ScrollVelocity({
+						startTime: obj.startTime,
+						multipliers: obj.multipliers.copy(),
+						linked: obj.linked
+					}));
+				song.save(path);
+			}
+		});
+		var pasteCameraFocusesPrompt = new YesNoPrompt("Are you sure you want to paste this map's camera focuses into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = getDifficulties();
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.cameraFocuses.resize(0);
+				for (obj in state.song.cameraFocuses)
+					song.cameraFocuses.push(new CameraFocus({
+						startTime: obj.startTime,
+						char: obj.char
+					}));
+				song.save(path);
+			}
+		});
+		var pasteEventsPrompt = new YesNoPrompt("Are you sure you want to paste this map's events into all other difficulties? This action is irreversible.",
+			function()
+			{
+				var difficulties = getDifficulties();
+				for (difficulty in difficulties)
+				{
+					var path = Path.join([state.song.directory, difficulty + '.json']);
+					var song = Song.loadSong(path);
+					song.events.resize(0);
+					for (obj in state.song.events)
+						song.events.push(new EventObject({
+							startTime: obj.startTime,
+							events: obj.events.copy()
+						}));
+					song.save(path);
+				}
+			});
+		var pasteLyricStepsPrompt = new YesNoPrompt("Are you sure you want to paste this map's lyric steps into all other difficulties? This action is irreversible.",
+			function()
+		{
+			var difficulties = getDifficulties();
+			for (difficulty in difficulties)
+			{
+				var path = Path.join([state.song.directory, difficulty + '.json']);
+				var song = Song.loadSong(path);
+				song.lyricSteps.resize(0);
+				for (obj in state.song.lyricSteps)
+					song.lyricSteps.push(new LyricStep({
+						startTime: obj.startTime
+					}));
+				song.save(path);
+			}
+		});
+
 		var tab = createTab('Song');
 		var inputSpacing = 125;
 		var inputWidth = 250;
@@ -446,7 +404,24 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(gfInput);
 
-		var velocityLabel = new EditorText(gfLabel.x, gfLabel.y + gfLabel.height + spacing, 0, 'Initial Scroll Velocity:');
+		var stageLabel = new EditorText(gfLabel.x, gfLabel.y + gfLabel.height + spacing, 0, 'Stage:');
+		tab.add(stageLabel);
+
+		stageInput = new EditorInputText(stageLabel.x + inputSpacing, stageLabel.y - 1, inputWidth, state.song.stage);
+		stageInput.textChanged.add(function(text, lastText)
+		{
+			if (text.length == 0)
+			{
+				state.notificationManager.showNotification("You can't have an empty stage name!", WARNING);
+				stageInput.text = lastText;
+				return;
+			}
+
+			state.actionManager.perform(new ActionChangeStage(state, text, lastText));
+		});
+		tab.add(stageInput);
+
+		var velocityLabel = new EditorText(stageLabel.x, stageLabel.y + stageLabel.height + spacing, 0, 'Initial Scroll Velocity:');
 		tab.add(velocityLabel);
 
 		velocityStepper = new EditorNumericStepper(velocityLabel.x + inputSpacing, velocityLabel.y - 1, 0.1, 1, 0, 10, 2);
@@ -528,7 +503,25 @@ class SongEditorEditPanel extends EditorPanel
 		refreshLyricsButton.x = (width - refreshLyricsButton.width) / 2;
 		tab.add(refreshLyricsButton);
 
-		var pasteTimingPointsButton = new FlxUIButton(0, refreshLyricsButton.y + refreshLyricsButton.height + spacing,
+		var pasteMetadataButton = new FlxUIButton(0, refreshLyricsButton.y + refreshLyricsButton.height + spacing, 'Paste metadata into all difficulties',
+			function()
+			{
+				state.openSubState(pasteMetadataPrompt);
+			});
+		pasteMetadataButton.resize(190, pasteMetadataButton.height);
+		pasteMetadataButton.x = (width - pasteMetadataButton.width) / 2;
+		tab.add(pasteMetadataButton);
+
+		var pasteCharactersButton = new FlxUIButton(0, pasteMetadataButton.y + pasteMetadataButton.height + spacing,
+			'Paste characters & stage into all difficulties', function()
+		{
+			state.openSubState(pasteCharactersPrompt);
+		});
+		pasteCharactersButton.resize(220, pasteCharactersButton.height);
+		pasteCharactersButton.x = (width - pasteCharactersButton.width) / 2;
+		tab.add(pasteCharactersButton);
+
+		var pasteTimingPointsButton = new FlxUIButton(0, pasteCharactersButton.y + pasteCharactersButton.height + spacing,
 			'Paste timing points into all difficulties', function()
 		{
 			state.openSubState(pasteTimingPointsPrompt);
@@ -761,6 +754,63 @@ class SongEditorEditPanel extends EditorPanel
 
 	function createNotesTab()
 	{
+		var removeAllNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in state.song.notes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
+			}
+		});
+		var removeSelectedNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in selectedNotes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
+			}
+		});
+		var normalizeAllNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in state.song.notes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
+			}
+		});
+		var normalizeSelectedNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
+		{
+			if (text.length > 0)
+			{
+				var notes:Array<NoteInfo> = [];
+				for (note in selectedNotes)
+				{
+					if (note.type == text)
+						notes.push(note);
+				}
+				if (notes.length > 0)
+					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
+			}
+		});
+
 		var tab = createTab('Notes');
 
 		var inputWidth = width - 10;
@@ -1297,6 +1347,8 @@ class SongEditorEditPanel extends EditorPanel
 				bfInput.text = params.bf;
 			case SongEditorActionManager.CHANGE_GF:
 				gfInput.text = params.gf;
+			case SongEditorActionManager.CHANGE_STAGE:
+				stageInput.text = params.stage;
 			case SongEditorActionManager.CHANGE_INITIAL_SV:
 				velocityStepper.changeWithoutTrigger(params.initialScrollVelocity);
 		}
@@ -1685,5 +1737,10 @@ class SongEditorEditPanel extends EditorPanel
 			updateSelectedCameraFocuses();
 		if (selectedEvents.length == 0)
 			updateSelectedEvents();
+	}
+
+	function getDifficulties()
+	{
+		return Song.getSongDifficulties(state.song.directory, state.song.difficultyName);
 	}
 }

@@ -502,14 +502,14 @@ class NoteManager extends FlxBasic
 
 	function get_onBreak()
 	{
-		if (nextNote == null)
-			return false;
-
 		for (laneNotes in heldLongNoteLanes)
 		{
 			if (laneNotes.length > 0)
 				return false;
 		}
+
+		if (nextNote == null)
+			return true;
 
 		return (nextNote.startTime - currentAudioPosition >= 2000);
 	}

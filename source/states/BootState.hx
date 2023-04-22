@@ -99,6 +99,7 @@ class BootState extends FNFState
 	function initGame()
 	{
 		FlxG.fixedTimestep = false; // allow elapsed time to be variable
+		FlxG.debugger.toggleKeys = [GRAVEACCENT, BACKSLASH]; // remove F2 from debugger toggle keys
 		FlxG.game.focusLostFramerate = 60; // 60 fps instead of 10 when focus is lost
 		FlxG.mouse.useSystemCursor = true; // use system cursor instead of HaxeFlixel one
 		FlxG.mouse.visible = false; // hide mouse by default
@@ -169,10 +170,8 @@ class BootState extends FNFState
 							var difficulties:Array<String> = [];
 							for (songFile in FileSystem.readDirectory(songPath))
 							{
-								if (songFile.endsWith('.json'))
-								{
+								if (songFile.endsWith('.json') && !songFile.startsWith('!'))
 									difficulties.push(songFile.substr(0, songFile.length - 5));
-								}
 							}
 							songs.push({
 								name: song,

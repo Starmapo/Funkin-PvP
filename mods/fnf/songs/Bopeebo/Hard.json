@@ -5,6 +5,7 @@
 		}
 	],
 	"vocalsFile": "Voices.ogg",
+	"events": [],
 	"notes": [
 		{
 			"lane": 2
@@ -536,8 +537,108 @@
 	"opponent": "dad",
 	"bf": "bf",
 	"gf": "gf",
+	"lyricSteps": [
+		{
+			"startTime": 4200
+		},
+		{
+			"startTime": 4800
+		},
+		{
+			"startTime": 9000
+		},
+		{
+			"startTime": 9600
+		},
+		{
+			"startTime": 13800
+		},
+		{
+			"startTime": 14400
+		},
+		{
+			"startTime": 18600
+		},
+		{
+			"startTime": 19200
+		},
+		{
+			"startTime": 23400
+		},
+		{
+			"startTime": 24000
+		},
+		{
+			"startTime": 28200
+		},
+		{
+			"startTime": 28500
+		},
+		{
+			"startTime": 28800
+		},
+		{
+			"startTime": 33000
+		},
+		{
+			"startTime": 33600
+		},
+		{
+			"startTime": 37800
+		},
+		{
+			"startTime": 38400
+		},
+		{
+			"startTime": 42600
+		},
+		{
+			"startTime": 43200
+		},
+		{
+			"startTime": 47400
+		},
+		{
+			"startTime": 48000
+		},
+		{
+			"startTime": 52200
+		},
+		{
+			"startTime": 52800
+		},
+		{
+			"startTime": 57000
+		},
+		{
+			"startTime": 57600
+		},
+		{
+			"startTime": 61800
+		},
+		{
+			"startTime": 62400
+		},
+		{
+			"startTime": 66600
+		},
+		{
+			"startTime": 66900
+		},
+		{
+			"startTime": 67200
+		},
+		{
+			"startTime": 71400
+		},
+		{
+			"startTime": 72000
+		},
+		{
+			"startTime": 76200
+		}
+	],
 	"title": "Bopeebo",
-	"sliderVelocities": [],
 	"initialScrollVelocity": 1,
 	"source": "Friday Night Funkin'",
 	"instFile": "Inst.ogg",
@@ -652,5 +753,6 @@
 			"char": 1,
 			"startTime": 74400
 		}
-	]
+	],
+	"scrollVelocities": []
 }

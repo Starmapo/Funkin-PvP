@@ -1,1 +1,394 @@
-{"song":{"song":"Tutorial","notes":[{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[9600,0,0],[10800,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[12000,0,0],[13200,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[14400,0,0],[15600,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[16800,0,0],[18000,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[19200,2,0],[20400,1,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[21600,2,0],[22800,1,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[24000,2,0],[25200,1,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[26400,2,0],[27600,1,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[28800,0,0],[30000,2,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[31200,1,0],[32400,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[33600,0,0],[34800,2,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[36000,1,0],[37200,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[38400,1,0],[39000,1,0],[39600,2,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[40800,1,0],[41400,1,0],[42000,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[43200,1,0],[43800,1,0],[44400,2,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[45600,1,0],[46200,1,0],[46800,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[48000,1,0],[48300,2,0],[48600,3,0],[48900,2,0],[49800,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[50400,1,0],[50700,2,0],[51000,3,0],[51300,2,0],[52200,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[52800,3,0],[53400,1,0],[54000,0,0],[54600,1,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[55200,2,0],[55800,3,0],[56400,0,0],[57000,2,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[57600,1,750]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]}],"bpm":100,"sections":0,"needsVoices":false,"player1":"bf","player2":"gf","sectionLengths":[],"speed":1},"bpm":100,"sections":27,"notes":[{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[9600,0,0],[10800,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[12000,0,0],[13200,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[14400,0,0],[15600,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[16800,0,0],[18000,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[19200,2,0],[20400,1,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[21600,2,0],[22800,1,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[24000,2,0],[25200,1,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[26400,2,0],[27600,1,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[28800,0,0],[30000,2,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[31200,1,0],[32400,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[33600,0,0],[34800,2,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[36000,1,0],[37200,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[38400,1,0],[39000,1,0],[39600,2,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[40800,1,0],[41400,1,0],[42000,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[43200,1,0],[43800,1,0],[44400,2,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[45600,1,0],[46200,1,0],[46800,3,0]]},{"mustHitSection":false,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[48000,1,0],[48300,2,0],[48600,3,0],[48900,2,0],[49800,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[50400,1,0],[50700,2,0],[51000,3,0],[51300,2,0],[52200,3,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[52800,3,0],[53400,1,0],[54000,0,0],[54600,1,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[55200,2,0],[55800,3,0],[56400,0,0],[57000,2,0]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[[57600,1,750]]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]},{"mustHitSection":true,"typeOfSection":0,"lengthInSteps":16,"sectionNotes":[]}]}
+{
+	"timingPoints": [
+		{
+			"bpm": 100
+		}
+	],
+	"vocalsFile": "",
+	"events": [],
+	"notes": [
+		{
+			"startTime": 9600
+		},
+		{
+			"lane": 3,
+			"startTime": 10800
+		},
+		{
+			"startTime": 12000
+		},
+		{
+			"lane": 3,
+			"startTime": 13200
+		},
+		{
+			"lane": 4,
+			"startTime": 14400
+		},
+		{
+			"lane": 7,
+			"startTime": 15600
+		},
+		{
+			"lane": 4,
+			"startTime": 16800
+		},
+		{
+			"lane": 7,
+			"startTime": 18000
+		},
+		{
+			"lane": 2,
+			"startTime": 19200
+		},
+		{
+			"lane": 1,
+			"startTime": 20400
+		},
+		{
+			"lane": 2,
+			"startTime": 21600
+		},
+		{
+			"lane": 1,
+			"startTime": 22800
+		},
+		{
+			"lane": 6,
+			"startTime": 24000
+		},
+		{
+			"lane": 5,
+			"startTime": 25200
+		},
+		{
+			"lane": 6,
+			"startTime": 26400
+		},
+		{
+			"lane": 5,
+			"startTime": 27600
+		},
+		{
+			"startTime": 28800
+		},
+		{
+			"lane": 2,
+			"startTime": 30000
+		},
+		{
+			"lane": 1,
+			"startTime": 31200
+		},
+		{
+			"lane": 3,
+			"startTime": 32400
+		},
+		{
+			"lane": 4,
+			"startTime": 33600
+		},
+		{
+			"lane": 6,
+			"startTime": 34800
+		},
+		{
+			"lane": 5,
+			"startTime": 36000
+		},
+		{
+			"lane": 7,
+			"startTime": 37200
+		},
+		{
+			"lane": 1,
+			"startTime": 38400
+		},
+		{
+			"lane": 1,
+			"startTime": 39000
+		},
+		{
+			"lane": 2,
+			"startTime": 39600
+		},
+		{
+			"lane": 1,
+			"startTime": 40800
+		},
+		{
+			"lane": 1,
+			"startTime": 41400
+		},
+		{
+			"lane": 3,
+			"startTime": 42000
+		},
+		{
+			"lane": 5,
+			"startTime": 43200
+		},
+		{
+			"lane": 5,
+			"startTime": 43800
+		},
+		{
+			"lane": 6,
+			"startTime": 44400
+		},
+		{
+			"lane": 5,
+			"startTime": 45600
+		},
+		{
+			"lane": 5,
+			"startTime": 46200
+		},
+		{
+			"lane": 7,
+			"startTime": 46800
+		},
+		{
+			"lane": 1,
+			"startTime": 48000
+		},
+		{
+			"lane": 2,
+			"startTime": 48300
+		},
+		{
+			"lane": 3,
+			"startTime": 48600
+		},
+		{
+			"lane": 2,
+			"startTime": 48900
+		},
+		{
+			"lane": 3,
+			"startTime": 49800
+		},
+		{
+			"lane": 5,
+			"startTime": 50400
+		},
+		{
+			"lane": 6,
+			"startTime": 50700
+		},
+		{
+			"lane": 7,
+			"startTime": 51000
+		},
+		{
+			"lane": 6,
+			"startTime": 51300
+		},
+		{
+			"lane": 7,
+			"startTime": 52200
+		},
+		{
+			"lane": 7,
+			"startTime": 52800
+		},
+		{
+			"lane": 5,
+			"startTime": 53400
+		},
+		{
+			"lane": 4,
+			"startTime": 54000
+		},
+		{
+			"lane": 5,
+			"startTime": 54600
+		},
+		{
+			"lane": 6,
+			"startTime": 55200
+		},
+		{
+			"lane": 7,
+			"startTime": 55800
+		},
+		{
+			"lane": 4,
+			"startTime": 56400
+		},
+		{
+			"lane": 6,
+			"startTime": 57000
+		},
+		{
+			"endTime": 58350,
+			"lane": 5,
+			"startTime": 57600
+		}
+	],
+	"artist": "Kawai Sprite",
+	"opponent": "gf",
+	"bf": "bf",
+	"gf": "gf",
+	"lyricSteps": [
+		{
+			"startTime": 9600
+		},
+		{
+			"startTime": 10800
+		},
+		{
+			"startTime": 12000
+		},
+		{
+			"startTime": 13200
+		},
+		{
+			"startTime": 14400
+		},
+		{
+			"startTime": 18000
+		},
+		{
+			"startTime": 18300
+		},
+		{
+			"startTime": 18450
+		},
+		{
+			"startTime": 18600
+		},
+		{
+			"startTime": 18750
+		},
+		{
+			"startTime": 19200
+		},
+		{
+			"startTime": 20400
+		},
+		{
+			"startTime": 21600
+		},
+		{
+			"startTime": 22800
+		},
+		{
+			"startTime": 24000
+		},
+		{
+			"startTime": 27600
+		},
+		{
+			"startTime": 27900
+		},
+		{
+			"startTime": 28050
+		},
+		{
+			"startTime": 28200
+		},
+		{
+			"startTime": 28350
+		},
+		{
+			"startTime": 28800
+		},
+		{
+			"startTime": 30000
+		},
+		{
+			"startTime": 31200
+		},
+		{
+			"startTime": 32400
+		},
+		{
+			"startTime": 33600
+		},
+		{
+			"startTime": 38400
+		},
+		{
+			"startTime": 39000
+		},
+		{
+			"startTime": 39600
+		},
+		{
+			"startTime": 40800
+		},
+		{
+			"startTime": 41400
+		},
+		{
+			"startTime": 42000
+		},
+		{
+			"startTime": 43200
+		},
+		{
+			"startTime": 48000
+		},
+		{
+			"startTime": 48300
+		},
+		{
+			"startTime": 48600
+		},
+		{
+			"startTime": 48900
+		},
+		{
+			"startTime": 49800
+		},
+		{
+			"startTime": 50400
+		}
+	],
+	"title": "Tutorial",
+	"initialScrollVelocity": 1,
+	"source": "Friday Night Funkin'",
+	"instFile": "Inst.ogg",
+	"cameraFocuses": [
+		{
+			"char": 1
+		},
+		{
+			"startTime": 9600
+		},
+		{
+			"char": 1,
+			"startTime": 14400
+		},
+		{
+			"startTime": 19200
+		},
+		{
+			"char": 1,
+			"startTime": 24000
+		},
+		{
+			"startTime": 28800
+		},
+		{
+			"char": 1,
+			"startTime": 33600
+		},
+		{
+			"startTime": 38400
+		},
+		{
+			"char": 1,
+			"startTime": 43200
+		},
+		{
+			"startTime": 48000
+		},
+		{
+			"char": 1,
+			"startTime": 50400
+		}
+	],
+	"scrollVelocities": []
+}

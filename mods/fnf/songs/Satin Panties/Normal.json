@@ -1,0 +1,1757 @@
+{
+	"stage": "limo",
+	"timingPoints": [
+		{
+			"bpm": 110
+		}
+	],
+	"vocalsFile": "Voices.ogg",
+	"events": [],
+	"notes": [
+		{},
+		{
+			"startTime": 272.727264
+		},
+		{
+			"startTime": 545.4545
+		},
+		{
+			"startTime": 954.5454
+		},
+		{
+			"startTime": 1363.63635
+		},
+		{
+			"startTime": 1636.36353
+		},
+		{
+			"startTime": 1909.09082
+		},
+		{
+			"startTime": 2045.45447
+		},
+		{
+			"lane": 7,
+			"startTime": 2181.818
+		},
+		{
+			"lane": 7,
+			"startTime": 2454.54541
+		},
+		{
+			"lane": 7,
+			"startTime": 2727.27271
+		},
+		{
+			"lane": 7,
+			"startTime": 3136.36353
+		},
+		{
+			"lane": 7,
+			"startTime": 3545.45435
+		},
+		{
+			"lane": 7,
+			"startTime": 3818.18164
+		},
+		{
+			"lane": 7,
+			"startTime": 4090.909
+		},
+		{
+			"lane": 7,
+			"startTime": 4227.27246
+		},
+		{
+			"lane": 2,
+			"startTime": 4636.36328
+		},
+		{
+			"lane": 3,
+			"startTime": 4909.091
+		},
+		{
+			"lane": 2,
+			"startTime": 5181.818
+		},
+		{
+			"lane": 3,
+			"startTime": 5318.18164
+		},
+		{
+			"lane": 2,
+			"startTime": 5863.636
+		},
+		{
+			"lane": 3,
+			"startTime": 6000
+		},
+		{
+			"startTime": 6272.727
+		},
+		{
+			"lane": 3,
+			"startTime": 6409.091
+		},
+		{
+			"lane": 2,
+			"startTime": 6818.18164
+		},
+		{
+			"lane": 3,
+			"startTime": 7090.90869
+		},
+		{
+			"lane": 2,
+			"startTime": 7363.636
+		},
+		{
+			"lane": 3,
+			"startTime": 7500
+		},
+		{
+			"startTime": 7772.727
+		},
+		{
+			"lane": 2,
+			"startTime": 8045.454
+		},
+		{
+			"lane": 3,
+			"startTime": 8181.818
+		},
+		{
+			"endTime": 9272,
+			"lane": 2,
+			"startTime": 8727.272
+		},
+		{
+			"lane": 6,
+			"startTime": 9000
+		},
+		{
+			"lane": 7,
+			"startTime": 9272.727
+		},
+		{
+			"lane": 6,
+			"startTime": 9545.454
+		},
+		{
+			"lane": 7,
+			"startTime": 9681.818
+		},
+		{
+			"lane": 6,
+			"startTime": 10227.2725
+		},
+		{
+			"lane": 7,
+			"startTime": 10363.6357
+		},
+		{
+			"lane": 4,
+			"startTime": 10636.3633
+		},
+		{
+			"lane": 7,
+			"startTime": 10772.7266
+		},
+		{
+			"lane": 6,
+			"startTime": 11181.8174
+		},
+		{
+			"lane": 7,
+			"startTime": 11454.5449
+		},
+		{
+			"lane": 6,
+			"startTime": 11727.2725
+		},
+		{
+			"lane": 7,
+			"startTime": 11863.6357
+		},
+		{
+			"lane": 4,
+			"startTime": 12136.3633
+		},
+		{
+			"lane": 6,
+			"startTime": 12409.0908
+		},
+		{
+			"lane": 7,
+			"startTime": 12545.4541
+		},
+		{
+			"endTime": 13636,
+			"lane": 6,
+			"startTime": 13090.9082
+		},
+		{
+			"lane": 1,
+			"startTime": 13363.6357
+		},
+		{
+			"startTime": 13636.3633
+		},
+		{
+			"startTime": 13909.0908
+		},
+		{
+			"endTime": 14454,
+			"lane": 2,
+			"startTime": 14181.8174
+		},
+		{
+			"lane": 3,
+			"startTime": 14590.9082
+		},
+		{
+			"startTime": 14727.2725
+		},
+		{
+			"lane": 1,
+			"startTime": 15000
+		},
+		{
+			"endTime": 15545,
+			"lane": 3,
+			"startTime": 15272.7266
+		},
+		{
+			"startTime": 15681.8174
+		},
+		{
+			"startTime": 15954.5449
+		},
+		{
+			"startTime": 16090.9082
+		},
+		{
+			"endTime": 16636,
+			"lane": 2,
+			"startTime": 16363.6357
+		},
+		{
+			"lane": 3,
+			"startTime": 16772.7266
+		},
+		{
+			"startTime": 16909.09
+		},
+		{
+			"endTime": 17999,
+			"lane": 2,
+			"startTime": 17454.5449
+		},
+		{
+			"lane": 5,
+			"startTime": 17727.2715
+		},
+		{
+			"lane": 4,
+			"startTime": 18000
+		},
+		{
+			"lane": 4,
+			"startTime": 18272.7266
+		},
+		{
+			"endTime": 18818,
+			"lane": 6,
+			"startTime": 18545.4531
+		},
+		{
+			"lane": 7,
+			"startTime": 18954.5449
+		},
+		{
+			"lane": 4,
+			"startTime": 19090.9082
+		},
+		{
+			"lane": 5,
+			"startTime": 19363.6367
+		},
+		{
+			"endTime": 19909,
+			"lane": 7,
+			"startTime": 19636.3633
+		},
+		{
+			"lane": 4,
+			"startTime": 20045.4531
+		},
+		{
+			"lane": 4,
+			"startTime": 20318.1816
+		},
+		{
+			"lane": 4,
+			"startTime": 20454.5449
+		},
+		{
+			"endTime": 20999,
+			"lane": 6,
+			"startTime": 20727.2715
+		},
+		{
+			"lane": 7,
+			"startTime": 21136.3633
+		},
+		{
+			"lane": 4,
+			"startTime": 21272.7266
+		},
+		{
+			"endTime": 22227,
+			"lane": 6,
+			"startTime": 21818.1816
+		},
+		{
+			"endTime": 22227,
+			"lane": 2,
+			"startTime": 21818.1816
+		},
+		{
+			"lane": 7,
+			"startTime": 22363.6348
+		},
+		{
+			"lane": 3,
+			"startTime": 22363.6348
+		},
+		{
+			"lane": 7,
+			"startTime": 22636.3633
+		},
+		{
+			"lane": 3,
+			"startTime": 22636.3633
+		},
+		{
+			"lane": 4,
+			"startTime": 22909.09
+		},
+		{
+			"startTime": 22909.09
+		},
+		{
+			"lane": 4,
+			"startTime": 23181.8184
+		},
+		{
+			"startTime": 23181.8184
+		},
+		{
+			"lane": 5,
+			"startTime": 23318.1816
+		},
+		{
+			"lane": 1,
+			"startTime": 23318.1816
+		},
+		{
+			"lane": 4,
+			"startTime": 23454.5449
+		},
+		{
+			"startTime": 23454.5449
+		},
+		{
+			"lane": 4,
+			"startTime": 23727.2715
+		},
+		{
+			"startTime": 23727.2715
+		},
+		{
+			"lane": 7,
+			"startTime": 23863.6348
+		},
+		{
+			"lane": 3,
+			"startTime": 23863.6348
+		},
+		{
+			"endTime": 24409,
+			"lane": 1,
+			"startTime": 24000
+		},
+		{
+			"endTime": 24409,
+			"lane": 5,
+			"startTime": 24000
+		},
+		{
+			"lane": 4,
+			"startTime": 24545.4531
+		},
+		{
+			"startTime": 24545.4531
+		},
+		{
+			"lane": 4,
+			"startTime": 24818.1816
+		},
+		{
+			"startTime": 24818.1816
+		},
+		{
+			"lane": 7,
+			"startTime": 24954.5449
+		},
+		{
+			"lane": 3,
+			"startTime": 24954.5449
+		},
+		{
+			"endTime": 25227,
+			"lane": 6,
+			"startTime": 25090.9082
+		},
+		{
+			"endTime": 25227,
+			"lane": 2,
+			"startTime": 25090.9082
+		},
+		{
+			"lane": 7,
+			"startTime": 25363.6348
+		},
+		{
+			"lane": 3,
+			"startTime": 25363.6348
+		},
+		{
+			"lane": 7,
+			"startTime": 25636.3633
+		},
+		{
+			"lane": 3,
+			"startTime": 25636.3633
+		},
+		{
+			"lane": 5,
+			"startTime": 25909.09
+		},
+		{
+			"lane": 1,
+			"startTime": 25909.09
+		},
+		{
+			"endTime": 26590,
+			"startTime": 26181.8164
+		},
+		{
+			"endTime": 26590,
+			"lane": 7,
+			"startTime": 26181.8164
+		},
+		{
+			"endTime": 27136,
+			"lane": 4,
+			"startTime": 26727.2715
+		},
+		{
+			"endTime": 27136,
+			"lane": 3,
+			"startTime": 26727.2715
+		},
+		{
+			"lane": 2,
+			"startTime": 27272.7266
+		},
+		{
+			"lane": 6,
+			"startTime": 27272.7266
+		},
+		{
+			"lane": 2,
+			"startTime": 27545.4531
+		},
+		{
+			"lane": 6,
+			"startTime": 27545.4531
+		},
+		{
+			"endTime": 28227,
+			"lane": 3,
+			"startTime": 27818.1816
+		},
+		{
+			"endTime": 28227,
+			"lane": 4,
+			"startTime": 27818.1816
+		},
+		{
+			"endTime": 28772,
+			"lane": 1,
+			"startTime": 28363.6348
+		},
+		{
+			"endTime": 28772,
+			"lane": 5,
+			"startTime": 28363.6348
+		},
+		{
+			"endTime": 29318,
+			"lane": 3,
+			"startTime": 28909.09
+		},
+		{
+			"endTime": 29318,
+			"lane": 7,
+			"startTime": 28909.09
+		},
+		{
+			"endTime": 29863,
+			"lane": 2,
+			"startTime": 29454.5449
+		},
+		{
+			"endTime": 29863,
+			"lane": 6,
+			"startTime": 29454.5449
+		},
+		{
+			"startTime": 30000
+		},
+		{
+			"lane": 4,
+			"startTime": 30000
+		},
+		{
+			"endTime": 30681,
+			"lane": 3,
+			"startTime": 30272.7266
+		},
+		{
+			"lane": 7,
+			"startTime": 30272.7266
+		},
+		{
+			"endTime": 31090,
+			"lane": 5,
+			"startTime": 30545.4531
+		},
+		{
+			"lane": 2,
+			"startTime": 30818.1816
+		},
+		{
+			"startTime": 31090.9082
+		},
+		{
+			"lane": 1,
+			"startTime": 31363.6348
+		},
+		{
+			"lane": 3,
+			"startTime": 31636.3633
+		},
+		{
+			"startTime": 31772.7266
+		},
+		{
+			"lane": 3,
+			"startTime": 31909.09
+		},
+		{
+			"lane": 3,
+			"startTime": 32181.8164
+		},
+		{
+			"lane": 1,
+			"startTime": 32454.5449
+		},
+		{
+			"lane": 1,
+			"startTime": 33000
+		},
+		{
+			"lane": 3,
+			"startTime": 33136.3633
+		},
+		{
+			"endTime": 33409,
+			"startTime": 33272.7266
+		},
+		{
+			"lane": 1,
+			"startTime": 33545.4531
+		},
+		{
+			"lane": 2,
+			"startTime": 33818.18
+		},
+		{
+			"startTime": 34090.9063
+		},
+		{
+			"lane": 3,
+			"startTime": 34363.6367
+		},
+		{
+			"startTime": 34636.3633
+		},
+		{
+			"lane": 1,
+			"startTime": 34772.7266
+		},
+		{
+			"lane": 3,
+			"startTime": 34909.09
+		},
+		{
+			"lane": 3,
+			"startTime": 35181.8164
+		},
+		{
+			"lane": 6,
+			"startTime": 35181.8164
+		},
+		{
+			"lane": 4,
+			"startTime": 35454.543
+		},
+		{
+			"lane": 5,
+			"startTime": 35727.2734
+		},
+		{
+			"lane": 7,
+			"startTime": 36000
+		},
+		{
+			"lane": 4,
+			"startTime": 36136.3633
+		},
+		{
+			"lane": 7,
+			"startTime": 36272.7266
+		},
+		{
+			"lane": 7,
+			"startTime": 36545.4531
+		},
+		{
+			"lane": 5,
+			"startTime": 36818.18
+		},
+		{
+			"lane": 5,
+			"startTime": 37363.6367
+		},
+		{
+			"lane": 7,
+			"startTime": 37500
+		},
+		{
+			"endTime": 37772,
+			"lane": 4,
+			"startTime": 37636.3633
+		},
+		{
+			"lane": 5,
+			"startTime": 37909.09
+		},
+		{
+			"lane": 6,
+			"startTime": 38181.8164
+		},
+		{
+			"lane": 4,
+			"startTime": 38454.543
+		},
+		{
+			"lane": 7,
+			"startTime": 38727.2734
+		},
+		{
+			"lane": 3,
+			"startTime": 38727.2734
+		},
+		{
+			"lane": 1,
+			"startTime": 39000
+		},
+		{
+			"lane": 4,
+			"startTime": 39000
+		},
+		{
+			"lane": 3,
+			"startTime": 39136.3633
+		},
+		{
+			"lane": 5,
+			"startTime": 39136.3633
+		},
+		{
+			"lane": 2,
+			"startTime": 39272.7266
+		},
+		{
+			"lane": 7,
+			"startTime": 39272.7266
+		},
+		{
+			"lane": 2,
+			"startTime": 39545.4531
+		},
+		{
+			"lane": 7,
+			"startTime": 39545.4531
+		},
+		{
+			"startTime": 39818.18
+		},
+		{
+			"lane": 1,
+			"startTime": 39954.543
+		},
+		{
+			"lane": 3,
+			"startTime": 40090.9063
+		},
+		{
+			"lane": 3,
+			"startTime": 40363.6367
+		},
+		{
+			"startTime": 40500
+		},
+		{
+			"lane": 3,
+			"startTime": 40636.3633
+		},
+		{
+			"lane": 3,
+			"startTime": 40909.09
+		},
+		{
+			"lane": 1,
+			"startTime": 41181.8164
+		},
+		{
+			"startTime": 41454.543
+		},
+		{
+			"lane": 1,
+			"startTime": 41727.27
+		},
+		{
+			"lane": 3,
+			"startTime": 41863.6367
+		},
+		{
+			"endTime": 42136,
+			"startTime": 42000
+		},
+		{
+			"lane": 1,
+			"startTime": 42272.7266
+		},
+		{
+			"lane": 2,
+			"startTime": 42545.4531
+		},
+		{
+			"startTime": 42818.18
+		},
+		{
+			"lane": 7,
+			"startTime": 43090.9063
+		},
+		{
+			"lane": 3,
+			"startTime": 43090.9063
+		},
+		{
+			"lane": 5,
+			"startTime": 43363.6367
+		},
+		{
+			"startTime": 43363.6367
+		},
+		{
+			"lane": 7,
+			"startTime": 43500
+		},
+		{
+			"lane": 1,
+			"startTime": 43500
+		},
+		{
+			"lane": 6,
+			"startTime": 43636.3633
+		},
+		{
+			"lane": 6,
+			"startTime": 43909.09
+		},
+		{
+			"lane": 4,
+			"startTime": 44181.8164
+		},
+		{
+			"lane": 5,
+			"startTime": 44318.18
+		},
+		{
+			"lane": 7,
+			"startTime": 44454.543
+		},
+		{
+			"lane": 7,
+			"startTime": 44727.27
+		},
+		{
+			"lane": 4,
+			"startTime": 44863.6367
+		},
+		{
+			"lane": 7,
+			"startTime": 45000
+		},
+		{
+			"lane": 7,
+			"startTime": 45272.7266
+		},
+		{
+			"lane": 5,
+			"startTime": 45545.4531
+		},
+		{
+			"lane": 4,
+			"startTime": 45818.18
+		},
+		{
+			"lane": 5,
+			"startTime": 46090.9063
+		},
+		{
+			"lane": 7,
+			"startTime": 46227.27
+		},
+		{
+			"endTime": 46500,
+			"lane": 4,
+			"startTime": 46363.6367
+		},
+		{
+			"lane": 5,
+			"startTime": 46636.3633
+		},
+		{
+			"lane": 6,
+			"startTime": 46909.09
+		},
+		{
+			"lane": 4,
+			"startTime": 47181.8164
+		},
+		{
+			"lane": 7,
+			"startTime": 47454.543
+		},
+		{
+			"lane": 4,
+			"startTime": 47727.27
+		},
+		{
+			"lane": 5,
+			"startTime": 47863.6367
+		},
+		{
+			"lane": 2,
+			"startTime": 48272.7266
+		},
+		{
+			"lane": 3,
+			"startTime": 48409.09
+		},
+		{
+			"startTime": 48545.4531
+		},
+		{
+			"startTime": 48818.18
+		},
+		{
+			"lane": 3,
+			"startTime": 49090.9063
+		},
+		{
+			"lane": 3,
+			"startTime": 49363.6367
+		},
+		{
+			"lane": 1,
+			"startTime": 49636.3633
+		},
+		{
+			"startTime": 49909.09
+		},
+		{
+			"lane": 3,
+			"startTime": 50454.543
+		},
+		{
+			"lane": 1,
+			"startTime": 50590.9063
+		},
+		{
+			"startTime": 50727.27
+		},
+		{
+			"lane": 2,
+			"startTime": 51000
+		},
+		{
+			"startTime": 51272.7266
+		},
+		{
+			"lane": 2,
+			"startTime": 51545.4531
+		},
+		{
+			"startTime": 51818.18
+		},
+		{
+			"lane": 1,
+			"startTime": 52090.9063
+		},
+		{
+			"endTime": 52909,
+			"lane": 2,
+			"startTime": 52363.6328
+		},
+		{
+			"lane": 6,
+			"startTime": 52636.3633
+		},
+		{
+			"lane": 7,
+			"startTime": 52772.7266
+		},
+		{
+			"lane": 4,
+			"startTime": 52909.09
+		},
+		{
+			"lane": 4,
+			"startTime": 53181.8164
+		},
+		{
+			"lane": 7,
+			"startTime": 53454.543
+		},
+		{
+			"lane": 7,
+			"startTime": 53727.27
+		},
+		{
+			"lane": 5,
+			"startTime": 54000
+		},
+		{
+			"lane": 4,
+			"startTime": 54272.7266
+		},
+		{
+			"lane": 7,
+			"startTime": 54818.18
+		},
+		{
+			"lane": 5,
+			"startTime": 54954.543
+		},
+		{
+			"lane": 4,
+			"startTime": 55090.9063
+		},
+		{
+			"lane": 6,
+			"startTime": 55363.6328
+		},
+		{
+			"lane": 4,
+			"startTime": 55636.3633
+		},
+		{
+			"lane": 6,
+			"startTime": 55909.09
+		},
+		{
+			"lane": 4,
+			"startTime": 56181.8164
+		},
+		{
+			"lane": 5,
+			"startTime": 56454.543
+		},
+		{
+			"endTime": 57136,
+			"lane": 2,
+			"startTime": 56727.27
+		},
+		{
+			"endTime": 57136,
+			"lane": 6,
+			"startTime": 56727.27
+		},
+		{
+			"lane": 3,
+			"startTime": 57272.7266
+		},
+		{
+			"lane": 7,
+			"startTime": 57272.7266
+		},
+		{
+			"lane": 3,
+			"startTime": 57545.4531
+		},
+		{
+			"lane": 7,
+			"startTime": 57545.4531
+		},
+		{
+			"startTime": 57818.18
+		},
+		{
+			"lane": 4,
+			"startTime": 57818.18
+		},
+		{
+			"startTime": 58090.9063
+		},
+		{
+			"lane": 4,
+			"startTime": 58090.9063
+		},
+		{
+			"lane": 1,
+			"startTime": 58227.27
+		},
+		{
+			"lane": 5,
+			"startTime": 58227.27
+		},
+		{
+			"startTime": 58363.6328
+		},
+		{
+			"lane": 4,
+			"startTime": 58363.6328
+		},
+		{
+			"startTime": 58636.3633
+		},
+		{
+			"lane": 4,
+			"startTime": 58636.3633
+		},
+		{
+			"lane": 3,
+			"startTime": 58772.7266
+		},
+		{
+			"lane": 7,
+			"startTime": 58772.7266
+		},
+		{
+			"endTime": 59318,
+			"lane": 1,
+			"startTime": 58909.09
+		},
+		{
+			"endTime": 59318,
+			"lane": 5,
+			"startTime": 58909.09
+		},
+		{
+			"lane": 4,
+			"startTime": 59454.543
+		},
+		{
+			"startTime": 59454.543
+		},
+		{
+			"lane": 4,
+			"startTime": 59727.27
+		},
+		{
+			"startTime": 59727.27
+		},
+		{
+			"lane": 7,
+			"startTime": 59863.6328
+		},
+		{
+			"lane": 3,
+			"startTime": 59863.6328
+		},
+		{
+			"endTime": 60136,
+			"lane": 6,
+			"startTime": 60000
+		},
+		{
+			"endTime": 60136,
+			"lane": 2,
+			"startTime": 60000
+		},
+		{
+			"lane": 7,
+			"startTime": 60272.7266
+		},
+		{
+			"lane": 3,
+			"startTime": 60272.7266
+		},
+		{
+			"lane": 7,
+			"startTime": 60545.4531
+		},
+		{
+			"lane": 3,
+			"startTime": 60545.4531
+		},
+		{
+			"lane": 5,
+			"startTime": 60818.18
+		},
+		{
+			"lane": 1,
+			"startTime": 60818.18
+		},
+		{
+			"endTime": 61499,
+			"lane": 4,
+			"startTime": 61090.9063
+		},
+		{
+			"endTime": 61499,
+			"lane": 3,
+			"startTime": 61090.9063
+		},
+		{
+			"endTime": 62045,
+			"startTime": 61636.3633
+		},
+		{
+			"endTime": 62045,
+			"lane": 7,
+			"startTime": 61636.3633
+		},
+		{
+			"lane": 6,
+			"startTime": 62181.8164
+		},
+		{
+			"lane": 2,
+			"startTime": 62181.8164
+		},
+		{
+			"lane": 6,
+			"startTime": 62454.543
+		},
+		{
+			"lane": 2,
+			"startTime": 62454.543
+		},
+		{
+			"endTime": 63136,
+			"lane": 7,
+			"startTime": 62727.27
+		},
+		{
+			"endTime": 63136,
+			"startTime": 62727.27
+		},
+		{
+			"endTime": 63681,
+			"lane": 1,
+			"startTime": 63272.7266
+		},
+		{
+			"endTime": 63681,
+			"lane": 5,
+			"startTime": 63272.7266
+		},
+		{
+			"endTime": 64227,
+			"lane": 3,
+			"startTime": 63818.18
+		},
+		{
+			"endTime": 64227,
+			"lane": 7,
+			"startTime": 63818.18
+		},
+		{
+			"endTime": 64772,
+			"lane": 2,
+			"startTime": 64363.6328
+		},
+		{
+			"endTime": 64772,
+			"lane": 6,
+			"startTime": 64363.6328
+		},
+		{
+			"startTime": 64909.09
+		},
+		{
+			"lane": 4,
+			"startTime": 64909.09
+		},
+		{
+			"lane": 3,
+			"startTime": 65181.8164
+		},
+		{
+			"lane": 7,
+			"startTime": 65181.8164
+		},
+		{
+			"endTime": 65999,
+			"lane": 5,
+			"startTime": 65454.543
+		},
+		{
+			"lane": 2,
+			"startTime": 65727.27
+		},
+		{
+			"startTime": 66000
+		},
+		{
+			"lane": 1,
+			"startTime": 66272.73
+		},
+		{
+			"lane": 3,
+			"startTime": 66545.45
+		},
+		{
+			"startTime": 66681.81
+		},
+		{
+			"lane": 3,
+			"startTime": 66818.18
+		},
+		{
+			"lane": 3,
+			"startTime": 67090.91
+		},
+		{
+			"lane": 1,
+			"startTime": 67363.63
+		},
+		{
+			"lane": 1,
+			"startTime": 67909.0859
+		},
+		{
+			"lane": 3,
+			"startTime": 68045.45
+		},
+		{
+			"endTime": 68318,
+			"startTime": 68181.81
+		},
+		{
+			"lane": 1,
+			"startTime": 68454.55
+		},
+		{
+			"lane": 3,
+			"startTime": 68727.27
+		},
+		{
+			"startTime": 69000
+		},
+		{
+			"startTime": 69181.81
+		},
+		{
+			"lane": 3,
+			"startTime": 69272.73
+		},
+		{
+			"lane": 1,
+			"startTime": 69545.45
+		},
+		{
+			"startTime": 69727.27
+		},
+		{
+			"endTime": 70227,
+			"lane": 1,
+			"startTime": 69818.18
+		},
+		{
+			"lane": 6,
+			"startTime": 70090.91
+		},
+		{
+			"lane": 4,
+			"startTime": 70363.63
+		},
+		{
+			"endTime": 70772,
+			"lane": 3,
+			"startTime": 70363.63
+		},
+		{
+			"lane": 5,
+			"startTime": 70636.36
+		},
+		{
+			"lane": 7,
+			"startTime": 70909.0859
+		},
+		{
+			"endTime": 71318,
+			"lane": 2,
+			"startTime": 70909.0859
+		},
+		{
+			"lane": 4,
+			"startTime": 71045.45
+		},
+		{
+			"lane": 7,
+			"startTime": 71181.81
+		},
+		{
+			"lane": 7,
+			"startTime": 71454.55
+		},
+		{
+			"endTime": 71863,
+			"lane": 3,
+			"startTime": 71454.55
+		},
+		{
+			"lane": 5,
+			"startTime": 71727.27
+		},
+		{
+			"endTime": 72409,
+			"lane": 1,
+			"startTime": 72000
+		},
+		{
+			"lane": 5,
+			"startTime": 72272.73
+		},
+		{
+			"lane": 7,
+			"startTime": 72409.0859
+		},
+		{
+			"endTime": 72681,
+			"lane": 4,
+			"startTime": 72545.45
+		},
+		{
+			"endTime": 72954,
+			"lane": 3,
+			"startTime": 72545.45
+		},
+		{
+			"lane": 5,
+			"startTime": 72818.18
+		},
+		{
+			"lane": 7,
+			"startTime": 73090.91
+		},
+		{
+			"lane": 4,
+			"startTime": 73363.63
+		},
+		{
+			"lane": 4,
+			"startTime": 73545.45
+		},
+		{
+			"lane": 7,
+			"startTime": 73636.36
+		},
+		{
+			"lane": 5,
+			"startTime": 73909.0859
+		},
+		{
+			"lane": 4,
+			"startTime": 74090.91
+		},
+		{
+			"lane": 2,
+			"startTime": 74181.81
+		},
+		{
+			"endTime": 74590,
+			"lane": 5,
+			"startTime": 74181.81
+		},
+		{
+			"lane": 2,
+			"startTime": 74454.55
+		},
+		{
+			"startTime": 74727.27
+		},
+		{
+			"endTime": 75136,
+			"lane": 7,
+			"startTime": 74727.27
+		},
+		{
+			"lane": 1,
+			"startTime": 74863.63
+		},
+		{
+			"lane": 3,
+			"startTime": 75000
+		},
+		{
+			"lane": 3,
+			"startTime": 75272.73
+		},
+		{
+			"endTime": 75681,
+			"lane": 6,
+			"startTime": 75272.73
+		},
+		{
+			"startTime": 75409.0859
+		},
+		{
+			"lane": 3,
+			"startTime": 75545.45
+		},
+		{
+			"lane": 3,
+			"startTime": 75818.18
+		},
+		{
+			"endTime": 76227,
+			"lane": 7,
+			"startTime": 75818.18
+		},
+		{
+			"lane": 1,
+			"startTime": 76090.91
+		},
+		{
+			"startTime": 76363.63
+		},
+		{
+			"endTime": 76772,
+			"lane": 5,
+			"startTime": 76363.63
+		},
+		{
+			"lane": 1,
+			"startTime": 76636.36
+		},
+		{
+			"lane": 3,
+			"startTime": 76772.73
+		},
+		{
+			"endTime": 77045,
+			"startTime": 76909.0859
+		},
+		{
+			"endTime": 77318,
+			"lane": 7,
+			"startTime": 76909.0859
+		},
+		{
+			"lane": 1,
+			"startTime": 77181.81
+		},
+		{
+			"lane": 2,
+			"startTime": 77454.55
+		},
+		{
+			"endTime": 77863,
+			"lane": 6,
+			"startTime": 77454.55
+		},
+		{
+			"startTime": 77727.27
+		},
+		{
+			"lane": 3,
+			"startTime": 78000
+		},
+		{
+			"lane": 7,
+			"startTime": 78000
+		},
+		{
+			"lane": 4,
+			"startTime": 78136.36
+		},
+		{
+			"startTime": 78272.73
+		},
+		{
+			"lane": 1,
+			"startTime": 78409.0859
+		},
+		{
+			"lane": 5,
+			"startTime": 78409.0859
+		},
+		{
+			"lane": 6,
+			"startTime": 78545.45
+		},
+		{
+			"lane": 6,
+			"startTime": 78818.18
+		},
+		{
+			"lane": 4,
+			"startTime": 79090.91
+		},
+		{
+			"lane": 5,
+			"startTime": 79227.27
+		},
+		{
+			"lane": 7,
+			"startTime": 79363.63
+		},
+		{
+			"lane": 7,
+			"startTime": 79636.36
+		},
+		{
+			"lane": 4,
+			"startTime": 79772.73
+		},
+		{
+			"lane": 7,
+			"startTime": 79909.0859
+		},
+		{
+			"lane": 7,
+			"startTime": 80181.81
+		},
+		{
+			"lane": 5,
+			"startTime": 80454.55
+		},
+		{
+			"lane": 4,
+			"startTime": 80727.27
+		},
+		{
+			"lane": 5,
+			"startTime": 81000
+		},
+		{
+			"lane": 7,
+			"startTime": 81136.36
+		},
+		{
+			"endTime": 81409,
+			"lane": 4,
+			"startTime": 81272.73
+		},
+		{
+			"lane": 5,
+			"startTime": 81545.45
+		},
+		{
+			"lane": 6,
+			"startTime": 81818.18
+		},
+		{
+			"lane": 4,
+			"startTime": 82090.91
+		},
+		{
+			"lane": 7,
+			"startTime": 82363.63
+		},
+		{
+			"lane": 4,
+			"startTime": 82636.36
+		},
+		{
+			"lane": 5,
+			"startTime": 82772.73
+		},
+		{
+			"endTime": 83999,
+			"lane": 7,
+			"startTime": 82909.0859
+		},
+		{
+			"lane": 2,
+			"startTime": 83181.81
+		},
+		{
+			"lane": 3,
+			"startTime": 83454.54
+		},
+		{
+			"lane": 2,
+			"startTime": 83727.27
+		},
+		{
+			"lane": 3,
+			"startTime": 83863.63
+		},
+		{
+			"lane": 2,
+			"startTime": 84409.0859
+		},
+		{
+			"lane": 3,
+			"startTime": 84545.45
+		},
+		{
+			"startTime": 84818.18
+		},
+		{
+			"lane": 3,
+			"startTime": 84954.54
+		},
+		{
+			"lane": 6,
+			"startTime": 85363.63
+		},
+		{
+			"lane": 7,
+			"startTime": 85636.36
+		},
+		{
+			"lane": 6,
+			"startTime": 85909.0859
+		},
+		{
+			"lane": 7,
+			"startTime": 86045.45
+		},
+		{
+			"lane": 6,
+			"startTime": 86590.91
+		},
+		{
+			"lane": 7,
+			"startTime": 86727.27
+		},
+		{
+			"lane": 5,
+			"startTime": 87000
+		},
+		{
+			"endTime": 87818,
+			"lane": 6,
+			"startTime": 87272.73
+		}
+	],
+	"artist": "Kawai Sprite",
+	"opponent": "mom-car",
+	"bf": "bf-car",
+	"gf": "gf-car",
+	"lyricSteps": [],
+	"title": "Satin-Panties",
+	"initialScrollVelocity": 1,
+	"source": "Friday Night Funkin'",
+	"instFile": "Inst.ogg",
+	"cameraFocuses": [
+		{},
+		{
+			"char": 1,
+			"startTime": 2181.81818181818
+		},
+		{
+			"startTime": 4363.63636363636
+		},
+		{
+			"char": 1,
+			"startTime": 8727.27272727273
+		},
+		{
+			"startTime": 13090.9090909091
+		},
+		{
+			"char": 1,
+			"startTime": 17454.5454545455
+		},
+		{
+			"startTime": 21818.1818181818
+		},
+		{
+			"char": 1,
+			"startTime": 26181.8181818182
+		},
+		{
+			"startTime": 30545.4545454546
+		},
+		{
+			"char": 1,
+			"startTime": 34909.0909090909
+		},
+		{
+			"startTime": 39272.7272727273
+		},
+		{
+			"char": 1,
+			"startTime": 43636.3636363637
+		},
+		{
+			"startTime": 48000
+		},
+		{
+			"char": 1,
+			"startTime": 52363.6363636364
+		},
+		{
+			"startTime": 56727.2727272728
+		},
+		{
+			"char": 1,
+			"startTime": 61090.9090909091
+		},
+		{
+			"startTime": 65454.5454545455
+		},
+		{
+			"char": 1,
+			"startTime": 69818.1818181819
+		},
+		{
+			"startTime": 74181.8181818182
+		},
+		{
+			"char": 1,
+			"startTime": 78545.4545454546
+		},
+		{
+			"startTime": 82909.0909090909
+		},
+		{
+			"char": 1,
+			"startTime": 85090.9090909091
+		}
+	],
+	"scrollVelocities": []
+}

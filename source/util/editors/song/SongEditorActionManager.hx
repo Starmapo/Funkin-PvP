@@ -46,6 +46,7 @@ class SongEditorActionManager extends ActionManager
 	public static inline var CHANGE_OPPONENT:String = 'change-opponent';
 	public static inline var CHANGE_BF:String = 'change-bf';
 	public static inline var CHANGE_GF:String = 'change-gf';
+	public static inline var CHANGE_STAGE:String = 'change-stage';
 	public static inline var CHANGE_INITIAL_SV:String = 'change-initial-sv';
 
 	var state:SongEditorState;
@@ -1184,6 +1185,39 @@ class ActionChangeGF implements IAction
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {gf: state.song.gf});
+	}
+}
+
+class ActionChangeStage implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_STAGE;
+
+	var state:SongEditorState;
+	var value:String;
+	var lastValue:String;
+
+	public function new(state:SongEditorState, value:String, lastValue:String)
+	{
+		this.state = state;
+		this.value = value;
+		this.lastValue = lastValue;
+	}
+
+	public function perform()
+	{
+		state.song.stage = value;
+		triggerEvent();
+	}
+
+	public function undo()
+	{
+		state.song.stage = lastValue;
+		triggerEvent();
+	}
+
+	function triggerEvent()
+	{
+		state.actionManager.triggerEvent(type, {stage: state.song.stage});
 	}
 }
 

@@ -29,7 +29,7 @@ class PromptSubState extends FlxSubState
 		FlxG.cameras.add(camSubState, false);
 		cameras = [camSubState];
 
-		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGBFloat(0, 0, 0, 0.8)));
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGBFloat(0, 0, 0, 0.5)));
 
 		promptText = new FlxUIText(0, 0, FlxG.width / 2, message);
 		promptText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);

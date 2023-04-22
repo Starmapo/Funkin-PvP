@@ -159,6 +159,7 @@ class SongEditorPlayState extends FNFState
 
 	function onSongComplete()
 	{
+		lyricsDisplay.visible = false;
 		exit();
 	}
 
