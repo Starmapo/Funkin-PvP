@@ -534,7 +534,12 @@ class SongEditorState extends FNFState
 			deleteSelectedObjects();
 		if (FlxG.keys.justPressed.TAB)
 			playfieldTabs.onTabEvent(playfieldNotes.exists ? 'Other' : 'Notes');
-		if (FlxG.keys.justPressed.ESCAPE)
+
+		if (FlxG.keys.justPressed.F1)
+			exitToTestPlay(0);
+		else if (FlxG.keys.justPressed.F2)
+			exitToTestPlay(1);
+		else if (FlxG.keys.justPressed.ESCAPE)
 			leaveEditor();
 	}
 

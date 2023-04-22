@@ -54,7 +54,7 @@ class CharacterInfo extends JsonObject
 			image: json.image,
 			scale: json.scale,
 			healthIcon: json.healthicon,
-			position: json.position.copy(),
+			positionOffset: json.position.copy(),
 			flipX: json.flip_x,
 			antialiasing: json.no_antialiasing == false,
 			healthColors: json.healthbar_colors,

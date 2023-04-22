@@ -9,8 +9,8 @@ class Character extends DancingSprite
 	public var charPosY:Float;
 	public var flipped:Bool;
 	public var debugMode:Bool = false;
-
-	var startWidth:Float;
+	public var startWidth:Float;
+	public var startHeight:Float;
 
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false)
 	{
@@ -29,7 +29,9 @@ class Character extends DancingSprite
 
 	override function animPlayed(name:String)
 	{
-		updatePosition();
+		if (flipped)
+			updatePosition();
+
 		animation.finishCallback = function(name:String)
 		{
 			var anim = charInfo.getAnim(name);
@@ -126,6 +128,7 @@ class Character extends DancingSprite
 		danceStep = 0;
 		playAnim(danceAnims[0], true);
 		startWidth = frameWidth;
+		startHeight = frameHeight;
 
 		updatePosition();
 	}

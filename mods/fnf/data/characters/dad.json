@@ -1,142 +1,155 @@
 {
-	"animations": [
+	"positionOffset": [
+		0,
+		0
+	],
+	"image": "characters/dad",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "dad",
+	"flipX": false,
+	"anims": [
 		{
-			"offsets": [
-				-9,
-				10
-			],
-			"loop": false,
-			"anim": "singLEFT",
+			"atlasName": "Dad idle dance",
+			"indices": [],
+			"nextAnim": "",
 			"fps": 24,
-			"name": "Dad Sing Note LEFT",
-			"indices": []
-		},
-		{
-			"offsets": [
-				0,
-				-30
-			],
 			"loop": false,
-			"anim": "singDOWN",
-			"fps": 24,
-			"name": "Dad Sing Note DOWN",
-			"indices": []
-		},
-		{
-			"offsets": [
-				-6,
-				50
-			],
-			"loop": false,
-			"anim": "singUP",
-			"fps": 24,
-			"name": "Dad Sing Note UP",
-			"indices": []
-		},
-		{
-			"offsets": [
-				0,
-				27
-			],
-			"loop": false,
-			"anim": "singRIGHT",
-			"fps": 24,
-			"name": "Dad Sing Note RIGHT",
-			"indices": []
-		},
-		{
-			"offsets": [
+			"name": "idle",
+			"offset": [
 				0,
 				0
-			],
-			"loop": false,
-			"anim": "idle",
-			"fps": 24,
-			"name": "Dad idle dance",
-			"indices": []
+			]
 		},
 		{
-			"offsets": [
-				0,
-				0
-			],
-			"loop": true,
-			"fps": 24,
-			"anim": "idle-loop",
+			"atlasName": "Dad idle dance",
 			"indices": [
 				10,
 				11,
 				12,
 				12
 			],
-			"name": "Dad idle dance"
+			"nextAnim": "",
+			"fps": 24,
+			"loop": true,
+			"name": "idle-loop",
+			"offset": [
+				0,
+				0
+			]
 		},
 		{
-			"offsets": [
+			"atlasName": "Dad Sing Note DOWN",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singDOWN",
+			"offset": [
+				0,
+				-30
+			]
+		},
+		{
+			"atlasName": "Dad Sing Note LEFT",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singLEFT",
+			"offset": [
 				-9,
 				10
-			],
-			"loop": true,
-			"fps": 24,
-			"anim": "singLEFT-loop",
+			]
+		},
+		{
+			"atlasName": "Dad Sing Note LEFT",
 			"indices": [
 				12,
 				13,
 				14,
 				15
 			],
-			"name": "Dad Sing Note LEFT"
+			"nextAnim": "",
+			"fps": 24,
+			"loop": true,
+			"name": "singLEFT-loop",
+			"offset": [
+				-9,
+				10
+			]
 		},
 		{
-			"offsets": [
+			"atlasName": "Dad Sing Note RIGHT",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singRIGHT",
+			"offset": [
 				0,
 				27
-			],
-			"loop": true,
-			"fps": 24,
-			"anim": "singRIGHT-loop",
+			]
+		},
+		{
+			"atlasName": "Dad Sing Note RIGHT",
 			"indices": [
 				15,
 				16,
 				17,
 				18
 			],
-			"name": "Dad Sing Note RIGHT"
+			"nextAnim": "",
+			"fps": 24,
+			"loop": true,
+			"name": "singRIGHT-loop",
+			"offset": [
+				0,
+				27
+			]
 		},
 		{
-			"offsets": [
+			"atlasName": "Dad Sing Note UP",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singUP",
+			"offset": [
 				-6,
 				50
-			],
-			"loop": true,
-			"fps": 24,
-			"anim": "singUP-loop",
+			]
+		},
+		{
+			"atlasName": "Dad Sing Note UP",
 			"indices": [
 				56,
 				57,
 				58,
 				59
 			],
-			"name": "Dad Sing Note UP"
+			"nextAnim": "",
+			"fps": 24,
+			"loop": true,
+			"name": "singUP-loop",
+			"offset": [
+				-6,
+				50
+			]
 		}
 	],
-	"no_antialiasing": false,
-	"image": "characters/dad",
-	"position": [
-		0,
-		0
+	"cameraOffset": [
+		17,
+		-211
 	],
-	"healthicon": "dad",
-	"flip_x": false,
-	"healthbar_colors": [
+	"healthColors": [
 		175,
 		102,
 		206
 	],
-	"camera_position": [
-		0,
-		0
-	],
-	"sing_duration": 6.1,
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
 	"scale": 1
 }
