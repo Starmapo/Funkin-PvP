@@ -14,7 +14,7 @@
 		{
 			"atlasName": "Dad idle dance",
 			"indices": [],
-			"nextAnim": "",
+			"nextAnim": "idle-loop",
 			"fps": 24,
 			"loop": false,
 			"name": "idle",
@@ -55,7 +55,7 @@
 		{
 			"atlasName": "Dad Sing Note LEFT",
 			"indices": [],
-			"nextAnim": "",
+			"nextAnim": "singLEFT-loop",
 			"fps": 24,
 			"loop": false,
 			"name": "singLEFT",
@@ -84,7 +84,7 @@
 		{
 			"atlasName": "Dad Sing Note RIGHT",
 			"indices": [],
-			"nextAnim": "",
+			"nextAnim": "singRIGHT-loop",
 			"fps": 24,
 			"loop": false,
 			"name": "singRIGHT",
@@ -113,7 +113,7 @@
 		{
 			"atlasName": "Dad Sing Note UP",
 			"indices": [],
-			"nextAnim": "",
+			"nextAnim": "singUP-loop",
 			"fps": 24,
 			"loop": false,
 			"name": "singUP",

@@ -1,0 +1,159 @@
+{
+	"positionOffset": [
+		-9,
+		380.4
+	],
+	"image": "characters/bf",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "bf",
+	"flipX": true,
+	"anims": [
+		{
+			"atlasName": "BF HEY!!",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "hey",
+			"offset": [
+				2,
+				5
+			]
+		},
+		{
+			"atlasName": "BF idle dance",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF idle shaking",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": true,
+			"name": "scared",
+			"offset": [
+				0,
+				1
+			]
+		},
+		{
+			"atlasName": "BF NOTE DOWN",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singDOWN",
+			"offset": [
+				-21,
+				-52
+			]
+		},
+		{
+			"atlasName": "BF NOTE DOWN MISS",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singDOWN-miss",
+			"offset": [
+				-21,
+				-22
+			]
+		},
+		{
+			"atlasName": "BF NOTE LEFT",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singLEFT",
+			"offset": [
+				-31,
+				-10
+			]
+		},
+		{
+			"atlasName": "BF NOTE LEFT MISS",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singLEFT-miss",
+			"offset": [
+				-32,
+				16
+			]
+		},
+		{
+			"atlasName": "BF NOTE RIGHT",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singRIGHT",
+			"offset": [
+				45,
+				-9
+			]
+		},
+		{
+			"atlasName": "BF NOTE RIGHT MISS",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singRIGHT-miss",
+			"offset": [
+				39,
+				19
+			]
+		},
+		{
+			"atlasName": "BF NOTE UP",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singUP",
+			"offset": [
+				6,
+				30
+			]
+		},
+		{
+			"atlasName": "BF NOTE UP MISS",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singUP-miss",
+			"offset": [
+				2,
+				30
+			]
+		}
+	],
+	"cameraOffset": [
+		-15,
+		-62
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

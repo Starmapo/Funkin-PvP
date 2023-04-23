@@ -69,9 +69,7 @@ class SongSelectState extends FNFState
 		add(playerGroups);
 
 		for (i in 0...players)
-		{
 			playerGroups.add(new PlayerSongSelect(i, camPlayers[i], this));
-		}
 
 		stateText = new FlxText(0, 0, 0, 'Song Selection');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -144,14 +142,16 @@ class PlayerSongSelect extends FlxGroup
 {
 	static var lastSelectedGroups:Array<Int> = [0, 0];
 
-	public var viewingSongs:Bool = false;
+	public var viewing:Int = 0;
 
 	var player:Int = 0;
 	var state:SongSelectState;
 	var groupMenuList:GroupMenuList;
 	var songMenuList:SongMenuList;
+	var difficultyMenuList:DifficultyMenuList;
 	var camFollow:FlxObject;
 	var lastGroupReset:String = '';
+	var lastSongReset:String = '';
 
 	public function new(player:Int, camera:FlxCamera, state:SongSelectState)
 	{
@@ -167,18 +167,23 @@ class PlayerSongSelect extends FlxGroup
 		groupMenuList = new GroupMenuList(player);
 		groupMenuList.onChange.add(onGroupChange);
 		groupMenuList.onAccept.add(onGroupAccept);
-		add(groupMenuList);
 
 		for (name => group in Mods.songGroups)
-		{
 			groupMenuList.createItem(group);
-		}
 
 		songMenuList = new SongMenuList(player);
 		songMenuList.onChange.add(onSongChange);
 		songMenuList.onAccept.add(onSongAccept);
 		songMenuList.controlsEnabled = false;
+
+		difficultyMenuList = new DifficultyMenuList(player);
+		difficultyMenuList.onChange.add(onDiffChange);
+		difficultyMenuList.onAccept.add(onDiffAccept);
+		difficultyMenuList.controlsEnabled = false;
+
+		add(difficultyMenuList);
 		add(songMenuList);
+		add(groupMenuList);
 
 		setControlsEnabled(false);
 
@@ -190,13 +195,21 @@ class PlayerSongSelect extends FlxGroup
 	{
 		if (!state.transitioning && PlayerSettings.checkPlayerAction(player, BACK_P))
 		{
-			if (viewingSongs)
+			if (viewing == 1)
 			{
 				groupMenuList.controlsEnabled = true;
 				songMenuList.controlsEnabled = false;
-				camFollow.x = FlxG.width / (Settings.singleSongSelection ? 2 : 4);
+				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 0.5 : 0.25);
 				updateCamFollow(groupMenuList.selectedItem);
-				viewingSongs = false;
+				viewing = 0;
+			}
+			else if (viewing == 2)
+			{
+				songMenuList.controlsEnabled = true;
+				difficultyMenuList.controlsEnabled = false;
+				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1 : 0.75);
+				updateCamFollow(songMenuList.selectedItem);
+				viewing = 1;
 			}
 			else
 			{
@@ -213,8 +226,10 @@ class PlayerSongSelect extends FlxGroup
 
 	public function setControlsEnabled(value:Bool)
 	{
-		if (viewingSongs)
+		if (viewing == 1)
 			songMenuList.controlsEnabled = value;
+		else if (viewing == 2)
+			difficultyMenuList.controlsEnabled = value;
 		else
 			groupMenuList.controlsEnabled = value;
 	}
@@ -236,10 +251,8 @@ class PlayerSongSelect extends FlxGroup
 			lastGroupReset = item.name;
 		}
 		else
-		{
 			updateCamFollow(songMenuList.selectedItem);
-		}
-		viewingSongs = true;
+		viewing = 1;
 		CoolUtil.playScrollSound();
 	}
 
@@ -255,31 +268,58 @@ class PlayerSongSelect extends FlxGroup
 		updateCamFollow(item);
 	}
 
-	function onSongAccept(item:SongMenuItem) {}
+	function onSongAccept(item:SongMenuItem)
+	{
+		songMenuList.controlsEnabled = false;
+		difficultyMenuList.controlsEnabled = true;
+		camFollow.x = FlxG.width * (Settings.singleSongSelection ? 2.5 : 1.25);
+		if (lastSongReset != item.name)
+		{
+			difficultyMenuList.resetSong(item);
+			lastSongReset = item.name;
+		}
+		else
+			updateCamFollow(difficultyMenuList.selectedItem);
+		viewing = 2;
+		CoolUtil.playScrollSound();
+	}
+
+	function onDiffChange(item:DifficultyMenuItem)
+	{
+		updateCamFollow(item);
+	}
+
+	function onDiffAccept(item:DifficultyMenuItem) {}
 }
 
 class GroupMenuList extends TypedMenuList<GroupMenuItem>
 {
 	var player:Int = 0;
+	var columns:Int = 4;
+	var gridSize:Int = 158;
+	var singleOffset:Float;
+	var doubleOffset:Float;
 
 	public function new(player:Int)
 	{
-		super(VERTICAL, PLAYER(player));
+		super(COLUMNS(4), PLAYER(player));
 		this.player = player;
+
+		var columnWidth = gridSize * 4;
+		singleOffset = (FlxG.width - columnWidth) / 2;
+		doubleOffset = ((FlxG.width / 2) - columnWidth) / 2;
 	}
 
 	public function createItem(groupData:ModSongGroup)
 	{
 		var name = groupData.name;
-		var item = new GroupMenuItem(0, 250 * length, name, groupData);
+		var item = new GroupMenuItem(gridSize * (length % columns), gridSize * Math.floor(length / columns), name, groupData);
+
 		if (Settings.singleSongSelection)
-		{
-			item.screenCenter(X);
-		}
+			item.x += singleOffset;
 		else
-		{
-			item.x = ((FlxG.width / 2) - item.width) / 2;
-		}
+			item.x += doubleOffset;
+
 		return addItem(name, item);
 	}
 }
@@ -340,7 +380,7 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		var graphic = Paths.getImage(name, groupData.directory, true, graphicKey);
 
 		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupData.name);
-		text.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		text.setFormat('VCR OSD Mono', 8, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		text.updateHitbox();
 		text.y -= text.height;
 
@@ -406,23 +446,19 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 	{
 		super();
 		this.player = player;
-
-		cacheItems();
 	}
 
-	public function createItem(songData:ModSong)
+	public function createItem(songData:ModSong, y:Float)
 	{
 		var name = songData.directory + songData.name;
-		var item = new SongMenuItem(0, 0, name, songData);
+		var item = new SongMenuItem(0, y, name, songData);
 		if (Settings.singleSongSelection)
-		{
 			item.x = FlxG.width + ((FlxG.width - item.width) / 2);
-		}
 		else
-		{
 			item.x = (FlxG.width / 2) + (((FlxG.width / 2) - item.width) / 2);
-		}
+		item.y -= item.height / 2;
 		byName[name] = item;
+		item.ID = length;
 		return item;
 	}
 
@@ -433,30 +469,18 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 		clear();
 		for (song in songGroup.songs)
 		{
-			var item = byName[song.directory + song.name];
-			item.y = (midpoint.y + (100 * length)) - (item.height / 2);
-			item.ID = length;
+			var item = createItem(song, (midpoint.y + (100 * length)));
 			add(item);
 		}
 		selectItem(0);
 		midpoint.put();
 	}
-
-	function cacheItems()
-	{
-		for (group in Mods.songGroups)
-		{
-			for (song in group.songs)
-			{
-				createItem(song);
-			}
-		}
-	}
 }
 
 class SongMenuItem extends TextMenuItem
 {
-	var songData:ModSong;
+	public var songData:ModSong;
+
 	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, songData:ModSong)
@@ -465,6 +489,65 @@ class SongMenuItem extends TextMenuItem
 		this.songData = songData;
 
 		label.text = songData.name;
+		if (label.width > maxWidth)
+		{
+			var ratio = maxWidth / label.width;
+			label.size = Math.floor(label.size * ratio);
+		}
+	}
+}
+
+class DifficultyMenuList extends TypedMenuList<DifficultyMenuItem>
+{
+	var player:Int = 0;
+
+	public function new(player:Int)
+	{
+		super();
+		this.player = player;
+	}
+
+	public function createItem(diff:String, songData:ModSong, y:Float)
+	{
+		var name = songData.directory + songData.name + diff;
+		var item = new DifficultyMenuItem(0, y, name, diff, songData);
+		if (Settings.singleSongSelection)
+			item.x = FlxG.width * 2 + ((FlxG.width - item.width) / 2);
+		else
+			item.x = FlxG.width + (((FlxG.width / 2) - item.width) / 2);
+		item.y -= item.height / 2;
+		byName[name] = item;
+		return item;
+	}
+
+	public function resetSong(songItem:SongMenuItem)
+	{
+		var songData = songItem.songData;
+		var midpoint = songItem.getMidpoint();
+		clear();
+		for (diff in songData.difficulties)
+		{
+			var item = createItem(diff, songData, (midpoint.y + (100 * length)));
+			item.ID = length;
+			add(item);
+		}
+		selectItem(0);
+		midpoint.put();
+	}
+}
+
+class DifficultyMenuItem extends TextMenuItem
+{
+	public var songData:ModSong;
+
+	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
+
+	public function new(x:Float = 0, y:Float = 0, name:String, diff:String, songData:ModSong)
+	{
+		super(x, y, name, callback);
+		this.songData = songData;
+
+		label.text = name;
 		if (label.width > maxWidth)
 		{
 			var ratio = maxWidth / label.width;

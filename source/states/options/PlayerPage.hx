@@ -46,6 +46,24 @@ class PlayerPage extends Page
 			defaultValue: false
 		});
 		addSetting({
+			name: 'scrollSpeed',
+			displayName: 'Scroll Speed',
+			description: 'How fast the notes should be going.',
+			type: NUMBER,
+			defaultValue: 0.75,
+			displayFunction: function(v)
+			{
+				return v + 'x';
+			}
+		});
+		addSetting({
+			name: 'noteSplashes',
+			displayName: 'Note Splashes',
+			description: 'If enabled, a splash will appear when you get a "Sick" or "Marvelous" judgement.',
+			type: CHECKBOX,
+			defaultValue: true
+		});
+		addSetting({
 			displayName: 'Change Controls',
 			description: 'Change your device and key/button binds.',
 			type: ACTION

@@ -64,6 +64,7 @@ class CharacterEditorState extends FNFState
 		add(ghostChar);
 
 		char = new Character(0, 0, charInfo);
+		char.alpha = 0.85;
 		add(char);
 
 		camIndicator = new FlxSprite().loadGraphic(Paths.getImage('editors/cross'));
@@ -144,7 +145,7 @@ class CharacterEditorState extends FNFState
 		}
 		else
 			camPos.velocity.set();
-		
+
 		if (FlxG.keys.justPressed.R)
 			resetCamPos();
 
@@ -197,8 +198,8 @@ class CharacterEditorState extends FNFState
 		{
 			var delta = FlxG.mouse.getWorldPosition() - dragMousePos;
 			var offset = draggingCam ? charInfo.cameraOffset : charInfo.positionOffset;
-			offset[0] = dragPositionOffset[0] + delta.x;
-			offset[1] = dragPositionOffset[1] + delta.y;
+			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2);
+			offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2);
 
 			if (draggingCam)
 				updateCamIndicator();
@@ -224,7 +225,7 @@ class CharacterEditorState extends FNFState
 				dragPositionOffset = charInfo.cameraOffset.copy();
 				draggingCam = true;
 			}
-			else if (char.pixelsOverlapPoint(mousePos))
+			else if (FlxG.mouse.overlaps(char))
 			{
 				dragMousePos = mousePos;
 				dragPositionOffset = charInfo.positionOffset.copy();
@@ -353,13 +354,11 @@ class CharacterEditorState extends FNFState
 			ghostAnim = name;
 			ghostChar.visible = true;
 			ghostChar.playAnim(name, true);
-			char.alpha = 0.85;
 		}
 		else
 		{
 			ghostAnim = null;
 			ghostChar.visible = false;
-			char.alpha = 1;
 		}
 	}
 

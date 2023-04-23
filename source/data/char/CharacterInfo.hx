@@ -74,7 +74,7 @@ class CharacterInfo extends JsonObject
 				offset: anim.offsets.copy(),
 				nextAnim: ''
 			});
-			animMap.set(anim.name, true);
+			animMap.set(anim.anim, true);
 		}
 		if (animMap.exists('danceLeft') && animMap.exists('danceRight'))
 			charInfo.danceAnims = ['danceLeft', 'danceRight'];

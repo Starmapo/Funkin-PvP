@@ -1,12 +1,12 @@
 package ui.lists;
 
-import flixel.util.FlxDestroyUtil;
 import data.Controls.Action;
 import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 typedef MenuList = TypedMenuList<MenuItem>;
@@ -159,6 +159,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 			{
 				case HORIZONTAL: navigate(checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT));
 				case VERTICAL: navigate(checkAction(UI_UP_P), checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
+				case COLUMNS(n): navigateColumns();
 				case BOTH: navigate(checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P), checkAction(UI_LEFT) || checkAction(UI_UP), checkAction(UI_RIGHT)
 						|| checkAction(UI_DOWN));
 			}
@@ -224,24 +225,80 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return index;
 	}
 
-	function changeIndex(index:Int, prev:Bool)
+	function navigateGrid(prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool, prevJump:Bool, nextJump:Bool, prevJumpHold:Bool, nextJumpHold:Bool)
+	{
+		var index = selectedIndex;
+
+		if (prev == next && prevJump == nextJump && (!holdEnabled || (prevHold == nextHold && prevJumpHold == nextJumpHold)))
+			return index;
+
+		if (prev || next)
+		{
+			holdTime = lastHoldTime = 0;
+			index = changeIndex(index, prev);
+		}
+		else if (holdEnabled && (prevHold || nextHold))
+		{
+			holdTime += FlxG.elapsed;
+
+			if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
+			{
+				index = changeIndex(index, prevHold);
+				lastHoldTime = holdTime;
+			}
+		}
+
+		if (prevJump || nextJump)
+		{
+			holdTime = lastHoldTime = 0;
+			index = changeIndex(index, prevJump, switch (navMode)
+			{
+				case COLUMNS(n): n;
+				default: 1;
+			});
+		}
+		else if (holdEnabled && (prevJumpHold || nextJumpHold))
+		{
+			holdTime += FlxG.elapsed;
+
+			if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
+			{
+				index = changeIndex(index, prevJumpHold, switch (navMode)
+				{
+					case COLUMNS(n): n;
+					default: 1;
+				});
+				lastHoldTime = holdTime;
+			}
+		}
+
+		return index;
+	}
+
+	function navigateColumns()
+	{
+		return navigateGrid(checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT), checkAction(UI_UP_P),
+			checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
+	}
+
+	function changeIndex(index:Int, prev:Bool, amount:Int = 1)
 	{
 		if (prev)
 		{
-			if (index > 0)
-				index--;
-			else if (wrapEnabled)
-				index = length - 1;
+			if (wrapEnabled)
+				index = FlxMath.wrapInt(index - amount, 0, length - 1);
+			else
+				index = FlxMath.maxInt(index - amount, 0);
 		}
 		else
 		{
-			if (index < length - 1)
-				index++;
-			else if (wrapEnabled)
-				index = 0;
+			if (wrapEnabled)
+				index = FlxMath.wrapInt(index + amount, 0, length - 1);
+			else
+				index = FlxMath.minInt(index + amount, length - 1);
 		}
 		return index;
-	};
+	}
 
 	function accept()
 	{
@@ -391,6 +448,7 @@ enum NavMode
 	HORIZONTAL;
 	VERTICAL;
 	BOTH;
+	COLUMNS(n:Int);
 }
 
 enum ControlsMode

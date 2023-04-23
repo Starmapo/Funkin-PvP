@@ -1,8 +1,10 @@
 package states.editors;
 
+import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxObject;
 import states.editors.SongEditorState;
+import states.menus.MainMenuState;
 import ui.lists.TextMenuList;
 
 class ToolboxState extends FNFState
@@ -44,6 +46,14 @@ class ToolboxState extends FNFState
 		FlxG.camera.snapToTarget();
 
 		super.create();
+	}
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		if (PlayerSettings.checkAction(BACK_P))
+			FlxG.switchState(new MainMenuState());
 	}
 
 	function createItem(name:String, callback:Void->Void)
