@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
@@ -440,6 +441,16 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 			label.alpha = alpha;
 
 		return alpha;
+	}
+
+	override function set_color(value:FlxColor):FlxColor
+	{
+		super.set_color(value);
+
+		if (label != null)
+			label.color = color;
+
+		return color;
 	}
 }
 

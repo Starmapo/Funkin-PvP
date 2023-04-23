@@ -111,13 +111,9 @@ class SongSelectState extends FNFState
 
 		// prevent overflow (it would probably take an eternity for that to happen but you can never be too safe)
 		if (iconScroll.x >= 300)
-		{
 			iconScroll.x %= 300;
-		}
 		if (iconScroll.y >= 300)
-		{
 			iconScroll.y %= 300;
-		}
 
 		stateText.y = camScroll.y;
 		for (cam in camPlayers)
@@ -143,6 +139,7 @@ class PlayerSongSelect extends FlxGroup
 	static var lastSelectedGroups:Array<Int> = [0, 0];
 
 	public var viewing:Int = 0;
+	public var ready:Bool = false;
 
 	var player:Int = 0;
 	var state:SongSelectState;
@@ -152,6 +149,7 @@ class PlayerSongSelect extends FlxGroup
 	var camFollow:FlxObject;
 	var lastGroupReset:String = '';
 	var lastSongReset:String = '';
+	var lastDiffItem:DifficultyMenuItem;
 
 	public function new(player:Int, camera:FlxCamera, state:SongSelectState)
 	{
@@ -170,6 +168,7 @@ class PlayerSongSelect extends FlxGroup
 
 		for (name => group in Mods.songGroups)
 			groupMenuList.createItem(group);
+		groupMenuList.afterInit();
 
 		songMenuList = new SongMenuList(player);
 		songMenuList.onChange.add(onSongChange);
@@ -195,7 +194,15 @@ class PlayerSongSelect extends FlxGroup
 	{
 		if (!state.transitioning && PlayerSettings.checkPlayerAction(player, BACK_P))
 		{
-			if (viewing == 1)
+			if (ready)
+			{
+				var item = difficultyMenuList.selectedItem;
+				FlxTween.cancelTweensOf(item);
+				FlxTween.color(item, 0.5, FlxColor.LIME, FlxColor.WHITE);
+				ready = false;
+				difficultyMenuList.controlsEnabled = true;
+			}
+			else if (viewing == 1)
 			{
 				groupMenuList.controlsEnabled = true;
 				songMenuList.controlsEnabled = false;
@@ -207,7 +214,7 @@ class PlayerSongSelect extends FlxGroup
 			{
 				songMenuList.controlsEnabled = true;
 				difficultyMenuList.controlsEnabled = false;
-				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1 : 0.75);
+				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1.5 : 0.75);
 				updateCamFollow(songMenuList.selectedItem);
 				viewing = 1;
 			}
@@ -286,10 +293,26 @@ class PlayerSongSelect extends FlxGroup
 
 	function onDiffChange(item:DifficultyMenuItem)
 	{
+		if (lastDiffItem != null)
+		{
+			// the color tween changes the item's alpha for some fucking reason
+			// so i gotta stop it if the item is unselected
+			FlxTween.cancelTweensOf(lastDiffItem);
+			lastDiffItem.color = FlxColor.WHITE;
+			lastDiffItem = null;
+		}
 		updateCamFollow(item);
 	}
 
-	function onDiffAccept(item:DifficultyMenuItem) {}
+	function onDiffAccept(item:DifficultyMenuItem)
+	{
+		ready = true;
+		difficultyMenuList.controlsEnabled = false;
+		FlxTween.cancelTweensOf(item);
+		FlxTween.color(item, 0.5, FlxColor.WHITE, FlxColor.LIME);
+		CoolUtil.playConfirmSound();
+		lastDiffItem = item;
+	}
 }
 
 class GroupMenuList extends TypedMenuList<GroupMenuItem>
@@ -321,6 +344,17 @@ class GroupMenuList extends TypedMenuList<GroupMenuItem>
 			item.x += doubleOffset;
 
 		return addItem(name, item);
+	}
+
+	public function afterInit()
+	{
+		var num = length % columns;
+		if (num != 0)
+		{
+			var offset = ((gridSize * 4) - (gridSize * num)) / 2;
+			for (i in length - num...length)
+				members[i].x += offset;
+		}
 	}
 }
 
@@ -380,7 +414,7 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		var graphic = Paths.getImage(name, groupData.directory, true, graphicKey);
 
 		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupData.name);
-		text.setFormat('VCR OSD Mono', 8, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		text.updateHitbox();
 		text.y -= text.height;
 
@@ -394,7 +428,7 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		var mask = FlxG.bitmap.get('groupMask');
 		if (mask == null)
 		{
-			var sprite = new FlxSprite().makeGraphic(600, 240, FlxColor.TRANSPARENT, false, 'groupMask');
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.BLACK);
 			mask = sprite.graphic;
 			sprite.destroy();
@@ -405,7 +439,7 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		var outline = FlxG.bitmap.get('groupOutline');
 		if (outline == null)
 		{
-			var sprite = new FlxSprite().makeGraphic(600, 240, FlxColor.TRANSPARENT, false, 'groupOutline');
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupOutline');
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
 				{thickness: thickness, color: FlxColor.WHITE});
 			outline = sprite.graphic;
@@ -547,7 +581,7 @@ class DifficultyMenuItem extends TextMenuItem
 		super(x, y, name, callback);
 		this.songData = songData;
 
-		label.text = name;
+		label.text = diff;
 		if (label.width > maxWidth)
 		{
 			var ratio = maxWidth / label.width;

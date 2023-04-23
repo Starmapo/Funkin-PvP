@@ -49,8 +49,9 @@ class Song extends JsonObject
 		}
 
 		var song = new Song(json);
-		song.directory = Path.directory(path);
+		song.directory = Path.normalize(Path.directory(path));
 		song.difficultyName = new Path(path).file;
+		song.mod = song.directory.split('/')[1];
 		song.sort();
 		return song;
 	}
@@ -352,6 +353,8 @@ class Song extends JsonObject
 		The difficulty name of this map. Set automatically with `Song.loadSong()`.
 	**/
 	public var difficultyName:String = '';
+
+	public var mod:String = '';
 
 	/**
 		The chart version that this map was made with.
