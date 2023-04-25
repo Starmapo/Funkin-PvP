@@ -37,6 +37,7 @@ class SongSelectState extends FNFState
 	override function create()
 	{
 		transIn = transOut = null;
+		persistentUpdate = true;
 
 		var players = Settings.singleSongSelection ? 1 : 2;
 		for (i in 0...players)
@@ -114,6 +115,26 @@ class SongSelectState extends FNFState
 			iconScroll.x %= 300;
 		if (iconScroll.y >= 300)
 			iconScroll.y %= 300;
+
+		if (!transitioning)
+		{
+			var ready = true;
+			for (player in playerGroups)
+			{
+				if (!player.ready)
+				{
+					ready = false;
+					break;
+				}
+			}
+			if (ready)
+			{
+				exitTransition(function(_)
+				{
+					FlxG.switchState(new CharacterSelectState());
+				});
+			}
+		}
 
 		stateText.y = camScroll.y;
 		for (cam in camPlayers)
@@ -295,8 +316,6 @@ class PlayerSongSelect extends FlxGroup
 	{
 		if (lastDiffItem != null)
 		{
-			// the color tween changes the item's alpha for some fucking reason
-			// so i gotta stop it if the item is unselected
 			FlxTween.cancelTweensOf(lastDiffItem);
 			lastDiffItem.color = FlxColor.WHITE;
 			lastDiffItem = null;

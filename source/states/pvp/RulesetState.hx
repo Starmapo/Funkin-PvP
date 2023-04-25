@@ -159,8 +159,11 @@ class RulesetState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
 
-		CoolUtil.playPvPMusic(0);
-		FlxG.sound.music.fadeIn(Main.TRANSITION_TIME);
+		if (!FlxG.sound.musicPlaying)
+		{
+			CoolUtil.playPvPMusic(0);
+			FlxG.sound.music.fadeIn(Main.TRANSITION_TIME);
+		}
 
 		super.create();
 	}
