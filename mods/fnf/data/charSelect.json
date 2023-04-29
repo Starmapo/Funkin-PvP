@@ -2,6 +2,7 @@
   "groups": [
     {
       "name": "Friday Night Funkin'",
+	  "bg": "bg/fnf",
       "chars": [
         "Boyfriend",
         "Girlfriend",

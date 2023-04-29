@@ -9,6 +9,7 @@ class Mods
 	public static var currentMod:String = 'fnf';
 	public static var pvpMusic:Array<String> = [];
 	public static var songGroups:Map<String, ModSongGroup> = [];
+	public static var characterGroups:Map<String, ModCharacterGroup> = [];
 }
 
 class Mod extends JsonObject
@@ -42,5 +43,13 @@ typedef ModSong =
 {
 	var name:String;
 	var difficulties:Array<String>;
+	var directory:String;
+}
+
+typedef ModCharacterGroup =
+{
+	var name:String;
+	var bg:String;
+	var chars:Array<String>;
 	var directory:String;
 }

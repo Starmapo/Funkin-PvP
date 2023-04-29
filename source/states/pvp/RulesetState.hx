@@ -47,7 +47,6 @@ class RulesetState extends FNFState
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF21007F;
-		bg.cameras = [FlxG.camera];
 		add(bg);
 
 		stateText = new FlxText(0, 0, 0, 'Ruleset');

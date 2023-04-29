@@ -155,7 +155,7 @@ class BootState extends FNFState
 				}
 
 				var songSelectPath = Path.join([fullPath, 'data/songSelect.json']);
-				if (FileSystem.exists(pvpMusicPath))
+				if (FileSystem.exists(songSelectPath))
 				{
 					var songSelect = Paths.getJson(songSelectPath);
 					var groups:Array<Dynamic> = songSelect.groups;
@@ -194,6 +194,9 @@ class BootState extends FNFState
 							songGroup.songs.push(song);
 					}
 				}
+
+				var characterSelectPath = Path.join([fullPath, 'data/charSelect.json']);
+				if (FileSystem.exists(characterSelectPath)) {}
 			}
 		}
 		if (!hasFNF)
