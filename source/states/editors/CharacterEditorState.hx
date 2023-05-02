@@ -11,7 +11,11 @@ import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.io.Path;
+import openfl.display.PNGEncoderOptions;
+import openfl.events.Event;
+import openfl.net.FileReference;
 import sprites.game.Character;
+import sys.io.File;
 import systools.Dialogs;
 import ui.editors.NotificationManager;
 
@@ -122,6 +126,15 @@ class CharacterEditorState extends FNFState
 		});
 		saveButton.x -= saveButton.width;
 		buttonGroup.add(saveButton);
+
+		var saveFrameButton = new FlxUIButton(FlxG.width, saveButton.y + saveButton.height + 4, 'Save Current Frame', function()
+		{
+			saveFrame();
+		});
+		saveFrameButton.resize(160, saveFrameButton.height);
+		saveFrameButton.autoCenterLabel();
+		saveFrameButton.x -= saveFrameButton.width;
+		buttonGroup.add(saveFrameButton);
 
 		notificationManager = new NotificationManager();
 		add(notificationManager);
@@ -370,5 +383,22 @@ class CharacterEditorState extends FNFState
 	function updateCamIndicator()
 	{
 		camIndicator.setPosition(char.x + (char.startWidth / 2) + charInfo.cameraOffset[0], char.y + (char.startHeight / 2) + charInfo.cameraOffset[1]);
+	}
+
+	function saveFrame()
+	{
+		var frame = char.frame;
+		if (frame == null)
+			return;
+
+		var bytes = char.pixels.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
+		var fr = new FileReference();
+		fr.addEventListener(Event.SELECT, onSelect);
+		fr.save(bytes, charInfo.charName + '.png');
+	}
+
+	function onSelect(_)
+	{
+		notificationManager.showNotification('Image succesfully saved!', SUCCESS);
 	}
 }
