@@ -34,10 +34,16 @@ class Character extends DancingSprite
 
 		animation.finishCallback = function(name:String)
 		{
-			var anim = charInfo.getAnim(name);
-			if (anim != null && anim.nextAnim.length > 0)
-				playAnim(anim.nextAnim);
-			animation.finishCallback = null;
+			if (!debugMode)
+			{
+				var anim = charInfo.getAnim(name);
+				if (anim != null && anim.nextAnim.length > 0)
+					playAnim(anim.nextAnim);
+				else
+					stopAnimCallback();
+			}
+			else
+				stopAnimCallback();
 		}
 	}
 

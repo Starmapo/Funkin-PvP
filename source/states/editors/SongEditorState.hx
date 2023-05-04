@@ -308,7 +308,7 @@ class SongEditorState extends FNFState
 			actionManager.lastSaveAction = actionManager.undoStack[0];
 
 		if (notif)
-			notificationManager.showNotification('Song succesfully saved!', SUCCESS);
+			notificationManager.showNotification('Song successfully saved!', SUCCESS);
 	}
 
 	public function getTimeFromY(y:Float)

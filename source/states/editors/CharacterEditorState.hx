@@ -69,6 +69,7 @@ class CharacterEditorState extends FNFState
 
 		char = new Character(0, 0, charInfo);
 		char.alpha = 0.85;
+		char.debugMode = true;
 		add(char);
 
 		camIndicator = new FlxSprite().loadGraphic(Paths.getImage('editors/cross'));
@@ -122,7 +123,7 @@ class CharacterEditorState extends FNFState
 		var saveButton = new FlxUIButton(FlxG.width, loadButton.y + loadButton.height + 4, 'Save', function()
 		{
 			save();
-			notificationManager.showNotification('Character succesfully saved!', SUCCESS);
+			notificationManager.showNotification('Character successfully saved!', SUCCESS);
 		});
 		saveButton.x -= saveButton.width;
 		buttonGroup.add(saveButton);
@@ -188,6 +189,10 @@ class CharacterEditorState extends FNFState
 				if (FlxG.keys.justPressed.PERIOD)
 					changeFrameIndex(1);
 			}
+			if (FlxG.keys.justPressed.HOME)
+				char.animation.curAnim.curFrame = 0;
+			if (FlxG.keys.justPressed.END && char.animation.curAnim.numFrames > 0)
+				char.animation.curAnim.curFrame = char.animation.curAnim.numFrames - 1;
 
 			var canHold = timeSinceLastChange >= 0.1;
 			var mult = FlxG.keys.pressed.SHIFT ? 10 : 1;
@@ -392,13 +397,7 @@ class CharacterEditorState extends FNFState
 			return;
 
 		var bytes = char.pixels.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
-		var fr = new FileReference();
-		fr.addEventListener(Event.SELECT, onSelect);
-		fr.save(bytes, charInfo.charName + '.png');
-	}
-
-	function onSelect(_)
-	{
-		notificationManager.showNotification('Image succesfully saved!', SUCCESS);
+		File.saveBytes(charInfo.charName + '.png', bytes);
+		notificationManager.showNotification('Image successfully saved!', SUCCESS);
 	}
 }
