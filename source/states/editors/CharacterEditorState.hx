@@ -43,7 +43,7 @@ class CharacterEditorState extends FNFState
 	{
 		super();
 		if (charInfo == null)
-			charInfo = CharacterInfo.loadCharacterFromName('fnf:Daddy Dearest');
+			charInfo = CharacterInfo.loadCharacterFromName('fnf:dad');
 		this.charInfo = charInfo;
 
 		persistentUpdate = true;
@@ -56,7 +56,7 @@ class CharacterEditorState extends FNFState
 		bg.scrollFactor.set();
 		add(bg);
 
-		guideChar = new Character(0, 0, CharacterInfo.loadCharacterFromName('fnf:Daddy Dearest'));
+		guideChar = new Character(0, 0, CharacterInfo.loadCharacterFromName('fnf:dad'));
 		guideChar.color = 0xFF886666;
 		guideChar.alpha = 0.6;
 		add(guideChar);

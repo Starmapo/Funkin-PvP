@@ -4,9 +4,18 @@
       "name": "Friday Night Funkin'",
 	  "bg": "bg/fnf",
       "chars": [
-        "Boyfriend",
-        "Girlfriend",
-        "Daddy Dearest"
+		  {
+			  "name": "bf",
+			  "displayName": "Boyfriend"
+		  },
+		  		  {
+			  "name": "gf",
+			  "displayName": "Girlfriend"
+		  },
+		  {
+			  "name": "dad",
+			  "displayName": "Daddy Dearest"
+		  }
       ]
     }
   ]
