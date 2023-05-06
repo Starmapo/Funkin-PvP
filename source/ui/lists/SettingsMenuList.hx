@@ -278,26 +278,6 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		return data;
 	}
 
-	override function get_width()
-	{
-		if (label != null)
-		{
-			return label.width;
-		}
-
-		return width;
-	}
-
-	override function get_height()
-	{
-		if (label != null)
-		{
-			return label.height;
-		}
-
-		return height;
-	}
-
 	function get_value():Dynamic
 	{
 		return Reflect.getProperty(Settings, data.name);

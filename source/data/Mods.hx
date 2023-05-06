@@ -50,6 +50,12 @@ typedef ModCharacterGroup =
 {
 	var name:String;
 	var bg:String;
-	var chars:Array<String>;
+	var chars:Array<ModCharacter>;
+	var directory:String;
+}
+
+typedef ModCharacter =
+{
+	var name:String;
 	var directory:String;
 }

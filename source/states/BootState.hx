@@ -196,7 +196,42 @@ class BootState extends FNFState
 				}
 
 				var characterSelectPath = Path.join([fullPath, 'data/charSelect.json']);
-				if (FileSystem.exists(characterSelectPath)) {}
+				if (FileSystem.exists(characterSelectPath))
+				{
+					var characterSelect = Paths.getJson(characterSelectPath);
+					var groups:Array<Dynamic> = characterSelect.groups;
+					for (group in groups)
+					{
+						var chars:Array<ModCharacter> = [];
+						for (i in 0...group.chars.length)
+						{
+							var char = group.chars[i];
+							if (char != null && char.length > 0)
+							{
+								chars.push({
+									name: char,
+									directory: mod.directory
+								});
+							}
+						}
+
+						var charGroup = Mods.characterGroups.get(group.name);
+						if (charGroup == null)
+						{
+							charGroup = {
+								name: group.name,
+								bg: group.bg,
+								chars: [],
+								directory: mod.directory
+							};
+							Mods.characterGroups.set(group.name, charGroup);
+						}
+						for (char in chars)
+							charGroup.chars.push(char);
+
+						trace(charGroup);
+					}
+				}
 			}
 		}
 		if (!hasFNF)

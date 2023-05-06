@@ -19,7 +19,6 @@ import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import ui.lists.GroupMenuList;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
 
@@ -165,7 +164,7 @@ class PlayerSongSelect extends FlxGroup
 
 	var player:Int = 0;
 	var state:SongSelectState;
-	var groupMenuList:GroupMenuList;
+	var groupMenuList:SongGroupMenuList;
 	var songMenuList:SongMenuList;
 	var difficultyMenuList:DifficultyMenuList;
 	var camFollow:FlxObject;
@@ -184,7 +183,7 @@ class PlayerSongSelect extends FlxGroup
 		camera.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
 
-		groupMenuList = new GroupMenuList(player);
+		groupMenuList = new SongGroupMenuList(player);
 		groupMenuList.singleSongSelection = Settings.singleSongSelection;
 		groupMenuList.onChange.add(onGroupChange);
 		groupMenuList.onAccept.add(onGroupAccept);
@@ -264,13 +263,13 @@ class PlayerSongSelect extends FlxGroup
 			groupMenuList.controlsEnabled = value;
 	}
 
-	function onGroupChange(item:GroupMenuItem)
+	function onGroupChange(item:SongGroupMenuItem)
 	{
 		updateCamFollow(item);
 		lastSelectedGroups[player] = item.ID;
 	}
 
-	function onGroupAccept(item:GroupMenuItem)
+	function onGroupAccept(item:SongGroupMenuItem)
 	{
 		groupMenuList.controlsEnabled = false;
 		songMenuList.controlsEnabled = true;
@@ -336,6 +335,121 @@ class PlayerSongSelect extends FlxGroup
 	}
 }
 
+class SongGroupMenuList extends TypedMenuList<SongGroupMenuItem>
+{
+	public var singleSongSelection:Bool = false;
+
+	var player:Int = 0;
+	var columns:Int = 4;
+	var gridSize:Int = 158;
+	var singleOffset:Float;
+	var doubleOffset:Float;
+
+	public function new(player:Int)
+	{
+		super(COLUMNS(columns), PLAYER(player));
+		this.player = player;
+
+		var columnWidth = gridSize * 4;
+		singleOffset = (FlxG.width - columnWidth) / 2;
+		doubleOffset = ((FlxG.width / 2) - columnWidth) / 2;
+	}
+
+	public function createItem(groupData:ModSongGroup)
+	{
+		var name = groupData.name;
+		var item = new SongGroupMenuItem(gridSize * (length % columns), gridSize * Math.floor(length / columns), name, groupData);
+
+		if (singleSongSelection)
+			item.x += singleOffset;
+		else
+			item.x += doubleOffset;
+
+		return addItem(name, item);
+	}
+
+	public function afterInit()
+	{
+		var num = length % columns;
+		if (num != 0)
+		{
+			var offset = ((gridSize * 4) - (gridSize * num)) / 2;
+			for (i in length - num...length)
+				members[i].x += offset;
+		}
+	}
+}
+
+class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
+{
+	public var groupData:ModSongGroup;
+
+	var bg:FlxSprite;
+
+	public function new(x:Float = 0, y:Float = 0, name:String, groupData:ModSongGroup)
+	{
+		this.groupData = groupData;
+
+		var label = new FlxSpriteGroup();
+
+		super(x, y, label, name);
+
+		bg = new FlxSprite().loadGraphic(getBGGraphic(groupData.bg));
+		bg.antialiasing = true;
+		label.add(bg);
+
+		setEmptyBackground();
+	}
+
+	function getBGGraphic(name:String)
+	{
+		var graphicKey = name + '_edit';
+		if (FlxG.bitmap.checkCache(graphicKey))
+			return FlxG.bitmap.get(graphicKey);
+
+		var thickness = 4;
+
+		var graphic = Paths.getImage(name, groupData.directory, true, graphicKey);
+
+		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupData.name);
+		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		text.updateHitbox();
+		text.y -= text.height;
+
+		var textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(graphic.height - text.y), FlxColor.GRAY);
+		graphic.bitmap.copyPixels(textBG.pixels, new Rectangle(0, 0, textBG.width, textBG.height), new Point(textBG.x, textBG.y), null, null, true);
+		textBG.destroy();
+
+		graphic.bitmap.copyPixels(text.pixels, new Rectangle(0, 0, text.width, text.height), new Point(text.x, text.y), null, null, true);
+		text.destroy();
+
+		var mask = FlxG.bitmap.get('groupMask');
+		if (mask == null)
+		{
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
+			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.BLACK);
+			mask = sprite.graphic;
+			sprite.destroy();
+		}
+
+		graphic.bitmap.copyChannel(mask.bitmap, new Rectangle(0, 0, mask.width, mask.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
+
+		var outline = FlxG.bitmap.get('groupOutline');
+		if (outline == null)
+		{
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupOutline');
+			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
+				{thickness: thickness, color: FlxColor.WHITE});
+			outline = sprite.graphic;
+			sprite.destroy();
+		}
+
+		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
+
+		return graphic;
+	}
+}
+
 class SongMenuList extends TypedMenuList<SongMenuItem>
 {
 	var player:Int = 0;
@@ -360,9 +474,9 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 		return item;
 	}
 
-	public function resetGroup(groupItem:GroupMenuItem)
+	public function resetGroup(groupItem:SongGroupMenuItem)
 	{
-		var songGroup = Mods.songGroups.get(groupItem.name);
+		var songGroup = groupItem.groupData;
 		var midpoint = groupItem.getMidpoint();
 		clear();
 		for (song in songGroup.songs)

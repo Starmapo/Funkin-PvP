@@ -368,9 +368,9 @@ class Song extends JsonObject
 		source = readString(data.source, 'Unknown Source');
 		instFile = readString(data.instFile, 'Inst.ogg');
 		vocalsFile = readString(data.vocalsFile, 'Voices.ogg');
-		bf = readString(data.bf, 'bf');
-		opponent = readString(data.opponent, 'dad');
-		gf = readString(data.gf, 'gf');
+		bf = readString(data.bf, 'Boyfriend');
+		opponent = readString(data.opponent, 'Daddy Dearest');
+		gf = readString(data.gf, 'Girlfriend');
 		stage = readString(data.stage, 'stage');
 		for (t in readArray(data.timingPoints))
 		{

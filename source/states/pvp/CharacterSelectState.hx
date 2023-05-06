@@ -13,7 +13,10 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import ui.lists.GroupMenuList;
+import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapDataChannel;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import ui.lists.MenuList.MenuItem;
 import ui.lists.MenuList.TypedMenuItem;
 import ui.lists.MenuList.TypedMenuList;
@@ -135,8 +138,10 @@ class PlayerCharacterSelect extends FlxGroup
 
 	var player:Int = 0;
 	var state:CharacterSelectState;
-	var groupMenuList:GroupMenuList;
+	var groupMenuList:CharacterGroupMenuList;
+	var charMenuList:CharacterMenuList;
 	var camFollow:FlxObject;
+	var lastGroupReset:String = '';
 
 	public function new(player:Int, camera:FlxCamera, state:CharacterSelectState)
 	{
@@ -149,14 +154,20 @@ class PlayerCharacterSelect extends FlxGroup
 		camera.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
 
-		groupMenuList = new GroupMenuList(player);
+		groupMenuList = new CharacterGroupMenuList(player);
 		groupMenuList.onChange.add(onGroupChange);
 		groupMenuList.onAccept.add(onGroupAccept);
 
-		for (name => group in Mods.songGroups)
+		for (_ => group in Mods.characterGroups)
 			groupMenuList.createItem(group);
 		groupMenuList.afterInit();
 
+		charMenuList = new CharacterMenuList(player);
+		charMenuList.controlsEnabled = false;
+		charMenuList.onChange.add(onCharChange);
+		charMenuList.onAccept.add(onCharAccept);
+
+		add(charMenuList);
 		add(groupMenuList);
 
 		setControlsEnabled(false);
@@ -171,6 +182,7 @@ class PlayerCharacterSelect extends FlxGroup
 		{
 			if (viewing == 1)
 			{
+				charMenuList.controlsEnabled = false;
 				groupMenuList.controlsEnabled = true;
 				camFollow.x = FlxG.width * 0.25;
 				updateCamFollow(groupMenuList.selectedItem);
@@ -201,38 +213,234 @@ class PlayerCharacterSelect extends FlxGroup
 		midpoint.put();
 	}
 
-	function onGroupChange(item:GroupMenuItem)
+	function onGroupChange(item:CharacterGroupMenuItem)
 	{
 		updateCamFollow(item);
 		lastSelectedGroups[player] = item.ID;
 	}
 
-	function onGroupAccept(item:GroupMenuItem)
+	function onGroupAccept(item:CharacterGroupMenuItem)
 	{
 		groupMenuList.controlsEnabled = false;
+		charMenuList.controlsEnabled = true;
 		camFollow.x = FlxG.width * 0.75;
+		if (lastGroupReset != item.name)
+		{
+			charMenuList.resetGroup(item);
+			lastGroupReset = item.name;
+		}
+		else
+			updateCamFollow(charMenuList.selectedItem);
 		viewing = 1;
 		CoolUtil.playScrollSound();
 	}
+
+	function onCharChange(item:CharacterMenuItem)
+	{
+		updateCamFollow(item);
+	}
+
+	function onCharAccept(item:CharacterMenuItem) {}
 }
 
-class CharacterMenuList extends TypedMenuList<CharacterMenuItem> {}
-
-class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
+class CharacterGroupMenuList extends TypedMenuList<CharacterGroupMenuItem>
 {
+	public var singleSongSelection:Bool = false;
+
+	var player:Int = 0;
+	var columns:Int = 4;
+	var gridSize:Int = 158;
+	var singleOffset:Float;
+	var doubleOffset:Float;
+
+	public function new(player:Int)
+	{
+		super(COLUMNS(columns), PLAYER(player));
+		this.player = player;
+
+		var columnWidth = gridSize * 4;
+		singleOffset = (FlxG.width - columnWidth) / 2;
+		doubleOffset = ((FlxG.width / 2) - columnWidth) / 2;
+	}
+
+	public function createItem(groupData:ModCharacterGroup)
+	{
+		var name = groupData.name;
+		var item = new CharacterGroupMenuItem(gridSize * (length % columns), gridSize * Math.floor(length / columns), name, groupData);
+
+		if (singleSongSelection)
+			item.x += singleOffset;
+		else
+			item.x += doubleOffset;
+
+		return addItem(name, item);
+	}
+
+	public function afterInit()
+	{
+		var num = length % columns;
+		if (num != 0)
+		{
+			var offset = ((gridSize * 4) - (gridSize * num)) / 2;
+			for (i in length - num...length)
+				members[i].x += offset;
+		}
+	}
+}
+
+class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
+{
+	public var groupData:ModCharacterGroup;
+
 	var bg:FlxSprite;
 
-	public function new(x:Float = 0, y:Float = 0, name:String, char:String)
+	public function new(x:Float = 0, y:Float = 0, name:String, groupData:ModCharacterGroup)
 	{
+		this.groupData = groupData;
+
 		var label = new FlxSpriteGroup();
 
-		bg = new FlxSprite();
-		label.add(bg);
-
 		super(x, y, label, name);
+
+		bg = new FlxSprite().loadGraphic(getBGGraphic(groupData.bg));
+		bg.antialiasing = true;
+		label.add(bg);
 
 		setEmptyBackground();
 	}
 
-	function getBGGraphic(char:String) {}
+	function getBGGraphic(name:String)
+	{
+		var graphicKey = name + '_edit';
+		if (FlxG.bitmap.checkCache(graphicKey))
+			return FlxG.bitmap.get(graphicKey);
+
+		var thickness = 4;
+
+		var graphic = Paths.getImage(name, groupData.directory, true, graphicKey);
+
+		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupData.name);
+		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		text.updateHitbox();
+		text.y -= text.height;
+
+		var textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(graphic.height - text.y), FlxColor.GRAY);
+		graphic.bitmap.copyPixels(textBG.pixels, new Rectangle(0, 0, textBG.width, textBG.height), new Point(textBG.x, textBG.y), null, null, true);
+		textBG.destroy();
+
+		graphic.bitmap.copyPixels(text.pixels, new Rectangle(0, 0, text.width, text.height), new Point(text.x, text.y), null, null, true);
+		text.destroy();
+
+		var mask = FlxG.bitmap.get('groupMask');
+		if (mask == null)
+		{
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
+			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.BLACK);
+			mask = sprite.graphic;
+			sprite.destroy();
+		}
+
+		graphic.bitmap.copyChannel(mask.bitmap, new Rectangle(0, 0, mask.width, mask.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
+
+		var outline = FlxG.bitmap.get('groupOutline');
+		if (outline == null)
+		{
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupOutline');
+			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
+				{thickness: thickness, color: FlxColor.WHITE});
+			outline = sprite.graphic;
+			sprite.destroy();
+		}
+
+		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
+
+		return graphic;
+	}
+}
+
+class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
+{
+	var player:Int = 0;
+	var columns:Int = 4;
+	var gridSize:Int = 80;
+	var offset:Float;
+
+	public function new(player:Int)
+	{
+		super(COLUMNS(columns), PLAYER(player));
+		this.player = player;
+
+		var columnWidth = gridSize * 4;
+		offset = ((FlxG.width / 2) - columnWidth) / 2;
+	}
+
+	public function createItem(charData:ModCharacter, y:Float)
+	{
+		var name = charData.directory + charData.name;
+		var item = new CharacterMenuItem(gridSize * (length % columns), y + gridSize * Math.floor(length / columns), name, charData);
+		item.x += (FlxG.width * 0.75);
+		item.y -= item.height / 2;
+		byName[name] = item;
+		item.ID = length;
+		return item;
+	}
+
+	public function resetGroup(groupItem:CharacterGroupMenuItem)
+	{
+		var charGroup = groupItem.groupData;
+		var midpoint = groupItem.getMidpoint();
+		clear();
+		for (song in charGroup.chars)
+		{
+			var item = createItem(song, midpoint.y);
+			add(item);
+		}
+		selectItem(0);
+		midpoint.put();
+	}
+}
+
+class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
+{
+	var bg:FlxSprite;
+	var charData:ModCharacter;
+
+	public function new(x:Float = 0, y:Float = 0, name:String, charData:ModCharacter)
+	{
+		this.charData = charData;
+
+		var label = new FlxSpriteGroup();
+
+		super(x, y, label, name);
+
+		bg = new FlxSprite().loadGraphic(getBGGraphic());
+		bg.antialiasing = true;
+		label.add(bg);
+
+		setEmptyBackground();
+	}
+
+	function getBGGraphic()
+	{
+		var graphicKey = name + '_edit';
+		if (FlxG.bitmap.checkCache(graphicKey))
+			return FlxG.bitmap.get(graphicKey);
+
+		var thickness = 4;
+
+		var graphic = Paths.getImage('characterSelect/' + charData.name, charData.directory, true, graphicKey);
+
+		var outline = FlxG.bitmap.get('charOutline');
+		if (outline == null)
+		{
+			var sprite = new FlxSprite().makeGraphic(80, 80, FlxColor.TRANSPARENT, false, 'charOutline');
+			FlxSpriteUtil.drawRect(sprite, 0, 0, sprite.width, sprite.height, FlxColor.TRANSPARENT, {thickness: thickness, color: FlxColor.WHITE});
+			outline = sprite.graphic;
+			sprite.destroy();
+		}
+
+		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
+
+		return graphic;
+	}
 }

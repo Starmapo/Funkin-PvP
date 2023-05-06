@@ -249,27 +249,27 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 			}
 		}
 
-		if (prevJump || nextJump)
+		var jumpAmount = switch (navMode)
 		{
-			holdTime = lastHoldTime = 0;
-			index = changeIndex(index, prevJump, switch (navMode)
-			{
-				case COLUMNS(n): n;
-				default: 1;
-			});
+			case COLUMNS(n): n;
+			default: 1;
 		}
-		else if (holdEnabled && (prevJumpHold || nextJumpHold))
+		if (length > jumpAmount)
 		{
-			holdTime += FlxG.elapsed;
-
-			if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
+			if (prevJump || nextJump)
 			{
-				index = changeIndex(index, prevJumpHold, switch (navMode)
+				holdTime = lastHoldTime = 0;
+				index = changeIndex(index, prevJump, jumpAmount);
+			}
+			else if (holdEnabled && (prevJumpHold || nextJumpHold))
+			{
+				holdTime += FlxG.elapsed;
+
+				if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
 				{
-					case COLUMNS(n): n;
-					default: 1;
-				});
-				lastHoldTime = holdTime;
+					index = changeIndex(index, prevJumpHold, jumpAmount);
+					lastHoldTime = holdTime;
+				}
 			}
 		}
 
@@ -451,6 +451,26 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 			label.color = color;
 
 		return color;
+	}
+
+	override function get_width()
+	{
+		if (label != null)
+		{
+			return label.width;
+		}
+
+		return width;
+	}
+
+	override function get_height()
+	{
+		if (label != null)
+		{
+			return label.height;
+		}
+
+		return height;
 	}
 }
 
