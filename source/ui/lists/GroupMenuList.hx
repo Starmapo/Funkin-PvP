@@ -16,7 +16,7 @@ import ui.lists.MenuList;
 
 class GroupMenuList extends TypedMenuList<GroupMenuItem>
 {
-    public var singleSongSelection:Bool = false;
+	public var singleSongSelection:Bool = false;
 
 	var player:Int = 0;
 	var columns:Int = 4;
@@ -63,7 +63,6 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 {
 	var bg:FlxSprite;
 	var groupData:ModSongGroup;
-	var targetScale:Float = 1;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, groupData:ModSongGroup)
 	{
@@ -77,31 +76,6 @@ class GroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		super(x, y, label, name);
 
 		setEmptyBackground();
-
-		bg.scale.set(targetScale, targetScale);
-	}
-
-	override function update(elapsed:Float)
-	{
-		if (label != null)
-		{
-			var lerp = CoolUtil.getLerp(0.25);
-			bg.scale.set(FlxMath.lerp(bg.scale.x, targetScale, lerp), FlxMath.lerp(bg.scale.y, targetScale, lerp));
-		}
-
-		super.update(elapsed);
-	}
-
-	override function idle()
-	{
-		alpha = 0.6;
-		targetScale = 0.8;
-	}
-
-	override function select()
-	{
-		alpha = 1;
-		targetScale = 1;
 	}
 
 	function getBGGraphic(name:String)

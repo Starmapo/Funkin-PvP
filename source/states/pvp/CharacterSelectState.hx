@@ -5,6 +5,7 @@ import data.PlayerSettings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.addons.display.FlxBackdrop;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
@@ -168,11 +169,21 @@ class PlayerCharacterSelect extends FlxGroup
 	{
 		if (!state.transitioning && PlayerSettings.checkPlayerAction(player, BACK_P))
 		{
-			state.exitTransition(function(_)
+			if (viewing == 1)
 			{
-				FlxG.switchState(new RulesetState());
-			});
-			CoolUtil.playCancelSound();
+				groupMenuList.controlsEnabled = true;
+				camFollow.x = FlxG.width * 0.25;
+				updateCamFollow(groupMenuList.selectedItem);
+				viewing = 0;
+			}
+			else
+			{
+				state.exitTransition(function(_)
+				{
+					FlxG.switchState(new SongSelectState());
+				});
+				CoolUtil.playCancelSound();
+			}
 		}
 
 		super.update(elapsed);
@@ -206,4 +217,22 @@ class PlayerCharacterSelect extends FlxGroup
 }
 
 class CharacterMenuList extends TypedMenuList<CharacterMenuItem> {}
-class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup> {}
+
+class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
+{
+	var bg:FlxSprite;
+
+	public function new(x:Float = 0, y:Float = 0, name:String, char:String)
+	{
+		var label = new FlxSpriteGroup();
+
+		bg = new FlxSprite();
+		label.add(bg);
+
+		super(x, y, label, name);
+
+		setEmptyBackground();
+	}
+
+	function getBGGraphic(char:String) {}
+}

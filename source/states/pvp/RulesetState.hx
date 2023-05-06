@@ -104,13 +104,15 @@ class RulesetState extends FNFState
 			changeAmount: 0.05,
 			holdDelay: 0.05
 		});
-		addSetting({
-			name: 'randomEvents',
-			displayName: 'Random Events',
-			description: "Whether random events are enabled to spice up the gameplay.",
-			type: CHECKBOX,
-			defaultValue: true
-		});
+		/*
+			addSetting({
+				name: 'randomEvents',
+				displayName: 'Random Events',
+				description: "Whether random events are enabled to spice up the gameplay.",
+				type: CHECKBOX,
+				defaultValue: true
+			});
+		 */
 		addSetting({
 			name: 'canDie',
 			displayName: 'Can Die',
