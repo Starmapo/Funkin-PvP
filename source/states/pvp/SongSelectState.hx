@@ -88,6 +88,7 @@ class SongSelectState extends FNFState
 		iconScroll.cameras = [camScroll];
 		iconScroll.velocity.set(25, 25);
 		iconScroll.scale.set(0.5, 0.5);
+		iconScroll.antialiasing = true;
 
 		add(iconScroll);
 		add(stateText);
@@ -160,8 +161,7 @@ class SongSelectState extends FNFState
 
 	function reloadSong()
 	{
-		var player = playerGroups.length > 1 ? FlxG.random.int(0, playerGroups.length - 1) : 0;
-		var group = playerGroups.members[player];
+		var group = playerGroups.members[FlxG.random.int(0, playerGroups.length - 1)];
 		var data = group.songMenuList.selectedItem.songData;
 		var difficulty = group.difficultyMenuList.selectedItem.difficulty;
 		song = Song.loadSong(data.name + '/' + difficulty, data.directory);

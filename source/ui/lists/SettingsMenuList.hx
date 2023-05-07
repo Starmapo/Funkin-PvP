@@ -325,6 +325,7 @@ class Checkbox extends AnimatedSprite
 
 		this.value = value;
 		animation.finish();
+		antialiasing = true;
 	}
 
 	function set_value(newValue:Bool)

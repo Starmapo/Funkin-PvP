@@ -6,6 +6,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
@@ -25,6 +26,15 @@ class OptionsState extends FNFState
 	var currentName:PageName = Options;
 	var currentPage(get, never):Page;
 	var camPages:FlxCamera;
+	var nextState:FlxState;
+
+	public function new(?nextState:FlxState)
+	{
+		super();
+		if (nextState == null)
+			nextState = new MainMenuState();
+		this.nextState = nextState;
+	}
 
 	override function create()
 	{
@@ -161,7 +171,7 @@ class OptionsState extends FNFState
 			ease: FlxEase.expoIn,
 			onComplete: function(_)
 			{
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(nextState);
 			}
 		});
 		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);

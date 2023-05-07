@@ -407,7 +407,7 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 		super.draw();
 		if (label != null)
 		{
-			label.cameras = cameras;
+			label.cameras = _cameras;
 			label.scrollFactor.copyFrom(scrollFactor);
 			label.draw();
 		}

@@ -81,6 +81,7 @@ class CharacterSelectState extends FNFState
 		iconScroll.cameras = [camScroll];
 		iconScroll.velocity.set(25, 25);
 		iconScroll.scale.set(0.5, 0.5);
+		iconScroll.antialiasing = true;
 
 		add(iconScroll);
 		add(stateText);
@@ -126,7 +127,13 @@ class CharacterSelectState extends FNFState
 			{
 				exitTransition(function(_)
 				{
-					FlxG.switchState(new PlayState(SongSelectState.song));
+					var chars = [];
+					for (group in playerGroups)
+					{
+						var data = group.charMenuList.selectedItem.charData;
+						chars.push(data.directory + ':' + data.name);
+					}
+					FlxG.switchState(new PlayState(SongSelectState.song, chars));
 				});
 			}
 		}
@@ -156,11 +163,11 @@ class PlayerCharacterSelect extends FlxGroup
 
 	public var viewing:Int = 0;
 	public var ready:Bool = false;
+	public var groupMenuList:CharacterGroupMenuList;
+	public var charMenuList:CharacterMenuList;
 
 	var player:Int = 0;
 	var state:CharacterSelectState;
-	var groupMenuList:CharacterGroupMenuList;
-	var charMenuList:CharacterMenuList;
 	var camFollow:FlxObject;
 	var lastGroupReset:String = '';
 	var charPortrait:FlxSprite;

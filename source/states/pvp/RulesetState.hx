@@ -62,6 +62,7 @@ class RulesetState extends FNFState
 		iconScroll.cameras = [camScroll];
 		iconScroll.velocity.set(25, 25);
 		iconScroll.scale.set(0.5, 0.5);
+		iconScroll.antialiasing = true;
 
 		add(iconScroll);
 		add(stateText);

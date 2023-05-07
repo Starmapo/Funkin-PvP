@@ -1,8 +1,8 @@
 package states;
 
+import data.PlayerSettings;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
-import data.skin.NoteSkin;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -11,17 +11,18 @@ import flixel.sound.FlxSound;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import states.pvp.SongSelectState;
+import subStates.PauseSubState;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
-import ui.game.Playfield;
 import ui.game.SongInfoDisplay;
 import util.MusicTiming;
 
 class PlayState extends FNFState
 {
 	public var song:Song;
+	public var chars:Array<String>;
 	public var isPaused:Bool = false;
 	public var hasStarted:Bool = false;
 
@@ -34,15 +35,18 @@ class PlayState extends FNFState
 	var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
 	var songInfoDisplay:SongInfoDisplay;
 	var lyricsDisplay:LyricsDisplay;
+	var pauseSubState:PauseSubState;
 
-	public function new(?song:Song)
+	public function new(?song:Song, chars:Array<String>)
 	{
 		super();
 		if (song == null)
 			song = Song.loadSong('mods/fnf/songs/Tutorial/Hard');
 		this.song = song;
+		this.chars = chars;
 
 		persistentUpdate = true;
+		destroySubStates = false;
 	}
 
 	override public function create()
@@ -53,6 +57,7 @@ class PlayState extends FNFState
 		initCameras();
 		initSong();
 		initUI();
+		initPauseSubState();
 
 		super.create();
 	}
@@ -77,13 +82,29 @@ class PlayState extends FNFState
 		timing = FlxDestroyUtil.destroy(timing);
 	}
 
-	public function startSong(timing:MusicTiming) {}
+	override function closeSubState()
+	{
+		super.closeSubState();
+
+		if (isPaused)
+		{
+			isPaused = false;
+			persistentUpdate = true;
+			timing.resumeMusic();
+		}
+	}
+
+	public function startSong(timing:MusicTiming)
+	{
+		hasStarted = true;
+	}
 
 	public function exit()
 	{
 		timing.stopMusic();
 		persistentUpdate = false;
 		FlxG.switchState(new SongSelectState());
+		CoolUtil.playPvPMusic();
 	}
 
 	function initCameras()
@@ -148,12 +169,30 @@ class PlayState extends FNFState
 		add(lyricsDisplay);
 	}
 
+	function initPauseSubState()
+	{
+		pauseSubState = new PauseSubState(this);
+	}
+
 	function handleInput(elapsed:Float)
 	{
 		if (isPaused)
 			return;
 
 		ruleset.handleInput(elapsed);
+
+		for (i in 0...2)
+		{
+			if (PlayerSettings.checkPlayerAction(i, PAUSE_P))
+			{
+				timing.pauseMusic();
+				persistentUpdate = false;
+				pauseSubState.onOpen(i);
+				openSubState(pauseSubState);
+				isPaused = true;
+				break;
+			}
+		}
 	}
 
 	function endSong()
