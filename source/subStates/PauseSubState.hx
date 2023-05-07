@@ -1,5 +1,6 @@
 package subStates;
 
+import data.Mods;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -45,6 +46,7 @@ class PauseSubState extends FlxSubState
 		});
 		menuList.createItem('Exit to options', function()
 		{
+			Mods.currentMod = '';
 			FlxG.switchState(new OptionsState(new PlayState(state.song, state.chars)));
 			CoolUtil.playMenuMusic();
 		});

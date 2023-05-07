@@ -6,7 +6,7 @@ class Mods
 {
 	public static final modsPath:String = 'mods/';
 	public static var currentMods:Array<Mod> = [];
-	public static var currentMod:String = 'fnf';
+	public static var currentMod:String = '';
 	public static var pvpMusic:Array<String> = [];
 	public static var songGroups:Map<String, ModSongGroup> = [];
 	public static var characterGroups:Map<String, ModCharacterGroup> = [];

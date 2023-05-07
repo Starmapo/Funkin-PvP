@@ -210,7 +210,6 @@ class MainMenuItem extends TextMenuItem
 		this.fireInstantly = fireInstantly;
 		this.fadeMusic = fadeMusic;
 		label.scale.set(targetScale, targetScale);
-		label.antialiasing = true;
 	}
 
 	override function update(elapsed:Float)

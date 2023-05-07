@@ -1,15 +1,21 @@
 package states;
 
+import data.Mods;
 import data.PlayerSettings;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.sound.FlxSound;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxTimer;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
 import ui.game.JudgementDisplay;
@@ -36,6 +42,11 @@ class PlayState extends FNFState
 	var songInfoDisplay:SongInfoDisplay;
 	var lyricsDisplay:LyricsDisplay;
 	var pauseSubState:PauseSubState;
+	var introSprPaths:Array<String> = ["ready", "set", "go"];
+	var introSndPaths:Array<String> = [
+		"intro3", "intro2",
+		"intro1", "introGo"
+	];
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -52,12 +63,20 @@ class PlayState extends FNFState
 	override public function create()
 	{
 		if (FlxG.sound.musicPlaying)
+		{
 			FlxG.sound.music.stop();
+			FlxG.sound.music = null;
+		}
+
+		Mods.currentMod = song.mod;
 
 		initCameras();
 		initSong();
 		initUI();
 		initPauseSubState();
+		precache();
+
+		startCountdown();
 
 		super.create();
 	}
@@ -82,6 +101,26 @@ class PlayState extends FNFState
 		timing = FlxDestroyUtil.destroy(timing);
 	}
 
+	override function openSubState(subState:FlxSubState)
+	{
+		if (isPaused)
+		{
+			FlxG.sound.pause();
+			FlxTween.globalManager.forEach(function(twn)
+			{
+				if (!twn.finished)
+					twn.active = false;
+			});
+			FlxTimer.globalManager.forEach(function(tmr)
+			{
+				if (!tmr.finished)
+					tmr.active = false;
+			});
+		}
+
+		super.openSubState(subState);
+	}
+
 	override function closeSubState()
 	{
 		super.closeSubState();
@@ -90,7 +129,17 @@ class PlayState extends FNFState
 		{
 			isPaused = false;
 			persistentUpdate = true;
-			timing.resumeMusic();
+			FlxTween.globalManager.forEach(function(twn)
+			{
+				if (!twn.finished)
+					twn.active = true;
+			});
+			FlxTimer.globalManager.forEach(function(tmr)
+			{
+				if (!tmr.finished)
+					tmr.active = true;
+			});
+			FlxG.sound.resume();
 		}
 	}
 
@@ -103,6 +152,7 @@ class PlayState extends FNFState
 	{
 		timing.stopMusic();
 		persistentUpdate = false;
+		Mods.currentMod = '';
 		FlxG.switchState(new SongSelectState());
 		CoolUtil.playPvPMusic();
 	}
@@ -174,6 +224,14 @@ class PlayState extends FNFState
 		pauseSubState = new PauseSubState(this);
 	}
 
+	function precache()
+	{
+		for (image in introSprPaths)
+			Paths.getImage('countdown/' + image);
+		for (sound in introSndPaths)
+			Paths.getSound('countdown/' + sound);
+	}
+
 	function handleInput(elapsed:Float)
 	{
 		if (isPaused)
@@ -185,11 +243,10 @@ class PlayState extends FNFState
 		{
 			if (PlayerSettings.checkPlayerAction(i, PAUSE_P))
 			{
-				timing.pauseMusic();
+				isPaused = true;
 				persistentUpdate = false;
 				pauseSubState.onOpen(i);
 				openSubState(pauseSubState);
-				isPaused = true;
 				break;
 			}
 		}
@@ -220,5 +277,32 @@ class PlayState extends FNFState
 	function onJudgementAdded(judgement:Judgement, player:Int)
 	{
 		judgementDisplay.members[player].showJudgement(judgement);
+	}
+
+	function startCountdown()
+	{
+		new FlxTimer().start(song.timingPoints[0].beatLength / 1000, function(tmr)
+		{
+			var count = tmr.elapsedLoops;
+			if (count > 1)
+				readySetGo('countdown/' + introSprPaths[count - 2]);
+			FlxG.sound.play(Paths.getSound('countdown/' + introSndPaths[count - 1]), 0.6);
+		}, 4);
+	}
+
+	function readySetGo(path:String):Void
+	{
+		var spr = new FlxSprite().loadGraphic(Paths.getImage(path));
+		spr.scrollFactor.set();
+		spr.screenCenter();
+		spr.cameras = [camHUD];
+		add(spr);
+		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / 1000, {
+			ease: FlxEase.cubeInOut,
+			onComplete: function(_)
+			{
+				spr.destroy();
+			}
+		});
 	}
 }
