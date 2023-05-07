@@ -172,26 +172,30 @@ class BootState extends FNFState
 								if (songFile.endsWith('.json') && !songFile.startsWith('!'))
 									difficulties.push(songFile.substr(0, songFile.length - 5));
 							}
-							songs.push({
-								name: song,
-								difficulties: difficulties,
-								directory: mod.directory
-							});
+							if (difficulties.length > 0)
+								songs.push({
+									name: song,
+									difficulties: difficulties,
+									directory: mod.directory
+								});
 						}
 
-						var songGroup = Mods.songGroups.get(group.name);
-						if (songGroup == null)
+						if (songs.length > 0)
 						{
-							songGroup = {
-								name: group.name,
-								bg: group.bg,
-								songs: [],
-								directory: mod.directory
-							};
-							Mods.songGroups.set(group.name, songGroup);
+							var songGroup = Mods.songGroups.get(group.name);
+							if (songGroup == null)
+							{
+								songGroup = {
+									name: group.name,
+									bg: group.bg,
+									songs: [],
+									directory: mod.directory
+								};
+								Mods.songGroups.set(group.name, songGroup);
+							}
+							for (song in songs)
+								songGroup.songs.push(song);
 						}
-						for (song in songs)
-							songGroup.songs.push(song);
 					}
 				}
 
@@ -206,30 +210,34 @@ class BootState extends FNFState
 						for (i in 0...group.chars.length)
 						{
 							var char = group.chars[i];
-							if (char != null && char.length > 0)
+							if (char != null)
 							{
 								chars.push({
-									name: char,
+									name: char.name,
+									displayName: char.displayName,
 									directory: mod.directory
 								});
 							}
 						}
 
-						var charGroup = Mods.characterGroups.get(group.name);
-						if (charGroup == null)
+						if (chars.length > 0)
 						{
-							charGroup = {
-								name: group.name,
-								bg: group.bg,
-								chars: [],
-								directory: mod.directory
-							};
-							Mods.characterGroups.set(group.name, charGroup);
-						}
-						for (char in chars)
-							charGroup.chars.push(char);
+							var charGroup = Mods.characterGroups.get(group.name);
+							if (charGroup == null)
+							{
+								charGroup = {
+									name: group.name,
+									bg: group.bg,
+									chars: [],
+									directory: mod.directory
+								};
+								Mods.characterGroups.set(group.name, charGroup);
+							}
+							for (char in chars)
+								charGroup.chars.push(char);
 
-						trace(charGroup);
+							trace(charGroup);
+						}
 					}
 				}
 			}

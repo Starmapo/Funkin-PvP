@@ -57,5 +57,6 @@ typedef ModCharacterGroup =
 typedef ModCharacter =
 {
 	var name:String;
+	var displayName:String;
 	var directory:String;
 }

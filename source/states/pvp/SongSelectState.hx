@@ -429,6 +429,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.BLACK);
 			mask = sprite.graphic;
+			mask.destroyOnNoUse = false;
 			sprite.destroy();
 		}
 
@@ -441,6 +442,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
 				{thickness: thickness, color: FlxColor.WHITE});
 			outline = sprite.graphic;
+			outline.destroyOnNoUse = false;
 			sprite.destroy();
 		}
 

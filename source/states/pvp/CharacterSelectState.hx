@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxBackdrop;
+import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
@@ -67,7 +68,7 @@ class CharacterSelectState extends FNFState
 		for (i in 0...2)
 			playerGroups.add(new PlayerCharacterSelect(i, camPlayers[i], this));
 
-		stateText = new FlxText(0, 0, 0, 'Song Selection');
+		stateText = new FlxText(0, 0, 0, 'Character Selection');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		stateText.screenCenter(X);
 		stateText.scrollFactor.set();
@@ -142,6 +143,8 @@ class PlayerCharacterSelect extends FlxGroup
 	var charMenuList:CharacterMenuList;
 	var camFollow:FlxObject;
 	var lastGroupReset:String = '';
+	var charPortrait:FlxSprite;
+	var charText:FlxText;
 
 	public function new(player:Int, camera:FlxCamera, state:CharacterSelectState)
 	{
@@ -169,6 +172,20 @@ class PlayerCharacterSelect extends FlxGroup
 
 		add(charMenuList);
 		add(groupMenuList);
+
+		charPortrait = new FlxSprite(FlxG.width / 2 + 10 + (player == 1 ? FlxG.width / 4 : 0), FlxG.height / 4);
+		charPortrait.antialiasing = true;
+		charPortrait.scrollFactor.y = 0;
+		add(charPortrait);
+
+		var charPortraitOutline = new FlxSprite(charPortrait.x, charPortrait.y, getPortraitOutlineGraphic());
+		charPortraitOutline.scrollFactor.copyFrom(charPortrait.scrollFactor);
+		add(charPortraitOutline);
+
+		charText = new FlxText(charPortraitOutline.x, charPortraitOutline.y + charPortraitOutline.height + 10, charPortraitOutline.width, '');
+		charText.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		charText.scrollFactor.copyFrom(charPortraitOutline.scrollFactor);
+		add(charText);
 
 		setControlsEnabled(false);
 
@@ -238,9 +255,31 @@ class PlayerCharacterSelect extends FlxGroup
 	function onCharChange(item:CharacterMenuItem)
 	{
 		updateCamFollow(item);
+		var portrait = Paths.getImage('characterSelect/portraits/' + item.charData.name, item.charData.directory);
+		if (portrait != null)
+			charPortrait.loadGraphic(portrait);
+		charPortrait.visible = (portrait != null);
+		charText.text = item.charData.displayName;
 	}
 
 	function onCharAccept(item:CharacterMenuItem) {}
+
+	function getPortraitOutlineGraphic()
+	{
+		var graphicKey = 'portrait_outline';
+		if (FlxG.bitmap.checkCache(graphicKey))
+			return FlxG.bitmap.get(graphicKey);
+
+		var outline:FlxGraphic = null;
+
+		var sprite = new FlxSprite().makeGraphic(300, 360, FlxColor.TRANSPARENT, true, graphicKey);
+		FlxSpriteUtil.drawRect(sprite, 0, 0, sprite.width, sprite.height, FlxColor.TRANSPARENT, {thickness: 4, color: FlxColor.WHITE});
+		outline = sprite.graphic;
+		outline.destroyOnNoUse = false;
+		sprite.destroy();
+
+		return outline;
+	}
 }
 
 class CharacterGroupMenuList extends TypedMenuList<CharacterGroupMenuItem>
@@ -337,6 +376,7 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.BLACK);
 			mask = sprite.graphic;
+			mask.destroyOnNoUse = false;
 			sprite.destroy();
 		}
 
@@ -349,6 +389,7 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
 				{thickness: thickness, color: FlxColor.WHITE});
 			outline = sprite.graphic;
+			outline.destroyOnNoUse = false;
 			sprite.destroy();
 		}
 
@@ -378,7 +419,8 @@ class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
 	{
 		var name = charData.directory + charData.name;
 		var item = new CharacterMenuItem(gridSize * (length % columns), y + gridSize * Math.floor(length / columns), name, charData);
-		item.x += (FlxG.width * 0.75);
+		if (player == 0)
+			item.x += (FlxG.width * 0.75);
 		item.y -= item.height / 2;
 		byName[name] = item;
 		item.ID = length;
@@ -402,8 +444,9 @@ class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
 
 class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 {
+	public var charData:ModCharacter;
+
 	var bg:FlxSprite;
-	var charData:ModCharacter;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, charData:ModCharacter)
 	{
@@ -428,7 +471,10 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		var thickness = 4;
 
-		var graphic = Paths.getImage('characterSelect/' + charData.name, charData.directory, true, graphicKey);
+		trace(charData);
+		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.directory, true, graphicKey);
+		if (graphic == null)
+			graphic = FlxGraphic.fromRectangle(80, 80, FlxColor.TRANSPARENT, true, graphicKey);
 
 		var outline = FlxG.bitmap.get('charOutline');
 		if (outline == null)
@@ -436,6 +482,7 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			var sprite = new FlxSprite().makeGraphic(80, 80, FlxColor.TRANSPARENT, false, 'charOutline');
 			FlxSpriteUtil.drawRect(sprite, 0, 0, sprite.width, sprite.height, FlxColor.TRANSPARENT, {thickness: thickness, color: FlxColor.WHITE});
 			outline = sprite.graphic;
+			outline.destroyOnNoUse = false;
 			sprite.destroy();
 		}
 
