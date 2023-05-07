@@ -13,7 +13,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import lime.app.Application;
-import states.pvp.CharacterSelectState;
+import states.pvp.SongSelectState;
 import sys.FileSystem;
 import sys.thread.Thread;
 import util.WindowsAPI;
@@ -251,7 +251,7 @@ class BootState extends FNFState
 
 	function exit()
 	{
-		FlxG.switchState(new CharacterSelectState());
+		FlxG.switchState(new SongSelectState());
 	}
 
 	function updateText(text:String)

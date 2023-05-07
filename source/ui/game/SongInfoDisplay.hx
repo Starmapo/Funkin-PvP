@@ -27,7 +27,9 @@ class SongInfoDisplay extends FlxText
 
 	override function update(elapsed:Float)
 	{
-		var newText = song.title
+		var newText = song.artist
+			+ ' - '
+			+ song.title
 			+ ' ['
 			+ song.difficultyName
 			+ ']\n'

@@ -84,6 +84,7 @@ class NoteManager extends FlxBasic
 						var lastAlpha = note.alpha;
 						note.alpha *= alpha;
 
+						note.cameras = cameras;
 						note.draw();
 
 						note.alpha = lastAlpha;
@@ -511,6 +512,6 @@ class NoteManager extends FlxBasic
 		if (nextNote == null)
 			return true;
 
-		return (nextNote.startTime - currentAudioPosition >= 2000);
+		return (nextNote.startTime - currentAudioPosition >= 5000);
 	}
 }

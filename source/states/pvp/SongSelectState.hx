@@ -195,7 +195,9 @@ class PlayerSongSelect extends FlxGroup
 		camera.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
 
-		groupMenuList = new SongGroupMenuList(player);
+		var controlsMode:ControlsMode = (Settings.singleSongSelection ? ALL : PLAYER(player));
+
+		groupMenuList = new SongGroupMenuList(player, controlsMode);
 		groupMenuList.singleSongSelection = Settings.singleSongSelection;
 		groupMenuList.onChange.add(onGroupChange);
 		groupMenuList.onAccept.add(onGroupAccept);
@@ -204,12 +206,12 @@ class PlayerSongSelect extends FlxGroup
 			groupMenuList.createItem(group);
 		groupMenuList.afterInit();
 
-		songMenuList = new SongMenuList(player);
+		songMenuList = new SongMenuList(player, controlsMode);
 		songMenuList.onChange.add(onSongChange);
 		songMenuList.onAccept.add(onSongAccept);
 		songMenuList.controlsEnabled = false;
 
-		difficultyMenuList = new DifficultyMenuList(player);
+		difficultyMenuList = new DifficultyMenuList(player, controlsMode);
 		difficultyMenuList.onChange.add(onDiffChange);
 		difficultyMenuList.onAccept.add(onDiffAccept);
 		difficultyMenuList.controlsEnabled = false;
@@ -226,7 +228,8 @@ class PlayerSongSelect extends FlxGroup
 
 	override function update(elapsed:Float)
 	{
-		if (!state.transitioning && PlayerSettings.checkPlayerAction(player, BACK_P))
+		var back = (Settings.singleSongSelection ? PlayerSettings.checkAction(BACK_P) : PlayerSettings.checkPlayerAction(player, BACK_P));
+		if (!state.transitioning && back)
 		{
 			if (ready)
 			{
@@ -350,9 +353,9 @@ class SongGroupMenuList extends TypedMenuList<SongGroupMenuItem>
 	var singleOffset:Float;
 	var doubleOffset:Float;
 
-	public function new(player:Int)
+	public function new(player:Int, controlsMode:ControlsMode)
 	{
-		super(COLUMNS(columns), PLAYER(player));
+		super(COLUMNS(columns), controlsMode);
 		this.player = player;
 
 		var columnWidth = gridSize * 4;
@@ -461,9 +464,9 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 {
 	var player:Int = 0;
 
-	public function new(player:Int)
+	public function new(player:Int, controlsMode:ControlsMode)
 	{
-		super();
+		super(VERTICAL, controlsMode);
 		this.player = player;
 	}
 
@@ -520,9 +523,9 @@ class DifficultyMenuList extends TypedMenuList<DifficultyMenuItem>
 {
 	var player:Int = 0;
 
-	public function new(player:Int)
+	public function new(player:Int, controlsMode:ControlsMode)
 	{
-		super();
+		super(VERTICAL, controlsMode);
 		this.player = player;
 	}
 
