@@ -84,6 +84,8 @@ class PlayState extends FNFState
 		songInst = FlxG.sound.load(Paths.getSongInst(song));
 		songInst.onComplete = endSong;
 		songVocals = FlxG.sound.load(Paths.getSongVocals(song));
+		if (songVocals == null)
+			songVocals = FlxG.sound.list.add(new FlxSound());
 
 		timing = new MusicTiming(songInst, song.timingPoints, true, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
 	}

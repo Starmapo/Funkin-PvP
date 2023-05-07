@@ -22,6 +22,11 @@ class Song extends JsonObject
 	**/
 	public static function loadSong(path:String, ?mod:String)
 	{
+		if (!path.endsWith('.json'))
+			path += '.json';
+		if (!Paths.exists(path))
+			path = Paths.getPath('songs/$path', mod);
+
 		if (!Paths.exists(path))
 			return null;
 

@@ -3,6 +3,7 @@ package states.pvp;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
+import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -24,6 +25,8 @@ import ui.lists.TextMenuList;
 
 class SongSelectState extends FNFState
 {
+	public static var song:Song = null;
+
 	public var transitioning:Bool = true;
 
 	var camPlayers:Array<FlxCamera> = [];
@@ -129,6 +132,7 @@ class SongSelectState extends FNFState
 			}
 			if (ready)
 			{
+				reloadSong();
 				exitTransition(function(_)
 				{
 					FlxG.switchState(new CharacterSelectState());
@@ -153,6 +157,15 @@ class SongSelectState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
 	}
+
+	function reloadSong()
+	{
+		var player = playerGroups.length > 1 ? FlxG.random.int(0, playerGroups.length - 1) : 0;
+		var group = playerGroups.members[player];
+		var data = group.songMenuList.selectedItem.songData;
+		var difficulty = group.difficultyMenuList.selectedItem.difficulty;
+		song = Song.loadSong(data.name + '/' + difficulty, data.directory);
+	}
 }
 
 class PlayerSongSelect extends FlxGroup
@@ -161,16 +174,15 @@ class PlayerSongSelect extends FlxGroup
 
 	public var viewing:Int = 0;
 	public var ready:Bool = false;
+	public var groupMenuList:SongGroupMenuList;
+	public var songMenuList:SongMenuList;
+	public var difficultyMenuList:DifficultyMenuList;
 
 	var player:Int = 0;
 	var state:SongSelectState;
-	var groupMenuList:SongGroupMenuList;
-	var songMenuList:SongMenuList;
-	var difficultyMenuList:DifficultyMenuList;
 	var camFollow:FlxObject;
 	var lastGroupReset:String = '';
 	var lastSongReset:String = '';
-	var lastDiffItem:DifficultyMenuItem;
 
 	public function new(player:Int, camera:FlxCamera, state:SongSelectState)
 	{
@@ -220,7 +232,7 @@ class PlayerSongSelect extends FlxGroup
 			{
 				var item = difficultyMenuList.selectedItem;
 				FlxTween.cancelTweensOf(item);
-				FlxTween.color(item, 0.5, FlxColor.LIME, FlxColor.WHITE);
+				FlxTween.color(item, 0.5, item.color, FlxColor.WHITE);
 				ready = false;
 				difficultyMenuList.controlsEnabled = true;
 			}
@@ -315,12 +327,6 @@ class PlayerSongSelect extends FlxGroup
 
 	function onDiffChange(item:DifficultyMenuItem)
 	{
-		if (lastDiffItem != null)
-		{
-			FlxTween.cancelTweensOf(lastDiffItem);
-			lastDiffItem.color = FlxColor.WHITE;
-			lastDiffItem = null;
-		}
 		updateCamFollow(item);
 	}
 
@@ -329,9 +335,8 @@ class PlayerSongSelect extends FlxGroup
 		ready = true;
 		difficultyMenuList.controlsEnabled = false;
 		FlxTween.cancelTweensOf(item);
-		FlxTween.color(item, 0.5, FlxColor.WHITE, FlxColor.LIME);
+		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
 		CoolUtil.playConfirmSound();
-		lastDiffItem = item;
 	}
 }
 
@@ -553,15 +558,17 @@ class DifficultyMenuList extends TypedMenuList<DifficultyMenuItem>
 class DifficultyMenuItem extends TextMenuItem
 {
 	public var songData:ModSong;
+	public var difficulty:String;
 
 	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
 
-	public function new(x:Float = 0, y:Float = 0, name:String, diff:String, songData:ModSong)
+	public function new(x:Float = 0, y:Float = 0, name:String, difficulty:String, songData:ModSong)
 	{
 		super(x, y, name, callback);
 		this.songData = songData;
+		this.difficulty = difficulty;
 
-		label.text = diff;
+		label.text = difficulty;
 		if (label.width > maxWidth)
 		{
 			var ratio = maxWidth / label.width;

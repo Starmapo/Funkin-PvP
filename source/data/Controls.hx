@@ -446,10 +446,6 @@ class Controls extends FlxActionSet
 					}
 					controlsAdded = true;
 				}
-				else
-				{
-					FlxG.log.warn('Couldn\'t find gamepad \"$id\".');
-				}
 			case NONE:
 		}
 	}
@@ -472,7 +468,7 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.pressed.ANY;
 			case GAMEPAD(_):
-				if (gamepad != null)
+				if (gamepad != null && gamepad.connected)
 					return gamepad.pressed.ANY;
 				return false;
 			case NONE:
@@ -487,7 +483,7 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.justPressed.ANY;
 			case GAMEPAD(_):
-				if (gamepad != null)
+				if (gamepad != null && gamepad.connected)
 					return gamepad.justPressed.ANY;
 				return false;
 			case NONE:
@@ -502,7 +498,7 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.justReleased.ANY;
 			case GAMEPAD(_):
-				if (gamepad != null)
+				if (gamepad != null && gamepad.connected)
 					return gamepad.justReleased.ANY;
 				return false;
 			case NONE:
@@ -517,7 +513,7 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.firstPressed();
 			case GAMEPAD(_):
-				if (gamepad != null)
+				if (gamepad != null && gamepad.connected)
 					return gamepad.firstPressedID();
 				return -1;
 			case NONE:
@@ -532,7 +528,7 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.firstJustPressed();
 			case GAMEPAD(_):
-				if (gamepad != null)
+				if (gamepad != null && gamepad.connected)
 					return gamepad.firstJustPressedID();
 				return -1;
 			case NONE:
@@ -547,7 +543,7 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.firstJustReleased();
 			case GAMEPAD(_):
-				if (gamepad != null)
+				if (gamepad != null && gamepad.connected)
 					return gamepad.firstJustReleasedID();
 				return -1;
 			case NONE:
@@ -562,17 +558,9 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.checkStatus(id, PRESSED);
 			case GAMEPAD(_):
-				try
-				{
-					if (gamepad != null)
-						return gamepad.checkStatus(id, PRESSED);
-					return false;
-				}
-				catch (e)
-				{
-					trace(e);
-					return false;
-				}
+				if (gamepad != null && gamepad.connected)
+					return gamepad.checkStatus(id, PRESSED);
+				return false;
 			case NONE:
 				return false;
 		}
@@ -585,17 +573,9 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.checkStatus(id, JUST_PRESSED);
 			case GAMEPAD(_):
-				try
-				{
-					if (gamepad != null)
-						return gamepad.checkStatus(id, JUST_PRESSED);
-					return false;
-				}
-				catch (e)
-				{
-					trace(e);
-					return false;
-				}
+				if (gamepad != null && gamepad.connected)
+					return gamepad.checkStatus(id, JUST_PRESSED);
+				return false;
 			case NONE:
 				return false;
 		}
@@ -608,17 +588,9 @@ class Controls extends FlxActionSet
 			case KEYBOARD:
 				return FlxG.keys.checkStatus(id, JUST_RELEASED);
 			case GAMEPAD(_):
-				try
-				{
-					if (gamepad != null)
-						return gamepad.checkStatus(id, JUST_RELEASED);
-					return false;
-				}
-				catch (e)
-				{
-					trace(e);
-					return false;
-				}
+				if (gamepad != null && gamepad.connected)
+					return gamepad.checkStatus(id, JUST_RELEASED);
+				return false;
 			case NONE:
 				return false;
 		}

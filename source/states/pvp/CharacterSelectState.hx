@@ -111,6 +111,26 @@ class CharacterSelectState extends FNFState
 		if (iconScroll.y >= 300)
 			iconScroll.y %= 300;
 
+		if (!transitioning)
+		{
+			var ready = true;
+			for (player in playerGroups)
+			{
+				if (!player.ready)
+				{
+					ready = false;
+					break;
+				}
+			}
+			if (ready)
+			{
+				exitTransition(function(_)
+				{
+					FlxG.switchState(new PlayState(SongSelectState.song));
+				});
+			}
+		}
+
 		stateText.y = camScroll.y;
 		for (cam in camPlayers)
 			cam.zoom = FlxG.camera.zoom;
@@ -173,7 +193,14 @@ class PlayerCharacterSelect extends FlxGroup
 		add(charMenuList);
 		add(groupMenuList);
 
-		charPortrait = new FlxSprite(FlxG.width / 2 + 10 + (player == 1 ? FlxG.width / 4 : 0), FlxG.height / 4);
+		charPortrait = new FlxSprite(FlxG.width / 2, FlxG.height / 4);
+		if (player == 0)
+			charPortrait.x += 5;
+		else
+		{
+			charPortrait.x += 15 + FlxG.width / 4;
+			charPortrait.flipX = true;
+		}
 		charPortrait.antialiasing = true;
 		charPortrait.scrollFactor.y = 0;
 		add(charPortrait);
@@ -197,7 +224,15 @@ class PlayerCharacterSelect extends FlxGroup
 	{
 		if (!state.transitioning && PlayerSettings.checkPlayerAction(player, BACK_P))
 		{
-			if (viewing == 1)
+			if (ready)
+			{
+				var item = charMenuList.selectedItem;
+				FlxTween.cancelTweensOf(item);
+				FlxTween.color(item, 0.5, item.color, FlxColor.WHITE);
+				ready = false;
+				charMenuList.controlsEnabled = true;
+			}
+			else if (viewing == 1)
 			{
 				charMenuList.controlsEnabled = false;
 				groupMenuList.controlsEnabled = true;
@@ -211,8 +246,8 @@ class PlayerCharacterSelect extends FlxGroup
 				{
 					FlxG.switchState(new SongSelectState());
 				});
-				CoolUtil.playCancelSound();
 			}
+			CoolUtil.playCancelSound();
 		}
 
 		super.update(elapsed);
@@ -262,7 +297,14 @@ class PlayerCharacterSelect extends FlxGroup
 		charText.text = item.charData.displayName;
 	}
 
-	function onCharAccept(item:CharacterMenuItem) {}
+	function onCharAccept(item:CharacterMenuItem)
+	{
+		ready = true;
+		charMenuList.controlsEnabled = false;
+		FlxTween.cancelTweensOf(item);
+		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
+		CoolUtil.playConfirmSound();
+	}
 
 	function getPortraitOutlineGraphic()
 	{
@@ -420,7 +462,12 @@ class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
 		var name = charData.directory + charData.name;
 		var item = new CharacterMenuItem(gridSize * (length % columns), y + gridSize * Math.floor(length / columns), name, charData);
 		if (player == 0)
-			item.x += (FlxG.width * 0.75);
+			item.x += (FlxG.width * 0.75) - 5;
+		else
+		{
+			item.x += (FlxG.width * 0.5) + 5;
+			item.flipX = true;
+		}
 		item.y -= item.height / 2;
 		byName[name] = item;
 		item.ID = length;
@@ -471,7 +518,6 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		var thickness = 4;
 
-		trace(charData);
 		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.directory, true, graphicKey);
 		if (graphic == null)
 			graphic = FlxGraphic.fromRectangle(80, 80, FlxColor.TRANSPARENT, true, graphicKey);
@@ -489,5 +535,11 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
 
 		return graphic;
+	}
+
+	override function set_flipX(value)
+	{
+		bg.flipX = value;
+		return super.set_flipX(value);
 	}
 }

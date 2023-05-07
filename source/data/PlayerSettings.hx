@@ -66,6 +66,7 @@ class PlayerSettings
 		}
 
 		FlxG.gamepads.deviceConnected.add(onGamepadConnected);
+		FlxG.gamepads.deviceDisconnected.add(onGamepadDisconnected);
 	}
 
 	public static function checkAction(action:Action)
@@ -155,6 +156,20 @@ class PlayerSettings
 			if (player.config.device.equals(GAMEPAD(id)) && !player.controls.controlsAdded)
 			{
 				player.controls.loadFromConfig(player.config);
+			}
+		}
+	}
+
+	static function onGamepadDisconnected(gamepad:FlxGamepad)
+	{
+		var id = gamepad.id;
+
+		for (i in 0...players.length)
+		{
+			var player = players[i];
+			if (player.config.device.equals(GAMEPAD(id)) && player.controls.controlsAdded)
+			{
+				player.controls.reset();
 			}
 		}
 	}
