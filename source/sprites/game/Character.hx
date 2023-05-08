@@ -9,13 +9,14 @@ class Character extends DancingSprite
 	public var charInfo:CharacterInfo;
 	public var charPosX:Float;
 	public var charPosY:Float;
-	public var flipped(default, set):Bool;
+	public var flipped(default, null):Bool;
 	public var debugMode:Bool = false;
 	public var startWidth:Float;
 	public var startHeight:Float;
-	public var state:CharacterState = IDLE;
-	public var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	public var state:CharacterState = Idle;
+	public var singAnimations:Array<String>;
 	public var holdTimers:Array<FlxTimer> = [];
+	public var allowDanceTimer:FlxTimer = new FlxTimer();
 
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false)
 	{
@@ -54,7 +55,7 @@ class Character extends DancingSprite
 
 	override function danced(_)
 	{
-		state = IDLE;
+		state = Idle;
 	}
 
 	public function setCharacterPosition(x:Float, y:Float)
@@ -107,10 +108,10 @@ class Character extends DancingSprite
 		animation.finishCallback = null;
 	}
 
-	public function playNoteAnim(note:Note)
+	public function playNoteAnim(note:Note, beatLength:Float)
 	{
 		var lane = note.info.playerLane;
-		playSingAnim(lane);
+		playSingAnim(lane, beatLength);
 
 		if (note.info.isLongNote)
 		{
@@ -120,7 +121,7 @@ class Character extends DancingSprite
 			holdTimers[lane] = new FlxTimer().start((1 / 24) * 4, function(tmr)
 			{
 				if (note.tail.visible)
-					playSingAnim(lane, true);
+					playSingAnim(lane, beatLength, true);
 				else
 				{
 					tmr.cancel();
@@ -130,16 +131,25 @@ class Character extends DancingSprite
 		}
 	}
 
-	public function playSingAnim(lane:Int, hold:Bool = false)
+	public function playSingAnim(lane:Int, beatLength:Float, hold:Bool = false)
 	{
 		if (lane < 0 || lane > singAnimations.length - 1)
 			return;
 
-		canDance = false;
-		state = SING(lane);
 		var anim = singAnimations[lane];
 		if (animation.exists(anim))
+		{
+			canDance = false;
+			state = Sing(lane);
 			playAnim(anim, true, false, hold ? charInfo.holdLoopPoint : 0);
+
+			if (allowDanceTimer.active)
+				allowDanceTimer.cancel();
+			allowDanceTimer.start(beatLength / 1000, function(_)
+			{
+				canDance = true;
+			});
+		}
 	}
 
 	public function playMissAnim(lane:Int)
@@ -147,11 +157,14 @@ class Character extends DancingSprite
 		if (lane < 0 || lane > singAnimations.length - 1)
 			return;
 
-		canDance = false;
-		state = SING(lane);
 		var anim = singAnimations[lane] + '-miss';
 		if (animation.exists(anim))
 		{
+			if (allowDanceTimer.active)
+				allowDanceTimer.cancel();
+
+			canDance = false;
+			state = Miss(lane);
 			playAnim(anim, true, false);
 			animation.finishCallback = function(_)
 			{
@@ -166,8 +179,11 @@ class Character extends DancingSprite
 		if (!animation.exists(name))
 			return;
 
+		if (allowDanceTimer.active)
+			allowDanceTimer.cancel();
+
 		canDance = false;
-		state = SPECIAL;
+		state = Special;
 		playAnim(name, force, reversed, frame);
 		animation.finishCallback = function(_)
 		{
@@ -178,7 +194,7 @@ class Character extends DancingSprite
 
 	function initializeCharacter()
 	{
-		frames = Paths.getSpritesheet(charInfo.image);
+		frames = Paths.getSpritesheet(charInfo.image, charInfo.mod);
 		danceAnims = charInfo.danceAnims.copy();
 		flipX = charInfo.flipX;
 		if (flipped)
@@ -190,7 +206,7 @@ class Character extends DancingSprite
 		{
 			var offset = anim.offset.copy();
 			if (flipped)
-				offset = [-offset[0], -offset[1]];
+				offset = [-offset[0], offset[1]];
 
 			addAnim({
 				name: anim.name,
@@ -210,33 +226,25 @@ class Character extends DancingSprite
 			}
 		}
 
-		state = IDLE;
+		state = Idle;
 		danceStep = 0;
 		playAnim(danceAnims[0], true);
 		startWidth = frameWidth;
 		startHeight = frameHeight;
 
-		updatePosition();
-	}
+		if (flipped != charInfo.flipX)
+			singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
+		else
+			singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
-	function set_flipped(value:Bool)
-	{
-		if (flipped != value)
-		{
-			flipped = value;
-			if (flipped)
-				singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
-			else
-				singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
-		}
-		return value;
+		updatePosition();
 	}
 }
 
 enum CharacterState
 {
-	IDLE;
-	SING(direction:Int);
-	MISS(direction:Int);
-	SPECIAL;
+	Idle;
+	Sing(direction:Int);
+	Miss(direction:Int);
+	Special;
 }

@@ -171,7 +171,7 @@ class PlayState extends FNFState
 
 	public function getPlayerCharacter(player:Int)
 	{
-		return player == 0 ? bf : opponent;
+		return player == 0 ? opponent : bf;
 	}
 
 	function initCameras()
@@ -212,6 +212,7 @@ class PlayState extends FNFState
 		ruleset.laneReleased.add(onLaneReleased);
 		ruleset.noteHit.add(onNoteHit);
 		ruleset.noteMissed.add(onNoteMissed);
+		ruleset.noteReleaseMissed.add(onNoteMissed);
 		ruleset.judgementAdded.add(onJudgementAdded);
 
 		judgementDisplay = new FlxTypedGroup();
@@ -242,7 +243,7 @@ class PlayState extends FNFState
 
 	function initCharacters()
 	{
-		gf = new Character(400, 0, CharacterInfo.loadCharacterFromName(song.gf));
+		gf = new Character(400, 50, CharacterInfo.loadCharacterFromName(song.gf), true);
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
 		add(gf);
@@ -343,8 +344,6 @@ class PlayState extends FNFState
 			timer.cancel();
 			char.holdTimers[lane] = null;
 		}
-		char.canDance = true;
-		char.dance();
 	}
 
 	function onNoteHit(note:Note, judgement:Judgement)
@@ -353,7 +352,7 @@ class PlayState extends FNFState
 		ruleset.playfields[player].onNoteHit(note, judgement);
 
 		var char = getPlayerCharacter(player);
-		char.playSingAnim(note.info.playerLane);
+		char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength);
 	}
 
 	function onNoteMissed(note:Note)

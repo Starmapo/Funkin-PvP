@@ -125,7 +125,7 @@ class Playfield extends FlxGroup
 		{
 			if (anim == 'confirm')
 			{
-				if (note.currentlyBeingHeld)
+				if (note.currentlyBeingHeld && note.tail.visible)
 					receptor.playAnim('confirm', true);
 				else
 				{

@@ -158,6 +158,9 @@ class InputManager
 
 			ruleset.noteReleased.dispatch(note);
 
+			if (judgement == MISS)
+				ruleset.noteReleaseMissed.dispatch(note);
+
 			if (judgement == MISS || judgement == SHIT)
 				manager.killHoldPoolObject(note, judgement == MISS);
 			else

@@ -36,7 +36,6 @@ class CharacterInfo extends JsonObject
 			var mod = name.substr(0, colonIndex);
 			var charName = name.substr(colonIndex + 1);
 			var path = 'mods/$mod/data/characters/$charName.json';
-			trace(path);
 			return loadCharacter(path);
 		}
 

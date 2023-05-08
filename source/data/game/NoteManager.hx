@@ -370,6 +370,8 @@ class NoteManager extends FlxBasic
 
 				ruleset.scoreProcessors[player].registerScore(MISS);
 
+				ruleset.noteMissed.dispatch(note);
+
 				if (note.info.isLongNote)
 				{
 					killPoolObject(note);
