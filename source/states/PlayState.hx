@@ -2,11 +2,13 @@ package states;
 
 import data.Mods;
 import data.PlayerSettings;
+import data.char.CharacterInfo;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -16,6 +18,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxTimer;
+import sprites.game.Character;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
 import ui.game.JudgementDisplay;
@@ -47,6 +50,12 @@ class PlayState extends FNFState
 		"intro3", "intro2",
 		"intro1", "introGo"
 	];
+	var opponent:Character;
+	var bf:Character;
+	var gf:Character;
+	var camFollow:FlxObject;
+	var disableCamFollow:Bool = false;
+	var defaultCamZoom:Float = 1.05;
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -74,6 +83,8 @@ class PlayState extends FNFState
 		initSong();
 		initUI();
 		initPauseSubState();
+		initCharacters();
+		initStage();
 		precache();
 
 		startCountdown();
@@ -90,9 +101,10 @@ class PlayState extends FNFState
 
 		handleInput(elapsed);
 
-		super.update(elapsed);
-
 		lyricsDisplay.updateLyrics(songInst.time);
+		updateCamPosition();
+
+		super.update(elapsed);
 	}
 
 	override function destroy()
@@ -157,10 +169,13 @@ class PlayState extends FNFState
 		CoolUtil.playPvPMusic();
 	}
 
+	public function getPlayerCharacter(player:Int)
+	{
+		return player == 0 ? bf : opponent;
+	}
+
 	function initCameras()
 	{
-		FlxG.camera.bgColor = FlxColor.GRAY;
-
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
@@ -196,6 +211,7 @@ class PlayState extends FNFState
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.laneReleased.add(onLaneReleased);
 		ruleset.noteHit.add(onNoteHit);
+		ruleset.noteMissed.add(onNoteMissed);
 		ruleset.judgementAdded.add(onJudgementAdded);
 
 		judgementDisplay = new FlxTypedGroup();
@@ -222,6 +238,59 @@ class PlayState extends FNFState
 	function initPauseSubState()
 	{
 		pauseSubState = new PauseSubState(this);
+	}
+
+	function initCharacters()
+	{
+		gf = new Character(400, 0, CharacterInfo.loadCharacterFromName(song.gf));
+		gf.scrollFactor.set(0.95, 0.95);
+		timing.addDancingSprite(gf);
+		add(gf);
+
+		opponent = new Character(100, 100, CharacterInfo.loadCharacterFromName(chars[0]));
+		timing.addDancingSprite(opponent);
+		add(opponent);
+
+		bf = new Character(770, 100, CharacterInfo.loadCharacterFromName(chars[1]), true);
+		timing.addDancingSprite(bf);
+		add(bf);
+	}
+
+	function initStage()
+	{
+		camFollow = new FlxObject();
+		add(camFollow);
+
+		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+		updateCamPosition();
+		FlxG.camera.snapToTarget();
+
+		FlxG.camera.zoom = defaultCamZoom;
+	}
+
+	function updateCamPosition()
+	{
+		if (disableCamFollow)
+			return;
+
+		var camFocus = song.getCameraFocusAt(timing.audioPosition);
+		if (camFocus == null)
+			return;
+
+		var char = switch (camFocus.char)
+		{
+			case OPPONENT:
+				opponent;
+			case BF:
+				bf;
+			case GF:
+				gf;
+		}
+		var camOffsetX = char.charInfo.cameraOffset[0];
+		var camOffsetY = char.charInfo.cameraOffset[1];
+		if (char.flipped)
+			camOffsetX *= -1;
+		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
 	}
 
 	function precache()
@@ -266,12 +335,32 @@ class PlayState extends FNFState
 	function onLaneReleased(lane:Int, player:Int)
 	{
 		ruleset.playfields[player].onLaneReleased(lane);
+
+		var char = getPlayerCharacter(player);
+		var timer = char.holdTimers[lane];
+		if (timer != null)
+		{
+			timer.cancel();
+			char.holdTimers[lane] = null;
+		}
+		char.canDance = true;
+		char.dance();
 	}
 
 	function onNoteHit(note:Note, judgement:Judgement)
 	{
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note, judgement);
+
+		var char = getPlayerCharacter(player);
+		char.playSingAnim(note.info.playerLane);
+	}
+
+	function onNoteMissed(note:Note)
+	{
+		var player = note.info.player;
+		var char = getPlayerCharacter(player);
+		char.playMissAnim(note.info.playerLane);
 	}
 
 	function onJudgementAdded(judgement:Judgement, player:Int)

@@ -1,16 +1,21 @@
 package sprites.game;
 
 import data.char.CharacterInfo;
+import flixel.util.FlxTimer;
+import ui.game.Note;
 
 class Character extends DancingSprite
 {
 	public var charInfo:CharacterInfo;
 	public var charPosX:Float;
 	public var charPosY:Float;
-	public var flipped:Bool;
+	public var flipped(default, set):Bool;
 	public var debugMode:Bool = false;
 	public var startWidth:Float;
 	public var startHeight:Float;
+	public var state:CharacterState = IDLE;
+	public var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	public var holdTimers:Array<FlxTimer> = [];
 
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false)
 	{
@@ -47,6 +52,11 @@ class Character extends DancingSprite
 		}
 	}
 
+	override function danced(_)
+	{
+		state = IDLE;
+	}
+
 	public function setCharacterPosition(x:Float, y:Float)
 	{
 		charPosX = x;
@@ -57,7 +67,7 @@ class Character extends DancingSprite
 	public function updatePosition()
 	{
 		if (flipped)
-			x = charPosX + charInfo.positionOffset[0] + (startWidth - width);
+			x = charPosX - charInfo.positionOffset[0] + (startWidth - width);
 		else
 			x = charPosX + charInfo.positionOffset[0];
 
@@ -97,6 +107,75 @@ class Character extends DancingSprite
 		animation.finishCallback = null;
 	}
 
+	public function playNoteAnim(note:Note)
+	{
+		var lane = note.info.playerLane;
+		playSingAnim(lane);
+
+		if (note.info.isLongNote)
+		{
+			if (holdTimers[lane] != null)
+				holdTimers[lane].cancel();
+
+			holdTimers[lane] = new FlxTimer().start((1 / 24) * 4, function(tmr)
+			{
+				if (note.tail.visible)
+					playSingAnim(lane, true);
+				else
+				{
+					tmr.cancel();
+					holdTimers[lane] = null;
+				}
+			}, 0);
+		}
+	}
+
+	public function playSingAnim(lane:Int, hold:Bool = false)
+	{
+		if (lane < 0 || lane > singAnimations.length - 1)
+			return;
+
+		canDance = false;
+		state = SING(lane);
+		var anim = singAnimations[lane];
+		if (animation.exists(anim))
+			playAnim(anim, true, false, hold ? charInfo.holdLoopPoint : 0);
+	}
+
+	public function playMissAnim(lane:Int)
+	{
+		if (lane < 0 || lane > singAnimations.length - 1)
+			return;
+
+		canDance = false;
+		state = SING(lane);
+		var anim = singAnimations[lane] + '-miss';
+		if (animation.exists(anim))
+		{
+			playAnim(anim, true, false);
+			animation.finishCallback = function(_)
+			{
+				canDance = true;
+				dance();
+			}
+		}
+	}
+
+	public function playSpecialAnim(name:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)
+	{
+		if (!animation.exists(name))
+			return;
+
+		canDance = false;
+		state = SPECIAL;
+		playAnim(name, force, reversed, frame);
+		animation.finishCallback = function(_)
+		{
+			canDance = true;
+			dance();
+		}
+	}
+
 	function initializeCharacter()
 	{
 		frames = Paths.getSpritesheet(charInfo.image);
@@ -131,6 +210,7 @@ class Character extends DancingSprite
 			}
 		}
 
+		state = IDLE;
 		danceStep = 0;
 		playAnim(danceAnims[0], true);
 		startWidth = frameWidth;
@@ -138,4 +218,25 @@ class Character extends DancingSprite
 
 		updatePosition();
 	}
+
+	function set_flipped(value:Bool)
+	{
+		if (flipped != value)
+		{
+			flipped = value;
+			if (flipped)
+				singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
+			else
+				singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+		}
+		return value;
+	}
+}
+
+enum CharacterState
+{
+	IDLE;
+	SING(direction:Int);
+	MISS(direction:Int);
+	SPECIAL;
 }

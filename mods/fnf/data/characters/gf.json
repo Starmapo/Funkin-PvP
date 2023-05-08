@@ -10,7 +10,7 @@
 	],
 	"holdLoopPoint": 0,
 	"healthIcon": "gf",
-	"flipX": false,
+	"flipX": true,
 	"anims": [
 		{
 			"atlasName": "GF Cheer",
