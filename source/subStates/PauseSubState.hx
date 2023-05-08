@@ -46,15 +46,15 @@ class PauseSubState extends FlxSubState
 		});
 		menuList.createItem('Exit to options', function()
 		{
-			Mods.currentMod = '';
+			state.reset();
 			FlxG.switchState(new OptionsState(new PlayState(state.song, state.chars)));
 			CoolUtil.playMenuMusic();
 		});
 		menuList.createItem('Exit to character select', function()
 		{
-			Mods.currentMod = '';
+			state.reset();
 			FlxG.switchState(new CharacterSelectState());
-			CoolUtil.playMenuMusic();
+			CoolUtil.playPvPMusic();
 		});
 		menuList.createItem('Exit to song select', function()
 		{

@@ -2,6 +2,7 @@ package states.pvp;
 
 import data.PlayerSettings;
 import data.Settings.WinCondition;
+import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -105,6 +106,13 @@ class RulesetState extends FNFState
 			changeAmount: 0.05,
 			holdDelay: 0.05
 		});
+		addSetting({
+			name: 'noSliderVelocity',
+			displayName: 'No Slider Velocities',
+			description: "If enabled, slider velocities are removed from songs that have them.",
+			type: CHECKBOX,
+			defaultValue: false
+		});
 		/*
 			addSetting({
 				name: 'randomEvents',
@@ -120,6 +128,13 @@ class RulesetState extends FNFState
 			description: "If enabled, health bars are added and players can die by losing all of their health.",
 			type: CHECKBOX,
 			defaultValue: true
+		});
+		addSetting({
+			name: 'noMiss',
+			displayName: 'No Miss',
+			description: "If enabled, players die instantly if they miss a note. \"Can Die\" being disabled doesn't stop this.",
+			type: CHECKBOX,
+			defaultValue: false
 		});
 		addSetting({
 			name: 'winCondition',
@@ -248,6 +263,7 @@ class RulesetState extends FNFState
 
 	function exitTransition(fadeMusic:Bool, onComplete:FlxTween->Void)
 	{
+		Settings.saveData();
 		if (descTween != null)
 			descTween.cancel();
 		transitioning = true;

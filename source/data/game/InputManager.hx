@@ -13,12 +13,12 @@ class InputManager
 	var realPlayer:Int;
 	var controls:Controls;
 
-	public function new(ruleset:GameplayRuleset, player:Int, autoplay:Bool = false)
+	public function new(ruleset:GameplayRuleset, player:Int)
 	{
 		this.ruleset = ruleset;
 		this.player = player;
 		realPlayer = player;
-		this.autoplay = autoplay;
+		autoplay = PlayerSettings.players[player].config.autoplay;
 		controls = PlayerSettings.players[player].controls;
 
 		setInputBinds();
@@ -44,6 +44,7 @@ class InputManager
 				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.endTime)
 				{
 					var note = lane[0];
+					ruleset.laneReleased.dispatch(note.info.playerLane, player);
 					handleKeyRelease(manager, note);
 				}
 			}

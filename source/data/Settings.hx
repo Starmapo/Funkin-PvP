@@ -29,8 +29,10 @@ class Settings
 	// Ruleset
 	public static var singleSongSelection:Bool = false;
 	public static var playbackRate:Float = 1;
+	public static var noSliderVelocity:Bool = false;
 	public static var randomEvents:Bool = true;
 	public static var canDie:Bool = true;
+	public static var noMiss:Bool = false;
 	public static var winCondition:WinCondition = SCORE;
 	// Editor
 	public static var editorScrollSpeed:BindableFloat;
@@ -65,8 +67,10 @@ class Settings
 		load('autoPause');
 		load('singleSongSelection');
 		load('playbackRate');
+		load('noSliderVelocity');
 		load('randomEvents');
 		load('canDie');
+		load('noMiss');
 		load('winCondition');
 		loadBindableFloat('editorScrollSpeed', 0.8, 0.25, 5);
 		loadBindable('editorScaleSpeedWithRate', true);
@@ -98,6 +102,8 @@ class Settings
 				config.scrollSpeed = 0.75;
 			if (config.noteSplashes == null)
 				config.noteSplashes = true;
+			if (config.autoplay == null)
+				config.autoplay = false;
 		}
 	}
 
@@ -120,8 +126,10 @@ class Settings
 		save('autoPause');
 		save('singleSongSelection');
 		save('playbackRate');
+		save('noSliderVelocity');
 		save('randomEvents');
 		save('canDie');
+		save('noMiss');
 		save('winCondition');
 		saveBindable('editorScrollSpeed');
 		saveBindable('editorScaleSpeedWithRate');

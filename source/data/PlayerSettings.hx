@@ -154,9 +154,7 @@ class PlayerSettings
 		{
 			var player = players[i];
 			if (player.config.device.equals(GAMEPAD(id)) && !player.controls.controlsAdded)
-			{
 				player.controls.loadFromConfig(player.config);
-			}
 		}
 	}
 
@@ -168,9 +166,7 @@ class PlayerSettings
 		{
 			var player = players[i];
 			if (player.config.device.equals(GAMEPAD(id)) && player.controls.controlsAdded)
-			{
 				player.controls.reset();
-			}
 		}
 	}
 
@@ -206,7 +202,8 @@ class PlayerSettings
 			controls: controls,
 			downScroll: false,
 			scrollSpeed: 0.75,
-			noteSplashes: true
+			noteSplashes: true,
+			autoplay: false
 		};
 	}
 }

@@ -28,7 +28,7 @@ class CharacterInfo extends JsonObject
 		return charInfo;
 	}
 
-	public static function loadCharacterFromName(name:String, ?songMod:String)
+	public static function loadCharacterFromName(name:String)
 	{
 		var colonIndex = name.indexOf(':');
 		if (colonIndex > -1)
@@ -39,16 +39,7 @@ class CharacterInfo extends JsonObject
 			return loadCharacter(path);
 		}
 
-		var path:String = null;
-
-		if (songMod != null)
-		{
-			path = 'mods/$songMod/data/characters/$name.json';
-			if (Paths.exists(path))
-				return loadCharacter(path);
-		}
-
-		path = 'mods/${Mods.currentMod}/data/characters/$name.json';
+		var path = 'mods/${Mods.currentMod}/data/characters/$name.json';
 		if (Paths.exists(path))
 			return loadCharacter(path);
 

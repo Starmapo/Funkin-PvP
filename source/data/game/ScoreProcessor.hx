@@ -26,10 +26,6 @@ class ScoreProcessor
 
 	var ruleset:GameplayRuleset;
 	var song:Song;
-	var playbackRate:Float;
-	var noFail:Bool;
-	var autoplay:Bool;
-	var noMiss:Bool;
 	var totalJudgements:Int;
 	var summedScore:Int;
 	var multiplierCount:Int;
@@ -39,16 +35,11 @@ class ScoreProcessor
 	var maxMultiplierCount(get, never):Int;
 	var scoreCount:Int;
 
-	public function new(ruleset:GameplayRuleset, song:Song, player:Int, ?windows:JudgementWindows, playbackRate:Float = 1, noFail:Bool = false,
-			autoplay:Bool = false, noMiss:Bool = false)
+	public function new(ruleset:GameplayRuleset, song:Song, player:Int, ?windows:JudgementWindows)
 	{
 		this.ruleset = ruleset;
 		this.song = song;
 		this.player = player;
-		this.playbackRate = playbackRate;
-		this.noFail = noFail;
-		this.autoplay = autoplay;
-		this.noMiss = noMiss;
 
 		initializeJudgementWindows(windows);
 		initializeMods();
@@ -125,7 +116,7 @@ class ScoreProcessor
 			multiplierCount -= multiplierCountToIncreaseIndex * 2;
 			combo = 0;
 
-			if (noMiss)
+			if (Settings.noMiss)
 			{
 				health = 0;
 				forceFail = true;
@@ -163,7 +154,7 @@ class ScoreProcessor
 	function initializeMods()
 	{
 		for (judgement => _ in judgementWindow)
-			judgementWindow[judgement] *= playbackRate;
+			judgementWindow[judgement] *= Settings.playbackRate;
 	}
 
 	function getTotalJudgementCount()
@@ -201,10 +192,7 @@ class ScoreProcessor
 
 	function initializeHealthWeighting()
 	{
-		if (autoplay)
-			return;
-
-		var density = song.getActionsPerSecond(playbackRate);
+		var density = song.getActionsPerSecond(Settings.playbackRate);
 		if (density == 0 || density >= 12 || Math.isNaN(density))
 			return;
 		if (density > 0 && density < 2)
@@ -237,7 +225,7 @@ class ScoreProcessor
 
 	function get_failed()
 	{
-		return health <= 0 && (!noFail || forceFail);
+		return health <= 0 && (Settings.canDie || forceFail);
 	}
 
 	function get_maxMultiplierCount()

@@ -2,6 +2,7 @@ package states;
 
 import data.Mods;
 import data.PlayerSettings;
+import data.Settings;
 import data.char.CharacterInfo;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
@@ -11,11 +12,11 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
+import flixel.animation.FlxAnimationController;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxTimer;
 import sprites.game.Character;
@@ -56,6 +57,7 @@ class PlayState extends FNFState
 	var camFollow:FlxObject;
 	var disableCamFollow:Bool = false;
 	var defaultCamZoom:Float = 1.05;
+	var canPause:Bool = false;
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -78,6 +80,7 @@ class PlayState extends FNFState
 		}
 
 		Mods.currentMod = song.mod;
+		FlxAnimationController.globalSpeed = Settings.playbackRate;
 
 		initCameras();
 		initSong();
@@ -128,6 +131,7 @@ class PlayState extends FNFState
 				if (!tmr.finished)
 					tmr.active = false;
 			});
+			FlxG.camera.followActive = false;
 		}
 
 		super.openSubState(subState);
@@ -151,8 +155,15 @@ class PlayState extends FNFState
 				if (!tmr.finished)
 					tmr.active = true;
 			});
+			FlxG.camera.followActive = true;
 			FlxG.sound.resume();
 		}
+	}
+
+	override function finishTransIn()
+	{
+		super.finishTransIn();
+		canPause = true;
 	}
 
 	public function startSong(timing:MusicTiming)
@@ -164,9 +175,15 @@ class PlayState extends FNFState
 	{
 		timing.stopMusic();
 		persistentUpdate = false;
-		Mods.currentMod = '';
+		reset();
 		FlxG.switchState(new SongSelectState());
 		CoolUtil.playPvPMusic();
+	}
+
+	public function reset()
+	{
+		Mods.currentMod = '';
+		FlxAnimationController.globalSpeed = 1;
 	}
 
 	public function getPlayerCharacter(player:Int)
@@ -185,11 +202,14 @@ class PlayState extends FNFState
 	{
 		songInst = FlxG.sound.load(Paths.getSongInst(song));
 		songInst.onComplete = endSong;
+		songInst.pitch = Settings.playbackRate;
+
 		var vocals = Paths.getSongVocals(song);
 		if (vocals != null)
 			songVocals = FlxG.sound.load(vocals);
 		else
 			songVocals = FlxG.sound.list.add(new FlxSound());
+		songVocals.pitch = Settings.playbackRate;
 
 		timing = new MusicTiming(songInst, song.timingPoints, true, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
 	}
@@ -243,16 +263,30 @@ class PlayState extends FNFState
 
 	function initCharacters()
 	{
-		gf = new Character(400, 130, CharacterInfo.loadCharacterFromName(song.gf), true, true);
+		var gfInfo = CharacterInfo.loadCharacterFromName(song.gf);
+		if (gfInfo == null)
+			gfInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
+
+		gf = new Character(400, 130, gfInfo, true, true);
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
 		add(gf);
 
-		opponent = new Character(100, 100, CharacterInfo.loadCharacterFromName(chars[0]));
+		var opponentName = chars[0] != null ? chars[0] : song.opponent;
+		var opponentInfo = CharacterInfo.loadCharacterFromName(opponentName);
+		if (opponentInfo == null)
+			CharacterInfo.loadCharacterFromName('fnf:dad');
+
+		opponent = new Character(100, 100, opponentInfo);
 		timing.addDancingSprite(opponent);
 		add(opponent);
 
-		bf = new Character(770, 100, CharacterInfo.loadCharacterFromName(chars[1]), true);
+		var bfName = chars[1] != null ? chars[1] : song.bf;
+		var bfInfo = CharacterInfo.loadCharacterFromName(bfName);
+		if (bfInfo == null)
+			CharacterInfo.loadCharacterFromName('fnf:bf');
+
+		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
 		add(bf);
 	}

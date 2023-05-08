@@ -54,12 +54,23 @@ class PlayerPage extends Page
 			displayFunction: function(v)
 			{
 				return v + 'x';
-			}
+			},
+			minValue: 0.25,
+			maxValue: 5,
+			decimals: 2,
+			changeAmount: 0.01
 		});
 		addSetting({
 			name: 'noteSplashes',
 			displayName: 'Note Splashes',
 			description: 'If enabled, a splash will appear when you get a "Sick" or "Marvelous" judgement.',
+			type: CHECKBOX,
+			defaultValue: true
+		});
+		addSetting({
+			name: 'autoplay',
+			displayName: 'Autoplay',
+			description: "Whether to let the game play this player's side.",
 			type: CHECKBOX,
 			defaultValue: true
 		});

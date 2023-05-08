@@ -9,6 +9,7 @@ typedef PlayerConfig =
 	var ?scrollSpeed:Float;
 	var downScroll:Bool;
 	var ?noteSplashes:Bool;
+	var ?autoplay:Bool;
 }
 
 enum PlayerConfigDevice

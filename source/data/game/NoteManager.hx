@@ -9,6 +9,8 @@ import ui.game.Note;
 
 class NoteManager extends FlxBasic
 {
+	static var breakAlpha:Float = 0.2;
+
 	public var nextNote(get, never):NoteInfo;
 	public var currentAudioPosition:Float = 0;
 	public var currentVisualPosition:Float = 0;
@@ -25,9 +27,6 @@ class NoteManager extends FlxBasic
 	var ruleset:GameplayRuleset;
 	var song:Song;
 	var player:Int;
-	var playbackRate:Float;
-	var noSliderVelocity:Bool;
-	var songLength:Float;
 	var createObjectPositionTreshold:Float;
 	var recycleObjectPositionTreshold:Float;
 	var createObjectTimeTreshold:Float;
@@ -36,17 +35,13 @@ class NoteManager extends FlxBasic
 	var currentSvIndex:Int = 0;
 	var initialPoolSizePerLane:Int = 2;
 	var autoplay(get, never):Bool;
-	var breakAlpha:Float = 0.2;
 
-	public function new(ruleset:GameplayRuleset, song:Song, player:Int, playbackRate:Float = 1, noSliderVelocity:Bool = false)
+	public function new(ruleset:GameplayRuleset, song:Song, player:Int)
 	{
 		super();
 		this.ruleset = ruleset;
 		this.song = song;
 		this.player = player;
-		this.playbackRate = playbackRate;
-		this.noSliderVelocity = noSliderVelocity;
-		songLength = song.length;
 		config = Settings.playerConfigs[player];
 
 		updatePoolingPositions();
@@ -110,7 +105,7 @@ class NoteManager extends FlxBasic
 
 	public function getPositionFromTimeIndex(time:Float, index:Int)
 	{
-		if (noSliderVelocity)
+		if (Settings.noSliderVelocity)
 			return time;
 
 		if (index == 0)
@@ -126,7 +121,7 @@ class NoteManager extends FlxBasic
 	public function getSVDirectionChanges(startTime:Float, endTime:Float)
 	{
 		var changes:Array<SVDirectionChange> = [];
-		if (noSliderVelocity)
+		if (Settings.noSliderVelocity)
 			return changes;
 
 		var i = 0;
@@ -173,7 +168,7 @@ class NoteManager extends FlxBasic
 
 	public function isSVNegative(time:Float)
 	{
-		if (noSliderVelocity)
+		if (Settings.noSliderVelocity)
 			return false;
 
 		var i = 0;
@@ -461,7 +456,7 @@ class NoteManager extends FlxBasic
 
 	function get_scrollSpeed()
 	{
-		return config.scrollSpeed / playbackRate;
+		return config.scrollSpeed / Settings.playbackRate;
 	}
 
 	function get_autoplay()

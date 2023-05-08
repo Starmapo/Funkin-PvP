@@ -28,6 +28,8 @@ class Character extends DancingSprite
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false, isGF:Bool = false)
 	{
 		super(x, y);
+		if (charInfo == null)
+			charInfo = CharacterInfo.loadCharacterFromName('fnf:bf');
 		this.charInfo = charInfo;
 		this.flipped = flipped;
 		this.isGF = isGF;

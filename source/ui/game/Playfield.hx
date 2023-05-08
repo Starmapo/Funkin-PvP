@@ -123,8 +123,16 @@ class Playfield extends FlxGroup
 
 		receptor.animation.finishCallback = function(anim)
 		{
-			if (anim == 'confirm' && note.currentlyBeingHeld && note.tail.visible)
-				receptor.playAnim(anim, true);
+			if (anim == 'confirm')
+			{
+				if (note.currentlyBeingHeld && note.tail.visible)
+					receptor.playAnim(anim, true);
+				else
+				{
+					receptor.stopAnimCallback();
+					receptor.playAnim('static');
+				}
+			}
 		}
 
 		if (config.noteSplashes && (judgement == MARV || judgement == SICK))
