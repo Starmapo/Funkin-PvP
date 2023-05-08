@@ -9,7 +9,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import states.PlayState;
 import states.options.OptionsState;
-import states.pvp.SongSelectState;
+import states.pvp.CharacterSelectState;
 import ui.lists.MenuList.TypedMenuList;
 import ui.lists.TextMenuList;
 
@@ -50,7 +50,13 @@ class PauseSubState extends FlxSubState
 			FlxG.switchState(new OptionsState(new PlayState(state.song, state.chars)));
 			CoolUtil.playMenuMusic();
 		});
-		menuList.createItem('Exit to menu', function()
+		menuList.createItem('Exit to character select', function()
+		{
+			Mods.currentMod = '';
+			FlxG.switchState(new CharacterSelectState());
+			CoolUtil.playMenuMusic();
+		});
+		menuList.createItem('Exit to song select', function()
 		{
 			state.exit();
 		});

@@ -243,7 +243,7 @@ class PlayState extends FNFState
 
 	function initCharacters()
 	{
-		gf = new Character(400, 130, CharacterInfo.loadCharacterFromName(song.gf), true);
+		gf = new Character(400, 130, CharacterInfo.loadCharacterFromName(song.gf), true, true);
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
 		add(gf);

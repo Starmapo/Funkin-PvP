@@ -1,6 +1,8 @@
 package sprites.game;
 
 import data.char.CharacterInfo;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import ui.game.Note;
 
@@ -17,14 +19,18 @@ class Character extends DancingSprite
 	public var singAnimations:Array<String>;
 	public var holdTimers:Array<FlxTimer> = [];
 	public var allowDanceTimer:FlxTimer = new FlxTimer();
+	public var allowMissColor:Bool = true;
+	public var intendedColor:FlxColor = FlxColor.WHITE;
+	public var isGF:Bool;
 
 	var xDifference:Float = 0;
 
-	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false)
+	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false, isGF:Bool = false)
 	{
 		super(x, y);
 		this.charInfo = charInfo;
 		this.flipped = flipped;
+		this.isGF = isGF;
 		initializeCharacter();
 		setCharacterPosition(x, y);
 	}
@@ -63,6 +69,7 @@ class Character extends DancingSprite
 	override function danced(_)
 	{
 		state = Idle;
+		resetColor();
 	}
 
 	public function setCharacterPosition(x:Float, y:Float)
@@ -74,7 +81,7 @@ class Character extends DancingSprite
 
 	public function updatePosition()
 	{
-		if (flipped)
+		if (flipped && !isGF)
 			x = charPosX - charInfo.positionOffset[0] + xDifference;
 		else
 			x = charPosX + charInfo.positionOffset[0];
@@ -144,6 +151,7 @@ class Character extends DancingSprite
 			canDance = false;
 			state = Sing(lane);
 			playAnim(anim, charInfo.loopAnimsOnHold || !hold, false, hold ? charInfo.holdLoopPoint : 0);
+			resetColor();
 
 			if (allowDanceTimer.active)
 				allowDanceTimer.cancel();
@@ -160,6 +168,12 @@ class Character extends DancingSprite
 			return;
 
 		var anim = singAnimations[lane] + '-miss';
+		var fallback = false;
+		if (!animation.exists(anim) && allowMissColor)
+		{
+			anim = singAnimations[lane];
+			fallback = true;
+		}
 		if (animation.exists(anim))
 		{
 			if (allowDanceTimer.active)
@@ -168,6 +182,11 @@ class Character extends DancingSprite
 			canDance = false;
 			state = Miss(lane);
 			playAnim(anim, true, false);
+			if (fallback)
+				setMissColor();
+			else
+				resetColor();
+
 			animation.finishCallback = function(_)
 			{
 				canDance = true;
@@ -187,11 +206,41 @@ class Character extends DancingSprite
 		canDance = false;
 		state = Special;
 		playAnim(name, force, reversed, frame);
+		resetColor();
 		animation.finishCallback = function(_)
 		{
 			canDance = true;
 			dance();
 		}
+	}
+
+	public function doColorTween(duration:Float, fromColor:FlxColor, toColor:FlxColor, options:TweenOptions)
+	{
+		if (options == null)
+			options = {type: ONESHOT};
+
+		allowMissColor = false;
+		FlxTween.color(this, duration, fromColor, toColor, {
+			type: options.type,
+			ease: options.ease,
+			onStart: options.onStart,
+			onUpdate: function(twn)
+			{
+				intendedColor = color;
+
+				if (options.onUpdate != null)
+					options.onUpdate(twn);
+			},
+			onComplete: function(twn)
+			{
+				allowMissColor = true;
+
+				if (options.onComplete != null)
+					options.onComplete(twn);
+			},
+			startDelay: options.startDelay,
+			loopDelay: options.loopDelay
+		});
 	}
 
 	function initializeCharacter()
@@ -234,7 +283,8 @@ class Character extends DancingSprite
 		startWidth = frameWidth;
 		startHeight = frameHeight;
 		updateOffset();
-		
+		resetColor();
+
 		xDifference = (429 - startWidth);
 		updatePosition();
 
@@ -242,6 +292,16 @@ class Character extends DancingSprite
 			singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
 		else
 			singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	}
+
+	function setMissColor()
+	{
+		color = 0xFF565694;
+	}
+
+	function resetColor()
+	{
+		color = intendedColor;
 	}
 }
 
