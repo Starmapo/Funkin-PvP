@@ -73,10 +73,12 @@ class Paths
 	{
 		var originalPath = path;
 
-		var imagePath = path + '.png';
+		var imagePath = path;
+		if (!imagePath.endsWith('.png'))
+			imagePath += '.png';
 		if (!exists(imagePath))
 		{
-			imagePath = getPath('images/$imagePath');
+			imagePath = getPath('images/$imagePath', mod);
 			path = Path.withoutExtension(imagePath);
 		}
 
@@ -235,9 +237,8 @@ class Paths
 	{
 		// idk if this does anything but whatever
 		for (_ => sound in cachedSounds)
-		{
 			sound.close();
-		}
+
 		cachedSounds.clear();
 	}
 }

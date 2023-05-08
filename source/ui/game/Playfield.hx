@@ -110,29 +110,21 @@ class Playfield extends FlxGroup
 	public function onLaneReleased(lane:Int)
 	{
 		var receptor = receptors.members[lane];
-		receptor.animation.finishCallback = null;
+		receptor.stopAnimCallback();
 		receptor.playAnim('static');
 	}
 
 	public function onNoteHit(note:Note, judgement:Judgement)
 	{
 		var receptor = receptors.members[note.info.playerLane];
-		receptor.animation.finishCallback = null;
+		receptor.stopAnimCallback();
 
 		receptor.playAnim('confirm', true);
 
 		receptor.animation.finishCallback = function(anim)
 		{
-			if (anim == 'confirm')
-			{
-				if (note.currentlyBeingHeld && note.tail.visible)
-					receptor.playAnim('confirm', true);
-				else
-				{
-					receptor.playAnim('static', true);
-					receptor.animation.finishCallback = null;
-				}
-			}
+			if (anim == 'confirm' && note.currentlyBeingHeld && note.tail.visible)
+				receptor.playAnim(anim, true);
 		}
 
 		if (config.noteSplashes && (judgement == MARV || judgement == SICK))

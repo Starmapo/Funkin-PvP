@@ -80,6 +80,11 @@ class AnimatedSprite extends FlxSprite
 			offset.add(animOffset[0], animOffset[1]);
 	}
 
+	public function stopAnimCallback()
+	{
+		animation.finishCallback = null;
+	}
+
 	function resolveAnimData(data:AnimData)
 	{
 		if (data.fps == null)

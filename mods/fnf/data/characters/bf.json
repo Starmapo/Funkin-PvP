@@ -72,36 +72,12 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE LEFT",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
-			"name": "singLEFT",
-			"offset": [
-				-31,
-				-10
-			]
-		},
-		{
-			"atlasName": "BF NOTE LEFT MISS",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
-			"name": "singLEFT-miss",
-			"offset": [
-				-32,
-				16
-			]
-		},
-		{
 			"atlasName": "BF NOTE RIGHT",
 			"indices": [],
 			"nextAnim": "",
 			"fps": 24,
 			"loop": false,
-			"name": "singRIGHT",
+			"name": "singLEFT",
 			"offset": [
 				45,
 				-9
@@ -113,10 +89,34 @@
 			"nextAnim": "",
 			"fps": 24,
 			"loop": false,
-			"name": "singRIGHT-miss",
+			"name": "singLEFT-miss",
 			"offset": [
 				39,
 				19
+			]
+		},
+		{
+			"atlasName": "BF NOTE LEFT",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singRIGHT",
+			"offset": [
+				-31,
+				-10
+			]
+		},
+		{
+			"atlasName": "BF NOTE LEFT MISS",
+			"indices": [],
+			"nextAnim": "",
+			"fps": 24,
+			"loop": false,
+			"name": "singRIGHT-miss",
+			"offset": [
+				-32,
+				16
 			]
 		},
 		{

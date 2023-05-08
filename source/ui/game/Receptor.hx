@@ -4,10 +4,6 @@ import data.skin.NoteSkin;
 import flixel.tweens.FlxTween;
 import sprites.AnimatedSprite;
 
-/**
-	A receptor is a static note sprite that indicates when you should hit a note.
-	It gives feedback whenever you press it and also if you hit a note or not.
-**/
 class Receptor extends AnimatedSprite
 {
 	public var lane(default, null):Int;

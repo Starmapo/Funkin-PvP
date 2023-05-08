@@ -18,6 +18,8 @@ class Character extends DancingSprite
 	public var holdTimers:Array<FlxTimer> = [];
 	public var allowDanceTimer:FlxTimer = new FlxTimer();
 
+	var xDifference:Float = 0;
+
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false)
 	{
 		super(x, y);
@@ -35,9 +37,6 @@ class Character extends DancingSprite
 
 	override function animPlayed(name:String)
 	{
-		if (flipped)
-			updatePosition();
-
 		animation.finishCallback = function(name:String)
 		{
 			if (!debugMode)
@@ -51,6 +50,14 @@ class Character extends DancingSprite
 			else
 				stopAnimCallback();
 		}
+	}
+
+	override function updateOffset()
+	{
+		super.updateOffset();
+
+		if (flipped)
+			offset.x -= (startWidth - width);
 	}
 
 	override function danced(_)
@@ -68,7 +75,7 @@ class Character extends DancingSprite
 	public function updatePosition()
 	{
 		if (flipped)
-			x = charPosX - charInfo.positionOffset[0] + (startWidth - width);
+			x = charPosX - charInfo.positionOffset[0] + xDifference;
 		else
 			x = charPosX + charInfo.positionOffset[0];
 
@@ -101,11 +108,6 @@ class Character extends DancingSprite
 			return anim.offset;
 
 		return [0, 0];
-	}
-
-	public function stopAnimCallback()
-	{
-		animation.finishCallback = null;
 	}
 
 	public function playNoteAnim(note:Note, beatLength:Float)
@@ -141,11 +143,11 @@ class Character extends DancingSprite
 		{
 			canDance = false;
 			state = Sing(lane);
-			playAnim(anim, true, false, hold ? charInfo.holdLoopPoint : 0);
+			playAnim(anim, charInfo.loopAnimsOnHold || !hold, false, hold ? charInfo.holdLoopPoint : 0);
 
 			if (allowDanceTimer.active)
 				allowDanceTimer.cancel();
-			allowDanceTimer.start(beatLength / 1000, function(_)
+			allowDanceTimer.start((beatLength / 1000) * 1.5, function(_)
 			{
 				canDance = true;
 			});
@@ -231,13 +233,15 @@ class Character extends DancingSprite
 		playAnim(danceAnims[0], true);
 		startWidth = frameWidth;
 		startHeight = frameHeight;
+		updateOffset();
+		
+		xDifference = (429 - startWidth);
+		updatePosition();
 
-		if (flipped != charInfo.flipX)
+		if (flipped)
 			singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
 		else
 			singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
-
-		updatePosition();
 	}
 }
 
