@@ -46,9 +46,7 @@
 	<haxelib name="hxcpp-debug-server" if="desktop" />
 	<haxelib name="systools" if="desktop" />
 	<ndll name="systools" haxelib="systools" if="desktop" />
-
-	<!--In case you want to use nape with flixel-->
-	<!--<haxelib name="nape-haxe4" />-->
+	<haxelib name="hscript" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

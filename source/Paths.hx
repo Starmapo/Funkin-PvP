@@ -18,6 +18,8 @@ import sys.io.File;
 
 class Paths
 {
+	public static var SCRIPT_EXTENSIONS:Array<String> = [".hx", ".hscript"];
+
 	/**
 		Cache of sounds that have been loaded.
 	**/
@@ -196,6 +198,18 @@ class Paths
 			{
 				trace(e);
 			}
+		}
+
+		return null;
+	}
+
+	public static function getScriptPath(key:String, ?mod:String)
+	{
+		for (ext in SCRIPT_EXTENSIONS)
+		{
+			var path = getPath(key + ext, mod);
+			if (exists(path))
+				return path;
 		}
 
 		return null;

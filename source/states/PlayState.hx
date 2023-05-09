@@ -6,6 +6,7 @@ import data.Settings;
 import data.char.CharacterInfo;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
+import data.scripts.Script;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -35,29 +36,29 @@ class PlayState extends FNFState
 	public var chars:Array<String>;
 	public var isPaused:Bool = false;
 	public var hasStarted:Bool = false;
-
-	var camHUD:FlxCamera;
-	var timing:MusicTiming;
-	var songInst:FlxSound;
-	var songVocals:FlxSound;
-	var ruleset:GameplayRuleset;
-	var statsDisplay:FlxTypedGroup<PlayerStatsDisplay>;
-	var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
-	var songInfoDisplay:SongInfoDisplay;
-	var lyricsDisplay:LyricsDisplay;
-	var pauseSubState:PauseSubState;
-	var introSprPaths:Array<String> = ["ready", "set", "go"];
-	var introSndPaths:Array<String> = [
+	public var camHUD:FlxCamera;
+	public var timing:MusicTiming;
+	public var songInst:FlxSound;
+	public var songVocals:FlxSound;
+	public var ruleset:GameplayRuleset;
+	public var statsDisplay:FlxTypedGroup<PlayerStatsDisplay>;
+	public var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
+	public var songInfoDisplay:SongInfoDisplay;
+	public var lyricsDisplay:LyricsDisplay;
+	public var pauseSubState:PauseSubState;
+	public var introSprPaths:Array<String> = ["ready", "set", "go"];
+	public var introSndPaths:Array<String> = [
 		"intro3", "intro2",
 		"intro1", "introGo"
 	];
-	var opponent:Character;
-	var bf:Character;
-	var gf:Character;
-	var camFollow:FlxObject;
-	var disableCamFollow:Bool = false;
-	var defaultCamZoom:Float = 1.05;
-	var canPause:Bool = false;
+	public var opponent:Character;
+	public var bf:Character;
+	public var gf:Character;
+	public var camFollow:FlxObject;
+	public var disableCamFollow:Bool = false;
+	public var defaultCamZoom:Float = 1.05;
+	public var canPause:Bool = false;
+	public var scripts:Array<Script> = [];
 
 	public function new(?song:Song, chars:Array<String>)
 	{
