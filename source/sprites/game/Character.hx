@@ -1,6 +1,7 @@
 package sprites.game;
 
 import data.char.CharacterInfo;
+import flixel.animation.FlxAnimationController;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
@@ -24,6 +25,7 @@ class Character extends DancingSprite
 	public var isGF:Bool;
 
 	var xDifference:Float = 0;
+	var holdTime:Float = ((1 / 24) * 4);
 
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false, isGF:Bool = false)
 	{
@@ -129,7 +131,7 @@ class Character extends DancingSprite
 			if (holdTimers[lane] != null)
 				holdTimers[lane].cancel();
 
-			holdTimers[lane] = new FlxTimer().start((1 / 24) * 4, function(tmr)
+			holdTimers[lane] = new FlxTimer().start(holdTime / FlxAnimationController.globalSpeed, function(tmr)
 			{
 				if (note.tail.visible)
 					playSingAnim(lane, beatLength, true);
@@ -197,7 +199,7 @@ class Character extends DancingSprite
 		}
 	}
 
-	public function playSpecialAnim(name:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)
+	public function playSpecialAnim(name:String, allowDanceTime:Float = 0, force:Bool = false, reversed:Bool = false, frame:Int = 0)
 	{
 		if (!animation.exists(name))
 			return;
@@ -209,10 +211,22 @@ class Character extends DancingSprite
 		state = Special;
 		playAnim(name, force, reversed, frame);
 		resetColor();
-		animation.finishCallback = function(_)
+		
+		if (allowDanceTime > 0)
 		{
-			canDance = true;
-			dance();
+			allowDanceTimer.start(allowDanceTime, function(_)
+			{
+				canDance = true;
+				dance();
+			});
+		}
+		else
+		{
+			animation.finishCallback = function(_)
+			{
+				canDance = true;
+				dance();
+			}
 		}
 	}
 

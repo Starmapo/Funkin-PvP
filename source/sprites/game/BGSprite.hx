@@ -35,6 +35,6 @@ class BGSprite extends AnimatedSprite
 	public function dance():Void
 	{
 		if (idleAnim != null)
-			animation.play(idleAnim);
+			playAnim(idleAnim);
 	}
 }

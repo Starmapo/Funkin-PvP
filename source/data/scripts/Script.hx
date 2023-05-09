@@ -1,5 +1,14 @@
 package data.scripts;
 
+import data.char.CharacterInfo;
+import data.skin.NoteSkin;
+import data.song.CameraFocus;
+import data.song.EventObject;
+import data.song.LyricStep;
+import data.song.NoteInfo;
+import data.song.ScrollVelocity;
+import data.song.Song;
+import data.song.TimingPoint;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -10,7 +19,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.sound.FlxSound;
 import flixel.system.FlxAssets;
@@ -18,8 +26,6 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxAxes;
-import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import haxe.Json;
 import hscript.Expr;
@@ -28,7 +34,6 @@ import hscript.Parser;
 import lime.app.Application;
 import openfl.Assets;
 import openfl.display.BitmapData;
-import openfl.display.BlendMode;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import sprites.AnimatedSprite;
@@ -41,6 +46,9 @@ import ui.game.Note;
 import ui.game.NoteSplash;
 import ui.game.Receptor;
 
+using StringTools;
+
+// Some stuff here is from Yoshi Engine
 class Script
 {
 	public var interp:Interp;
@@ -135,6 +143,11 @@ class Script
 		return null;
 	}
 
+	function onError(message:String)
+	{
+		trace(message);
+	}
+
 	function setStartingVariables()
 	{
 		setVariable('this', this);
@@ -185,21 +198,54 @@ class Script
 
 		setVariable('AnimatedSprite', AnimatedSprite);
 		setVariable('BGSprite', BGSprite);
+		setVariable('CameraFocus', CameraFocus);
 		setVariable('Character', Character);
+		setVariable('CharacterInfo', CharacterInfo);
+		setVariable('Controls', Controls);
 		setVariable('CoolUtil', CoolUtil);
 		setVariable('DancingSprite', DancingSprite);
+		setVariable('EventObject', EventObject);
 		setVariable('FNFState', FNFState);
+		setVariable('LyricStep', LyricStep);
+		setVariable('Mods', Mods);
 		setVariable('Note', Note);
+		setVariable('NoteInfo', NoteInfo);
+		setVariable('NoteSkin', NoteSkin);
 		setVariable('NoteSplash', NoteSplash);
 		setVariable('Paths', Paths);
 		setVariable('PlayerSettings', PlayerSettings);
 		setVariable('PlayState', PlayState);
 		setVariable('Receptor', Receptor);
+		setVariable('ScrollVelocity', ScrollVelocity);
 		setVariable('Settings', Settings);
+		setVariable('Song', Song);
+		setVariable('TimingPoint', TimingPoint);
 
 		setVariable("close", function()
 		{
 			closed = true;
+		});
+		setVariable("import", function(className:String)
+		{
+			var splitClassName = [for (e in className.split(".")) e.trim()];
+			var realClassName = splitClassName.join(".");
+			var cl = Type.resolveClass(realClassName);
+			var en = Type.resolveEnum(realClassName);
+			if (cl == null && en == null)
+				onError('Class / Enum at "$realClassName" does not exist.');
+			else
+			{
+				if (en != null)
+				{
+					var enumThingy = {};
+					for (c in en.getConstructors())
+						Reflect.setField(enumThingy, c, en.createByName(c));
+
+					setVariable(splitClassName[splitClassName.length - 1], enumThingy);
+				}
+				else
+					setVariable(splitClassName[splitClassName.length - 1], cl);
+			}
 		});
 	}
 }

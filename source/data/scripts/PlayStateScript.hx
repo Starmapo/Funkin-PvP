@@ -10,10 +10,13 @@ class PlayStateScript extends Script
 
 	public function new(state:PlayState, path:String, mod:String)
 	{
+		this.state = state;
 		super(path, mod);
+	}
 
-		if (interp == null)
-			return;
+	override function setStartingVariables()
+	{
+		super.setStartingVariables();
 
 		setVariable("state", state);
 		setVariable("opponent", state.opponent);
@@ -83,5 +86,10 @@ class PlayStateScript extends Script
 		{
 			return state.getPlayerCharacter(player);
 		});
+	}
+
+	override function onError(message:String)
+	{
+		state.notificationManager.showNotification(message, ERROR);
 	}
 }

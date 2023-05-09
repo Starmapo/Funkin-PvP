@@ -23,12 +23,15 @@ import flixel.util.FlxTimer;
 import sprites.game.Character;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
+import ui.editors.NotificationManager;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
 import ui.game.SongInfoDisplay;
 import util.MusicTiming;
+
+using StringTools;
 
 class PlayState extends FNFState
 {
@@ -59,6 +62,7 @@ class PlayState extends FNFState
 	public var defaultCamZoom:Float = 1.05;
 	public var canPause:Bool = false;
 	public var scripts:Array<PlayStateScript> = [];
+	public var notificationManager:NotificationManager;
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -198,7 +202,7 @@ class PlayState extends FNFState
 		return player == 0 ? opponent : bf;
 	}
 
-	public function addScript(key:String, ?mod:String)
+	public function addScript(key:String, mod:String)
 	{
 		var path = Paths.getScriptPath(key, mod);
 		if (Paths.exists(path))
@@ -224,6 +228,43 @@ class PlayState extends FNFState
 
 			script.execute(func, args);
 		}
+	}
+
+	public function triggerEvent(name:String, params:Array<String>)
+	{
+		switch (name)
+		{
+			case "Hey!":
+				var value1 = params[0] != null ? params[0].toLowerCase().trim() : '';
+				var value2 = params[1] != null ? params[1].toLowerCase().trim() : '';
+
+				var time = Std.parseFloat(value2);
+				if (Math.isNaN(time) || time <= 0)
+					time = 0.6;
+
+				var bfHey = true;
+				var gfCheer = true;
+				switch (value1)
+				{
+					case 'bf', 'boyfriend', '0':
+						gfCheer = false;
+					case 'gf', 'girlfriend', '1':
+						bfHey = false;
+				}
+
+				if (bfHey)
+					bf.playSpecialAnim('hey', time, true);
+				if (gfCheer)
+					gf.playSpecialAnim('cheer', time, true);
+
+			case "Set GF Speed":
+				var value = params[0] != null ? Std.parseInt(params[0].trim()) : 1;
+				if (Math.isNaN(value) || value < 1)
+					value = 1;
+				gf.danceBeats = value;
+		}
+
+		executeScripts("onEvent", [name, params]);
 	}
 
 	function initCameras()
@@ -290,6 +331,9 @@ class PlayState extends FNFState
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
 		lyricsDisplay.cameras = [camHUD];
 		add(lyricsDisplay);
+
+		notificationManager = new NotificationManager();
+		add(notificationManager);
 	}
 
 	function initPauseSubState()
@@ -333,7 +377,7 @@ class PlayState extends FNFState
 		updateCamPosition();
 		add(camFollow);
 
-		addScript('data/stages/' + song.stage);
+		addScript('data/stages/' + song.stage, song.mod);
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		FlxG.camera.snapToTarget();
@@ -433,7 +477,7 @@ class PlayState extends FNFState
 		ruleset.playfields[player].onNoteHit(note, judgement);
 
 		var char = getPlayerCharacter(player);
-		char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength);
+		char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate);
 
 		executeScripts("onNoteHit", [note, judgement]);
 	}
@@ -465,7 +509,7 @@ class PlayState extends FNFState
 
 	function startCountdown()
 	{
-		new FlxTimer().start(song.timingPoints[0].beatLength / 1000, function(tmr)
+		new FlxTimer().start(song.timingPoints[0].beatLength / Settings.playbackRate / 1000, function(tmr)
 		{
 			var count = tmr.elapsedLoops;
 			if (count > 1)
@@ -481,7 +525,7 @@ class PlayState extends FNFState
 		spr.screenCenter();
 		spr.cameras = [camHUD];
 		add(spr);
-		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / 1000, {
+		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / Settings.playbackRate / 1000, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(_)
 			{

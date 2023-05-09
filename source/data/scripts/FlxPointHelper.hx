@@ -31,7 +31,7 @@ class FlxPointHelper
 	public var lx(get, never):Float;
 	public var ly(get, never):Float;
 
-	public var point:FlxPoint;
+	public var point(default, null):FlxPoint;
 
 	public function new(x:Float = 0, y:Float = 0)
 	{

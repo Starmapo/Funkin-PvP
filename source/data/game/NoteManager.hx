@@ -509,6 +509,6 @@ class NoteManager extends FlxBasic
 		if (nextNote == null)
 			return true;
 
-		return (nextNote.startTime - currentAudioPosition >= 5000);
+		return (nextNote.startTime - currentAudioPosition >= 5000 / Settings.playbackRate);
 	}
 }
