@@ -199,7 +199,8 @@ class MusicTiming implements IFlxDestroyable
 	**/
 	public function addDancingSprite(sprite:DancingSprite)
 	{
-		dancingSprites.push(sprite);
+		if (sprite != null)
+			dancingSprites.push(sprite);
 	}
 
 	/**

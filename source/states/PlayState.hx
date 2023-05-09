@@ -7,6 +7,8 @@ import data.char.CharacterInfo;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.scripts.PlayStateScript;
+import data.scripts.Script;
+import data.song.EventObject;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -19,10 +21,13 @@ import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
+import haxe.io.Path;
 import sprites.game.Character;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
+import sys.FileSystem;
 import ui.editors.NotificationManager;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
@@ -63,6 +68,7 @@ class PlayState extends FNFState
 	public var canPause:Bool = false;
 	public var scripts:Array<PlayStateScript> = [];
 	public var notificationManager:NotificationManager;
+	public var events:Array<PlayStateEvent> = [];
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -93,8 +99,10 @@ class PlayState extends FNFState
 		initPauseSubState();
 		initCharacters();
 		initStage();
+		initScripts();
 		precache();
 
+		checkEvents();
 		startCountdown();
 
 		super.create();
@@ -106,6 +114,8 @@ class PlayState extends FNFState
 	{
 		executeScripts("onUpdate", [elapsed]);
 
+		super.update(elapsed);
+
 		timing.update(elapsed);
 
 		ruleset.updateCurrentTrackPosition();
@@ -116,7 +126,7 @@ class PlayState extends FNFState
 		lyricsDisplay.updateLyrics(songInst.time);
 		updateCamPosition();
 
-		super.update(elapsed);
+		checkEvents();
 
 		executeScripts("onUpdatePost", [elapsed]);
 	}
@@ -206,18 +216,45 @@ class PlayState extends FNFState
 	{
 		var path = Paths.getScriptPath(key, mod);
 		if (Paths.exists(path))
-		{
-			var script = new PlayStateScript(this, path, mod);
-			scripts.push(script);
-			script.execute("onCreate");
-			return script;
-		}
+			return addScriptPath(path, mod);
 
 		return null;
 	}
 
-	public function executeScripts(func:String, ?args:Array<Any>)
+	public function addScriptPath(path:String, mod:String)
 	{
+		var script = new PlayStateScript(this, path, mod);
+		scripts.push(script);
+		script.execute("onCreate");
+		return script;
+	}
+
+	public function addScriptsInFolder(folder:String)
+	{
+		if (FileSystem.exists(folder) && FileSystem.isDirectory(folder))
+		{
+			for (file in FileSystem.readDirectory(folder))
+			{
+				for (ext in Paths.SCRIPT_EXTENSIONS)
+				{
+					if (file.endsWith(ext))
+					{
+						addScriptPath(Path.join([folder, file]), song.mod);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	public function executeScripts(func:String, ?args:Array<Any>, ignoreStops:Bool = true, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic
+	{
+		if (exclusions == null)
+			exclusions = [];
+		if (excludeValues == null)
+			excludeValues = [];
+
+		var ret:Dynamic = Script.FUNCTION_CONTINUE;
 		for (script in scripts)
 		{
 			if (script.closed)
@@ -226,8 +263,18 @@ class PlayState extends FNFState
 				continue;
 			}
 
-			script.execute(func, args);
+			if (exclusions.contains(script.path))
+				continue;
+
+			var funcRet:Dynamic = script.execute(func, args);
+			if (funcRet == Script.FUNCTION_STOP_SCRIPTS && !ignoreStops)
+				break;
+
+			if (funcRet != null && funcRet != Script.FUNCTION_CONTINUE && !excludeValues.contains(funcRet))
+				ret = funcRet;
 		}
+
+		return ret;
 	}
 
 	public function triggerEvent(name:String, params:Array<String>)
@@ -258,10 +305,12 @@ class PlayState extends FNFState
 					gf.playSpecialAnim('cheer', time, true);
 
 			case "Set GF Speed":
+				trace(params, params.length, params[0]);
 				var value = params[0] != null ? Std.parseInt(params[0].trim()) : 1;
-				if (Math.isNaN(value) || value < 1)
+				if (value == null || Math.isNaN(value) || value < 1)
 					value = 1;
 				gf.danceBeats = value;
+				trace(value);
 		}
 
 		executeScripts("onEvent", [name, params]);
@@ -385,6 +434,56 @@ class PlayState extends FNFState
 		FlxG.camera.zoom = defaultCamZoom;
 	}
 
+	function initScripts()
+	{
+		addScriptsInFolder(song.directory);
+
+		var characters = [opponent, bf, gf];
+		for (char in characters)
+			addScript('data/characters/' + char.charInfo.charName, char.charInfo.mod);
+
+		var noteTypeMap = new Map<String, Bool>();
+		var eventMap = new Map<String, Bool>();
+		for (note in song.notes)
+		{
+			if (!noteTypeMap.exists(note.type))
+				noteTypeMap.set(note.type, true);
+		}
+		for (event in song.events)
+		{
+			for (sub in event.events)
+			{
+				events.push({
+					startTime: event.startTime,
+					event: sub.event,
+					params: sub.params
+				});
+
+				if (!eventMap.exists(sub.event))
+					eventMap.set(sub.event, true);
+			}
+		}
+
+		for (note => _ in noteTypeMap)
+			addScript('data/noteTypes/$note', song.mod);
+		for (event => _ in eventMap)
+			addScript('data/events/$event', song.mod);
+
+		addScriptsInFolder('data/globalScripts');
+
+		for (event in events)
+			event.startTime -= getEventEarlyTrigger(event);
+		events.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
+	}
+
+	function precache()
+	{
+		for (image in introSprPaths)
+			Paths.getImage('countdown/' + image);
+		for (sound in introSndPaths)
+			Paths.getSound('countdown/' + sound);
+	}
+
 	function updateCamPosition()
 	{
 		if (disableCamFollow)
@@ -408,14 +507,6 @@ class PlayState extends FNFState
 		if (char.flipped)
 			camOffsetX *= -1;
 		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
-	}
-
-	function precache()
-	{
-		for (image in introSprPaths)
-			Paths.getImage('countdown/' + image);
-		for (sound in introSndPaths)
-			Paths.getSound('countdown/' + sound);
 	}
 
 	function handleInput(elapsed:Float)
@@ -509,7 +600,7 @@ class PlayState extends FNFState
 
 	function startCountdown()
 	{
-		new FlxTimer().start(song.timingPoints[0].beatLength / Settings.playbackRate / 1000, function(tmr)
+		new FlxTimer().start(song.timingPoints[0].beatLength * Settings.playbackRate / 1000, function(tmr)
 		{
 			var count = tmr.elapsedLoops;
 			if (count > 1)
@@ -525,7 +616,7 @@ class PlayState extends FNFState
 		spr.screenCenter();
 		spr.cameras = [camHUD];
 		add(spr);
-		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / Settings.playbackRate / 1000, {
+		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength * Settings.playbackRate / 1000, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(_)
 			{
@@ -535,4 +626,29 @@ class PlayState extends FNFState
 
 		executeScripts("onReadySetGo", [spr]);
 	}
+
+	function getEventEarlyTrigger(event:PlayStateEvent)
+	{
+		var value:Dynamic = executeScripts("getEventEarlyTrigger", [event]);
+		if (value != 0 && value != Script.FUNCTION_CONTINUE)
+			return value;
+
+		return 0;
+	}
+
+	function checkEvents()
+	{
+		while (events.length > 0 && timing.audioPosition >= events[0].startTime)
+		{
+			var event = events.shift();
+			triggerEvent(event.event, event.params);
+		}
+	}
+}
+
+typedef PlayStateEvent =
+{
+	var startTime:Float;
+	var event:String;
+	var params:Array<String>;
 }

@@ -48,9 +48,13 @@ import ui.game.Receptor;
 
 using StringTools;
 
-// Some stuff here is from Yoshi Engine
+// Some stuff here is from Yoshi Engine or Psych Engine
 class Script
 {
+	public static var FUNCTION_STOP:String = "FUNCTIONSTOP";
+	public static var FUNCTION_CONTINUE:String = "FUNCTIONCONTINUE";
+	public static var FUNCTION_STOP_SCRIPTS:String = "FUNCTIONSTOPSCRIPTS";
+
 	public var interp:Interp;
 	public var path:String;
 	public var mod:String;
@@ -98,12 +102,12 @@ class Script
 		setStartingVariables();
 	}
 
-	public function execute(func:String, ?args:Array<Any>)
+	public function execute(func:String, ?args:Array<Any>):Dynamic
 	{
 		var lastMod = Mods.currentMod;
 		Mods.currentMod = mod;
 
-		var r = executeFunc(func, args);
+		var r:Dynamic = executeFunc(func, args);
 
 		Mods.currentMod = lastMod;
 
@@ -126,7 +130,7 @@ class Script
 		return interp.variables.get(name);
 	}
 
-	function executeFunc(func:String, ?args:Array<Any>)
+	function executeFunc(func:String, ?args:Array<Any>):Dynamic
 	{
 		if (interp == null)
 			return null;

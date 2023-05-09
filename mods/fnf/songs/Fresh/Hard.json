@@ -1,11 +1,49 @@
 {
+	"stage": "stage",
 	"timingPoints": [
 		{
 			"bpm": 120
 		}
 	],
 	"vocalsFile": "Voices.ogg",
-	"events": [],
+	"events": [
+		{
+			"startTime": 8000,
+			"events": [
+				{
+					"params": "2",
+					"event": "Set GF Speed"
+				}
+			]
+		},
+		{
+			"startTime": 24000,
+			"events": [
+				{
+					"params": "1",
+					"event": "Set GF Speed"
+				}
+			]
+		},
+		{
+			"startTime": 40000,
+			"events": [
+				{
+					"params": "2",
+					"event": "Set GF Speed"
+				}
+			]
+		},
+		{
+			"startTime": 56000,
+			"events": [
+				{
+					"params": "1",
+					"event": "Set GF Speed"
+				}
+			]
+		}
+	],
 	"notes": [
 		{
 			"lane": 1

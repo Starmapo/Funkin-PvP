@@ -20,10 +20,9 @@ class Paths
 {
 	public static var SCRIPT_EXTENSIONS:Array<String> = [".hx", ".hscript"];
 
-	/**
-		Cache of sounds that have been loaded.
-	**/
 	public static var cachedSounds:Map<String, Sound> = new Map();
+	public static var trackingAssets:Bool = false;
+	public static var trackedGraphics:Bool = false;
 
 	public static function getPath(key:String, ?mod:String):String
 	{

@@ -1,11 +1,157 @@
 {
+	"stage": "stage",
 	"timingPoints": [
 		{
 			"bpm": 100
 		}
 	],
 	"vocalsFile": "Voices.ogg",
-	"events": [],
+	"events": [
+		{
+			"startTime": 4200,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 9000,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 13800,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 18600,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 23400,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 28200,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 33000,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 37800,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 42600,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 47400,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 52200,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 57000,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 61800,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 66600,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 71400,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 76200,
+			"events": [
+				{
+					"params": "bf",
+					"event": "Hey!"
+				}
+			]
+		}
+	],
 	"notes": [
 		{
 			"lane": 2

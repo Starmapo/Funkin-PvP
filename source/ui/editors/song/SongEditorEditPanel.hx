@@ -269,10 +269,19 @@ class SongEditorEditPanel extends EditorPanel
 					var song = Song.loadSong(path);
 					song.events.resize(0);
 					for (obj in state.song.events)
+					{
+						var events = [];
+						for (sub in obj.events)
+							events.push({
+								event: sub.event,
+								params: sub.params.join(',')
+							});
+
 						song.events.push(new EventObject({
 							startTime: obj.startTime,
-							events: obj.events.copy()
+							events: events
 						}));
+					}
 					song.save(path);
 				}
 			});

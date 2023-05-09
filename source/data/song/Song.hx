@@ -15,7 +15,6 @@ using StringTools;
 class Song extends JsonObject
 {
 	public static var CURRENT_VERSION:String = '1.0.0';
-	public static var scrollSpeedMult:Float = 0.32;
 
 	/**
 		Loads a song from a path.
@@ -120,8 +119,9 @@ class Song extends JsonObject
 		{
 			for (file in FileSystem.readDirectory(directory))
 			{
-				if (file.endsWith('.json') && !file.startsWith('!') && file != excludeDifficulty)
-					difficulties.push(Path.withoutExtension(file));
+				var fileName = Path.withoutExtension(file);
+				if (file.endsWith('.json') && !file.startsWith('!') && fileName != excludeDifficulty)
+					difficulties.push(fileName);
 			}
 		}
 		return difficulties;

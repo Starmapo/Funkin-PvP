@@ -1,11 +1,31 @@
 {
+	"stage": "stage",
 	"timingPoints": [
 		{
 			"bpm": 100
 		}
 	],
 	"vocalsFile": "",
-	"events": [],
+	"events": [
+		{
+			"startTime": 18600,
+			"events": [
+				{
+					"params": "",
+					"event": "Hey!"
+				}
+			]
+		},
+		{
+			"startTime": 28200,
+			"events": [
+				{
+					"params": "",
+					"event": "Hey!"
+				}
+			]
+		}
+	],
 	"notes": [
 		{
 			"startTime": 9600

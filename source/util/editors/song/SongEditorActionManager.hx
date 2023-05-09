@@ -897,7 +897,7 @@ class ActionChangeEventParams implements IAction
 	{
 		eventInfo.params = lastParams.split(',');
 
-		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, evparamsent: params});
+		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, params: params});
 	}
 }
 
