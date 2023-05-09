@@ -6,7 +6,7 @@ import data.Settings;
 import data.char.CharacterInfo;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
-import data.scripts.Script;
+import data.scripts.PlayStateScript;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -58,7 +58,7 @@ class PlayState extends FNFState
 	public var disableCamFollow:Bool = false;
 	public var defaultCamZoom:Float = 1.05;
 	public var canPause:Bool = false;
-	public var scripts:Array<Script> = [];
+	public var scripts:Array<PlayStateScript> = [];
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -94,10 +94,14 @@ class PlayState extends FNFState
 		startCountdown();
 
 		super.create();
+
+		executeScripts("onCreatePost");
 	}
 
 	override public function update(elapsed:Float)
 	{
+		executeScripts("onUpdate", [elapsed]);
+
 		timing.update(elapsed);
 
 		ruleset.updateCurrentTrackPosition();
@@ -109,6 +113,8 @@ class PlayState extends FNFState
 		updateCamPosition();
 
 		super.update(elapsed);
+
+		executeScripts("onUpdatePost", [elapsed]);
 	}
 
 	override function destroy()
@@ -192,6 +198,34 @@ class PlayState extends FNFState
 		return player == 0 ? opponent : bf;
 	}
 
+	public function addScript(key:String, ?mod:String)
+	{
+		var path = Paths.getScriptPath(key, mod);
+		if (Paths.exists(path))
+		{
+			var script = new PlayStateScript(this, path, mod);
+			scripts.push(script);
+			script.execute("onCreate");
+			return script;
+		}
+
+		return null;
+	}
+
+	public function executeScripts(func:String, ?args:Array<Any>)
+	{
+		for (script in scripts)
+		{
+			if (script.closed)
+			{
+				scripts.remove(script);
+				continue;
+			}
+
+			script.execute(func, args);
+		}
+	}
+
 	function initCameras()
 	{
 		camHUD = new FlxCamera();
@@ -231,9 +265,10 @@ class PlayState extends FNFState
 
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.laneReleased.add(onLaneReleased);
+		ruleset.ghostTap.add(onGhostTap);
 		ruleset.noteHit.add(onNoteHit);
 		ruleset.noteMissed.add(onNoteMissed);
-		ruleset.noteReleaseMissed.add(onNoteMissed);
+		ruleset.noteReleaseMissed.add(onNoteReleaseMissed);
 		ruleset.judgementAdded.add(onJudgementAdded);
 
 		judgementDisplay = new FlxTypedGroup();
@@ -295,10 +330,12 @@ class PlayState extends FNFState
 	function initStage()
 	{
 		camFollow = new FlxObject();
+		updateCamPosition();
 		add(camFollow);
 
+		addScript('data/stages/' + song.stage);
+
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
-		updateCamPosition();
 		FlxG.camera.snapToTarget();
 
 		FlxG.camera.zoom = defaultCamZoom;
@@ -366,6 +403,8 @@ class PlayState extends FNFState
 	function onLanePressed(lane:Int, player:Int)
 	{
 		ruleset.playfields[player].onLanePressed(lane);
+
+		executeScripts("onLanePressed", [lane, player]);
 	}
 
 	function onLaneReleased(lane:Int, player:Int)
@@ -379,6 +418,13 @@ class PlayState extends FNFState
 			timer.cancel();
 			char.holdTimers[lane] = null;
 		}
+
+		executeScripts("onLaneReleased", [lane, player]);
+	}
+
+	function onGhostTap(lane:Int, player:Int)
+	{
+		executeScripts("onGhostTap", [lane, player]);
 	}
 
 	function onNoteHit(note:Note, judgement:Judgement)
@@ -388,6 +434,8 @@ class PlayState extends FNFState
 
 		var char = getPlayerCharacter(player);
 		char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength);
+
+		executeScripts("onNoteHit", [note, judgement]);
 	}
 
 	function onNoteMissed(note:Note)
@@ -395,11 +443,24 @@ class PlayState extends FNFState
 		var player = note.info.player;
 		var char = getPlayerCharacter(player);
 		char.playMissAnim(note.info.playerLane);
+
+		executeScripts("onNoteMissed", [note]);
+	}
+
+	function onNoteReleaseMissed(note:Note)
+	{
+		var player = note.info.player;
+		var char = getPlayerCharacter(player);
+		char.playMissAnim(note.info.playerLane);
+
+		executeScripts("onNoteReleaseMissed", [note]);
 	}
 
 	function onJudgementAdded(judgement:Judgement, player:Int)
 	{
 		judgementDisplay.members[player].showJudgement(judgement);
+
+		executeScripts("onJudgementAdded", [judgement, player]);
 	}
 
 	function startCountdown()
@@ -427,5 +488,7 @@ class PlayState extends FNFState
 				spr.destroy();
 			}
 		});
+
+		executeScripts("onReadySetGo", [spr]);
 	}
 }

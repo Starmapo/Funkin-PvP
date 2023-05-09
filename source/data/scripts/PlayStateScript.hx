@@ -79,5 +79,9 @@ class PlayStateScript extends Script
 		{
 			return state.insert(state.members.indexOf(state.gf) + 1, obj);
 		});
+		setVariable("getPlayerCharacter", function(player:Int = 0)
+		{
+			return state.getPlayerCharacter(player);
+		});
 	}
 }
