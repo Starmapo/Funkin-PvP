@@ -22,7 +22,8 @@ class Paths
 
 	public static var cachedSounds:Map<String, Sound> = new Map();
 	public static var trackingAssets:Bool = false;
-	public static var trackedGraphics:Bool = false;
+	public static var trackedGraphics:Array<FlxGraphic> = [];
+	public static var trackedSounds:Array<String> = [];
 
 	public static function getPath(key:String, ?mod:String):String
 	{
@@ -52,22 +53,27 @@ class Paths
 		if (key == null)
 			key = path;
 
+		var graphic:FlxGraphic = null;
 		// exists in openfl assets, so get it from there
 		if (Assets.exists(path, IMAGE))
 		{
-			return FlxGraphic.fromAssetKey(path, unique, key);
+			graphic = FlxGraphic.fromAssetKey(path, unique, key);
 		}
 		#if sys
 		// otherwise, get it from the file
 		else if (FileSystem.exists(path))
 		{
 			var bitmap = BitmapData.fromFile(path);
-			return FlxGraphic.fromBitmapData(bitmap, unique, key);
+			graphic = FlxGraphic.fromBitmapData(bitmap, unique, key);
 		}
 		#end
 
-		FlxG.log.warn('Graphic \"$originalPath\" not found.');
-		return null;
+		if (graphic == null)
+			FlxG.log.warn('Graphic \"$originalPath\" not found.');
+		else if (trackingAssets)
+			trackedGraphics.push(graphic);
+
+		return graphic;
 	}
 
 	public static function getSpritesheet(path:String, ?mod:String, unique:Bool = false):FlxAtlasFrames
@@ -130,22 +136,22 @@ class Paths
 		if (cachedSounds.exists(path))
 			return cachedSounds.get(path);
 
+		var sound:Sound = null;
 		if (Assets.exists(path, SOUND))
-		{
-			var sound = Assets.getSound(path);
-			cachedSounds.set(path, sound);
-			return sound;
-		}
+			sound = Assets.getSound(path, false);
 		#if sys
 		else if (FileSystem.exists(path))
-		{
-			var sound = Sound.fromFile('./$path');
-			cachedSounds.set(path, sound);
-			return sound;
-		}
+			sound = Sound.fromFile('./$path');
 		#end
 
-		return null;
+		if (sound != null)
+		{
+			cachedSounds.set(path, sound);
+			if (trackingAssets)
+				trackedSounds.push(path);
+		}
+
+		return sound;
 	}
 
 	public static function getMusic(path:String, ?mod:String)
@@ -248,10 +254,17 @@ class Paths
 
 	public static function clearSounds()
 	{
-		// idk if this does anything but whatever
-		for (_ => sound in cachedSounds)
-			sound.close();
-
 		cachedSounds.clear();
+	}
+
+	public static function clearTrackedAssets()
+	{
+		for (graphic in trackedGraphics)
+			FlxG.bitmap.remove(graphic);
+		trackedGraphics.resize(0);
+
+		for (key in trackedSounds)
+			cachedSounds.remove(key);
+		trackedSounds.resize(0);
 	}
 }

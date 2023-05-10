@@ -96,6 +96,7 @@ class PlayState extends FNFState
 
 		Mods.currentMod = song.mod;
 		FlxAnimationController.globalSpeed = Settings.playbackRate;
+		Paths.trackingAssets = true;
 
 		initCameras();
 		initSong();
@@ -140,6 +141,9 @@ class PlayState extends FNFState
 	{
 		super.destroy();
 		timing = FlxDestroyUtil.destroy(timing);
+		
+		Paths.clearTrackedAssets();
+		Paths.trackingAssets = false;
 	}
 
 	override function openSubState(subState:FlxSubState)
