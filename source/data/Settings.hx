@@ -24,7 +24,8 @@ class Settings
 	public static var globalOffset:Int = 0;
 	public static var smoothAudioTiming:Bool = false;
 	// Miscellaneous
-	public static var flashing:Bool = true;
+	public static var flashing:Bool = false;
+	public static var camZooming:Bool = true;
 	public static var autoPause:Bool = false;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;
@@ -64,6 +65,7 @@ class Settings
 		load('globalOffset');
 		load('smoothAudioTiming');
 		load('flashing');
+		load('camZooming');
 		load('autoPause');
 		load('singleSongSelection');
 		load('playbackRate');
@@ -123,6 +125,7 @@ class Settings
 		save('globalOffset');
 		save('smoothAudioTiming');
 		save('flashing');
+		save('camZooming');
 		save('autoPause');
 		save('singleSongSelection');
 		save('playbackRate');

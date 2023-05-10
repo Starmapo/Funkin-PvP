@@ -101,6 +101,11 @@ class MusicTiming implements IFlxDestroyable
 	public var onBeatHit:FlxTypedSignal<Int->Float->Void> = new FlxTypedSignal();
 
 	/**
+		Gets dispatched when a new bar is reached.
+	**/
+	public var onBarHit:FlxTypedSignal<Int->Float->Void> = new FlxTypedSignal();
+
+	/**
 		Whether or not this will detect if it missed a step hit and replay it before the current step.
 	**/
 	public var checkSkippedSteps:Bool = true;
@@ -179,6 +184,7 @@ class MusicTiming implements IFlxDestroyable
 	{
 		FlxDestroyUtil.destroy(onStepHit);
 		FlxDestroyUtil.destroy(onBeatHit);
+		FlxDestroyUtil.destroy(onBarHit);
 	}
 
 	/**
@@ -281,10 +287,7 @@ class MusicTiming implements IFlxDestroyable
 
 			var timeOutOfThreshold = Math.abs(extra.time - music.time) >= SYNC_THRESHOLD * music.pitch;
 			if (timeOutOfThreshold)
-			{
-				FlxG.log.notice('Resynced vocals with difference of ' + Math.abs(extra.time - music.time));
 				extra.time = music.time;
-			}
 		}
 	}
 
@@ -324,9 +327,7 @@ class MusicTiming implements IFlxDestroyable
 
 		// thx forever engine
 		if (oldStep > curStep)
-		{
 			oldStep = curStep - 1;
-		}
 		for (i in storedSteps)
 		{
 			if (i < oldStep || i > curStep)
@@ -337,9 +338,7 @@ class MusicTiming implements IFlxDestroyable
 			for (i in oldStep...curStep)
 			{
 				if (!storedSteps.contains(i) && i >= 0)
-				{
 					stepHit(i, i);
-				}
 			}
 		}
 
@@ -374,6 +373,17 @@ class MusicTiming implements IFlxDestroyable
 		}
 
 		onBeatHit.dispatch(beat, decBeat);
+
+		if (beat % curTimingPoint.meter == 0)
+		{
+			var decBar = decBeat / curTimingPoint.meter;
+			barHit(Math.floor(decBar), decBar);
+		}
+	}
+
+	function barHit(bar:Int, decBar:Float)
+	{
+		onBarHit.dispatch(bar, decBar);
 	}
 
 	function reset()

@@ -14,6 +14,13 @@ class MiscellaneousPage extends BaseSettingsPage
 			displayName: 'Flashing Lights',
 			description: "Whether flashing lights are enabled.",
 			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
+			name: 'camZooming',
+			displayName: 'Camera Zooming on Beat',
+			description: "If enabled, the camera will zoom in on every bar.",
+			type: CHECKBOX,
 			defaultValue: true
 		});
 		addSetting({

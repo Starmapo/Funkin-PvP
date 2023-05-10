@@ -160,6 +160,7 @@ class CharacterSelectState extends FNFState
 class PlayerCharacterSelect extends FlxGroup
 {
 	static var lastSelectedGroups:Array<Int> = [0, 0];
+	static var lastSelectedChars:Array<Int> = [0, 0];
 
 	public var viewing:Int = 0;
 	public var ready:Bool = false;
@@ -224,6 +225,9 @@ class PlayerCharacterSelect extends FlxGroup
 		setControlsEnabled(false);
 
 		groupMenuList.selectItem(lastSelectedGroups[player]);
+		charMenuList.resetGroup(groupMenuList.selectedItem);
+		lastGroupReset = groupMenuList.selectedItem.name;
+		charMenuList.selectItem(lastSelectedChars[player]);
 		camera.snapToTarget();
 	}
 
@@ -302,6 +306,7 @@ class PlayerCharacterSelect extends FlxGroup
 			charPortrait.loadGraphic(portrait);
 		charPortrait.visible = (portrait != null);
 		charText.text = item.charData.displayName;
+		lastSelectedChars[player] = item.ID;
 	}
 
 	function onCharAccept(item:CharacterMenuItem)

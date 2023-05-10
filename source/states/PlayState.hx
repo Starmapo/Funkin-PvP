@@ -17,6 +17,7 @@ import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.animation.FlxAnimationController;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -69,6 +70,9 @@ class PlayState extends FNFState
 	public var scripts:Array<PlayStateScript> = [];
 	public var notificationManager:NotificationManager;
 	public var events:Array<PlayStateEvent> = [];
+	public var camZooming:Bool = true;
+	public var camZoomingMult:Float = 1;
+	public var camZoomingDecay:Float = 1;
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -125,6 +129,7 @@ class PlayState extends FNFState
 
 		lyricsDisplay.updateLyrics(songInst.time);
 		updateCamPosition();
+		updateCamZoom(elapsed);
 
 		checkEvents();
 
@@ -316,6 +321,15 @@ class PlayState extends FNFState
 		executeScripts("onEvent", [name, params]);
 	}
 
+	public function endSong()
+	{
+		lyricsDisplay.visible = false;
+
+		var ret = executeScripts("onEndSong");
+		if (ret != Script.FUNCTION_STOP)
+			exit();
+	}
+
 	function initCameras()
 	{
 		camHUD = new FlxCamera();
@@ -337,6 +351,9 @@ class PlayState extends FNFState
 		songVocals.pitch = Settings.playbackRate;
 
 		timing = new MusicTiming(songInst, song.timingPoints, true, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
+		timing.onStepHit.add(onStepHit);
+		timing.onBeatHit.add(onBeatHit);
+		timing.onBarHit.add(onBarHit);
 	}
 
 	function initUI()
@@ -428,7 +445,7 @@ class PlayState extends FNFState
 
 		addScript('data/stages/' + song.stage, song.mod);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+		FlxG.camera.follow(camFollow, LOCKON, 0.04 * Settings.playbackRate);
 		FlxG.camera.snapToTarget();
 
 		FlxG.camera.zoom = defaultCamZoom;
@@ -509,6 +526,16 @@ class PlayState extends FNFState
 		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
 	}
 
+	function updateCamZoom(elapsed:Float)
+	{
+		if (camZooming)
+		{
+			var lerp = (0.05 * camZoomingDecay * Settings.playbackRate);
+			FlxG.camera.zoom = CoolUtil.reverseLerp(defaultCamZoom, FlxG.camera.zoom, lerp);
+			camHUD.zoom = CoolUtil.reverseLerp(1, camHUD.zoom, lerp);
+		}
+	}
+
 	function handleInput(elapsed:Float)
 	{
 		if (isPaused)
@@ -527,12 +554,6 @@ class PlayState extends FNFState
 				break;
 			}
 		}
-	}
-
-	function endSong()
-	{
-		lyricsDisplay.visible = false;
-		exit();
 	}
 
 	function onLanePressed(lane:Int, player:Int)
@@ -600,13 +621,17 @@ class PlayState extends FNFState
 
 	function startCountdown()
 	{
-		new FlxTimer().start(song.timingPoints[0].beatLength * Settings.playbackRate / 1000, function(tmr)
+		new FlxTimer().start(song.timingPoints[0].beatLength / Settings.playbackRate / 1000, function(tmr)
 		{
-			var count = tmr.elapsedLoops;
-			if (count > 1)
-				readySetGo('countdown/' + introSprPaths[count - 2]);
-			FlxG.sound.play(Paths.getSound('countdown/' + introSndPaths[count - 1]), 0.6);
+			var count = tmr.elapsedLoops - 1;
+			if (count > 0)
+				readySetGo('countdown/' + introSprPaths[count - 1]);
+			FlxG.sound.play(Paths.getSound('countdown/' + introSndPaths[count]), 0.6);
+
+			executeScripts("onCountdownTick", [count]);
 		}, 4);
+
+		executeScripts("onStartCountdown");
 	}
 
 	function readySetGo(path:String):Void
@@ -616,7 +641,7 @@ class PlayState extends FNFState
 		spr.screenCenter();
 		spr.cameras = [camHUD];
 		add(spr);
-		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength * Settings.playbackRate / 1000, {
+		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / Settings.playbackRate / 1000, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(_)
 			{
@@ -643,6 +668,27 @@ class PlayState extends FNFState
 			var event = events.shift();
 			triggerEvent(event.event, event.params);
 		}
+	}
+
+	function onStepHit(step:Int, decStep:Float)
+	{
+		executeScripts("onStepHit", [step, decStep]);
+	}
+
+	function onBeatHit(beat:Int, decBeat:Float)
+	{
+		executeScripts("onBeatHit", [beat, decBeat]);
+	}
+
+	function onBarHit(bar:Int, decBar:Float)
+	{
+		if (Settings.camZooming && camZooming && FlxG.camera.zoom < 1.35)
+		{
+			FlxG.camera.zoom += 0.015 * camZoomingMult;
+			camHUD.zoom += 0.03 * camZoomingMult;
+		}
+
+		executeScripts("onBarHit", [bar, decBar]);
 	}
 }
 

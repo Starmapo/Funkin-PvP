@@ -98,7 +98,7 @@ class MainMenuState extends FNFState
 	override function update(elapsed:Float)
 	{
 		var bgY = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
-		bg.y = FlxMath.lerp(bg.y, bgY, 0.1);
+		bg.y = CoolUtil.lerp(bg.y, bgY, 0.1);
 
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
 		{
@@ -216,8 +216,8 @@ class MainMenuItem extends TextMenuItem
 	{
 		if (label != null)
 		{
-			var lerp = CoolUtil.getLerp(0.25);
-			label.scale.set(FlxMath.lerp(label.scale.x, targetScale, lerp), FlxMath.lerp(label.scale.y, targetScale, lerp));
+			var lerp = 0.25;
+			label.scale.set(CoolUtil.lerp(label.scale.x, targetScale, lerp), CoolUtil.lerp(label.scale.y, targetScale, lerp));
 		}
 
 		super.update(elapsed);

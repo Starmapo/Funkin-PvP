@@ -15,12 +15,17 @@ class CoolUtil
 {
 	public static function getLerp(lerp:Float)
 	{
-		return lerp * (60 / FlxG.updateFramerate);
+		return FlxMath.bound(lerp * (60 / FlxG.updateFramerate), 0, 1);
 	}
 
 	public static function lerp(a:Float, b:Float, ratio:Float)
 	{
 		return FlxMath.lerp(a, b, getLerp(ratio));
+	}
+
+	public static function reverseLerp(a:Float, b:Float, ratio:Float)
+	{
+		return FlxMath.lerp(a, b, 1 - getLerp(ratio));
 	}
 
 	public static function createMenuBG(image:String = 'menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0)
