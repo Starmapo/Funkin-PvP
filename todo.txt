@@ -1,0 +1,5 @@
+cache settings
+results screen
+health bars
+dying
+rest of the characters, stages and events

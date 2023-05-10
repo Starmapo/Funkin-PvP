@@ -280,12 +280,12 @@ class Song extends JsonObject
 	public var source:String;
 
 	/**
-		The name of the instrumental file.
+		The name of the instrumental file. Unused for now.
 	**/
 	public var instFile:String;
 
 	/**
-		The name of the vocals file.
+		The name of the vocals file. Unused for now.
 	**/
 	public var vocalsFile:String;
 

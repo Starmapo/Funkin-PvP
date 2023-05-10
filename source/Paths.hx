@@ -47,8 +47,13 @@ class Paths
 		if (!exists(path))
 			path = getPath('images/$path', mod);
 
-		if (FlxG.bitmap.checkCache(path) && !unique)
-			return FlxG.bitmap.get(path);
+		if (!unique)
+		{
+			if (key != null && FlxG.bitmap.checkCache(key))
+				return FlxG.bitmap.get(key);
+			if (FlxG.bitmap.checkCache(path))
+				return FlxG.bitmap.get(path);
+		}
 
 		if (key == null)
 			key = path;
@@ -56,9 +61,7 @@ class Paths
 		var graphic:FlxGraphic = null;
 		// exists in openfl assets, so get it from there
 		if (Assets.exists(path, IMAGE))
-		{
 			graphic = FlxGraphic.fromAssetKey(path, unique, key);
-		}
 		#if sys
 		// otherwise, get it from the file
 		else if (FileSystem.exists(path))
@@ -70,13 +73,13 @@ class Paths
 
 		if (graphic == null)
 			FlxG.log.warn('Graphic \"$originalPath\" not found.');
-		else if (trackingAssets)
+		else if (trackingAssets && !trackedGraphics.contains(graphic))
 			trackedGraphics.push(graphic);
 
 		return graphic;
 	}
 
-	public static function getSpritesheet(path:String, ?mod:String, unique:Bool = false):FlxAtlasFrames
+	public static function getSpritesheet(path:String, ?mod:String, unique:Bool = false, ?key:String):FlxAtlasFrames
 	{
 		var originalPath = path;
 
@@ -89,7 +92,7 @@ class Paths
 			path = Path.withoutExtension(imagePath);
 		}
 
-		var image = getImage(imagePath, mod, unique);
+		var image = getImage(imagePath, mod, unique, key);
 		if (image == null)
 			return null;
 
@@ -147,7 +150,7 @@ class Paths
 		if (sound != null)
 		{
 			cachedSounds.set(path, sound);
-			if (trackingAssets)
+			if (trackingAssets && !trackedSounds.contains(path))
 				trackedSounds.push(path);
 		}
 
@@ -259,10 +262,12 @@ class Paths
 
 	public static function clearTrackedAssets()
 	{
+		trace('Removing ${trackedGraphics.length} graphic' + (trackedGraphics.length != 1 ? 's' : ''));
 		for (graphic in trackedGraphics)
 			FlxG.bitmap.remove(graphic);
 		trackedGraphics.resize(0);
 
+		trace('Removing ${trackedSounds.length} sound' + (trackedSounds.length != 1 ? 's' : ''));
 		for (key in trackedSounds)
 			cachedSounds.remove(key);
 		trackedSounds.resize(0);
