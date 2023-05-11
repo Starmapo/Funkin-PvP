@@ -33,4 +33,9 @@ class ScrollVelocity extends JsonObject implements ITimingObject
 			LabelValuePair.weak("multipliers", multipliers)
 		]);
 	}
+
+	override function destroy()
+	{
+		multipliers = null;
+	}
 }

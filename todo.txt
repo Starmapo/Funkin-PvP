@@ -1,4 +1,3 @@
-cache settings
 results screen
 health bars
 dying

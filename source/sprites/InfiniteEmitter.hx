@@ -25,6 +25,12 @@ class InfiniteEmitter extends FlxEmitter
 		super(X, Y);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		particleGraphic = null;
+	}
+
 	override public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false,
 			AutoBuffer:Bool = false)
 	{

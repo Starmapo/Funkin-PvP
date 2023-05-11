@@ -43,6 +43,23 @@ class TitleState extends FNFState
 	var introText:Array<String>;
 	var transitioning:Bool = false;
 
+	override function destroy()
+	{
+		super.destroy();
+		camHUD = null;
+		timing = FlxDestroyUtil.destroy(timing);
+		startTimer = FlxDestroyUtil.destroy(startTimer);
+		textGroup = null;
+		gradient = null;
+		logo = null;
+		icon = null;
+		iconTween = null;
+		pressEnter = null;
+		colorSwap = null;
+		emitter = null;
+		introText = null;
+	}
+
 	override public function create()
 	{
 		transIn = transOut = null;
@@ -190,12 +207,6 @@ class TitleState extends FNFState
 		gradient.alpha = gradientAlpha + gradientBop;
 
 		super.update(elapsed);
-	}
-
-	override function destroy()
-	{
-		super.destroy();
-		timing = FlxDestroyUtil.destroy(timing);
 	}
 
 	function getIntroText()

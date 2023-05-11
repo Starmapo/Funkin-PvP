@@ -1,5 +1,7 @@
 package data.skin;
 
+import flixel.util.FlxDestroyUtil;
+
 /**
 	Configuration for a note skin.
 **/
@@ -79,6 +81,14 @@ class NoteSkin extends JsonObject
 		splashesScale = readFloat(data.splashesScale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}
+
+	override function destroy()
+	{
+		receptors = FlxDestroyUtil.destroyArray(receptors);
+		receptorsOffset = null;
+		notes = FlxDestroyUtil.destroyArray(notes);
+		splashes = FlxDestroyUtil.destroyArray(splashes);
+	}
 }
 
 class ReceptorData extends JsonObject
@@ -139,6 +149,13 @@ class ReceptorData extends JsonObject
 		staticOffset = readFloatArray(data.staticOffset, [], null, 2, -1000, 1000, 2);
 		pressedOffset = readFloatArray(data.pressedOffset, [], null, 2, -1000, 1000, 2);
 		confirmOffset = readFloatArray(data.confirmOffset, [], null, 2, -1000, 1000, 2);
+	}
+
+	override function destroy()
+	{
+		staticOffset = null;
+		pressedOffset = null;
+		confirmOffset = null;
 	}
 }
 

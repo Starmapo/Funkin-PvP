@@ -73,6 +73,8 @@ class PlayState extends FNFState
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
 
+	var clearCache:Bool = false;
+
 	public function new(?song:Song, chars:Array<String>)
 	{
 		super();
@@ -140,7 +142,27 @@ class PlayState extends FNFState
 	override function destroy()
 	{
 		super.destroy();
+		song = null;
+		chars = null;
+		camHUD = null;
 		timing = FlxDestroyUtil.destroy(timing);
+		songInst = null;
+		songVocals = FlxDestroyUtil.destroy(songVocals);
+		ruleset = FlxDestroyUtil.destroy(ruleset);
+		statsDisplay = null;
+		judgementDisplay = null;
+		songInfoDisplay = null;
+		lyricsDisplay = null;
+		pauseSubState = FlxDestroyUtil.destroy(pauseSubState);
+		introSprPaths = null;
+		introSndPaths = null;
+		opponent = null;
+		bf = null;
+		gf = null;
+		camFollow = null;
+		scripts = FlxDestroyUtil.destroyArray(scripts);
+		notificationManager = null;
+		events = null;
 	}
 
 	override function openSubState(subState:FlxSubState)
@@ -193,6 +215,16 @@ class PlayState extends FNFState
 		canPause = true;
 	}
 
+	override function finishTransOut()
+	{
+		if (clearCache && Settings.clearGameplayCache)
+		{
+			Paths.clearTrackedAssets();
+			Paths.trackingAssets = false;
+		}
+		super.finishTransOut();
+	}
+
 	public function startSong(timing:MusicTiming)
 	{
 		hasStarted = true;
@@ -203,11 +235,7 @@ class PlayState extends FNFState
 		timing.stopMusic();
 		persistentUpdate = false;
 		reset();
-		if (clearCache && Settings.clearGameplayCache)
-		{
-			Paths.clearTrackedAssets();
-			Paths.trackingAssets = false;
-		}
+		this.clearCache = clearCache;
 		FlxG.switchState(state);
 	}
 

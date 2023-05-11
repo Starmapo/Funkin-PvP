@@ -26,6 +26,7 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxTimer;
 import haxe.Json;
 import hscript.Expr;
@@ -49,11 +50,11 @@ import ui.game.Receptor;
 using StringTools;
 
 // Some stuff here is from Yoshi Engine or Psych Engine
-class Script
+class Script implements IFlxDestroyable
 {
-	public static var FUNCTION_STOP:String = "FUNCTIONSTOP";
-	public static var FUNCTION_CONTINUE:String = "FUNCTIONCONTINUE";
-	public static var FUNCTION_STOP_SCRIPTS:String = "FUNCTIONSTOPSCRIPTS";
+	public static final FUNCTION_STOP:String = "FUNCTIONSTOP";
+	public static final FUNCTION_CONTINUE:String = "FUNCTIONCONTINUE";
+	public static final FUNCTION_STOP_SCRIPTS:String = "FUNCTIONSTOPSCRIPTS";
 
 	public var interp:Interp;
 	public var path:String;
@@ -130,6 +131,11 @@ class Script
 			return null;
 
 		return interp.variables.get(name);
+	}
+
+	public function destroy()
+	{
+		interp = null;
 	}
 
 	function executeFunc(func:String, ?args:Array<Any>):Dynamic

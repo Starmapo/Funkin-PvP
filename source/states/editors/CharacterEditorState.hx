@@ -10,6 +10,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import openfl.display.PNGEncoderOptions;
 import openfl.events.Event;
@@ -47,6 +48,22 @@ class CharacterEditorState extends FNFState
 		this.charInfo = charInfo;
 
 		persistentUpdate = true;
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		charInfo = FlxDestroyUtil.destroy(charInfo);
+		char = null;
+		camPos = null;
+		animText = null;
+		ghostChar = null;
+		infoText = null;
+		dragMousePos = FlxDestroyUtil.put(dragMousePos);
+		guideChar = null;
+		notificationManager = null;
+		buttonGroup = null;
+		camIndicator = null;
 	}
 
 	override function create()
@@ -215,7 +232,8 @@ class CharacterEditorState extends FNFState
 
 		if (dragMousePos != null)
 		{
-			var delta = FlxG.mouse.getWorldPosition() - dragMousePos;
+			var mousePos = FlxG.mouse.getWorldPosition();
+			var delta = mousePos - dragMousePos;
 			var offset = draggingCam ? charInfo.cameraOffset : charInfo.positionOffset;
 			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2);
 			offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2);
@@ -233,6 +251,9 @@ class CharacterEditorState extends FNFState
 				dragMousePos = null;
 				dragPositionOffset = null;
 			}
+
+			mousePos.put();
+			delta.put();
 		}
 
 		if (FlxG.mouse.justPressed)
@@ -250,6 +271,8 @@ class CharacterEditorState extends FNFState
 				dragPositionOffset = charInfo.positionOffset.copy();
 				draggingCam = false;
 			}
+			else
+				mousePos.put();
 		}
 
 		if (FlxG.keys.justPressed.ESCAPE)

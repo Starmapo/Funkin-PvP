@@ -26,13 +26,11 @@ class ColorSwap
 	{
 		shader.data.uTime.value[0] += elapsed;
 		hueShit += elapsed;
-		// trace(shader.data.money.value[0]);
 	}
 
 	function set_colorToReplace(color:FlxColor):FlxColor
 	{
 		colorToReplace = color;
-
 		return color;
 	}
 
@@ -50,7 +48,6 @@ class ColorSwap
 	function set_newColor(color:FlxColor):FlxColor
 	{
 		newColor = color;
-
 		return color;
 	}
 }

@@ -1,12 +1,13 @@
 package data.game;
 
 import data.song.Song;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import ui.game.Note;
 import ui.game.Playfield;
 import util.MusicTiming;
 
-class GameplayRuleset
+class GameplayRuleset implements IFlxDestroyable
 {
 	public var scoreProcessors:Array<ScoreProcessor> = [];
 	public var inputManagers:Array<InputManager> = [];
@@ -21,10 +22,9 @@ class GameplayRuleset
 	public var noteReleaseMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 	public var judgementAdded:FlxTypedSignal<Judgement->Int->Void> = new FlxTypedSignal();
 	public var startDelay:Float;
+	public var timing:MusicTiming;
 
 	var song:Song;
-
-	public var timing:MusicTiming;
 
 	public function new(song:Song, timing:MusicTiming)
 	{
@@ -58,5 +58,23 @@ class GameplayRuleset
 	{
 		for (inputManager in inputManagers)
 			inputManager.handleInput(elapsed);
+	}
+
+	public function destroy()
+	{
+		scoreProcessors = FlxDestroyUtil.destroyArray(scoreProcessors);
+		inputManagers = FlxDestroyUtil.destroyArray(inputManagers);
+		playfields = FlxDestroyUtil.destroyArray(playfields);
+		noteManagers = FlxDestroyUtil.destroyArray(noteManagers);
+		FlxDestroyUtil.destroy(lanePressed);
+		FlxDestroyUtil.destroy(laneReleased);
+		FlxDestroyUtil.destroy(ghostTap);
+		FlxDestroyUtil.destroy(noteHit);
+		FlxDestroyUtil.destroy(noteMissed);
+		FlxDestroyUtil.destroy(noteReleased);
+		FlxDestroyUtil.destroy(noteReleaseMissed);
+		FlxDestroyUtil.destroy(judgementAdded);
+		timing = null;
+		song = null;
 	}
 }

@@ -212,6 +212,20 @@ class RulesetState extends FNFState
 		descBG.y = descText.y - 2;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		camScroll = null;
+		camOver = null;
+		iconScroll = null;
+		items = null;
+		descBG = null;
+		descText = null;
+		descTween = null;
+		camFollow = null;
+		stateText = null;
+	}
+
 	function onChange(item:SettingsMenuItem)
 	{
 		updateCamFollow(item);

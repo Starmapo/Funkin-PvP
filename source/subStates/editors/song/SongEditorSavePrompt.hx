@@ -34,4 +34,10 @@ class SongEditorSavePrompt extends PromptSubState
 		]);
 		this.callback = callback;
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		callback = null;
+	}
 }

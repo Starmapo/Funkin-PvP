@@ -32,6 +32,12 @@ class PromptInputSubState extends PromptSubState
 		promptBG.resize(promptBG.width, promptBG.height + addY);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		inputText = null;
+	}
+
 	override function onOpen()
 	{
 		super.onOpen();

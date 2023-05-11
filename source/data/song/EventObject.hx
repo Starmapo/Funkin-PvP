@@ -1,5 +1,7 @@
 package data.song;
 
+import flixel.util.FlxDestroyUtil;
+
 class EventObject extends JsonObject implements ITimingObject
 {
 	public var startTime:Float;
@@ -14,6 +16,11 @@ class EventObject extends JsonObject implements ITimingObject
 				events.push(new Event(e));
 		}
 	}
+
+	override function destroy()
+	{
+		events = FlxDestroyUtil.destroyArray(events);
+	}
 }
 
 class Event extends JsonObject
@@ -25,5 +32,10 @@ class Event extends JsonObject
 	{
 		event = readString(data.event);
 		params = readString(data.params).split(',');
+	}
+
+	override function destroy()
+	{
+		params = null;
 	}
 }

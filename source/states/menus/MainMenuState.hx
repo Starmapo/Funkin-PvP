@@ -26,6 +26,15 @@ class MainMenuState extends FNFState
 	var bg:FlxSprite;
 	var magenta:FlxSprite;
 
+	override function destroy()
+	{
+		super.destroy();
+		menuList = null;
+		camFollow = null;
+		bg = null;
+		magenta = null;
+	}
+
 	override function create()
 	{
 		transIn = transOut = null;

@@ -37,6 +37,8 @@ class Bindable<T> implements IFlxDestroyable
 	public function destroy()
 	{
 		FlxDestroyUtil.destroy(valueChanged);
+		defaultValue = null;
+		_value = null;
 	}
 
 	function get_value()

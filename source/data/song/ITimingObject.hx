@@ -1,6 +1,9 @@
 package data.song;
 
-interface ITimingObject
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+
+interface ITimingObject extends IFlxDestroyable
 {
 	var startTime:Float;
+	function destroy():Void;
 }

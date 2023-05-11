@@ -95,6 +95,40 @@ class SongEditorState extends FNFState
 		this.song = song;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		playfieldNotes = null;
+		playfieldOther = null;
+		beatSnap = FlxDestroyUtil.destroy(beatSnap);
+		song = null;
+		inst = null;
+		vocals = FlxDestroyUtil.destroy(vocals);
+		availableBeatSnaps = null;
+		FlxDestroyUtil.destroy(songSeeked);
+		FlxDestroyUtil.destroy(rateChanged);
+		FlxDestroyUtil.destroy(currentTool);
+		notificationManager = null;
+		tooltip = null;
+		selectedObjects = FlxDestroyUtil.destroy(selectedObjects);
+		seekBar = null;
+		zoomInButton = null;
+		zoomOutButton = null;
+		detailsPanel = null;
+		compositionPanel = null;
+		editPanel = null;
+		actionManager = FlxDestroyUtil.destroy(actionManager);
+		copiedObjects = null;
+		playfieldTabs = null;
+		selector = null;
+		lyricsDisplay = null;
+		camHUD = null;
+		savePrompt = FlxDestroyUtil.destroy(savePrompt);
+		camFocusDisplay = null;
+		metronome = FlxDestroyUtil.destroy(metronome);
+		Application.current.onExit.remove(onExit);
+	}
+
 	override function create()
 	{
 		persistentUpdate = true;
@@ -252,17 +286,6 @@ class SongEditorState extends FNFState
 
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
-	}
-
-	override function destroy()
-	{
-		super.destroy();
-		actionManager = FlxDestroyUtil.destroy(actionManager);
-		beatSnap = FlxDestroyUtil.destroy(beatSnap);
-		selectedObjects = FlxDestroyUtil.destroy(selectedObjects);
-		Application.current.onExit.remove(onExit);
-		FlxDestroyUtil.destroy(songSeeked);
-		FlxDestroyUtil.destroy(rateChanged);
 	}
 
 	override function openSubState(subState)

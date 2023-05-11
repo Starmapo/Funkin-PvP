@@ -24,12 +24,6 @@ class AnimatedSprite extends FlxSprite
 		this.scale.set(scale, scale);
 	}
 
-	override function destroy()
-	{
-		super.destroy();
-		FlxDestroyUtil.destroy(onAnimPlayed);
-	}
-
 	/**
 		Adds a new animation using `AnimData`.
 	**/
@@ -83,6 +77,13 @@ class AnimatedSprite extends FlxSprite
 	public function stopAnimCallback()
 	{
 		animation.finishCallback = null;
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		offsets = null;
+		FlxDestroyUtil.destroy(onAnimPlayed);
 	}
 
 	function resolveAnimData(data:AnimData)

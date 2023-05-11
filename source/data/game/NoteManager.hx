@@ -5,6 +5,7 @@ import data.song.Song;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.math.FlxMath;
+import flixel.util.FlxDestroyUtil;
 import ui.game.Note;
 
 class NoteManager extends FlxBasic
@@ -323,6 +324,30 @@ class NoteManager extends FlxBasic
 		heldLongNoteLanes[note.info.playerLane].push(note);
 		note.currentlyBeingHeld = true;
 		note.head.visible = false;
+	}
+
+	override function destroy()
+	{
+		config = null;
+		noteQueueLanes = destroyLanes(noteQueueLanes);
+		activeNoteLanes = destroyLanes(activeNoteLanes);
+		deadNoteLanes = destroyLanes(deadNoteLanes);
+		heldLongNoteLanes = destroyLanes(heldLongNoteLanes);
+		ruleset = null;
+		song = null;
+		velocityPositionMarkers = null;
+
+		super.destroy();
+	}
+
+	function destroyLanes<T:IFlxDestroyable>(array:Array<Array<T>>):Array<Array<T>>
+	{
+		if (array != null)
+		{
+			for (lane in array)
+				FlxDestroyUtil.destroyArray(lane);
+		}
+		return null;
 	}
 
 	function updateAndScoreActiveObjects()

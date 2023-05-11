@@ -44,17 +44,6 @@ class PlayerSettings
 		 UI_RIGHT => [-1, -1],   UI_DOWN => [-1, -1],  ACCEPT => [-1, -1],       BACK => [-1, -1], PAUSE => [-1, -1],   RESET => [-1, -1],
 	];
 
-	public var id(default, null):Int;
-	public var config(default, null):PlayerConfig;
-	public var controls(default, null):Controls;
-
-	function new(id:Int)
-	{
-		this.id = id;
-		this.config = Settings.playerConfigs[id];
-		this.controls = new Controls('player$id', config);
-	}
-
 	public static function init()
 	{
 		initSaveData();
@@ -205,5 +194,16 @@ class PlayerSettings
 			noteSplashes: true,
 			autoplay: false
 		};
+	}
+
+	public var id(default, null):Int;
+	public var config(default, null):PlayerConfig;
+	public var controls(default, null):Controls;
+
+	public function new(id:Int)
+	{
+		this.id = id;
+		this.config = Settings.playerConfigs[id];
+		this.controls = new Controls('player$id', config);
 	}
 }

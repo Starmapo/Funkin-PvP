@@ -3,8 +3,9 @@ package data.game;
 import data.game.HitStat.KeyPressType;
 import data.song.Song;
 import flixel.math.FlxMath;
+import flixel.util.FlxDestroyUtil;
 
-class ScoreProcessor
+class ScoreProcessor implements IFlxDestroyable
 {
 	public var player:Int;
 	public var score:Int;
@@ -135,6 +136,20 @@ class ScoreProcessor
 		health = FlxMath.bound(health + judgementHealthWeighting[judgement], 0, 100);
 
 		ruleset.judgementAdded.dispatch(judgement, player);
+	}
+
+	public function destroy()
+	{
+		stats = FlxDestroyUtil.destroyArray(stats);
+		windows = null;
+		currentJudgements = null;
+		judgementWindow = null;
+		judgementScoreWeighting = null;
+		judgementHealthWeighting = null;
+		judgementAccuracyWeighting = null;
+		windowReleaseMultiplier = null;
+		ruleset = null;
+		song = null;
 	}
 
 	function initializeJudgementWindows(?windows:JudgementWindows)

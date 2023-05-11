@@ -19,6 +19,12 @@ class PlayersPage extends Page
 		createItem('Player 2', switchPage.bind(Player(1)));
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		items = null;
+	}
+
 	override function onAppear()
 	{
 		updateCamFollow(items.selectedItem);

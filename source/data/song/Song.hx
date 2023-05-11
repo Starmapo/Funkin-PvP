@@ -3,6 +3,7 @@ package data.song;
 import data.song.CameraFocus.CameraFocusChar;
 import data.song.EventObject.Event;
 import flixel.sound.FlxSound;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import haxe.Json;
@@ -1045,6 +1046,13 @@ class Song extends JsonObject
 			LabelValuePair.weak("scrollVelocities", scrollVelocities),
 			LabelValuePair.weak("notes", notes)
 		]);
+	}
+
+	override function destroy()
+	{
+		scrollVelocities = FlxDestroyUtil.destroyArray(scrollVelocities);
+		events = FlxDestroyUtil.destroyArray(events);
+		notes = FlxDestroyUtil.destroyArray(notes);
 	}
 
 	function get_length():Float

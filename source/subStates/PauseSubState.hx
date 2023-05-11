@@ -85,6 +85,16 @@ class PauseSubState extends FlxSubState
 		}
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+		menuList = null;
+		camSubState = null;
+		camFollow = null;
+		playerText = null;
+	}
+
 	public function onOpen(player:Int)
 	{
 		menuList.controlsMode = PLAYER(player);

@@ -18,6 +18,12 @@ class SongEditorLyricsDisplay extends LyricsDisplay
 		state.actionManager.onEvent.add(onEvent);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+	}
+
 	function onEvent(type:String, params:Dynamic)
 	{
 		switch (type)

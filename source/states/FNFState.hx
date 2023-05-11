@@ -29,5 +29,11 @@ class FNFState extends FlxTransitionableState
 		return true;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		dropdowns = null;
+	}
+
 	function onMemberAdded(object:FlxBasic) {}
 }

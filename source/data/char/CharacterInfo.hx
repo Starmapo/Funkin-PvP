@@ -1,5 +1,6 @@
 package data.char;
 
+import flixel.util.FlxDestroyUtil;
 import haxe.Json;
 import haxe.io.Path;
 import sys.io.File;
@@ -124,6 +125,15 @@ class CharacterInfo extends JsonObject
 		holdLoopPoint = readInt(data.holdLoopPoint, 0, 0);
 	}
 
+	override function destroy()
+	{
+		anims = FlxDestroyUtil.destroyArray(anims);
+		danceAnims = null;
+		positionOffset = null;
+		cameraOffset = null;
+		healthColors = null;
+	}
+
 	public function sortAnims()
 	{
 		anims.sort(function(a, b)
@@ -203,5 +213,11 @@ class AnimInfo extends JsonObject
 		loop = readBool(data.loop);
 		offset = readFloatArray(data.offset, [0, 0], null, 2, -1000, 1000, 2);
 		nextAnim = readString(data.nextAnim);
+	}
+
+	override function destroy()
+	{
+		indices = null;
+		offset = null;
 	}
 }

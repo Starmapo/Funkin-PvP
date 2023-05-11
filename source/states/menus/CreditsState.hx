@@ -9,6 +9,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
 
@@ -26,6 +27,19 @@ class CreditsState extends FNFState
 	var creditDesc:FlxText;
 	var creditLink:FlxText;
 	var colorTween:FlxTween;
+
+	override function destroy()
+	{
+		super.destroy();
+		creditsArray = FlxDestroyUtil.destroyArray(creditsArray);
+		categoryMenuList = null;
+		creditMenuList = null;
+		bg = null;
+		creditGroup = null;
+		creditDesc = null;
+		creditLink = null;
+		colorTween = null;
+	}
 
 	override function create()
 	{

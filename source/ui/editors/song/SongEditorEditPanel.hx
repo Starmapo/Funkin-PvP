@@ -152,6 +152,50 @@ class SongEditorEditPanel extends EditorPanel
 		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+		titleInput = null;
+		artistInput = null;
+		sourceInput = null;
+		difficultyInput = null;
+		opponentInput = null;
+		bfInput = null;
+		gfInput = null;
+		stageInput = null;
+		velocityStepper = null;
+		speedStepper = null;
+		rateStepper = null;
+		beatSnapDropdown = null;
+		waveformDropdown = null;
+		instVolumeStepper = null;
+		vocalsVolumeStepper = null;
+		typeInput = null;
+		noteParamsInput = null;
+		selectedNotes = null;
+		notePropertiesGroup = null;
+		timingPointTimeStepper = null;
+		bpmStepper = null;
+		meterStepper = null;
+		selectedTimingPoints = null;
+		timingPointPropertiesGroup = null;
+		multiplierStepper1 = null;
+		multiplierStepper2 = null;
+		linkedCheckbox = null;
+		selectedScrollVelocities = null;
+		scrollVelocitiesPropertiesGroup = null;
+		charDropdown = null;
+		selectedCameraFocuses = null;
+		cameraFocusesPropertiesGroup = null;
+		eventIndexLabel = null;
+		eventInput = null;
+		eventParamsInput = null;
+		selectedEvents = null;
+		eventsPropertiesGroup = null;
+		lastEvent = null;
+	}
+
 	function createSongTab()
 	{
 		var applyOffsetPrompt = new SongEditorApplyOffsetPrompt(function(text)

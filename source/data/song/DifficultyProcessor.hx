@@ -1,13 +1,14 @@
 package data.song;
 
 import flixel.math.FlxMath;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
 /**
 	Literally everything here comes from Quaver, huge thanks to the Quaver team.
 	And no, I don't understand most of the code that's here. If something isn't right I probably won't notice lol.
 **/
-class DifficultyProcessor
+class DifficultyProcessor implements IFlxDestroyable
 {
 	public static function getDifficultyName(difficulty:Float)
 	{
@@ -78,7 +79,7 @@ class DifficultyProcessor
 					lane: note.playerLane,
 					endTime: note.endTime,
 					type: note.type,
-					params: note.params
+					params: note.params.join(',')
 				}));
 		}
 
@@ -86,6 +87,13 @@ class DifficultyProcessor
 			return;
 
 		calculateDifficulty(rate);
+	}
+
+	public function destroy()
+	{
+		strainSolverData = FlxDestroyUtil.destroyArray(strainSolverData);
+		song = null;
+		notes = FlxDestroyUtil.destroyArray(notes);
 	}
 
 	function calculateDifficulty(rate:Float)
@@ -477,7 +485,7 @@ class DifficultyProcessor
 	}
 }
 
-class StrainSolverNote
+class StrainSolverNote implements IFlxDestroyable
 {
 	public var note:NoteInfo;
 	public var fingerState:FingerState = NONE;
@@ -489,9 +497,14 @@ class StrainSolverNote
 	{
 		this.note = note;
 	}
+
+	public function destroy()
+	{
+		note = null;
+	}
 }
 
-class StrainSolverData
+class StrainSolverData implements IFlxDestroyable
 {
 	public var notes:Array<StrainSolverNote> = [];
 	public var startTime:Float = 0;
@@ -530,6 +543,12 @@ class StrainSolverData
 		}
 
 		totalStrainValue /= notes.length;
+	}
+
+	public function destroy()
+	{
+		notes = FlxDestroyUtil.destroyArray(notes);
+		nextStrainSolverDataOnCurrentHand = null;
 	}
 
 	function get_handChord()

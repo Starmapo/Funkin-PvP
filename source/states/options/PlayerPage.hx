@@ -88,6 +88,15 @@ class PlayerPage extends Page
 		descBG.y = descText.y - 2;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		items = null;
+		descBG = null;
+		descText = null;
+		descTween = null;
+	}
+
 	override function onAppear()
 	{
 		updateCamFollow(items.selectedItem);

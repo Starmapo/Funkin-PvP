@@ -143,6 +143,18 @@ class CharacterSelectState extends FNFState
 			cam.zoom = FlxG.camera.zoom;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		camPlayers = null;
+		camDivision = null;
+		camScroll = null;
+		camOver = null;
+		iconScroll = null;
+		stateText = null;
+		playerGroups = null;
+	}
+
 	public function exitTransition(onComplete:FlxTween->Void)
 	{
 		transitioning = true;
@@ -262,6 +274,17 @@ class PlayerCharacterSelect extends FlxGroup
 		}
 
 		super.update(elapsed);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		groupMenuList = null;
+		charMenuList = null;
+		state = null;
+		camFollow = null;
+		charPortrait = null;
+		charText = null;
 	}
 
 	public function setControlsEnabled(value:Bool)
@@ -402,6 +425,13 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		setEmptyBackground();
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		groupData = null;
+		bg = null;
+	}
+
 	function getBGGraphic(name:String)
 	{
 		var graphicKey = name + '_edit';
@@ -520,6 +550,13 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		label.add(bg);
 
 		setEmptyBackground();
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		charData = null;
+		bg = null;
 	}
 
 	function getBGGraphic()

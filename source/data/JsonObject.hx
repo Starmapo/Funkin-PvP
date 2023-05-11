@@ -2,12 +2,15 @@ package data;
 
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
 	Basically this just allows for easily reading JSON files.
 **/
-class JsonObject
+class JsonObject implements IFlxDestroyable
 {
+	public function destroy() {}
+
 	/**
 	 * Returns a property from a JSON file.
 	 * @param value 		The property from the JSON file.

@@ -1,5 +1,6 @@
 package ui.editors.song;
 
+import flixel.util.FlxDestroyUtil;
 import data.Settings;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
@@ -79,12 +80,14 @@ class SongEditorNoteGroup extends FlxBasic
 
 	override function destroy()
 	{
-		for (note in notes)
-			note.destroy();
+		super.destroy();
+		notes = FlxDestroyUtil.destroyArray(notes);
+		state = null;
+		playfield = null;
+		notePool = null;
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 		Settings.editorLongNoteAlpha.valueChanged.remove(onLongNoteAlphaChanged);
-		super.destroy();
 	}
 
 	public function getHoveredNote()

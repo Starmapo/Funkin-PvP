@@ -1,8 +1,9 @@
 package data.game;
 
 import data.song.NoteInfo;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
-class HitStat
+class HitStat implements IFlxDestroyable
 {
 	public var type:HitStatType;
 	public var keyPressType:KeyPressType;
@@ -24,6 +25,11 @@ class HitStat
 		this.hitDifference = hitDifference;
 		this.accuracy = accuracy;
 		this.health = health;
+	}
+
+	public function destroy()
+	{
+		note = null;
 	}
 }
 

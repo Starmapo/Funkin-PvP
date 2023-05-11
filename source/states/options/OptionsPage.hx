@@ -27,6 +27,12 @@ class OptionsPage extends Page
 		items.selectItem(lastSelected);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		items = null;
+	}
+
 	override function onAppear()
 	{
 		updateCamFollow(items.selectedItem);

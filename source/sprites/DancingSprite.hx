@@ -38,12 +38,6 @@ class DancingSprite extends AnimatedSprite
 	**/
 	public var onDance:FlxTypedSignal<String->Void> = new FlxTypedSignal();
 
-	override function destroy()
-	{
-		super.destroy();
-		FlxDestroyUtil.destroy(onDance);
-	}
-
 	/**
 		Makes this sprite play the next dancing animation.
 	**/
@@ -81,6 +75,13 @@ class DancingSprite extends AnimatedSprite
 			dance();
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		danceAnims = null;
+		FlxDestroyUtil.destroy(onDance);
+	}
+
 	function playDanceAnim(force:Bool = false)
 	{
 		var anim = danceAnims[danceStep];
@@ -95,7 +96,7 @@ class DancingSprite extends AnimatedSprite
 	/**
 		This function is called after this sprite dances. You can override this with whatever you wish.
 	**/
-	public function danced(name:String) {}
+	function danced(name:String) {}
 }
 
 enum abstract DancePreset(Int) to Int from Int

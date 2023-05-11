@@ -4,11 +4,14 @@ import data.char.CharacterInfo;
 import flixel.animation.FlxAnimationController;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxTimer;
 import ui.game.Note;
 
 class Character extends DancingSprite
 {
+	static var holdTime:Float = ((1 / 24) * 4);
+
 	public var charInfo:CharacterInfo;
 	public var charPosX:Float;
 	public var charPosY:Float;
@@ -25,7 +28,6 @@ class Character extends DancingSprite
 	public var isGF:Bool;
 
 	var xDifference:Float = 0;
-	var holdTime:Float = ((1 / 24) * 4);
 
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false, isGF:Bool = false)
 	{
@@ -211,7 +213,7 @@ class Character extends DancingSprite
 		state = Special;
 		playAnim(name, force, reversed, frame);
 		resetColor();
-		
+
 		if (allowDanceTime > 0)
 		{
 			allowDanceTimer.start(allowDanceTime, function(_)
@@ -257,6 +259,15 @@ class Character extends DancingSprite
 			startDelay: options.startDelay,
 			loopDelay: options.loopDelay
 		});
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		charInfo = FlxDestroyUtil.destroy(charInfo);
+		singAnimations = null;
+		holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
+		allowDanceTimer = FlxDestroyUtil.destroy(allowDanceTimer);
 	}
 
 	function initializeCharacter()

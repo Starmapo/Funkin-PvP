@@ -37,4 +37,11 @@ class SongEditorCompositionPanel extends EditorPanel
 
 		addGroup(tab);
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		tools = null;
+		state = null;
+	}
 }

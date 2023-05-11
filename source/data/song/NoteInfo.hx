@@ -93,6 +93,11 @@ class NoteInfo extends JsonObject implements ITimingObject
 		]);
 	}
 
+	override function destroy()
+	{
+		params = null;
+	}
+
 	function get_isLongNote()
 	{
 		return endTime > 0;

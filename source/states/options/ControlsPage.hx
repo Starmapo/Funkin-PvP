@@ -217,6 +217,16 @@ class ControlsPage extends Page
 	override function destroy()
 	{
 		super.destroy();
+		items = null;
+		pressBG = null;
+		pressText = null;
+		curItem = null;
+		settings = null;
+		deviceText = null;
+		deviceButton = null;
+		exitButton = null;
+		defaultButton = null;
+		clearButton = null;
 		defaultPrompt = FlxDestroyUtil.destroy(defaultPrompt);
 		clearPrompt = FlxDestroyUtil.destroy(clearPrompt);
 	}

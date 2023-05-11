@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
+import flixel.util.FlxDestroyUtil;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
 import ui.game.Note;
@@ -52,6 +53,22 @@ class SongEditorPlayState extends FNFState
 				song.notes.remove(note);
 			i--;
 		}
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		song = FlxDestroyUtil.destroy(song);
+		originalSong = null;
+		timing = FlxDestroyUtil.destroy(timing);
+		inst = null;
+		vocals = FlxDestroyUtil.destroy(vocals);
+		ruleset = FlxDestroyUtil.destroy(ruleset);
+		bg = null;
+		statsDisplay = null;
+		judgementDisplay = null;
+		songInfoDisplay = null;
+		lyricsDisplay = null;
 	}
 
 	override function create()

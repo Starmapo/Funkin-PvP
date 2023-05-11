@@ -146,6 +146,18 @@ class SongSelectState extends FNFState
 			cam.zoom = FlxG.camera.zoom;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		camPlayers = null;
+		camDivision = null;
+		camScroll = null;
+		camOver = null;
+		playerGroups = null;
+		iconScroll = null;
+		stateText = null;
+	}
+
 	public function exitTransition(onComplete:FlxTween->Void)
 	{
 		transitioning = true;
@@ -266,6 +278,16 @@ class PlayerSongSelect extends FlxGroup
 		}
 
 		super.update(elapsed);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		groupMenuList = null;
+		songMenuList = null;
+		difficultyMenuList = null;
+		state = null;
+		camFollow = null;
 	}
 
 	public function setControlsEnabled(value:Bool)
@@ -409,6 +431,13 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		setEmptyBackground();
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		groupData = null;
+		bg = null;
+	}
+
 	function getBGGraphic(name:String)
 	{
 		var graphicKey = name + '_edit';
@@ -517,6 +546,12 @@ class SongMenuItem extends TextMenuItem
 			label.size = Math.floor(label.size * ratio);
 		}
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		songData = null;
+	}
 }
 
 class DifficultyMenuList extends TypedMenuList<DifficultyMenuItem>
@@ -577,5 +612,11 @@ class DifficultyMenuItem extends TextMenuItem
 			var ratio = maxWidth / label.width;
 			label.size = Math.floor(label.size * ratio);
 		}
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		songData = null;
 	}
 }

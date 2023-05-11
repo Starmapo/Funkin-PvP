@@ -2,9 +2,10 @@ package util.editors.song;
 
 import data.Settings;
 import flixel.FlxG;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import states.editors.SongEditorState;
 
-class SongEditorMetronome
+class SongEditorMetronome implements IFlxDestroyable
 {
 	var state:SongEditorState;
 	var lastBeat:Int;
@@ -51,5 +52,10 @@ class SongEditorMetronome
 
 		lastBeat = currentBeat;
 		lastTotalBeats = currentTotalBeats;
+	}
+
+	public function destroy()
+	{
+		state = null;
 	}
 }

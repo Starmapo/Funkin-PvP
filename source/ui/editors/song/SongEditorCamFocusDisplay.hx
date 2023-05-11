@@ -24,6 +24,12 @@ class SongEditorCamFocusDisplay extends AnimatedSprite
 		updateDisplay();
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+	}
+
 	public function updateDisplay()
 	{
 		var anim:String = null;

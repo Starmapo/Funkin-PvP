@@ -104,6 +104,9 @@ class OptionsState extends FNFState
 	{
 		super.destroy();
 		camFollow = null;
+		pages = null;
+		camPages = null;
+		nextState = null;
 	}
 
 	function addPage<T:Page>(name:PageName, page:T)

@@ -14,6 +14,12 @@ class PlayStateScript extends Script
 		super(path, mod);
 	}
 
+	override function destroy()
+	{
+		state = null;
+		super.destroy();
+	}
+
 	override function setStartingVariables()
 	{
 		super.setStartingVariables();

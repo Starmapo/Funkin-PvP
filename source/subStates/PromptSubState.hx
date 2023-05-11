@@ -66,6 +66,15 @@ class PromptSubState extends FlxSubState
 		promptBG.resize(promptBG.width, promptText.height + 5 + buttonGroup.members[0].height + 10);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		promptBG = null;
+		promptText = null;
+		buttonGroup = null;
+		camSubState = null;
+	}
+
 	function onOpen()
 	{
 		camSubState.visible = true;

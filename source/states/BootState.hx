@@ -95,6 +95,15 @@ class BootState extends FNFState
 		loadingBG.updateHitbox();
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		bg = null;
+		loadingText = null;
+		loadingBG = null;
+		loadingSteps = null;
+	}
+
 	function initGame()
 	{
 		FlxG.fixedTimestep = false; // allow elapsed time to be variable

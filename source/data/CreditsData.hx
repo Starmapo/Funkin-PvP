@@ -13,6 +13,11 @@ class CreditsData extends JsonObject
 			groups.push(new CreditGroup(c));
 		}
 	}
+
+	override function destroy()
+	{
+		groups = null;
+	}
 }
 
 class CreditGroup extends JsonObject
@@ -27,6 +32,11 @@ class CreditGroup extends JsonObject
 		{
 			credits.push(new Credit(c));
 		}
+	}
+
+	override function destroy()
+	{
+		credits = null;
 	}
 }
 

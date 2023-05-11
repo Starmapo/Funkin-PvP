@@ -1,9 +1,10 @@
 package data.game;
 
 import data.Controls.Action;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import ui.game.Note;
 
-class InputManager
+class InputManager implements IFlxDestroyable
 {
 	public var autoplay:Bool;
 	public var bindingStore:Array<InputBinding>;
@@ -91,6 +92,13 @@ class InputManager
 	{
 		realPlayer = player;
 		controls = PlayerSettings.players[player].controls;
+	}
+
+	public function destroy()
+	{
+		bindingStore = null;
+		ruleset = null;
+		controls = null;
 	}
 
 	function setInputBinds()

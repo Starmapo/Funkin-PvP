@@ -58,7 +58,10 @@ class FlxPointHelper
 		return point.equals(p);
 	}
 
-	public function destroy() {}
+	public function destroy()
+	{
+		point.destroy();
+	}
 
 	public inline function toString():String
 	{

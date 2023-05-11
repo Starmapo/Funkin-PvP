@@ -74,6 +74,13 @@ class SongEditorDetailsPanel extends EditorPanel
 	override function destroy()
 	{
 		super.destroy();
+		state = null;
+		noteCountText = null;
+		bpmText = null;
+		scrollVelocityText = null;
+		timeText = null;
+		stepText = null;
+		beatText = null;
 	}
 
 	function onSongSeeked(_, _)

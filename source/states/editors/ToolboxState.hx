@@ -14,6 +14,13 @@ class ToolboxState extends FNFState
 	var items:TextMenuList;
 	var camFollow:FlxObject;
 
+	override function destroy()
+	{
+		super.destroy();
+		items = null;
+		camFollow = null;
+	}
+
 	override function create()
 	{
 		if (!FlxG.sound.musicPlaying)
