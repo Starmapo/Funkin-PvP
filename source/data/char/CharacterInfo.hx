@@ -30,13 +30,12 @@ class CharacterInfo extends JsonObject
 
 	public static function loadCharacterFromName(name:String)
 	{
-		var colonIndex = name.indexOf(':');
-		if (colonIndex > -1)
+		var nameInfo = CoolUtil.getNameInfo(name);
+		if (nameInfo.mod.length > 0)
 		{
-			var mod = name.substr(0, colonIndex);
-			var charName = name.substr(colonIndex + 1);
-			var path = 'mods/$mod/data/characters/$charName.json';
-			return loadCharacter(path);
+			var path = 'mods/${nameInfo.mod}/data/characters/${nameInfo.name}.json';
+			if (Paths.exists(path))
+				return loadCharacter(path);
 		}
 
 		var path = 'mods/${Mods.currentMod}/data/characters/$name.json';

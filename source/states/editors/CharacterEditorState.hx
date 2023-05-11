@@ -59,6 +59,7 @@ class CharacterEditorState extends FNFState
 		guideChar = new Character(0, 0, CharacterInfo.loadCharacterFromName('fnf:dad'));
 		guideChar.color = 0xFF886666;
 		guideChar.alpha = 0.6;
+		guideChar.animation.finish();
 		add(guideChar);
 
 		ghostChar = new Character(0, 0, charInfo);
@@ -93,7 +94,7 @@ class CharacterEditorState extends FNFState
 
 		var loadButton = new FlxUIButton(FlxG.width, 0, 'Load', function()
 		{
-			var result = Dialogs.openFile("Select chart inside the game's directory to load", '', {
+			var result = Dialogs.openFile("Select character inside the game's directory to load", '', {
 				count: 1,
 				descriptions: ['JSON files'],
 				extensions: ['*.json']

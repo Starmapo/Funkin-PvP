@@ -27,7 +27,7 @@ class Paths
 
 	public static function getPath(key:String, ?mod:String):String
 	{
-		if (mod == null)
+		if (mod == null || mod.length == 0)
 			mod = Mods.currentMod;
 
 		var modPath = '${Mods.modsPath}/$mod/$key';

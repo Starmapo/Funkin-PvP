@@ -62,6 +62,8 @@ class Script
 
 	public function new(path:String, mod:String)
 	{
+		if (mod == null || mod.length == 0)
+			mod = Mods.currentMod;
 		this.path = path;
 		this.mod = mod;
 

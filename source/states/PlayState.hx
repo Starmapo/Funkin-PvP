@@ -141,7 +141,7 @@ class PlayState extends FNFState
 	{
 		super.destroy();
 		timing = FlxDestroyUtil.destroy(timing);
-		
+
 		Paths.clearTrackedAssets();
 		Paths.trackingAssets = false;
 	}
@@ -447,7 +447,8 @@ class PlayState extends FNFState
 		updateCamPosition();
 		add(camFollow);
 
-		addScript('data/stages/' + song.stage, song.mod);
+		var stageInfo = CoolUtil.getNameInfo(song.stage);
+		addScript('data/stages/' + stageInfo.name, stageInfo.mod);
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * Settings.playbackRate);
 		FlxG.camera.snapToTarget();
@@ -486,9 +487,15 @@ class PlayState extends FNFState
 		}
 
 		for (note => _ in noteTypeMap)
-			addScript('data/noteTypes/$note', song.mod);
+		{
+			var noteInfo = CoolUtil.getNameInfo(note);
+			addScript('data/noteTypes/${noteInfo.name}', noteInfo.mod);
+		}
 		for (event => _ in eventMap)
-			addScript('data/events/$event', song.mod);
+		{
+			var eventInfo = CoolUtil.getNameInfo(event);
+			addScript('data/events/${eventInfo.name}', eventInfo.mod);
+		}
 
 		addScriptsInFolder('data/globalScripts');
 
@@ -625,7 +632,7 @@ class PlayState extends FNFState
 
 	function startCountdown()
 	{
-		new FlxTimer().start(song.timingPoints[0].beatLength / Settings.playbackRate / 1000, function(tmr)
+		new FlxTimer().start(song.timingPoints[0].beatLength / 1000, function(tmr)
 		{
 			var count = tmr.elapsedLoops - 1;
 			if (count > 0)
@@ -645,7 +652,7 @@ class PlayState extends FNFState
 		spr.screenCenter();
 		spr.cameras = [camHUD];
 		add(spr);
-		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / Settings.playbackRate / 1000, {
+		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / 1000, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(_)
 			{

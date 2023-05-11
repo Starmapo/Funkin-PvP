@@ -185,8 +185,8 @@
 		}
 	],
 	"cameraOffset": [
-		0,
-		0
+		-15,
+		-175
 	],
 	"healthColors": [
 		165,

@@ -213,6 +213,24 @@ class CoolUtil
 		return num >= start && num <= end;
 	}
 
+	public static function getNameInfo(name:String):NameInfo
+	{
+		var realName = name;
+		var mod = '';
+
+		var colonIndex = name.indexOf(':');
+		if (colonIndex > 0)
+		{
+			realName = name.substr(colonIndex + 1);
+			mod = name.substr(0, colonIndex);
+		}
+
+		return {
+			name: realName,
+			mod: mod
+		}
+	}
+
 	@:generic
 	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{
@@ -314,4 +332,10 @@ class CoolUtil
 		}
 		return value;
 	}
+}
+
+typedef NameInfo =
+{
+	var name:String;
+	var ?mod:String;
 }
