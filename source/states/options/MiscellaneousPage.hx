@@ -33,5 +33,19 @@ class MiscellaneousPage extends BaseSettingsPage
 		{
 			FlxG.autoPause = Settings.autoPause;
 		});
+		addSetting({
+			name: 'persistentCache',
+			displayName: 'Persistent Cache',
+			description: "If enabled, graphics and sounds will be kept in memory even when they're unused.",
+			type: CHECKBOX,
+			defaultValue: true
+		});
+		addSetting({
+			name: 'clearGameplayCache',
+			displayName: 'Clear Gameplay Cache',
+			description: "If enabled, graphics and sounds loaded while in gameplay will be cleared after exiting.",
+			type: CHECKBOX,
+			defaultValue: true
+		});
 	}
 }

@@ -10,6 +10,7 @@ import flixel.util.FlxColor;
 import states.PlayState;
 import states.options.OptionsState;
 import states.pvp.CharacterSelectState;
+import states.pvp.SongSelectState;
 import ui.lists.MenuList.TypedMenuList;
 import ui.lists.TextMenuList;
 
@@ -46,19 +47,18 @@ class PauseSubState extends FlxSubState
 		});
 		menuList.createItem('Exit to options', function()
 		{
-			state.reset();
-			FlxG.switchState(new OptionsState(new PlayState(state.song, state.chars)));
+			state.exit(new OptionsState(new PlayState(state.song, state.chars)), false);
 			CoolUtil.playMenuMusic();
 		});
 		menuList.createItem('Exit to character select', function()
 		{
-			state.reset();
-			FlxG.switchState(new CharacterSelectState());
+			state.exit(new CharacterSelectState());
 			CoolUtil.playPvPMusic();
 		});
 		menuList.createItem('Exit to song select', function()
 		{
-			state.exit();
+			state.exit(new SongSelectState());
+			CoolUtil.playPvPMusic();
 		});
 
 		playerText = new FlxText(0, 10);

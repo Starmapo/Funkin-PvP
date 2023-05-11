@@ -1,4 +1,5 @@
 import data.Mods;
+import data.Settings;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
@@ -24,6 +25,15 @@ class Paths
 	public static var trackingAssets:Bool = false;
 	public static var trackedGraphics:Array<FlxGraphic> = [];
 	public static var trackedSounds:Array<String> = [];
+
+	public static function init()
+	{
+		FlxG.signals.preStateSwitch.add(function()
+		{
+			if (!Settings.persistentCache || FlxG.keys.pressed.F5)
+				clear();
+		});
+	}
 
 	public static function getPath(key:String, ?mod:String):String
 	{

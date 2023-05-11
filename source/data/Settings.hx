@@ -27,6 +27,8 @@ class Settings
 	public static var flashing:Bool = false;
 	public static var camZooming:Bool = true;
 	public static var autoPause:Bool = false;
+	public static var persistentCache:Bool = true;
+	public static var clearGameplayCache:Bool = true;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;
 	public static var playbackRate:Float = 1;
@@ -67,6 +69,8 @@ class Settings
 		load('flashing');
 		load('camZooming');
 		load('autoPause');
+		load('persistentCache');
+		load('clearGameplayCache');
 		load('singleSongSelection');
 		load('playbackRate');
 		load('noSliderVelocity');
@@ -127,6 +131,8 @@ class Settings
 		save('flashing');
 		save('camZooming');
 		save('autoPause');
+		save('persistentCache');
+		save('clearGameplayCache');
 		save('singleSongSelection');
 		save('playbackRate');
 		save('noSliderVelocity');

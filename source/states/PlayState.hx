@@ -8,16 +8,15 @@ import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.scripts.PlayStateScript;
 import data.scripts.Script;
-import data.song.EventObject;
 import data.song.Song;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.animation.FlxAnimationController;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -96,7 +95,8 @@ class PlayState extends FNFState
 
 		Mods.currentMod = song.mod;
 		FlxAnimationController.globalSpeed = Settings.playbackRate;
-		Paths.trackingAssets = true;
+		if (Settings.clearGameplayCache)
+			Paths.trackingAssets = true;
 
 		initCameras();
 		initSong();
@@ -141,9 +141,6 @@ class PlayState extends FNFState
 	{
 		super.destroy();
 		timing = FlxDestroyUtil.destroy(timing);
-
-		Paths.clearTrackedAssets();
-		Paths.trackingAssets = false;
 	}
 
 	override function openSubState(subState:FlxSubState)
@@ -201,13 +198,17 @@ class PlayState extends FNFState
 		hasStarted = true;
 	}
 
-	public function exit()
+	public function exit(state:FlxState, clearCache:Bool = true)
 	{
 		timing.stopMusic();
 		persistentUpdate = false;
 		reset();
-		FlxG.switchState(new SongSelectState());
-		CoolUtil.playPvPMusic();
+		if (clearCache && Settings.clearGameplayCache)
+		{
+			Paths.clearTrackedAssets();
+			Paths.trackingAssets = false;
+		}
+		FlxG.switchState(state);
 	}
 
 	public function reset()
@@ -331,7 +332,10 @@ class PlayState extends FNFState
 
 		var ret = executeScripts("onEndSong");
 		if (ret != Script.FUNCTION_STOP)
-			exit();
+		{
+			exit(new SongSelectState());
+			CoolUtil.playPvPMusic();
+		}
 	}
 
 	function initCameras()
