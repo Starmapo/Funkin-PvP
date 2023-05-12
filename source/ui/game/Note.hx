@@ -145,6 +145,20 @@ class Note extends FlxSpriteGroup
 		tint = FlxColor.fromRGBFloat(0.3, 0.3, 0.3);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		info = null;
+		head = null;
+		body = null;
+		tail = null;
+		manager = null;
+		playfield = null;
+		noteSkin = null;
+		config = null;
+		svDirectionChanges = null;
+	}
+
 	function initializeSprites(info:NoteInfo)
 	{
 		var frames = Paths.getSpritesheet(noteSkin.notesImage);

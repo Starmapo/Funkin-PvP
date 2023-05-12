@@ -64,10 +64,13 @@ class EditorInputText extends FlxSpriteGroup
 
 	override function destroy()
 	{
-		textField.textField.removeEventListener(FocusEvent.FOCUS_IN, onFocusIn);
-		textField.textField.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 		FlxDestroyUtil.destroy(focusLost);
 		FlxDestroyUtil.destroy(textChanged);
+		textBorder = null;
+		textBG = null;
+		textField.textField.removeEventListener(FocusEvent.FOCUS_IN, onFocusIn);
+		textField.textField.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
+		textField = null;
 		super.destroy();
 	}
 

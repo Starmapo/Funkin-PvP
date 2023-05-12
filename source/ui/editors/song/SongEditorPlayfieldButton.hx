@@ -10,6 +10,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import states.editors.SongEditorState;
 import ui.editors.song.SongEditorNoteGroup.SongEditorNote;
@@ -65,6 +66,16 @@ class SongEditorPlayfieldButton extends FlxSprite
 		handleInput();
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+		playfield = null;
+		longNoteInDrag = null;
+		objectMoveInitialMousePosition = FlxDestroyUtil.put(objectMoveInitialMousePosition);
+		objectInDrag = null;
+	}
+
 	function handleInput()
 	{
 		if (!isHeld)
@@ -86,7 +97,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 				|| (objectInDrag != null && previousDragOffset != 0))
 				state.actionManager.perform(new ActionMoveObjects(state, state.selectedObjects.value.copy(), columnOffset, previousDragOffset, false));
 
-			objectMoveInitialMousePosition = null;
+			objectMoveInitialMousePosition = FlxDestroyUtil.put(objectMoveInitialMousePosition);
 			objectInDrag = null;
 			timeDragStart = 0;
 			previousDragOffset = 0;
@@ -425,7 +436,12 @@ class SongEditorPlayfieldButton extends FlxSprite
 			columnOffset = 0;
 		}
 
-		if ((objectMoveInitialMousePosition - FlxG.mouse.getGlobalPosition()).isZero())
+		var mousePos = FlxG.mouse.getGlobalPosition();
+		var delta = (objectMoveInitialMousePosition - mousePos);
+		var isZero = delta.isZero();
+		mousePos.put();
+		delta.put();
+		if (isZero)
 			return;
 
 		if (longNoteInDrag != null)

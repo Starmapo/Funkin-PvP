@@ -60,6 +60,22 @@ class SongEditorPlayfield extends FlxGroup
 			otherGroup.update(elapsed);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		bg = null;
+		borderLeft = null;
+		borderRight = null;
+		dividerLines = null;
+		hitPositionLine = null;
+		timeline = null;
+		waveform = null;
+		noteGroup = null;
+		otherGroup = null;
+		playfieldButton = null;
+		state = null;
+	}
+
 	public function getLaneFromX(x:Float)
 	{
 		var percentage = (x - bg.x) / bg.width;

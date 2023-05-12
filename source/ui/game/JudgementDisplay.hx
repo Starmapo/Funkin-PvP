@@ -56,6 +56,18 @@ class JudgementDisplay extends FlxSprite
 		});
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		noteSkin = null;
+		if (posTween != null)
+			posTween.cancel();
+		posTween = null;
+		if (alphaTween != null)
+			alphaTween.cancel();
+		alphaTween = null;
+	}
+
 	function getJudgementGraphic(judgement:Judgement)
 	{
 		var path = 'judgements/base/';

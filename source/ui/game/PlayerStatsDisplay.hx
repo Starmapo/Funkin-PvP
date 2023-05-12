@@ -55,6 +55,16 @@ class PlayerStatsDisplay extends FlxGroup
 		missText.text = 'Misses: ' + scoreProcessor.currentJudgements[Judgement.MISS];
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		scoreProcessor = null;
+		scoreText = null;
+		gradeText = null;
+		comboText = null;
+		missText = null;
+	}
+
 	function getGradeFromAccuracy(accuracy:Float)
 	{
 		if (accuracy >= 100)

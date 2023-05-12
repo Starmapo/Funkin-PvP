@@ -89,6 +89,13 @@ class Notification extends FlxSpriteGroup
 		alpha = 0;
 		scrollFactor.set();
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		bg = null;
+		text = null;
+	}
 }
 
 enum NotificationLevel

@@ -64,6 +64,9 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 	override function destroy()
 	{
 		FlxDestroyUtil.destroy(valueChanged);
+		inputText = null;
+		buttonPlus = null;
+		buttonMinus = null;
 		super.destroy();
 	}
 

@@ -76,6 +76,13 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 		}
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+		tabs = null;
+	}
+
 	function distributeTabs(W:Float = -1):Void
 	{
 		if (W == -1)

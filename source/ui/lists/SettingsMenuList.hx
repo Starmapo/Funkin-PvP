@@ -174,6 +174,15 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		setData(name, callback);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		data = null;
+		nameText = null;
+		checkbox = null;
+		valueText = null;
+	}
+
 	override function setData(name:String, ?callback:Void->Void)
 	{
 		super.setData(name, callback);

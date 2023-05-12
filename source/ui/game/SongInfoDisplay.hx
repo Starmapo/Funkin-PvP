@@ -41,4 +41,11 @@ class SongInfoDisplay extends FlxText
 		if (text != newText)
 			text = newText;
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		song = null;
+		inst = null;
+	}
 }

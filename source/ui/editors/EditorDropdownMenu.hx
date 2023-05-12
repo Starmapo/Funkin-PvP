@@ -10,6 +10,11 @@ import flixel.addons.ui.interfaces.IFlxUIWidget;
 
 class EditorDropdownMenu extends FlxUIDropDownMenu implements IFlxUIClickable implements IFlxUIWidget
 {
+	public static function makeStrIdLabelArray(stringArray:Array<String>, useIndexID:Bool = false):Array<StrNameLabel>
+	{
+		return FlxUIDropDownMenu.makeStrIdLabelArray(stringArray, useIndexID);
+	}
+
 	var tabMenu:FlxUITabMenu;
 
 	public function new(x:Float = 0, y:Float = 0, ?dataList:Array<StrNameLabel>, ?callback:String->Void, ?tabMenu:FlxUITabMenu)
@@ -18,9 +23,10 @@ class EditorDropdownMenu extends FlxUIDropDownMenu implements IFlxUIClickable im
 		this.tabMenu = tabMenu;
 	}
 
-	public static function makeStrIdLabelArray(stringArray:Array<String>, useIndexID:Bool = false):Array<StrNameLabel>
+	override function destroy()
 	{
-		return FlxUIDropDownMenu.makeStrIdLabelArray(stringArray, useIndexID);
+		super.destroy();
+		tabMenu = null;
 	}
 
 	override function showList(b:Bool)

@@ -1,7 +1,6 @@
 package util;
 
 import data.PlayerSettings;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 

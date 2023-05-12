@@ -8,6 +8,7 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.util.FlxDestroyUtil;
 import openfl.geom.Rectangle;
 import states.editors.SongEditorState;
 
@@ -33,6 +34,13 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		{
 			handleSelection();
 		}
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+		startingPoint = FlxDestroyUtil.put(startingPoint);
 	}
 
 	function handleSelection()
@@ -112,12 +120,13 @@ class SongEditorSelector extends FlxUI9SliceSprite
 
 			selectObjects(timeDragEnd, startLane, endLane);
 		}
+		difference.put();
 
 		isSelecting = false;
 		visible = false;
 		setPosition();
 		resize(0, 0);
-		startingPoint = null;
+		startingPoint = FlxDestroyUtil.put(startingPoint);
 		timeDragStart = 0;
 	}
 

@@ -84,6 +84,16 @@ class SongEditorSeekBar extends FlxSpriteGroup
 		}
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		bg = null;
+		state = null;
+		barsSprite = null;
+		seekLine = null;
+		scheduledFunction = null;
+	}
+
 	function createBars()
 	{
 		if (state.song.notes.length == 0)

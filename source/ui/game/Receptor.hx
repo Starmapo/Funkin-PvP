@@ -56,6 +56,15 @@ class Receptor extends AnimatedSprite
 		scrollFactor.set();
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		skin = null;
+		if (alphaTween != null)
+			alphaTween.cancel();
+		alphaTween = null;
+	}
+
 	override public function animPlayed(name:String)
 	{
 		if (skin.receptorsCenterAnimation)

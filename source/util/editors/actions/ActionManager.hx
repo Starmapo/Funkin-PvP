@@ -54,6 +54,9 @@ class ActionManager implements IFlxDestroyable
 
 	public function destroy()
 	{
+		undoStack = FlxDestroyUtil.destroyArray(undoStack);
+		redoStack = FlxDestroyUtil.destroyArray(redoStack);
+		lastSaveAction = null;
 		FlxDestroyUtil.destroy(onEvent);
 	}
 

@@ -1,6 +1,8 @@
 package util.editors.actions;
 
-interface IAction
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+
+interface IAction extends IFlxDestroyable
 {
 	var type:String;
 	function perform():Void;

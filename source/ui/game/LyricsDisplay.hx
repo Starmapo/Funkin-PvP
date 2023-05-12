@@ -105,6 +105,13 @@ class LyricsDisplay extends FlxText
 		updateLyrics(time);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		song = null;
+		lines = null;
+	}
+
 	function updateWithLyric(lyric:LyricsLine)
 	{
 		var stepIndex = lyric.steps.length - 1;

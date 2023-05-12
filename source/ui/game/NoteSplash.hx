@@ -58,6 +58,14 @@ class NoteSplash extends AnimatedSprite
 		alpha = receptor.alpha * alphaMult;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		noteSkin = null;
+		receptor = null;
+		splashData = null;
+	}
+
 	public function updatePosition()
 	{
 		setPosition(receptor.x + (receptor.width / 2) - (width / 2), receptor.y + (receptor.height / 2) - (height / 2));

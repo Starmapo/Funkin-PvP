@@ -74,14 +74,19 @@ class SongEditorTimeline extends FlxBasic
 
 	override function destroy()
 	{
+		super.destroy();
+		lines = null;
+		state = null;
+		playfield = null;
 		for (lines in cachedLines)
 		{
 			for (line in lines)
 				FlxDestroyUtil.destroy(line);
 		}
+		cachedLines = null;
+		linePool = null;
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
-		super.destroy();
 	}
 
 	public function initializeLines()

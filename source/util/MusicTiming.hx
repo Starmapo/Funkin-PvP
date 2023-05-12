@@ -182,9 +182,16 @@ class MusicTiming implements IFlxDestroyable
 
 	public function destroy()
 	{
+		onStart = null;
+		timingPoints = null;
+		curTimingPoint = null;
 		FlxDestroyUtil.destroy(onStepHit);
 		FlxDestroyUtil.destroy(onBeatHit);
 		FlxDestroyUtil.destroy(onBarHit);
+		music = null;
+		extraMusic = null;
+		storedSteps = null;
+		dancingSprites = null;
 	}
 
 	/**

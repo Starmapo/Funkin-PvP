@@ -13,6 +13,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import states.editors.SongEditorState;
 import util.editors.song.SongEditorActionManager;
@@ -74,6 +75,26 @@ class SongEditorOtherGroup extends FlxBasic
 		updateCamFocusPool();
 		updateEventPool();
 		updateLyricStepPool();
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		timingPoints = FlxDestroyUtil.destroyArray(timingPoints);
+		scrollVelocities = FlxDestroyUtil.destroyArray(scrollVelocities);
+		cameraFocuses = FlxDestroyUtil.destroyArray(cameraFocuses);
+		events = FlxDestroyUtil.destroyArray(events);
+		lyricSteps = FlxDestroyUtil.destroyArray(lyricSteps);
+		state = null;
+		playfield = null;
+		camFocusPool = null;
+		timingPointPool = null;
+		svPool = null;
+		eventPool = null;
+		lyricStepPool = null;
+		state.rateChanged.remove(onRateChanged);
+		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
+		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
 
 	function updateTimingPointPool()
@@ -214,14 +235,6 @@ class SongEditorOtherGroup extends FlxBasic
 					obj.draw();
 			}
 		}
-	}
-
-	override function destroy()
-	{
-		state.rateChanged.add(onRateChanged);
-		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
-		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
-		super.destroy();
 	}
 
 	public function getHoveredObject():ISongEditorTimingObject

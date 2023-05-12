@@ -11,7 +11,6 @@ import haxe.io.Bytes;
 import lime.media.AudioBuffer;
 import openfl.geom.Rectangle;
 import states.editors.SongEditorState;
-import sys.thread.Thread;
 
 class SongEditorWaveform extends FlxBasic
 {
@@ -63,6 +62,10 @@ class SongEditorWaveform extends FlxBasic
 
 	override function destroy()
 	{
+		super.destroy();
+		state = null;
+		playfield = null;
+		slices = null;
 		for (slices in cachedSlices)
 		{
 			for (slice in slices)
@@ -70,9 +73,13 @@ class SongEditorWaveform extends FlxBasic
 				slice.destroy();
 			}
 		}
+		cachedSlices = null;
+		waveformData = null;
+		sound = null;
+		buffer = null;
+		bytes = null;
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
-		super.destroy();
 	}
 
 	public function reloadWaveform()

@@ -68,8 +68,12 @@ class Tooltip extends FlxSpriteGroup
 	override function destroy()
 	{
 		super.destroy();
+		bg = null;
+		text = null;
+		addedTooltips = null;
 		if (fadeTween != null)
 			fadeTween.cancel();
+		fadeTween = null;
 	}
 
 	public function changeText(newText:String = '')

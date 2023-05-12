@@ -101,6 +101,14 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		super.update(elapsed);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		FlxDestroyUtil.destroy(onChange);
+		FlxDestroyUtil.destroy(onAccept);
+		byName = null;
+	}
+
 	public function addItem(name:String, item:T):T
 	{
 		if (length == selectedIndex)
@@ -309,14 +317,6 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 			selectedItem.callback();
 	}
 
-	override function destroy()
-	{
-		super.destroy();
-		byName.clear();
-		FlxDestroyUtil.destroy(onChange);
-		FlxDestroyUtil.destroy(onAccept);
-	}
-
 	inline function get_selectedItem():T
 	{
 		return members[selectedIndex];
@@ -356,6 +356,12 @@ class MenuItem extends FlxSprite
 		alpha = 1;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		callback = null;
+	}
+
 	function setData(name:String, ?callback:Void->Void)
 	{
 		this.name = name;
@@ -376,6 +382,12 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 		this.label = label;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		label = null;
+	}
+
 	/**
 	 * Use this when you only want to show the label
 	 */
@@ -392,7 +404,7 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 			value.y = y;
 			value.alpha = alpha;
 		}
-		return this.label = value;
+		return label = value;
 	}
 
 	override function update(elapsed:Float)

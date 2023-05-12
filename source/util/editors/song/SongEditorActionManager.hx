@@ -124,6 +124,12 @@ class SongEditorActionManager extends ActionManager
 		perform(new ActionAddObject(state, obj));
 		return obj;
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+	}
 }
 
 class ActionAddObject implements IAction
@@ -151,6 +157,12 @@ class ActionAddObject implements IAction
 	public function undo()
 	{
 		new ActionRemoveObject(state, object).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		object = null;
 	}
 }
 
@@ -180,6 +192,12 @@ class ActionRemoveObject implements IAction
 	{
 		new ActionAddObject(state, object).perform();
 	}
+
+	public function destroy()
+	{
+		state = null;
+		object = null;
+	}
 }
 
 class ActionAddObjectBatch implements IAction
@@ -206,6 +224,12 @@ class ActionAddObjectBatch implements IAction
 	public function undo()
 	{
 		new ActionRemoveObjectBatch(state, objects).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		objects = null;
 	}
 }
 
@@ -237,6 +261,12 @@ class ActionRemoveObjectBatch implements IAction
 	{
 		new ActionAddObjectBatch(state, objects).perform();
 	}
+
+	public function destroy()
+	{
+		state = null;
+		objects = null;
+	}
 }
 
 class ActionResizeLongNote implements IAction
@@ -265,6 +295,12 @@ class ActionResizeLongNote implements IAction
 	public function undo()
 	{
 		new ActionResizeLongNote(state, note, newTime, originalTime).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		note = null;
 	}
 }
 
@@ -303,6 +339,13 @@ class ActionChangeNoteType implements IAction
 
 		state.actionManager.triggerEvent(type, {notes: notes, noteType: noteType});
 	}
+
+	public function destroy()
+	{
+		state = null;
+		notes = null;
+		lastTypes = null;
+	}
 }
 
 class ActionChangeNoteParams implements IAction
@@ -339,6 +382,14 @@ class ActionChangeNoteParams implements IAction
 		lastParams.clear();
 
 		state.actionManager.triggerEvent(type, {notes: notes, params: params});
+	}
+
+	public function destroy()
+	{
+		state = null;
+		notes = null;
+		params = null;
+		lastParams = null;
 	}
 }
 
@@ -386,6 +437,12 @@ class ActionMoveObjects implements IAction
 	{
 		new ActionMoveObjects(state, objects, -laneOffset, -dragOffset).perform();
 		shouldPerform = true;
+	}
+
+	public function destroy()
+	{
+		state = null;
+		objects = null;
 	}
 }
 
@@ -472,6 +529,15 @@ class ActionResnapObjects implements IAction
 		timeAdjustments.clear();
 	}
 
+	public function destroy()
+	{
+		state = null;
+		snaps = null;
+		objects = null;
+		noteTimeAdjustments = null;
+		timeAdjustments = null;
+	}
+
 	function closestTickOverall(time:Float)
 	{
 		var closestTime:Float = FlxMath.MAX_VALUE_FLOAT;
@@ -524,6 +590,12 @@ class ActionFlipNotes implements IAction
 	{
 		perform();
 	}
+
+	public function destroy()
+	{
+		state = null;
+		notes = null;
+	}
 }
 
 class ActionApplyModifier implements IAction
@@ -574,6 +646,12 @@ class ActionApplyModifier implements IAction
 
 		state.actionManager.triggerEvent(type, {modifier: modifier});
 	}
+
+	public function destroy()
+	{
+		state = null;
+		originalNotes = null;
+	}
 }
 
 class ActionChangeTimingPointTime implements IAction
@@ -610,6 +688,13 @@ class ActionChangeTimingPointTime implements IAction
 		lastTimes.clear();
 
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, time: time});
+	}
+
+	public function destroy()
+	{
+		state = null;
+		timingPoints = null;
+		lastTimes = null;
 	}
 }
 
@@ -648,6 +733,13 @@ class ActionChangeTimingPointBPM implements IAction
 
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, bpm: bpm});
 	}
+
+	public function destroy()
+	{
+		state = null;
+		timingPoints = null;
+		lastBPMs = null;
+	}
 }
 
 class ActionChangeTimingPointMeter implements IAction
@@ -684,6 +776,13 @@ class ActionChangeTimingPointMeter implements IAction
 		lastMeters.clear();
 
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, meter: meter});
+	}
+
+	public function destroy()
+	{
+		state = null;
+		timingPoints = null;
+		lastMeters = null;
 	}
 }
 
@@ -724,6 +823,13 @@ class ActionChangeSVMultiplier implements IAction
 
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, player: player, multiplier: multiplier});
 	}
+
+	public function destroy()
+	{
+		state = null;
+		scrollVelocities = null;
+		lastMultipliers = null;
+	}
 }
 
 class ActionChangeSVMultipliers implements IAction
@@ -760,6 +866,14 @@ class ActionChangeSVMultipliers implements IAction
 		lastMultipliers.clear();
 
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, multipliers: multipliers});
+	}
+
+	public function destroy()
+	{
+		state = null;
+		scrollVelocities = null;
+		multipliers = null;
+		lastMultipliers = null;
 	}
 }
 
@@ -798,6 +912,13 @@ class ActionChangeSVLinked implements IAction
 
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, linked: linked});
 	}
+
+	public function destroy()
+	{
+		state = null;
+		scrollVelocities = null;
+		lastLinked = null;
+	}
 }
 
 class ActionChangeCameraFocusChar implements IAction
@@ -835,6 +956,13 @@ class ActionChangeCameraFocusChar implements IAction
 
 		state.actionManager.triggerEvent(type, {cameraFocuses: cameraFocuses, char: char});
 	}
+
+	public function destroy()
+	{
+		state = null;
+		cameraFocuses = null;
+		lastChars = null;
+	}
 }
 
 class ActionChangeEvent implements IAction
@@ -866,6 +994,12 @@ class ActionChangeEvent implements IAction
 		eventInfo.event = lastEvent;
 
 		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, event: event});
+	}
+
+	public function destroy()
+	{
+		state = null;
+		eventInfo = null;
 	}
 }
 
@@ -899,6 +1033,12 @@ class ActionChangeEventParams implements IAction
 
 		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, params: params});
 	}
+
+	public function destroy()
+	{
+		state = null;
+		eventInfo = null;
+	}
 }
 
 class ActionAddEvent implements IAction
@@ -927,6 +1067,13 @@ class ActionAddEvent implements IAction
 	{
 		new ActionRemoveEvent(state, eventObject, event).perform();
 	}
+
+	public function destroy()
+	{
+		state = null;
+		eventObject = null;
+		event = null;
+	}
 }
 
 class ActionRemoveEvent implements IAction
@@ -954,6 +1101,13 @@ class ActionRemoveEvent implements IAction
 	public function undo()
 	{
 		new ActionAddEvent(state, eventObject, event).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		eventObject = null;
+		event = null;
 	}
 }
 
@@ -988,6 +1142,11 @@ class ActionChangeTitle implements IAction
 	{
 		state.actionManager.triggerEvent(type, {title: state.song.title});
 	}
+
+	public function destroy()
+	{
+		state = null;
+	}
 }
 
 class ActionChangeArtist implements IAction
@@ -1021,6 +1180,11 @@ class ActionChangeArtist implements IAction
 	{
 		state.actionManager.triggerEvent(type, {artist: state.song.artist});
 	}
+
+	public function destroy()
+	{
+		state = null;
+	}
 }
 
 class ActionChangeSource implements IAction
@@ -1048,6 +1212,11 @@ class ActionChangeSource implements IAction
 	{
 		state.song.source = lastValue;
 		triggerEvent();
+	}
+
+	public function destroy()
+	{
+		state = null;
 	}
 
 	function triggerEvent()
@@ -1083,6 +1252,11 @@ class ActionChangeDifficultyName implements IAction
 		triggerEvent();
 	}
 
+	public function destroy()
+	{
+		state = null;
+	}
+
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {difficultyName: state.song.difficultyName});
@@ -1114,6 +1288,11 @@ class ActionChangeOpponent implements IAction
 	{
 		state.song.opponent = lastValue;
 		triggerEvent();
+	}
+
+	public function destroy()
+	{
+		state = null;
 	}
 
 	function triggerEvent()
@@ -1149,6 +1328,11 @@ class ActionChangeBF implements IAction
 		triggerEvent();
 	}
 
+	public function destroy()
+	{
+		state = null;
+	}
+
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {bf: state.song.bf});
@@ -1180,6 +1364,11 @@ class ActionChangeGF implements IAction
 	{
 		state.song.gf = lastValue;
 		triggerEvent();
+	}
+
+	public function destroy()
+	{
+		state = null;
 	}
 
 	function triggerEvent()
@@ -1215,6 +1404,11 @@ class ActionChangeStage implements IAction
 		triggerEvent();
 	}
 
+	public function destroy()
+	{
+		state = null;
+	}
+
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {stage: state.song.stage});
@@ -1246,6 +1440,11 @@ class ActionChangeInitialSV implements IAction
 	{
 		state.song.initialScrollVelocity = lastValue;
 		triggerEvent();
+	}
+
+	public function destroy()
+	{
+		state = null;
 	}
 
 	function triggerEvent()

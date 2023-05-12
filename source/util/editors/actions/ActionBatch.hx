@@ -26,4 +26,9 @@ class ActionBatch implements IAction
 			i--;
 		}
 	}
+
+	public function destroy()
+	{
+		actions = null;
+	}
 }

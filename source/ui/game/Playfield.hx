@@ -160,6 +160,15 @@ class Playfield extends FlxGroup
 			obj.alpha = objAlpha;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		config = null;
+		noteSkin = null;
+		receptors = null;
+		splashes = null;
+	}
+
 	function initReceptors()
 	{
 		receptors = new FlxTypedGroup();
