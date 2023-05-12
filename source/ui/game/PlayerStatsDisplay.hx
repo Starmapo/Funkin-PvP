@@ -10,49 +10,44 @@ import flixel.util.FlxColor;
 
 class PlayerStatsDisplay extends FlxGroup
 {
-	var player:Int;
-	var scoreProcessor:ScoreProcessor;
-	var scoreText:FlxText;
-	var gradeText:FlxText;
-	var comboText:FlxText;
-	var missText:FlxText;
+	public var scoreText:FlxText;
+	public var gradeText:FlxText;
+	public var comboText:FlxText;
+	public var missText:FlxText;
 
-	public function new(player:Int, scoreProcessor:ScoreProcessor)
+	var scoreProcessor:ScoreProcessor;
+
+	public function new(scoreProcessor:ScoreProcessor, size:Int = 16, ?startY:Float)
 	{
 		super();
-		this.player = player;
+		if (startY == null)
+			startY = FlxG.height * 0.8;
 		this.scoreProcessor = scoreProcessor;
 
-		var pos = 5 + (FlxG.width / 2) * player;
+		var pos = 5 + (FlxG.width / 2) * scoreProcessor.player;
 
-		scoreText = new FlxText(pos, FlxG.height * 0.8, (FlxG.width / 2) - 10);
-		scoreText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		scoreText = new FlxText(pos, startY, (FlxG.width / 2) - 10);
+		scoreText.setFormat('VCR OSD Mono', size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(scoreText);
 
 		gradeText = new FlxText(pos, scoreText.y + scoreText.height + 2, (FlxG.width / 2) - 10);
-		gradeText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		gradeText.setFormat('VCR OSD Mono', size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(gradeText);
 
 		comboText = new FlxText(pos, gradeText.y + gradeText.height + 2, (FlxG.width / 2) - 10);
-		comboText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		comboText.setFormat('VCR OSD Mono', size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(comboText);
 
 		missText = new FlxText(pos, comboText.y + comboText.height + 2, (FlxG.width / 2) - 10);
-		missText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		missText.setFormat('VCR OSD Mono', size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(missText);
+
+		updateText();
 	}
 
 	override function update(elapsed:Float)
 	{
-		scoreText.text = 'Score: ' + scoreProcessor.score;
-
-		var accuracy = scoreProcessor.accuracy;
-		gradeText.text = 'Grade: ' + getGradeFromAccuracy(accuracy) + ' (' + FlxMath.roundDecimal(accuracy, 2) + '%)' + getFCText();
-
-		var maxCombo = scoreProcessor.maxCombo;
-		comboText.text = 'Combo: ' + scoreProcessor.combo + (maxCombo > 0 ? ' (Max: $maxCombo)' : '');
-
-		missText.text = 'Misses: ' + scoreProcessor.currentJudgements[Judgement.MISS];
+		updateText();
 	}
 
 	override function destroy()
@@ -65,37 +60,16 @@ class PlayerStatsDisplay extends FlxGroup
 		missText = null;
 	}
 
-	function getGradeFromAccuracy(accuracy:Float)
+	public function updateText()
 	{
-		if (accuracy >= 100)
-			return 'X';
-		else if (accuracy >= 99)
-			return 'SS';
-		else if (accuracy >= 95)
-			return 'S';
-		else if (accuracy >= 90)
-			return 'A';
-		else if (accuracy >= 80)
-			return 'B';
-		else if (accuracy >= 70)
-			return 'C';
+		scoreText.text = 'Score: ' + scoreProcessor.score;
 
-		return 'D';
-	}
+		var accuracy = FlxMath.roundDecimal(scoreProcessor.accuracy, 2);
+		gradeText.text = 'Grade: ' + CoolUtil.getGradeFromAccuracy(accuracy) + ' (' + accuracy + '%)' + CoolUtil.getFCText(scoreProcessor);
 
-	function getFCText()
-	{
-		if (scoreProcessor.currentJudgements[MISS] > 0
-			|| scoreProcessor.currentJudgements[SHIT] > 0
-			|| scoreProcessor.totalJudgementCount == 0)
-			return '';
-		if (scoreProcessor.currentJudgements[BAD] > 0)
-			return ' [FC]';
-		if (scoreProcessor.currentJudgements[GOOD] > 0)
-			return ' [Good FC]';
-		if (scoreProcessor.currentJudgements[SICK] > 0)
-			return ' [Sick FC]';
+		var maxCombo = scoreProcessor.maxCombo;
+		comboText.text = 'Combo: ' + scoreProcessor.combo + (maxCombo > 0 ? ' (Max: $maxCombo)' : '');
 
-		return ' [Marvelous FC]';
+		missText.text = 'Misses: ' + scoreProcessor.currentJudgements[MISS];
 	}
 }

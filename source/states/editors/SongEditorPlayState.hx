@@ -117,7 +117,7 @@ class SongEditorPlayState extends FNFState
 
 		statsDisplay = new FlxTypedGroup();
 		for (i in 0...2)
-			statsDisplay.add(new PlayerStatsDisplay(i, ruleset.scoreProcessors[i]));
+			statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
 		add(statsDisplay);
 
 		songInfoDisplay = new SongInfoDisplay(song, inst);

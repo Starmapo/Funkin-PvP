@@ -134,7 +134,7 @@ class PlayStateScript extends Script
 		{
 			var notes:Array<NoteInfo> = [];
 			for (manager in state.ruleset.noteManagers)
-				pushLaneNoteInfos(notes, manager.noteQueueLanes);
+				pushLaneNotes(notes, manager.noteQueueLanes);
 			return notes;
 		});
 	}
@@ -144,16 +144,7 @@ class PlayStateScript extends Script
 		state.notificationManager.showNotification(message, ERROR);
 	}
 
-	function pushLaneNotes(to:Array<Note>, array:Array<Array<Note>>)
-	{
-		for (lane in array)
-		{
-			for (note in lane)
-				to.push(note);
-		}
-	}
-
-	function pushLaneNoteInfos(to:Array<NoteInfo>, array:Array<Array<NoteInfo>>)
+	function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)
 	{
 		for (lane in array)
 		{

@@ -2,6 +2,8 @@ package;
 
 import data.Mods;
 import data.PlayerSettings;
+import data.game.Judgement;
+import data.game.ScoreProcessor;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -229,6 +231,40 @@ class CoolUtil
 			name: realName,
 			mod: mod
 		}
+	}
+
+	public static function getGradeFromAccuracy(accuracy:Float)
+	{
+		if (accuracy >= 100)
+			return 'X';
+		else if (accuracy >= 99)
+			return 'SS';
+		else if (accuracy >= 95)
+			return 'S';
+		else if (accuracy >= 90)
+			return 'A';
+		else if (accuracy >= 80)
+			return 'B';
+		else if (accuracy >= 70)
+			return 'C';
+
+		return 'D';
+	}
+
+	public static function getFCText(scoreProcessor:ScoreProcessor)
+	{
+		if (scoreProcessor.currentJudgements[MISS] > 0
+			|| scoreProcessor.currentJudgements[SHIT] > 0
+			|| scoreProcessor.totalJudgementCount == 0)
+			return '';
+		if (scoreProcessor.currentJudgements[BAD] > 0)
+			return ' [FC]';
+		if (scoreProcessor.currentJudgements[GOOD] > 0)
+			return ' [Good FC]';
+		if (scoreProcessor.currentJudgements[SICK] > 0)
+			return ' [Sick FC]';
+
+		return ' [Marvelous FC]';
 	}
 
 	@:generic

@@ -131,7 +131,7 @@ class ScoreProcessor implements IFlxDestroyable
 		scoreCount += judgementScoreWeighting[judgement] + multiplierIndex * multiplierCountToIncreaseIndex;
 
 		final standardizedMaxScore = 1000000;
-		score = Std.int(standardizedMaxScore * (scoreCount / summedScore));
+		score = Math.round(standardizedMaxScore * (scoreCount / summedScore));
 
 		health = FlxMath.bound(health + judgementHealthWeighting[judgement], 0, 100);
 

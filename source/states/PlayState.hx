@@ -27,6 +27,7 @@ import haxe.io.Path;
 import sprites.game.Character;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
+import subStates.ResultsScreen;
 import sys.FileSystem;
 import ui.editors.NotificationManager;
 import ui.game.JudgementDisplay;
@@ -44,6 +45,7 @@ class PlayState extends FNFState
 	public var chars:Array<String>;
 	public var isPaused:Bool = false;
 	public var hasStarted:Bool = false;
+	public var hasEnded:Bool = false;
 	public var camHUD:FlxCamera;
 	public var timing:MusicTiming;
 	public var songInst:FlxSound;
@@ -70,8 +72,9 @@ class PlayState extends FNFState
 	public var notificationManager:NotificationManager;
 	public var events:Array<PlayStateEvent> = [];
 	public var camZooming:Bool = true;
-	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
+	public var camBop:Bool = true;
+	public var camBopMult:Float = 1;
 
 	var clearCache:Bool = false;
 
@@ -228,6 +231,7 @@ class PlayState extends FNFState
 	public function startSong(timing:MusicTiming)
 	{
 		hasStarted = true;
+		executeScripts("onStartSong");
 	}
 
 	public function exit(state:FlxState, clearCache:Bool = true)
@@ -361,13 +365,40 @@ class PlayState extends FNFState
 
 	public function endSong()
 	{
+		if (hasEnded)
+			return;
+
+		hasEnded = true;
+		if (songInst.playing)
+			timing.pauseMusic();
 		lyricsDisplay.visible = false;
+		for (display in statsDisplay)
+			display.visible = false;
+		songInfoDisplay.visible = false;
 
 		var ret = executeScripts("onEndSong");
 		if (ret != Script.FUNCTION_STOP)
+			openSubState(new ResultsScreen(this));
+	}
+
+	public function killNotes()
+	{
+		for (manager in ruleset.noteManagers)
 		{
-			exit(new SongSelectState());
-			CoolUtil.playPvPMusic();
+			killLanes(manager.noteQueueLanes);
+			killLanes(manager.activeNoteLanes);
+			killLanes(manager.heldLongNoteLanes);
+			killLanes(manager.deadNoteLanes);
+		}
+		events.resize(0);
+	}
+
+	public function killLanes<T>(lanes:Array<Array<T>>)
+	{
+		for (lane in lanes)
+		{
+			while (lane.length > 0)
+				lane.shift();
 		}
 	}
 
@@ -428,7 +459,7 @@ class PlayState extends FNFState
 
 		statsDisplay = new FlxTypedGroup();
 		for (i in 0...2)
-			statsDisplay.add(new PlayerStatsDisplay(i, ruleset.scoreProcessors[i]));
+			statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
 		statsDisplay.cameras = [camHUD];
 		add(statsDisplay);
 
@@ -596,10 +627,19 @@ class PlayState extends FNFState
 
 	function handleInput(elapsed:Float)
 	{
-		if (isPaused)
+		if (isPaused || hasEnded)
 			return;
 
 		ruleset.handleInput(elapsed);
+
+		#if debug
+		if (FlxG.keys.justPressed.F1 && hasStarted)
+		{
+			camBop = false;
+			killNotes();
+			endSong();
+		}
+		#end
 
 		for (i in 0...2)
 		{
@@ -743,10 +783,10 @@ class PlayState extends FNFState
 
 	function onBarHit(bar:Int, decBar:Float)
 	{
-		if (Settings.camZooming && camZooming && FlxG.camera.zoom < 1.35)
+		if (Settings.camZooming && camZooming && camBop && FlxG.camera.zoom < 1.35)
 		{
-			FlxG.camera.zoom += 0.015 * camZoomingMult;
-			camHUD.zoom += 0.03 * camZoomingMult;
+			FlxG.camera.zoom += 0.015 * camBopMult;
+			camHUD.zoom += 0.03 * camBopMult;
 		}
 
 		executeScripts("onBarHit", [bar, decBar]);
