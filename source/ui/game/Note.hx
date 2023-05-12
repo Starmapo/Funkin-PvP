@@ -21,6 +21,10 @@ class Note extends FlxSpriteGroup
 	public var head:AnimatedSprite;
 	public var body:AnimatedSprite;
 	public var tail:AnimatedSprite;
+	public var altAnim:Bool;
+	public var heyNote:Bool;
+	public var gfSing:Bool;
+	public var noAnim:Bool;
 
 	var manager:NoteManager;
 	var playfield:Playfield;
@@ -70,6 +74,11 @@ class Note extends FlxSpriteGroup
 				flipY = !flipY;
 			tail.flipY = flipY;
 		}
+
+		altAnim = (info.type == 'Alt Animation');
+		heyNote = (info.type == 'Hey!');
+		gfSing = (info.type == 'GF Sing');
+		noAnim = (info.type == 'No Animation');
 
 		updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
 	}

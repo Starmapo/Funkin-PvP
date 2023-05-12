@@ -31,15 +31,6 @@ class InputManager implements IFlxDestroyable
 
 		if (autoplay)
 		{
-			for (lane in manager.activeNoteLanes)
-			{
-				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.startTime)
-				{
-					var note = lane[0];
-					ruleset.lanePressed.dispatch(note.info.playerLane, player);
-					handleKeyPress(manager, note);
-				}
-			}
 			for (lane in manager.heldLongNoteLanes)
 			{
 				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.endTime)
@@ -47,6 +38,15 @@ class InputManager implements IFlxDestroyable
 					var note = lane[0];
 					ruleset.laneReleased.dispatch(note.info.playerLane, player);
 					handleKeyRelease(manager, note);
+				}
+			}
+			for (lane in manager.activeNoteLanes)
+			{
+				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.startTime)
+				{
+					var note = lane[0];
+					ruleset.lanePressed.dispatch(note.info.playerLane, player);
+					handleKeyPress(manager, note);
 				}
 			}
 			return;

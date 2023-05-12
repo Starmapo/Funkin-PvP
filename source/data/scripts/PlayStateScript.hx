@@ -1,8 +1,10 @@
 package data.scripts;
 
+import data.song.NoteInfo;
 import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import states.PlayState;
+import ui.game.Note;
 
 class PlayStateScript extends Script
 {
@@ -92,10 +94,71 @@ class PlayStateScript extends Script
 		{
 			return state.getPlayerCharacter(player);
 		});
+		setVariable("getNoteCharacter", function(note:Note)
+		{
+			return state.getNoteCharacter(note);
+		});
+		setVariable("getCurrentNotes", function()
+		{
+			var notes:Array<Note> = [];
+			for (manager in state.ruleset.noteManagers)
+			{
+				pushLaneNotes(notes, manager.activeNoteLanes);
+				pushLaneNotes(notes, manager.heldLongNoteLanes);
+				pushLaneNotes(notes, manager.deadNoteLanes);
+			}
+			return notes;
+		});
+		setVariable("getActiveNotes", function()
+		{
+			var notes:Array<Note> = [];
+			for (manager in state.ruleset.noteManagers)
+				pushLaneNotes(notes, manager.activeNoteLanes);
+			return notes;
+		});
+		setVariable("getHeldNotes", function()
+		{
+			var notes:Array<Note> = [];
+			for (manager in state.ruleset.noteManagers)
+				pushLaneNotes(notes, manager.heldLongNoteLanes);
+			return notes;
+		});
+		setVariable("getDeadNotes", function()
+		{
+			var notes:Array<Note> = [];
+			for (manager in state.ruleset.noteManagers)
+				pushLaneNotes(notes, manager.deadNoteLanes);
+			return notes;
+		});
+		setVariable("getQueueNotes", function()
+		{
+			var notes:Array<NoteInfo> = [];
+			for (manager in state.ruleset.noteManagers)
+				pushLaneNoteInfos(notes, manager.noteQueueLanes);
+			return notes;
+		});
 	}
 
 	override function onError(message:String)
 	{
 		state.notificationManager.showNotification(message, ERROR);
+	}
+
+	function pushLaneNotes(to:Array<Note>, array:Array<Array<Note>>)
+	{
+		for (lane in array)
+		{
+			for (note in lane)
+				to.push(note);
+		}
+	}
+
+	function pushLaneNoteInfos(to:Array<NoteInfo>, array:Array<Array<NoteInfo>>)
+	{
+		for (lane in array)
+		{
+			for (note in lane)
+				to.push(note);
+		}
 	}
 }

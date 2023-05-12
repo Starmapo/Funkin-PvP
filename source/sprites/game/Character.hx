@@ -12,7 +12,7 @@ class Character extends DancingSprite
 {
 	static var holdTime:Float = ((1 / 24) * 4);
 
-	public var charInfo:CharacterInfo;
+	public var charInfo(default, set):CharacterInfo;
 	public var charPosX:Float;
 	public var charPosY:Float;
 	public var flipped(default, null):Bool;
@@ -34,10 +34,9 @@ class Character extends DancingSprite
 		super(x, y);
 		if (charInfo == null)
 			charInfo = CharacterInfo.loadCharacterFromName('fnf:bf');
-		this.charInfo = charInfo;
 		this.flipped = flipped;
 		this.isGF = isGF;
-		initializeCharacter();
+		this.charInfo = charInfo;
 		setCharacterPosition(x, y);
 	}
 
@@ -135,7 +134,7 @@ class Character extends DancingSprite
 
 			holdTimers[lane] = new FlxTimer().start(holdTime / FlxAnimationController.globalSpeed, function(tmr)
 			{
-				if (note.tail.visible)
+				if (note.currentlyBeingHeld && note.tail.visible)
 					playSingAnim(lane, beatLength, true);
 				else
 				{
@@ -261,6 +260,16 @@ class Character extends DancingSprite
 		});
 	}
 
+	public function setMissColor()
+	{
+		color = 0xFF565694;
+	}
+
+	public function resetColor()
+	{
+		color = intendedColor;
+	}
+
 	override function destroy()
 	{
 		super.destroy();
@@ -321,14 +330,14 @@ class Character extends DancingSprite
 			singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 	}
 
-	function setMissColor()
+	function set_charInfo(value:CharacterInfo)
 	{
-		color = 0xFF565694;
-	}
-
-	function resetColor()
-	{
-		color = intendedColor;
+		if (value != null && charInfo != value)
+		{
+			charInfo = value;
+			initializeCharacter();
+		}
+		return value;
 	}
 }
 

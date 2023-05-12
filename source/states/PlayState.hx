@@ -130,7 +130,7 @@ class PlayState extends FNFState
 
 		handleInput(elapsed);
 
-		lyricsDisplay.updateLyrics(songInst.time);
+		lyricsDisplay.updateLyrics(timing.audioPosition);
 		updateCamPosition();
 		updateCamZoom(elapsed);
 
@@ -248,6 +248,11 @@ class PlayState extends FNFState
 	public function getPlayerCharacter(player:Int)
 	{
 		return player == 0 ? opponent : bf;
+	}
+
+	public function getNoteCharacter(note:Note)
+	{
+		return note.gfSing ? gf : getPlayerCharacter(note.info.player);
 	}
 
 	public function addScript(key:String, mod:String)
@@ -413,6 +418,7 @@ class PlayState extends FNFState
 		ruleset.noteMissed.add(onNoteMissed);
 		ruleset.noteReleaseMissed.add(onNoteReleaseMissed);
 		ruleset.judgementAdded.add(onJudgementAdded);
+		ruleset.noteSpawned.add(onNoteSpawned);
 
 		judgementDisplay = new FlxTypedGroup();
 		for (i in 0...2)
@@ -534,6 +540,15 @@ class PlayState extends FNFState
 		for (event in events)
 			event.startTime -= getEventEarlyTrigger(event);
 		events.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
+
+		for (manager in ruleset.noteManagers)
+		{
+			for (lane in manager.activeNoteLanes)
+			{
+				for (note in lane)
+					onNoteSpawned(note);
+			}
+		}
 	}
 
 	function precache()
@@ -631,7 +646,7 @@ class PlayState extends FNFState
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note, judgement);
 
-		var char = getPlayerCharacter(player);
+		var char = getNoteCharacter(note);
 		char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate);
 
 		executeScripts("onNoteHit", [note, judgement]);
@@ -639,8 +654,7 @@ class PlayState extends FNFState
 
 	function onNoteMissed(note:Note)
 	{
-		var player = note.info.player;
-		var char = getPlayerCharacter(player);
+		var char = getNoteCharacter(note);
 		char.playMissAnim(note.info.playerLane);
 
 		executeScripts("onNoteMissed", [note]);
@@ -648,8 +662,7 @@ class PlayState extends FNFState
 
 	function onNoteReleaseMissed(note:Note)
 	{
-		var player = note.info.player;
-		var char = getPlayerCharacter(player);
+		var char = getNoteCharacter(note);
 		char.playMissAnim(note.info.playerLane);
 
 		executeScripts("onNoteReleaseMissed", [note]);
@@ -660,6 +673,11 @@ class PlayState extends FNFState
 		judgementDisplay.members[player].showJudgement(judgement);
 
 		executeScripts("onJudgementAdded", [judgement, player]);
+	}
+
+	function onNoteSpawned(note:Note)
+	{
+		executeScripts("onNoteSpawned", [note]);
 	}
 
 	function startCountdown()

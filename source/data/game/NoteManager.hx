@@ -6,6 +6,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import ui.game.Note;
 
 class NoteManager extends FlxBasic
@@ -88,6 +89,19 @@ class NoteManager extends FlxBasic
 				}
 			}
 		}
+	}
+
+	override function destroy()
+	{
+		config = null;
+		noteQueueLanes = destroyLanes(noteQueueLanes);
+		activeNoteLanes = destroyLanes(activeNoteLanes);
+		deadNoteLanes = destroyLanes(deadNoteLanes);
+		heldLongNoteLanes = destroyLanes(heldLongNoteLanes);
+		ruleset = null;
+		song = null;
+		velocityPositionMarkers = null;
+		super.destroy();
 	}
 
 	public function getPositionFromTime(time:Float)
@@ -284,7 +298,9 @@ class NoteManager extends FlxBasic
 
 	public function createPoolObject(info:NoteInfo)
 	{
-		activeNoteLanes[info.playerLane].push(new Note(info, this, ruleset.playfields[player]));
+		var note = new Note(info, this, ruleset.playfields[player]);
+		activeNoteLanes[info.playerLane].push(note);
+		ruleset.noteSpawned.dispatch(note);
 	}
 
 	public function killPoolObject(note:Note)
@@ -314,6 +330,7 @@ class NoteManager extends FlxBasic
 			var info = lane.shift();
 			note.initializeObject(info);
 			activeNoteLanes[info.playerLane].push(note);
+			ruleset.noteSpawned.dispatch(note);
 		}
 		else
 			note.destroy();
@@ -324,20 +341,6 @@ class NoteManager extends FlxBasic
 		heldLongNoteLanes[note.info.playerLane].push(note);
 		note.currentlyBeingHeld = true;
 		note.head.visible = false;
-	}
-
-	override function destroy()
-	{
-		config = null;
-		noteQueueLanes = destroyLanes(noteQueueLanes);
-		activeNoteLanes = destroyLanes(activeNoteLanes);
-		deadNoteLanes = destroyLanes(deadNoteLanes);
-		heldLongNoteLanes = destroyLanes(heldLongNoteLanes);
-		ruleset = null;
-		song = null;
-		velocityPositionMarkers = null;
-
-		super.destroy();
 	}
 
 	function destroyLanes<T:IFlxDestroyable>(array:Array<Array<T>>):Array<Array<T>>
