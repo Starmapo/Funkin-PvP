@@ -1,4 +1,3 @@
-health bars
 dying
 add missing settings
 rest of the characters, stages and events
