@@ -126,6 +126,13 @@ class ResultsScreen extends FlxSubState
 		}
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+		camSubState = null;
+	}
+
 	function compare(a:Float, b:Float)
 	{
 		if (a > b)

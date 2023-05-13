@@ -6,6 +6,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import haxe.io.Path;
+import haxe.xml.Access;
 import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
@@ -93,9 +94,7 @@ class Paths
 	{
 		var originalPath = path;
 
-		var imagePath = path;
-		if (!imagePath.endsWith('.png'))
-			imagePath += '.png';
+		var imagePath = path + '.png';
 		if (!exists(imagePath))
 		{
 			imagePath = getPath('images/$imagePath', mod);
@@ -136,6 +135,52 @@ class Paths
 
 		FlxG.log.warn('Spritesheet \"$originalPath\" not found.');
 		return null;
+	}
+
+	public static function isSpritesheet(path:String, ?mod:String):Bool
+	{
+		var imagePath = path + '.png';
+		if (!exists(imagePath))
+		{
+			imagePath = getPath('images/$imagePath', mod);
+			path = Path.withoutExtension(imagePath);
+		}
+		if (!exists(imagePath))
+			return false;
+
+		var xml = getContent('$path.xml');
+		if (xml != null)
+		{
+			try
+			{
+				var data = new Access(Xml.parse(xml).firstElement());
+				if (data.hasNode.SubTexture)
+					return true;
+			}
+			catch (e) {}
+		}
+
+		var txt = getContent('$path.txt');
+		if (txt != null)
+		{
+			var lines = txt.trim().split('\n');
+			if (lines.length > 0 && lines[0].contains('='))
+				return true;
+		}
+
+		var json = getContent('$path.json');
+		if (json != null)
+		{
+			try
+			{
+				var data = Json.parse(json);
+				if (data.frames != null)
+					return true;
+			}
+			catch (e) {}
+		}
+
+		return false;
 	}
 
 	public static function getSound(path:String, ?mod:String):Sound

@@ -21,7 +21,7 @@ class PlayerStatsDisplay extends FlxGroup
 	{
 		super();
 		if (startY == null)
-			startY = FlxG.height * 0.8;
+			startY = FlxG.height - 200;
 		this.scoreProcessor = scoreProcessor;
 
 		var pos = 5 + (FlxG.width / 2) * scoreProcessor.player;

@@ -30,6 +30,7 @@ import subStates.PauseSubState;
 import subStates.ResultsScreen;
 import sys.FileSystem;
 import ui.editors.NotificationManager;
+import ui.game.HealthBar;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
 import ui.game.Note;
@@ -75,6 +76,7 @@ class PlayState extends FNFState
 	public var camZoomingDecay:Float = 1;
 	public var camBop:Bool = true;
 	public var camBopMult:Float = 1;
+	public var healthBars:FlxTypedGroup<HealthBar>;
 
 	var clearCache:Bool = false;
 
@@ -170,6 +172,8 @@ class PlayState extends FNFState
 
 	override function openSubState(subState:FlxSubState)
 	{
+		setScripts('subState', subState);
+
 		if (isPaused)
 		{
 			FlxG.sound.pause();
@@ -192,6 +196,8 @@ class PlayState extends FNFState
 	override function closeSubState()
 	{
 		super.closeSubState();
+
+		setScripts('subState', null);
 
 		if (isPaused)
 		{
@@ -304,12 +310,6 @@ class PlayState extends FNFState
 		var ret:Dynamic = Script.FUNCTION_CONTINUE;
 		for (script in scripts)
 		{
-			if (script.closed)
-			{
-				scripts.remove(script);
-				continue;
-			}
-
 			if (exclusions.contains(script.path))
 				continue;
 
@@ -322,6 +322,20 @@ class PlayState extends FNFState
 		}
 
 		return ret;
+	}
+
+	public function setScripts(name:String, value:Dynamic, ?exclusions:Array<String>)
+	{
+		if (exclusions == null)
+			exclusions = [];
+
+		for (script in scripts)
+		{
+			if (exclusions.contains(script.path))
+				continue;
+
+			script.setVariable(name, value);
+		}
 	}
 
 	public function triggerEvent(name:String, params:Array<String>)
@@ -508,6 +522,14 @@ class PlayState extends FNFState
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
 		add(bf);
+
+		healthBars = new FlxTypedGroup();
+		for (i in 0...2)
+			healthBars.add(new HealthBar(ruleset.scoreProcessors[i], getPlayerCharacter(i).charInfo));
+		healthBars.cameras = [camHUD];
+		add(healthBars);
+
+		FlxG.debugger.track(healthBars.members[0].icon);
 	}
 
 	function initStage()

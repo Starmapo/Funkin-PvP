@@ -4,7 +4,7 @@ import flixel.FlxG;
 
 class Mods
 {
-	public static final modsPath:String = 'mods/';
+	public static final modsPath:String = 'mods';
 	public static var currentMods:Array<Mod> = [];
 	public static var currentMod:String = '';
 	public static var pvpMusic:Array<String> = [];

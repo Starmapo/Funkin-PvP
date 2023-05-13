@@ -146,9 +146,9 @@ class ReceptorData extends JsonObject
 		staticFPS = readFloat(data.staticFPS, 0, 0, 1000, 2);
 		pressedFPS = readFloat(data.pressedFPS, 24, 0, 1000, 2);
 		confirmFPS = readFloat(data.confirmFPS, 24, 0, 1000, 2);
-		staticOffset = readFloatArray(data.staticOffset, [], null, 2, -1000, 1000, 2);
-		pressedOffset = readFloatArray(data.pressedOffset, [], null, 2, -1000, 1000, 2);
-		confirmOffset = readFloatArray(data.confirmOffset, [], null, 2, -1000, 1000, 2);
+		staticOffset = readFloatArray(data.staticOffset, [], null, 2, null, null, 2);
+		pressedOffset = readFloatArray(data.pressedOffset, [], null, 2, null, null, 2);
+		confirmOffset = readFloatArray(data.confirmOffset, [], null, 2, null, null, 2);
 	}
 
 	override function destroy()
@@ -183,6 +183,6 @@ class SplashData extends JsonObject
 	{
 		anim = readString(data.anim);
 		fps = readFloat(data.fps, 24, 0, 1000, 2);
-		offset = readFloatArray(data.offset, [], null, 2, -1000, 1000, 2);
+		offset = readFloatArray(data.offset, [], null, 2, null, null, 2);
 	}
 }

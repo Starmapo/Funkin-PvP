@@ -32,7 +32,12 @@ class AnimatedSprite extends FlxSprite
 		data = resolveAnimData(data);
 
 		if (data.indices != null && data.indices.length > 0)
-			animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
+		{
+			if (data.atlasName != null && data.atlasName.length > 0)
+				animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
+			else
+				animation.add(data.name, data.indices, data.fps, data.loop, data.flipX, data.flipY);
+		}
 		else
 			animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
 
@@ -112,10 +117,9 @@ typedef AnimData =
 	name:String,
 
 	/**
-		The animation's name in the atlas.
+		The animation's name in the atlas. Optional if you input `indices`.
 	**/
-	atlasName:String,
-
+	?atlasName:String,
 	/**
 		Optional, an array of numbers indicating what frames to play in what order.
 	**/

@@ -211,7 +211,7 @@ class AnimInfo extends JsonObject
 		indices = readIntArray(data.indices, []);
 		fps = readFloat(data.fps, 24, 0, 1000, 2);
 		loop = readBool(data.loop);
-		offset = readFloatArray(data.offset, [0, 0], null, 2, -1000, 1000, 2);
+		offset = readFloatArray(data.offset, [0, 0], null, 2, null, null, 2);
 		nextAnim = readString(data.nextAnim);
 	}
 

@@ -267,6 +267,14 @@ class CoolUtil
 		return ' [Marvelous FC]';
 	}
 
+	public static function getColorFromArray(array:Array<Int>)
+	{
+		if (array == null || array.length < 3)
+			return new FlxColor();
+		
+		return FlxColor.fromRGB(array[0], array[1], array[2]);
+	}
+
 	@:generic
 	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{

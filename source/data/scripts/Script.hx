@@ -107,6 +107,9 @@ class Script implements IFlxDestroyable
 
 	public function execute(func:String, ?args:Array<Any>):Dynamic
 	{
+		if (closed)
+			return FUNCTION_CONTINUE;
+
 		var lastMod = Mods.currentMod;
 		Mods.currentMod = mod;
 
