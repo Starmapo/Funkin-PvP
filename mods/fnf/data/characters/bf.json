@@ -65,7 +65,7 @@
 			"nextAnim": "",
 			"fps": 24,
 			"loop": false,
-			"name": "singDOWN-miss",
+			"name": "singDOWNmiss",
 			"offset": [
 				-21,
 				-22
@@ -89,7 +89,7 @@
 			"nextAnim": "",
 			"fps": 24,
 			"loop": false,
-			"name": "singLEFT-miss",
+			"name": "singLEFTmiss",
 			"offset": [
 				39,
 				19
@@ -113,7 +113,7 @@
 			"nextAnim": "",
 			"fps": 24,
 			"loop": false,
-			"name": "singRIGHT-miss",
+			"name": "singRIGHTmiss",
 			"offset": [
 				-32,
 				16
@@ -137,7 +137,7 @@
 			"nextAnim": "",
 			"fps": 24,
 			"loop": false,
-			"name": "singUP-miss",
+			"name": "singUPmiss",
 			"offset": [
 				2,
 				30

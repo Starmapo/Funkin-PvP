@@ -172,7 +172,7 @@ class Character extends DancingSprite
 		if (lane < 0 || lane > singAnimations.length - 1)
 			return;
 
-		var anim = singAnimations[lane] + '-miss';
+		var anim = singAnimations[lane] + 'miss';
 		var fallback = false;
 		if (!animation.exists(anim) && allowMissColor)
 		{
