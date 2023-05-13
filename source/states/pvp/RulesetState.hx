@@ -125,7 +125,7 @@ class RulesetState extends FNFState
 		addSetting({
 			name: 'canDie',
 			displayName: 'Can Die',
-			description: "If enabled, health bars are added and players can die by losing all of their health.",
+			description: "If enabled, players can die by losing all of their health.",
 			type: CHECKBOX,
 			defaultValue: true
 		});

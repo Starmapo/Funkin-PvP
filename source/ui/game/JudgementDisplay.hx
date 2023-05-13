@@ -38,7 +38,7 @@ class JudgementDisplay extends FlxSprite
 		updateHitbox();
 
 		x = (((FlxG.width / 2) - width) / 2) + (FlxG.width / 2) * player;
-		y = (FlxG.height * 0.7) - (height / 2) - 5;
+		y = (FlxG.height * 0.7) - (height / 2) - 20;
 
 		if (posTween != null)
 			posTween.cancel();

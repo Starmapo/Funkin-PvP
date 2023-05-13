@@ -10,7 +10,7 @@ class ScoreProcessor implements IFlxDestroyable
 	public var player:Int;
 	public var score:Int;
 	public var accuracy:Float;
-	public var health:Float = 100;
+	public var health:Float = 50;
 	public var combo:Int;
 	public var maxCombo:Int;
 	public var failed(get, never):Bool;
@@ -20,8 +20,8 @@ class ScoreProcessor implements IFlxDestroyable
 	public var currentJudgements:Map<Judgement, Int> = [MARV => 0, SICK => 0, GOOD => 0, BAD => 0, SHIT => 0, MISS => 0];
 	public var judgementWindow:Map<Judgement, Float> = new Map();
 	public var judgementScoreWeighting:Map<Judgement, Int> = [MARV => 100, SICK => 50, GOOD => 25, BAD => 10, SHIT => 5, MISS => 0];
-	public var judgementHealthWeighting:Map<Judgement, Float> = [MARV => 0.5, SICK => 0.4, GOOD => 0.2, BAD => 0.1, SHIT => 0, MISS => -3];
-	public var judgementAccuracyWeighting:Map<Judgement, Float> = [MARV => 100, SICK => 100, GOOD => 70, BAD => 40, SHIT => 0, MISS => -50];
+	public var judgementHealthWeighting:Map<Judgement, Float> = [MARV => 0.5, SICK => 0.4, GOOD => 0.2, BAD => -3, SHIT => -4.5, MISS => -6];
+	public var judgementAccuracyWeighting:Map<Judgement, Float> = [MARV => 100, SICK => 98.25, GOOD => 65, BAD => 25, SHIT => -100, MISS => -50];
 	public var windowReleaseMultiplier:Map<Judgement, Float> = [MARV => 1.5, SICK => 1.5, GOOD => 1.5, BAD => 1.5, SHIT => 1.5];
 	public var totalJudgementCount(get, never):Int;
 

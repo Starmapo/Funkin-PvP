@@ -385,6 +385,7 @@ class PlayState extends FNFState
 		hasEnded = true;
 		if (songInst.playing)
 			timing.pauseMusic();
+		songInst.time = songInst.length;
 		lyricsDisplay.visible = false;
 		for (display in statsDisplay)
 			display.visible = false;
@@ -475,7 +476,6 @@ class PlayState extends FNFState
 		for (i in 0...2)
 			statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
 		statsDisplay.cameras = [camHUD];
-		add(statsDisplay);
 
 		songInfoDisplay = new SongInfoDisplay(song, songInst);
 		songInfoDisplay.cameras = [camHUD];
@@ -529,7 +529,7 @@ class PlayState extends FNFState
 		healthBars.cameras = [camHUD];
 		add(healthBars);
 
-		FlxG.debugger.track(healthBars.members[0].icon);
+		add(statsDisplay);
 	}
 
 	function initStage()
@@ -800,6 +800,9 @@ class PlayState extends FNFState
 
 	function onBeatHit(beat:Int, decBeat:Float)
 	{
+		for (bar in healthBars)
+			bar.onBeatHit();
+
 		executeScripts("onBeatHit", [beat, decBeat]);
 	}
 

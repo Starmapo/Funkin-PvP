@@ -1,5 +1,6 @@
 package ui.game;
 
+import data.Settings;
 import data.char.CharacterInfo;
 import data.game.ScoreProcessor;
 import flixel.FlxG;
@@ -15,6 +16,7 @@ class HealthBar extends FlxSpriteGroup
 	public var bg:FlxSprite;
 	public var bar:FlxBar;
 	public var icon:HealthIcon;
+	public var bopScale:Float = 1.2;
 
 	var scoreProcessor:ScoreProcessor;
 	var right:Bool;
@@ -27,7 +29,7 @@ class HealthBar extends FlxSpriteGroup
 		var barWidth = Std.int((FlxG.width / 2) - 200);
 
 		right = scoreProcessor.player > 0;
-		setPosition((FlxG.width / 2 - barWidth) / 2 + (right ? FlxG.width / 2 : 0), 650);
+		setPosition((FlxG.width / 2 - barWidth) / 2 + (right ? FlxG.width / 2 : 0), 620);
 
 		bg = new FlxSprite().makeGraphic(barWidth, 20, FlxColor.BLACK);
 		add(bg);
@@ -50,14 +52,41 @@ class HealthBar extends FlxSpriteGroup
 	{
 		super.update(elapsed);
 
-		var percent = bar.percent / 100;
-		var addX = (right ? bar.width - (bar.width * percent) : bar.width * percent);
-		icon.setPosition(bar.x + addX - (icon.width / 2), bar.y + (bar.height / 2) - (icon.height / 2));
+		var scale = CoolUtil.reverseLerp(1, icon.scale.x, 0.15 * Settings.playbackRate);
+		icon.scale.set(scale, scale);
+		icon.offsetScale.set(scale, scale);
+		icon.updateOffset();
+
+		var anim = 'normal';
+		if (bar.percent > 80)
+			anim = 'winning';
+		else if (bar.percent < 20)
+			anim = 'losing';
+		if (icon.animation.name != anim && icon.animation.exists(anim))
+			icon.playAnim(anim);
+
+		updateIconPos();
 	}
 
 	override function destroy()
 	{
 		super.destroy();
 		scoreProcessor = null;
+	}
+
+	public function onBeatHit()
+	{
+		icon.scale.set(bopScale, bopScale);
+		icon.offsetScale.set(bopScale, bopScale);
+		icon.updateOffset();
+
+		updateIconPos();
+	}
+
+	public function updateIconPos()
+	{
+		var percent = bar.percent / 100;
+		var addX = (right ? bar.width - (bar.width * percent) : bar.width * percent);
+		icon.setPosition(bar.x + addX - (icon.width / 2), bar.y + (bar.height / 2) - (icon.height / 2));
 	}
 }
