@@ -17,9 +17,11 @@ import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.animation.FlxAnimationController;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
@@ -77,8 +79,10 @@ class PlayState extends FNFState
 	public var camBop:Bool = true;
 	public var camBopMult:Float = 1;
 	public var healthBars:FlxTypedGroup<HealthBar>;
-
-	var clearCache:Bool = false;
+	public var died:Bool = false;
+	public var clearCache:Bool = false;
+	public var deathBG:FlxSprite;
+	public var deathTimer:FlxTimer;
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -140,6 +144,9 @@ class PlayState extends FNFState
 		updateCamZoom(elapsed);
 
 		checkEvents();
+		checkDeath();
+
+		updateDeathBG();
 
 		executeScripts("onUpdatePost", [elapsed]);
 	}
@@ -382,18 +389,23 @@ class PlayState extends FNFState
 		if (hasEnded)
 			return;
 
-		hasEnded = true;
-		if (songInst.playing)
-			timing.pauseMusic();
-		songInst.time = songInst.length;
-		lyricsDisplay.visible = false;
-		for (display in statsDisplay)
-			display.visible = false;
-		songInfoDisplay.visible = false;
-
 		var ret = executeScripts("onEndSong");
 		if (ret != Script.FUNCTION_STOP)
+		{
+			hasEnded = true;
+			camBop = false;
+			if (songInst.playing)
+				timing.pauseMusic();
+			songInst.time = songInst.length;
+			lyricsDisplay.visible = false;
+			for (display in statsDisplay)
+				display.visible = false;
+			songInfoDisplay.visible = false;
+			for (manager in ruleset.inputManagers)
+				manager.stopInput();
+
 			openSubState(new ResultsScreen(this));
+		}
 	}
 
 	public function killNotes()
@@ -415,6 +427,15 @@ class PlayState extends FNFState
 			while (lane.length > 0)
 				lane.shift();
 		}
+	}
+
+	public function focusOnChar(char:Character)
+	{
+		var camOffsetX = char.charInfo.cameraOffset[0];
+		var camOffsetY = char.charInfo.cameraOffset[1];
+		if (char.flipped)
+			camOffsetX *= -1;
+		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
 	}
 
 	function initCameras()
@@ -534,6 +555,11 @@ class PlayState extends FNFState
 
 	function initStage()
 	{
+		deathBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		deathBG.scrollFactor.set();
+		deathBG.visible = false;
+		updateDeathBG();
+
 		camFollow = new FlxObject();
 		updateCamPosition();
 		add(camFollow);
@@ -630,11 +656,7 @@ class PlayState extends FNFState
 			case GF:
 				gf;
 		}
-		var camOffsetX = char.charInfo.cameraOffset[0];
-		var camOffsetY = char.charInfo.cameraOffset[1];
-		if (char.flipped)
-			camOffsetX *= -1;
-		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
+		focusOnChar(char);
 	}
 
 	function updateCamZoom(elapsed:Float)
@@ -657,7 +679,6 @@ class PlayState extends FNFState
 		#if debug
 		if (FlxG.keys.justPressed.F1 && hasStarted)
 		{
-			camBop = false;
 			killNotes();
 			endSong();
 		}
@@ -795,11 +816,17 @@ class PlayState extends FNFState
 
 	function onStepHit(step:Int, decStep:Float)
 	{
+		if (hasEnded)
+			return;
+
 		executeScripts("onStepHit", [step, decStep]);
 	}
 
 	function onBeatHit(beat:Int, decBeat:Float)
 	{
+		if (hasEnded)
+			return;
+
 		for (bar in healthBars)
 			bar.onBeatHit();
 
@@ -808,6 +835,9 @@ class PlayState extends FNFState
 
 	function onBarHit(bar:Int, decBar:Float)
 	{
+		if (hasEnded)
+			return;
+
 		if (Settings.camZooming && camZooming && camBop && FlxG.camera.zoom < 1.35)
 		{
 			FlxG.camera.zoom += 0.015 * camBopMult;
@@ -815,6 +845,72 @@ class PlayState extends FNFState
 		}
 
 		executeScripts("onBarHit", [bar, decBar]);
+	}
+
+	function updateDeathBG()
+	{
+		var zoom = Math.min(FlxG.camera.zoom, 1);
+		deathBG.setGraphicSize(Math.ceil(FlxG.width / zoom), Math.ceil(FlxG.height / zoom));
+		deathBG.updateHitbox();
+	}
+
+	function onDeath(player:Int)
+	{
+		died = true;
+
+		timing.pauseMusic();
+		killNotes();
+
+		if (members.indexOf(deathBG) < 0)
+		{
+			var pos = FlxMath.minInt(FlxMath.minInt(members.indexOf(gf), members.indexOf(opponent)), members.indexOf(bf));
+			insert(pos, deathBG);
+		}
+		deathBG.visible = true;
+
+		var char = getPlayerCharacter(player);
+		if (char.allowDanceTimer.active)
+			char.allowDanceTimer.cancel();
+		for (timer in char.holdTimers)
+		{
+			if (timer != null && timer.active)
+				timer.cancel();
+		}
+		char.stopAnimCallback();
+		char.angularVelocity = 360;
+		FlxTween.tween(char.scale, {x: 0, y: 0}, 0.8, {
+			onComplete: function(_)
+			{
+				char.visible = false;
+			}
+		});
+
+		focusOnChar(char);
+		disableCamFollow = true;
+
+		if (deathTimer == null)
+			deathTimer = new FlxTimer().start(2, function(_)
+			{
+				endSong();
+			});
+
+		FlxG.camera.flash(FlxColor.WHITE, 0.5);
+		FlxG.sound.play(Paths.getSound('death/default'));
+
+		executeScripts("onDeath", [player]);
+	}
+
+	function checkDeath()
+	{
+		if (!Settings.canDie || died || hasEnded)
+			return;
+
+		for (i in 0...2)
+		{
+			var score = ruleset.scoreProcessors[i];
+			if (score.failed)
+				onDeath(i);
+		}
 	}
 }
 

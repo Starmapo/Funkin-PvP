@@ -183,6 +183,8 @@ class SongSelectState extends FNFState
 class PlayerSongSelect extends FlxGroup
 {
 	static var lastSelectedGroups:Array<Int> = [0, 0];
+	static var lastSelectedSongs:Array<Int> = [0, 0];
+	static var lastSelectedDiffs:Array<Int> = [0, 0];
 
 	public var viewing:Int = 0;
 	public var ready:Bool = false;
@@ -235,6 +237,16 @@ class PlayerSongSelect extends FlxGroup
 		setControlsEnabled(false);
 
 		groupMenuList.selectItem(lastSelectedGroups[player]);
+
+		songMenuList.resetGroup(groupMenuList.selectedItem);
+		lastGroupReset = groupMenuList.selectedItem.name;
+		songMenuList.selectItem(lastSelectedSongs[player]);
+
+		difficultyMenuList.resetSong(songMenuList.selectedItem);
+		lastSongReset = songMenuList.selectedItem.name;
+		difficultyMenuList.selectItem(lastSelectedDiffs[player]);
+
+		updateCamFollow(groupMenuList.selectedItem);
 		camera.snapToTarget();
 	}
 
@@ -314,6 +326,7 @@ class PlayerSongSelect extends FlxGroup
 		if (lastGroupReset != item.name)
 		{
 			songMenuList.resetGroup(item);
+			songMenuList.selectItem(0);
 			lastGroupReset = item.name;
 		}
 		else
@@ -332,6 +345,7 @@ class PlayerSongSelect extends FlxGroup
 	function onSongChange(item:SongMenuItem)
 	{
 		updateCamFollow(item);
+		lastSelectedSongs[player] = item.ID;
 	}
 
 	function onSongAccept(item:SongMenuItem)
@@ -342,6 +356,7 @@ class PlayerSongSelect extends FlxGroup
 		if (lastSongReset != item.name)
 		{
 			difficultyMenuList.resetSong(item);
+			difficultyMenuList.selectItem(0);
 			lastSongReset = item.name;
 		}
 		else
@@ -353,6 +368,7 @@ class PlayerSongSelect extends FlxGroup
 	function onDiffChange(item:DifficultyMenuItem)
 	{
 		updateCamFollow(item);
+		lastSelectedDiffs[player] = item.ID;
 	}
 
 	function onDiffAccept(item:DifficultyMenuItem)
@@ -521,9 +537,8 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 		for (song in songGroup.songs)
 		{
 			var item = createItem(song, (midpoint.y + (100 * length)));
-			add(item);
+			addItem(item.name, item);
 		}
-		selectItem(0);
 		midpoint.put();
 	}
 }
@@ -585,10 +600,8 @@ class DifficultyMenuList extends TypedMenuList<DifficultyMenuItem>
 		for (diff in songData.difficulties)
 		{
 			var item = createItem(diff, songData, (midpoint.y + (100 * length)));
-			item.ID = length;
-			add(item);
+			addItem(item.name, item);
 		}
-		selectItem(0);
 		midpoint.put();
 	}
 }

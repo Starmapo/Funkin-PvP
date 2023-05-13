@@ -17,6 +17,10 @@ import ui.game.PlayerStatsDisplay;
 
 class ResultsScreen extends FlxSubState
 {
+	static final PLAYER_1_WIN:String = 'Player 1 wins!';
+	static final PLAYER_2_WIN:String = 'Player 2 wins!';
+	static final TIE:String = 'Tie!';
+
 	var state:PlayState;
 	var camSubState:FlxCamera;
 	var canExit:Bool = false;
@@ -33,29 +37,42 @@ class ResultsScreen extends FlxSubState
 		cameras = [camSubState];
 
 		var scores = [for (i in 0...2) state.ruleset.scoreProcessors[i]];
-		var conditions = [
-			for (i in 0...2)
-				switch (Settings.winCondition)
-				{
-					case ACCURACY:
-						FlxMath.roundDecimal(scores[i].accuracy, 2);
-					case MISSES:
-						scores[i].currentJudgements[Judgement.MISS];
-					default:
-						scores[i].score;
-				}
-		];
-		var winText = switch (Settings.winCondition)
+		var winText = '';
+		if (state.died)
 		{
-			case MISSES:
-				compareReverse(conditions[0], conditions[1]);
-			default:
-				compare(conditions[0], conditions[1]);
+			if (!scores[0].failed)
+				winText = PLAYER_1_WIN;
+			else if (!scores[1].failed)
+				winText = PLAYER_2_WIN;
+			else
+				winText = TIE;
+		}
+		else
+		{
+			var conditions = [
+				for (i in 0...2)
+					switch (Settings.winCondition)
+					{
+						case ACCURACY:
+							FlxMath.roundDecimal(scores[i].accuracy, 2);
+						case MISSES:
+							scores[i].currentJudgements[Judgement.MISS];
+						default:
+							scores[i].score;
+					}
+			];
+			winText = switch (Settings.winCondition)
+			{
+				case MISSES:
+					compareReverse(conditions[0], conditions[1]);
+				default:
+					compare(conditions[0], conditions[1]);
+			}
 		}
 		var winner = switch (winText)
 		{
-			case 'Player 1 wins!': 0;
-			case 'Player 2 wins!': 1;
+			case PLAYER_1_WIN: 0;
+			case PLAYER_2_WIN: 1;
 			default: -1;
 		}
 
@@ -69,15 +86,18 @@ class ResultsScreen extends FlxSubState
 			var display = new PlayerStatsDisplay(scores[i], 32, 180);
 			add(display);
 
-			var color = (winner < 0 || i == winner) ? FlxColor.LIME : FlxColor.RED;
-			switch (Settings.winCondition)
+			if (!state.died)
 			{
-				case SCORE:
-					display.scoreText.color = color;
-				case ACCURACY:
-					display.gradeText.color = color;
-				case MISSES:
-					display.missText.color = color;
+				var color = (winner < 0 || i == winner) ? FlxColor.LIME : FlxColor.RED;
+				switch (Settings.winCondition)
+				{
+					case SCORE:
+						display.scoreText.color = color;
+					case ACCURACY:
+						display.gradeText.color = color;
+					case MISSES:
+						display.missText.color = color;
+				}
 			}
 
 			var addX = (i > 0 ? (FlxG.width / 2) : 0);
@@ -136,20 +156,20 @@ class ResultsScreen extends FlxSubState
 	function compare(a:Float, b:Float)
 	{
 		if (a > b)
-			return 'Player 1 wins!';
+			return PLAYER_1_WIN;
 		else if (b > a)
-			return 'Player 2 wins!';
+			return PLAYER_2_WIN;
 		else
-			return 'Tie!';
+			return TIE;
 	}
 
 	function compareReverse(a:Float, b:Float)
 	{
 		if (a < b)
-			return 'Player 1 wins!';
+			return PLAYER_1_WIN;
 		else if (b < a)
-			return 'Player 2 wins!';
+			return PLAYER_2_WIN;
 		else
-			return 'Tie!';
+			return TIE;
 	}
 }

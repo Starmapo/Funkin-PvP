@@ -240,6 +240,8 @@ class PlayerCharacterSelect extends FlxGroup
 		charMenuList.resetGroup(groupMenuList.selectedItem);
 		lastGroupReset = groupMenuList.selectedItem.name;
 		charMenuList.selectItem(lastSelectedChars[player]);
+
+		updateCamFollow(groupMenuList.selectedItem);
 		camera.snapToTarget();
 	}
 
@@ -313,6 +315,7 @@ class PlayerCharacterSelect extends FlxGroup
 		if (lastGroupReset != item.name)
 		{
 			charMenuList.resetGroup(item);
+			charMenuList.selectItem(0);
 			lastGroupReset = item.name;
 		}
 		else
@@ -524,9 +527,8 @@ class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
 		for (song in charGroup.chars)
 		{
 			var item = createItem(song, midpoint.y);
-			add(item);
+			addItem(item.name, item);
 		}
-		selectItem(0);
 		midpoint.put();
 	}
 }

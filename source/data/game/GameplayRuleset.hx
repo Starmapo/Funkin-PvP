@@ -34,10 +34,10 @@ class GameplayRuleset implements IFlxDestroyable
 		startDelay = timing.startDelay;
 		for (i in 0...2)
 		{
-			scoreProcessors.push(new ScoreProcessor(this, song, i));
-			inputManagers.push(new InputManager(this, i));
 			playfields.push(new Playfield(i));
+			scoreProcessors.push(new ScoreProcessor(this, song, i));
 			noteManagers.push(new NoteManager(this, song, i));
+			inputManagers.push(new InputManager(this, i));
 		}
 	}
 

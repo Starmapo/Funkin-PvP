@@ -13,6 +13,7 @@ class InputManager implements IFlxDestroyable
 	var player:Int;
 	var realPlayer:Int;
 	var controls:Controls;
+	var manager:NoteManager;
 
 	public function new(ruleset:GameplayRuleset, player:Int)
 	{
@@ -21,14 +22,13 @@ class InputManager implements IFlxDestroyable
 		realPlayer = player;
 		autoplay = PlayerSettings.players[player].config.autoplay;
 		controls = PlayerSettings.players[player].controls;
+		manager = ruleset.noteManagers[player];
 
 		setInputBinds();
 	}
 
 	public function handleInput(elapsed:Float)
 	{
-		var manager = ruleset.noteManagers[player];
-
 		if (autoplay)
 		{
 			for (lane in manager.heldLongNoteLanes)
@@ -37,7 +37,7 @@ class InputManager implements IFlxDestroyable
 				{
 					var note = lane[0];
 					ruleset.laneReleased.dispatch(note.info.playerLane, player);
-					handleKeyRelease(manager, note);
+					handleKeyRelease(note);
 				}
 			}
 			for (lane in manager.activeNoteLanes)
@@ -46,7 +46,7 @@ class InputManager implements IFlxDestroyable
 				{
 					var note = lane[0];
 					ruleset.lanePressed.dispatch(note.info.playerLane, player);
-					handleKeyPress(manager, note);
+					handleKeyPress(note);
 				}
 			}
 			return;
@@ -76,14 +76,14 @@ class InputManager implements IFlxDestroyable
 				ruleset.lanePressed.dispatch(lane, player);
 				var note = manager.getClosestTap(lane);
 				if (note != null)
-					handleKeyPress(manager, note);
+					handleKeyPress(note);
 			}
 			else
 			{
 				ruleset.laneReleased.dispatch(lane, player);
 				var note = manager.getClosestRelease(lane);
 				if (note != null)
-					handleKeyRelease(manager, note);
+					handleKeyRelease(note);
 			}
 		}
 	}
@@ -101,6 +101,18 @@ class InputManager implements IFlxDestroyable
 		controls = null;
 	}
 
+	public function stopInput()
+	{
+		for (i in 0...bindingStore.length)
+		{
+			bindingStore[i].pressed = false;
+			ruleset.laneReleased.dispatch(i, player);
+			var note = manager.getClosestRelease(i);
+			if (note != null)
+				handleKeyRelease(note);
+		}
+	}
+
 	function setInputBinds()
 	{
 		bindingStore = [
@@ -111,7 +123,7 @@ class InputManager implements IFlxDestroyable
 		];
 	}
 
-	function handleKeyPress(manager:NoteManager, note:Note)
+	function handleKeyPress(note:Note)
 	{
 		var time = manager.currentAudioPosition;
 		var hitDifference = autoplay ? 0 : note.info.startTime - time;
@@ -149,7 +161,7 @@ class InputManager implements IFlxDestroyable
 		}
 	}
 
-	function handleKeyRelease(manager:NoteManager, note:Note)
+	function handleKeyRelease(note:Note)
 	{
 		var lane = note.info.playerLane;
 		var time = manager.currentAudioPosition;
