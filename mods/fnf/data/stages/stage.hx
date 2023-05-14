@@ -10,10 +10,13 @@ function onCreate()
 	stageFront.updateHitbox();
 	addBehindChars(stageFront);
 
-	var stageCurtains = new BGSprite('stages/stage/stagecurtains', -500, -300, 1.3, 1.3);
-	stageCurtains.scale.set(0.9, 0.9);
-	stageCurtains.updateHitbox();
-	addBehindChars(stageCurtains);
-				
+	if (!Settings.lowQuality)
+	{
+		var stageCurtains = new BGSprite('stages/stage/stagecurtains', -500, -300, 1.3, 1.3);
+		stageCurtains.scale.set(0.9, 0.9);
+		stageCurtains.updateHitbox();
+		addOverChars(stageCurtains);
+	}
+	
 	close();
 }

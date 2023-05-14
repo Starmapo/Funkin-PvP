@@ -33,14 +33,7 @@ class HealthIcon extends AnimatedSprite
 
 		var path = Path.withoutExtension(imagePath);
 
-		info = null;
-		var jsonPath = path + '.json';
-		if (Paths.exists(jsonPath))
-		{
-			var json = Paths.getJson(jsonPath);
-			if (json != null)
-				info = new IconInfo(json);
-		}
+		info = IconInfo.loadIconFromName(icon);
 		if (info == null)
 			info = new IconInfo({});
 

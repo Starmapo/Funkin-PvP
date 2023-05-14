@@ -21,6 +21,8 @@ class ResultsScreen extends FlxSubState
 	static final PLAYER_2_WIN:String = 'Player 2 wins!';
 	static final TIE:String = 'Tie!';
 
+	public var winner:Int;
+
 	var state:PlayState;
 	var camSubState:FlxCamera;
 	var canExit:Bool = false;
@@ -69,7 +71,7 @@ class ResultsScreen extends FlxSubState
 					compare(conditions[0], conditions[1]);
 			}
 		}
-		var winner = switch (winText)
+		winner = switch (winText)
 		{
 			case PLAYER_1_WIN: 0;
 			case PLAYER_2_WIN: 1;

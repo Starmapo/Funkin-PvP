@@ -40,7 +40,7 @@ class VideoPage extends BaseSettingsPage
 				return value + ' FPS';
 			},
 			minValue: 60,
-			maxValue: 480,
+			maxValue: 360,
 			changeAmount: 10,
 			holdDelay: 0.05
 		}, function()
@@ -124,6 +124,20 @@ class VideoPage extends BaseSettingsPage
 		}, function()
 		{
 			Main.updateColorFilter();
+		});
+		addSetting({
+			name: 'lowQuality',
+			displayName: 'Low Quality',
+			description: "If enabled, some background details are disabled, improving performance and reducing loading times.",
+			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
+			name: 'shaders',
+			displayName: 'Shaders',
+			description: "Whether gameplay shaders are enabled.",
+			type: CHECKBOX,
+			defaultValue: true
 		});
 	}
 }

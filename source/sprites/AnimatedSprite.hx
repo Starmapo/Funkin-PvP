@@ -24,7 +24,6 @@ class AnimatedSprite extends FlxSprite
 		super(x, y);
 		this.frames = frames;
 		this.scale.set(scale, scale);
-		offsetScale.set(scale, scale);
 	}
 
 	/**

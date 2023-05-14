@@ -1,7 +1,42 @@
 package data.char;
 
+import haxe.io.Path;
+
 class IconInfo extends JsonObject
 {
+	public static function loadIcon(path:String, ?mod:String)
+	{
+		if (!Paths.exists(path))
+			return null;
+
+		var json:Dynamic = Paths.getJson(path, mod);
+		if (json == null)
+			return null;
+
+		var iconInfo = new IconInfo(json);
+		iconInfo.directory = Path.normalize(Path.directory(path));
+		iconInfo.iconName = new Path(path).file;
+		iconInfo.mod = iconInfo.directory.split('/')[1];
+		return iconInfo;
+	}
+
+	public static function loadIconFromName(name:String)
+	{
+		var nameInfo = CoolUtil.getNameInfo(name);
+		if (nameInfo.mod.length > 0)
+		{
+			var path = 'mods/${nameInfo.mod}/data/icons/${nameInfo.name}.json';
+			if (Paths.exists(path))
+				return loadIcon(path);
+		}
+
+		var path = 'mods/${Mods.currentMod}/data/icons/$name.json';
+		if (Paths.exists(path))
+			return loadIcon(path);
+
+		return loadIcon('mods/fnf/data/icons/$name.json');
+	}
+
 	public var frames:Int;
 	public var antialiasing:Bool;
 	public var positionOffset:Array<Float>;
@@ -13,6 +48,9 @@ class IconInfo extends JsonObject
 	public var winningAnim:String;
 	public var winningFPS:Float;
 	public var winningOffset:Array<Float>;
+	public var directory:String = '';
+	public var iconName:String = '';
+	public var mod:String = '';
 
 	public function new(data:Dynamic)
 	{

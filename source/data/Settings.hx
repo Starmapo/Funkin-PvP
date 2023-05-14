@@ -18,6 +18,8 @@ class Settings
 	public static var brightness:Int = 0;
 	public static var gamma:Float = 1;
 	public static var filter:FilterType = NONE;
+	public static var lowQuality:Bool = false;
+	public static var shaders:Bool = true;
 	// Audio
 	public static var musicVolume:Float = 1;
 	public static var effectVolume:Float = 1;
@@ -61,6 +63,8 @@ class Settings
 		load('brightness');
 		load('gamma');
 		load('filter');
+		load('lowQuality');
+		load('shaders');
 		load('masterVolume');
 		load('musicVolume');
 		load('effectVolume');
@@ -123,6 +127,8 @@ class Settings
 		save('brightness');
 		save('gamma');
 		save('filter');
+		save('lowQuality');
+		save('shaders');
 		save('masterVolume');
 		save('musicVolume');
 		save('effectVolume');

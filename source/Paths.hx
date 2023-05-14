@@ -174,7 +174,7 @@ class Paths
 			try
 			{
 				var data = Json.parse(json);
-				if (data.frames != null)
+				if (data != null && data.frames != null)
 					return true;
 			}
 			catch (e) {}

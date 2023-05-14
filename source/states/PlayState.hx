@@ -404,7 +404,10 @@ class PlayState extends FNFState
 			for (manager in ruleset.inputManagers)
 				manager.stopInput();
 
-			openSubState(new ResultsScreen(this));
+			var screen = new ResultsScreen(this);
+			if (screen.winner > -1)
+				focusOnChar(getPlayerCharacter(screen.winner));
+			openSubState(screen);
 		}
 	}
 
@@ -640,7 +643,7 @@ class PlayState extends FNFState
 
 	function updateCamPosition()
 	{
-		if (disableCamFollow)
+		if (disableCamFollow || died || hasEnded)
 			return;
 
 		var camFocus = song.getCameraFocusAt(timing.audioPosition);
@@ -886,7 +889,6 @@ class PlayState extends FNFState
 		});
 
 		focusOnChar(char);
-		disableCamFollow = true;
 
 		if (deathTimer == null)
 			deathTimer = new FlxTimer().start(2, function(_)
