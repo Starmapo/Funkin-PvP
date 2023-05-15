@@ -666,7 +666,7 @@ class PlayState extends FNFState
 	{
 		if (camZooming)
 		{
-			var lerp = (0.05 * camZoomingDecay * Settings.playbackRate);
+			var lerp = (elapsed * 3 * camZoomingDecay * Settings.playbackRate);
 			FlxG.camera.zoom = CoolUtil.reverseLerp(defaultCamZoom, FlxG.camera.zoom, lerp);
 			camHUD.zoom = CoolUtil.reverseLerp(1, camHUD.zoom, lerp);
 		}

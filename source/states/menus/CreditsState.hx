@@ -288,7 +288,7 @@ class CreditsMenuList extends TypedMenuList<CreditsMenuItem>
 
 class CreditsMenuItem extends TextMenuItem
 {
-	static var LERP:Float = 0.16;
+	static var LERP:Float = 9.6;
 
 	public var targetY:Int = 0;
 
@@ -301,8 +301,8 @@ class CreditsMenuItem extends TextMenuItem
 
 	override function update(elapsed:Float)
 	{
-		x = CoolUtil.lerp(x, getX(), LERP);
-		y = CoolUtil.lerp(y, getY(), LERP);
+		x = CoolUtil.lerp(x, getX(), elapsed * LERP);
+		y = CoolUtil.lerp(y, getY(), elapsed * LERP);
 
 		super.update(elapsed);
 	}

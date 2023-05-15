@@ -107,7 +107,7 @@ class MainMenuState extends FNFState
 	override function update(elapsed:Float)
 	{
 		var bgY = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
-		bg.y = CoolUtil.lerp(bg.y, bgY, 0.1);
+		bg.y = CoolUtil.lerp(bg.y, bgY, elapsed * 6);
 
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
 		{
@@ -212,6 +212,7 @@ class MainMenuItem extends TextMenuItem
 	public var fadeMusic:Bool = false;
 
 	var targetScale:Float = 1;
+	var lerp:Float = 15;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, fireInstantly:Bool = false, fadeMusic:Bool = false)
 	{
@@ -224,10 +225,7 @@ class MainMenuItem extends TextMenuItem
 	override function update(elapsed:Float)
 	{
 		if (label != null)
-		{
-			var lerp = 0.25;
-			label.scale.set(CoolUtil.lerp(label.scale.x, targetScale, lerp), CoolUtil.lerp(label.scale.y, targetScale, lerp));
-		}
+			label.scale.set(CoolUtil.lerp(label.scale.x, targetScale, elapsed * lerp), CoolUtil.lerp(label.scale.y, targetScale, elapsed * lerp));
 
 		super.update(elapsed);
 	}

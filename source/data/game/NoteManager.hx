@@ -61,7 +61,7 @@ class NoteManager extends FlxBasic
 
 	override function update(elapsed:Float)
 	{
-		updateAlpha();
+		updateAlpha(elapsed);
 		updateAndScoreActiveObjects();
 		updateAndScoreHeldObjects();
 		updateDeadObjects();
@@ -465,17 +465,17 @@ class NoteManager extends FlxBasic
 		}
 	}
 
-	function updateAlpha()
+	function updateAlpha(elapsed:Float)
 	{
 		if (onBreak && alpha > breakAlpha)
 		{
-			alpha -= CoolUtil.getLerp(0.05);
+			alpha -= CoolUtil.getLerp(elapsed * 3);
 			if (alpha < breakAlpha)
 				alpha = breakAlpha;
 		}
 		else if (!onBreak && alpha < 1)
 		{
-			alpha += CoolUtil.getLerp(0.05);
+			alpha += CoolUtil.getLerp(elapsed * 3);
 			if (alpha > 1)
 				alpha = 1;
 		}

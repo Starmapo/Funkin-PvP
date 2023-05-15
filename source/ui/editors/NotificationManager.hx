@@ -23,7 +23,7 @@ class NotificationManager extends FlxTypedGroup<Notification>
 			var text = members[i];
 			if (text == null)
 				continue;
-			text.y = CoolUtil.lerp(text.y, targetY, 0.25);
+			text.y = CoolUtil.lerp(text.y, targetY, elapsed * 15);
 			targetY += text.height + 10;
 		}
 	}

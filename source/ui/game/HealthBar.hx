@@ -52,7 +52,7 @@ class HealthBar extends FlxSpriteGroup
 	{
 		super.update(elapsed);
 
-		var scale = CoolUtil.reverseLerp(1, icon.scale.x, 0.15 * Settings.playbackRate);
+		var scale = CoolUtil.reverseLerp(1, icon.scale.x, elapsed * 9 * Settings.playbackRate);
 		icon.scale.set(scale, scale);
 		icon.offsetScale.set(scale, scale);
 		icon.updateOffset();
