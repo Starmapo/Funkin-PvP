@@ -25,6 +25,7 @@ class Note extends FlxSpriteGroup
 	public var heyNote:Bool;
 	public var gfSing:Bool;
 	public var noAnim:Bool;
+	public var texture(default, set):String;
 
 	var manager:NoteManager;
 	var playfield:Playfield;
@@ -43,13 +44,15 @@ class Note extends FlxSpriteGroup
 		noteSkin = playfield.noteSkin;
 		config = manager.config;
 
-		initializeSprites(info);
+		initializeSprites();
 		initializeObject(info);
 	}
 
 	public function initializeObject(info:NoteInfo)
 	{
 		this.info = info;
+
+		texture = '';
 
 		tint = FlxColor.WHITE;
 
@@ -154,6 +157,53 @@ class Note extends FlxSpriteGroup
 		tint = FlxColor.fromRGBFloat(0.3, 0.3, 0.3);
 	}
 
+	public function reloadTexture()
+	{
+		var tex = texture;
+		if (tex.length < 1)
+			tex = noteSkin.notesImage;
+
+		var frames = Paths.getSpritesheet(tex);
+		if (frames == null)
+			frames = Paths.getSpritesheet('notes/default');
+
+		head.frames = frames;
+		head.addAnim({
+			name: 'head',
+			atlasName: noteSkin.notes[info.playerLane].headAnim,
+			fps: 0,
+			loop: false
+		}, true);
+		head.scale.set(noteSkin.notesScale, noteSkin.notesScale);
+		head.updateHitbox();
+		bodyOffset = head.height / 2;
+		longNoteSizeDifference = head.height / 2;
+
+		body.frames = frames;
+		body.addAnim({
+			name: 'body',
+			atlasName: noteSkin.notes[info.playerLane].bodyAnim,
+			fps: 0,
+			loop: false
+		}, true);
+		body.scale.copyFrom(head.scale);
+		body.updateHitbox();
+		body.x = x + (head.width / 2) - (body.width / 2);
+
+		tail.frames = frames;
+		tail.addAnim({
+			name: 'tail',
+			atlasName: noteSkin.notes[info.playerLane].tailAnim,
+			fps: 0,
+			loop: false
+		}, true);
+		tail.scale.copyFrom(head.scale);
+		tail.updateHitbox();
+		tail.x = x + (head.width / 2) - (tail.width / 2);
+
+		updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
+	}
+
 	override function destroy()
 	{
 		super.destroy();
@@ -168,48 +218,15 @@ class Note extends FlxSpriteGroup
 		svDirectionChanges = null;
 	}
 
-	function initializeSprites(info:NoteInfo)
+	function initializeSprites()
 	{
-		var frames = Paths.getSpritesheet(noteSkin.notesImage);
-
 		head = new AnimatedSprite();
-		head.frames = frames;
-		head.addAnim({
-			name: 'head',
-			atlasName: noteSkin.notes[info.playerLane].headAnim,
-			fps: 0,
-			loop: false
-		}, true);
 		head.antialiasing = noteSkin.antialiasing;
-		head.scale.set(noteSkin.notesScale, noteSkin.notesScale);
-		head.updateHitbox();
-		bodyOffset = head.height / 2;
-		longNoteSizeDifference = head.height / 2;
 
 		body = new AnimatedSprite();
-		body.frames = frames;
-		body.addAnim({
-			name: 'body',
-			atlasName: noteSkin.notes[info.playerLane].bodyAnim,
-			fps: 0,
-			loop: false
-		}, true);
-		body.scale.copyFrom(head.scale);
-		body.updateHitbox();
-		body.x = (head.width / 2) - (body.width / 2);
 
 		tail = new AnimatedSprite();
-		tail.frames = frames;
-		tail.addAnim({
-			name: 'tail',
-			atlasName: noteSkin.notes[info.playerLane].tailAnim,
-			fps: 0,
-			loop: false
-		}, true);
 		tail.antialiasing = noteSkin.antialiasing;
-		tail.scale.copyFrom(head.scale);
-		tail.updateHitbox();
-		tail.x = (head.width / 2) - (tail.width / 2);
 
 		add(body);
 		add(tail);
@@ -227,6 +244,16 @@ class Note extends FlxSpriteGroup
 		{
 			tint = value;
 			tail.color = body.color = head.color = tint;
+		}
+		return value;
+	}
+
+	function set_texture(value:String)
+	{
+		if (value != null && texture != value)
+		{
+			texture = value;
+			reloadTexture();
 		}
 		return value;
 	}

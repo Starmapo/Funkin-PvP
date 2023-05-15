@@ -1,2 +1,3 @@
+add icons for song select
 add missing settings
-rest of the characters, stages and events
+rest of the fnf characters, stages and events

@@ -104,7 +104,9 @@ class Playfield extends FlxGroup
 
 	public function onLanePressed(lane:Int)
 	{
-		receptors.members[lane].playAnim('pressed');
+		var receptor = receptors.members[lane];
+		receptor.stopAnimCallback();
+		receptor.playAnim('pressed');
 	}
 
 	public function onLaneReleased(lane:Int)
@@ -121,20 +123,15 @@ class Playfield extends FlxGroup
 	{
 		var receptor = receptors.members[note.info.playerLane];
 		receptor.stopAnimCallback();
-
 		receptor.playAnim('confirm', true);
-
 		receptor.animation.finishCallback = function(anim)
 		{
-			if (anim == 'confirm')
+			if (note.currentlyBeingHeld)
+				receptor.playAnim(anim, true);
+			else
 			{
-				if (note.currentlyBeingHeld && note.tail.visible)
-					receptor.playAnim(anim, true);
-				else
-				{
-					receptor.stopAnimCallback();
-					receptor.playAnim('static');
-				}
+				receptor.stopAnimCallback();
+				receptor.playAnim('static');
 			}
 		}
 
@@ -181,6 +178,8 @@ class Playfield extends FlxGroup
 		for (i in 0...4)
 		{
 			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1], i, noteSkin);
+			if (config.downScroll)
+				receptor.y = FlxG.height - receptor.height - 50 + noteSkin.receptorsOffset[1];
 			receptors.add(receptor);
 
 			curX += receptor.width + noteSkin.receptorsPadding;

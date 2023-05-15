@@ -1,5 +1,7 @@
 package ui.game;
 
+import data.PlayerConfig;
+import data.PlayerSettings;
 import data.Settings;
 import data.char.CharacterInfo;
 import data.game.ScoreProcessor;
@@ -25,13 +27,16 @@ class HealthBar extends FlxSpriteGroup
 	{
 		super();
 		this.scoreProcessor = scoreProcessor;
+		var player = scoreProcessor.player;
+		var config = PlayerSettings.players[player].config;
 
 		var barWidth = Std.int((FlxG.width / 2) - 200);
+		var barHeight = 20;
 
-		right = scoreProcessor.player > 0;
-		setPosition((FlxG.width / 2 - barWidth) / 2 + (right ? FlxG.width / 2 : 0), 620);
+		right = (player > 0);
+		setPosition((FlxG.width / 2 - barWidth) / 2 + (right ? FlxG.width / 2 : 0), (config.downScroll ? 100 - barHeight : FlxG.height - 100));
 
-		bg = new FlxSprite().makeGraphic(barWidth, 20, FlxColor.BLACK);
+		bg = new FlxSprite().makeGraphic(barWidth, barHeight, FlxColor.BLACK);
 		add(bg);
 
 		var healthColor = CoolUtil.getColorFromArray(charInfo.healthColors);

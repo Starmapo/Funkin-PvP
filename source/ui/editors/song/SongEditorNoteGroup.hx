@@ -377,7 +377,7 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		this.info = info;
 		noteInfo = info;
 
-		var noteGraphic = Paths.getSpritesheet('notes/NOTE_assets');
+		var noteGraphic = Paths.getSpritesheet('notes/default');
 
 		body = new AnimatedSprite(0, 0, noteGraphic);
 		body.addAnim({

@@ -1,5 +1,6 @@
 package ui.game;
 
+import data.PlayerSettings;
 import data.game.Judgement;
 import data.game.ScoreProcessor;
 import flixel.FlxG;
@@ -20,11 +21,15 @@ class PlayerStatsDisplay extends FlxGroup
 	public function new(scoreProcessor:ScoreProcessor, size:Int = 16, ?startY:Float)
 	{
 		super();
-		if (startY == null)
-			startY = FlxG.height - 200;
 		this.scoreProcessor = scoreProcessor;
+		var player = scoreProcessor.player;
+		if (startY == null)
+		{
+			var config = PlayerSettings.players[player].config;
+			startY = (config.downScroll ? 120 : FlxG.height - 200);
+		}
 
-		var pos = 5 + (FlxG.width / 2) * scoreProcessor.player;
+		var pos = 5 + (FlxG.width / 2) * player;
 
 		scoreText = new FlxText(pos, startY, (FlxG.width / 2) - 10);
 		scoreText.setFormat('VCR OSD Mono', size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);

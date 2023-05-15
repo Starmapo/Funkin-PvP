@@ -111,6 +111,7 @@ class MusicTiming implements IFlxDestroyable
 	public var checkSkippedSteps:Bool = true;
 
 	public var startDelay:Float;
+	public var dance:Bool = true;
 
 	var music:FlxSound;
 	var extraMusic:Array<FlxSound>;
@@ -373,10 +374,13 @@ class MusicTiming implements IFlxDestroyable
 
 	function beatHit(beat:Int, decBeat:Float)
 	{
-		for (sprite in dancingSprites)
+		if (dance)
 		{
-			if (sprite.canDance && beat % sprite.danceBeats == 0)
-				sprite.dance();
+			for (sprite in dancingSprites)
+			{
+				if (sprite.canDance && beat % sprite.danceBeats == 0)
+					sprite.dance();
+			}
 		}
 
 		onBeatHit.dispatch(beat, decBeat);

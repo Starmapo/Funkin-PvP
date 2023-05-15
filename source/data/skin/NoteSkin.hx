@@ -59,7 +59,7 @@ class NoteSkin extends JsonObject
 				receptors.push(new ReceptorData(r));
 		}
 		receptorsCenterAnimation = readBool(data.receptorsCenterAnimation, true);
-		receptorsImage = readString(data.receptorsImage, 'notes/NOTE_assets');
+		receptorsImage = readString(data.receptorsImage, 'notes/default');
 		receptorsOffset = readFloatArray(data.receptorsOffset, [0, 0], null, 2, -1000, 1000, 2);
 		receptorsPadding = readFloat(data.receptorsPadding, 0, -1000, 1000, 2);
 		receptorsScale = readFloat(data.receptorsScale, 1, 0.01, 100, 2);
@@ -68,7 +68,7 @@ class NoteSkin extends JsonObject
 			if (n != null)
 				notes.push(new NoteData(n));
 		}
-		notesImage = readString(data.notesImage, 'notes/NOTE_assets');
+		notesImage = readString(data.notesImage, 'notes/default');
 		notesScale = readFloat(data.notesScale, 1, 0.01, 100, 2);
 		judgementsSkin = readString(data.judgementsSkin, 'base');
 		judgementsScale = readFloat(data.judgementsScale, 1, 0.01, 100, 2);

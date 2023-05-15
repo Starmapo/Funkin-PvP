@@ -393,7 +393,7 @@ class NoteManager extends FlxBasic
 
 				ruleset.scoreProcessors[player].registerScore(MISS);
 
-				ruleset.noteMissed.dispatch(note);
+				ruleset.noteReleaseMissed.dispatch(note);
 
 				if (note.info.isLongNote)
 				{
@@ -430,7 +430,7 @@ class NoteManager extends FlxBasic
 
 		for (lane in heldLongNoteLanes)
 		{
-			while (lane.length > 0 && !lane[0].currentlyBeingHeld && currentAudioPosition > lane[0].info.endTime + window)
+			while (lane.length > 0 && currentAudioPosition > lane[0].info.endTime + window)
 			{
 				var note = lane.shift();
 

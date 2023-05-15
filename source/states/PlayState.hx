@@ -396,6 +396,7 @@ class PlayState extends FNFState
 			camBop = false;
 			if (songInst.playing)
 				timing.pauseMusic();
+			timing.checkSkippedSteps = false;
 			songInst.time = songInst.length;
 			lyricsDisplay.visible = false;
 			for (display in statsDisplay)
@@ -852,8 +853,9 @@ class PlayState extends FNFState
 
 	function updateDeathBG()
 	{
-		var zoom = Math.min(FlxG.camera.zoom, 1);
-		deathBG.setGraphicSize(Math.ceil(FlxG.width / zoom), Math.ceil(FlxG.height / zoom));
+		deathBG.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
+
+		deathBG.setGraphicSize(Math.ceil(FlxG.camera.viewWidth), Math.ceil(FlxG.camera.viewHeight));
 		deathBG.updateHitbox();
 	}
 
@@ -904,7 +906,7 @@ class PlayState extends FNFState
 
 	function checkDeath()
 	{
-		if (!Settings.canDie || died || hasEnded)
+		if (died || hasEnded)
 			return;
 
 		for (i in 0...2)
