@@ -277,7 +277,7 @@ class PlayerSongSelect extends FlxGroup
 				songMenuList.controlsEnabled = true;
 				difficultyMenuList.controlsEnabled = false;
 				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1.5 : 0.75);
-				updateCamFollow(songMenuList.selectedItem);
+				updateCamFollow(songMenuList.selectedItem.text);
 				viewing = 1;
 			}
 			else
