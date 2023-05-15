@@ -1,4 +1,4 @@
-package ui.game;
+package ui;
 
 import data.char.IconInfo;
 import haxe.io.Path;

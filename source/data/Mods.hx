@@ -42,6 +42,7 @@ typedef ModSongGroup =
 typedef ModSong =
 {
 	var name:String;
+	var icon:String;
 	var difficulties:Array<String>;
 	var directory:String;
 }

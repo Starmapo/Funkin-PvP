@@ -173,8 +173,13 @@ class BootState extends FNFState
 						var songs:Array<ModSong> = [];
 						for (i in 0...group.songs.length)
 						{
-							var song = group.songs[i];
-							var songPath = Paths.getPath('songs/$song', mod.directory);
+							var songData = group.songs[i];
+							var name = songData.name;
+							var icon:String = songData.icon;
+							if (!icon.contains(':'))
+								icon = mod.directory + ':' + icon;
+
+							var songPath = Paths.getPath('songs/$name', mod.directory);
 							var difficulties:Array<String> = [];
 							for (songFile in FileSystem.readDirectory(songPath))
 							{
@@ -183,7 +188,8 @@ class BootState extends FNFState
 							}
 							if (difficulties.length > 0)
 								songs.push({
-									name: song,
+									name: name,
+									icon: icon,
 									difficulties: difficulties,
 									directory: mod.directory
 								});

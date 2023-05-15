@@ -4,29 +4,98 @@
       "name": "Friday Night Funkin'",
 	  "bg": "bg/fnf",
       "songs": [
-        "Tutorial",
-        "Bopeebo",
-        "Fresh",
-        "Dadbattle",
-		"Spookeez",
-		"South",
-		"Monster",
-		"Pico",
-		"Philly Nice",
-		"Blammed",
-		"Satin Panties",
-		"High",
-		"M.I.L.F",
-		"Cocoa",
-		"Eggnog",
-		"Winter Horrorland",
-		"Senpai",
-		"Roses",
-		"Thorns",
-		"Ugh",
-		"Guns",
-		"Stress",
-		"Test"
+		{
+		  "name": "Tutorial",
+		  "icon": "gf"
+		},
+        {
+		  "name": "Bopeebo",
+		  "icon": "dad"
+		},
+        {
+		  "name": "Fresh",
+		  "icon": "dad"
+		},
+        {
+		  "name": "Dadbattle",
+		  "icon": "dad"
+		},
+		{
+		  "name": "Spookeez",
+		  "icon": "spooky"
+		},
+		{
+		  "name": "South",
+		  "icon": "spooky"
+		},
+		{
+		  "name": "Monster",
+		  "icon": "monster"
+		},
+		{
+		  "name": "Pico",
+		  "icon": "pico"
+		},
+		{
+		  "name": "Philly Nice",
+		  "icon": "pico"
+		},
+		{
+		  "name": "Blammed",
+		  "icon": "pico"
+		},
+		{
+		  "name": "Satin Panties",
+		  "icon": "mom"
+		},
+		{
+		  "name": "High",
+		  "icon": "mom"
+		},
+		{
+		  "name": "M.I.L.F",
+		  "icon": "mom"
+		},
+		{
+		  "name": "Cocoa",
+		  "icon": "parents"
+		},
+		{
+		  "name": "Eggnog",
+		  "icon": "parents"
+		},
+		{
+		  "name": "Winter Horrorland",
+		  "icon": "monster"
+		},
+		{
+		  "name": "Senpai",
+		  "icon": "senpai"
+		},
+		{
+		  "name": "Roses",
+		  "icon": "senpai"
+		},
+		{
+		  "name": "Thorns",
+		  "icon": "spirit"
+		},
+		{
+		  "name": "Ugh",
+		  "icon": "tankman"
+		},
+		{
+		  "name": "Guns",
+		  "icon": "tankman"
+		},
+		{
+		  "name": "Stress",
+		  "icon": "tankman"
+		},
+		{
+		  "name": "Test",
+		  "icon": "bf-pixel"
+		}
       ]
     }
   ]

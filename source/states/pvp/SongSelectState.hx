@@ -20,6 +20,7 @@ import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
+import ui.HealthIcon;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
 
@@ -330,12 +331,12 @@ class PlayerSongSelect extends FlxGroup
 			lastGroupReset = item.name;
 		}
 		else
-			updateCamFollow(songMenuList.selectedItem);
+			updateCamFollow(songMenuList.selectedItem.text);
 		viewing = 1;
 		CoolUtil.playScrollSound();
 	}
 
-	function updateCamFollow(item:MenuItem)
+	function updateCamFollow(item:FlxSprite)
 	{
 		var midpoint = item.getMidpoint();
 		camFollow.y = midpoint.y;
@@ -344,7 +345,7 @@ class PlayerSongSelect extends FlxGroup
 
 	function onSongChange(item:SongMenuItem)
 	{
-		updateCamFollow(item);
+		updateCamFollow(item.text);
 		lastSelectedSongs[player] = item.ID;
 	}
 
@@ -536,36 +537,54 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 		clear();
 		for (song in songGroup.songs)
 		{
-			var item = createItem(song, (midpoint.y + (100 * length)));
+			var item = createItem(song, (midpoint.y + (160 * length)));
 			addItem(item.name, item);
 		}
 		midpoint.put();
 	}
 }
 
-class SongMenuItem extends TextMenuItem
+class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 {
 	public var songData:ModSong;
+	public var text:FlxText;
+	public var icon:HealthIcon;
 
-	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
+	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 15;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, songData:ModSong)
 	{
-		super(x, y, name, callback);
+		var label = new FlxSpriteGroup();
+
+		super(x, y, label, name, callback);
 		this.songData = songData;
 
-		label.text = songData.name;
-		if (label.width > maxWidth)
+		text = new FlxText(0, 0, 0, songData.name);
+		text.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		text.antialiasing = true;
+		label.add(text);
+
+		icon = new HealthIcon(0, text.height / 2, songData.icon);
+		icon.y -= (icon.height / 2);
+		label.add(icon);
+		maxWidth -= icon.width;
+
+		if (text.width > maxWidth)
 		{
-			var ratio = maxWidth / label.width;
-			label.size = Math.floor(label.size * ratio);
+			var ratio = maxWidth / text.width;
+			text.size = Math.floor(text.size * ratio);
 		}
+		icon.x = text.width + 5;
+
+		setEmptyBackground();
 	}
 
 	override function destroy()
 	{
 		super.destroy();
 		songData = null;
+		text = null;
+		icon = null;
 	}
 }
 
