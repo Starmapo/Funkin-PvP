@@ -47,6 +47,7 @@ class AudioPage extends BaseSettingsPage
 			maxValue: 300,
 			holdMult: 2
 		});
+		/*
 		addSetting({
 			name: 'smoothAudioTiming',
 			displayName: 'Smooth Audio Timing',
@@ -54,5 +55,6 @@ class AudioPage extends BaseSettingsPage
 			type: CHECKBOX,
 			defaultValue: false
 		});
+		*/
 	}
 }

@@ -1,5 +1,6 @@
 package data.game;
 
+import data.song.NoteInfo;
 import data.song.Song;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
@@ -57,8 +58,47 @@ class GameplayRuleset implements IFlxDestroyable
 
 	public function handleInput(elapsed:Float)
 	{
-		for (inputManager in inputManagers)
-			inputManager.handleInput(elapsed);
+		for (manager in inputManagers)
+			manager.handleInput(elapsed);
+	}
+
+	public function stopInput()
+	{
+		for (manager in inputManagers)
+			manager.stopInput();
+	}
+
+	public function killNotes()
+	{
+		for (manager in noteManagers)
+		{
+			killInfoLanes(manager.noteQueueLanes);
+			killNoteLanes(manager.activeNoteLanes);
+			killNoteLanes(manager.heldLongNoteLanes);
+			killNoteLanes(manager.deadNoteLanes);
+		}
+	}
+
+	public function killInfoLanes(lanes:Array<Array<NoteInfo>>)
+	{
+		for (lane in lanes)
+		{
+			while (lane.length > 0)
+				lane.shift();
+		}
+	}
+
+	public function killNoteLanes(lanes:Array<Array<Note>>)
+	{
+		for (lane in lanes)
+		{
+			while (lane.length > 0)
+			{
+				var note = lane.shift();
+				note.currentlyBeingHeld = false;
+				note.destroy();
+			}
+		}
 	}
 
 	public function destroy()

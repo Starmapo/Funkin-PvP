@@ -3,10 +3,8 @@ package data.game;
 import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxBasic;
-import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal.FlxTypedSignal;
 import ui.game.Note;
 
 class NoteManager extends FlxBasic

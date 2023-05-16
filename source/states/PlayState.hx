@@ -133,7 +133,11 @@ class PlayState extends FNFState
 		// after the sound is finished playing, its time is reset back to 0 for some reason
 		// so i gotta set it manually
 		if (instEnded)
+		{
 			songInst.time = songInst.length;
+			if (timing.time < songInst.time)
+				timing.setTime(songInst.time);
+		}
 
 		executeScripts("onUpdate", [elapsed]);
 
@@ -418,8 +422,7 @@ class PlayState extends FNFState
 			}
 			if (songInfoDisplay != null)
 				songInfoDisplay.visible = false;
-			for (manager in ruleset.inputManagers)
-				manager.stopInput();
+			ruleset.stopInput();
 
 			var screen = new ResultsScreen(this);
 			if (screen.winner > -1)
@@ -430,23 +433,8 @@ class PlayState extends FNFState
 
 	public function killNotes()
 	{
-		for (manager in ruleset.noteManagers)
-		{
-			killLanes(manager.noteQueueLanes);
-			killLanes(manager.activeNoteLanes);
-			killLanes(manager.heldLongNoteLanes);
-			killLanes(manager.deadNoteLanes);
-		}
+		ruleset.killNotes();
 		events.resize(0);
-	}
-
-	public function killLanes<T>(lanes:Array<Array<T>>)
-	{
-		for (lane in lanes)
-		{
-			while (lane.length > 0)
-				lane.shift();
-		}
 	}
 
 	public function focusOnChar(char:Character)
@@ -467,22 +455,22 @@ class PlayState extends FNFState
 
 	function initSong()
 	{
-		songInst = FlxG.sound.load(Paths.getSongInst(song));
-		songInst.onComplete = function()
+		songInst = FlxG.sound.load(Paths.getSongInst(song), 1, false, null, false, false, null, function()
 		{
 			instEnded = true;
-		}
+			songInst.stop();
+			songInst.time = songInst.length;
+		});
 		songInst.pitch = Settings.playbackRate;
 
 		var vocals = Paths.getSongVocals(song);
 		if (vocals != null)
-			songVocals = FlxG.sound.load(vocals);
+			songVocals = FlxG.sound.load(vocals, 1, false, null, false, false, null, function()
+			{
+				songVocals.volume = 0;
+			});
 		else
 			songVocals = FlxG.sound.list.add(new FlxSound());
-		songVocals.onComplete = function()
-		{
-			songVocals.volume = 0;
-		}
 		songVocals.pitch = Settings.playbackRate;
 
 		timing = new MusicTiming(songInst, song.timingPoints, true, song.timingPoints[0].beatLength * 5, [songVocals], startSong);

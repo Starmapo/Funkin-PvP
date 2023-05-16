@@ -134,7 +134,7 @@ class Character extends DancingSprite
 
 			holdTimers[lane] = new FlxTimer().start(holdTime / FlxAnimationController.globalSpeed, function(tmr)
 			{
-				if (note.currentlyBeingHeld && note.tail.visible)
+				if (note.exists && note.currentlyBeingHeld && note.tail.visible)
 					playSingAnim(lane, beatLength, true);
 				else
 				{

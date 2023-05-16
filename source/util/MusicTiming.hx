@@ -161,8 +161,15 @@ class MusicTiming implements IFlxDestroyable
 			time += elapsed * 1000 * music.pitch;
 			updateAudioPosition();
 			updateCurStep();
-			return;
+
+			if (time < 0)
+				return;
 		}
+
+		updateTime(elapsed);
+		resyncExtraMusic();
+		updateAudioPosition();
+		updateCurStep();
 
 		if (!hasStarted)
 		{
@@ -175,11 +182,6 @@ class MusicTiming implements IFlxDestroyable
 			if (onStart != null)
 				onStart(this);
 		}
-
-		updateTime(elapsed);
-		resyncExtraMusic();
-		updateAudioPosition();
-		updateCurStep();
 	}
 
 	public function destroy()
@@ -272,31 +274,18 @@ class MusicTiming implements IFlxDestroyable
 		if (music._paused || paused)
 			return;
 
-		if (Settings.smoothAudioTiming)
-		{
-			time += elapsed * 1000 * music.pitch;
+		time += elapsed * 1000 * music.pitch;
 
-			var timeOutOfThreshold = time < music.time || time > music.time + (SYNC_THRESHOLD * music.pitch);
-			var checkTime = music.time - previousTime;
-			var needsRoutineSync = checkTime >= ROUTINE_SYNC_TIME || checkTime <= -ROUTINE_SYNC_TIME;
+		if (!music.playing)
+			return;
 
-			if (!timeOutOfThreshold && !needsRoutineSync && previousTime != 0)
-				return;
+		var threshold = (SYNC_THRESHOLD * music.pitch);
+		var timeOutOfThreshold = time < music.time - threshold || time > music.time + threshold;
+		if (!timeOutOfThreshold && previousTime != 0)
+			return;
 
-			previousTime = time = music.time;
-		}
-		else
-		{
-			if (music.playing)
-				time = music.time;
-			else
-			{
-				if (time < music.time)
-					time = music.time;
-				
-				time += elapsed * 1000 * music.pitch;
-			}
-		}
+		// FlxG.log.add('Resynced: $time, ${music.time}');
+		previousTime = time = music.time;
 	}
 
 	function resyncExtraMusic()
@@ -317,7 +306,7 @@ class MusicTiming implements IFlxDestroyable
 
 	function updateAudioPosition()
 	{
-		audioPosition = time + Settings.globalOffset * music.pitch;
+		audioPosition = time + Math.round(Settings.globalOffset * music.pitch);
 
 		FlxG.watch.addQuick('Song Playing', music.playing);
 		FlxG.watch.addQuick('Song Time', music.time);
