@@ -23,7 +23,6 @@ class GameplayRuleset implements IFlxDestroyable
 	public var noteReleaseMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 	public var judgementAdded:FlxTypedSignal<Judgement->Int->Void> = new FlxTypedSignal();
 	public var noteSpawned:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
-	public var startDelay:Float;
 	public var timing:MusicTiming;
 
 	var song:Song;
@@ -32,7 +31,6 @@ class GameplayRuleset implements IFlxDestroyable
 	{
 		this.song = song;
 		this.timing = timing;
-		startDelay = timing.startDelay;
 		for (i in 0...2)
 		{
 			playfields.push(new Playfield(i));

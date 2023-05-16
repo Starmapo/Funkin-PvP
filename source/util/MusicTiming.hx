@@ -110,7 +110,6 @@ class MusicTiming implements IFlxDestroyable
 	**/
 	public var checkSkippedSteps:Bool = true;
 
-	public var startDelay:Float;
 	public var dance:Bool = true;
 	public var paused:Bool = false;
 
@@ -121,14 +120,6 @@ class MusicTiming implements IFlxDestroyable
 	var oldStep:Int = -1;
 	var dancingSprites:Array<DancingSprite> = [];
 
-	/**
-		Creates a new timing object.
-		@param music        The music to base the timing off of. Note that it should be pitched beforehand.
-		@param timingPoints	The timing points to use for step/beat/bar calculations.
-		@param startDelay   The time to wait before playing the music.
-		@param extraMusic	Extra music objects to sync with the main music.
-		@param onStart		A callback for when the music starts playing.
-	**/
 	public function new(music:FlxSound, ?timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = true, startDelay:Float = 0, ?onBeatHit:Int->Float->Void,
 			?extraMusic:Array<FlxSound>, ?onStart:MusicTiming->Void)
 	{
@@ -143,7 +134,6 @@ class MusicTiming implements IFlxDestroyable
 		this.timingPoints = timingPoints;
 		this.checkSkippedSteps = checkSkippedSteps;
 		this.extraMusic = extraMusic;
-		this.startDelay = startDelay;
 		this.onStart = onStart;
 		if (onBeatHit != null)
 			this.onBeatHit.add(onBeatHit);
