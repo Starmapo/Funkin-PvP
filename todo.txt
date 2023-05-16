@@ -1,2 +1,9 @@
-add missing settings
+pause music
+discord rich presence
+judgement windows presets
+add kade engine settings
+add forever engine settings
+add andromeda engine settings
+add leather engine settings
 rest of the fnf characters, stages and events
+force default stage setting

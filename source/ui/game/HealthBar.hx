@@ -51,6 +51,8 @@ class HealthBar extends FlxSpriteGroup
 		icon = new HealthIcon(0, 0, iconName);
 		icon.flipX = right;
 		add(icon);
+
+		alpha = Settings.healthBarAlpha;
 	}
 
 	override function update(elapsed:Float)

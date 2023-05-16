@@ -93,11 +93,6 @@ class VideoPage extends BaseSettingsPage
 			description: "Change how vibrant the game looks.",
 			type: PERCENT,
 			defaultValue: 1,
-			displayFunction: function(value)
-			{
-				var value:Float = value;
-				return value * 100 + '%';
-			},
 			minValue: 0.1,
 			maxValue: 1
 		}, function()

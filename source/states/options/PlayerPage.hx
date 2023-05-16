@@ -68,11 +68,18 @@ class PlayerPage extends Page
 			defaultValue: true
 		});
 		addSetting({
+			name: 'noReset',
+			displayName: 'Disable Reset Button',
+			description: "If enabled, pressing RESET won't kill you.",
+			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
 			name: 'autoplay',
 			displayName: 'Autoplay',
 			description: "Whether to let the game play this player's side.",
 			type: CHECKBOX,
-			defaultValue: true
+			defaultValue: false
 		});
 		addSetting({
 			displayName: 'Change Controls',

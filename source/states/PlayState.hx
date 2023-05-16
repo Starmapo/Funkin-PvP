@@ -83,6 +83,7 @@ class PlayState extends FNFState
 	public var deathBG:FlxSprite;
 	public var deathTimer:FlxTimer;
 	public var isComplete(get, never):Bool;
+	public var backgroundCover:FlxSprite;
 
 	var instEnded:Bool = false;
 
@@ -189,6 +190,10 @@ class PlayState extends FNFState
 		scripts = FlxDestroyUtil.destroyArray(scripts);
 		notificationManager = null;
 		events = null;
+		healthBars = null;
+		deathBG = null;
+		deathTimer = null;
+		backgroundCover = null;
 	}
 
 	override function openSubState(subState:FlxSubState)
@@ -481,6 +486,15 @@ class PlayState extends FNFState
 
 	function initUI()
 	{
+		if (Settings.backgroundBrightness < 1)
+		{
+			backgroundCover = new FlxSprite().makeGraphic(1, 1, FlxColor.fromRGBFloat(0, 0, 0, 1 - Settings.backgroundBrightness));
+			backgroundCover.setGraphicSize(FlxG.width, FlxG.height);
+			backgroundCover.updateHitbox();
+			backgroundCover.cameras = [camHUD];
+			add(backgroundCover);
+		}
+
 		ruleset = new GameplayRuleset(song, timing);
 		for (playfield in ruleset.playfields)
 		{
@@ -567,11 +581,14 @@ class PlayState extends FNFState
 
 		if (!Settings.hideHUD)
 		{
-			healthBars = new FlxTypedGroup();
-			for (i in 0...2)
-				healthBars.add(new HealthBar(ruleset.scoreProcessors[i], getPlayerCharacter(i).charInfo));
-			healthBars.cameras = [camHUD];
-			add(healthBars);
+			if (Settings.healthBarAlpha > 0)
+			{
+				healthBars = new FlxTypedGroup();
+				for (i in 0...2)
+					healthBars.add(new HealthBar(ruleset.scoreProcessors[i], getPlayerCharacter(i).charInfo));
+				healthBars.cameras = [camHUD];
+				add(healthBars);
+			}
 
 			add(statsDisplay);
 		}
@@ -930,13 +947,14 @@ class PlayState extends FNFState
 
 	function checkDeath()
 	{
-		if (died || hasEnded)
+		if (died || !hasStarted || hasEnded)
 			return;
 
 		for (i in 0...2)
 		{
 			var score = ruleset.scoreProcessors[i];
-			if (score.failed)
+			var reset = (!PlayerSettings.players[i].config.noReset && PlayerSettings.checkPlayerAction(i, RESET_P));
+			if (score.failed || reset)
 				onDeath(i);
 		}
 	}

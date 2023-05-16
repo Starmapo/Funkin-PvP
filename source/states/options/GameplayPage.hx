@@ -23,6 +23,15 @@ class GameplayPage extends BaseSettingsPage
 			defaultValue: true
 		});
 		addSetting({
+			name: 'backgroundBrightness',
+			displayName: 'Background Brightness',
+			description: "Change how visible the background elements should be.",
+			type: PERCENT,
+			defaultValue: 1,
+			minValue: 0,
+			maxValue: 1
+		});
+		addSetting({
 			name: 'hideHUD',
 			displayName: 'Hide HUD',
 			description: "If enabled, hides most HUD elements.",
@@ -41,6 +50,15 @@ class GameplayPage extends BaseSettingsPage
 				TimeDisplay.PERCENTAGE,
 				TimeDisplay.DISABLED
 			]
+		});
+		addSetting({
+			name: 'healthBarAlpha',
+			displayName: 'Health Bars Opacity',
+			description: "Change how visible the health bars should be.",
+			type: PERCENT,
+			defaultValue: 1,
+			minValue: 0,
+			maxValue: 1
 		});
 		addSetting({
 			name: 'camZooming',

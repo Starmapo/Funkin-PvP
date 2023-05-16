@@ -14,13 +14,15 @@ class InputManager implements IFlxDestroyable
 	var realPlayer:Int;
 	var controls:Controls;
 	var manager:NoteManager;
+	var config:PlayerConfig;
 
 	public function new(ruleset:GameplayRuleset, player:Int)
 	{
 		this.ruleset = ruleset;
 		this.player = player;
 		realPlayer = player;
-		autoplay = PlayerSettings.players[player].config.autoplay;
+		config = PlayerSettings.players[player].config;
+		autoplay = config.autoplay;
 		controls = PlayerSettings.players[player].controls;
 		manager = ruleset.noteManagers[player];
 
@@ -99,6 +101,7 @@ class InputManager implements IFlxDestroyable
 		bindingStore = null;
 		ruleset = null;
 		controls = null;
+		config = null;
 	}
 
 	public function stopInput()

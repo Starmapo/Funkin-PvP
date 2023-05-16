@@ -189,9 +189,10 @@ class PlayerSettings
 		return {
 			device: device,
 			controls: controls,
-			downScroll: false,
 			scrollSpeed: 0.75,
+			downScroll: false,
 			noteSplashes: true,
+			noReset: false,
 			autoplay: false
 		};
 	}

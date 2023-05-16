@@ -1,5 +1,6 @@
 package data;
 
+import data.game.Judgement;
 import flixel.FlxG;
 import util.bindable.Bindable;
 import util.bindable.BindableFloat;
@@ -27,8 +28,10 @@ class Settings
 	// Gameplay
 	public static var lowQuality:Bool = false;
 	public static var shaders:Bool = true;
+	public static var backgroundBrightness:Float = 1;
 	public static var hideHUD:Bool = false;
 	public static var timeDisplay:TimeDisplay = TIME_ELAPSED;
+	public static var healthBarAlpha:Float = 1;
 	public static var camZooming:Bool = true;
 	public static var clearGameplayCache:Bool = true;
 	// Miscellaneous
@@ -38,6 +41,13 @@ class Settings
 	public static var singleSongSelection:Bool = false;
 	public static var playbackRate:Float = 1;
 	public static var noSliderVelocity:Bool = false;
+	public static var marvWindow:Int = 23;
+	public static var sickWindow:Int = 57;
+	public static var goodWindow:Int = 101;
+	public static var badWindow:Int = 141;
+	public static var shitWindow:Int = 169;
+	public static var missWindow:Int = 218;
+	public static var comboBreakJudgement:Judgement = MISS;
 	public static var randomEvents:Bool = true;
 	public static var canDie:Bool = true;
 	public static var noMiss:Bool = false;
@@ -74,8 +84,10 @@ class Settings
 		load('smoothAudioTiming');
 		load('lowQuality');
 		load('shaders');
+		load('backgroundBrightness');
 		load('hideHUD');
 		load('timeDisplay');
+		load('healthBarAlpha');
 		load('camZooming');
 		load('clearGameplayCache');
 		load('autoPause');
@@ -83,6 +95,13 @@ class Settings
 		load('singleSongSelection');
 		load('playbackRate');
 		load('noSliderVelocity');
+		load('marvWindow');
+		load('sickWindow');
+		load('goodWindow');
+		load('badWindow');
+		load('shitWindow');
+		load('missWindow');
+		load('comboBreakJudgement');
 		load('randomEvents');
 		load('canDie');
 		load('noMiss');
@@ -117,6 +136,8 @@ class Settings
 				config.scrollSpeed = 0.75;
 			if (config.noteSplashes == null)
 				config.noteSplashes = true;
+			if (config.noReset == null)
+				config.noReset = false;
 			if (config.autoplay == null)
 				config.autoplay = false;
 		}
@@ -140,8 +161,10 @@ class Settings
 		save('smoothAudioTiming');
 		save('lowQuality');
 		save('shaders');
+		save('backgroundBrightness');
 		save('hideHUD');
 		save('timeDisplay');
+		save('healthBarAlpha');
 		save('camZooming');
 		save('clearGameplayCache');
 		save('autoPause');
@@ -149,6 +172,13 @@ class Settings
 		save('singleSongSelection');
 		save('playbackRate');
 		save('noSliderVelocity');
+		save('marvWindow');
+		save('sickWindow');
+		save('goodWindow');
+		save('badWindow');
+		save('shitWindow');
+		save('missWindow');
+		save('comboBreakJudgement');
 		save('randomEvents');
 		save('canDie');
 		save('noMiss');

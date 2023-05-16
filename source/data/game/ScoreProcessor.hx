@@ -16,7 +16,6 @@ class ScoreProcessor implements IFlxDestroyable
 	public var failed(get, never):Bool;
 	public var forceFail:Bool = false;
 	public var stats:Array<HitStat> = [];
-	public var windows:JudgementWindows;
 	public var currentJudgements:Map<Judgement, Int> = [MARV => 0, SICK => 0, GOOD => 0, BAD => 0, SHIT => 0, MISS => 0];
 	public var judgementWindow:Map<Judgement, Float> = new Map();
 	public var judgementScoreWeighting:Map<Judgement, Int> = [MARV => 100, SICK => 50, GOOD => 25, BAD => 10, SHIT => 5, MISS => 0];
@@ -36,13 +35,13 @@ class ScoreProcessor implements IFlxDestroyable
 	var maxMultiplierCount(get, never):Int;
 	var scoreCount:Int;
 
-	public function new(ruleset:GameplayRuleset, song:Song, player:Int, ?windows:JudgementWindows)
+	public function new(ruleset:GameplayRuleset, song:Song, player:Int)
 	{
 		this.ruleset = ruleset;
 		this.song = song;
 		this.player = player;
 
-		initializeJudgementWindows(windows);
+		initializeJudgementWindows();
 		initializeMods();
 
 		totalJudgements = getTotalJudgementCount();
@@ -96,13 +95,13 @@ class ScoreProcessor implements IFlxDestroyable
 
 		accuracy = calculateAccuracy();
 
-		var comboBreakJudgement = windows.comboBreakJudgement;
+		var comboBreakJudgement = Settings.comboBreakJudgement;
 		if (comboBreakJudgement == MARV || comboBreakJudgement == GHOST)
 			comboBreakJudgement = MISS;
 
 		if ((judgement : Int) < (comboBreakJudgement : Int))
 		{
-			if (judgement == BAD || judgement == SHIT)
+			if ((judgement : Int) >= (Judgement.BAD : Int))
 				multiplierCount -= multiplierCountToIncreaseIndex;
 			else
 				multiplierCount++;
@@ -141,7 +140,6 @@ class ScoreProcessor implements IFlxDestroyable
 	public function destroy()
 	{
 		stats = FlxDestroyUtil.destroyArray(stats);
-		windows = null;
 		currentJudgements = null;
 		judgementWindow = null;
 		judgementScoreWeighting = null;
@@ -152,18 +150,14 @@ class ScoreProcessor implements IFlxDestroyable
 		song = null;
 	}
 
-	function initializeJudgementWindows(?windows:JudgementWindows)
+	function initializeJudgementWindows()
 	{
-		if (windows == null)
-			windows = new JudgementWindows();
-		this.windows = windows;
-
-		judgementWindow[Judgement.MARV] = windows.marvelous;
-		judgementWindow[Judgement.SICK] = windows.sick;
-		judgementWindow[Judgement.GOOD] = windows.good;
-		judgementWindow[Judgement.BAD] = windows.bad;
-		judgementWindow[Judgement.SHIT] = windows.shit;
-		judgementWindow[Judgement.MISS] = windows.miss;
+		judgementWindow[Judgement.MARV] = Settings.marvWindow;
+		judgementWindow[Judgement.SICK] = Settings.sickWindow;
+		judgementWindow[Judgement.GOOD] = Settings.goodWindow;
+		judgementWindow[Judgement.BAD] = Settings.badWindow;
+		judgementWindow[Judgement.SHIT] = Settings.shitWindow;
+		judgementWindow[Judgement.MISS] = Settings.missWindow;
 	}
 
 	function initializeMods()

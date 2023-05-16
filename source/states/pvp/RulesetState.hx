@@ -3,6 +3,7 @@ package states.pvp;
 import data.PlayerSettings;
 import data.Settings.WinCondition;
 import data.Settings;
+import data.game.Judgement;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -113,6 +114,99 @@ class RulesetState extends FNFState
 			type: CHECKBOX,
 			defaultValue: false
 		});
+		addSetting({
+			name: 'marvWindow',
+			displayName: '"Marvelous" Hit Window',
+			description: 'Change the amount of milliseconds you have for scoring a "Marvelous" rating.',
+			type: NUMBER,
+			defaultValue: 23,
+			displayFunction: function(value)
+			{
+				return value + 'ms';
+			},
+			minValue: 1,
+			maxValue: 500
+		});
+		addSetting({
+			name: 'sickWindow',
+			displayName: '"Sick" Hit Window',
+			description: 'Change the amount of milliseconds you have for scoring a "Sick" rating.',
+			type: NUMBER,
+			defaultValue: 57,
+			displayFunction: function(value)
+			{
+				return value + 'ms';
+			},
+			minValue: 1,
+			maxValue: 500
+		});
+		addSetting({
+			name: 'goodWindow',
+			displayName: '"Good" Hit Window',
+			description: 'Change the amount of milliseconds you have for scoring a "Good" rating.',
+			type: NUMBER,
+			defaultValue: 101,
+			displayFunction: function(value)
+			{
+				return value + 'ms';
+			},
+			minValue: 1,
+			maxValue: 500
+		});
+		addSetting({
+			name: 'badWindow',
+			displayName: '"Bad" Hit Window',
+			description: 'Change the amount of milliseconds you have for scoring a "Bad" rating.',
+			type: NUMBER,
+			defaultValue: 141,
+			displayFunction: function(value)
+			{
+				return value + 'ms';
+			},
+			minValue: 1,
+			maxValue: 500
+		});
+		addSetting({
+			name: 'shitWindow',
+			displayName: '"Shit" Hit Window',
+			description: 'Change the amount of milliseconds you have for scoring a "Shit" rating.',
+			type: NUMBER,
+			defaultValue: 169,
+			displayFunction: function(value)
+			{
+				return value + 'ms';
+			},
+			minValue: 1,
+			maxValue: 500
+		});
+		addSetting({
+			name: 'missWindow',
+			displayName: 'Miss Window',
+			description: 'Change the amount of milliseconds you have before missing a note.',
+			type: NUMBER,
+			defaultValue: 218,
+			displayFunction: function(value)
+			{
+				return value + 'ms';
+			},
+			minValue: 1,
+			maxValue: 500
+		});
+		addSetting({
+			name: 'comboBreakJudgement',
+			displayName: 'Combo Break Judgement',
+			description: 'Select which judgement causes a player to lose their combo.',
+			type: NUMBER,
+			defaultValue: Judgement.MISS,
+			displayFunction: function(value)
+			{
+				return Judgement.getJudgementName(value);
+			},
+			minValue: 1,
+			maxValue: 5,
+			holdDelay: 0.05,
+			wrap: true
+		});
 		/*
 			addSetting({
 				name: 'randomEvents',
@@ -132,7 +226,7 @@ class RulesetState extends FNFState
 		addSetting({
 			name: 'noMiss',
 			displayName: 'No Miss',
-			description: "If enabled, players die instantly if they miss a note. \"Can Die\" being disabled doesn't stop this.",
+			description: "If enabled, players die instantly if they get a combo break. \"Can Die\" being disabled doesn't stop this.",
 			type: CHECKBOX,
 			defaultValue: false
 		});
