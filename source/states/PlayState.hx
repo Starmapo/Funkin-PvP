@@ -406,8 +406,7 @@ class PlayState extends FNFState
 			camBop = false;
 			if (songInst.playing)
 				timing.pauseMusic();
-			else
-				timing.paused = true;
+			timing.paused = true;
 			timing.checkSkippedSteps = false;
 			songInst.time = songInst.length;
 			songVocals.stop();
