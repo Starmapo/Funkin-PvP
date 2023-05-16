@@ -460,7 +460,7 @@ class PlayState extends FNFState
 
 	function initSong()
 	{
-		songInst = FlxG.sound.load(Paths.getSongInst(song), 1, false, null, false, false, null, function()
+		songInst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
 		{
 			instEnded = true;
 			songInst.stop();
@@ -470,7 +470,7 @@ class PlayState extends FNFState
 
 		var vocals = Paths.getSongVocals(song);
 		if (vocals != null)
-			songVocals = FlxG.sound.load(vocals, 1, false, null, false, false, null, function()
+			songVocals = FlxG.sound.load(vocals, 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
 			{
 				songVocals.volume = 0;
 			});
@@ -705,8 +705,8 @@ class PlayState extends FNFState
 		if (camZooming)
 		{
 			var lerp = (elapsed * 3 * camZoomingDecay * Settings.playbackRate);
-			FlxG.camera.zoom = CoolUtil.reverseLerp(defaultCamZoom, FlxG.camera.zoom, lerp);
-			camHUD.zoom = CoolUtil.reverseLerp(1, camHUD.zoom, lerp);
+			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 1 - lerp);
+			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 1 - lerp);
 		}
 	}
 

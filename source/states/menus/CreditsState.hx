@@ -5,6 +5,7 @@ import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -301,8 +302,8 @@ class CreditsMenuItem extends TextMenuItem
 
 	override function update(elapsed:Float)
 	{
-		x = CoolUtil.lerp(x, getX(), elapsed * LERP);
-		y = CoolUtil.lerp(y, getY(), elapsed * LERP);
+		x = FlxMath.lerp(x, getX(), elapsed * LERP);
+		y = FlxMath.lerp(y, getY(), elapsed * LERP);
 
 		super.update(elapsed);
 	}

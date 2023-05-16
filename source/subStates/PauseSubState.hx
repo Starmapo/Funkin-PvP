@@ -5,11 +5,13 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSubState;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import states.PlayState;
 import states.options.OptionsState;
 import states.pvp.CharacterSelectState;
+import states.pvp.RulesetState;
 import states.pvp.SongSelectState;
 import ui.lists.MenuList.TypedMenuList;
 import ui.lists.TextMenuList;
@@ -21,6 +23,7 @@ class PauseSubState extends FlxSubState
 	var camSubState:FlxCamera;
 	var camFollow:FlxObject;
 	var playerText:FlxText;
+	var music:FlxSound;
 
 	public function new(state:PlayState)
 	{
@@ -60,6 +63,11 @@ class PauseSubState extends FlxSubState
 			state.exit(new SongSelectState());
 			CoolUtil.playPvPMusic();
 		});
+		menuList.createItem('Exit to ruleset settings', function()
+		{
+			state.exit(new RulesetState());
+			CoolUtil.playPvPMusic();
+		});
 
 		playerText = new FlxText(0, 10);
 		playerText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
@@ -75,14 +83,27 @@ class PauseSubState extends FlxSubState
 		menuList.selectItem(0);
 		camSubState.snapToTarget();
 
+		music = FlxG.sound.load(Paths.getMusic('Breakfast'), 0, true, FlxG.sound.defaultMusicGroup);
+
 		openCallback = function()
 		{
 			camSubState.visible = true;
+			music.volume = 0;
+			music.play(false, FlxG.random.float(0, music.length / 2));
 		}
 		closeCallback = function()
 		{
 			camSubState.visible = false;
+			music.stop();
 		}
+	}
+
+	override function update(elapsed:Float)
+	{
+		if (music.volume < 0.5)
+			music.volume = Math.min(music.volume + (elapsed * 0.01), 0.5);
+
+		super.update(elapsed);
 	}
 
 	override function destroy()
@@ -93,6 +114,7 @@ class PauseSubState extends FlxSubState
 		camSubState = null;
 		camFollow = null;
 		playerText = null;
+		music = null;
 	}
 
 	public function onOpen(player:Int)

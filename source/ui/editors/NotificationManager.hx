@@ -4,6 +4,7 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import openfl.geom.Rectangle;
@@ -20,7 +21,7 @@ class NotificationManager extends FlxTypedGroup<Notification>
 			var text = members[i];
 			if (text == null)
 				continue;
-			text.y = CoolUtil.lerp(text.y, targetY, elapsed * 15);
+			text.y = FlxMath.lerp(text.y, targetY, elapsed * 15);
 			targetY += text.height + 10;
 		}
 	}

@@ -1,4 +1,3 @@
-pause music
 discord rich presence
 judgement windows presets
 add kade engine settings

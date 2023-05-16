@@ -467,13 +467,13 @@ class NoteManager extends FlxBasic
 	{
 		if (onBreak && alpha > breakAlpha)
 		{
-			alpha -= CoolUtil.getLerp(elapsed * 3);
+			alpha -= elapsed * 3;
 			if (alpha < breakAlpha)
 				alpha = breakAlpha;
 		}
 		else if (!onBreak && alpha < 1)
 		{
-			alpha += CoolUtil.getLerp(elapsed * 3);
+			alpha += elapsed * 3;
 			if (alpha > 1)
 				alpha = 1;
 		}
