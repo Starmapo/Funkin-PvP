@@ -66,6 +66,9 @@ class OptionsState extends FNFState
 		var audioPage = addPage(Audio, new AudioPage());
 		audioPage.onExit.add(switchPage.bind(Options));
 
+		var gameplayPage = addPage(Gameplay, new GameplayPage());
+		gameplayPage.onExit.add(switchPage.bind(Options));
+
 		var miscPage = addPage(Miscellaneous, new MiscellaneousPage());
 		miscPage.onExit.add(switchPage.bind(Options));
 

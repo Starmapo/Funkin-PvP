@@ -163,6 +163,7 @@ class Character extends DancingSprite
 			allowDanceTimer.start((beatLength / 1000) * 1.5, function(_)
 			{
 				canDance = true;
+				dance();
 			});
 		}
 	}

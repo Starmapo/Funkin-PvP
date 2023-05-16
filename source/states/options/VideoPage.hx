@@ -126,18 +126,11 @@ class VideoPage extends BaseSettingsPage
 			Main.updateColorFilter();
 		});
 		addSetting({
-			name: 'lowQuality',
-			displayName: 'Low Quality',
-			description: "If enabled, some background details are disabled, improving performance and reducing loading times.",
+			name: 'flashing',
+			displayName: 'Flashing Lights',
+			description: "Whether flashing lights are enabled.",
 			type: CHECKBOX,
 			defaultValue: false
-		});
-		addSetting({
-			name: 'shaders',
-			displayName: 'Shaders',
-			description: "Whether gameplay shaders are enabled.",
-			type: CHECKBOX,
-			defaultValue: true
 		});
 	}
 }

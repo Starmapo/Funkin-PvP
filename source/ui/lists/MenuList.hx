@@ -96,7 +96,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 	override function update(elapsed:Float)
 	{
 		if (controlsEnabled)
-			updateControls();
+			updateControls(elapsed);
 
 		super.update(elapsed);
 	}
@@ -160,16 +160,16 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return byName.get(name);
 	}
 
-	function updateControls()
+	function updateControls(elapsed:Float)
 	{
 		if (length > 1)
 		{
 			var index = switch (navMode)
 			{
-				case HORIZONTAL: navigate(checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT));
-				case VERTICAL: navigate(checkAction(UI_UP_P), checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
-				case COLUMNS(n): navigateColumns();
-				case BOTH: navigate(checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P), checkAction(UI_LEFT) || checkAction(UI_UP), checkAction(UI_RIGHT)
+				case HORIZONTAL: navigate(elapsed, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT));
+				case VERTICAL: navigate(elapsed, checkAction(UI_UP_P), checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
+				case COLUMNS(n): navigateColumns(elapsed);
+				case BOTH: navigate(elapsed, checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P), checkAction(UI_LEFT) || checkAction(UI_UP), checkAction(UI_RIGHT)
 						|| checkAction(UI_DOWN));
 			}
 
@@ -208,7 +208,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return false;
 	}
 
-	function navigate(prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
+	function navigate(elapsed:Float, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
 	{
 		var index = selectedIndex;
 
@@ -222,7 +222,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		}
 		else if (holdEnabled && (prevHold || nextHold))
 		{
-			holdTime += FlxG.elapsed;
+			holdTime += elapsed;
 
 			if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
 			{
@@ -234,7 +234,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return index;
 	}
 
-	function navigateGrid(prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool, prevJump:Bool, nextJump:Bool, prevJumpHold:Bool, nextJumpHold:Bool)
+	function navigateGrid(elapsed:Float, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool, prevJump:Bool, nextJump:Bool, prevJumpHold:Bool, nextJumpHold:Bool)
 	{
 		var index = selectedIndex;
 
@@ -248,7 +248,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		}
 		else if (holdEnabled && (prevHold || nextHold))
 		{
-			holdTime += FlxG.elapsed;
+			holdTime += elapsed;
 
 			if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
 			{
@@ -271,7 +271,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 			}
 			else if (holdEnabled && (prevJumpHold || nextJumpHold))
 			{
-				holdTime += FlxG.elapsed;
+				holdTime += elapsed;
 
 				if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
 				{
@@ -284,9 +284,9 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return index;
 	}
 
-	function navigateColumns()
+	function navigateColumns(elapsed:Float)
 	{
-		return navigateGrid(checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT), checkAction(UI_UP_P),
+		return navigateGrid(elapsed, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT), checkAction(UI_UP_P),
 			checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
 	}
 

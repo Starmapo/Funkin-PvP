@@ -19,15 +19,15 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 	var itemHoldTime:Float = 0;
 	var itemLastHoldTime:Float = 0;
 
-	override function updateControls()
+	override function updateControls(elapsed:Float)
 	{
-		super.updateControls();
+		super.updateControls(elapsed);
 
 		if (selectedItem != null)
 		{
 			if (!selectedItem.canAccept)
 			{
-				if (navigateItem(selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT)))
+				if (navigateItem(elapsed, selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT)))
 				{
 					if (selectedItem.callback != null)
 						selectedItem.callback();
@@ -66,7 +66,7 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 			selectedItem.callback();
 	}
 
-	function navigateItem(item:T, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
+	function navigateItem(elapsed:Float, item:T, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
 	{
 		var canHold = holdEnabled && item.data.type != STRING;
 		if (prev == next && (!canHold || prevHold == nextHold))
@@ -83,7 +83,7 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 		}
 		else if (canHold && (prevHold || nextHold))
 		{
-			itemHoldTime += FlxG.elapsed;
+			itemHoldTime += elapsed;
 
 			if (itemHoldTime >= minScrollTime && itemHoldTime - itemLastHoldTime >= item.data.holdDelay)
 			{

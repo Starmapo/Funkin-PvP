@@ -120,7 +120,7 @@ class SongEditorPlayState extends FNFState
 			statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
 		add(statsDisplay);
 
-		songInfoDisplay = new SongInfoDisplay(song, inst);
+		songInfoDisplay = new SongInfoDisplay(song, inst, timing);
 		add(songInfoDisplay);
 
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));

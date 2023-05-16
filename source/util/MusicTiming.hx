@@ -112,6 +112,7 @@ class MusicTiming implements IFlxDestroyable
 
 	public var startDelay:Float;
 	public var dance:Bool = true;
+	public var paused:Bool = false;
 
 	var music:FlxSound;
 	var extraMusic:Array<FlxSound>;
@@ -175,7 +176,7 @@ class MusicTiming implements IFlxDestroyable
 				onStart(this);
 		}
 
-		updateTime();
+		updateTime(elapsed);
 		resyncExtraMusic();
 		updateAudioPosition();
 		updateCurStep();
@@ -235,6 +236,7 @@ class MusicTiming implements IFlxDestroyable
 		{
 			extra.pause();
 		}
+		paused = true;
 	}
 
 	/**
@@ -247,6 +249,7 @@ class MusicTiming implements IFlxDestroyable
 		{
 			extra.resume();
 		}
+		paused = false;
 	}
 
 	/**
@@ -260,13 +263,18 @@ class MusicTiming implements IFlxDestroyable
 			extra.stop();
 		}
 		reset();
+		paused = false;
 	}
 
-	function updateTime()
+	function updateTime(elapsed:Float)
 	{
+		@:privateAccess
+		if (music._paused || paused)
+			return;
+
 		if (Settings.smoothAudioTiming)
 		{
-			time += FlxG.elapsed * 1000 * music.pitch;
+			time += elapsed * 1000 * music.pitch;
 
 			var timeOutOfThreshold = time < music.time || time > music.time + (SYNC_THRESHOLD * music.pitch);
 			var checkTime = music.time - previousTime;
@@ -279,7 +287,15 @@ class MusicTiming implements IFlxDestroyable
 		}
 		else
 		{
-			time = music.time;
+			if (music.playing)
+				time = music.time;
+			else
+			{
+				if (time < music.time)
+					time = music.time;
+				
+				time += elapsed * 1000 * music.pitch;
+			}
 		}
 	}
 
@@ -303,7 +319,9 @@ class MusicTiming implements IFlxDestroyable
 	{
 		audioPosition = time + Settings.globalOffset * music.pitch;
 
-		FlxG.watch.addQuick('Song Time', audioPosition);
+		FlxG.watch.addQuick('Song Playing', music.playing);
+		FlxG.watch.addQuick('Song Time', music.time);
+		FlxG.watch.addQuick('Audio Position', audioPosition);
 	}
 
 	function updateCurStep()

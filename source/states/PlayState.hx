@@ -27,7 +27,6 @@ import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import haxe.io.Path;
 import sprites.game.Character;
-import states.pvp.SongSelectState;
 import subStates.PauseSubState;
 import subStates.ResultsScreen;
 import sys.FileSystem;
@@ -83,6 +82,9 @@ class PlayState extends FNFState
 	public var clearCache:Bool = false;
 	public var deathBG:FlxSprite;
 	public var deathTimer:FlxTimer;
+	public var isComplete(get, never):Bool;
+
+	var instEnded:Bool = false;
 
 	public function new(?song:Song, chars:Array<String>)
 	{
@@ -128,6 +130,11 @@ class PlayState extends FNFState
 
 	override public function update(elapsed:Float)
 	{
+		// after the sound is finished playing, its time is reset back to 0 for some reason
+		// so i gotta set it manually
+		if (instEnded)
+			songInst.time = songInst.length;
+
 		executeScripts("onUpdate", [elapsed]);
 
 		super.update(elapsed);
@@ -138,6 +145,9 @@ class PlayState extends FNFState
 		ruleset.update(elapsed);
 
 		handleInput(elapsed);
+
+		if (!hasEnded && isComplete)
+			endSong();
 
 		lyricsDisplay.updateLyrics(timing.audioPosition);
 		updateCamPosition();
@@ -396,12 +406,19 @@ class PlayState extends FNFState
 			camBop = false;
 			if (songInst.playing)
 				timing.pauseMusic();
+			else
+				timing.paused = true;
 			timing.checkSkippedSteps = false;
 			songInst.time = songInst.length;
+			songVocals.stop();
 			lyricsDisplay.visible = false;
-			for (display in statsDisplay)
-				display.visible = false;
-			songInfoDisplay.visible = false;
+			if (statsDisplay != null)
+			{
+				for (display in statsDisplay)
+					display.visible = false;
+			}
+			if (songInfoDisplay != null)
+				songInfoDisplay.visible = false;
 			for (manager in ruleset.inputManagers)
 				manager.stopInput();
 
@@ -452,7 +469,10 @@ class PlayState extends FNFState
 	function initSong()
 	{
 		songInst = FlxG.sound.load(Paths.getSongInst(song));
-		songInst.onComplete = endSong;
+		songInst.onComplete = function()
+		{
+			instEnded = true;
+		}
 		songInst.pitch = Settings.playbackRate;
 
 		var vocals = Paths.getSongVocals(song);
@@ -460,6 +480,10 @@ class PlayState extends FNFState
 			songVocals = FlxG.sound.load(vocals);
 		else
 			songVocals = FlxG.sound.list.add(new FlxSound());
+		songVocals.onComplete = function()
+		{
+			songVocals.volume = 0;
+		}
 		songVocals.pitch = Settings.playbackRate;
 
 		timing = new MusicTiming(songInst, song.timingPoints, true, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
@@ -491,20 +515,26 @@ class PlayState extends FNFState
 		ruleset.judgementAdded.add(onJudgementAdded);
 		ruleset.noteSpawned.add(onNoteSpawned);
 
-		judgementDisplay = new FlxTypedGroup();
-		for (i in 0...2)
-			judgementDisplay.add(new JudgementDisplay(i, ruleset.playfields[i].noteSkin));
-		judgementDisplay.cameras = [camHUD];
-		add(judgementDisplay);
+		if (!Settings.hideHUD)
+		{
+			judgementDisplay = new FlxTypedGroup();
+			for (i in 0...2)
+				judgementDisplay.add(new JudgementDisplay(i, ruleset.playfields[i].noteSkin));
+			judgementDisplay.cameras = [camHUD];
+			add(judgementDisplay);
 
-		statsDisplay = new FlxTypedGroup();
-		for (i in 0...2)
-			statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
-		statsDisplay.cameras = [camHUD];
+			statsDisplay = new FlxTypedGroup();
+			for (i in 0...2)
+				statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
+			statsDisplay.cameras = [camHUD];
+		}
 
-		songInfoDisplay = new SongInfoDisplay(song, songInst);
-		songInfoDisplay.cameras = [camHUD];
-		add(songInfoDisplay);
+		if (!Settings.hideHUD || Settings.timeDisplay != DISABLED)
+		{
+			songInfoDisplay = new SongInfoDisplay(song, songInst, timing);
+			songInfoDisplay.cameras = [camHUD];
+			add(songInfoDisplay);
+		}
 
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
 		lyricsDisplay.cameras = [camHUD];
@@ -548,13 +578,16 @@ class PlayState extends FNFState
 		timing.addDancingSprite(bf);
 		add(bf);
 
-		healthBars = new FlxTypedGroup();
-		for (i in 0...2)
-			healthBars.add(new HealthBar(ruleset.scoreProcessors[i], getPlayerCharacter(i).charInfo));
-		healthBars.cameras = [camHUD];
-		add(healthBars);
+		if (!Settings.hideHUD)
+		{
+			healthBars = new FlxTypedGroup();
+			for (i in 0...2)
+				healthBars.add(new HealthBar(ruleset.scoreProcessors[i], getPlayerCharacter(i).charInfo));
+			healthBars.cameras = [camHUD];
+			add(healthBars);
 
-		add(statsDisplay);
+			add(statsDisplay);
+		}
 	}
 
 	function initStage()
@@ -757,7 +790,8 @@ class PlayState extends FNFState
 
 	function onJudgementAdded(judgement:Judgement, player:Int)
 	{
-		judgementDisplay.members[player].showJudgement(judgement);
+		if (judgementDisplay != null)
+			judgementDisplay.members[player].showJudgement(judgement);
 
 		executeScripts("onJudgementAdded", [judgement, player]);
 	}
@@ -831,8 +865,11 @@ class PlayState extends FNFState
 		if (hasEnded)
 			return;
 
-		for (bar in healthBars)
-			bar.onBeatHit();
+		if (healthBars != null)
+		{
+			for (bar in healthBars)
+				bar.onBeatHit();
+		}
 
 		executeScripts("onBeatHit", [beat, decBeat]);
 	}
@@ -915,6 +952,25 @@ class PlayState extends FNFState
 			if (score.failed)
 				onDeath(i);
 		}
+	}
+
+	function get_isComplete()
+	{
+		for (manager in ruleset.noteManagers)
+		{
+			for (lane in manager.activeNoteLanes)
+			{
+				if (lane.length > 0)
+					return false;
+			}
+			for (lane in manager.heldLongNoteLanes)
+			{
+				if (lane.length > 0)
+					return false;
+			}
+		}
+
+		return timing.audioPosition > songInst.length;
 	}
 }
 

@@ -18,19 +18,22 @@ class Settings
 	public static var brightness:Int = 0;
 	public static var gamma:Float = 1;
 	public static var filter:FilterType = NONE;
-	public static var lowQuality:Bool = false;
-	public static var shaders:Bool = true;
+	public static var flashing:Bool = false;
 	// Audio
 	public static var musicVolume:Float = 1;
 	public static var effectVolume:Float = 1;
 	public static var globalOffset:Int = 0;
 	public static var smoothAudioTiming:Bool = false;
-	// Miscellaneous
-	public static var flashing:Bool = false;
+	// Gameplay
+	public static var lowQuality:Bool = false;
+	public static var shaders:Bool = true;
+	public static var hideHUD:Bool = false;
+	public static var timeDisplay:TimeDisplay = TIME_ELAPSED;
 	public static var camZooming:Bool = true;
+	public static var clearGameplayCache:Bool = true;
+	// Miscellaneous
 	public static var autoPause:Bool = false;
 	public static var persistentCache:Bool = true;
-	public static var clearGameplayCache:Bool = true;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;
 	public static var playbackRate:Float = 1;
@@ -63,18 +66,20 @@ class Settings
 		load('brightness');
 		load('gamma');
 		load('filter');
-		load('lowQuality');
-		load('shaders');
+		load('flashing');
 		load('masterVolume');
 		load('musicVolume');
 		load('effectVolume');
 		load('globalOffset');
 		load('smoothAudioTiming');
-		load('flashing');
+		load('lowQuality');
+		load('shaders');
+		load('hideHUD');
+		load('timeDisplay');
 		load('camZooming');
+		load('clearGameplayCache');
 		load('autoPause');
 		load('persistentCache');
-		load('clearGameplayCache');
 		load('singleSongSelection');
 		load('playbackRate');
 		load('noSliderVelocity');
@@ -127,18 +132,20 @@ class Settings
 		save('brightness');
 		save('gamma');
 		save('filter');
-		save('lowQuality');
-		save('shaders');
+		save('flashing');
 		save('masterVolume');
 		save('musicVolume');
 		save('effectVolume');
 		save('globalOffset');
 		save('smoothAudioTiming');
-		save('flashing');
+		save('lowQuality');
+		save('shaders');
+		save('hideHUD');
+		save('timeDisplay');
 		save('camZooming');
+		save('clearGameplayCache');
 		save('autoPause');
 		save('persistentCache');
-		save('clearGameplayCache');
 		save('singleSongSelection');
 		save('playbackRate');
 		save('noSliderVelocity');
@@ -241,4 +248,12 @@ enum abstract MetronomeType(String) from String to String
 	var NONE = 'None';
 	var EVERY_BEAT = 'Every Beat';
 	var EVERY_HALF_BEAT = 'Every Half Beat';
+}
+
+enum abstract TimeDisplay(String) from String to String
+{
+	var TIME_ELAPSED = 'Time Elapsed';
+	var TIME_LEFT = 'Time Left';
+	var PERCENTAGE = 'Percentage Progress';
+	var DISABLED = 'Disabled';
 }

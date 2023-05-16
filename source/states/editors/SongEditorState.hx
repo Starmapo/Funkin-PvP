@@ -237,7 +237,7 @@ class SongEditorState extends FNFState
 
 	override function update(elapsed:Float)
 	{
-		handleInput();
+		handleInput(elapsed);
 
 		playfieldTabs.update(elapsed);
 		selector.update(elapsed);
@@ -416,7 +416,7 @@ class SongEditorState extends FNFState
 		FlxG.switchState(new SongEditorPlayState(song, player, time));
 	}
 
-	function handleInput()
+	function handleInput(elapsed:Float)
 	{
 		if (!checkAllowInput())
 			return;
@@ -441,7 +441,7 @@ class SongEditorState extends FNFState
 			}
 		}
 
-		timeSinceLastPlayfieldZoom += FlxG.elapsed;
+		timeSinceLastPlayfieldZoom += elapsed;
 		var canZoom = timeSinceLastPlayfieldZoom >= 0.1;
 
 		if (FlxG.keys.justPressed.PAGEUP)

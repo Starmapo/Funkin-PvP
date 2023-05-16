@@ -62,9 +62,9 @@ class NoteManager extends FlxBasic
 	override function update(elapsed:Float)
 	{
 		updateAlpha(elapsed);
-		updateAndScoreActiveObjects();
-		updateAndScoreHeldObjects();
-		updateDeadObjects();
+		updateAndScoreActiveObjects(elapsed);
+		updateAndScoreHeldObjects(elapsed);
+		updateDeadObjects(elapsed);
 	}
 
 	override function draw()
@@ -353,7 +353,7 @@ class NoteManager extends FlxBasic
 		return null;
 	}
 
-	function updateAndScoreActiveObjects()
+	function updateAndScoreActiveObjects(elapsed:Float)
 	{
 		for (lane in noteQueueLanes)
 		{
@@ -370,7 +370,7 @@ class NoteManager extends FlxBasic
 			for (note in lane)
 			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
-				note.update(FlxG.elapsed);
+				note.update(elapsed);
 			}
 		}
 	}
@@ -407,7 +407,7 @@ class NoteManager extends FlxBasic
 		}
 	}
 
-	function updateAndScoreHeldObjects()
+	function updateAndScoreHeldObjects(elapsed:Float)
 	{
 		scoreHeldObjects();
 
@@ -416,7 +416,7 @@ class NoteManager extends FlxBasic
 			for (note in lane)
 			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
-				note.update(FlxG.elapsed);
+				note.update(elapsed);
 			}
 		}
 	}
@@ -447,7 +447,7 @@ class NoteManager extends FlxBasic
 		}
 	}
 
-	function updateDeadObjects()
+	function updateDeadObjects(elapsed:Float)
 	{
 		for (lane in deadNoteLanes)
 		{
@@ -460,7 +460,7 @@ class NoteManager extends FlxBasic
 			for (note in lane)
 			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
-				note.update(FlxG.elapsed);
+				note.update(elapsed);
 			}
 		}
 	}

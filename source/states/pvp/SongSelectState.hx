@@ -524,7 +524,7 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 			item.x = FlxG.width + ((FlxG.width - item.width) / 2);
 		else
 			item.x = (FlxG.width / 2) + (((FlxG.width / 2) - item.width) / 2);
-		item.y -= item.height / 2;
+		item.y -= item.text.height / 2;
 		byName[name] = item;
 		item.ID = length;
 		return item;
