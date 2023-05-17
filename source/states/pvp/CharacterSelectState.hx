@@ -21,6 +21,7 @@ import openfl.geom.Rectangle;
 import ui.lists.MenuList.MenuItem;
 import ui.lists.MenuList.TypedMenuItem;
 import ui.lists.MenuList.TypedMenuList;
+import util.DiscordClient;
 
 class CharacterSelectState extends FNFState
 {
@@ -36,6 +37,8 @@ class CharacterSelectState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Character Select");
+
 		transIn = transOut = null;
 		persistentUpdate = true;
 

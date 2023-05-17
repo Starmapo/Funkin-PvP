@@ -1,5 +1,6 @@
 package states.editors;
 
+import util.DiscordClient;
 import data.char.CharacterInfo;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -68,6 +69,8 @@ class CharacterEditorState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Character Editor");
+
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
 		bg.scrollFactor.set();

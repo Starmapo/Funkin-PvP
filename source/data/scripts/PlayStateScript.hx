@@ -41,6 +41,7 @@ class PlayStateScript extends Script
 		setVariable("songInfoDisplay", state.songInfoDisplay);
 		setVariable("lyricsDisplay", state.lyricsDisplay);
 		setVariable("healthBars", state.healthBars);
+		setVariable("playbackRate", Settings.playbackRate);
 
 		setVariable("add", state.add);
 		setVariable("insert", state.insert);

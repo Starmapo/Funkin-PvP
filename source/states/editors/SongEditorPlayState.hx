@@ -14,6 +14,7 @@ import ui.game.LyricsDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
 import ui.game.SongInfoDisplay;
+import util.DiscordClient;
 import util.MusicTiming;
 
 class SongEditorPlayState extends FNFState
@@ -73,6 +74,8 @@ class SongEditorPlayState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(song.title + ' [${song.difficultyName}]', "Song Editor Playtesting");
+
 		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
 		inst.onComplete = onSongComplete;
 		var vocalsSound = Paths.getSongVocals(song);

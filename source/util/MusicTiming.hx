@@ -296,7 +296,7 @@ class MusicTiming implements IFlxDestroyable
 
 	function updateAudioPosition()
 	{
-		audioPosition = time + Math.round(Settings.globalOffset * music.pitch);
+		audioPosition = time + Settings.globalOffset;
 
 		FlxG.watch.addQuick('Song Playing', music.playing);
 		FlxG.watch.addQuick('Song Time', music.time);

@@ -13,6 +13,7 @@ class Page extends FlxGroup
 	public var onSwitch(default, null):FlxTypedSignal<PageName->Void> = new FlxTypedSignal();
 	public var onExit(default, null) = new FlxSignal();
 	public var onOpenSubState(default, null):FlxTypedSignal<FlxSubState->Void> = new FlxTypedSignal();
+	public var rpcDetails:String = '';
 
 	var camFollow(get, never):FlxObject;
 

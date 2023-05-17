@@ -40,6 +40,7 @@ import ui.editors.song.SongEditorPlayfieldTabs;
 import ui.editors.song.SongEditorSeekBar;
 import ui.editors.song.SongEditorSelector;
 import ui.game.LyricsDisplay;
+import util.DiscordClient;
 import util.MusicTiming;
 import util.bindable.Bindable;
 import util.bindable.BindableArray;
@@ -131,6 +132,8 @@ class SongEditorState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Song Editor");
+
 		persistentUpdate = true;
 		destroySubStates = false;
 

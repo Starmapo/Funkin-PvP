@@ -8,6 +8,7 @@ class MiscellaneousPage extends BaseSettingsPage
 	public function new()
 	{
 		super();
+		rpcDetails = 'Miscellaneous Options';
 
 		addSetting({
 			name: 'autoPause',

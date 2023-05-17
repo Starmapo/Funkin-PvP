@@ -16,6 +16,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import states.menus.MainMenuState;
 import ui.lists.SettingsMenuList;
+import util.DiscordClient;
 
 class RulesetState extends FNFState
 {
@@ -34,6 +35,8 @@ class RulesetState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Ruleset Options");
+
 		transIn = transOut = null;
 
 		camScroll = new FlxCamera();

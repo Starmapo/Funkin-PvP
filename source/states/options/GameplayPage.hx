@@ -7,6 +7,7 @@ class GameplayPage extends BaseSettingsPage
 	public function new()
 	{
 		super();
+		rpcDetails = 'Gameplay Options';
 
 		addSetting({
 			name: 'lowQuality',

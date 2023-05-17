@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import states.editors.SongEditorState;
 import states.menus.MainMenuState;
 import ui.lists.TextMenuList;
+import util.DiscordClient;
 
 class ToolboxState extends FNFState
 {
@@ -23,6 +24,8 @@ class ToolboxState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Toolbox Menu");
+
 		if (!FlxG.sound.musicPlaying)
 			CoolUtil.playMenuMusic();
 

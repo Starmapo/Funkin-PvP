@@ -15,6 +15,7 @@ import states.options.OptionsState;
 import states.pvp.RulesetState;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
+import util.DiscordClient;
 
 class MainMenuState extends FNFState
 {
@@ -37,6 +38,8 @@ class MainMenuState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Main Menu");
+
 		transIn = transOut = null;
 
 		bg = CoolUtil.createMenuBG('menuBG', 1.2);

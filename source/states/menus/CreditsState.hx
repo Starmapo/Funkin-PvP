@@ -1,5 +1,6 @@
 package states.menus;
 
+import util.DiscordClient;
 import data.CreditsData;
 import data.PlayerSettings;
 import flixel.FlxG;
@@ -44,6 +45,8 @@ class CreditsState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Credits Screen");
+
 		transIn = transOut = null;
 
 		bg = CoolUtil.createMenuBG('menuBGDesat');

@@ -9,6 +9,7 @@ class PlayersPage extends Page
 	public function new()
 	{
 		super();
+		rpcDetails = 'Player Options';
 
 		items = new TextMenuList();
 		items.onChange.add(onChange);

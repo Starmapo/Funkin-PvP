@@ -37,6 +37,7 @@ import ui.game.LyricsDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
 import ui.game.SongInfoDisplay;
+import util.DiscordClient;
 import util.MusicTiming;
 
 using StringTools;
@@ -84,6 +85,8 @@ class PlayState extends FNFState
 	public var deathTimer:FlxTimer;
 	public var isComplete(get, never):Bool;
 	public var backgroundCover:FlxSprite;
+	public var detailsText:String;
+	public var pausedDetailsText:String;
 
 	var instEnded:Bool = false;
 
@@ -214,6 +217,8 @@ class PlayState extends FNFState
 					tmr.active = false;
 			});
 			FlxG.camera.followActive = false;
+
+			DiscordClient.changePresence(pausedDetailsText, 'In a match');
 		}
 
 		super.openSubState(subState);
@@ -241,7 +246,29 @@ class PlayState extends FNFState
 			});
 			FlxG.camera.followActive = true;
 			FlxG.sound.resume();
+
+			if (hasStarted)
+				DiscordClient.changePresence(detailsText, 'In a match', null, true, getTimeRemaining());
+			else
+				DiscordClient.changePresence(detailsText, 'In a match');
 		}
+	}
+
+	override function onFocus()
+	{
+		if (FlxG.autoPause && !hasEnded)
+		{
+			if (hasStarted)
+				DiscordClient.changePresence(detailsText, 'In a match', null, true, getTimeRemaining());
+			else
+				DiscordClient.changePresence(detailsText, 'In a match');
+		}
+	}
+
+	override function onFocusLost()
+	{
+		if (FlxG.autoPause && !hasEnded)
+			DiscordClient.changePresence(pausedDetailsText, 'In a match');
 	}
 
 	override function finishTransIn()
@@ -263,6 +290,7 @@ class PlayState extends FNFState
 	public function startSong(timing:MusicTiming)
 	{
 		hasStarted = true;
+		DiscordClient.changePresence(detailsText, 'In a match', null, true, getSongLength());
 		executeScripts("onStartSong");
 	}
 
@@ -433,6 +461,14 @@ class PlayState extends FNFState
 			if (screen.winner > -1)
 				focusOnChar(getPlayerCharacter(screen.winner));
 			openSubState(screen);
+
+			var winText = switch (screen.winner)
+			{
+				case -1: 'Tie';
+				default: 'Player ${screen.winner + 1} wins';
+			}
+
+			DiscordClient.changePresence(winText + ' - ' + detailsText, 'Results Screen');
 		}
 	}
 
@@ -449,6 +485,16 @@ class PlayState extends FNFState
 		if (char.flipped)
 			camOffsetX *= -1;
 		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
+	}
+
+	public function getSongLength()
+	{
+		return (songInst.length / songInst.pitch) - Settings.globalOffset;
+	}
+
+	public function getTimeRemaining()
+	{
+		return getSongLength() - (timing.time / songInst.pitch) + Settings.globalOffset;
 	}
 
 	function initCameras()
@@ -482,6 +528,10 @@ class PlayState extends FNFState
 		timing.onStepHit.add(onStepHit);
 		timing.onBeatHit.add(onBeatHit);
 		timing.onBarHit.add(onBarHit);
+
+		detailsText = song.title + ' [${song.difficultyName}]';
+		pausedDetailsText = 'Paused - $detailsText';
+		DiscordClient.changePresence(detailsText, 'In a match');
 	}
 
 	function initUI()

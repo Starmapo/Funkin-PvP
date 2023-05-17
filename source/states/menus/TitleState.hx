@@ -1,5 +1,6 @@
 package states.menus;
 
+import util.DiscordClient;
 import data.PlayerSettings;
 import data.Settings;
 import data.song.TimingPoint;
@@ -62,6 +63,8 @@ class TitleState extends FNFState
 
 	override public function create()
 	{
+		DiscordClient.changePresence(null, "Title Screen");
+
 		transIn = transOut = null;
 
 		FlxG.camera.bgColor = 0;

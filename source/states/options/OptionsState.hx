@@ -17,6 +17,7 @@ import flixel.util.FlxSignal;
 import states.menus.MainMenuState;
 import ui.lists.SettingsMenuList;
 import ui.lists.TextMenuList;
+import util.DiscordClient;
 
 class OptionsState extends FNFState
 {
@@ -38,6 +39,8 @@ class OptionsState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Options Menu");
+
 		transIn = transOut = null;
 		destroySubStates = false;
 
@@ -165,6 +168,11 @@ class OptionsState extends FNFState
 			currentPage.onAppear();
 			camPages.snapToTarget();
 		}
+
+		if (currentPage != null)
+			DiscordClient.changePresence(currentPage.rpcDetails, 'Options Menu');
+		else
+			DiscordClient.changePresence(null, 'Options Menu');
 	}
 
 	function exitToMainMenu()

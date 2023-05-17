@@ -23,6 +23,7 @@ import openfl.geom.Rectangle;
 import ui.HealthIcon;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
+import util.DiscordClient;
 
 class SongSelectState extends FNFState
 {
@@ -40,6 +41,8 @@ class SongSelectState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Song Select");
+
 		transIn = transOut = null;
 		persistentUpdate = true;
 

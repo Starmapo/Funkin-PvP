@@ -8,6 +8,7 @@ class AudioPage extends BaseSettingsPage
 	public function new()
 	{
 		super();
+		rpcDetails = 'Audio Options';
 
 		addSetting({
 			name: 'musicVolume',

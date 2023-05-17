@@ -16,6 +16,7 @@ import lime.app.Application;
 import states.pvp.SongSelectState;
 import sys.FileSystem;
 import sys.thread.Thread;
+import util.DiscordClient;
 import util.WindowsAPI;
 
 using StringTools;
@@ -106,6 +107,12 @@ class BootState extends FNFState
 
 	function initGame()
 	{
+		DiscordClient.initialize();
+		Application.current.window.onClose.add(function()
+		{
+			DiscordClient.shutdown();
+		});
+
 		FlxG.fixedTimestep = false; // allow elapsed time to be variable
 		FlxG.debugger.toggleKeys = [GRAVEACCENT, BACKSLASH]; // remove F2 from debugger toggle keys
 		FlxG.game.focusLostFramerate = 60; // 60 fps instead of 10 when focus is lost

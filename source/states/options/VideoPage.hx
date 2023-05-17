@@ -9,6 +9,7 @@ class VideoPage extends BaseSettingsPage
 	public function new()
 	{
 		super();
+		rpcDetails = 'Video Options';
 
 		addSetting({
 			name: 'resolution',
