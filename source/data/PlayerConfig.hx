@@ -8,6 +8,8 @@ typedef PlayerConfig =
 	var controls:Map<Control, Array<Int>>;
 	var ?scrollSpeed:Float;
 	var downScroll:Bool;
+	var ?judgementCounter:Bool;
+	var ?npsDisplay:Bool;
 	var ?noteSplashes:Bool;
 	var ?noReset:Bool;
 	var ?autoplay:Bool;

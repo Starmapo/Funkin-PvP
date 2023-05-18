@@ -108,7 +108,7 @@ class MusicTiming implements IFlxDestroyable
 	/**
 		Whether or not this will detect if it missed a step hit and replay it before the current step.
 	**/
-	public var checkSkippedSteps:Bool = true;
+	public var checkSkippedSteps:Bool;
 
 	public var dance:Bool = true;
 	public var paused:Bool = false;
@@ -120,7 +120,7 @@ class MusicTiming implements IFlxDestroyable
 	var oldStep:Int = -1;
 	var dancingSprites:Array<DancingSprite> = [];
 
-	public function new(music:FlxSound, ?timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = true, startDelay:Float = 0, ?onBeatHit:Int->Float->Void,
+	public function new(music:FlxSound, ?timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = false, startDelay:Float = 0, ?onBeatHit:Int->Float->Void,
 			?extraMusic:Array<FlxSound>, ?onStart:MusicTiming->Void)
 	{
 		if (music == null)

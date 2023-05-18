@@ -32,8 +32,10 @@ import subStates.ResultsScreen;
 import sys.FileSystem;
 import ui.editors.NotificationManager;
 import ui.game.HealthBar;
+import ui.game.JudgementCounter;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
+import ui.game.NPSDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
 import ui.game.SongInfoDisplay;
@@ -87,6 +89,8 @@ class PlayState extends FNFState
 	public var backgroundCover:FlxSprite;
 	public var detailsText:String;
 	public var pausedDetailsText:String;
+	public var judgementCounters:FlxTypedGroup<JudgementCounter>;
+	public var npsDisplay:FlxTypedGroup<NPSDisplay>;
 
 	var instEnded:Bool = false;
 
@@ -197,6 +201,8 @@ class PlayState extends FNFState
 		deathBG = null;
 		deathTimer = null;
 		backgroundCover = null;
+		judgementCounters = null;
+		npsDisplay = null;
 	}
 
 	override function openSubState(subState:FlxSubState)
@@ -442,7 +448,6 @@ class PlayState extends FNFState
 			if (songInst.playing)
 				timing.pauseMusic();
 			timing.paused = true;
-			timing.checkSkippedSteps = false;
 			songInst.time = songInst.length;
 			songVocals.stop();
 			lyricsDisplay.visible = false;
@@ -522,7 +527,7 @@ class PlayState extends FNFState
 			songVocals = FlxG.sound.list.add(new FlxSound());
 		songVocals.pitch = Settings.playbackRate;
 
-		timing = new MusicTiming(songInst, song.timingPoints, true, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
+		timing = new MusicTiming(songInst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
 		timing.onStepHit.add(onStepHit);
 		timing.onBeatHit.add(onBeatHit);
 		timing.onBarHit.add(onBarHit);
@@ -578,11 +583,29 @@ class PlayState extends FNFState
 			statsDisplay.cameras = [camHUD];
 		}
 
+		judgementCounters = new FlxTypedGroup();
+		for (i in 0...2)
+		{
+			var counter = new JudgementCounter(ruleset.scoreProcessors[i]);
+			counter.exists = Settings.playerConfigs[i].judgementCounter;
+			judgementCounters.add(counter);
+		}
+		judgementCounters.cameras = [camHUD];
+		add(judgementCounters);
+
+		npsDisplay = new FlxTypedGroup();
+		for (i in 0...2)
+		{
+			var display = new NPSDisplay(i);
+			display.exists = Settings.playerConfigs[i].npsDisplay;
+			npsDisplay.add(display);
+		}
+		npsDisplay.cameras = [camHUD];
+
 		if (!Settings.hideHUD || Settings.timeDisplay != DISABLED)
 		{
 			songInfoDisplay = new SongInfoDisplay(song, songInst, timing);
 			songInfoDisplay.cameras = [camHUD];
-			add(songInfoDisplay);
 		}
 
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
@@ -590,7 +613,6 @@ class PlayState extends FNFState
 		add(lyricsDisplay);
 
 		notificationManager = new NotificationManager();
-		add(notificationManager);
 	}
 
 	function initPauseSubState()
@@ -640,6 +662,13 @@ class PlayState extends FNFState
 
 			add(statsDisplay);
 		}
+
+		add(npsDisplay);
+
+		if (songInfoDisplay != null)
+			add(songInfoDisplay);
+
+		add(notificationManager);
 	}
 
 	function initStage()
@@ -821,6 +850,8 @@ class PlayState extends FNFState
 		var char = getNoteCharacter(note);
 		char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate);
 
+		npsDisplay.members[player].addTime(Date.now().getTime());
+
 		executeScripts("onNoteHit", [note, judgement]);
 	}
 
@@ -844,6 +875,8 @@ class PlayState extends FNFState
 	{
 		if (judgementDisplay != null)
 			judgementDisplay.members[player].showJudgement(judgement);
+
+		judgementCounters.members[player].updateText();
 
 		executeScripts("onJudgementAdded", [judgement, player]);
 	}

@@ -62,6 +62,20 @@ class PlayerPage extends Page
 			changeAmount: 0.01
 		});
 		addSetting({
+			name: 'judgementCounter',
+			displayName: 'Judgement Counter',
+			description: 'If enabled, a counter will keep track of your current judgements.',
+			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
+			name: 'npsDisplay',
+			displayName: 'NPS Display',
+			description: 'If enabled, your current notes per second are visible.',
+			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
 			name: 'noteSplashes',
 			displayName: 'Note Splashes',
 			description: 'If enabled, a splash will appear when you get a "Sick" or "Marvelous" judgement.',

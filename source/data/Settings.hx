@@ -29,6 +29,7 @@ class Settings
 	public static var lowQuality:Bool = false;
 	public static var shaders:Bool = true;
 	public static var backgroundBrightness:Float = 1;
+	public static var distractions:Bool = true;
 	public static var hideHUD:Bool = false;
 	public static var timeDisplay:TimeDisplay = TIME_ELAPSED;
 	public static var healthBarAlpha:Float = 1;
@@ -71,7 +72,7 @@ class Settings
 	public static var editorSaveOnExit:Bindable<Bool> = new Bindable(true);
 	public static var editorMetronome:Bindable<MetronomeType> = new Bindable(MetronomeType.NONE);
 
-	public static var fields:Array<String>;
+	static var fields:Array<String>;
 
 	public static function loadData()
 	{
@@ -97,28 +98,13 @@ class Settings
 		FlxG.sound.defaultSoundGroup.volume = effectVolume;
 
 		FlxG.autoPause = autoPause;
-
-		if (playerConfigs != null)
-		{
-			for (config in playerConfigs)
-			{
-				if (config.scrollSpeed == null)
-					config.scrollSpeed = 0.75;
-				if (config.noteSplashes == null)
-					config.noteSplashes = true;
-				if (config.noReset == null)
-					config.noReset = false;
-				if (config.autoplay == null)
-					config.autoplay = false;
-			}
-		}
 	}
 
 	public static function saveData()
 	{
 		if (fields == null)
 			initFields();
-		
+
 		for (f in fields)
 		{
 			var field = Reflect.getProperty(Settings, f);

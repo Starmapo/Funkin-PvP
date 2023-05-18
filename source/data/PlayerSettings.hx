@@ -48,6 +48,22 @@ class PlayerSettings
 	{
 		initSaveData();
 
+		for (config in Settings.playerConfigs)
+		{
+			if (config.scrollSpeed == null)
+				config.scrollSpeed = 0.75;
+			if (config.judgementCounter == null)
+				config.judgementCounter = false;
+			if (config.npsDisplay == null)
+				config.npsDisplay = false;
+			if (config.noteSplashes == null)
+				config.noteSplashes = true;
+			if (config.noReset == null)
+				config.noReset = false;
+			if (config.autoplay == null)
+				config.autoplay = false;
+		}
+
 		for (i in 0...2)
 		{
 			var player = new PlayerSettings(i);
@@ -191,6 +207,7 @@ class PlayerSettings
 			controls: controls,
 			scrollSpeed: 0.75,
 			downScroll: false,
+			judgementCounter: false,
 			noteSplashes: true,
 			noReset: false,
 			autoplay: false

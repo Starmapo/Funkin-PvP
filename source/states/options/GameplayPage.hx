@@ -33,6 +33,13 @@ class GameplayPage extends BaseSettingsPage
 			maxValue: 1
 		});
 		addSetting({
+			name: 'distractions',
+			displayName: 'Distractions',
+			description: "Toggle stage distractions that can hinder your gameplay.",
+			type: CHECKBOX,
+			defaultValue: true
+		});
+		addSetting({
 			name: 'hideHUD',
 			displayName: 'Hide HUD',
 			description: "If enabled, hides most HUD elements.",
