@@ -14,7 +14,9 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import states.menus.MainMenuState;
+import subStates.pvp.JudgementPresetsSubState;
 import ui.lists.SettingsMenuList;
 import util.DiscordClient;
 
@@ -22,22 +24,26 @@ class RulesetState extends FNFState
 {
 	static var lastSelected:Int = 0;
 
+	public var items:SettingsMenuList;
+
 	var camScroll:FlxCamera;
 	var camOver:FlxCamera;
 	var iconScroll:FlxBackdrop;
 	var transitioning:Bool = true;
-	var items:SettingsMenuList;
 	var descBG:FlxSprite;
 	var descText:FlxText;
 	var descTween:FlxTween;
 	var camFollow:FlxObject;
 	var stateText:FlxText;
+	var judgementPresetsSubState:JudgementPresetsSubState;
 
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Ruleset Options");
 
 		transIn = transOut = null;
+		destroySubStates = false;
+		persistentUpdate = false;
 
 		camScroll = new FlxCamera();
 		camScroll.bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.5);
@@ -45,6 +51,9 @@ class RulesetState extends FNFState
 		camOver = new FlxCamera();
 		camOver.bgColor = 0;
 		FlxG.cameras.add(camOver, false);
+
+		judgementPresetsSubState = new JudgementPresetsSubState(this);
+		judgementPresetsSubState.cameras = [camOver];
 
 		camFollow = new FlxObject(FlxG.width / 2);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
@@ -196,6 +205,14 @@ class RulesetState extends FNFState
 			maxValue: 500
 		});
 		addSetting({
+			displayName: 'Judgement Presets',
+			description: "Choose a preset for judgement hit windows.",
+			type: ACTION
+		}, function()
+		{
+			openSubState(judgementPresetsSubState);
+		});
+		addSetting({
 			name: 'comboBreakJudgement',
 			displayName: 'Combo Break Judgement',
 			description: 'Select which judgement causes a player to lose their combo.',
@@ -321,6 +338,7 @@ class RulesetState extends FNFState
 		descTween = null;
 		camFollow = null;
 		stateText = null;
+		judgementPresetsSubState = FlxDestroyUtil.destroy(judgementPresetsSubState);
 	}
 
 	function onChange(item:SettingsMenuItem)
