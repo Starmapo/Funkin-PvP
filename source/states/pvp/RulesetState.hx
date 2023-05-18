@@ -175,6 +175,12 @@ class RulesetState extends FNFState
 			type: CHECKBOX
 		});
 		addSetting({
+			name: 'ghostTapping',
+			displayName: 'Ghost Tapping',
+			description: "If enabled, you won't get misses from pressing a key without there being a note nearby.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'marvWindow',
 			displayName: '"Marvelous" Hit Window',
 			description: 'Change the amount of milliseconds you have for scoring a "Marvelous" rating.',
@@ -281,6 +287,36 @@ class RulesetState extends FNFState
 			displayName: 'Can Die',
 			description: "If enabled, players can die by losing all of their health.",
 			type: CHECKBOX
+		});
+		addSetting({
+			name: 'healthGain',
+			displayName: 'Health Gain Multiplier',
+			description: 'Change how much health you gain after successfully hitting a note.',
+			type: NUMBER,
+			displayFunction: function(value)
+			{
+				return value + 'x';
+			},
+			minValue: 0,
+			maxValue: 5,
+			decimals: 2,
+			changeAmount: 0.05,
+			holdDelay: 0.05
+		});
+		addSetting({
+			name: 'healthLoss',
+			displayName: 'Health Loss Multiplier',
+			description: 'Change how much health you lose after missing or badly hitting a note.',
+			type: NUMBER,
+			displayFunction: function(value)
+			{
+				return value + 'x';
+			},
+			minValue: 0.5,
+			maxValue: 5,
+			decimals: 2,
+			changeAmount: 0.05,
+			holdDelay: 0.05
 		});
 		addSetting({
 			name: 'noMiss',

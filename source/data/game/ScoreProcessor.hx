@@ -132,7 +132,12 @@ class ScoreProcessor implements IFlxDestroyable
 		final standardizedMaxScore = 1000000;
 		score = Math.round(standardizedMaxScore * (scoreCount / summedScore));
 
-		health = FlxMath.bound(health + judgementHealthWeighting[judgement], 0, 100);
+		var healthAdd = judgementHealthWeighting[judgement];
+		if (healthAdd > 0)
+			healthAdd *= Settings.healthGain;
+		else if (healthAdd < 0)
+			healthAdd *= Settings.healthLoss;
+		health = FlxMath.bound(health + healthAdd, 0, 100);
 
 		ruleset.judgementAdded.dispatch(judgement, player);
 	}

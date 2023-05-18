@@ -50,6 +50,7 @@ class Settings
 	public static var fullLongNotes:Bool = false;
 	public static var inverse:Bool = false;
 	public static var randomize:Bool = false;
+	public static var ghostTapping:Bool = true;
 	public static var marvWindow:Int = 23;
 	public static var sickWindow:Int = 57;
 	public static var goodWindow:Int = 101;
@@ -59,6 +60,8 @@ class Settings
 	public static var comboBreakJudgement:Judgement = MISS;
 	public static var randomEvents:Bool = true;
 	public static var canDie:Bool = true;
+	public static var healthGain:Float = 1;
+	public static var healthLoss:Float = 1;
 	public static var noMiss:Bool = false;
 	public static var winCondition:WinCondition = SCORE;
 	// Editor

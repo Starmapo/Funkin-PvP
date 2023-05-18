@@ -854,6 +854,15 @@ class PlayState extends FNFState
 
 	function onGhostTap(lane:Int, player:Int)
 	{
+		if (!Settings.ghostTapping)
+		{
+			var char = getPlayerCharacter(player);
+			char.playMissAnim(lane);
+
+			if (Settings.missSounds)
+				playMissSound();
+		}
+
 		executeScripts("onGhostTap", [lane, player]);
 	}
 

@@ -135,6 +135,12 @@ class InputManager implements IFlxDestroyable
 
 		if (judgement == GHOST)
 		{
+			if (!Settings.ghostTapping)
+			{
+				ruleset.scoreProcessors[player].registerScore(MISS);
+				ruleset.scoreProcessors[player].stats.push(new HitStat(MISS, PRESS, null, time, MISS, time, ruleset.scoreProcessors[player].accuracy,
+					ruleset.scoreProcessors[player].health));
+			}
 			ruleset.ghostTap.dispatch(lane, player);
 			return;
 		}
