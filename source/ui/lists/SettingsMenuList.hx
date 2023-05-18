@@ -37,15 +37,19 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 				}
 			}
 
-			if (checkAction(RESET_P) && selectedItem.data.type != ACTION && selectedItem.value != selectedItem.data.defaultValue)
+			if (checkAction(RESET_P) && selectedItem.data.type != ACTION)
 			{
-				selectedItem.value = selectedItem.data.defaultValue;
+				var defaultValue = selectedItem.getDefaultValue();
+				if (selectedItem.value != defaultValue)
+				{
+					selectedItem.value = defaultValue;
 
-				if (selectedItem.callback != null)
-					selectedItem.callback();
+					if (selectedItem.callback != null)
+						selectedItem.callback();
 
-				if (playScrollSound)
-					CoolUtil.playScrollSound();
+					if (playScrollSound)
+						CoolUtil.playScrollSound();
+				}
 			}
 		}
 	}
@@ -166,6 +170,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		nameText = new FlxText(5, 0, 0, '', 65);
 		nameText.setFormat('PhantomMuff 1.5', nameText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		nameText.antialiasing = true;
 		label.add(nameText);
 
 		super(x, y, label, name, callback);
@@ -215,6 +220,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 				default:
 					valueText = new FlxText((FlxG.width / 2) + 5, 0, 0, '', 65);
 					valueText.setFormat('PhantomMuff 1.5', valueText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+					valueText.antialiasing = true;
 					updateValueText();
 					label.add(valueText);
 			}
@@ -247,6 +253,11 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			valueText.size = Math.floor(valueText.size * ratio);
 		}
 		valueText.x = (FlxG.width / 2) + 5 + ((maxWidth - valueText.width) / 2);
+	}
+
+	public function getDefaultValue()
+	{
+		return Settings.defaultValues.get(data.name);
 	}
 
 	function resolveSettingData(data:SettingData)

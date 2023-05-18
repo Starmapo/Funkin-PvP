@@ -15,7 +15,6 @@ class AudioPage extends BaseSettingsPage
 			displayName: 'Music Volume',
 			description: "How loud the music should be.",
 			type: PERCENT,
-			defaultValue: 1,
 			minValue: 0,
 			maxValue: 1
 		}, function()
@@ -27,7 +26,6 @@ class AudioPage extends BaseSettingsPage
 			displayName: 'Effect Volume',
 			description: "How loud the sound effects should be.",
 			type: PERCENT,
-			defaultValue: 1,
 			minValue: 0,
 			maxValue: 1
 		}, function()
@@ -39,7 +37,6 @@ class AudioPage extends BaseSettingsPage
 			displayName: 'Global Offset',
 			description: "An offset to apply to every song. Negative offset means the timing position is behind of the audio position, useful for headphones latency.",
 			type: NUMBER,
-			defaultValue: 0,
 			displayFunction: function(value)
 			{
 				return value + 'ms';
@@ -53,8 +50,7 @@ class AudioPage extends BaseSettingsPage
 			name: 'smoothAudioTiming',
 			displayName: 'Smooth Audio Timing',
 			description: "If enabled, attempts to make the audio/frame timing move smoothly, instead of being set to the audio's exact position.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		});
 		*/
 	}

@@ -126,6 +126,8 @@ class BootState extends FNFState
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
 		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
+
+		Paths.init();
 	}
 
 	function loadSave()

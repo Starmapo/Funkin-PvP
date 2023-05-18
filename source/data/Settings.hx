@@ -73,6 +73,8 @@ class Settings
 	public static var editorSaveOnExit:Bindable<Bool> = new Bindable(true);
 	public static var editorMetronome:Bindable<MetronomeType> = new Bindable(MetronomeType.NONE);
 
+	public static var defaultValues:Map<String, Dynamic> = new Map();
+
 	static var fields:Array<String>;
 
 	public static function loadData()
@@ -149,6 +151,7 @@ class Settings
 	{
 		var daFields = Type.getClassFields(Settings);
 		daFields.remove('fields');
+		daFields.remove('defaultValues');
 		var i = daFields.length - 1;
 		while (i >= 0)
 		{
@@ -156,6 +159,16 @@ class Settings
 			var field = Reflect.getProperty(Settings, f);
 			if (Reflect.isFunction(field))
 				daFields.remove(f);
+			else
+			{
+				if (Std.isOfType(field, Bindable))
+				{
+					var bindable:Bindable<Any> = cast field;
+					defaultValues.set(f, bindable.value);
+				}
+				else
+					defaultValues.set(f, field);
+			}
 
 			i--;
 		}

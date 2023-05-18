@@ -100,15 +100,13 @@ class RulesetState extends FNFState
 			name: 'singleSongSelection',
 			displayName: 'Single Song Selection',
 			description: "If enabled, both players will pick one song instead of randomly picking from both players' selections.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		});
 		addSetting({
 			name: 'playbackRate',
 			displayName: 'Playback Rate',
 			description: "Change how slow or fast the song plays.",
 			type: NUMBER,
-			defaultValue: 1,
 			displayFunction: function(value)
 			{
 				return value + 'x';
@@ -123,22 +121,19 @@ class RulesetState extends FNFState
 			name: 'noSliderVelocity',
 			displayName: 'No Slider Velocities',
 			description: "If enabled, slider velocities are removed from maps that have them.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		});
 		addSetting({
 			name: 'mirrorNotes',
 			displayName: 'Mirror Notes',
 			description: "If enabled, the map is flipped horizontally.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		});
 		addSetting({
 			name: 'noLongNotes',
 			displayName: 'No Long Notes',
 			description: "If enabled, long notes are converted into regular notes.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		}, function()
 		{
 			if (Settings.noLongNotes)
@@ -151,8 +146,7 @@ class RulesetState extends FNFState
 			name: 'fullLongNotes',
 			displayName: 'Full Long Notes',
 			description: "If enabled, every note in the map becomes a long note.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		}, function()
 		{
 			if (Settings.fullLongNotes)
@@ -165,8 +159,7 @@ class RulesetState extends FNFState
 			name: 'inverse',
 			displayName: 'Inverse Notes',
 			description: "If enabled, regular notes are converted into long notes and long notes are replaced by gaps.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		}, function()
 		{
 			if (Settings.inverse)
@@ -179,15 +172,13 @@ class RulesetState extends FNFState
 			name: 'randomize',
 			displayName: 'Randomize Map',
 			description: "If enabled, note lanes are shuffled around randomly.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		});
 		addSetting({
 			name: 'marvWindow',
 			displayName: '"Marvelous" Hit Window',
 			description: 'Change the amount of milliseconds you have for scoring a "Marvelous" rating.',
 			type: NUMBER,
-			defaultValue: 23,
 			displayFunction: function(value)
 			{
 				return value + 'ms';
@@ -200,7 +191,6 @@ class RulesetState extends FNFState
 			displayName: '"Sick" Hit Window',
 			description: 'Change the amount of milliseconds you have for scoring a "Sick" rating.',
 			type: NUMBER,
-			defaultValue: 57,
 			displayFunction: function(value)
 			{
 				return value + 'ms';
@@ -213,7 +203,6 @@ class RulesetState extends FNFState
 			displayName: '"Good" Hit Window',
 			description: 'Change the amount of milliseconds you have for scoring a "Good" rating.',
 			type: NUMBER,
-			defaultValue: 101,
 			displayFunction: function(value)
 			{
 				return value + 'ms';
@@ -226,7 +215,6 @@ class RulesetState extends FNFState
 			displayName: '"Bad" Hit Window',
 			description: 'Change the amount of milliseconds you have for scoring a "Bad" rating.',
 			type: NUMBER,
-			defaultValue: 141,
 			displayFunction: function(value)
 			{
 				return value + 'ms';
@@ -239,7 +227,6 @@ class RulesetState extends FNFState
 			displayName: '"Shit" Hit Window',
 			description: 'Change the amount of milliseconds you have for scoring a "Shit" rating.',
 			type: NUMBER,
-			defaultValue: 169,
 			displayFunction: function(value)
 			{
 				return value + 'ms';
@@ -252,7 +239,6 @@ class RulesetState extends FNFState
 			displayName: 'Miss Window',
 			description: 'Change the amount of milliseconds you have before missing a note.',
 			type: NUMBER,
-			defaultValue: 218,
 			displayFunction: function(value)
 			{
 				return value + 'ms';
@@ -273,7 +259,6 @@ class RulesetState extends FNFState
 			displayName: 'Combo Break Judgement',
 			description: 'Select which judgement causes a player to lose their combo.',
 			type: NUMBER,
-			defaultValue: Judgement.MISS,
 			displayFunction: function(value)
 			{
 				return Judgement.getJudgementName(value);
@@ -288,30 +273,26 @@ class RulesetState extends FNFState
 				name: 'randomEvents',
 				displayName: 'Random Events',
 				description: "Whether random events are enabled to spice up the gameplay.",
-				type: CHECKBOX,
-				defaultValue: true
+				type: CHECKBOX
 			});
 		 */
 		addSetting({
 			name: 'canDie',
 			displayName: 'Can Die',
 			description: "If enabled, players can die by losing all of their health.",
-			type: CHECKBOX,
-			defaultValue: true
+			type: CHECKBOX
 		});
 		addSetting({
 			name: 'noMiss',
 			displayName: 'No Miss',
 			description: "If enabled, players die instantly if they get a combo break.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		});
 		addSetting({
 			name: 'winCondition',
 			displayName: 'Win Condition',
 			description: "Choose the win condition.",
 			type: STRING,
-			defaultValue: WinCondition.SCORE,
 			options: [WinCondition.SCORE, WinCondition.ACCURACY, WinCondition.MISSES]
 		});
 		addSetting({

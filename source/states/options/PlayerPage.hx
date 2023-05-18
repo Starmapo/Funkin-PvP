@@ -203,6 +203,11 @@ class PlayerSettingsMenuItem extends SettingsMenuItem
 		super(x, y, name, callback, data);
 	}
 
+	override function getDefaultValue()
+	{
+		return data.defaultValue;
+	}
+
 	override function get_value():Dynamic
 	{
 		return Reflect.getProperty(PlayerSettings.players[player].config, data.name);

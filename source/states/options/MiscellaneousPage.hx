@@ -14,8 +14,7 @@ class MiscellaneousPage extends BaseSettingsPage
 			name: 'autoPause',
 			displayName: 'Auto Pause',
 			description: "If enabled, the game will pause while you aren't viewing it.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		}, function()
 		{
 			FlxG.autoPause = Settings.autoPause;
@@ -24,8 +23,7 @@ class MiscellaneousPage extends BaseSettingsPage
 			name: 'persistentCache',
 			displayName: 'Persistent Cache',
 			description: "If enabled, graphics and sounds will be kept in memory even when they're unused.",
-			type: CHECKBOX,
-			defaultValue: true
+			type: CHECKBOX
 		});
 	}
 }

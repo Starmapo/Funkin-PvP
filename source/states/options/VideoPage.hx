@@ -16,7 +16,6 @@ class VideoPage extends BaseSettingsPage
 			displayName: 'Window Resolution',
 			description: 'How big the game window should be.',
 			type: PERCENT,
-			defaultValue: 1,
 			displayFunction: function(value)
 			{
 				var value:Float = value;
@@ -35,7 +34,6 @@ class VideoPage extends BaseSettingsPage
 			displayName: 'Framerate Cap',
 			description: 'The maximum amount of FPS allowed in the game.',
 			type: NUMBER,
-			defaultValue: 60,
 			displayFunction: function(value)
 			{
 				return value + ' FPS';
@@ -52,8 +50,7 @@ class VideoPage extends BaseSettingsPage
 			name: 'antialiasing',
 			displayName: 'Antialiasing',
 			description: "Whether antialiasing is enabled.",
-			type: CHECKBOX,
-			defaultValue: true
+			type: CHECKBOX
 		}, function()
 		{
 			FlxG.forceNoAntialiasing = !Settings.antialiasing;
@@ -63,7 +60,6 @@ class VideoPage extends BaseSettingsPage
 			displayName: 'Hue',
 			description: "Change the hues of the game's colors.",
 			type: NUMBER,
-			defaultValue: 0,
 			minValue: 0,
 			maxValue: 359,
 			wrap: true
@@ -76,7 +72,6 @@ class VideoPage extends BaseSettingsPage
 			displayName: 'Brightness',
 			description: "Change how bright the game looks.",
 			type: NUMBER,
-			defaultValue: 0,
 			displayFunction: function(value)
 			{
 				return value / 2 + '%';
@@ -93,7 +88,6 @@ class VideoPage extends BaseSettingsPage
 			displayName: 'Gamma',
 			description: "Change how vibrant the game looks.",
 			type: PERCENT,
-			defaultValue: 1,
 			minValue: 0.1,
 			maxValue: 1
 		}, function()
@@ -105,7 +99,6 @@ class VideoPage extends BaseSettingsPage
 			displayName: 'Filter',
 			description: 'Select a filter for colorblindness, or just for fun.',
 			type: STRING,
-			defaultValue: FilterType.NONE,
 			options: [
 				FilterType.NONE,
 				FilterType.DEUTERANOPIA,
@@ -125,8 +118,7 @@ class VideoPage extends BaseSettingsPage
 			name: 'flashing',
 			displayName: 'Flashing Lights',
 			description: "Whether flashing lights are enabled.",
-			type: CHECKBOX,
-			defaultValue: false
+			type: CHECKBOX
 		});
 	}
 }
