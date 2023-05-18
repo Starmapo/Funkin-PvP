@@ -90,12 +90,12 @@ class PlayState extends FNFState
 
 	var instEnded:Bool = false;
 
-	public function new(?song:Song, chars:Array<String>)
+	public function new(?map:Song, chars:Array<String>)
 	{
 		super();
-		if (song == null)
-			song = Song.loadSong('mods/fnf/songs/Tutorial/Hard');
-		this.song = song;
+		if (map == null)
+			map = Song.loadSong('mods/fnf/songs/Tutorial/Hard');
+		song = map;
 		this.chars = chars;
 
 		persistentUpdate = true;

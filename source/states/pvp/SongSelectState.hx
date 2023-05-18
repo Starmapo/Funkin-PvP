@@ -181,6 +181,20 @@ class SongSelectState extends FNFState
 		var data = group.songMenuList.selectedItem.songData;
 		var difficulty = group.difficultyMenuList.selectedItem.difficulty;
 		song = Song.loadSong(data.name + '/' + difficulty, data.directory);
+
+		if (Settings.noLongNotes)
+			song.replaceLongNotesWithRegularNotes();
+		if (Settings.inverse)
+			song.applyInverse();
+		if (Settings.fullLongNotes)
+		{
+			song.replaceLongNotesWithRegularNotes();
+			song.applyInverse();
+		}
+		if (Settings.mirrorNotes)
+			song.mirrorNotes();
+		if (Settings.randomize)
+			song.randomizeLanes();
 	}
 }
 

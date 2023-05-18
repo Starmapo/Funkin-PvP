@@ -41,6 +41,11 @@ class Settings
 	public static var singleSongSelection:Bool = false;
 	public static var playbackRate:Float = 1;
 	public static var noSliderVelocity:Bool = false;
+	public static var mirrorNotes:Bool = false;
+	public static var noLongNotes:Bool = false;
+	public static var fullLongNotes:Bool = false;
+	public static var inverse:Bool = false;
+	public static var randomize:Bool = false;
 	public static var marvWindow:Int = 23;
 	public static var sickWindow:Int = 57;
 	public static var goodWindow:Int = 101;
@@ -95,6 +100,11 @@ class Settings
 		load('singleSongSelection');
 		load('playbackRate');
 		load('noSliderVelocity');
+		load('mirrorNotes');
+		load('noLongNotes');
+		load('fullLongNotes');
+		load('inverse');
+		load('randomize');
 		load('marvWindow');
 		load('sickWindow');
 		load('goodWindow');
@@ -172,6 +182,11 @@ class Settings
 		save('singleSongSelection');
 		save('playbackRate');
 		save('noSliderVelocity');
+		save('mirrorNotes');
+		save('noLongNotes');
+		save('fullLongNotes');
+		save('inverse');
+		save('randomize');
 		save('marvWindow');
 		save('sickWindow');
 		save('goodWindow');

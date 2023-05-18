@@ -2,6 +2,7 @@ package data.song;
 
 import data.song.CameraFocus.CameraFocusChar;
 import data.song.EventObject.Event;
+import flixel.FlxG;
 import flixel.sound.FlxSound;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
@@ -1033,6 +1034,18 @@ class Song extends JsonObject
 			stage: stage
 		};
 		File.saveContent(path, Json.stringify(data, "\t"));
+	}
+
+	public function randomizeLanes()
+	{
+		var values = [for (i in 0...4) i];
+		FlxG.random.shuffle(values);
+
+		for (note in notes)
+		{
+			var add = note.player * 4;
+			note.lane = values[note.playerLane] + add;
+		}
 	}
 
 	/**
