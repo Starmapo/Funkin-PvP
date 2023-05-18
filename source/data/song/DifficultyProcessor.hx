@@ -134,13 +134,12 @@ class DifficultyProcessor implements IFlxDestroyable
 	{
 		var chordClumpToleranceMs = 8;
 
-		for (i in 0...strainSolverData.length - 1)
+		var i = 0;
+		while (i < strainSolverData.length - 1)
 		{
-			for (j in i + 1...strainSolverData.length)
+			var j = i + 1;
+			while (j < strainSolverData.length)
 			{
-				if (strainSolverData[j] == null)
-					continue;
-
 				var msDiff = strainSolverData[j].startTime - strainSolverData[i].startTime;
 				if (msDiff > chordClumpToleranceMs)
 					break;
@@ -168,13 +167,15 @@ class DifficultyProcessor implements IFlxDestroyable
 
 					strainSolverData.remove(strainSolverData[j]);
 				}
+
+				j++;
 			}
+
+			i++;
 		}
 
 		for (i in 0...strainSolverData.length)
-		{
 			strainSolverData[i].solveFingerState();
-		}
 	}
 
 	function computeForFingerActions()

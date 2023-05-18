@@ -169,7 +169,7 @@ class PlayerSettings
 			for (i in 0...FlxG.gamepads.numActiveGamepads)
 			{
 				var gamepad = FlxG.gamepads.getByID(i);
-				if (gamepad != null)
+				if (gamepad != null && gamepad.connected)
 				{
 					playerConfigs.push(createDefaultConfig(GAMEPAD(gamepad.id), defaultGamepadControls.copy()));
 					foundGamepad = true;

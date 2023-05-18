@@ -1,6 +1,7 @@
 package ui.game;
 
 import data.PlayerSettings;
+import data.Settings;
 import data.game.Judgement;
 import data.game.ScoreProcessor;
 import flixel.FlxG;
@@ -25,7 +26,7 @@ class PlayerStatsDisplay extends FlxGroup
 		var player = scoreProcessor.player;
 		if (startY == null)
 		{
-			var config = PlayerSettings.players[player].config;
+			var config = Settings.playerConfigs[player];
 			startY = (config.downScroll ? 120 : FlxG.height - 200);
 		}
 

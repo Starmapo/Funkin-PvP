@@ -420,12 +420,10 @@ class PlayState extends FNFState
 					gf.playSpecialAnim('cheer', time, true);
 
 			case "Set GF Speed":
-				trace(params, params.length, params[0]);
 				var value = params[0] != null ? Std.parseInt(params[0].trim()) : 1;
 				if (value == null || Math.isNaN(value) || value < 1)
 					value = 1;
 				gf.danceBeats = value;
-				trace(value);
 		}
 
 		executeScripts("onEvent", [name, params]);

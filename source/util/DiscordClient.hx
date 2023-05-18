@@ -10,6 +10,8 @@ import discord_rpc.DiscordRpc;
 
 class DiscordClient
 {
+	static var changedPresence:Bool = false;
+
 	public function new()
 	{
 		#if discord_rpc
@@ -68,17 +70,16 @@ class DiscordClient
 			startTimestamp: Std.int(startTimestamp / 1000),
 			endTimestamp: Std.int(endTimestamp / 1000)
 		});
+
+		changedPresence = true;
 		#end
 	}
 
 	#if discord_rpc
 	static function onReady()
 	{
-		DiscordRpc.presence({
-			state: "Starting Up",
-			largeImageKey: 'icon',
-			largeImageText: "Friday Night Funkin' PvP"
-		});
+		if (!changedPresence)
+			changePresence(null, "Starting Up");
 	}
 
 	static function onError(_code:Int, _message:String)

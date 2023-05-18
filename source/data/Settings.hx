@@ -58,76 +58,34 @@ class Settings
 	public static var noMiss:Bool = false;
 	public static var winCondition:WinCondition = SCORE;
 	// Editor
-	public static var editorScrollSpeed:BindableFloat;
-	public static var editorScaleSpeedWithRate:Bindable<Bool>;
-	public static var editorLongNoteAlpha:BindableFloat;
-	public static var editorHitsoundVolume:BindableFloat;
-	public static var editorOpponentHitsounds:Bindable<Bool>;
-	public static var editorBFHitsounds:Bindable<Bool>;
-	public static var editorLiveMapping:Bindable<Bool>;
-	public static var editorPlaceOnNearestTick:Bindable<Bool>;
-	public static var editorInstVolume:BindableFloat;
-	public static var editorVocalsVolume:BindableFloat;
-	public static var editorSaveOnExit:Bindable<Bool>;
-	public static var editorMetronome:Bindable<MetronomeType>;
+	public static var editorScrollSpeed:BindableFloat = new BindableFloat(0.8, 0.25, 5);
+	public static var editorScaleSpeedWithRate:Bindable<Bool> = new Bindable(true);
+	public static var editorLongNoteAlpha:BindableFloat = new BindableFloat(1, 0.3, 1);
+	public static var editorHitsoundVolume:BindableFloat = new BindableFloat(1, 0, 1);
+	public static var editorOpponentHitsounds:Bindable<Bool> = new Bindable(true);
+	public static var editorBFHitsounds:Bindable<Bool> = new Bindable(true);
+	public static var editorLiveMapping:Bindable<Bool> = new Bindable(true);
+	public static var editorPlaceOnNearestTick:Bindable<Bool> = new Bindable(true);
+	public static var editorInstVolume:BindableFloat = new BindableFloat(1, 0, 1);
+	public static var editorVocalsVolume:BindableFloat = new BindableFloat(1, 0, 1);
+	public static var editorSaveOnExit:Bindable<Bool> = new Bindable(true);
+	public static var editorMetronome:Bindable<MetronomeType> = new Bindable(MetronomeType.NONE);
+
+	public static var fields:Array<String>;
 
 	public static function loadData()
 	{
-		load('playerConfigs');
-		load('resolution');
-		load('fpsCap');
-		load('antialiasing');
-		load('hue');
-		load('brightness');
-		load('gamma');
-		load('filter');
-		load('flashing');
-		load('masterVolume');
-		load('musicVolume');
-		load('effectVolume');
-		load('globalOffset');
-		load('smoothAudioTiming');
-		load('lowQuality');
-		load('shaders');
-		load('backgroundBrightness');
-		load('hideHUD');
-		load('timeDisplay');
-		load('healthBarAlpha');
-		load('camZooming');
-		load('clearGameplayCache');
-		load('autoPause');
-		load('persistentCache');
-		load('singleSongSelection');
-		load('playbackRate');
-		load('noSliderVelocity');
-		load('mirrorNotes');
-		load('noLongNotes');
-		load('fullLongNotes');
-		load('inverse');
-		load('randomize');
-		load('marvWindow');
-		load('sickWindow');
-		load('goodWindow');
-		load('badWindow');
-		load('shitWindow');
-		load('missWindow');
-		load('comboBreakJudgement');
-		load('randomEvents');
-		load('canDie');
-		load('noMiss');
-		load('winCondition');
-		loadBindableFloat('editorScrollSpeed', 0.8, 0.25, 5);
-		loadBindable('editorScaleSpeedWithRate', true);
-		loadBindableFloat('editorLongNoteAlpha', 1, 0.3, 1);
-		loadBindableFloat('editorHitsoundVolume', 1, 0, 1);
-		loadBindable('editorOpponentHitsounds', true);
-		loadBindable('editorBFHitsounds', true);
-		loadBindable('editorLiveMapping', true);
-		loadBindable('editorPlaceOnNearestTick', true);
-		loadBindableFloat('editorInstVolume', 1, 0, 1);
-		loadBindableFloat('editorVocalsVolume', 1, 0, 1);
-		loadBindable('editorSaveOnExit', true);
-		loadBindable('editorMetronome', MetronomeType.NONE);
+		if (fields == null)
+			initFields();
+
+		for (f in fields)
+		{
+			var field = Reflect.getProperty(Settings, f);
+			if (Std.isOfType(field, Bindable))
+				loadBindable(f);
+			else
+				load(f);
+		}
 
 		if (!FlxG.fullscreen)
 			FlxG.resizeWindow(Math.round(FlxG.width * resolution), Math.round(FlxG.height * resolution));
@@ -140,76 +98,35 @@ class Settings
 
 		FlxG.autoPause = autoPause;
 
-		for (config in playerConfigs)
+		if (playerConfigs != null)
 		{
-			if (config.scrollSpeed == null)
-				config.scrollSpeed = 0.75;
-			if (config.noteSplashes == null)
-				config.noteSplashes = true;
-			if (config.noReset == null)
-				config.noReset = false;
-			if (config.autoplay == null)
-				config.autoplay = false;
+			for (config in playerConfigs)
+			{
+				if (config.scrollSpeed == null)
+					config.scrollSpeed = 0.75;
+				if (config.noteSplashes == null)
+					config.noteSplashes = true;
+				if (config.noReset == null)
+					config.noReset = false;
+				if (config.autoplay == null)
+					config.autoplay = false;
+			}
 		}
 	}
 
 	public static function saveData()
 	{
-		save('playerConfigs');
-		save('resolution');
-		save('fpsCap');
-		save('antialiasing');
-		save('hue');
-		save('brightness');
-		save('gamma');
-		save('filter');
-		save('flashing');
-		save('masterVolume');
-		save('musicVolume');
-		save('effectVolume');
-		save('globalOffset');
-		save('smoothAudioTiming');
-		save('lowQuality');
-		save('shaders');
-		save('backgroundBrightness');
-		save('hideHUD');
-		save('timeDisplay');
-		save('healthBarAlpha');
-		save('camZooming');
-		save('clearGameplayCache');
-		save('autoPause');
-		save('persistentCache');
-		save('singleSongSelection');
-		save('playbackRate');
-		save('noSliderVelocity');
-		save('mirrorNotes');
-		save('noLongNotes');
-		save('fullLongNotes');
-		save('inverse');
-		save('randomize');
-		save('marvWindow');
-		save('sickWindow');
-		save('goodWindow');
-		save('badWindow');
-		save('shitWindow');
-		save('missWindow');
-		save('comboBreakJudgement');
-		save('randomEvents');
-		save('canDie');
-		save('noMiss');
-		save('winCondition');
-		saveBindable('editorScrollSpeed');
-		saveBindable('editorScaleSpeedWithRate');
-		saveBindable('editorLongNoteAlpha');
-		saveBindable('editorHitsoundVolume');
-		saveBindable('editorOpponentHitsounds');
-		saveBindable('editorBFHitsounds');
-		saveBindable('editorLiveMapping');
-		saveBindable('editorPlaceOnNearestTick');
-		saveBindable('editorInstVolume');
-		saveBindable('editorVocalsVolume');
-		saveBindable('editorSaveOnExit');
-		saveBindable('editorMetronome');
+		if (fields == null)
+			initFields();
+		
+		for (f in fields)
+		{
+			var field = Reflect.getProperty(Settings, f);
+			if (Std.isOfType(field, Bindable))
+				saveBindable(f);
+			else
+				save(f);
+		}
 
 		FlxG.save.flush();
 	}
@@ -221,37 +138,13 @@ class Settings
 			Reflect.setProperty(Settings, variable, data);
 	}
 
-	static function loadBindable<T>(variable:String, defaultValue:T)
+	static function loadBindable(variable:String)
 	{
-		var bindable = new Bindable(defaultValue);
+		var bindable:Bindable<Any> = Reflect.getProperty(Settings, variable);
 
-		var data:Null<T> = Reflect.field(FlxG.save.data, variable);
+		var data = Reflect.field(FlxG.save.data, variable);
 		if (data != null)
 			bindable.value = data;
-
-		Reflect.setProperty(Settings, variable, bindable);
-	}
-
-	static function loadBindableInt(variable:String, defaultValue:Int, minValue:Int, maxValue:Int)
-	{
-		var bindable = new BindableInt(defaultValue, minValue, maxValue);
-
-		var data:Null<Int> = Reflect.field(FlxG.save.data, variable);
-		if (data != null)
-			bindable.value = data;
-
-		Reflect.setProperty(Settings, variable, bindable);
-	}
-
-	static function loadBindableFloat(variable:String, defaultValue:Float, minValue:Float, maxValue:Float)
-	{
-		var bindable = new BindableFloat(defaultValue, minValue, maxValue);
-
-		var data:Null<Float> = Reflect.field(FlxG.save.data, variable);
-		if (data != null)
-			bindable.value = data;
-
-		Reflect.setProperty(Settings, variable, bindable);
 	}
 
 	static function save(variable:String)
@@ -259,10 +152,27 @@ class Settings
 		Reflect.setField(FlxG.save.data, variable, Reflect.getProperty(Settings, variable));
 	}
 
-	static function saveBindable<T>(variable:String)
+	static function saveBindable(variable:String)
 	{
-		var bindable:Bindable<T> = Reflect.getProperty(Settings, variable);
+		var bindable:Bindable<Any> = Reflect.getProperty(Settings, variable);
 		Reflect.setField(FlxG.save.data, variable, bindable.value);
+	}
+
+	static function initFields()
+	{
+		var daFields = Type.getClassFields(Settings);
+		daFields.remove('fields');
+		var i = daFields.length - 1;
+		while (i >= 0)
+		{
+			var f = daFields[i];
+			var field = Reflect.getProperty(Settings, f);
+			if (Reflect.isFunction(field))
+				daFields.remove(f);
+
+			i--;
+		}
+		fields = daFields;
 	}
 }
 

@@ -21,7 +21,7 @@ class InputManager implements IFlxDestroyable
 		this.ruleset = ruleset;
 		this.player = player;
 		realPlayer = player;
-		config = PlayerSettings.players[player].config;
+		config = Settings.playerConfigs[player];
 		autoplay = config.autoplay;
 		controls = PlayerSettings.players[player].controls;
 		manager = ruleset.noteManagers[player];

@@ -29,7 +29,7 @@ class HealthBar extends FlxSpriteGroup
 		super();
 		this.scoreProcessor = scoreProcessor;
 		var player = scoreProcessor.player;
-		var config = PlayerSettings.players[player].config;
+		var config = Settings.playerConfigs[player];
 
 		var barWidth = Std.int((FlxG.width / 2) - 200);
 		var barHeight = 20;

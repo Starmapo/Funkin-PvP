@@ -333,10 +333,14 @@ class MusicTiming implements IFlxDestroyable
 		// thx forever engine
 		if (oldStep > curStep)
 			oldStep = curStep - 1;
-		for (i in storedSteps)
+		var i = storedSteps.length - 1;
+		while (i >= 0)
 		{
-			if (i < oldStep || i > curStep)
-				storedSteps.remove(i);
+			var step = storedSteps[i];
+			if (step < oldStep || step > curStep)
+				storedSteps.remove(step);
+
+			i--;
 		}
 		if (checkSkippedSteps && curStep > oldStep)
 		{

@@ -1,5 +1,6 @@
 package ui.game;
 
+import data.Settings;
 import data.PlayerConfig;
 import data.game.Judgement;
 import data.skin.NoteSkin;
@@ -96,7 +97,7 @@ class Playfield extends FlxGroup
 
 		this.player = player;
 		this.noteSkin = noteSkin;
-		config = FlxG.save.data.playerConfigs[player];
+		config = Settings.playerConfigs[player];
 
 		initReceptors();
 		initSplashes();

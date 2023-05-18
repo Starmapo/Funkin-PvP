@@ -2,5 +2,7 @@ add kade engine settings
 add forever engine settings
 add andromeda engine settings
 add leather engine settings
-rest of the fnf characters, stages and events
 force default stage setting
+rest of the fnf characters, stages and events
+add note skins
+add rating skins
