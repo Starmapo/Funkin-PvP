@@ -1,6 +1,5 @@
 package ui.game;
 
-import flixel.math.FlxMath;
 import data.PlayerConfig;
 import data.PlayerSettings;
 import data.Settings;
@@ -9,6 +8,7 @@ import data.game.ScoreProcessor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 
@@ -40,9 +40,13 @@ class HealthBar extends FlxSpriteGroup
 		bg = new FlxSprite().makeGraphic(barWidth, barHeight, FlxColor.BLACK);
 		add(bg);
 
-		var healthColor = CoolUtil.getColorFromArray(charInfo.healthColors);
 		bar = new FlxBar(4, 4, right ? RIGHT_TO_LEFT : LEFT_TO_RIGHT, Std.int(bg.width) - 8, Std.int(bg.height) - 8, scoreProcessor, 'health');
-		bar.createFilledBar(healthColor.getDarkened(0.5), healthColor);
+		if (Settings.healthBarColors)
+		{
+			var healthColor = CoolUtil.getColorFromArray(charInfo.healthColors);
+			bar.createFilledBar(healthColor.getDarkened(0.5), healthColor);
+		} else
+			bar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		bar.numDivisions = Std.int(bar.width);
 		add(bar);
 

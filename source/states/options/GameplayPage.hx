@@ -69,6 +69,13 @@ class GameplayPage extends BaseSettingsPage
 			maxValue: 1
 		});
 		addSetting({
+			name: 'healthBarColors',
+			displayName: 'Character Health Colors',
+			description: "If enabled, health bars have their colors match the character icons.",
+			type: CHECKBOX,
+			defaultValue: true
+		});
+		addSetting({
 			name: 'camZooming',
 			displayName: 'Camera Zooming on Beat',
 			description: "If enabled, the camera will zoom in on every bar.",

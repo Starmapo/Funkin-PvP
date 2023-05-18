@@ -33,6 +33,7 @@ class Settings
 	public static var hideHUD:Bool = false;
 	public static var timeDisplay:TimeDisplay = TIME_ELAPSED;
 	public static var healthBarAlpha:Float = 1;
+	public static var healthBarColors:Bool = true;
 	public static var camZooming:Bool = true;
 	public static var clearGameplayCache:Bool = true;
 	// Miscellaneous
