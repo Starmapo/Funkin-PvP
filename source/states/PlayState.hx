@@ -27,6 +27,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import haxe.io.Path;
 import sprites.game.Character;
+import states.pvp.SongSelectState;
 import subStates.PauseSubState;
 import subStates.ResultsScreen;
 import sys.FileSystem;
@@ -460,18 +461,26 @@ class PlayState extends FNFState
 				songInfoDisplay.visible = false;
 			ruleset.stopInput();
 
-			var screen = new ResultsScreen(this);
-			if (screen.winner > -1)
-				focusOnChar(getPlayerCharacter(screen.winner));
-			openSubState(screen);
-
-			var winText = switch (screen.winner)
+			if (Settings.resultsScreen)
 			{
-				case -1: 'Tie';
-				default: 'Player ${screen.winner + 1} wins';
-			}
+				var screen = new ResultsScreen(this);
+				if (screen.winner > -1)
+					focusOnChar(getPlayerCharacter(screen.winner));
+				openSubState(screen);
 
-			DiscordClient.changePresence(winText + ' - ' + detailsText, 'Results Screen');
+				var winText = switch (screen.winner)
+				{
+					case -1: 'Tie';
+					default: 'Player ${screen.winner + 1} wins';
+				}
+
+				DiscordClient.changePresence(winText + ' - ' + detailsText, 'Results Screen');
+			}
+			else
+			{
+				exit(new SongSelectState());
+				CoolUtil.playPvPMusic();
+			}
 		}
 	}
 
@@ -754,6 +763,12 @@ class PlayState extends FNFState
 			Paths.getImage('countdown/' + image);
 		for (sound in introSndPaths)
 			Paths.getSound('countdown/' + sound);
+
+		if (Settings.missSounds)
+		{
+			for (i in 1...4)
+				Paths.getSound('miss/missnote$i');
+		}
 	}
 
 	function updateCamPosition()
@@ -860,6 +875,9 @@ class PlayState extends FNFState
 		var char = getNoteCharacter(note);
 		char.playMissAnim(note.info.playerLane);
 
+		if (Settings.missSounds)
+			playMissSound();
+
 		executeScripts("onNoteMissed", [note]);
 	}
 
@@ -867,6 +885,9 @@ class PlayState extends FNFState
 	{
 		var char = getNoteCharacter(note);
 		char.playMissAnim(note.info.playerLane);
+
+		if (Settings.missSounds)
+			playMissSound();
 
 		executeScripts("onNoteReleaseMissed", [note]);
 	}
@@ -1038,6 +1059,11 @@ class PlayState extends FNFState
 			if (score.failed || reset)
 				onDeath(i);
 		}
+	}
+
+	function playMissSound()
+	{
+		FlxG.sound.play(Paths.getSound('miss/missnote' + FlxG.random.int(1, 3)), FlxG.random.float(0.1, 0.2));
 	}
 
 	function get_isComplete()

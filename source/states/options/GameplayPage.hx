@@ -68,9 +68,21 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		addSetting({
+			name: 'missSounds',
+			displayName: 'Miss Sounds',
+			description: "Whether or not a sound should play when you miss a note.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'camZooming',
 			displayName: 'Camera Zooming on Beat',
-			description: "If enabled, the camera will zoom in on every bar.",
+			description: "If enabled, the camera will zoom in on every bar/measure.",
+			type: CHECKBOX
+		});
+		addSetting({
+			name: 'resultsScreen',
+			displayName: 'Results Screen',
+			description: "If enabled, a results screen is shown after a match.",
 			type: CHECKBOX
 		});
 		addSetting({

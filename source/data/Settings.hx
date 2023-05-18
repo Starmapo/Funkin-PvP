@@ -34,7 +34,9 @@ class Settings
 	public static var timeDisplay:TimeDisplay = TIME_ELAPSED;
 	public static var healthBarAlpha:Float = 1;
 	public static var healthBarColors:Bool = true;
+	public static var missSounds:Bool = true;
 	public static var camZooming:Bool = true;
+	public static var resultsScreen:Bool = true;
 	public static var clearGameplayCache:Bool = true;
 	// Miscellaneous
 	public static var autoPause:Bool = false;
