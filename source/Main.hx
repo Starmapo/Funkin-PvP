@@ -16,6 +16,7 @@ using StringTools;
 class Main extends Sprite
 {
 	public static final TRANSITION_TIME:Float = 0.7;
+
 	static var gameFilters:Array<BitmapFilter> = [];
 	static var colorFilter:ColorMatrixFilter;
 	static var hueFilter:ColorMatrixFilter;
@@ -134,6 +135,11 @@ class Main extends Sprite
 			a3, b3, c3, 0, 0,
 			 0,  0,  0, 1, 0
 		];
+	}
+
+	public static function getTransitionTime()
+	{
+		return TRANSITION_TIME * (Settings.fastTransitions ? 0.4 : 1);
 	}
 
 	public function new()

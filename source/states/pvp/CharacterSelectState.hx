@@ -90,8 +90,9 @@ class CharacterSelectState extends FNFState
 		add(stateText);
 
 		FlxG.camera.zoom = 3;
-		FlxTween.tween(camScroll, {y: 0}, Main.TRANSITION_TIME, {ease: FlxEase.expoOut});
-		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(camScroll, {y: 0}, duration, {ease: FlxEase.expoOut});
+		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
 			{
@@ -100,7 +101,7 @@ class CharacterSelectState extends FNFState
 					group.setControlsEnabled(true);
 			}
 		});
-		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
+		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 
 		super.create();
 	}
@@ -163,12 +164,13 @@ class CharacterSelectState extends FNFState
 		transitioning = true;
 		for (group in playerGroups)
 			group.setControlsEnabled(false);
-		FlxTween.tween(camScroll, {y: -camScroll.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
-		FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(camScroll, {y: -camScroll.height}, duration / 2, {ease: FlxEase.expoIn});
+		FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
 			ease: FlxEase.expoIn,
 			onComplete: onComplete
 		});
-		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+		camOver.fade(FlxColor.BLACK, duration, false, null, true);
 	}
 }
 

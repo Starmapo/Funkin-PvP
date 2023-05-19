@@ -96,6 +96,8 @@ class RulesetState extends FNFState
 		items.controlsEnabled = false;
 		add(items);
 
+		var duration = Main.getTransitionTime();
+
 		addSetting({
 			name: 'singleSongSelection',
 			displayName: 'Single Song Selection',
@@ -341,7 +343,7 @@ class RulesetState extends FNFState
 			{
 				FlxG.switchState(new SongSelectState());
 			});
-			FlxFlicker.flicker(items.selectedItem, Main.TRANSITION_TIME, 0.06, true, false);
+			FlxFlicker.flicker(items.selectedItem, duration, 0.06, true, false);
 			CoolUtil.playConfirmSound();
 		});
 
@@ -352,8 +354,8 @@ class RulesetState extends FNFState
 		add(descText);
 
 		FlxG.camera.zoom = 3;
-		FlxTween.tween(camScroll, {y: 0}, Main.TRANSITION_TIME, {ease: FlxEase.expoOut});
-		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
+		FlxTween.tween(camScroll, {y: 0}, duration, {ease: FlxEase.expoOut});
+		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
 			{
@@ -361,12 +363,12 @@ class RulesetState extends FNFState
 				items.controlsEnabled = true;
 			}
 		});
-		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
+		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playPvPMusic(0);
-			FlxG.sound.music.fadeIn(Main.TRANSITION_TIME);
+			FlxG.sound.music.fadeIn(duration);
 		}
 
 		super.create();
@@ -470,11 +472,12 @@ class RulesetState extends FNFState
 			descTween.cancel();
 		transitioning = true;
 		items.controlsEnabled = false;
+		var duration = Main.getTransitionTime();
 		if (fadeMusic)
-			FlxG.sound.music.fadeOut(Main.TRANSITION_TIME);
-		FlxTween.tween(camScroll, {y: -camScroll.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
-		FlxTween.tween(descText, {y: FlxG.height}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
-		FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
+			FlxG.sound.music.fadeOut(duration);
+		FlxTween.tween(camScroll, {y: -camScroll.height}, duration / 2, {ease: FlxEase.expoIn});
+		FlxTween.tween(descText, {y: FlxG.height}, duration / 2, {ease: FlxEase.expoIn});
+		FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
 			ease: FlxEase.expoIn,
 			onComplete: function(twn)
 			{
@@ -484,7 +487,7 @@ class RulesetState extends FNFState
 				onComplete(twn);
 			}
 		});
-		camOver.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+		camOver.fade(FlxColor.BLACK, duration, false, null, true);
 	}
 
 	function forceSettingOff(name:String)

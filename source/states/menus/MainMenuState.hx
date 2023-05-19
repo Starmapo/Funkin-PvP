@@ -86,8 +86,9 @@ class MainMenuState extends FNFState
 			magenta.y = bg.y;
 
 		FlxG.camera.zoom = 3;
-		FlxTween.tween(bg, {angle: 0}, Main.TRANSITION_TIME, {ease: FlxEase.quartInOut});
-		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(bg, {angle: 0}, duration, {ease: FlxEase.quartInOut});
+		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
 			{
@@ -95,13 +96,13 @@ class MainMenuState extends FNFState
 				menuList.controlsEnabled = true;
 			}
 		});
-		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
+		FlxG.camera.fade(FlxColor.BLACK, duration, true, null, true);
 
 		CoolUtil.playConfirmSound(0);
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playMenuMusic(0);
-			FlxG.sound.music.fadeIn(Main.TRANSITION_TIME);
+			FlxG.sound.music.fadeIn(duration);
 		}
 
 		super.create();
@@ -114,14 +115,15 @@ class MainMenuState extends FNFState
 
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
 		{
-			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
+			var duration = Main.getTransitionTime();
+			FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
 				ease: FlxEase.expoIn,
 				onComplete: function(_)
 				{
 					FlxG.switchState(new TitleState());
 				}
 			});
-			FlxG.camera.fade(FlxColor.WHITE, Main.TRANSITION_TIME, false, null, true);
+			FlxG.camera.fade(FlxColor.WHITE, duration, false, null, true);
 			CoolUtil.playCancelSound();
 			transitioning = true;
 		}
@@ -161,23 +163,24 @@ class MainMenuState extends FNFState
 		{
 			transitioning = true;
 			menuList.controlsEnabled = false;
+			var duration = Main.getTransitionTime();
 			menuList.forEach(function(item)
 			{
 				if (item != selectedItem)
 				{
-					FlxTween.tween(item, {x: item.x - FlxG.width}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
+					FlxTween.tween(item, {x: item.x - FlxG.width}, duration, {ease: FlxEase.backIn});
 				}
 			});
-			FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+			FlxG.camera.fade(FlxColor.BLACK, duration, false, null, true);
 			if (selectedItem.fadeMusic)
 			{
-				FlxG.sound.music.fadeOut(Main.TRANSITION_TIME, 0);
+				FlxG.sound.music.fadeOut(duration, 0);
 			}
-			FlxTween.tween(bg, {angle: 45}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
-			FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {ease: FlxEase.expoIn});
+			FlxTween.tween(bg, {angle: 45}, duration, {ease: FlxEase.expoIn});
+			FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {ease: FlxEase.expoIn});
 			if (magenta != null)
-				FlxFlicker.flicker(magenta, Main.TRANSITION_TIME, 0.15, false);
-			FlxFlicker.flicker(selectedItem, Main.TRANSITION_TIME, 0.06, true, false, function(_)
+				FlxFlicker.flicker(magenta, duration, 0.15, false);
+			FlxFlicker.flicker(selectedItem, duration, 0.06, true, false, function(_)
 			{
 				if (selectedItem.fadeMusic)
 					FlxG.sound.music.stop();
@@ -204,7 +207,8 @@ class MainMenuList extends TypedMenuList<MainMenuItem>
 		item.screenCenter(X);
 		var targetX = item.x;
 		item.x -= FlxG.width;
-		FlxTween.tween(item, {x: targetX}, Main.TRANSITION_TIME, {ease: FlxEase.expoInOut});
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(item, {x: targetX}, duration, {ease: FlxEase.expoInOut});
 		return addItem(name, item);
 	}
 }

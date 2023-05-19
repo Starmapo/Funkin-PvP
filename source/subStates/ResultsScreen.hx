@@ -129,7 +129,7 @@ class ResultsScreen extends FlxSubState
 		pressText.y -= pressText.height;
 		add(pressText);
 
-		FlxTween.tween(camSubState, {alpha: 1}, Main.TRANSITION_TIME, {
+		FlxTween.tween(camSubState, {alpha: 1}, Main.getTransitionTime(), {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
 			{

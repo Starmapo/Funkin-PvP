@@ -359,9 +359,10 @@ class TitleState extends FNFState
 			pressEnter.playAnim('press');
 			if (!Settings.flashing)
 				pressEnter.animation.pause();
-			camHUD.flash(FlxColor.WHITE, Main.TRANSITION_TIME);
-			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, Main.TRANSITION_TIME, {ease: FlxEase.backIn});
-			FlxTween.tween(FlxG.camera, {y: FlxG.height}, Main.TRANSITION_TIME, {
+			var duration = Main.getTransitionTime();
+			camHUD.flash(FlxColor.WHITE, duration);
+			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, duration, {ease: FlxEase.backIn});
+			FlxTween.tween(FlxG.camera, {y: FlxG.height}, duration, {
 				ease: FlxEase.expoIn,
 				onComplete: function(_)
 				{

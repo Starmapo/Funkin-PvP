@@ -78,7 +78,7 @@ class BootState extends FNFState
 			}
 
 			updateText('Finished!');
-			FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, exit, true);
+			FlxG.camera.fade(FlxColor.BLACK, Main.getTransitionTime(), false, exit, true);
 			CoolUtil.playConfirmSound();
 		});
 

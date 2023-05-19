@@ -87,14 +87,15 @@ class OptionsState extends FNFState
 		currentPage.onAppear();
 		camPages.snapToTarget();
 		FlxG.camera.zoom = 3;
-		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
 			{
 				currentPage.controlsEnabled = true;
 			}
 		});
-		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
+		camPages.fade(FlxColor.BLACK, duration, true, null, true);
 
 		super.create();
 	}
@@ -132,7 +133,8 @@ class OptionsState extends FNFState
 		{
 			currentPage.controlsEnabled = false;
 		}
-		FlxTween.tween(camPages, {y: FlxG.height}, Main.TRANSITION_TIME / 2, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(camPages, {y: FlxG.height}, duration / 2, {
 			ease: FlxEase.expoIn,
 			onComplete: function(_)
 			{
@@ -141,7 +143,7 @@ class OptionsState extends FNFState
 				{
 					currentPage.controlsEnabled = false;
 				}
-				FlxTween.tween(camPages, {y: 0}, Main.TRANSITION_TIME / 2, {
+				FlxTween.tween(camPages, {y: 0}, duration / 2, {
 					ease: FlxEase.expoOut,
 					onComplete: function(_)
 					{
@@ -181,14 +183,15 @@ class OptionsState extends FNFState
 		{
 			currentPage.controlsEnabled = false;
 		}
-		FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
 			ease: FlxEase.expoIn,
 			onComplete: function(_)
 			{
 				FlxG.switchState(nextState);
 			}
 		});
-		camPages.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+		camPages.fade(FlxColor.BLACK, duration, false, null, true);
 	}
 
 	inline function get_currentPage()

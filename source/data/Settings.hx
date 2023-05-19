@@ -2,6 +2,7 @@ package data;
 
 import data.game.Judgement;
 import flixel.FlxG;
+import flixel.addons.transition.FlxTransitionableState;
 import util.bindable.Bindable;
 import util.bindable.BindableFloat;
 import util.bindable.BindableInt;
@@ -42,6 +43,7 @@ class Settings
 	public static var clearGameplayCache:Bool = true;
 	// Miscellaneous
 	public static var autoPause:Bool = false;
+	public static var fastTransitions:Bool = false;
 	public static var persistentCache:Bool = true;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;
@@ -108,6 +110,8 @@ class Settings
 		FlxG.sound.defaultSoundGroup.volume = effectVolume;
 
 		FlxG.autoPause = autoPause;
+
+		FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
 	}
 
 	public static function saveData()

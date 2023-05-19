@@ -1,6 +1,5 @@
 package states.menus;
 
-import util.DiscordClient;
 import data.CreditsData;
 import data.PlayerSettings;
 import flixel.FlxG;
@@ -14,6 +13,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
+import util.DiscordClient;
 
 class CreditsState extends FNFState
 {
@@ -90,7 +90,8 @@ class CreditsState extends FNFState
 		categoryMenuList.snapPositions();
 
 		FlxG.camera.zoom = 3;
-		FlxTween.tween(FlxG.camera, {zoom: 1}, Main.TRANSITION_TIME, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
 			{
@@ -98,7 +99,7 @@ class CreditsState extends FNFState
 				categoryMenuList.controlsEnabled = true;
 			}
 		});
-		FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, true, null, true);
+		FlxG.camera.fade(FlxColor.BLACK, duration, true, null, true);
 
 		super.create();
 	}
@@ -108,20 +109,21 @@ class CreditsState extends FNFState
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
 		{
 			transitioning = true;
+			var duration = Main.getTransitionTime();
 			if (creditMenuList.visible)
 			{
 				creditMenuList.controlsEnabled = false;
 				for (text in creditGroup)
 				{
-					FlxTween.tween(text, {x: FlxG.width}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoIn});
+					FlxTween.tween(text, {x: FlxG.width}, duration / 2, {ease: FlxEase.expoIn});
 				}
-				FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, Main.TRANSITION_TIME / 2, {
+				FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, duration / 2, {
 					ease: FlxEase.expoIn,
 					onComplete: function(_)
 					{
 						creditMenuList.visible = false;
 						categoryMenuList.visible = true;
-						FlxTween.tween(FlxG.camera.scroll, {x: 0}, Main.TRANSITION_TIME / 2, {
+						FlxTween.tween(FlxG.camera.scroll, {x: 0}, duration / 2, {
 							ease: FlxEase.expoOut,
 							onComplete: function(_)
 							{
@@ -135,14 +137,14 @@ class CreditsState extends FNFState
 			}
 			else
 			{
-				FlxTween.tween(FlxG.camera, {zoom: 5}, Main.TRANSITION_TIME, {
+				FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
 					ease: FlxEase.expoIn,
 					onComplete: function(_)
 					{
 						FlxG.switchState(new MainMenuState());
 					}
 				});
-				FlxG.camera.fade(FlxColor.BLACK, Main.TRANSITION_TIME, false, null, true);
+				FlxG.camera.fade(FlxColor.BLACK, duration, false, null, true);
 			}
 			CoolUtil.playCancelSound();
 		}
@@ -178,7 +180,8 @@ class CreditsState extends FNFState
 	{
 		creditMenuList.resetCredits(creditsArray[categoryMenuList.selectedIndex].credits, onAcceptCredit);
 		categoryMenuList.controlsEnabled = false;
-		FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, Main.TRANSITION_TIME / 2, {
+		var duration = Main.getTransitionTime();
+		FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width / 2}, duration / 2, {
 			ease: FlxEase.expoIn,
 			onComplete: function(_)
 			{
@@ -188,9 +191,9 @@ class CreditsState extends FNFState
 				creditMenuList.snapPositions();
 				for (text in creditGroup)
 				{
-					FlxTween.tween(text, {x: (FlxG.width / 2) + 5}, Main.TRANSITION_TIME / 2, {ease: FlxEase.expoOut});
+					FlxTween.tween(text, {x: (FlxG.width / 2) + 5}, duration / 2, {ease: FlxEase.expoOut});
 				}
-				FlxTween.tween(FlxG.camera.scroll, {x: 0}, Main.TRANSITION_TIME / 2, {
+				FlxTween.tween(FlxG.camera.scroll, {x: 0}, duration / 2, {
 					ease: FlxEase.expoOut,
 					onComplete: function(_)
 					{
@@ -217,7 +220,7 @@ class CreditsState extends FNFState
 		if (colorTween != null)
 			colorTween.cancel();
 
-		colorTween = FlxTween.color(bg, Main.TRANSITION_TIME, bg.color, color, {
+		colorTween = FlxTween.color(bg, Main.getTransitionTime(), bg.color, color, {
 			onComplete: function(_)
 			{
 				colorTween = null;
