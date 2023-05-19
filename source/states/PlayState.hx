@@ -36,6 +36,7 @@ import ui.game.HealthBar;
 import ui.game.JudgementCounter;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
+import ui.game.MSDisplay;
 import ui.game.NPSDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
@@ -92,6 +93,7 @@ class PlayState extends FNFState
 	public var pausedDetailsText:String;
 	public var judgementCounters:FlxTypedGroup<JudgementCounter>;
 	public var npsDisplay:FlxTypedGroup<NPSDisplay>;
+	public var msDisplay:FlxTypedGroup<MSDisplay>;
 
 	var instEnded:Bool = false;
 
@@ -204,6 +206,7 @@ class PlayState extends FNFState
 		backgroundCover = null;
 		judgementCounters = null;
 		npsDisplay = null;
+		msDisplay = null;
 	}
 
 	override function openSubState(subState:FlxSubState)
@@ -580,6 +583,7 @@ class PlayState extends FNFState
 		ruleset.ghostTap.add(onGhostTap);
 		ruleset.noteHit.add(onNoteHit);
 		ruleset.noteMissed.add(onNoteMissed);
+		ruleset.noteReleased.add(onNoteReleased);
 		ruleset.noteReleaseMissed.add(onNoteReleaseMissed);
 		ruleset.judgementAdded.add(onJudgementAdded);
 		ruleset.noteSpawned.add(onNoteSpawned);
@@ -597,6 +601,16 @@ class PlayState extends FNFState
 				statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
 			statsDisplay.cameras = [camHUD];
 		}
+
+		msDisplay = new FlxTypedGroup();
+		for (i in 0...2)
+		{
+			var display = new MSDisplay(i);
+			display.exists = Settings.playerConfigs[i].msDisplay;
+			msDisplay.add(display);
+		}
+		msDisplay.cameras = [camHUD];
+		add(msDisplay);
 
 		judgementCounters = new FlxTypedGroup();
 		for (i in 0...2)
@@ -872,7 +886,7 @@ class PlayState extends FNFState
 		executeScripts("onGhostTap", [lane, player]);
 	}
 
-	function onNoteHit(note:Note, judgement:Judgement)
+	function onNoteHit(note:Note, judgement:Judgement, ms:Float)
 	{
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note, judgement);
@@ -882,7 +896,9 @@ class PlayState extends FNFState
 
 		npsDisplay.members[player].addTime(Date.now().getTime());
 
-		executeScripts("onNoteHit", [note, judgement]);
+		msDisplay.members[player].showMS(ms, judgement);
+
+		executeScripts("onNoteHit", [note, judgement, ms]);
 	}
 
 	function onNoteMissed(note:Note)
@@ -894,6 +910,14 @@ class PlayState extends FNFState
 			playMissSound();
 
 		executeScripts("onNoteMissed", [note]);
+	}
+
+	function onNoteReleased(note:Note, judgement:Judgement, ms:Float)
+	{
+		var player = note.info.player;
+		msDisplay.members[player].showMS(ms, judgement);
+
+		executeScripts("onNoteReleased", [note, judgement, ms]);
 	}
 
 	function onNoteReleaseMissed(note:Note)

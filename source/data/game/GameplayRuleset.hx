@@ -17,9 +17,9 @@ class GameplayRuleset implements IFlxDestroyable
 	public var lanePressed:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
 	public var laneReleased:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
 	public var ghostTap:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
-	public var noteHit:FlxTypedSignal<Note->Judgement->Void> = new FlxTypedSignal();
+	public var noteHit:FlxTypedSignal<Note->Judgement->Float->Void> = new FlxTypedSignal();
 	public var noteMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
-	public var noteReleased:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
+	public var noteReleased:FlxTypedSignal<Note->Judgement->Float->Void> = new FlxTypedSignal();
 	public var noteReleaseMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
 	public var judgementAdded:FlxTypedSignal<Judgement->Int->Void> = new FlxTypedSignal();
 	public var noteSpawned:FlxTypedSignal<Note->Void> = new FlxTypedSignal();

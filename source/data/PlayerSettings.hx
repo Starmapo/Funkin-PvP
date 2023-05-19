@@ -56,6 +56,8 @@ class PlayerSettings
 				config.judgementCounter = false;
 			if (config.npsDisplay == null)
 				config.npsDisplay = false;
+			if (config.msDisplay == null)
+				config.msDisplay = false;
 			if (config.noteSplashes == null)
 				config.noteSplashes = true;
 			if (config.noReset == null)
@@ -213,6 +215,7 @@ class PlayerSettings
 			downScroll: false,
 			judgementCounter: false,
 			npsDisplay: false,
+			msDisplay: false,
 			transparentReceptors: false,
 			transparentHolds: false,
 			noteSplashes: true,

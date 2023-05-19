@@ -162,7 +162,7 @@ class InputManager implements IFlxDestroyable
 				ruleset.noteMissed.dispatch(note);
 				manager.recyclePoolObject(note);
 			default:
-				ruleset.noteHit.dispatch(note, judgement);
+				ruleset.noteHit.dispatch(note, judgement, hitDifference);
 				if (note.info.isLongNote)
 					manager.changePoolObjectStatusToHeld(note);
 				else
@@ -186,7 +186,7 @@ class InputManager implements IFlxDestroyable
 			ruleset.scoreProcessors[player].stats.push(new HitStat(HIT, RELEASE, note.info, time, judgement, hitDifference,
 				ruleset.scoreProcessors[player].accuracy, ruleset.scoreProcessors[player].health));
 
-			ruleset.noteReleased.dispatch(note);
+			ruleset.noteReleased.dispatch(note, judgement, hitDifference);
 
 			if (judgement == MISS)
 				ruleset.noteReleaseMissed.dispatch(note);

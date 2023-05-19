@@ -201,7 +201,7 @@ class SongEditorPlayState extends FNFState
 		ruleset.playfields[player].onLaneReleased(lane);
 	}
 
-	function onNoteHit(note:Note, judgement:Judgement)
+	function onNoteHit(note:Note, judgement:Judgement, _)
 	{
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note, judgement);

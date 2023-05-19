@@ -76,6 +76,13 @@ class PlayerPage extends Page
 			defaultValue: false
 		});
 		addSetting({
+			name: 'msDisplay',
+			displayName: 'Hit MS Display',
+			description: 'If enabled, shows the millisecond difference when you hit a note.',
+			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
 			name: 'transparentReceptors',
 			displayName: 'Transparent Receptors',
 			description: 'If enabled, the receptors will be see-through.',
