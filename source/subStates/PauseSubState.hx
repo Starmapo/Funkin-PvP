@@ -46,7 +46,7 @@ class PauseSubState extends FlxSubState
 		});
 		menuList.createItem('Restart song', function()
 		{
-			FlxG.switchState(new PlayState(state.song, state.chars));
+			state.exit(new PlayState(state.song, state.chars), false);
 		});
 		menuList.createItem('Exit to options', function()
 		{

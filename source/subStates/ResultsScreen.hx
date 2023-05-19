@@ -123,8 +123,8 @@ class ResultsScreen extends FlxSubState
 			}
 		}
 
-		var pressText = new FlxText(0, FlxG.height - 10, 0, 'Press ACCEPT to continue');
-		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		var pressText = new FlxText(0, FlxG.height - 10, 0, 'Press ACCEPT to continue\nPress RESET to restart the song');
+		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.screenCenter(X);
 		pressText.y -= pressText.height;
 		add(pressText);
@@ -140,11 +140,19 @@ class ResultsScreen extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		if (canExit && PlayerSettings.checkAction(ACCEPT_P))
+		if (canExit)
 		{
-			canExit = false;
-			state.exit(new SongSelectState());
-			CoolUtil.playPvPMusic();
+			if (PlayerSettings.checkAction(ACCEPT_P))
+			{
+				canExit = false;
+				state.exit(new SongSelectState());
+				CoolUtil.playPvPMusic();
+			}
+			else if (PlayerSettings.checkAction(RESET_P))
+			{
+				canExit = false;
+				state.exit(new PlayState(state.song, state.chars), false);
+			}
 		}
 	}
 
