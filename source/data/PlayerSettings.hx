@@ -62,6 +62,10 @@ class PlayerSettings
 				config.noReset = false;
 			if (config.autoplay == null)
 				config.autoplay = false;
+			if (config.transparentReceptors == null)
+				config.transparentReceptors = false;
+			if (config.transparentHolds == null)
+				config.transparentHolds = false;
 		}
 
 		for (i in 0...2)
@@ -208,6 +212,9 @@ class PlayerSettings
 			scrollSpeed: 0.75,
 			downScroll: false,
 			judgementCounter: false,
+			npsDisplay: false,
+			transparentReceptors: false,
+			transparentHolds: false,
 			noteSplashes: true,
 			noReset: false,
 			autoplay: false

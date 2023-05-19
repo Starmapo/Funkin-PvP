@@ -76,6 +76,20 @@ class PlayerPage extends Page
 			defaultValue: false
 		});
 		addSetting({
+			name: 'transparentReceptors',
+			displayName: 'Transparent Receptors',
+			description: 'If enabled, the receptors will be see-through.',
+			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
+			name: 'transparentHolds',
+			displayName: 'Transparent Holds',
+			description: 'If enabled, note holds will be see-through.',
+			type: CHECKBOX,
+			defaultValue: false
+		});
+		addSetting({
 			name: 'noteSplashes',
 			displayName: 'Note Splashes',
 			description: 'If enabled, a splash will appear when you get a "Sick" or "Marvelous" judgement.',

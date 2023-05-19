@@ -224,9 +224,11 @@ class Note extends FlxSpriteGroup
 		head.antialiasing = noteSkin.antialiasing;
 
 		body = new AnimatedSprite();
+		body.alpha = config.transparentHolds ? 0.6 : 1;
 
 		tail = new AnimatedSprite();
 		tail.antialiasing = noteSkin.antialiasing;
+		tail.alpha = config.transparentHolds ? 0.6 : 1;
 
 		add(body);
 		add(tail);

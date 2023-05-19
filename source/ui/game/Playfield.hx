@@ -1,7 +1,7 @@
 package ui.game;
 
-import data.Settings;
 import data.PlayerConfig;
+import data.Settings;
 import data.game.Judgement;
 import data.skin.NoteSkin;
 import flixel.FlxG;
@@ -178,7 +178,7 @@ class Playfield extends FlxGroup
 
 		for (i in 0...4)
 		{
-			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1], i, noteSkin);
+			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1], i, noteSkin, config);
 			if (config.downScroll)
 				receptor.y = FlxG.height - receptor.height - 50 + noteSkin.receptorsOffset[1];
 			receptors.add(receptor);

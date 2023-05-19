@@ -10,6 +10,8 @@ typedef PlayerConfig =
 	var downScroll:Bool;
 	var ?judgementCounter:Bool;
 	var ?npsDisplay:Bool;
+	var ?transparentReceptors:Bool;
+	var ?transparentHolds:Bool;
 	var ?noteSplashes:Bool;
 	var ?noReset:Bool;
 	var ?autoplay:Bool;
