@@ -2,6 +2,7 @@ package sprites.game;
 
 import data.char.CharacterInfo;
 import flixel.animation.FlxAnimationController;
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -26,6 +27,7 @@ class Character extends DancingSprite
 	public var allowMissColor:Bool = true;
 	public var intendedColor:FlxColor = FlxColor.WHITE;
 	public var isGF:Bool;
+	public var camOffset:FlxPoint = FlxPoint.get();
 
 	var xDifference:Float = 0;
 
@@ -75,6 +77,7 @@ class Character extends DancingSprite
 	{
 		state = Idle;
 		resetColor();
+		setCamOffsetFromLane();
 	}
 
 	public function setCharacterPosition(x:Float, y:Float)
@@ -157,6 +160,7 @@ class Character extends DancingSprite
 			state = Sing(lane);
 			playAnim(anim, charInfo.loopAnimsOnHold || !hold, false, hold ? charInfo.holdLoopPoint : 0);
 			resetColor();
+			setCamOffsetFromLane(lane);
 
 			if (allowDanceTimer.active)
 				allowDanceTimer.cancel();
@@ -192,6 +196,7 @@ class Character extends DancingSprite
 				setMissColor();
 			else
 				resetColor();
+			setCamOffsetFromLane();
 
 			animation.finishCallback = function(_)
 			{
@@ -213,6 +218,7 @@ class Character extends DancingSprite
 		state = Special;
 		playAnim(name, force, reversed, frame);
 		resetColor();
+		setCamOffsetFromLane();
 
 		if (allowDanceTime > 0)
 		{
@@ -278,6 +284,7 @@ class Character extends DancingSprite
 		singAnimations = null;
 		holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
 		allowDanceTimer = FlxDestroyUtil.destroy(allowDanceTimer);
+		camOffset = FlxDestroyUtil.put(camOffset);
 	}
 
 	function initializeCharacter()
@@ -329,6 +336,24 @@ class Character extends DancingSprite
 			singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
 		else
 			singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	}
+
+	function setCamOffsetFromLane(lane:Int = -1)
+	{
+		var offset = 15;
+		switch (lane)
+		{
+			case 0:
+				camOffset.set(-offset, 0);
+			case 1:
+				camOffset.set(0, offset);
+			case 2:
+				camOffset.set(0, -offset);
+			case 3:
+				camOffset.set(offset, 0);
+			default:
+				camOffset.set();
+		}
 	}
 
 	function set_charInfo(value:CharacterInfo)

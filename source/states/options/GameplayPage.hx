@@ -68,6 +68,12 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		addSetting({
+			name: 'cameraNoteMovements',
+			displayName: 'Camera Note Movements',
+			description: "If enabled, the camera will move in the direction of notes.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'missSounds',
 			displayName: 'Miss Sounds',
 			description: "Whether or not a sound should play when you miss a note.",

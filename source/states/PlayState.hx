@@ -496,6 +496,12 @@ class PlayState extends FNFState
 		var camOffsetY = char.charInfo.cameraOffset[1];
 		if (char.flipped)
 			camOffsetX *= -1;
+		if (Settings.cameraNoteMovements)
+		{
+			camOffsetX += char.camOffset.x;
+			camOffsetY += char.camOffset.y;
+		}
+
 		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
 	}
 
