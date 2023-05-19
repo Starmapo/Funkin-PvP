@@ -34,6 +34,7 @@ class Settings
 	public static var timeDisplay:TimeDisplay = TIME_ELAPSED;
 	public static var healthBarAlpha:Float = 1;
 	public static var healthBarColors:Bool = true;
+	public static var breakTransparency:Bool = true;
 	public static var cameraNoteMovements:Bool = true;
 	public static var missSounds:Bool = true;
 	public static var camZooming:Bool = true;

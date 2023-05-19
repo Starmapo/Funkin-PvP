@@ -68,6 +68,12 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		addSetting({
+			name: 'breakTransparency',
+			displayName: 'Receptors Transparent on Break',
+			description: "If enabled, playfield receptors will get more transparent while there aren't notes nearby.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'cameraNoteMovements',
 			displayName: 'Camera Note Movements',
 			description: "If enabled, the camera will move in the direction of notes.",

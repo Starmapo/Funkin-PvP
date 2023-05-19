@@ -50,7 +50,7 @@ class NoteManager extends FlxBasic
 		initializeInfoPools();
 		initializeObjectPool();
 
-		if (onBreak)
+		if (Settings.breakTransparency && onBreak)
 		{
 			alpha = breakAlpha;
 			ruleset.playfields[player].alpha = alpha;
@@ -465,6 +465,9 @@ class NoteManager extends FlxBasic
 
 	function updateAlpha(elapsed:Float)
 	{
+		if (!Settings.breakTransparency)
+			return;
+
 		if (onBreak && alpha > breakAlpha)
 		{
 			alpha -= elapsed * 3;
