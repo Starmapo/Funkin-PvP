@@ -128,7 +128,7 @@ class Character extends DancingSprite
 	public function playNoteAnim(note:Note, beatLength:Float)
 	{
 		var lane = note.info.playerLane;
-		playSingAnim(lane, beatLength);
+		playSingAnim(lane, beatLength, false, note.animSuffix);
 
 		if (note.info.isLongNote)
 		{
@@ -138,7 +138,7 @@ class Character extends DancingSprite
 			holdTimers[lane] = new FlxTimer().start(holdTime / FlxAnimationController.globalSpeed, function(tmr)
 			{
 				if (note.exists && note.currentlyBeingHeld && note.tail.visible)
-					playSingAnim(lane, beatLength, true);
+					playSingAnim(lane, beatLength, true, note.animSuffix);
 				else
 				{
 					tmr.cancel();
@@ -148,12 +148,15 @@ class Character extends DancingSprite
 		}
 	}
 
-	public function playSingAnim(lane:Int, beatLength:Float, hold:Bool = false)
+	public function playSingAnim(lane:Int, beatLength:Float, hold:Bool = false, suffix:String = '')
 	{
 		if (lane < 0 || lane > singAnimations.length - 1)
 			return;
 
-		var anim = singAnimations[lane];
+		var anim = singAnimations[lane] + suffix;
+		if (!animation.exists(anim) && suffix.length > 0)
+			anim = singAnimations[lane];
+
 		if (animation.exists(anim))
 		{
 			canDance = false;

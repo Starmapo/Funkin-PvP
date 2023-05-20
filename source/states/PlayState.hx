@@ -326,6 +326,9 @@ class PlayState extends FNFState
 
 	public function getNoteCharacter(note:Note)
 	{
+		if (note.character != null)
+			return note.character;
+
 		return note.gfSing ? gf : getPlayerCharacter(note.info.player);
 	}
 
@@ -891,8 +894,14 @@ class PlayState extends FNFState
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note, judgement);
 
-		var char = getNoteCharacter(note);
-		char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate);
+		if (!note.noAnim)
+		{
+			var char = getNoteCharacter(note);
+			if (note.heyNote)
+				char.playSpecialAnim('hey', 0.6, true);
+			else
+				char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate);
+		}
 
 		npsDisplay.members[player].addTime(Date.now().getTime());
 
@@ -903,8 +912,11 @@ class PlayState extends FNFState
 
 	function onNoteMissed(note:Note)
 	{
-		var char = getNoteCharacter(note);
-		char.playMissAnim(note.info.playerLane);
+		if (!note.noMissAnim)
+		{
+			var char = getNoteCharacter(note);
+			char.playMissAnim(note.info.playerLane);
+		}
 
 		if (Settings.missSounds)
 			playMissSound();
@@ -922,8 +934,11 @@ class PlayState extends FNFState
 
 	function onNoteReleaseMissed(note:Note)
 	{
-		var char = getNoteCharacter(note);
-		char.playMissAnim(note.info.playerLane);
+		if (!note.noMissAnim)
+		{
+			var char = getNoteCharacter(note);
+			char.playMissAnim(note.info.playerLane);
+		}
 
 		if (Settings.missSounds)
 			playMissSound();

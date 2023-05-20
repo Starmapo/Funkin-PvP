@@ -8,6 +8,7 @@ import data.song.NoteInfo;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 import sprites.AnimatedSprite;
+import sprites.game.Character;
 
 class Note extends FlxSpriteGroup
 {
@@ -21,10 +22,12 @@ class Note extends FlxSpriteGroup
 	public var head:AnimatedSprite;
 	public var body:AnimatedSprite;
 	public var tail:AnimatedSprite;
-	public var altAnim:Bool;
+	public var animSuffix:String;
 	public var heyNote:Bool;
 	public var gfSing:Bool;
 	public var noAnim:Bool;
+	public var noMissAnim:Bool;
+	public var character:Character;
 	public var texture(default, set):String;
 
 	var manager:NoteManager;
@@ -78,10 +81,12 @@ class Note extends FlxSpriteGroup
 			tail.flipY = flipY;
 		}
 
-		altAnim = (info.type == 'Alt Animation');
+		animSuffix = (info.type == 'Alt Animation' ? '-alt' : '');
 		heyNote = (info.type == 'Hey!');
 		gfSing = (info.type == 'GF Sing');
 		noAnim = (info.type == 'No Animation');
+		noMissAnim = (info.type == 'No Animation');
+		character = null;
 
 		updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
 	}
