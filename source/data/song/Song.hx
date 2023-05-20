@@ -155,7 +155,8 @@ class Song extends JsonObject
 			notes: [],
 			bf: json.player1,
 			opponent: json.player2,
-			gf: json.gfVersion
+			gf: json.gfVersion,
+			stage: json.stage
 		};
 
 		var curTime:Float = 0;
@@ -375,10 +376,10 @@ class Song extends JsonObject
 		source = readString(data.source, 'Unknown Source');
 		instFile = readString(data.instFile, 'Inst.ogg');
 		vocalsFile = readString(data.vocalsFile, 'Voices.ogg');
-		bf = readString(data.bf, 'bf');
-		opponent = readString(data.opponent, 'dad');
-		gf = readString(data.gf, 'gf');
-		stage = readString(data.stage, 'stage');
+		bf = readString(data.bf, 'fnf:bf');
+		opponent = readString(data.opponent, 'fnf:dad');
+		gf = readString(data.gf, 'fnf:gf');
+		stage = readString(data.stage, 'fnf:stage');
 		for (t in readArray(data.timingPoints))
 		{
 			if (t != null)

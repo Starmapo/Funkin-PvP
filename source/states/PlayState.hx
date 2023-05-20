@@ -714,7 +714,8 @@ class PlayState extends FNFState
 		updateCamPosition();
 		add(camFollow);
 
-		var stageInfo = CoolUtil.getNameInfo(song.stage);
+		var stage = Settings.forceDefaultStage ? 'fnf:stage' : song.stage;
+		var stageInfo = CoolUtil.getNameInfo(stage);
 		addScript('data/stages/' + stageInfo.name, stageInfo.mod);
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * Settings.playbackRate);

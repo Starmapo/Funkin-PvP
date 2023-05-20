@@ -22,6 +22,12 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		addSetting({
+			name: 'forceDefaultStage',
+			displayName: 'Force Default Stage',
+			description: "If enabled, the Week 1 stage is forced on every song.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'backgroundBrightness',
 			displayName: 'Background Brightness',
 			description: "Change how visible the background elements should be.",

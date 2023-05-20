@@ -29,6 +29,7 @@ class Settings
 	// Gameplay
 	public static var lowQuality:Bool = false;
 	public static var shaders:Bool = true;
+	public static var forceDefaultStage:Bool = false;
 	public static var backgroundBrightness:Float = 1;
 	public static var distractions:Bool = true;
 	public static var hideHUD:Bool = false;
