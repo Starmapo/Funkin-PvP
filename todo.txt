@@ -1,4 +1,3 @@
-add missing fnf credits
 add leather engine settings
 force default stage setting
 rest of the fnf characters, stages and events

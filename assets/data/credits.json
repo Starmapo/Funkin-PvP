@@ -7,7 +7,7 @@
 					"name": "Starmapo",
 					"description": "Creator, programmer and artist of Friday Night Funkin' PvP",
 					"color": "#FFFF72",
-					"link": "https://github.com/Starmapo"
+					"link": "https://twitter.com/Starmapo"
 				}
 			]
 		},
@@ -16,27 +16,81 @@
 			"credits": [
 				{
 					"name": "ninjamuffin99",
-					"description": "Programmer of Friday Night Funkin'",
+					"description": "Programmer",
 					"color": "#D83948",
 					"link": "https://twitter.com/ninja_muffin99"
 				},
 				{
 					"name": "PhantomArcade",
-					"description": "Animator of Friday Night Funkin'",
+					"description": "Artist and Animator",
 					"color": "#23D156",
 					"link": "https://twitter.com/PhantomArcade3K"
 				},
 				{
+					"name": "Kawai Sprite",
+					"description": "Composer",
+					"color": "#450075",
+					"link": "https://twitter.com/kawaisprite"
+				},
+				{
 					"name": "evilsk8r",
-					"description": "Artist of Friday Night Funkin'",
+					"description": "Artist",
 					"color": "#75E836",
 					"link": "https://twitter.com/evilsk8r"
 				},
 				{
-					"name": "Kawai Sprite",
-					"description": "Composer of Friday Night Funkin'",
-					"color": "#450075",
-					"link": "https://twitter.com/kawaisprite"
+					"name": "Bassetfilms",
+					"description": "Composer of Lemon Monster's songs",
+					"color": "#9ED249",
+					"link": "https://twitter.com/Bassetfilms"
+				},
+				{
+					"name": "Moawling",
+					"description": "Week 6 Pixel Artist",
+					"color": "#FFB49A",
+					"link": "https://www.moaw.art/"
+				},
+				{
+					"name": "JohnnyUtah",
+					"description": "Logo Designer, Creator and Voice Actor of Tankman, Pixel Art Assistant",
+					"color": "#FFFFFF",
+					"link": "https://twitter.com/JohnnyUtahNG"
+				},
+				{
+					"name": "Spazkid",
+					"description": "Character Designer and Animator",
+					"color": "#5CC2D0",
+					"link": "https://twitter.com/Spazkidin3d"
+				},
+				{
+					"name": "IvanAlmighty",
+					"description": "UI Designer",
+					"color": "#CCCCCC",
+					"link": "https://twitter.com/IvanA1mighty"
+				},
+				{
+					"name": "MtH",
+					"description": "Programmer and Charter",
+					"color": "#FF902C",
+					"link": "https://twitter.com/emmnyaa"
+				},
+				{
+					"name": "GeoKureli",
+					"description": "Programmer",
+					"color": "#28CBC6",
+					"link": "https://twitter.com/GeoKureli"
+				},
+				{
+					"name": "M&M",
+					"description": "Programmer",
+					"color": "#9D5E89",
+					"link": "https://github.com/ActualMandM"
+				},
+				{
+					"name": "Game Page",
+					"description": "Play the game on Newgrounds!",
+					"color": "#FDA238",
+					"link": "https://www.newgrounds.com/portal/view/770371"
 				}
 			]
 		}
