@@ -12,11 +12,8 @@
 	"flipX": false,
 	"anims": [
 		{
-			"atlasName": "Dad idle dance",
-			"indices": [],
 			"nextAnim": "idle-loop",
-			"fps": 24,
-			"loop": false,
+			"atlasName": "Dad idle dance",
 			"name": "idle",
 			"offset": [
 				0,
@@ -24,16 +21,14 @@
 			]
 		},
 		{
-			"atlasName": "Dad idle dance",
+			"loop": true,
 			"indices": [
 				10,
 				11,
 				12,
 				12
 			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": true,
+			"atlasName": "Dad idle dance",
 			"name": "idle-loop",
 			"offset": [
 				0,
@@ -42,10 +37,6 @@
 		},
 		{
 			"atlasName": "Dad Sing Note DOWN",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
 			"name": "singDOWN",
 			"offset": [
 				0,
@@ -53,11 +44,8 @@
 			]
 		},
 		{
-			"atlasName": "Dad Sing Note LEFT",
-			"indices": [],
 			"nextAnim": "singLEFT-loop",
-			"fps": 24,
-			"loop": false,
+			"atlasName": "Dad Sing Note LEFT",
 			"name": "singLEFT",
 			"offset": [
 				-9,
@@ -65,16 +53,14 @@
 			]
 		},
 		{
-			"atlasName": "Dad Sing Note LEFT",
+			"loop": true,
 			"indices": [
 				12,
 				13,
 				14,
 				15
 			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": true,
+			"atlasName": "Dad Sing Note LEFT",
 			"name": "singLEFT-loop",
 			"offset": [
 				-9,
@@ -82,11 +68,8 @@
 			]
 		},
 		{
-			"atlasName": "Dad Sing Note RIGHT",
-			"indices": [],
 			"nextAnim": "singRIGHT-loop",
-			"fps": 24,
-			"loop": false,
+			"atlasName": "Dad Sing Note RIGHT",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -94,16 +77,14 @@
 			]
 		},
 		{
-			"atlasName": "Dad Sing Note RIGHT",
+			"loop": true,
 			"indices": [
 				15,
 				16,
 				17,
 				18
 			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": true,
+			"atlasName": "Dad Sing Note RIGHT",
 			"name": "singRIGHT-loop",
 			"offset": [
 				0,
@@ -111,11 +92,8 @@
 			]
 		},
 		{
-			"atlasName": "Dad Sing Note UP",
-			"indices": [],
 			"nextAnim": "singUP-loop",
-			"fps": 24,
-			"loop": false,
+			"atlasName": "Dad Sing Note UP",
 			"name": "singUP",
 			"offset": [
 				-6,
@@ -123,16 +101,14 @@
 			]
 		},
 		{
-			"atlasName": "Dad Sing Note UP",
+			"loop": true,
 			"indices": [
 				56,
 				57,
 				58,
 				59
 			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": true,
+			"atlasName": "Dad Sing Note UP",
 			"name": "singUP-loop",
 			"offset": [
 				-6,

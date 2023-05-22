@@ -1,25 +1,28 @@
 package states.editors;
 
-import util.DiscordClient;
 import data.char.CharacterInfo;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
+import lime.system.System;
 import openfl.display.PNGEncoderOptions;
 import openfl.events.Event;
 import openfl.net.FileReference;
 import sprites.game.Character;
 import sys.io.File;
 import systools.Dialogs;
+import ui.editors.EditorCheckbox;
 import ui.editors.NotificationManager;
+import util.DiscordClient;
 
 using StringTools;
 
@@ -37,7 +40,7 @@ class CharacterEditorState extends FNFState
 	var dragPositionOffset:Array<Float>;
 	var guideChar:Character;
 	var notificationManager:NotificationManager;
-	var buttonGroup:FlxTypedGroup<FlxUIButton>;
+	var uiGroup:FlxGroup;
 	var camIndicator:FlxSprite;
 	var draggingCam:Bool = false;
 
@@ -63,7 +66,7 @@ class CharacterEditorState extends FNFState
 		dragMousePos = FlxDestroyUtil.put(dragMousePos);
 		guideChar = null;
 		notificationManager = null;
-		buttonGroup = null;
+		uiGroup = null;
 		camIndicator = null;
 	}
 
@@ -109,8 +112,8 @@ class CharacterEditorState extends FNFState
 		infoText.scrollFactor.set();
 		add(infoText);
 
-		buttonGroup = new FlxTypedGroup();
-		add(buttonGroup);
+		uiGroup = new FlxTypedGroup();
+		add(uiGroup);
 
 		var loadButton = new FlxUIButton(FlxG.width, 0, 'Load', function()
 		{
@@ -139,7 +142,7 @@ class CharacterEditorState extends FNFState
 			FlxG.switchState(new CharacterEditorState(charInfo));
 		});
 		loadButton.x -= loadButton.width;
-		buttonGroup.add(loadButton);
+		uiGroup.add(loadButton);
 
 		var saveButton = new FlxUIButton(FlxG.width, loadButton.y + loadButton.height + 4, 'Save', function()
 		{
@@ -147,16 +150,29 @@ class CharacterEditorState extends FNFState
 			notificationManager.showNotification('Character successfully saved!', SUCCESS);
 		});
 		saveButton.x -= saveButton.width;
-		buttonGroup.add(saveButton);
+		uiGroup.add(saveButton);
 
 		var saveFrameButton = new FlxUIButton(FlxG.width, saveButton.y + saveButton.height + 4, 'Save Current Frame', function()
 		{
-			saveFrame();
+			saveFrame(charInfo.charName + '.png');
 		});
 		saveFrameButton.resize(160, saveFrameButton.height);
 		saveFrameButton.autoCenterLabel();
 		saveFrameButton.x -= saveFrameButton.width;
-		buttonGroup.add(saveFrameButton);
+		uiGroup.add(saveFrameButton);
+
+		var gfCheckbox:EditorCheckbox = null;
+		gfCheckbox = new EditorCheckbox(FlxG.width, saveFrameButton.y + saveFrameButton.height + 4, 'GF as Guide Character', 100, function()
+		{
+			if (gfCheckbox.checked)
+				guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
+			else
+				guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:dad');
+
+			guideChar.animation.finish();
+		});
+		gfCheckbox.x -= gfCheckbox.width;
+		uiGroup.add(gfCheckbox);
 
 		notificationManager = new NotificationManager();
 		add(notificationManager);
@@ -288,7 +304,7 @@ class CharacterEditorState extends FNFState
 		char.update(elapsed);
 		updateAnimText();
 		updateInfoText();
-		buttonGroup.update(elapsed);
+		uiGroup.update(elapsed);
 		notificationManager.update(elapsed);
 
 		if (!FlxG.mouse.visible)
@@ -416,14 +432,15 @@ class CharacterEditorState extends FNFState
 		camIndicator.setPosition(char.x + (char.startWidth / 2) + charInfo.cameraOffset[0], char.y + (char.startHeight / 2) + charInfo.cameraOffset[1]);
 	}
 
-	function saveFrame()
+	function saveFrame(filename:String)
 	{
 		var frame = char.frame;
 		if (frame == null)
 			return;
 
 		var bytes = char.pixels.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
-		File.saveBytes(charInfo.charName + '.png', bytes);
+		File.saveBytes(filename, bytes);
+		System.openFile(filename);
 		notificationManager.showNotification('Image successfully saved!', SUCCESS);
 	}
 }

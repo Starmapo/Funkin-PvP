@@ -658,7 +658,7 @@ class PlayState extends FNFState
 		if (gfInfo == null)
 			gfInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
 
-		gf = new Character(400, 130, gfInfo, true, true);
+		gf = new Character(400, 130, gfInfo, false, true);
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
 		add(gf);

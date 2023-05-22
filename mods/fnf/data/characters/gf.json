@@ -10,14 +10,10 @@
 	],
 	"holdLoopPoint": 0,
 	"healthIcon": "gf",
-	"flipX": true,
+	"flipX": false,
 	"anims": [
 		{
 			"atlasName": "GF Cheer",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
 			"name": "cheer",
 			"offset": [
 				0,
@@ -25,35 +21,6 @@
 			]
 		},
 		{
-			"atlasName": "GF Dancing Beat",
-			"indices": [
-				15,
-				16,
-				17,
-				18,
-				19,
-				20,
-				21,
-				22,
-				23,
-				24,
-				25,
-				26,
-				27,
-				28,
-				29
-			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
-			"name": "danceLeft",
-			"offset": [
-				0,
-				0
-			]
-		},
-		{
-			"atlasName": "GF Dancing Beat",
 			"indices": [
 				30,
 				0,
@@ -72,9 +39,32 @@
 				13,
 				14
 			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
+			"atlasName": "GF Dancing Beat",
+			"name": "danceLeft",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"indices": [
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29
+			],
+			"atlasName": "GF Dancing Beat",
 			"name": "danceRight",
 			"offset": [
 				0,
@@ -82,24 +72,21 @@
 			]
 		},
 		{
-			"atlasName": "GF Dancing Beat Hair blowing",
+			"loop": true,
 			"indices": [
 				0,
 				1,
 				2,
 				3
 			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": true,
+			"atlasName": "GF Dancing Beat Hair blowing",
 			"name": "hairBlow",
 			"offset": [
-				0,
+				45,
 				1
 			]
 		},
 		{
-			"atlasName": "GF Dancing Beat Hair Landing",
 			"indices": [
 				0,
 				1,
@@ -114,9 +101,7 @@
 				10,
 				11
 			],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
+			"atlasName": "GF Dancing Beat Hair Landing",
 			"name": "hairFall",
 			"offset": [
 				0,
@@ -124,11 +109,8 @@
 			]
 		},
 		{
-			"atlasName": "GF FEAR",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
 			"loop": true,
+			"atlasName": "GF FEAR",
 			"name": "scared",
 			"offset": [
 				-2,
@@ -137,46 +119,30 @@
 		},
 		{
 			"atlasName": "GF Down Note",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
 			"name": "singDOWN",
 			"offset": [
-				0,
-				-11
-			]
-		},
-		{
-			"atlasName": "GF Right Note",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
-			"name": "singLEFT",
-			"offset": [
-				0,
+				1,
 				-11
 			]
 		},
 		{
 			"atlasName": "GF left note",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
-			"name": "singRIGHT",
+			"name": "singLEFT",
 			"offset": [
 				0,
 				-10
 			]
 		},
 		{
+			"atlasName": "GF Right Note",
+			"name": "singRIGHT",
+			"offset": [
+				0,
+				-11
+			]
+		},
+		{
 			"atlasName": "GF Up Note",
-			"indices": [],
-			"nextAnim": "",
-			"fps": 24,
-			"loop": false,
 			"name": "singUP",
 			"offset": [
 				0,

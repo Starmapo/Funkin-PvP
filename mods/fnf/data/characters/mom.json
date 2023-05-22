@@ -1,0 +1,67 @@
+{
+	"positionOffset": [
+		4,
+		-38
+	],
+	"image": "characters/mom",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "mom",
+	"flipX": false,
+	"anims": [
+		{
+			"atlasName": "Mom Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "MOM DOWN POSE",
+			"name": "singDOWN",
+			"offset": [
+				20,
+				-172
+			]
+		},
+		{
+			"atlasName": "Mom Left Pose",
+			"name": "singLEFT",
+			"offset": [
+				250,
+				-28
+			]
+		},
+		{
+			"atlasName": "Mom Pose Left",
+			"name": "singRIGHT",
+			"offset": [
+				10,
+				-65
+			]
+		},
+		{
+			"atlasName": "Mom Up Pose",
+			"name": "singUP",
+			"offset": [
+				14,
+				66
+			]
+		}
+	],
+	"cameraOffset": [
+		0,
+		0
+	],
+	"healthColors": [
+		216,
+		85,
+		142
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

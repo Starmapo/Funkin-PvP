@@ -1,0 +1,89 @@
+{
+	"positionOffset": [
+		-126,
+		210
+	],
+	"image": "characters/spooky",
+	"danceAnims": [
+		"danceLeft",
+		"danceRight"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "spooky",
+	"flipX": false,
+	"anims": [
+		{
+			"fps": 12,
+			"indices": [
+				0,
+				2,
+				6
+			],
+			"atlasName": "spooky dance idle",
+			"name": "danceLeft",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"indices": [
+				8,
+				10,
+				12,
+				14
+			],
+			"atlasName": "spooky dance idle",
+			"name": "danceRight",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "spooky DOWN note",
+			"name": "singDOWN",
+			"offset": [
+				-20,
+				-147
+			]
+		},
+		{
+			"atlasName": "note sing left",
+			"name": "singLEFT",
+			"offset": [
+				119,
+				-10
+			]
+		},
+		{
+			"atlasName": "spooky sing right",
+			"name": "singRIGHT",
+			"offset": [
+				-132,
+				-3
+			]
+		},
+		{
+			"atlasName": "spooky UP NOTE",
+			"name": "singUP",
+			"offset": [
+				-20,
+				30
+			]
+		}
+	],
+	"cameraOffset": [
+		-24,
+		-12
+	],
+	"healthColors": [
+		213,
+		126,
+		0
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

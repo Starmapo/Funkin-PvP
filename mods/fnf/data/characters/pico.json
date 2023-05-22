@@ -1,0 +1,99 @@
+{
+	"positionOffset": [
+		-68,
+		318
+	],
+	"image": "characters/pico",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "pico",
+	"flipX": true,
+	"anims": [
+		{
+			"atlasName": "Pico Idle Dance",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "Pico Down Note",
+			"name": "singDOWN",
+			"offset": [
+				190,
+				-80
+			]
+		},
+		{
+			"atlasName": "Pico Down Note MISS",
+			"name": "singDOWNmiss",
+			"offset": [
+				193,
+				-37
+			]
+		},
+		{
+			"atlasName": "Pico Note Right",
+			"name": "singLEFT",
+			"offset": [
+				51,
+				3
+			]
+		},
+		{
+			"atlasName": "Pico Note Right Miss",
+			"name": "singLEFTmiss",
+			"offset": [
+				51,
+				49
+			]
+		},
+		{
+			"atlasName": "Pico NOTE LEFT",
+			"name": "singRIGHT",
+			"offset": [
+				-81,
+				-10
+			]
+		},
+		{
+			"atlasName": "Pico NOTE LEFT miss",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-75,
+				25
+			]
+		},
+		{
+			"atlasName": "pico Up note",
+			"name": "singUP",
+			"offset": [
+				-43,
+				28
+			]
+		},
+		{
+			"atlasName": "pico Up note miss",
+			"name": "singUPmiss",
+			"offset": [
+				-33,
+				64
+			]
+		}
+	],
+	"cameraOffset": [
+		-1,
+		-86
+	],
+	"healthColors": [
+		183,
+		216,
+		85
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

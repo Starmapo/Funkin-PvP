@@ -3,7 +3,7 @@
 		-9,
 		380.4
 	],
-	"image": "characters/bf",
+	"image": "characters/bf-car",
 	"danceAnims": [
 		"idle"
 	],
@@ -12,14 +12,7 @@
 	"flipX": true,
 	"anims": [
 		{
-			"atlasName": "BF HEY!!",
-			"name": "hey",
-			"offset": [
-				2,
-				5
-			]
-		},
-		{
+			"nextAnim": "idle-loop",
 			"atlasName": "BF idle dance",
 			"name": "idle",
 			"offset": [
@@ -29,16 +22,38 @@
 		},
 		{
 			"loop": true,
-			"atlasName": "BF idle shaking",
-			"name": "scared",
+			"indices": [
+				10,
+				11,
+				12,
+				13
+			],
+			"atlasName": "BF idle dance",
+			"name": "idle-loop",
 			"offset": [
 				0,
-				1
+				0
 			]
 		},
 		{
+			"nextAnim": "singDOWN-loop",
 			"atlasName": "BF NOTE DOWN",
 			"name": "singDOWN",
+			"offset": [
+				-21,
+				-52
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				26,
+				27,
+				28,
+				29
+			],
+			"atlasName": "BF NOTE DOWN",
+			"name": "singDOWN-loop",
 			"offset": [
 				-21,
 				-52
@@ -53,8 +68,24 @@
 			]
 		},
 		{
+			"nextAnim": "singLEFT-loop",
 			"atlasName": "BF NOTE RIGHT",
 			"name": "singLEFT",
+			"offset": [
+				45,
+				-9
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				58,
+				59,
+				60,
+				61
+			],
+			"atlasName": "BF NOTE RIGHT",
+			"name": "singLEFT-loop",
 			"offset": [
 				45,
 				-9
@@ -69,8 +100,24 @@
 			]
 		},
 		{
+			"nextAnim": "singRIGHT-loop",
 			"atlasName": "BF NOTE LEFT",
 			"name": "singRIGHT",
+			"offset": [
+				-31,
+				-10
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				12,
+				13,
+				14,
+				15
+			],
+			"atlasName": "BF NOTE LEFT",
+			"name": "singRIGHT-loop",
 			"offset": [
 				-31,
 				-10
@@ -85,8 +132,24 @@
 			]
 		},
 		{
+			"nextAnim": "singUP-loop",
 			"atlasName": "BF NOTE UP",
 			"name": "singUP",
+			"offset": [
+				6,
+				30
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				11,
+				12,
+				13,
+				14
+			],
+			"atlasName": "BF NOTE UP",
+			"name": "singUP-loop",
 			"offset": [
 				6,
 				30

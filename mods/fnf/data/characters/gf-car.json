@@ -1,0 +1,98 @@
+{
+	"positionOffset": [
+		0,
+		0
+	],
+	"image": "characters/gf-car",
+	"danceAnims": [
+		"danceLeft",
+		"danceRight"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "gf",
+	"flipX": false,
+	"anims": [
+		{
+			"loop": true,
+			"indices": [
+				10,
+				11,
+				12,
+				25,
+				26,
+				27
+			],
+			"atlasName": "GF Dancing Beat Hair blowing CAR",
+			"name": "dance-loop",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"nextAnim": "dance-loop",
+			"indices": [
+				30,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"atlasName": "GF Dancing Beat Hair blowing CAR",
+			"name": "danceLeft",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"nextAnim": "dance-loop",
+			"indices": [
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29
+			],
+			"atlasName": "GF Dancing Beat Hair blowing CAR",
+			"name": "danceRight",
+			"offset": [
+				0,
+				0
+			]
+		}
+	],
+	"cameraOffset": [
+		-49,
+		-179
+	],
+	"healthColors": [
+		165,
+		0,
+		77
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}
