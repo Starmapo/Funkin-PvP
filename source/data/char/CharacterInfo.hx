@@ -18,14 +18,19 @@ class CharacterInfo extends JsonObject
 		if (json == null)
 			return null;
 
+		var psych = false;
 		if (json.sing_duration != null)
+		{
 			json = convertPsychCharacter(json);
+			psych = true;
+		}
 
 		var charInfo = new CharacterInfo(json);
 		charInfo.directory = Path.normalize(Path.directory(path));
 		charInfo.charName = new Path(path).file;
 		charInfo.mod = charInfo.directory.split('/')[1];
 		charInfo.sortAnims();
+		charInfo.psych = psych;
 		return charInfo;
 	}
 
@@ -104,6 +109,7 @@ class CharacterInfo extends JsonObject
 	public var directory:String = '';
 	public var charName:String = '';
 	public var mod:String = '';
+	public var psych:Bool = false;
 
 	public function new(data:Dynamic)
 	{
@@ -166,15 +172,21 @@ class CharacterInfo extends JsonObject
 		}
 		for (anim in anims)
 		{
-			data.anims.push({
+			var animData:Dynamic = {
 				name: anim.name,
 				atlasName: anim.atlasName,
-				indices: anim.indices,
-				fps: anim.fps,
-				loop: anim.loop,
-				offset: anim.offset,
-				nextAnim: anim.nextAnim
-			});
+				offset: anim.offset
+			}
+			if (anim.indices.length > 0)
+				animData.indices = anim.indices;
+			if (anim.fps != 24)
+				animData.fps = anim.fps;
+			if (anim.loop)
+				animData.loop = anim.loop;
+			if (anim.nextAnim.length > 0)
+				animData.nextAnim = anim.nextAnim;
+
+			data.anims.push(animData);
 		}
 		File.saveContent(path, Json.stringify(data, "\t"));
 	}

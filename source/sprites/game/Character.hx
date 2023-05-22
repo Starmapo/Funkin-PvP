@@ -315,7 +315,7 @@ class Character extends DancingSprite
 				offset: offset
 			});
 
-			if (charInfo.scale != 1)
+			if (charInfo.psych && charInfo.scale != 1)
 			{
 				playAnim(anim.name, true);
 				var offset = offsets.get(anim.name);

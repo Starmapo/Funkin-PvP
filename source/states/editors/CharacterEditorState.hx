@@ -241,13 +241,12 @@ class CharacterEditorState extends FNFState
 			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2);
 			offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2);
 
-			if (draggingCam)
-				updateCamIndicator();
-			else
+			if (!draggingCam)
 			{
 				char.updatePosition();
 				ghostChar.updatePosition();
 			}
+			updateCamIndicator();
 
 			if (FlxG.mouse.released)
 			{

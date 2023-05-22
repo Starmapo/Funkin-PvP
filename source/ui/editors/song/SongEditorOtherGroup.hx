@@ -92,7 +92,6 @@ class SongEditorOtherGroup extends FlxBasic
 		svPool = null;
 		eventPool = null;
 		lyricStepPool = null;
-		state.rateChanged.remove(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
