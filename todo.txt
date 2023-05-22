@@ -1,3 +1,4 @@
+character editor without switching
 rest of the fnf characters, stages and events
 add note skins
 add rating skins

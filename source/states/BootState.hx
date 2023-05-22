@@ -1,5 +1,6 @@
 package states;
 
+import states.editors.CharacterEditorState;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -275,7 +276,7 @@ class BootState extends FNFState
 
 	function exit()
 	{
-		FlxG.switchState(new SongSelectState());
+		FlxG.switchState(new CharacterEditorState());
 	}
 
 	function updateText(text:String)

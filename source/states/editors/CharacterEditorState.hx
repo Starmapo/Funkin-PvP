@@ -171,7 +171,8 @@ class CharacterEditorState extends FNFState
 
 			guideChar.animation.finish();
 		});
-		gfCheckbox.x -= gfCheckbox.width;
+		gfCheckbox.x -= 80;
+		gfCheckbox.scrollFactor.set();
 		uiGroup.add(gfCheckbox);
 
 		notificationManager = new NotificationManager();
