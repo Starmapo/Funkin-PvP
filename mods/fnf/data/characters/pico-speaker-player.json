@@ -5,16 +5,16 @@
 	],
 	"image": "characters/pico-speaker",
 	"danceAnims": [
-		"shoot1"
+		"singLEFT"
 	],
 	"holdLoopPoint": 0,
 	"healthIcon": "pico",
 	"flipX": true,
 	"anims": [
 		{
-			"nextAnim": "shoot1-loop",
+			"nextAnim": "singLEFT-loop",
 			"atlasName": "Pico shoot 1",
-			"name": "shoot1",
+			"name": "singLEFT",
 			"offset": [
 				0,
 				0
@@ -28,16 +28,16 @@
 				25
 			],
 			"atlasName": "Pico shoot 1",
-			"name": "shoot1-loop",
+			"name": "singLEFT-loop",
 			"offset": [
 				0,
 				0
 			]
 		},
 		{
-			"nextAnim": "shoot2-loop",
+			"nextAnim": "singDOWN-loop",
 			"atlasName": "Pico shoot 2",
-			"name": "shoot2",
+			"name": "singDOWN",
 			"offset": [
 				98,
 				-128
@@ -51,16 +51,16 @@
 				59
 			],
 			"atlasName": "Pico shoot 2",
-			"name": "shoot2-loop",
+			"name": "singDOWN-loop",
 			"offset": [
 				98,
 				-128
 			]
 		},
 		{
-			"nextAnim": "shoot3-loop",
+			"nextAnim": "singUP-loop",
 			"atlasName": "Pico shoot 3",
-			"name": "shoot3",
+			"name": "singUP",
 			"offset": [
 				-474,
 				-64
@@ -74,16 +74,16 @@
 				52
 			],
 			"atlasName": "Pico shoot 3",
-			"name": "shoot3-loop",
+			"name": "singUP-loop",
 			"offset": [
 				-474,
 				-64
 			]
 		},
 		{
-			"nextAnim": "shoot4-loop",
+			"nextAnim": "singRIGHT-loop",
 			"atlasName": "Pico shoot 4",
-			"name": "shoot4",
+			"name": "singRIGHT",
 			"offset": [
 				-474,
 				-19
@@ -97,7 +97,7 @@
 				52
 			],
 			"atlasName": "Pico shoot 4",
-			"name": "shoot4-loop",
+			"name": "singRIGHT-loop",
 			"offset": [
 				-474,
 				-19

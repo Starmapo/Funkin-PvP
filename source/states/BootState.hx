@@ -1,6 +1,5 @@
 package states;
 
-import states.editors.CharacterEditorState;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -14,6 +13,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import lime.app.Application;
+import states.editors.CharacterEditorState;
 import states.pvp.SongSelectState;
 import sys.FileSystem;
 import sys.thread.Thread;
@@ -276,7 +276,7 @@ class BootState extends FNFState
 
 	function exit()
 	{
-		FlxG.switchState(new CharacterEditorState());
+		FlxG.switchState(new SongSelectState());
 	}
 
 	function updateText(text:String)

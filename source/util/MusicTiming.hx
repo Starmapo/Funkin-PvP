@@ -157,9 +157,6 @@ class MusicTiming implements IFlxDestroyable
 		}
 
 		updateTime(elapsed);
-		resyncExtraMusic();
-		updateAudioPosition();
-		updateCurStep();
 
 		if (!hasStarted)
 		{
@@ -172,6 +169,10 @@ class MusicTiming implements IFlxDestroyable
 			if (onStart != null)
 				onStart(this);
 		}
+
+		resyncExtraMusic();
+		updateAudioPosition();
+		updateCurStep();
 	}
 
 	public function destroy()

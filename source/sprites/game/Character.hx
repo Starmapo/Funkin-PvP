@@ -355,6 +355,8 @@ class Character extends DancingSprite
 			singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
 		else
 			singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+
+		danceBeats = danceAnims.length > 1 ? 1 : 2;
 	}
 
 	function setCamOffsetFromLane(lane:Int = -1)

@@ -169,8 +169,8 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 				case HORIZONTAL: navigate(elapsed, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT));
 				case VERTICAL: navigate(elapsed, checkAction(UI_UP_P), checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
 				case COLUMNS(n): navigateColumns(elapsed);
-				case BOTH: navigate(elapsed, checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P), checkAction(UI_LEFT) || checkAction(UI_UP), checkAction(UI_RIGHT)
-						|| checkAction(UI_DOWN));
+				case BOTH: navigate(elapsed, checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P), checkAction(UI_LEFT)
+						|| checkAction(UI_UP), checkAction(UI_RIGHT) || checkAction(UI_DOWN));
 			}
 
 			if (index != selectedIndex)
@@ -234,7 +234,8 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return index;
 	}
 
-	function navigateGrid(elapsed:Float, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool, prevJump:Bool, nextJump:Bool, prevJumpHold:Bool, nextJumpHold:Bool)
+	function navigateGrid(elapsed:Float, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool, prevJump:Bool, nextJump:Bool, prevJumpHold:Bool,
+			nextJumpHold:Bool)
 	{
 		var index = selectedIndex;
 
@@ -267,7 +268,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 			if (prevJump || nextJump)
 			{
 				holdTime = lastHoldTime = 0;
-				index = changeIndex(index, prevJump, jumpAmount);
+				index = jumpIndex(index, prevJump, nextJump, jumpAmount);
 			}
 			else if (holdEnabled && (prevJumpHold || nextJumpHold))
 			{
@@ -275,11 +276,29 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 
 				if (holdTime >= minScrollTime && holdTime - lastHoldTime >= scrollDelay)
 				{
-					index = changeIndex(index, prevJumpHold, jumpAmount);
+					index = jumpIndex(index, prevJumpHold, nextJumpHold, jumpAmount);
 					lastHoldTime = holdTime;
 				}
 			}
 		}
+
+		return index;
+	}
+
+	function jumpIndex(index:Int, prev:Bool, next:Bool, amount:Int = 1)
+	{
+		if (prev && index < amount)
+		{
+			while (index + amount < length)
+				index += amount;
+		}
+		else if (next && members[index + amount] == null)
+		{
+			while (index - amount >= 0)
+				index -= amount;
+		}
+		else
+			index = changeIndex(index, prev, amount);
 
 		return index;
 	}
