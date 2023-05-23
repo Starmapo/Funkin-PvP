@@ -1,0 +1,79 @@
+{
+	"positionOffset": [
+		-7,
+		22
+	],
+	"image": "characters/gf-pixel",
+	"danceAnims": [
+		"danceLeft",
+		"danceRight"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "gf",
+	"flipX": false,
+	"anims": [
+		{
+			"indices": [
+				30,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"atlasName": "GF IDLE",
+			"name": "danceLeft",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"indices": [
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29
+			],
+			"atlasName": "GF IDLE",
+			"name": "danceRight",
+			"offset": [
+				0,
+				0
+			]
+		}
+	],
+	"cameraOffset": [
+		-9,
+		-127
+	],
+	"healthColors": [
+		165,
+		0,
+		77
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": false,
+	"scale": 6
+}

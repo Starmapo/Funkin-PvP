@@ -1,0 +1,107 @@
+{
+	"positionOffset": [
+		-9,
+		380.4
+	],
+	"image": "characters/bf-christmas",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "bf",
+	"flipX": true,
+	"anims": [
+		{
+			"atlasName": "BF HEY!!",
+			"name": "hey",
+			"offset": [
+				2,
+				5
+			]
+		},
+		{
+			"atlasName": "BF idle dance",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF NOTE DOWN",
+			"name": "singDOWN",
+			"offset": [
+				-19,
+				-52
+			]
+		},
+		{
+			"atlasName": "BF NOTE DOWN MISS",
+			"name": "singDOWNmiss",
+			"offset": [
+				-16,
+				-22
+			]
+		},
+		{
+			"atlasName": "BF NOTE RIGHT",
+			"name": "singLEFT",
+			"offset": [
+				43,
+				-4
+			]
+		},
+		{
+			"atlasName": "BF NOTE RIGHT MISS",
+			"name": "singLEFTmiss",
+			"offset": [
+				43,
+				24
+			]
+		},
+		{
+			"atlasName": "BF NOTE LEFT",
+			"name": "singRIGHT",
+			"offset": [
+				-36,
+				-5
+			]
+		},
+		{
+			"atlasName": "BF NOTE LEFT MISS",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-34,
+				21
+			]
+		},
+		{
+			"atlasName": "BF NOTE UP",
+			"name": "singUP",
+			"offset": [
+				6,
+				30
+			]
+		},
+		{
+			"atlasName": "BF NOTE UP MISS",
+			"name": "singUPmiss",
+			"offset": [
+				4,
+				30
+			]
+		}
+	],
+	"cameraOffset": [
+		-15,
+		-62
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

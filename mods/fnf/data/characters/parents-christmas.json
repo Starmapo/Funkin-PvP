@@ -1,0 +1,243 @@
+{
+	"positionOffset": [
+		-351,
+		-2
+	],
+	"image": "characters/parents-christmas",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "parents",
+	"flipX": false,
+	"anims": [
+		{
+			"nextAnim": "idle-loop",
+			"atlasName": "Parent Christmas Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				10,
+				11,
+				12,
+				13
+			],
+			"atlasName": "Parent Christmas Idle",
+			"name": "idle-loop",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"nextAnim": "singDOWN-loop",
+			"atlasName": "Parent Down Note Dad",
+			"name": "singDOWN",
+			"offset": [
+				-34,
+				-23
+			]
+		},
+		{
+			"nextAnim": "singDOWN-alt-loop",
+			"atlasName": "Parent Down Note Mom",
+			"name": "singDOWN-alt",
+			"offset": [
+				-34,
+				-23
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				11,
+				12,
+				13,
+				14
+			],
+			"atlasName": "Parent Down Note Mom",
+			"name": "singDOWN-alt-loop",
+			"offset": [
+				-34,
+				-23
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				11,
+				12,
+				13,
+				14
+			],
+			"atlasName": "Parent Down Note Dad",
+			"name": "singDOWN-loop",
+			"offset": [
+				-34,
+				-23
+			]
+		},
+		{
+			"nextAnim": "singLEFT-loop",
+			"atlasName": "Parent Left Note Dad",
+			"name": "singLEFT",
+			"offset": [
+				-29,
+				20
+			]
+		},
+		{
+			"nextAnim": "singLEFT-alt-loop",
+			"atlasName": "Parent Left Note Mom",
+			"name": "singLEFT-alt",
+			"offset": [
+				-29,
+				19
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				11,
+				12,
+				13,
+				14
+			],
+			"atlasName": "Parent Left Note Mom",
+			"name": "singLEFT-alt-loop",
+			"offset": [
+				-29,
+				19
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				12,
+				13,
+				14,
+				15
+			],
+			"atlasName": "Parent Left Note Dad",
+			"name": "singLEFT-loop",
+			"offset": [
+				-29,
+				20
+			]
+		},
+		{
+			"nextAnim": "singRIGHT-loop",
+			"atlasName": "Parent Right Note Dad",
+			"name": "singRIGHT",
+			"offset": [
+				-4,
+				-20
+			]
+		},
+		{
+			"nextAnim": "singRIGHT-alt-loop",
+			"atlasName": "Parent Right Note Mom",
+			"name": "singRIGHT-alt",
+			"offset": [
+				-4,
+				-19
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				11,
+				12,
+				13,
+				14
+			],
+			"atlasName": "Parent Right Note Mom",
+			"name": "singRIGHT-alt-loop",
+			"offset": [
+				-4,
+				-19
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				12,
+				13,
+				14,
+				15
+			],
+			"atlasName": "Parent Right Note Dad",
+			"name": "singRIGHT-loop",
+			"offset": [
+				-4,
+				-20
+			]
+		},
+		{
+			"nextAnim": "singUP-loop",
+			"atlasName": "Parent Up Note Dad",
+			"name": "singUP",
+			"offset": [
+				-45,
+				25
+			]
+		},
+		{
+			"nextAnim": "singUP-alt-loop",
+			"atlasName": "Parent Up Note Mom",
+			"name": "singUP-alt",
+			"offset": [
+				-45,
+				28
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				10,
+				11,
+				12,
+				13
+			],
+			"atlasName": "Parent Up Note Mom",
+			"name": "singUP-alt-loop",
+			"offset": [
+				-45,
+				28
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				10,
+				11,
+				12,
+				13
+			],
+			"atlasName": "Parent Up Note Dad",
+			"name": "singUP-loop",
+			"offset": [
+				-45,
+				25
+			]
+		}
+	],
+	"cameraOffset": [
+		131,
+		-184
+	],
+	"healthColors": [
+		196,
+		94,
+		174
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

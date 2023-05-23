@@ -1,0 +1,83 @@
+{
+	"positionOffset": [
+		-41,
+		209
+	],
+	"image": "characters/tankman",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "tankman",
+	"flipX": true,
+	"anims": [
+		{
+			"atlasName": "Tankman Idle Dance instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "PRETTY GOOD tankman instance 1",
+			"name": "prettyGood",
+			"offset": [
+				1,
+				15
+			]
+		},
+		{
+			"atlasName": "Tankman DOWN note instance 1",
+			"name": "singDOWN",
+			"offset": [
+				80,
+				-110
+			]
+		},
+		{
+			"atlasName": "Tankman Right Note instance 1",
+			"name": "singLEFT",
+			"offset": [
+				86,
+				-10
+			]
+		},
+		{
+			"atlasName": "Tankman Note Left instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-25,
+				-26
+			]
+		},
+		{
+			"atlasName": "Tankman UP note instance 1",
+			"name": "singUP",
+			"offset": [
+				49,
+				54
+			]
+		},
+		{
+			"atlasName": "TANKMAN UGH instance 1",
+			"name": "ugh",
+			"offset": [
+				-17,
+				-9
+			]
+		}
+	],
+	"cameraOffset": [
+		-9,
+		-139
+	],
+	"healthColors": [
+		225,
+		225,
+		225
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

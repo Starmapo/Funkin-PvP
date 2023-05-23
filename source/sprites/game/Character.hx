@@ -28,6 +28,7 @@ class Character extends DancingSprite
 	public var intendedColor:FlxColor = FlxColor.WHITE;
 	public var isGF:Bool;
 	public var camOffset:FlxPoint = FlxPoint.get();
+	public var danceDisabled:Bool = false;
 
 	var xDifference:Float = 0;
 
@@ -169,8 +170,11 @@ class Character extends DancingSprite
 				allowDanceTimer.cancel();
 			allowDanceTimer.start((beatLength / 1000) * 1.5, function(_)
 			{
-				canDance = true;
-				dance();
+				if (!danceDisabled)
+				{
+					canDance = true;
+					dance();
+				}
 			});
 		}
 	}
@@ -203,8 +207,11 @@ class Character extends DancingSprite
 
 			animation.finishCallback = function(_)
 			{
-				canDance = true;
-				dance();
+				if (!danceDisabled)
+				{
+					canDance = true;
+					dance();
+				}
 			}
 		}
 	}
@@ -227,16 +234,24 @@ class Character extends DancingSprite
 		{
 			allowDanceTimer.start(allowDanceTime, function(_)
 			{
-				canDance = true;
-				dance();
+				if (!danceDisabled)
+				{
+					canDance = true;
+					dance();
+				}
 			});
 		}
 		else
 		{
 			animation.finishCallback = function(_)
 			{
-				canDance = true;
-				dance();
+				if (!danceDisabled)
+				{
+					canDance = true;
+					dance();
+				}
+				else
+					stopAnimCallback();
 			}
 		}
 	}
@@ -327,8 +342,9 @@ class Character extends DancingSprite
 		state = Idle;
 		danceStep = 0;
 		playAnim(danceAnims[0], true);
-		startWidth = frameWidth;
-		startHeight = frameHeight;
+		animation.finish();
+		startWidth = width;
+		startHeight = height;
 		updateOffset();
 		resetColor();
 

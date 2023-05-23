@@ -1,0 +1,67 @@
+{
+	"positionOffset": [
+		-220,
+		13
+	],
+	"image": "characters/spirit",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "spirit",
+	"flipX": false,
+	"anims": [
+		{
+			"atlasName": "idle spirit",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "spirit down",
+			"name": "singDOWN",
+			"offset": [
+				396,
+				369
+			]
+		},
+		{
+			"atlasName": "left",
+			"name": "singLEFT",
+			"offset": [
+				24,
+				-3
+			]
+		},
+		{
+			"atlasName": "right",
+			"name": "singRIGHT",
+			"offset": [
+				-10,
+				0
+			]
+		},
+		{
+			"atlasName": "up",
+			"name": "singUP",
+			"offset": [
+				7,
+				40
+			]
+		}
+	],
+	"cameraOffset": [
+		10,
+		24
+	],
+	"healthColors": [
+		255,
+		60,
+		110
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": false,
+	"scale": 6
+}

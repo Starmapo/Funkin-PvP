@@ -139,7 +139,16 @@ class CharacterEditorState extends FNFState
 				return;
 			}
 
-			FlxG.switchState(new CharacterEditorState(charInfo));
+			this.charInfo = charInfo;
+			ghostChar.charInfo = charInfo;
+			char.charInfo = charInfo;
+
+			updateCamIndicator();
+			updateAnimText();
+			updateInfoText();
+
+			resetCamPos();
+			FlxG.camera.snapToTarget();
 		});
 		loadButton.x -= loadButton.width;
 		uiGroup.add(loadButton);

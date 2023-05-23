@@ -1,0 +1,67 @@
+{
+	"positionOffset": [
+		-179,
+		-126
+	],
+	"image": "characters/senpai",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "senpai",
+	"flipX": false,
+	"anims": [
+		{
+			"atlasName": "Senpai Idle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "SENPAI DOWN NOTE instance 1",
+			"name": "singDOWN",
+			"offset": [
+				12,
+				0
+			]
+		},
+		{
+			"atlasName": "SENPAI LEFT NOTE instance 1",
+			"name": "singLEFT",
+			"offset": [
+				30,
+				0
+			]
+		},
+		{
+			"atlasName": "SENPAI RIGHT NOTE instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				5,
+				0
+			]
+		},
+		{
+			"atlasName": "SENPAI UP NOTE instance 1",
+			"name": "singUP",
+			"offset": [
+				13,
+				36
+			]
+		}
+	],
+	"cameraOffset": [
+		-33,
+		-177
+	],
+	"healthColors": [
+		255,
+		170,
+		111
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": false,
+	"scale": 6
+}

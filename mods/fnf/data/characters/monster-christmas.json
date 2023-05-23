@@ -1,19 +1,19 @@
 {
 	"positionOffset": [
-		4,
-		-38
+		-103,
+		61
 	],
-	"image": "characters/mom",
+	"image": "characters/monster-christmas",
 	"danceAnims": [
 		"idle"
 	],
 	"holdLoopPoint": 0,
-	"healthIcon": "mom",
+	"healthIcon": "monster",
 	"flipX": false,
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
-			"atlasName": "Mom Idle",
+			"atlasName": "monster idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -23,12 +23,11 @@
 		{
 			"loop": true,
 			"indices": [
-				10,
-				11,
 				12,
-				13
+				13,
+				14
 			],
-			"atlasName": "Mom Idle",
+			"atlasName": "monster idle",
 			"name": "idle-loop",
 			"offset": [
 				0,
@@ -37,109 +36,105 @@
 		},
 		{
 			"nextAnim": "singDOWN-loop",
-			"atlasName": "MOM DOWN POSE",
+			"atlasName": "monster down",
 			"name": "singDOWN",
 			"offset": [
-				20,
-				-172
+				-50,
+				-93
 			]
 		},
 		{
 			"loop": true,
 			"indices": [
-				9,
-				10,
-				11,
-				12
+				27,
+				28,
+				29
 			],
-			"atlasName": "MOM DOWN POSE",
+			"atlasName": "monster down",
 			"name": "singDOWN-loop",
 			"offset": [
-				20,
-				-172
+				-50,
+				-93
 			]
 		},
 		{
 			"nextAnim": "singLEFT-loop",
-			"atlasName": "Mom Left Pose",
+			"atlasName": "Monster left note",
 			"name": "singLEFT",
 			"offset": [
-				250,
-				-28
+				-34,
+				12
 			]
 		},
 		{
 			"loop": true,
 			"indices": [
-				6,
-				7,
-				8,
-				9
+				17,
+				18,
+				19
 			],
-			"atlasName": "Mom Left Pose",
+			"atlasName": "Monster left note",
 			"name": "singLEFT-loop",
 			"offset": [
-				250,
-				-28
+				-34,
+				12
 			]
 		},
 		{
 			"nextAnim": "singRIGHT-loop",
-			"atlasName": "Mom Pose Left",
+			"atlasName": "Monster Right note",
 			"name": "singRIGHT",
 			"offset": [
-				10,
-				-65
+				-51,
+				10
 			]
 		},
 		{
 			"loop": true,
 			"indices": [
-				6,
-				7,
-				8,
-				9
+				12,
+				13,
+				14
 			],
-			"atlasName": "Mom Pose Left",
+			"atlasName": "Monster Right note",
 			"name": "singRIGHT-loop",
 			"offset": [
-				10,
-				-65
+				-51,
+				10
 			]
 		},
 		{
 			"nextAnim": "singUP-loop",
-			"atlasName": "Mom Up Pose",
+			"atlasName": "monster up note",
 			"name": "singUP",
 			"offset": [
-				14,
-				66
+				-30,
+				58
 			]
 		},
 		{
 			"loop": true,
 			"indices": [
-				6,
-				7,
-				8,
-				9
+				21,
+				22,
+				23
 			],
-			"atlasName": "Mom Up Pose",
+			"atlasName": "monster up note",
 			"name": "singUP-loop",
 			"offset": [
-				14,
-				66
+				-30,
+				58
 			]
 		}
 	],
 	"cameraOffset": [
-		-7,
-		-156
+		4,
+		-207
 	],
 	"healthColors": [
-		216,
-		85,
-		142
+		243,
+		255,
+		110
 	],
 	"loopAnimsOnHold": true,
 	"antialiasing": true,

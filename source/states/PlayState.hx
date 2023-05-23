@@ -418,19 +418,19 @@ class PlayState extends FNFState
 					time = 0.6;
 
 				var bfHey = true;
-				var gfCheer = true;
+				var gfHey = true;
 				switch (value1)
 				{
 					case 'bf', 'boyfriend', '0':
-						gfCheer = false;
+						gfHey = false;
 					case 'gf', 'girlfriend', '1':
 						bfHey = false;
 				}
 
 				if (bfHey)
 					bf.playSpecialAnim('hey', time, true);
-				if (gfCheer)
-					gf.playSpecialAnim('cheer', time, true);
+				if (gfHey)
+					gf.playSpecialAnim('hey', time, true);
 
 			case "Set GF Speed":
 				var value = params[0] != null ? Std.parseInt(params[0].trim()) : 1;

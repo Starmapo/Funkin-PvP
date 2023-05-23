@@ -1,0 +1,99 @@
+{
+	"positionOffset": [
+		-58,
+		336.4
+	],
+	"image": "characters/bf-pixel",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "bf-pixel",
+	"flipX": true,
+	"anims": [
+		{
+			"atlasName": "BF IDLE instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF DOWN NOTE instance 1",
+			"name": "singDOWN",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF DOWN MISS instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF RIGHT NOTE instance 1",
+			"name": "singLEFT",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF RIGHT MISS instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF LEFT NOTE instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF LEFT MISS instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF UP NOTE instance 1",
+			"name": "singUP",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "BF UP MISS instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				0,
+				0
+			]
+		}
+	],
+	"cameraOffset": [
+		7,
+		-15
+	],
+	"healthColors": [
+		123,
+		214,
+		246
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": false,
+	"scale": 6
+}

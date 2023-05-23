@@ -1,0 +1,119 @@
+{
+	"positionOffset": [
+		-653,
+		-59.1
+	],
+	"image": "characters/pico-speaker",
+	"danceAnims": [
+		"shoot1"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "pico",
+	"flipX": true,
+	"anims": [
+		{
+			"nextAnim": "shoot1-loop",
+			"atlasName": "Pico shoot 1",
+			"name": "shoot1",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				23,
+				24,
+				25
+			],
+			"atlasName": "Pico shoot 1",
+			"name": "shoot1-loop",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"nextAnim": "shoot2-loop",
+			"atlasName": "Pico shoot 2",
+			"name": "shoot2",
+			"offset": [
+				98,
+				-128
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				57,
+				58,
+				59
+			],
+			"atlasName": "Pico shoot 2",
+			"name": "shoot2-loop",
+			"offset": [
+				98,
+				-128
+			]
+		},
+		{
+			"nextAnim": "shoot3-loop",
+			"atlasName": "Pico shoot 3",
+			"name": "shoot3",
+			"offset": [
+				-474,
+				-64
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				50,
+				51,
+				52
+			],
+			"atlasName": "Pico shoot 3",
+			"name": "shoot3-loop",
+			"offset": [
+				-474,
+				-64
+			]
+		},
+		{
+			"nextAnim": "shoot4-loop",
+			"atlasName": "Pico shoot 4",
+			"name": "shoot4",
+			"offset": [
+				-474,
+				-19
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				50,
+				51,
+				52
+			],
+			"atlasName": "Pico shoot 4",
+			"name": "shoot4-loop",
+			"offset": [
+				-474,
+				-19
+			]
+		}
+	],
+	"cameraOffset": [
+		187,
+		-134
+	],
+	"healthColors": [
+		183,
+		216,
+		85
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

@@ -1,9 +1,9 @@
 {
 	"positionOffset": [
-		4,
-		-38
+		8,
+		-24
 	],
-	"image": "characters/mom",
+	"image": "characters/mom-car",
 	"danceAnims": [
 		"idle"
 	],
@@ -41,22 +41,22 @@
 			"name": "singDOWN",
 			"offset": [
 				20,
-				-172
+				-160
 			]
 		},
 		{
 			"loop": true,
 			"indices": [
-				9,
-				10,
 				11,
-				12
+				12,
+				13,
+				14
 			],
 			"atlasName": "MOM DOWN POSE",
 			"name": "singDOWN-loop",
 			"offset": [
 				20,
-				-172
+				-160
 			]
 		},
 		{
@@ -65,7 +65,7 @@
 			"name": "singLEFT",
 			"offset": [
 				250,
-				-28
+				-23
 			]
 		},
 		{
@@ -80,7 +80,7 @@
 			"name": "singLEFT-loop",
 			"offset": [
 				250,
-				-28
+				-23
 			]
 		},
 		{
@@ -89,7 +89,7 @@
 			"name": "singRIGHT",
 			"offset": [
 				10,
-				-65
+				-60
 			]
 		},
 		{
@@ -104,7 +104,7 @@
 			"name": "singRIGHT-loop",
 			"offset": [
 				10,
-				-65
+				-60
 			]
 		},
 		{
@@ -113,28 +113,28 @@
 			"name": "singUP",
 			"offset": [
 				14,
-				66
+				71
 			]
 		},
 		{
 			"loop": true,
 			"indices": [
-				6,
-				7,
-				8,
-				9
+				11,
+				12,
+				13,
+				14
 			],
 			"atlasName": "Mom Up Pose",
 			"name": "singUP-loop",
 			"offset": [
 				14,
-				66
+				71
 			]
 		}
 	],
 	"cameraOffset": [
-		-7,
-		-156
+		-59,
+		-168
 	],
 	"healthColors": [
 		216,

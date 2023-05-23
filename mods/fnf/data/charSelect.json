@@ -15,7 +15,67 @@
 		  {
 			  "name": "dad",
 			  "displayName": "Daddy Dearest"
-		  }
+		  },
+		  {
+			  "name": "spooky",
+			  "displayName": "Skid & Pump"
+		  },
+		  {
+			  "name": "monster",
+			  "displayName": "Lemon Monster"
+		  },
+		  {
+			  "name": "pico",
+			  "displayName": "Pico"
+		  },
+		  {
+			  "name": "bf-car",
+			  "displayName": "Boyfriend (Windy)"
+		  },
+		  {
+			  "name": "mom",
+			  "displayName": "Mommy Mearest"
+		  },
+		  {
+			  "name": "mom-car",
+			  "displayName": "Mommy Mearest (Windy)"
+		  },
+		  {
+			  "name": "bf-christmas",
+			  "displayName": "Boyfriend (Christmas)"
+		  },
+		  {
+			  "name": "parents-christmas",
+			  "displayName": "Parents (Christmas)"
+		  },
+		  {
+			  "name": "monster-christmas",
+			  "displayName": "Lemon Monster (Christmas)"
+		  },
+		  {
+			  "name": "bf-pixel",
+			  "displayName": "Boyfriend (Pixel)"
+		  },
+		  {
+			  "name": "senpai",
+			  "displayName": "Senpai"
+		  },
+		  {
+			  "name": "senpai-angry",
+			  "displayName": "Senpai (Angry)"
+		  },
+		  {
+			  "name": "spirit",
+			  "displayName": "Spirit"
+		  },
+		  {
+			  "name": "tankman",
+			  "displayName": "Tankman"
+		  },
+		  {
+			  "name": "pico-speaker-player",
+			  "displayName": "Pico (Speakers)"
+		  },
       ]
     }
   ]
