@@ -189,6 +189,7 @@ class PlayerCharacterSelect extends FlxGroup
 	var camFollow:FlxObject;
 	var lastGroupReset:String = '';
 	var charPortrait:FlxSprite;
+	var charPortraitWhite:FlxSprite;
 	var charText:FlxText;
 
 	public function new(player:Int, camera:FlxCamera, state:CharacterSelectState)
@@ -229,6 +230,11 @@ class PlayerCharacterSelect extends FlxGroup
 		charPortrait.antialiasing = true;
 		charPortrait.scrollFactor.y = 0;
 		add(charPortrait);
+
+		charPortraitWhite = new FlxSprite(charPortrait.x, charPortrait.y).makeGraphic(1, 1, FlxColor.WHITE);
+		charPortraitWhite.scrollFactor.copyFrom(charPortrait.scrollFactor);
+		charPortraitWhite.alpha = 0;
+		add(charPortraitWhite);
 
 		var charPortraitOutline = new FlxSprite(charPortrait.x, charPortrait.y, getPortraitOutlineGraphic());
 		charPortraitOutline.scrollFactor.copyFrom(charPortrait.scrollFactor);
@@ -291,6 +297,7 @@ class PlayerCharacterSelect extends FlxGroup
 		state = null;
 		camFollow = null;
 		charPortrait = null;
+		charPortraitWhite = null;
 		charText = null;
 	}
 
@@ -334,8 +341,16 @@ class PlayerCharacterSelect extends FlxGroup
 		updateCamFollow(item);
 		var portrait = Paths.getImage('characterSelect/portraits/' + item.charData.name, item.charData.directory);
 		if (portrait != null)
+		{
 			charPortrait.loadGraphic(portrait);
-		charPortrait.visible = (portrait != null);
+
+			charPortraitWhite.setGraphicSize(Std.int(charPortrait.width), Std.int(charPortrait.height));
+			charPortraitWhite.updateHitbox();
+			charPortraitWhite.alpha = 0.25;
+			FlxTween.cancelTweensOf(charPortraitWhite);
+			FlxTween.tween(charPortraitWhite, {alpha: 0}, 0.2);
+		}
+		charPortraitWhite.visible = charPortrait.visible = (portrait != null);
 		charText.text = item.charData.displayName;
 		lastSelectedChars[player] = item.ID;
 	}
