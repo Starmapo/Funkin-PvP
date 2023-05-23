@@ -74,6 +74,12 @@ class Character extends DancingSprite
 			offset.x -= (startWidth - width);
 	}
 
+	override function dance(force:Bool = false)
+	{
+		if (!danceDisabled)
+			super.dance(force);
+	}
+
 	override function danced(_)
 	{
 		state = Idle;

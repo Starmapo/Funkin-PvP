@@ -642,9 +642,9 @@ class PlayState extends FNFState
 
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
 		lyricsDisplay.cameras = [camHUD];
-		add(lyricsDisplay);
 
 		notificationManager = new NotificationManager();
+		notificationManager.cameras = [camHUD];
 	}
 
 	function initPauseSubState()
@@ -696,10 +696,9 @@ class PlayState extends FNFState
 		}
 
 		add(npsDisplay);
-
 		if (songInfoDisplay != null)
 			add(songInfoDisplay);
-
+		add(lyricsDisplay);
 		add(notificationManager);
 	}
 

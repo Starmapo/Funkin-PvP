@@ -149,10 +149,18 @@ class Script implements IFlxDestroyable
 		var f = interp.variables.get(func);
 		if (f != null && Reflect.isFunction(f))
 		{
-			if (args == null || args.length < 1)
-				return f();
-			else
-				return Reflect.callMethod(null, f, args);
+			try
+			{
+				if (args == null || args.length < 1)
+					return f();
+				else
+					return Reflect.callMethod(null, f, args);
+			}
+			catch (e)
+			{
+				onError(e.message);
+				closed = true;
+			}
 		}
 
 		return null;

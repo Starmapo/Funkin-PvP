@@ -84,6 +84,8 @@
 	<!-- Makes the game use less RAM -->
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="desktop" />
 
+	<define name="hscriptPos" />
+
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->

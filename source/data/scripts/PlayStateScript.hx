@@ -156,6 +156,7 @@ class PlayStateScript extends Script
 	override function onError(message:String)
 	{
 		state.notificationManager.showNotification(message, ERROR);
+		super.onError(message);
 	}
 
 	function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)
