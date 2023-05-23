@@ -196,12 +196,12 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		{
 			if (checkbox != null)
 			{
-				label.remove(checkbox);
+				label.remove(checkbox, true);
 				checkbox = FlxDestroyUtil.destroy(checkbox);
 			}
 			if (valueText != null)
 			{
-				label.remove(valueText);
+				label.remove(valueText, true);
 				valueText = FlxDestroyUtil.destroy(valueText);
 			}
 

@@ -15,7 +15,7 @@ class IconInfo extends JsonObject
 
 		var iconInfo = new IconInfo(json);
 		iconInfo.directory = Path.normalize(Path.directory(path));
-		iconInfo.iconName = new Path(path).file;
+		iconInfo.name = new Path(path).file;
 		iconInfo.mod = iconInfo.directory.split('/')[1];
 		return iconInfo;
 	}
@@ -49,7 +49,7 @@ class IconInfo extends JsonObject
 	public var winningFPS:Float;
 	public var winningOffset:Array<Float>;
 	public var directory:String = '';
-	public var iconName:String = '';
+	public var name:String = '';
 	public var mod:String = '';
 
 	public function new(data:Dynamic)

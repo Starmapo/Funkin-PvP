@@ -730,7 +730,7 @@ class PlayState extends FNFState
 
 		var characters = [opponent, bf, gf];
 		for (char in characters)
-			addScript('data/characters/' + char.charInfo.charName, char.charInfo.mod);
+			addScript('data/characters/' + char.charInfo.name, char.charInfo.mod);
 
 		var noteTypeMap = new Map<String, Bool>();
 		var eventMap = new Map<String, Bool>();
@@ -784,9 +784,12 @@ class PlayState extends FNFState
 	function precache()
 	{
 		for (image in introSprPaths)
-			Paths.getImage('countdown/' + image);
+			precacheImage('countdown/' + image);
 		for (sound in introSndPaths)
 			Paths.getSound('countdown/' + sound);
+
+		for (i in 0...5)
+			precacheGraphic(JudgementDisplay.getJudgementGraphic(i));
 
 		if (Settings.missSounds)
 		{

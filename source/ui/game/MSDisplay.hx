@@ -42,7 +42,7 @@ class MSDisplay extends FlxText
 		}
 
 		x = (((FlxG.width / 2) - width) / 2) + (FlxG.width / 2) * player;
-		y = (FlxG.height * 0.65) - (height / 2) - 20;
+		y = (FlxG.height * 0.5) - (height / 2) - 10;
 
 		if (posTween != null)
 			posTween.cancel();

@@ -25,10 +25,10 @@ class JudgementCounter extends FlxText
 	public function updateText()
 	{
 		var t = '';
-		for (i in 0...6)
+		for (i in 0...5)
 		{
 			t += (Judgement.getJudgementName(i)) + ': ' + scoreProcessor.currentJudgements[i];
-			if (i < 5)
+			if (i < 4)
 				t += '\n';
 		}
 

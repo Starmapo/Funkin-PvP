@@ -3,6 +3,7 @@ package data.scripts;
 import data.song.NoteInfo;
 import flixel.FlxBasic;
 import flixel.math.FlxMath;
+import sprites.game.Character;
 import states.PlayState;
 import ui.game.Note;
 
@@ -91,6 +92,17 @@ class PlayStateScript extends Script
 		setVariable("addOverGF", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.gf) + 1, obj);
+		});
+		setVariable("getCharacters", function(?name:String, ?mod:String)
+		{
+			var characters:Array<Character> = [];
+			var allChars = [state.gf, state.opponent, state.bf];
+			for (char in allChars)
+			{
+				if ((name == null || char.charInfo.name == name) && (mod == null || char.charInfo.mod == mod))
+					characters.push(char);
+			}
+			return characters;
 		});
 		setVariable("getPlayerCharacter", function(player:Int = 0)
 		{

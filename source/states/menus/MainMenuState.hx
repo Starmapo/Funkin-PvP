@@ -1,5 +1,6 @@
 package states.menus;
 
+import flixel.text.FlxText;
 import data.PlayerSettings;
 import data.Settings;
 import flixel.FlxG;
@@ -84,6 +85,13 @@ class MainMenuState extends FNFState
 		bg.y = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
 		if (magenta != null)
 			magenta.y = bg.y;
+
+		var version = FlxG.stage.application.meta["version"];
+		var versionText = new FlxText(5, FlxG.height - 5, FlxG.width - 10, 'Version: $version');
+		versionText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		versionText.y -= versionText.height;
+		versionText.scrollFactor.set();
+		add(versionText);
 
 		FlxG.camera.zoom = 3;
 		var duration = Main.getTransitionTime();

@@ -27,7 +27,7 @@ class CharacterInfo extends JsonObject
 
 		var charInfo = new CharacterInfo(json);
 		charInfo.directory = Path.normalize(Path.directory(path));
-		charInfo.charName = new Path(path).file;
+		charInfo.name = new Path(path).file;
 		charInfo.mod = charInfo.directory.split('/')[1];
 		charInfo.sortAnims();
 		charInfo.psych = psych;
@@ -107,7 +107,7 @@ class CharacterInfo extends JsonObject
 	public var loopAnimsOnHold:Bool;
 	public var holdLoopPoint:Int;
 	public var directory:String = '';
-	public var charName:String = '';
+	public var name:String = '';
 	public var mod:String = '';
 	public var psych:Bool = false;
 

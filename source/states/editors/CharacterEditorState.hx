@@ -163,7 +163,7 @@ class CharacterEditorState extends FNFState
 
 		var saveFrameButton = new FlxUIButton(FlxG.width, saveButton.y + saveButton.height + 4, 'Save Current Frame', function()
 		{
-			saveFrame(charInfo.charName + '.png');
+			saveFrame(charInfo.name + '.png');
 		});
 		saveFrameButton.resize(160, saveFrameButton.height);
 		saveFrameButton.autoCenterLabel();
@@ -434,7 +434,7 @@ class CharacterEditorState extends FNFState
 
 	function save()
 	{
-		charInfo.save(Path.join([charInfo.directory, charInfo.charName + '.json']));
+		charInfo.save(Path.join([charInfo.directory, charInfo.name + '.json']));
 	}
 
 	function updateCamIndicator()

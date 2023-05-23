@@ -8,6 +8,27 @@ import flixel.tweens.FlxTween;
 
 class JudgementDisplay extends FlxSprite
 {
+	public static function getJudgementGraphic(judgement:Judgement)
+	{
+		var path = 'judgements/base/';
+		path += switch (judgement)
+		{
+			case MARV:
+				'marv';
+			case SICK:
+				'sick';
+			case GOOD:
+				'good';
+			case BAD:
+				'bad';
+			case SHIT:
+				'shit';
+			default:
+				'miss';
+		}
+		return Paths.getImage(path);
+	}
+
 	var player:Int;
 	var noteSkin:NoteSkin;
 	var posTween:FlxTween;
@@ -38,7 +59,7 @@ class JudgementDisplay extends FlxSprite
 		updateHitbox();
 
 		x = (((FlxG.width / 2) - width) / 2) + (FlxG.width / 2) * player;
-		y = (FlxG.height * 0.7) - (height / 2) - 20;
+		y = (FlxG.height * 0.5) - (height / 2) + 20;
 
 		if (posTween != null)
 			posTween.cancel();
@@ -66,26 +87,5 @@ class JudgementDisplay extends FlxSprite
 		if (alphaTween != null)
 			alphaTween.cancel();
 		alphaTween = null;
-	}
-
-	function getJudgementGraphic(judgement:Judgement)
-	{
-		var path = 'judgements/base/';
-		path += switch (judgement)
-		{
-			case MARV:
-				'marv';
-			case SICK:
-				'sick';
-			case GOOD:
-				'good';
-			case BAD:
-				'bad';
-			case SHIT:
-				'shit';
-			default:
-				'miss';
-		}
-		return Paths.getImage(path);
 	}
 }

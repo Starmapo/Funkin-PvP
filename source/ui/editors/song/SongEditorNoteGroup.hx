@@ -519,7 +519,7 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 	{
 		if (noteInfo.isLongNote)
 		{
-			remove(selectionSprite); // get the group height excluding the selection sprite
+			remove(selectionSprite, true); // get the group height excluding the selection sprite
 			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(height + 20));
 			selectionSprite.updateHitbox();
 			add(selectionSprite);
