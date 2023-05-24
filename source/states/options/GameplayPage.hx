@@ -16,6 +16,12 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		addSetting({
+			name: 'distractions',
+			displayName: 'Distractions',
+			description: "Toggle stage distractions that can hinder your gameplay.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'shaders',
 			displayName: 'Shaders',
 			description: "Whether gameplay shaders are enabled.",
@@ -34,12 +40,6 @@ class GameplayPage extends BaseSettingsPage
 			type: PERCENT,
 			minValue: 0,
 			maxValue: 1
-		});
-		addSetting({
-			name: 'distractions',
-			displayName: 'Distractions',
-			description: "Toggle stage distractions that can hinder your gameplay.",
-			type: CHECKBOX
 		});
 		addSetting({
 			name: 'hideHUD',

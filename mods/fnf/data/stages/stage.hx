@@ -1,10 +1,10 @@
 function onCreate()
 {
 	state.defaultCamZoom = 0.9;
-	
+
 	var bg = new BGSprite('stages/stage/stageback', -600, -200, 0.9, 0.9);
 	addBehindChars(bg);
-	
+
 	var stageFront = new BGSprite('stages/stage/stagefront', -650, 600, 0.9, 0.9);
 	stageFront.scale.set(1.1, 1.1);
 	stageFront.updateHitbox();
@@ -17,6 +17,6 @@ function onCreate()
 		stageCurtains.updateHitbox();
 		addOverChars(stageCurtains);
 	}
-	
+
 	close();
 }

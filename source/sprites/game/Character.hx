@@ -14,8 +14,8 @@ class Character extends DancingSprite
 	static var holdTime:Float = ((1 / 24) * 4);
 
 	public var charInfo(default, set):CharacterInfo;
-	public var charPosX:Float;
-	public var charPosY:Float;
+	public var charPosX(default, set):Float;
+	public var charPosY(default, set):Float;
 	public var flipped(default, null):Bool;
 	public var debugMode:Bool = false;
 	public var startWidth:Float;
@@ -87,11 +87,10 @@ class Character extends DancingSprite
 		setCamOffsetFromLane();
 	}
 
-	public function setCharacterPosition(x:Float, y:Float)
+	public function setCharacterPosition(x:Float = 0, y:Float = 0)
 	{
 		charPosX = x;
 		charPosY = y;
-		updatePosition();
 	}
 
 	public function updatePosition()
@@ -389,6 +388,26 @@ class Character extends DancingSprite
 		{
 			charInfo = value;
 			initializeCharacter();
+		}
+		return value;
+	}
+
+	function set_charPosX(value:Float)
+	{
+		if (charPosX != value)
+		{
+			charPosX = value;
+			updatePosition();
+		}
+		return value;
+	}
+
+	function set_charPosY(value:Float)
+	{
+		if (charPosY != value)
+		{
+			charPosY = value;
+			updatePosition();
 		}
 		return value;
 	}

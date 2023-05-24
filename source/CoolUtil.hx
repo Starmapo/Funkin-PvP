@@ -275,6 +275,14 @@ class CoolUtil
 		return FlxColor.fromRGB(array[0], array[1], array[2]);
 	}
 
+	public static function numberArray(max:Int, ?min = 0):Array<Int>
+	{
+		var dumbArray:Array<Int> = [];
+		for (i in min...max)
+			dumbArray.push(i);
+		return dumbArray;
+	}
+
 	@:generic
 	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{

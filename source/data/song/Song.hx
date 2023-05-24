@@ -56,8 +56,10 @@ class Song extends JsonObject
 
 		var song = new Song(json);
 		song.directory = Path.normalize(Path.directory(path));
+		var split = song.directory.split('/');
+		song.name = split[split.length - 1];
 		song.difficultyName = new Path(path).file;
-		song.mod = song.directory.split('/')[1];
+		song.mod = split[1];
 		song.sort();
 		return song;
 	}
@@ -212,7 +214,7 @@ class Song extends JsonObject
 				if (curNotes.exists(noteInfo.startTime) && curNotes.get(noteInfo.startTime).contains(noteInfo.lane))
 					continue;
 
-				if (section.altAnim == true)
+				if (section.altAnim == true && noteInfo.lane < 4)
 					noteInfo.type = 'Alt Animation';
 				if (note[3] != null)
 				{
@@ -362,6 +364,7 @@ class Song extends JsonObject
 	**/
 	public var difficultyName:String = '';
 
+	public var name:String = '';
 	public var mod:String = '';
 
 	/**

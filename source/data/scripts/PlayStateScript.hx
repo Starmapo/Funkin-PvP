@@ -5,8 +5,6 @@ import flixel.FlxBasic;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
 import hscript.Expr.ClassDecl;
-import hscript.Interp;
-import hscript.Parser;
 import sprites.game.Character;
 import states.PlayState;
 import ui.game.Note;
@@ -39,6 +37,8 @@ class PlayStateScript extends Script
 		setVariable("camFollow", state.camFollow);
 		setVariable("ruleset", state.ruleset);
 		setVariable("timing", state.timing);
+		setVariable("song", state.song);
+		setVariable("songName", state.song.name);
 		setVariable("camHUD", state.camHUD);
 		setVariable("songInst", state.songInst);
 		setVariable("songVocals", state.songVocals);
@@ -52,8 +52,22 @@ class PlayStateScript extends Script
 		setVariable("add", state.add);
 		setVariable("insert", state.insert);
 		setVariable("remove", state.remove);
+		setVariable("debugPrint", Reflect.makeVarArgs(function(el)
+		{
+			var inf = interp.posInfos();
+			var posInfo = inf.fileName + ':' + inf.lineNumber + ': ';
+			var max = el.length - 1;
+			for (i in 0...el.length)
+			{
+				posInfo += Std.string(el[i]);
+				if (i < max)
+					posInfo += ', ';
+			}
+			state.notificationManager.showNotification(posInfo);
+		}));
 
 		setVariable("getOrder", function(obj:FlxBasic)
+
 		{
 			return state.members.indexOf(obj);
 		});
@@ -164,7 +178,7 @@ class PlayStateScript extends Script
 		/*
 			// i tried to do some module shit, gave up
 			// it MIGHT be possible, but i dont think its worth the time
-			
+
 			setVariable("addModule", function(name:String)
 			{
 				var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);

@@ -261,7 +261,7 @@ class BootState extends FNFState
 							for (char in chars)
 								charGroup.chars.push(char);
 
-							trace(charGroup);
+							// trace(charGroup);
 						}
 					}
 				}

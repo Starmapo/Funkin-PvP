@@ -12,10 +12,12 @@ var lightFadeShader:FlxRuntimeShader;
 
 function onCreate()
 {
-	if (!Settings.lowQuality) {
+	if (!Settings.lowQuality)
+	{
 		var bg = new FlxSprite(-100).loadGraphic(Paths.getImage('stages/philly/sky'));
 		bg.scrollFactor.set(0.1, 0.1);
 		bg.antialiasing = true;
+		bg.active = false;
 		addBehindChars(bg);
 	}
 
@@ -24,45 +26,57 @@ function onCreate()
 	city.setGraphicSize(Std.int(city.width * 0.85));
 	city.updateHitbox();
 	city.antialiasing = true;
+	city.active = false;
 	addBehindChars(city);
-	
-	if (Settings.shaders)
+
+	if (Settings.distractions)
 	{
-		lightFadeShader = getShader("building");
-		lightFadeShader.setFloat("alphaShit", 0);
-	}
-	
-	phillyCityLights = new FlxTypedGroup();
-	addBehindChars(phillyCityLights);
-	
-	for (i in 0...5)
-	{
-		var light = new FlxSprite(city.x).loadGraphic(Paths.getImage('stages/philly/win' + i));
-		light.scrollFactor.set(0.3, 0.3);
-		light.visible = false;
-		light.setGraphicSize(Std.int(light.width * 0.85));
-		light.updateHitbox();
-		light.antialiasing = true;
-		if (lightFadeShader != null)
-			light.shader = lightFadeShader;
-		phillyCityLights.add(light);
+		if (Settings.shaders)
+		{
+			lightFadeShader = getShader("building");
+			lightFadeShader.setFloat("alphaShit", 0);
+		}
+
+		phillyCityLights = new FlxTypedGroup();
+		phillyCityLights.active = false;
+		addBehindChars(phillyCityLights);
+
+		for (i in 0...5)
+		{
+			var light = new FlxSprite(city.x).loadGraphic(Paths.getImage('stages/philly/win' + i));
+			light.scrollFactor.set(0.3, 0.3);
+			light.visible = false;
+			light.setGraphicSize(Std.int(light.width * 0.85));
+			light.updateHitbox();
+			light.antialiasing = true;
+			if (lightFadeShader != null)
+				light.shader = lightFadeShader;
+			phillyCityLights.add(light);
+		}
 	}
 
-	if (!Settings.lowQuality) {
+	if (!Settings.lowQuality)
+	{
 		var streetBehind = new FlxSprite(-40, 50).loadGraphic(Paths.getImage('stages/philly/behindTrain'));
+		streetBehind.active = false;
 		addBehindChars(streetBehind);
 	}
 
-	phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.getImage('stages/philly/train'));
-	phillyTrain.visible = false;
-	phillyTrain.antialiasing = true;
-	addBehindChars(phillyTrain);
+	if (Settings.distractions)
+	{
+		phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.getImage('stages/philly/train'));
+		phillyTrain.visible = false;
+		phillyTrain.antialiasing = true;
+		phillyTrain.active = false;
+		addBehindChars(phillyTrain);
 
-	trainSound = new FlxSound().loadEmbedded(Paths.getSound('train_passes'));
-	FlxG.sound.list.add(trainSound);
-	
-	var street = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.getImage('stages/philly/street'));
+		trainSound = new FlxSound().loadEmbedded(Paths.getSound('train_passes'));
+		FlxG.sound.list.add(trainSound);
+	}
+
+	var street = new FlxSprite(-40, 50).loadGraphic(Paths.getImage('stages/philly/street'));
 	street.antialiasing = true;
+	street.active = false;
 	addBehindChars(street);
 }
 
@@ -78,7 +92,7 @@ function onUpdate(elapsed)
 			trainFrameTiming = 0;
 		}
 	}
-	
+
 	if (lightFadeShader != null)
 	{
 		var point = timing.curTimingPoint;
@@ -89,6 +103,9 @@ function onUpdate(elapsed)
 
 function onBeatHit(beat, decBeat)
 {
+	if (phillyTrain == null)
+		return;
+
 	if (!trainMoving)
 		trainCooldown += 1;
 
@@ -96,7 +113,7 @@ function onBeatHit(beat, decBeat)
 	{
 		if (lightFadeShader != null)
 			lightFadeShader.setFloat("alphaShit", 0);
-		
+
 		phillyCityLights.forEach(function(light:FlxSprite)
 		{
 			light.visible = false;

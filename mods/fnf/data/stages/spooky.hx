@@ -11,17 +11,21 @@ function onCreate()
 	halloweenBG.animation.play('idle');
 	halloweenBG.antialiasing = true;
 	addBehindChars(halloweenBG);
-	
-	if (!Settings.lowQuality)
+
+	if (!Settings.lowQuality && Settings.distractions)
 	{
 		Paths.getSound('thunder_1');
 		Paths.getSound('thunder_2');
 	}
+	else
+		close();
 }
 
 function onBeatHit(beat, decBeat)
 {
-	if (!Settings.lowQuality && beat > lightningStrikeBeat + lightningOffset && FlxG.random.bool(10))
+	if (lightningStrikeBeat > beat)
+		lightningStrikeBeat = 0;
+	if (beat > lightningStrikeBeat + lightningOffset && FlxG.random.bool(10))
 		lightningStrikeShit(beat);
 }
 
