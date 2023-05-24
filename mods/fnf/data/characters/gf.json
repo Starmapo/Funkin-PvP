@@ -13,14 +13,6 @@
 	"flipX": false,
 	"anims": [
 		{
-			"atlasName": "GF Cheer",
-			"name": "hey",
-			"offset": [
-				0,
-				9
-			]
-		},
-		{
 			"indices": [
 				30,
 				0,
@@ -106,6 +98,14 @@
 			"offset": [
 				0,
 				0
+			]
+		},
+		{
+			"atlasName": "GF Cheer",
+			"name": "hey",
+			"offset": [
+				0,
+				9
 			]
 		},
 		{

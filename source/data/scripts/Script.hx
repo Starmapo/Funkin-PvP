@@ -59,6 +59,7 @@ class Script implements IFlxDestroyable
 	public static final FUNCTION_STOP_SCRIPTS:String = "FUNCTIONSTOPSCRIPTS";
 
 	public var interp:Interp;
+	public var expr:Expr;
 	public var path:String;
 	public var mod:String;
 	public var closed:Bool = false;
@@ -71,6 +72,7 @@ class Script implements IFlxDestroyable
 		this.mod = mod;
 
 		interp = new Interp();
+		setStartingVariables();
 
 		var script = Paths.getContent(path);
 		if (script == null || script.length < 1)
@@ -78,7 +80,6 @@ class Script implements IFlxDestroyable
 
 		var parser = new Parser();
 		parser.allowTypes = true;
-		var expr:Expr = null;
 		try
 		{
 			expr = parser.parseString(script);
@@ -103,8 +104,6 @@ class Script implements IFlxDestroyable
 				Application.current.window.alert(e.message, 'Script Error');
 			trace(e.message);
 		}
-
-		setStartingVariables();
 	}
 
 	public function execute(func:String, ?args:Array<Any>):Dynamic

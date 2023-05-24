@@ -416,6 +416,7 @@ class PlayState extends FNFState
 				var time = Std.parseFloat(value2);
 				if (Math.isNaN(time) || time <= 0)
 					time = 0.6;
+				time /= Settings.playbackRate;
 
 				var bfHey = true;
 				var gfHey = true;
@@ -433,10 +434,24 @@ class PlayState extends FNFState
 					gf.playSpecialAnim('hey', time, true);
 
 			case "Set GF Speed":
-				var value = params[0] != null ? Std.parseInt(params[0].trim()) : 1;
-				if (value == null || Math.isNaN(value) || value < 1)
+				var value = params[0] != null ? Std.parseInt(params[0].trim()) : null;
+				if (value == null || value < 1)
 					value = 1;
 				gf.danceBeats = value;
+
+			case "Add Camera Zoom":
+				if (Settings.camZooming && camZooming && camBop && FlxG.camera.zoom < 1.35)
+				{
+					var camZoom = params[0] != null ? Std.parseFloat(params[0].trim()) : Math.NaN;
+					if (Math.isNaN(camZoom))
+						camZoom = 0.015;
+					var hudZoom = params[1] != null ? Std.parseFloat(params[1].trim()) : Math.NaN;
+					if (Math.isNaN(hudZoom))
+						hudZoom = 0.03;
+
+					FlxG.camera.zoom += camZoom * camBopMult;
+					camHUD.zoom += hudZoom * camBopMult;
+				}
 		}
 
 		executeScripts("onEvent", [name, params]);

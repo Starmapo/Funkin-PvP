@@ -346,8 +346,8 @@ class Character extends DancingSprite
 		}
 
 		state = Idle;
-		danceStep = 0;
-		playAnim(danceAnims[0], true);
+		danceStep = -1;
+		playAnim(danceAnims[danceAnims.length - 1], true);
 		animation.finish();
 		startWidth = width;
 		startHeight = height;

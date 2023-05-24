@@ -6,7 +6,305 @@
 		}
 	],
 	"vocalsFile": "Voices.ogg",
-	"events": [],
+	"events": [
+		{
+			"startTime": 56000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 56333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 56666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 57000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 57333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 57666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 58000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 58333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 58666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 59000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 59333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 59666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 60000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 60333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 60666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 61000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 61333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 61666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 62000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 62333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 62666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 63000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 63333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 63666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 64000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 64333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 64666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 65000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 65333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 65666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 66000,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 66333.3333333333,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 66666.6666666667,
+			"events": [
+				{
+					"params": "",
+					"event": "Add Camera Zoom"
+				}
+			]
+		}
+	],
 	"notes": [
 		{
 			"lane": 1,

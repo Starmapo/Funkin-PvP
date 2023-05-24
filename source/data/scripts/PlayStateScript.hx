@@ -4,6 +4,9 @@ import data.song.NoteInfo;
 import flixel.FlxBasic;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
+import hscript.Expr.ClassDecl;
+import hscript.Interp;
+import hscript.Parser;
 import sprites.game.Character;
 import states.PlayState;
 import ui.game.Note;
@@ -11,6 +14,7 @@ import ui.game.Note;
 class PlayStateScript extends Script
 {
 	var state:PlayState;
+	var modules:Map<String, ClassDecl> = new Map();
 
 	public function new(state:PlayState, path:String, mod:String)
 	{
@@ -156,6 +160,78 @@ class PlayStateScript extends Script
 		{
 			return getShader(name, glslVersion);
 		});
+
+		/*
+			// i tried to do some module shit, gave up
+			// it MIGHT be possible, but i dont think its worth the time
+			
+			setVariable("addModule", function(name:String)
+			{
+				var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
+				var modulePath = Paths.getScriptPath('data/modules/${nameInfo.name}', nameInfo.mod);
+				if (Paths.exists(modulePath))
+				{
+					var module = Paths.getContent(modulePath);
+					var parser = new Parser();
+					var decls = parser.parseModule(module);
+					for (decl in decls)
+					{
+						switch (decl)
+						{
+							case DClass(c):
+								modules.set(c.name, c);
+							default:
+						}
+					}
+					return true;
+				}
+				return false;
+			});
+			setVariable("createModuleInstance", function(name:String, ?params:Array<String>):Dynamic
+			{
+				var module = modules.get(name);
+				if (module == null)
+				{
+					onError("Module " + name + " not found.");
+					return null;
+				}
+				if (module.extend == null)
+				{
+					var instance:Dynamic = {};
+					for (field in module.fields)
+					{
+						var stat = false;
+						for (access in field.access)
+						{
+							if (access == AStatic)
+							{
+								stat = true;
+								break;
+							}
+						}
+						if (!stat)
+						{
+							switch (field.kind)
+							{
+								case KFunction(f):
+									var func = switch (f.args.length)
+									{
+										default:
+											function()
+											{
+												var interp = new Interp();
+												interp.execute(f.expr);
+											}
+									}
+								case KVar(v):
+							}
+						}
+					}
+					return instance;
+				}
+				return null;
+			});
+		 */
 	}
 
 	override function onError(message:String)

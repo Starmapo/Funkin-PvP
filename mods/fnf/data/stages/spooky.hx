@@ -12,13 +12,16 @@ function onCreate()
 	halloweenBG.antialiasing = true;
 	addBehindChars(halloweenBG);
 	
-	Paths.getSound('thunder_1');
-	Paths.getSound('thunder_2');
+	if (!Settings.lowQuality)
+	{
+		Paths.getSound('thunder_1');
+		Paths.getSound('thunder_2');
+	}
 }
 
 function onBeatHit(beat, decBeat)
 {
-	if (beat > lightningStrikeBeat + lightningOffset && FlxG.random.bool(10))
+	if (!Settings.lowQuality && beat > lightningStrikeBeat + lightningOffset && FlxG.random.bool(10))
 		lightningStrikeShit(beat);
 }
 
