@@ -2,6 +2,7 @@ package data.scripts;
 
 import data.song.NoteInfo;
 import flixel.FlxBasic;
+import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
 import sprites.game.Character;
 import states.PlayState;
@@ -151,6 +152,10 @@ class PlayStateScript extends Script
 				pushLaneNotes(notes, manager.noteQueueLanes);
 			return notes;
 		});
+		setVariable("getShader", function(name:String, glslVersion:Int = 120)
+		{
+			return getShader(name, glslVersion);
+		});
 	}
 
 	override function onError(message:String)
@@ -166,5 +171,21 @@ class PlayStateScript extends Script
 			for (note in lane)
 				to.push(note);
 		}
+	}
+
+	function getShader(name:String, glslVersion:Int = 120):FlxRuntimeShader
+	{
+		var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
+		var ogPath = 'data/shaders/' + nameInfo.name;
+		var frag = Paths.getContent(Paths.getPath(ogPath + '.frag', nameInfo.mod));
+		var vert = Paths.getContent(Paths.getPath(ogPath + '.vert', nameInfo.mod));
+		if (frag == null && vert == null)
+		{
+			onError("Couldn't find shader \"" + name + '".');
+			return null;
+		}
+
+		var shader = new FlxRuntimeShader(frag, vert, glslVersion);
+		return shader;
 	}
 }

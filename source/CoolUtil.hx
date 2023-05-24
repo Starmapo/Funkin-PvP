@@ -215,10 +215,10 @@ class CoolUtil
 		return num >= start && num <= end;
 	}
 
-	public static function getNameInfo(name:String):NameInfo
+	public static function getNameInfo(name:String, defaultMod:String = ''):NameInfo
 	{
 		var realName = name;
-		var mod = '';
+		var mod = defaultMod;
 
 		var colonIndex = name.indexOf(':');
 		if (colonIndex > 0)
@@ -271,7 +271,7 @@ class CoolUtil
 	{
 		if (array == null || array.length < 3)
 			return new FlxColor();
-		
+
 		return FlxColor.fromRGB(array[0], array[1], array[2]);
 	}
 
