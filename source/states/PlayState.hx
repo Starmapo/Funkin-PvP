@@ -553,6 +553,16 @@ class PlayState extends FNFState
 		return getSongLength() - (timing.time / songInst.pitch) + Settings.globalOffset;
 	}
 
+	public function playNoteAnim(char:Character, note:Note)
+	{
+		char.playNoteAnim(note, getBeatLength());
+	}
+
+	public function getBeatLength()
+	{
+		return song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate;
+	}
+
 	function initCameras()
 	{
 		camHUD = new FlxCamera();
@@ -938,8 +948,43 @@ class PlayState extends FNFState
 			var char = getNoteCharacter(note);
 			if (note.heyNote)
 				char.playSpecialAnim('hey', 0.6, true);
+			else if (note.info.type == 'Play Animation')
+			{
+				var anim = note.info.params[0] != null ? note.info.params[0].trim() : '';
+				if (char.animation.exists(anim))
+				{
+					var force = true;
+					if (note.info.params[1] != null)
+					{
+						var param = note.info.params[1].trim();
+						force = param != 'false' && param != '0';
+					}
+					char.playAnim(anim, force);
+				}
+				else
+					playNoteAnim(char, note);
+			}
+			else if (note.info.type == 'Special Animation')
+			{
+				var anim = note.info.params[0] != null ? note.info.params[0].trim() : '';
+				if (char.animation.exists(anim))
+				{
+					var time = note.info.params[1] != null ? Std.parseFloat(note.info.params[1].trim()) : Math.NaN;
+					if (Math.isNaN(time) || time < 0)
+						time = 0;
+					var force = true;
+					if (note.info.params[2] != null)
+					{
+						var param = note.info.params[2].trim();
+						force = param != 'false' && param != '0';
+					}
+					char.playSpecialAnim(anim, time, force);
+				}
+				else
+					playNoteAnim(char, note);
+			}
 			else
-				char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate);
+				playNoteAnim(char, note);
 		}
 
 		npsDisplay.members[player].addTime(Sys.time());

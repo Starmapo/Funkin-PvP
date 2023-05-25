@@ -40,6 +40,7 @@ class PlayStateScript extends Script
 		setVariable("timing", state.timing);
 		setVariable("song", state.song);
 		setVariable("songName", state.song.name);
+		setVariable("difficultyName", state.song.difficultyName);
 		setVariable("camHUD", state.camHUD);
 		setVariable("songInst", state.songInst);
 		setVariable("songVocals", state.songVocals);

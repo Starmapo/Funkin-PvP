@@ -11,20 +11,15 @@ import data.song.Song;
 import data.song.TimingPoint;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
-import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxSort;
 import haxe.io.Path;
 import lime.app.Application;
-import lime.system.Clipboard;
-import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorSavePrompt;
 import sys.FileSystem;
 import sys.io.File;
@@ -50,6 +45,8 @@ import util.editors.song.SongEditorMetronome;
 
 class SongEditorState extends FNFState
 {
+	static var globalSong:Song;
+
 	public var hitPositionY:Int = 545;
 	public var playfieldNotes:SongEditorPlayfield;
 	public var playfieldOther:SongEditorPlayfield;
@@ -91,8 +88,13 @@ class SongEditorState extends FNFState
 	public function new(?song:Song)
 	{
 		super();
+		if (globalSong == null)
+			globalSong = Song.loadSong('Tutorial/Hard', 'fnf');
+		
 		if (song == null)
-			song = Song.loadSong('mods/fnf/songs/Tutorial/Hard.json');
+			song = globalSong;
+		else
+			globalSong = song;
 		this.song = song;
 	}
 
