@@ -1,102 +1,102 @@
 {
-  "groups": [
-    {
-      "name": "Friday Night Funkin'",
-	  "bg": "bg/fnf",
-      "songs": [
-		{
-		  "name": "Tutorial",
-		  "icon": "gf"
-		},
+    "groups":[
         {
-		  "name": "Bopeebo",
-		  "icon": "dad"
-		},
-        {
-		  "name": "Fresh",
-		  "icon": "dad"
-		},
-        {
-		  "name": "Dadbattle",
-		  "icon": "dad"
-		},
-		{
-		  "name": "Spookeez",
-		  "icon": "spooky"
-		},
-		{
-		  "name": "South",
-		  "icon": "spooky"
-		},
-		{
-		  "name": "Monster",
-		  "icon": "monster"
-		},
-		{
-		  "name": "Pico",
-		  "icon": "pico"
-		},
-		{
-		  "name": "Philly Nice",
-		  "icon": "pico"
-		},
-		{
-		  "name": "Blammed",
-		  "icon": "pico"
-		},
-		{
-		  "name": "Satin Panties",
-		  "icon": "mom"
-		},
-		{
-		  "name": "High",
-		  "icon": "mom"
-		},
-		{
-		  "name": "M.I.L.F",
-		  "icon": "mom"
-		},
-		{
-		  "name": "Cocoa",
-		  "icon": "parents"
-		},
-		{
-		  "name": "Eggnog",
-		  "icon": "parents"
-		},
-		{
-		  "name": "Winter Horrorland",
-		  "icon": "monster"
-		},
-		{
-		  "name": "Senpai",
-		  "icon": "senpai"
-		},
-		{
-		  "name": "Roses",
-		  "icon": "senpai"
-		},
-		{
-		  "name": "Thorns",
-		  "icon": "spirit"
-		},
-		{
-		  "name": "Ugh",
-		  "icon": "tankman"
-		},
-		{
-		  "name": "Guns",
-		  "icon": "tankman"
-		},
-		{
-		  "name": "Stress",
-		  "icon": "tankman"
-		},
-		{
-		  "name": "Test",
-		  "icon": "bf-pixel"
-		}
-      ]
-    }
-  ]
+            "name":"Friday Night Funkin'",
+            "bg":"bg/fnf",
+            "songs":[
+                {
+                    "name":"Tutorial",
+                    "icon":"gf"
+                },
+                {
+                    "name":"Bopeebo",
+                    "icon":"dad"
+                },
+                {
+                    "name":"Fresh",
+                    "icon":"dad"
+                },
+                {
+                    "name":"Dadbattle",
+                    "icon":"dad"
+                },
+                {
+                    "name":"Spookeez",
+                    "icon":"spooky"
+                },
+                {
+                    "name":"South",
+                    "icon":"spooky"
+                },
+                {
+                    "name":"Monster",
+                    "icon":"monster"
+                },
+                {
+                    "name":"Pico",
+                    "icon":"pico"
+                },
+                {
+                    "name":"Philly Nice",
+                    "icon":"pico"
+                },
+                {
+                    "name":"Blammed",
+                    "icon":"pico"
+                },
+                {
+                    "name":"Satin Panties",
+                    "icon":"mom"
+                },
+                {
+                    "name":"High",
+                    "icon":"mom"
+                },
+                {
+                    "name":"M.I.L.F",
+                    "icon":"mom"
+                },
+                {
+                    "name":"Cocoa",
+                    "icon":"parents"
+                },
+                {
+                    "name":"Eggnog",
+                    "icon":"parents"
+                },
+                {
+                    "name":"Winter Horrorland",
+                    "icon":"monster"
+                },
+                {
+                    "name":"Senpai",
+                    "icon":"senpai"
+                },
+                {
+                    "name":"Roses",
+                    "icon":"senpai"
+                },
+                {
+                    "name":"Thorns",
+                    "icon":"spirit"
+                },
+                {
+                    "name":"Ugh",
+                    "icon":"tankman"
+                },
+                {
+                    "name":"Guns",
+                    "icon":"tankman"
+                },
+                {
+                    "name":"Stress",
+                    "icon":"tankman"
+                },
+                {
+                    "name":"Test",
+                    "icon":"bf-pixel"
+                }
+            ]
+        }
+    ]
 }

@@ -68,7 +68,7 @@ function onCreate()
 		santa.antialiasing = true;
 		addBehindChars(santa);
 	}
-	
+
 	bf.charPosX += 200;
 
 	if (!Settings.distractions)

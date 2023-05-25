@@ -81,14 +81,14 @@ function onCreate()
 			bgGirlsDance();
 			bgGirls.animation.finish();
 		}
-		
+
 		bgGirls.setGraphicSize(Std.int(bgGirls.width * daPixelZoom));
 		bgGirls.updateHitbox();
 		addBehindChars(bgGirls);
 	}
-	
+
 	bf.charPosX += 180;
-	
+
 	if (Settings.lowQuality || !Settings.distractions)
 		close();
 }

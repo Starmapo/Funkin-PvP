@@ -18,7 +18,7 @@ function onCreate()
 	evilSnow.antialiasing = true;
 	evilTree.active = false;
 	addBehindChars(evilSnow);
-	
+
 	bf.charPosX += 320;
 
 	close();

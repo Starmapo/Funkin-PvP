@@ -1,6 +1,6 @@
 function onCreatePost() {
-	if (opponent.charInfo.charName == 'pico-speaker-player')
+	if (opponent.charInfo.name == 'pico-speaker-player')
 		opponent.danceDisabled = true;
-	if (bf.charInfo.charName == 'pico-speaker-player')
+	if (bf.charInfo.name == 'pico-speaker-player')
 		bf.danceDisabled = true;
 }

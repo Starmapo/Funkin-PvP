@@ -23,7 +23,7 @@ function onCreate()
 		bgLimo.scrollFactor.set(0.4, 0.4);
 		bgLimo.antialiasing = true;
 		addBehindChars(bgLimo);
-		
+
 		if (Settings.distractions)
 		{
 			grpLimoDancers = new FlxTypedGroup();
@@ -34,7 +34,8 @@ function onCreate()
 				var dancer = new FlxSprite((370 * i) + 130, bgLimo.y - 400);
 				dancer.frames = Paths.getSpritesheet("stages/limo/limoDancer");
 				dancer.animation.addByIndices('danceLeft', 'bg dancer sketch PINK', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-				dancer.animation.addByIndices('danceRight', 'bg dancer sketch PINK', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+				dancer.animation.addByIndices('danceRight', 'bg dancer sketch PINK', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24,
+					false);
 				dancer.animation.play('danceLeft');
 				dancer.animation.finish();
 				dancer.antialiasing = true;
@@ -51,19 +52,21 @@ function onCreate()
 	limo.antialiasing = true;
 	addOverGF(limo);
 
+	bf.setCharacterPosition(1030, -160);
+
 	if (Settings.distractions)
 	{
 		fastCar = new FlxSprite(-300, 160).loadGraphic(Paths.getImage('stages/limo/fastCarLol'));
 		fastCar.antialiasing = true;
 		addOverChars(fastCar);
-		
+
 		resetFastCar();
-		
+
 		Paths.getSound('carPass0');
 		Paths.getSound('carPass1');
 	}
-
-	bf.setCharacterPosition(1030, -160);
+	else
+		close();
 }
 
 function onBeatHit(beat, decBeat)
@@ -94,11 +97,12 @@ function resetFastCar():Void
 
 function fastCarDrive()
 {
-	FlxG.sound.play(Paths.getSound('carPass' + FlxG.random.int(0, 1)), 0.7);
+	var sound = FlxG.sound.play(Paths.getSound('carPass' + FlxG.random.int(0, 1)), 0.7);
+	sound.pitch = playbackRate;
 
-	fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
+	fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3 * playbackRate;
 	fastCarCanDrive = false;
-	new FlxTimer().start(2, function(tmr:FlxTimer)
+	new FlxTimer().start(2 / playbackRate, function(tmr:FlxTimer)
 	{
 		resetFastCar();
 	});

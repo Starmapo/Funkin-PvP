@@ -35,7 +35,7 @@ function lightningStrikeShit(beat:Int)
 	halloweenBG.animation.play('lightning');
 
 	lightningStrikeBeat = beat;
-	lightningOffset = FlxG.random.int(8, 24);
+	lightningOffset = Math.round(FlxG.random.int(8, 24) * playbackRate);
 
 	bf.playAnim('scared', true);
 	gf.playAnim('scared', true);

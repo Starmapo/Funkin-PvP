@@ -23,12 +23,12 @@ class NPSDisplay extends FlxText
 
 	override function update(elapsed:Float)
 	{
-		var curTime = Date.now().getTime();
+		var curTime = Sys.time();
 		var i = currentTimes.length - 1;
 		while (i >= 0)
 		{
 			var time = currentTimes[i];
-			if (time + 1000 < curTime)
+			if (time + 1 < curTime)
 				currentTimes.remove(time);
 			else
 				break;

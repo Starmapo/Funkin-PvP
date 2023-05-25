@@ -71,6 +71,7 @@ function onCreate()
 		addBehindChars(phillyTrain);
 
 		trainSound = new FlxSound().loadEmbedded(Paths.getSound('train_passes'));
+		trainSound.pitch = playbackRate;
 		FlxG.sound.list.add(trainSound);
 	}
 
@@ -126,7 +127,7 @@ function onBeatHit(beat, decBeat)
 
 	if (beat % 8 == 4 && !trainMoving && trainCooldown > 8 && FlxG.random.bool(30))
 	{
-		trainCooldown = FlxG.random.int(-4, 0);
+		trainCooldown = Math.round(FlxG.random.int(-4, 0) * playbackRate);
 		trainStart();
 	}
 }
@@ -143,7 +144,7 @@ function updateTrainPos()
 
 	if (startedMoving)
 	{
-		phillyTrain.x -= 400;
+		phillyTrain.x -= 400 * playbackRate;
 
 		if (phillyTrain.x < -2000 && !trainFinishing)
 		{

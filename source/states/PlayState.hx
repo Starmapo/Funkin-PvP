@@ -9,6 +9,7 @@ import data.game.Judgement;
 import data.scripts.PlayStateScript;
 import data.scripts.Script;
 import data.song.Song;
+import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -94,6 +95,8 @@ class PlayState extends FNFState
 	public var judgementCounters:FlxTypedGroup<JudgementCounter>;
 	public var npsDisplay:FlxTypedGroup<NPSDisplay>;
 	public var msDisplay:FlxTypedGroup<MSDisplay>;
+	// stupidly hardcoded this
+	public var preventUpdate:Array<FlxBasic> = [];
 
 	var instEnded:Bool = false;
 
@@ -152,7 +155,7 @@ class PlayState extends FNFState
 
 		executeScripts("onUpdate", [elapsed]);
 
-		super.update(elapsed);
+		normalUpdate(elapsed);
 
 		timing.update(elapsed);
 
@@ -174,6 +177,20 @@ class PlayState extends FNFState
 		updateDeathBG();
 
 		executeScripts("onUpdatePost", [elapsed]);
+	}
+
+	function normalUpdate(elapsed:Float)
+	{
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+
+		while (i < length)
+		{
+			basic = members[i++];
+
+			if (basic != null && basic.exists && basic.active && !preventUpdate.contains(basic))
+				basic.update(elapsed);
+		}
 	}
 
 	override function destroy()
@@ -589,11 +606,13 @@ class PlayState extends FNFState
 		{
 			playfield.cameras = [camHUD];
 			add(playfield);
+			preventUpdate.push(playfield);
 		}
 		for (manager in ruleset.noteManagers)
 		{
 			manager.cameras = [camHUD];
 			add(manager);
+			preventUpdate.push(manager);
 		}
 
 		ruleset.lanePressed.add(onLanePressed);
@@ -921,7 +940,7 @@ class PlayState extends FNFState
 				char.playNoteAnim(note, song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate);
 		}
 
-		npsDisplay.members[player].addTime(Date.now().getTime());
+		npsDisplay.members[player].addTime(Sys.time());
 
 		msDisplay.members[player].showMS(ms, judgement);
 

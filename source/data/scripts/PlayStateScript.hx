@@ -1,6 +1,7 @@
 package data.scripts;
 
 import data.song.NoteInfo;
+import data.song.Song;
 import flixel.FlxBasic;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
@@ -52,6 +53,9 @@ class PlayStateScript extends Script
 		setVariable("add", state.add);
 		setVariable("insert", state.insert);
 		setVariable("remove", state.remove);
+		setVariable("precacheGraphic", state.precacheGraphic);
+		setVariable("precacheImage", state.precacheImage);
+		setVariable("precacheCharacter", state.precacheCharacter);
 		setVariable("debugPrint", Reflect.makeVarArgs(function(el)
 		{
 			var inf = interp.posInfos();
@@ -67,7 +71,6 @@ class PlayStateScript extends Script
 		}));
 
 		setVariable("getOrder", function(obj:FlxBasic)
-
 		{
 			return state.members.indexOf(obj);
 		});
@@ -173,6 +176,10 @@ class PlayStateScript extends Script
 		setVariable("getShader", function(name:String, glslVersion:Int = 120)
 		{
 			return getShader(name, glslVersion);
+		});
+		setVariable("loadDifficulty", function(difficulty:String)
+		{
+			return Song.loadSong('${state.song.name}/$difficulty.json', Mods.currentMod);
 		});
 
 		/*

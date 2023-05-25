@@ -164,7 +164,7 @@ class Song extends JsonObject
 		var curTime:Float = 0;
 		var curBPM:Float = json.bpm;
 		var curFocus:Null<CameraFocusChar> = null;
-		var curNotes:Map<Int, Array<Int>> = new Map();
+		var curNotes:Map<String, Array<Int>> = new Map();
 		for (i in 0...json.notes.length)
 		{
 			var section = json.notes[i];
@@ -211,7 +211,8 @@ class Song extends JsonObject
 						noteInfo.lane += 4;
 				}
 
-				if (curNotes.exists(noteInfo.startTime) && curNotes.get(noteInfo.startTime).contains(noteInfo.lane))
+				var string = Std.string(noteInfo.startTime);
+				if (curNotes.exists(string) && curNotes.get(string).contains(noteInfo.lane))
 					continue;
 
 				if (section.altAnim == true && noteInfo.lane < 4)
@@ -225,10 +226,10 @@ class Song extends JsonObject
 				}
 				song.notes.push(noteInfo);
 
-				if (curNotes.exists(noteInfo.startTime) && !curNotes.get(noteInfo.startTime).contains(noteInfo.lane))
-					curNotes.get(noteInfo.startTime).push(noteInfo.lane);
+				if (curNotes.exists(string) && !curNotes.get(string).contains(noteInfo.lane))
+					curNotes.get(string).push(noteInfo.lane);
 				else
-					curNotes.set(noteInfo.startTime, [noteInfo.lane]);
+					curNotes.set(string, [noteInfo.lane]);
 			}
 			curTime += section.lengthInSteps * (15000 / curBPM);
 		}
