@@ -569,6 +569,7 @@ class PlayState extends FNFState
 			songInst.time = songInst.length;
 		});
 		songInst.pitch = Settings.playbackRate;
+		songInst.resetPositionOnFinish = false;
 
 		var vocals = Paths.getSongVocals(song);
 		if (vocals != null)
@@ -579,6 +580,7 @@ class PlayState extends FNFState
 		else
 			songVocals = FlxG.sound.list.add(new FlxSound());
 		songVocals.pitch = Settings.playbackRate;
+		songVocals.resetPositionOnFinish = false;
 
 		timing = new MusicTiming(songInst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
 		timing.onStepHit.add(onStepHit);
