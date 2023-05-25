@@ -16,10 +16,13 @@ import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxRuntimeShader;
+import flixel.addons.effects.FlxTrail;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.tile.FlxGraphicsShader;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.sound.FlxSound;
@@ -193,7 +196,9 @@ class Script implements IFlxDestroyable
 		setVariable('Point', Point);
 		setVariable('Rectangle', Rectangle);
 
+		setVariable('FlxAngle', FlxAngle);
 		setVariable('FlxAssets', FlxAssets);
+		setVariable('FlxAtlasFrames', FlxAtlasFrames);
 		setVariable('FlxAxes', FlxAxesHelper);
 		setVariable('FlxBackdrop', FlxBackdrop);
 		setVariable('FlxCamera', FlxCamera);
@@ -219,6 +224,7 @@ class Script implements IFlxDestroyable
 		setVariable('FlxTextFormat', FlxTextFormat);
 		setVariable('FlxTilemap', FlxTilemap);
 		setVariable('FlxTimer', FlxTimer);
+		setVariable('FlxTrail', FlxTrail);
 		setVariable('FlxTween', FlxTween);
 		setVariable('FlxTypedGroup', FlxTypedGroup);
 		setVariable('FlxTypedSpriteGroup', FlxTypedSpriteGroup);

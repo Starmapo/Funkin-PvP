@@ -84,6 +84,8 @@
 	<!-- Makes the game use less RAM -->
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="desktop" />
 
+	<haxeflag name="--macro" value="include('flixel')" />
+
 	<define name="hscriptPos" />
 
 	<!-- _________________________________ Custom _______________________________ -->

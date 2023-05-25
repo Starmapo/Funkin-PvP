@@ -87,7 +87,7 @@ function onCreate()
 		addBehindChars(bgGirls);
 	}
 	
-	bf.charPosX += 200;
+	bf.charPosX += 180;
 	
 	if (Settings.lowQuality || !Settings.distractions)
 		close();
