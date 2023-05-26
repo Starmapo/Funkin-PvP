@@ -19,7 +19,7 @@ import haxe.io.Path;
 import states.editors.SongEditorState;
 import subStates.PromptSubState.YesNoPrompt;
 import subStates.editors.song.SongEditorApplyOffsetPrompt;
-import subStates.editors.song.SongEditorNormalizeNoteTypePrompt;
+import subStates.editors.song.SongEditorChangeNoteTypePrompt;
 import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
 import systools.Dialogs;
 import ui.editors.EditorCheckbox;
@@ -92,6 +92,12 @@ class SongEditorEditPanel extends EditorPanel
 				name: 'Events',
 				label: 'Events'
 			},
+			/*
+				{
+					name: 'Extra',
+					label: 'Extra'
+				},
+			 */
 			{
 				name: 'Notes',
 				label: 'Notes'
@@ -117,6 +123,7 @@ class SongEditorEditPanel extends EditorPanel
 		createCameraFocusesTab();
 		createEditorTab();
 		createEventsTab();
+		createExtraTab();
 		createNotesTab();
 		createScrollVelocitiesTab();
 		createSongTab();
@@ -835,32 +842,44 @@ class SongEditorEditPanel extends EditorPanel
 					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
 			}
 		});
-		var normalizeAllNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
+		var changeAllNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
 		{
-			if (text.length > 0)
+			if (type.length > 0)
 			{
 				var notes:Array<NoteInfo> = [];
 				for (note in state.song.notes)
 				{
-					if (note.type == text)
+					if (note.type == type)
 						notes.push(note);
 				}
 				if (notes.length > 0)
-					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
+				{
+					var changeType = new ActionChangeNoteType(state, cast notes, newType);
+					if (params.length > 0)
+						state.actionManager.performBatch([changeType, new ActionChangeNoteParams(state, notes, params)]);
+					else
+						state.actionManager.perform(changeType);
+				}
 			}
 		});
-		var normalizeSelectedNoteTypePrompt = new SongEditorNormalizeNoteTypePrompt(function(text)
+		var changeSelectedNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
 		{
-			if (text.length > 0)
+			if (type.length > 0)
 			{
 				var notes:Array<NoteInfo> = [];
 				for (note in selectedNotes)
 				{
-					if (note.type == text)
+					if (note.type == type)
 						notes.push(note);
 				}
 				if (notes.length > 0)
-					state.actionManager.perform(new ActionChangeNoteType(state, cast notes, ''));
+				{
+					var changeType = new ActionChangeNoteType(state, cast notes, newType);
+					if (params.length > 0)
+						state.actionManager.performBatch([changeType, new ActionChangeNoteParams(state, notes, params)]);
+					else
+						state.actionManager.perform(changeType);
+				}
 			}
 		});
 
@@ -1060,23 +1079,23 @@ class SongEditorEditPanel extends EditorPanel
 		removeSelectedNoteTypesButton.x = (width - removeSelectedNoteTypesButton.width) / 2;
 		tab.add(removeSelectedNoteTypesButton);
 
-		var normalizeAllNoteTypesButton = new FlxUIButton(0, removeSelectedNoteTypesButton.y + removeSelectedNoteTypesButton.height + spacing,
-			'Normalize all notes of type', function()
+		var changeAllNoteTypesButton = new FlxUIButton(0, removeSelectedNoteTypesButton.y + removeSelectedNoteTypesButton.height + spacing,
+			'Change all notes of type', function()
 		{
-			state.openSubState(normalizeAllNoteTypePrompt);
+			state.openSubState(changeAllNoteTypePrompt);
 		});
-		normalizeAllNoteTypesButton.resize(150, normalizeAllNoteTypesButton.height);
-		normalizeAllNoteTypesButton.x = (width - normalizeAllNoteTypesButton.width) / 2;
-		tab.add(normalizeAllNoteTypesButton);
+		changeAllNoteTypesButton.resize(140, changeAllNoteTypesButton.height);
+		changeAllNoteTypesButton.x = (width - changeAllNoteTypesButton.width) / 2;
+		tab.add(changeAllNoteTypesButton);
 
-		var normalizeSelectedNoteTypesButton = new FlxUIButton(0, normalizeAllNoteTypesButton.y + normalizeAllNoteTypesButton.height + spacing,
-			'Normalize selected notes of type', function()
+		var changeSelectedNoteTypesButton = new FlxUIButton(0, changeAllNoteTypesButton.y + changeAllNoteTypesButton.height + spacing,
+			'Change selected notes of type', function()
 		{
-			state.openSubState(normalizeSelectedNoteTypePrompt);
+			state.openSubState(changeSelectedNoteTypePrompt);
 		});
-		normalizeSelectedNoteTypesButton.resize(170, normalizeSelectedNoteTypesButton.height);
-		normalizeSelectedNoteTypesButton.x = (width - normalizeSelectedNoteTypesButton.width) / 2;
-		tab.add(normalizeSelectedNoteTypesButton);
+		changeSelectedNoteTypesButton.resize(170, changeSelectedNoteTypesButton.height);
+		changeSelectedNoteTypesButton.x = (width - changeSelectedNoteTypesButton.width) / 2;
+		tab.add(changeSelectedNoteTypesButton);
 
 		addGroup(tab);
 	}
@@ -1362,6 +1381,8 @@ class SongEditorEditPanel extends EditorPanel
 
 		addGroup(tab);
 	}
+
+	function createExtraTab() {}
 
 	override function update(elapsed:Float)
 	{

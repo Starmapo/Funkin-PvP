@@ -51,7 +51,7 @@ class PlayerSettings
 		for (config in Settings.playerConfigs)
 		{
 			if (config.scrollSpeed == null)
-				config.scrollSpeed = 0.75;
+				config.scrollSpeed = 1;
 			if (config.judgementCounter == null)
 				config.judgementCounter = false;
 			if (config.npsDisplay == null)
@@ -68,6 +68,8 @@ class PlayerSettings
 				config.transparentReceptors = false;
 			if (config.transparentHolds == null)
 				config.transparentHolds = false;
+			if (config.notesScale == null)
+				config.notesScale = 1;
 		}
 
 		for (i in 0...2)
@@ -211,16 +213,7 @@ class PlayerSettings
 		return {
 			device: device,
 			controls: controls,
-			scrollSpeed: 0.75,
-			downScroll: false,
-			judgementCounter: false,
-			npsDisplay: false,
-			msDisplay: false,
-			transparentReceptors: false,
-			transparentHolds: false,
-			noteSplashes: true,
-			noReset: false,
-			autoplay: false
+			downScroll: false
 		};
 	}
 

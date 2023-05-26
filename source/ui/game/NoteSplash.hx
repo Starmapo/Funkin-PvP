@@ -1,5 +1,6 @@
 package ui.game;
 
+import data.PlayerConfig;
 import data.skin.NoteSkin;
 import flixel.FlxG;
 import sprites.AnimatedSprite;
@@ -13,9 +14,9 @@ class NoteSplash extends AnimatedSprite
 	var receptor:Receptor;
 	var splashData:SplashData;
 
-	public function new(id:Int, noteSkin:NoteSkin, receptor:Receptor)
+	public function new(id:Int, noteSkin:NoteSkin, receptor:Receptor, config:PlayerConfig)
 	{
-		super(0, 0, Paths.getSpritesheet(noteSkin.splashesImage), noteSkin.splashesScale);
+		super(0, 0, Paths.getSpritesheet(noteSkin.splashesImage), noteSkin.splashesScale * config.notesScale);
 		this.id = id;
 		this.noteSkin = noteSkin;
 		this.receptor = receptor;
@@ -31,6 +32,7 @@ class NoteSplash extends AnimatedSprite
 				offset: splashData.offset
 			}, true);
 		}
+		offsetScale.scale(config.notesScale);
 		kill();
 	}
 
@@ -39,7 +41,7 @@ class NoteSplash extends AnimatedSprite
 		animation.finishCallback = null;
 
 		playAnim('splash', true);
-		if (animation.curAnim != null)
+		if (animation.curAnim != null && splashData != null)
 			animation.curAnim.frameRate = splashData.fps + FlxG.random.int(-2, 2);
 
 		revive();

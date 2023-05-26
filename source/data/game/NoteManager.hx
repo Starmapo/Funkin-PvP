@@ -75,7 +75,7 @@ class NoteManager extends FlxBasic
 			{
 				for (note in lane)
 				{
-					if (note.canDraw())
+					if (note != null && note.exists && note.canDraw())
 					{
 						var lastAlpha = note.alpha;
 						note.alpha *= alpha;
@@ -369,7 +369,8 @@ class NoteManager extends FlxBasic
 			for (note in lane)
 			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
-				note.update(elapsed);
+				if (note.isOnScreen(cameras[0]))
+					note.update(elapsed);
 			}
 		}
 	}
@@ -459,7 +460,8 @@ class NoteManager extends FlxBasic
 			for (note in lane)
 			{
 				note.updateSpritePositions(currentTrackPosition, currentVisualPosition);
-				note.update(elapsed);
+				if (note.isOnScreen(cameras[0]))
+					note.update(elapsed);
 			}
 		}
 	}

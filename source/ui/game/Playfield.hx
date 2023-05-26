@@ -32,7 +32,7 @@ class Playfield extends FlxGroup
 						staticAnim: 'arrow static instance 2',
 						pressedAnim: 'down press instance 1',
 						confirmAnim: 'down confirm instance 1',
-						confirmOffset: [-3, 0]
+						confirmOffset: [-1.5, 0]
 					},
 					{
 						staticAnim: 'arrow static instance 4',
@@ -48,7 +48,7 @@ class Playfield extends FlxGroup
 				receptorsCenterAnimation: true,
 				receptorsOffset: [0, 0],
 				receptorsPadding: 0,
-				receptorsScale: 0.5,
+				receptorsScale: 0.7,
 				notes: [
 					{
 						headAnim: 'purple instance 1',
@@ -71,27 +71,26 @@ class Playfield extends FlxGroup
 						tailAnim: 'red hold end instance 1'
 					}
 				],
-				notesScale: 0.5,
+				notesScale: 0.7,
 				judgementsScale: 0.3,
 				splashes: [
 					{
 						anim: 'note impact 1 purple',
-						offset: [25, 25]
+						offset: [35, 35]
 					},
 					{
 						anim: 'note impact 1  blue',
-						offset: [25, 25]
+						offset: [35, 35]
 					},
 					{
 						anim: 'note impact 1 green',
-						offset: [25, 25]
+						offset: [35, 35]
 					},
 					{
 						anim: 'note impact 1 red',
-						offset: [25, 25]
+						offset: [35, 35]
 					}
 				],
-				splashesScale: 0.71,
 				antialiasing: true
 			});
 
@@ -200,6 +199,6 @@ class Playfield extends FlxGroup
 			return;
 
 		for (i in 0...4)
-			splashes.add(new NoteSplash(i, noteSkin, receptors.members[i]));
+			splashes.add(new NoteSplash(i, noteSkin, receptors.members[i], config));
 	}
 }

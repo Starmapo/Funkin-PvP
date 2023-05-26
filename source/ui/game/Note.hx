@@ -29,6 +29,8 @@ class Note extends FlxSpriteGroup
 	public var noMissAnim:Bool;
 	public var character:Character;
 	public var texture(default, set):String;
+	public var offsetX:Float = 0;
+	public var offsetY:Float = 0;
 
 	var manager:NoteManager;
 	var playfield:Playfield;
@@ -111,12 +113,12 @@ class Note extends FlxSpriteGroup
 
 		earliestTrackPosition = earliestPosition;
 		latestTrackPosition = latestPosition;
-		currentBodySize = Std.int((latestTrackPosition - earliestTrackPosition) * manager.scrollSpeed - longNoteSizeDifference);
+		currentBodySize = Math.round((latestTrackPosition - earliestTrackPosition) * manager.scrollSpeed - longNoteSizeDifference);
 	}
 
 	public function updateSpritePositions(offset:Float, curTime:Float)
 	{
-		x = playfield.receptors.members[info.playerLane].x;
+		x = playfield.receptors.members[info.playerLane].x + offsetX;
 
 		var hitPosition = playfield.receptors.members[info.playerLane].y;
 		var spritePosition;
@@ -131,12 +133,12 @@ class Note extends FlxSpriteGroup
 		else
 			spritePosition = hitPosition + getSpritePosition(offset, initialTrackPosition);
 
-		y = spritePosition;
+		y = spritePosition + offsetY;
 
 		if (!info.isLongNote)
 			return;
 
-		body.setGraphicSize(Std.int(body.width), currentBodySize);
+		body.setGraphicSize(Math.round(body.width), currentBodySize);
 		body.updateHitbox();
 
 		var earliestSpritePosition = hitPosition + getSpritePosition(offset, earliestTrackPosition);
@@ -179,7 +181,9 @@ class Note extends FlxSpriteGroup
 			fps: 0,
 			loop: false
 		}, true);
-		head.scale.set(noteSkin.notesScale, noteSkin.notesScale);
+		var scale = noteSkin.notesScale * config.notesScale;
+		head.scale.set(scale, scale);
+		head.offsetScale.set(config.notesScale, config.notesScale);
 		head.updateHitbox();
 		bodyOffset = head.height / 2;
 		longNoteSizeDifference = head.height / 2;
@@ -192,6 +196,7 @@ class Note extends FlxSpriteGroup
 			loop: false
 		}, true);
 		body.scale.copyFrom(head.scale);
+		body.offsetScale.set(config.notesScale, config.notesScale);
 		body.updateHitbox();
 		body.x = x + (head.width / 2) - (body.width / 2);
 
@@ -203,10 +208,26 @@ class Note extends FlxSpriteGroup
 			loop: false
 		}, true);
 		tail.scale.copyFrom(head.scale);
+		tail.offsetScale.set(config.notesScale, config.notesScale);
 		tail.updateHitbox();
 		tail.x = x + (head.width / 2) - (tail.width / 2);
 
 		updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
+	}
+
+	override function update(elapsed:Float)
+	{
+		var toUpdate = [head];
+		if (info.isLongNote)
+		{
+			toUpdate.push(body);
+			toUpdate.push(tail);
+		}
+		for (spr in toUpdate)
+		{
+			if (spr != null && spr.exists && spr.active)
+				spr.update(elapsed);
+		}
 	}
 
 	override function destroy()

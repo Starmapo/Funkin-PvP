@@ -133,7 +133,7 @@ function onUpdatePost(elapsed)
 		animationNotes.shift();
 	}
 
-	if (tankmanRun != null)
+	if (tankmanRun != null && tankmanRun.length > 0)
 	{
 		var i = 0;
 		while (i < tankmanRun.length)

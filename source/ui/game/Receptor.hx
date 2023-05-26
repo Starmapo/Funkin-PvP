@@ -2,7 +2,6 @@ package ui.game;
 
 import data.PlayerConfig;
 import data.skin.NoteSkin;
-import flixel.tweens.FlxTween;
 import sprites.AnimatedSprite;
 
 class Receptor extends AnimatedSprite
@@ -24,7 +23,9 @@ class Receptor extends AnimatedSprite
 			var data = skin.receptors[lane];
 
 			frames = Paths.getSpritesheet(skin.receptorsImage);
-			scale.set(skin.receptorsScale, skin.receptorsScale);
+			var noteScale = skin.receptorsScale * config.notesScale;
+			scale.scale(noteScale);
+			offsetScale.scale(config.notesScale);
 
 			addAnim({
 				name: 'static',
@@ -32,7 +33,6 @@ class Receptor extends AnimatedSprite
 				fps: data.staticFPS,
 				offset: data.staticOffset
 			}, true);
-			updateHitbox();
 			staticWidth = width;
 			staticHeight = height;
 
@@ -58,6 +58,8 @@ class Receptor extends AnimatedSprite
 
 		targetAlpha = config.transparentReceptors ? 0.8 : 1;
 		alpha = targetAlpha;
+
+		playAnim('static', true);
 	}
 
 	override function destroy()
@@ -70,7 +72,7 @@ class Receptor extends AnimatedSprite
 	{
 		if (skin.receptorsCenterAnimation)
 			offset.add((width - staticWidth) * 0.5, (height - staticHeight) * 0.5);
-		
+
 		if (name == 'confirm')
 			alpha = 1;
 		else

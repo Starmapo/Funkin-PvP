@@ -964,7 +964,8 @@
 			"startTime": 61853.9336
 		},
 		{
-			"type": "Alt Animation",
+			"params": "prettyGood",
+			"type": "Special Animation",
 			"lane": 1,
 			"startTime": 62022.4727
 		},

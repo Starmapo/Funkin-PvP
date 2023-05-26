@@ -1,6 +1,5 @@
 package ui.editors.song;
 
-import flixel.util.FlxDestroyUtil;
 import data.Settings;
 import data.song.ITimingObject;
 import data.song.NoteInfo;
@@ -8,6 +7,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import sprites.AnimatedSprite;
 import states.editors.SongEditorState;
@@ -499,7 +499,8 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 
 		tail.scale.copyFrom(head.scale);
 		tail.updateHitbox();
-		body.setGraphicSize(Std.int(body.frameWidth * head.scale.x), getLongNoteHeight());
+		body.setGraphicSize(body.frameWidth, getLongNoteHeight());
+		body.scale.x = head.scale.x;
 		body.updateHitbox();
 		body.x = head.x + (head.width / 2) - (body.width / 2);
 		body.y = head.y + (head.height / 2) - body.height;

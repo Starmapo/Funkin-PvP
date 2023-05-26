@@ -132,7 +132,8 @@
 			"startTime": 5250
 		},
 		{
-			"type": "Alt Animation",
+			"params": "ugh",
+			"type": "Play Animation",
 			"lane": 2,
 			"startTime": 5625
 		},
@@ -1154,7 +1155,8 @@
 			"startTime": 41250
 		},
 		{
-			"type": "Alt Animation",
+			"params": "ugh",
+			"type": "Play Animation",
 			"lane": 2,
 			"startTime": 41625
 		},
@@ -1332,7 +1334,8 @@
 			"startTime": 48937.5
 		},
 		{
-			"type": "Alt Animation",
+			"params": "ugh",
+			"type": "Play Animation",
 			"lane": 2,
 			"startTime": 49125
 		},
@@ -2079,7 +2082,8 @@
 			"startTime": 77250
 		},
 		{
-			"type": "Alt Animation",
+			"params": "ugh",
+			"type": "Play Animation",
 			"lane": 2,
 			"startTime": 77625
 		},

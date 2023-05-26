@@ -47,11 +47,26 @@ class PlayerPage extends Page
 			defaultValue: false
 		});
 		addSetting({
+			name: 'notesScale',
+			displayName: 'Note Scale',
+			description: 'Change how big the notes and receptors should be.',
+			type: NUMBER,
+			defaultValue: 1,
+			displayFunction: function(v)
+			{
+				return v + 'x';
+			},
+			minValue: 0.5,
+			maxValue: 1,
+			decimals: 2,
+			changeAmount: 0.05
+		});
+		addSetting({
 			name: 'scrollSpeed',
 			displayName: 'Scroll Speed',
-			description: 'How fast the notes should be going.',
+			description: 'Change how fast the notes should be going.',
 			type: NUMBER,
-			defaultValue: 0.75,
+			defaultValue: 1,
 			displayFunction: function(v)
 			{
 				return v + 'x';

@@ -18,10 +18,12 @@ class PromptSubState extends FlxSubState
 	var promptText:FlxUIText;
 	var buttonGroup:FlxTypedGroup<FlxUIButton>;
 	var camSubState:FlxCamera;
+	var buttons:Array<ButtonData>;
 
 	public function new(message:String, buttons:Array<ButtonData>)
 	{
 		super();
+		this.buttons = buttons;
 
 		camSubState = new FlxCamera();
 		camSubState.bgColor = 0;
@@ -42,6 +44,25 @@ class PromptSubState extends FlxSubState
 		buttonGroup = new FlxTypedGroup();
 		add(buttonGroup);
 
+		createButtons();
+
+		openCallback = onOpen;
+		closeCallback = onClose;
+
+		promptBG.resize(promptBG.width, promptText.height + 5 + buttonGroup.members[0].height + 10);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		promptBG = null;
+		promptText = null;
+		buttonGroup = null;
+		camSubState = null;
+	}
+
+	function createButtons()
+	{
 		var curX:Float = 0;
 		for (i in 0...buttons.length)
 		{
@@ -59,20 +80,6 @@ class PromptSubState extends FlxSubState
 			curX += button.width + 5;
 		}
 		CoolUtil.screenCenterGroup(buttonGroup, X);
-
-		openCallback = onOpen;
-		closeCallback = onClose;
-
-		promptBG.resize(promptBG.width, promptText.height + 5 + buttonGroup.members[0].height + 10);
-	}
-
-	override function destroy()
-	{
-		super.destroy();
-		promptBG = null;
-		promptText = null;
-		buttonGroup = null;
-		camSubState = null;
 	}
 
 	function onOpen()
