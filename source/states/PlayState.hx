@@ -469,6 +469,68 @@ class PlayState extends FNFState
 					FlxG.camera.zoom += camZoom * camBopMult;
 					camHUD.zoom += hudZoom * camBopMult;
 				}
+
+			case 'Play Animation':
+				var char = opponent;
+				if (params[1] != null)
+				{
+					switch (params[1].trim())
+					{
+						case 'bf', 'boyfriend', '1':
+							char = bf;
+						case 'gf', 'girlfriend', '2':
+							char = gf;
+					}
+				}
+				var time = params[2] != null ? Std.parseFloat(params[2].trim()) : Math.NaN;
+				if (Math.isNaN(time) || time < 0)
+					time = 0;
+				char.playSpecialAnim(params[0], time, true);
+
+			case 'Camera Follow Pos':
+				if (params[0] != null && params[0].length > 0)
+				{
+					var x = params[0] != null ? Std.parseFloat(params[0].trim()) : Math.NaN;
+					if (Math.isNaN(x))
+						x = 0;
+					var y = params[1] != null ? Std.parseFloat(params[1].trim()) : Math.NaN;
+					if (Math.isNaN(y))
+						y = 0;
+					camFollow.setPosition(x, y);
+					disableCamFollow = true;
+				}
+				else
+					disableCamFollow = false;
+
+			case 'Screen Shake':
+				var valuesArray:Array<Array<String>> = [[params[0], params[1]], [params[2], params[3]]];
+				var targetsArray:Array<FlxCamera> = [FlxG.camera, camHUD];
+				for (i in 0...targetsArray.length)
+				{
+					var values:Array<String> = valuesArray[i];
+					if (values == null)
+						continue;
+
+					var duration:Float = values[0] != null ? Std.parseFloat(values[0].trim()) : Math.NaN;
+					if (Math.isNaN(duration))
+						duration = 0;
+					var intensity:Float = values[1] != null ? Std.parseFloat(values[1].trim()) : Math.NaN;
+					if (Math.isNaN(intensity))
+						intensity = 0;
+
+					if (duration > 0 && intensity != 0)
+						targetsArray[i].shake(intensity, duration);
+				}
+
+			case 'Set Property':
+				if (params[0] != null)
+				{
+					var killMe:Array<String> = params[0].split('.');
+					if (killMe.length > 1)
+						CoolUtil.setVarInArray(CoolUtil.getPropertyLoopThingWhatever(killMe, true), killMe[killMe.length - 1], params[1]);
+					else
+						CoolUtil.setVarInArray(this, params[0], params[1]);
+				}
 		}
 
 		executeScripts("onEvent", [name, params]);

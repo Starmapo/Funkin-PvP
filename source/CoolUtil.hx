@@ -283,6 +283,64 @@ class CoolUtil
 		return dumbArray;
 	}
 
+	public static function getVarInArray(instance:Dynamic, variable:String):Any
+	{
+		var shit:Array<String> = variable.split('[');
+		if (shit.length > 1)
+		{
+			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
+
+			for (i in 1...shit.length)
+			{
+				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
+				blah = blah[leNum];
+			}
+			return blah;
+		}
+
+		return Reflect.getProperty(instance, variable);
+	}
+
+	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any
+	{
+		var shit:Array<String> = variable.split('[');
+		if (shit.length > 1)
+		{
+			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
+
+			for (i in 1...shit.length)
+			{
+				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
+				if (i >= shit.length - 1)
+					blah[leNum] = value;
+				else
+					blah = blah[leNum];
+			}
+			return blah;
+		}
+
+		Reflect.setProperty(instance, variable, value);
+		return true;
+	}
+
+	public static function getPropertyLoopThingWhatever(killMe:Array<String>, ?getProperty:Bool = true):Dynamic
+	{
+		var coverMeInPiss:Dynamic = getObjectDirectly(killMe[0]);
+		var end = killMe.length;
+		if (getProperty)
+			end = killMe.length - 1;
+
+		for (i in 1...end)
+			coverMeInPiss = getVarInArray(coverMeInPiss, killMe[i]);
+
+		return coverMeInPiss;
+	}
+
+	public static function getObjectDirectly(objectName:String):Dynamic
+	{
+		return getVarInArray(FlxG.state, objectName);
+	}
+
 	@:generic
 	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
 	{

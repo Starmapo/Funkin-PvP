@@ -43,7 +43,6 @@ class Song extends JsonObject
 
 			if (sliderVelocities != null)
 			{
-				json.scrollVelocities = [];
 				for (sv in sliderVelocities)
 				{
 					json.scrollVelocities.push(new ScrollVelocity({
@@ -145,7 +144,7 @@ class Song extends JsonObject
 		var song:Dynamic = {
 			title: json.song,
 			instFile: 'Inst.ogg',
-			vocalsFile: json.needsVoices ? 'Voices.ogg' : '',
+			vocalsFile: 'Voices.ogg',
 			scrollSpeed: json.speed,
 			timingPoints: [
 				{
@@ -158,7 +157,8 @@ class Song extends JsonObject
 			bf: json.player1,
 			opponent: json.player2,
 			gf: json.gfVersion,
-			stage: json.stage
+			stage: json.stage,
+			scrollVelocities: []
 		};
 
 		var curTime:Float = 0;
@@ -192,15 +192,27 @@ class Song extends JsonObject
 				};
 				if (noteInfo.lane < 0)
 				{
-					song.events.push(new EventObject({
-						startTime: note[0],
-						events: [
-							{
-								event: note[2],
-								params: note[3] + (note[4].length > 0 ? ',' + note[4] : '')
-							}
-						]
-					}));
+					if (note[2] == 'Change Scroll Speed')
+					{
+						var val:String = note[3];
+						var mult = val != null ? Std.parseFloat(val.trim()) : Math.NaN;
+						if (Math.isNaN(mult))
+							mult = 1;
+						json.scrollVelocities.push(new ScrollVelocity({
+							startTime: note[0],
+							multipliers: [mult, mult]
+						}));
+					}
+					else
+						song.events.push(new EventObject({
+							startTime: note[0],
+							events: [
+								{
+									event: note[2],
+									params: note[3] + (note[4].length > 0 ? ',' + note[4] : '')
+								}
+							]
+						}));
 					continue;
 				}
 				if (section.mustHitSection)
@@ -242,15 +254,28 @@ class Song extends JsonObject
 				var subs:Array<Array<String>> = event[1];
 				for (sub in subs)
 				{
-					subEvents.push(new Event({
-						event: sub[0],
-						params: sub[1] + (sub[2].length > 0 ? ',' + sub[2] : '')
-					}));
+					if (sub[0] == 'Change Scroll Speed')
+					{
+						var val:String = sub[1];
+						var mult = val != null ? Std.parseFloat(val.trim()) : Math.NaN;
+						if (Math.isNaN(mult))
+							mult = 1;
+						json.scrollVelocities.push(new ScrollVelocity({
+							startTime: sub[0],
+							multipliers: [mult, mult]
+						}));
+					}
+					else
+						subEvents.push(new Event({
+							event: sub[0],
+							params: sub[1] + (sub[2].length > 0 ? ',' + sub[2] : '')
+						}));
 				}
-				song.events.push(new EventObject({
-					startTime: event[0],
-					events: subEvents
-				}));
+				if (subEvents.length > 0)
+					song.events.push(new EventObject({
+						startTime: event[0],
+						events: subEvents
+					}));
 			}
 		}
 
