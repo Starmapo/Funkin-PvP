@@ -12,7 +12,7 @@ class Receptor extends AnimatedSprite
 	public var staticHeight:Float;
 	public var targetAlpha:Float = 1;
 
-	public function new(x:Float = 0, y:Float = 0, lane:Int = 0, ?skin:NoteSkin, config:PlayerConfig)
+	public function new(x:Float = 0, y:Float = 0, lane:Int = 0, ?skin:NoteSkin, ?config:PlayerConfig)
 	{
 		super(x, y);
 		this.lane = lane;
@@ -30,9 +30,10 @@ class Receptor extends AnimatedSprite
 				if (image != null)
 					loadGraphic(image, true, Math.round(image.width / 4), Math.round(image.height / 5));
 			}
-			var noteScale = skin.receptorsScale * config.notesScale;
+			var configScale = config != null ? config.notesScale : 1;
+			var noteScale = skin.receptorsScale * configScale;
 			scale.scale(noteScale);
-			offsetScale.scale(config.notesScale);
+			offsetScale.scale(configScale);
 
 			addAnim({
 				name: 'static',
@@ -66,7 +67,7 @@ class Receptor extends AnimatedSprite
 		}
 		scrollFactor.set();
 
-		targetAlpha = config.transparentReceptors ? 0.8 : 1;
+		targetAlpha = config != null && config.transparentReceptors ? 0.8 : 1;
 		alpha = targetAlpha;
 
 		playAnim('static', true);

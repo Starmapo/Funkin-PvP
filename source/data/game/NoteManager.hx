@@ -297,7 +297,7 @@ class NoteManager extends FlxBasic
 
 	public function createPoolObject(info:NoteInfo)
 	{
-		var note = new Note(info, this, ruleset.playfields[player]);
+		var note = new Note(info, this, ruleset.playfields[player], ruleset.playfields[player].noteSkin);
 		activeNoteLanes[info.playerLane].push(note);
 		ruleset.noteSpawned.dispatch(note);
 	}

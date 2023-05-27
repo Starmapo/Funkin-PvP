@@ -43,16 +43,19 @@ class Note extends FlxSpriteGroup
 	var longNoteSizeDifference:Float;
 	var toUpdate:Array<FlxSprite>;
 
-	public function new(info:NoteInfo, manager:NoteManager, playfield:Playfield)
+	public function new(info:NoteInfo, ?manager:NoteManager, ?playfield:Playfield, ?noteSkin:NoteSkin)
 	{
 		super();
 		this.playfield = playfield;
 		this.manager = manager;
-		noteSkin = playfield.noteSkin;
-		config = manager.config;
+		this.noteSkin = noteSkin;
+		if (manager != null)
+			config = manager.config;
 
 		initializeSprites();
 		initializeObject(info);
+
+		scrollFactor.set();
 	}
 
 	public function initializeObject(info:NoteInfo)
@@ -64,7 +67,10 @@ class Note extends FlxSpriteGroup
 		tint = FlxColor.WHITE;
 
 		head.visible = true;
-		initialTrackPosition = manager.getPositionFromTime(info.startTime);
+		if (manager != null)
+			initialTrackPosition = manager.getPositionFromTime(info.startTime);
+		else
+			initialTrackPosition = info.startTime;
 		currentlyBeingHeld = false;
 		toUpdate.resize(1);
 
@@ -75,15 +81,28 @@ class Note extends FlxSpriteGroup
 		}
 		else
 		{
-			svDirectionChanges = manager.getSVDirectionChanges(info.startTime, info.endTime);
+			if (manager != null)
+			{
+				svDirectionChanges = manager.getSVDirectionChanges(info.startTime, info.endTime);
+				endTrackPosition = manager.getPositionFromTime(info.endTime);
+			}
+			else
+			{
+				svDirectionChanges = [];
+				endTrackPosition = info.endTime;
+			}
 			tail.visible = body.visible = true;
-			endTrackPosition = manager.getPositionFromTime(info.endTime);
 			updateLongNoteSize(initialTrackPosition, info.startTime);
 
-			var flipY = config.downScroll;
-			if (manager.isSVNegative(info.endTime))
-				flipY = !flipY;
-			tail.flipY = flipY;
+			if (config != null)
+			{
+				var flipY = config.downScroll;
+				if (manager != null && manager.isSVNegative(info.endTime))
+					flipY = !flipY;
+				tail.flipY = flipY;
+			}
+			else
+				tail.flipY = false;
 
 			toUpdate.push(body);
 			toUpdate.push(tail);
@@ -119,14 +138,17 @@ class Note extends FlxSpriteGroup
 
 		earliestTrackPosition = earliestPosition;
 		latestTrackPosition = latestPosition;
-		currentBodySize = Math.round((latestTrackPosition - earliestTrackPosition) * manager.scrollSpeed - longNoteSizeDifference);
+
+		var speed = manager != null ? manager.scrollSpeed : 1;
+		currentBodySize = Math.round((latestTrackPosition - earliestTrackPosition) * speed - longNoteSizeDifference);
 	}
 
 	public function updateSpritePositions(offset:Float, curTime:Float)
 	{
-		x = playfield.receptors.members[info.playerLane].x + offsetX;
+		if (playfield != null)
+			x = playfield.receptors.members[info.playerLane].x + offsetX;
 
-		var hitPosition = playfield.receptors.members[info.playerLane].y;
+		var hitPosition = playfield != null ? playfield.receptors.members[info.playerLane].y : 50;
 		var spritePosition;
 		if (currentlyBeingHeld)
 		{
@@ -148,7 +170,7 @@ class Note extends FlxSpriteGroup
 		body.updateHitbox();
 
 		var earliestSpritePosition = hitPosition + getSpritePosition(offset, earliestTrackPosition);
-		if (config.downScroll)
+		if (config != null && config.downScroll)
 		{
 			body.y = earliestSpritePosition + bodyOffset - body.height;
 			tail.y = body.y - tail.height;
@@ -195,9 +217,10 @@ class Note extends FlxSpriteGroup
 		}
 		var data = noteSkin.notes[info.playerLane];
 
-		var scale = noteSkin.notesScale * config.notesScale;
+		var notesScale = config != null ? config.notesScale : 1;
+		var scale = noteSkin.notesScale * notesScale;
 		head.scale.set(scale, scale);
-		head.offsetScale.set(config.notesScale, config.notesScale);
+		head.offsetScale.set(notesScale, notesScale);
 		head.addAnim({
 			name: 'head',
 			atlasName: data.headAnim,
@@ -235,7 +258,10 @@ class Note extends FlxSpriteGroup
 
 	public function updateWithCurrentPositions()
 	{
-		updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
+		if (manager != null)
+			updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
+		else
+			updateSpritePositions(0, 0);
 	}
 
 	override function update(elapsed:Float)
@@ -268,7 +294,7 @@ class Note extends FlxSpriteGroup
 		head.antialiasing = noteSkin.antialiasing;
 
 		body = new AnimatedSprite();
-		body.alpha = config.transparentHolds ? 0.6 : 1;
+		body.alpha = config != null && config.transparentHolds ? 0.6 : 1;
 
 		tail = new AnimatedSprite();
 		tail.antialiasing = noteSkin.antialiasing;
@@ -283,7 +309,9 @@ class Note extends FlxSpriteGroup
 
 	function getSpritePosition(offset:Float, initialPos:Float)
 	{
-		return ((initialPos - offset) * (config.downScroll ? -manager.scrollSpeed : manager.scrollSpeed));
+		var downScroll = config != null ? config.downScroll : false;
+		var speed = manager != null ? manager.scrollSpeed : 1;
+		return ((initialPos - offset) * (downScroll ? -speed : speed));
 	}
 
 	function set_tint(value:FlxColor)
