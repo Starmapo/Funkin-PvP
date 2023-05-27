@@ -1,12 +1,46 @@
 package data.skin;
 
 import flixel.util.FlxDestroyUtil;
+import haxe.io.Path;
 
 /**
 	Configuration for a note skin.
 **/
 class NoteSkin extends JsonObject
 {
+	public static function loadSkin(path:String, ?mod:String)
+	{
+		if (!Paths.exists(path))
+			return null;
+
+		var json:Dynamic = Paths.getJson(path, mod);
+		if (json == null)
+			return null;
+
+		var skin = new NoteSkin(json);
+		skin.directory = Path.normalize(Path.directory(path));
+		skin.name = new Path(path).file;
+		skin.mod = skin.directory.split('/')[1];
+		return skin;
+	}
+
+	public static function loadSkinFromName(name:String)
+	{
+		var nameInfo = CoolUtil.getNameInfo(name);
+		if (nameInfo.mod.length > 0)
+		{
+			var path = 'mods/${nameInfo.mod}/data/noteskins/${nameInfo.name}.json';
+			if (Paths.exists(path))
+				return loadSkin(path);
+		}
+
+		var path = 'mods/${Mods.currentMod}/data/noteskins/$name.json';
+		if (Paths.exists(path))
+			return loadSkin(path);
+
+		return loadSkin('mods/fnf/data/noteskins/$name.json');
+	}
+
 	/**
 		The list of receptor configurations.
 	**/
@@ -50,6 +84,10 @@ class NoteSkin extends JsonObject
 		Whether or not the sprites have antialiasing.
 	**/
 	public var antialiasing:Bool;
+
+	public var directory:String = '';
+	public var name:String = '';
+	public var mod:String = '';
 
 	public function new(data:Dynamic)
 	{

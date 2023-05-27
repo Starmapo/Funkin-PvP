@@ -265,8 +265,24 @@ class BootState extends FNFState
 						}
 					}
 				}
+
+				var noteskinList = Path.join([fullPath, 'data/noteskins/skins.txt']);
+				if (FileSystem.exists(noteskinList))
+				{
+					var list = Paths.getContent(noteskinList).trim().split('\n');
+					for (n in list)
+					{
+						var split = n.trim().split(':');
+						Mods.noteSkins.push({
+							name: split[0],
+							displayName: split[1],
+							mod: mod.directory
+						});
+					}
+				}
 			}
 		}
+		trace(Mods.noteSkins);
 		if (!hasFNF)
 		{
 			updateText("Base FNF mod not detected. If you deleted it, please download the game again.");

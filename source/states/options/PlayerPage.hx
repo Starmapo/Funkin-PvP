@@ -21,7 +21,7 @@ class PlayerPage extends Page
 	{
 		super();
 		this.player = player;
-		rpcDetails = 'Player $player Options';
+		rpcDetails = 'Player ${player + 1} Options';
 
 		descBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		descBG.scrollFactor.set();

@@ -41,7 +41,7 @@ class ControlsPage extends Page
 		super();
 		this.player = player;
 		settings = PlayerSettings.players[player];
-		rpcDetails = 'Player $player Controls';
+		rpcDetails = 'Player ${player + 1} Controls';
 
 		items = new FlxTypedGroup();
 		add(items);

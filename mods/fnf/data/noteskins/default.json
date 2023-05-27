@@ -1,0 +1,72 @@
+{
+	"receptors": [
+		{
+			"staticAnim": "arrow static instance 1",
+			"pressedAnim": "left press instance 1",
+			"confirmAnim": "left confirm instance 1"
+		},
+		{
+			"staticAnim": "arrow static instance 2",
+			"pressedAnim": "down press instance 1",
+			"confirmAnim": "down confirm instance 1",
+			"confirmOffset": [-1.5, 0]
+		},
+		{
+			"staticAnim": "arrow static instance 4",
+			"pressedAnim": "up press instance 1",
+			"confirmAnim": "up confirm instance 1"
+		},
+		{
+			"staticAnim": "arrow static instance 3",
+			"pressedAnim": "right press instance 1",
+			"confirmAnim": "right confirm instance 1"
+		}
+	],
+	"receptorsCenterAnimation": true,
+	"receptorsOffset": [0, 0],
+	"receptorsPadding": 0,
+	"receptorsScale": 0.7,
+	"notes": [
+		{
+			"headAnim": "purple instance 1",
+			"bodyAnim": "purple hold piece instance 1",
+			"tailAnim": "pruple end hold instance 1"
+		},
+		{
+			"headAnim": "blue instance 1",
+			"bodyAnim": "blue hold piece instance 1",
+			"tailAnim": "blue hold end instance 1"
+		},
+		{
+			"headAnim": "green instance 1",
+			"bodyAnim": "green hold piece instance 1",
+			"tailAnim": "green hold end instance 1"
+		},
+		{
+			"headAnim": "red instance 1",
+			"bodyAnim": "red hold piece instance 1",
+			"tailAnim": "red hold end instance 1"
+		}
+	],
+	"notesScale": 0.7,
+	"judgementsScale": 0.3,
+	"splashes": [
+		{
+			"anim": "note impact 1 purple",
+			"offset": [35, 35]
+		},
+		{
+			"anim": "note impact 1  blue",
+			"offset": [35, 35]
+		},
+		{
+			"anim": "note impact 1 green",
+			"offset": [35, 35]
+		},
+		{
+			"anim": "note impact 1 red",
+			"offset": [35, 35]
+		}
+	],
+	"antialiasing": true
+}

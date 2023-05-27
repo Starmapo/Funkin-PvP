@@ -70,6 +70,8 @@ class PlayerSettings
 				config.transparentHolds = false;
 			if (config.notesScale == null)
 				config.notesScale = 1;
+			if (config.noteSkin == null)
+				config.noteSkin = 'fnf:default';
 		}
 
 		for (i in 0...2)
