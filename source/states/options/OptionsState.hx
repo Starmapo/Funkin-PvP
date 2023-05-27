@@ -1,22 +1,13 @@
 package states.options;
 
-import data.PlayerSettings;
-import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.util.FlxSignal;
 import states.menus.MainMenuState;
-import ui.lists.SettingsMenuList;
-import ui.lists.TextMenuList;
 import util.DiscordClient;
 
 class OptionsState extends FNFState
@@ -82,6 +73,9 @@ class OptionsState extends FNFState
 
 			var controlsPage = addPage(Controls(i), new ControlsPage(i));
 			controlsPage.onExit.add(switchPage.bind(Player(i)));
+
+			var noteSkinPage = addPage(NoteSkin(i), new NoteSkinPage(i));
+			noteSkinPage.onExit.add(switchPage.bind(Player(i)));
 		}
 
 		currentPage.onAppear();

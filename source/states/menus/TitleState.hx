@@ -21,6 +21,8 @@ import sprites.DancingSprite;
 import sprites.InfiniteEmitter;
 import util.MusicTiming;
 
+using StringTools;
+
 class TitleState extends FNFState
 {
 	static var logoY:Float = -50;
@@ -220,9 +222,7 @@ class TitleState extends FNFState
 		var swagGoodArray:Array<Array<String>> = [];
 
 		for (i in firstArray)
-		{
-			swagGoodArray.push(i.split('--'));
-		}
+			swagGoodArray.push(i.trim().split('--'));
 
 		introText = swagGoodArray[FlxG.random.int(0, swagGoodArray.length - 1)];
 	}
@@ -344,10 +344,10 @@ class TitleState extends FNFState
 		{
 			camHUD.flash(FlxColor.WHITE, 1);
 			clearText();
-			var tweenDuration = timing.curTimingPoint.beatLength * 0.002;
+			var tweenDuration = timing.timingPoints[0].beatLength * 0.002;
 			FlxTween.tween(logo, {y: logoY}, tweenDuration, {ease: FlxEase.quadInOut});
 			FlxTween.tween(icon, {x: FlxG.width * 0.62}, tweenDuration, {ease: FlxEase.quadInOut});
-			FlxTween.tween(pressEnter, {y: FlxG.height * 0.8}, tweenDuration, {ease: FlxEase.backOut, startDelay: timing.curTimingPoint.beatLength * 0.001});
+			FlxTween.tween(pressEnter, {y: FlxG.height * 0.8}, tweenDuration, {ease: FlxEase.backOut, startDelay: timing.timingPoints[0].beatLength * 0.001});
 			skippedIntro = true;
 		}
 	}

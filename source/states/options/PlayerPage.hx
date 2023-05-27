@@ -40,6 +40,16 @@ class PlayerPage extends Page
 		add(descText);
 
 		addSetting({
+			displayName: 'Change Controls',
+			description: 'Change your device and key/button binds.',
+			type: ACTION
+		}, switchPage.bind(Controls(player)));
+		addSetting({
+			displayName: 'Change Note Skin',
+			description: 'Change your note skin.',
+			type: ACTION
+		}, switchPage.bind(NoteSkin(player)));
+		addSetting({
 			name: 'downScroll',
 			displayName: 'Down Scroll',
 			description: 'If enabled, the notes will go down instead of up.',
@@ -132,11 +142,6 @@ class PlayerPage extends Page
 			type: CHECKBOX,
 			defaultValue: false
 		});
-		addSetting({
-			displayName: 'Change Controls',
-			description: 'Change your device and key/button binds.',
-			type: ACTION
-		}, switchPage.bind(Controls(player)));
 	}
 
 	override function update(elapsed:Float)
