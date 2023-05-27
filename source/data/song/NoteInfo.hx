@@ -59,6 +59,8 @@ class NoteInfo extends JsonObject implements ITimingObject
 		endTime = readFloat(data.endTime, 0, 0);
 		type = readString(data.type);
 		params = readString(data.params).split(',');
+		if (params == null)
+			params = [];
 	}
 
 	/**

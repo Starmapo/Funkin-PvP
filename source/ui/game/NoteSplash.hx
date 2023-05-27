@@ -16,7 +16,7 @@ class NoteSplash extends AnimatedSprite
 
 	public function new(id:Int, noteSkin:NoteSkin, receptor:Receptor, config:PlayerConfig)
 	{
-		super(0, 0, Paths.getSpritesheet(noteSkin.splashesImage), noteSkin.splashesScale * config.notesScale);
+		super(0, 0, Paths.getSpritesheet(noteSkin.splashesImage, noteSkin.mod), noteSkin.splashesScale * config.notesScale);
 		this.id = id;
 		this.noteSkin = noteSkin;
 		this.receptor = receptor;
@@ -33,6 +33,8 @@ class NoteSplash extends AnimatedSprite
 			}, true);
 		}
 		offsetScale.scale(config.notesScale);
+		antialiasing = noteSkin.antialiasing;
+		
 		kill();
 	}
 
@@ -70,6 +72,6 @@ class NoteSplash extends AnimatedSprite
 
 	public function updatePosition()
 	{
-		setPosition(receptor.x + (receptor.width / 2) - (width / 2), receptor.y + (receptor.height / 2) - (height / 2));
+		setPosition(receptor.x + (receptor.staticWidth / 2) - (width / 2), receptor.y + (receptor.staticHeight / 2) - (height / 2));
 	}
 }

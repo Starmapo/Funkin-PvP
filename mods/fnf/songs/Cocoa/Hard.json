@@ -1744,6 +1744,7 @@
 			"startTime": 100650
 		},
 		{
+			"type": "Alt Animation",
 			"endTime": 101400,
 			"lane": 3,
 			"startTime": 100800

@@ -220,7 +220,7 @@ class AnimInfo extends JsonObject
 	{
 		name = readString(data.name);
 		atlasName = readString(data.atlasName);
-		indices = readIntArray(data.indices, []);
+		indices = readIntArray(data.indices, [], null, null, 0);
 		fps = readFloat(data.fps, 24, 0, 1000, 2);
 		loop = readBool(data.loop);
 		offset = readFloatArray(data.offset, [0, 0], null, 2, null, null, 2);

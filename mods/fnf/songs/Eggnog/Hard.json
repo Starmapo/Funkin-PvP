@@ -299,45 +299,37 @@
 			"startTime": 22400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 22400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 22500
 		},
 		{
-			"type": "Alt Animation",
 			"endTime": 22700,
 			"lane": 7,
 			"startTime": 22600
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 22800
 		},
 		{
-			"type": "Alt Animation",
 			"endTime": 23100,
 			"lane": 6,
 			"startTime": 22900
 		},
 		{
-			"type": "Alt Animation",
 			"endTime": 23300,
 			"lane": 7,
 			"startTime": 23200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 23600
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 23800
 		},
@@ -706,7 +698,6 @@
 			"startTime": 41600
 		},
 		{
-			"type": "Alt Animation",
 			"endTime": 42000,
 			"lane": 7,
 			"startTime": 41600
@@ -756,52 +747,42 @@
 			"startTime": 43200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 43200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 43300
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 43400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 43600
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 43800
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 44000
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 44200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 44400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 44600
 		},
 		{
-			"type": "Alt Animation",
 			"endTime": 45200,
 			"lane": 7,
 			"startTime": 44800
@@ -855,47 +836,38 @@
 			"startTime": 46400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 46400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 46500
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 46600
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 46800
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 47000
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 47200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 47400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 47600
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 47800
 		},
@@ -1786,7 +1758,6 @@
 			"startTime": 86400
 		},
 		{
-			"type": "Alt Animation",
 			"endTime": 86800,
 			"lane": 7,
 			"startTime": 86400
@@ -1836,52 +1807,42 @@
 			"startTime": 88000
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 88000
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 88100
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 88200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 88400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 88600
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 88800
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 89000
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 89200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 89400
 		},
 		{
-			"type": "Alt Animation",
 			"endTime": 90000,
 			"lane": 7,
 			"startTime": 89600
@@ -1935,47 +1896,38 @@
 			"startTime": 91200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 91200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 91300
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 91400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 6,
 			"startTime": 91600
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 91800
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 92000
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 4,
 			"startTime": 92200
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 5,
 			"startTime": 92400
 		},
 		{
-			"type": "Alt Animation",
 			"lane": 7,
 			"startTime": 92600
 		},

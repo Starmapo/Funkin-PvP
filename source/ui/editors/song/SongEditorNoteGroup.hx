@@ -521,13 +521,13 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		if (noteInfo.isLongNote)
 		{
 			remove(selectionSprite, true); // get the group height excluding the selection sprite
-			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(height + 20));
+			selectionSprite.setGraphicSize(head.width, height + 20);
 			selectionSprite.updateHitbox();
 			add(selectionSprite);
 		}
 		else
 		{
-			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(head.height + 20));
+			selectionSprite.setGraphicSize(head.width, head.height + 20);
 			selectionSprite.updateHitbox();
 		}
 
@@ -570,12 +570,12 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		return false;
 	}
 
-	function getLongNoteHeight()
+	function getLongNoteHeight():Float
 	{
 		if (!noteInfo.isLongNote)
 			return 0;
 
-		return Math.round(Math.abs(state.hitPositionY - noteInfo.endTime * state.trackSpeed - head.height / 2 - y));
+		return Math.abs(state.hitPositionY - noteInfo.endTime * state.trackSpeed - head.height / 2 - y);
 	}
 
 	function onDeselectedNote(note:NoteInfo)

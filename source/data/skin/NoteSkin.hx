@@ -146,6 +146,10 @@ class ReceptorData extends JsonObject
 	**/
 	public var confirmAnim:String;
 
+	public var staticIndices:Array<Int>;
+	public var pressedIndices:Array<Int>;
+	public var confirmIndices:Array<Int>;
+
 	/**
 		The FPS for the static animation.
 	**/
@@ -181,6 +185,9 @@ class ReceptorData extends JsonObject
 		staticAnim = readString(data.staticAnim);
 		pressedAnim = readString(data.pressedAnim);
 		confirmAnim = readString(data.confirmAnim);
+		staticIndices = readIntArray(data.staticIndices, [], null, null, 0);
+		pressedIndices = readIntArray(data.pressedIndices, [], null, null, 0);
+		confirmIndices = readIntArray(data.confirmIndices, [], null, null, 0);
 		staticFPS = readFloat(data.staticFPS, 0, 0, 1000, 2);
 		pressedFPS = readFloat(data.pressedFPS, 24, 0, 1000, 2);
 		confirmFPS = readFloat(data.confirmFPS, 24, 0, 1000, 2);
@@ -191,6 +198,9 @@ class ReceptorData extends JsonObject
 
 	override function destroy()
 	{
+		staticIndices = null;
+		pressedIndices = null;
+		confirmIndices = null;
 		staticOffset = null;
 		pressedOffset = null;
 		confirmOffset = null;
@@ -202,12 +212,25 @@ class NoteData extends JsonObject
 	public var headAnim:String;
 	public var bodyAnim:String;
 	public var tailAnim:String;
+	public var headIndices:Array<Int>;
+	public var bodyIndices:Array<Int>;
+	public var tailIndices:Array<Int>;
 
 	public function new(data:Dynamic)
 	{
 		headAnim = readString(data.headAnim);
 		bodyAnim = readString(data.bodyAnim);
 		tailAnim = readString(data.tailAnim);
+		headIndices = readIntArray(data.headIndices, [], null, null, 0);
+		bodyIndices = readIntArray(data.bodyIndices, [], null, null, 0);
+		tailIndices = readIntArray(data.tailIndices, [], null, null, 0);
+	}
+
+	override function destroy()
+	{
+		headIndices = null;
+		bodyIndices = null;
+		tailIndices = null;
 	}
 }
 
@@ -222,5 +245,10 @@ class SplashData extends JsonObject
 		anim = readString(data.anim);
 		fps = readFloat(data.fps, 24, 0, 1000, 2);
 		offset = readFloatArray(data.offset, [], null, 2, null, null, 2);
+	}
+
+	override function destroy()
+	{
+		offset = null;
 	}
 }

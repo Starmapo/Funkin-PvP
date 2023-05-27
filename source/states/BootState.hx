@@ -92,7 +92,7 @@ class BootState extends FNFState
 		loadingText.text = wantedText;
 		loadingText.y = FlxG.height - loadingText.height;
 		loadingBG.setPosition(loadingText.x, loadingText.y - 2);
-		loadingBG.setGraphicSize(FlxG.width, Std.int(loadingText.height + 4));
+		loadingBG.setGraphicSize(FlxG.width, loadingText.height + 4);
 		loadingBG.updateHitbox();
 	}
 

@@ -19,7 +19,7 @@ class LyricsDisplay extends FlxText
 
 	public function new(song:Song, lyrics:String)
 	{
-		super(0, 130, FlxG.width / 2);
+		super(0, 200, FlxG.width / 2);
 		this.song = song;
 
 		setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);

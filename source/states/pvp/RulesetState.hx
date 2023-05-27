@@ -435,7 +435,7 @@ class RulesetState extends FNFState
 		descText.text = item.data.description;
 		descText.screenCenter(X);
 		descText.y = FlxG.height - descText.height - 10;
-		descBG.setGraphicSize(Std.int(descText.width + 4), Std.int(descText.height + 4));
+		descBG.setGraphicSize(descText.width + 4, descText.height + 4);
 		descBG.updateHitbox();
 		descBG.setPosition(descText.x - 2, descText.y - 2);
 		descBG.visible = descText.visible = descText.text.length > 0;

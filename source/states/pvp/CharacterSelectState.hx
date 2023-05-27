@@ -344,7 +344,7 @@ class PlayerCharacterSelect extends FlxGroup
 		{
 			charPortrait.loadGraphic(portrait);
 
-			charPortraitWhite.setGraphicSize(Std.int(charPortrait.width), Std.int(charPortrait.height));
+			charPortraitWhite.setGraphicSize(charPortrait.width, charPortrait.height);
 			charPortraitWhite.updateHitbox();
 			charPortraitWhite.alpha = 0.25;
 			FlxTween.cancelTweensOf(charPortraitWhite);

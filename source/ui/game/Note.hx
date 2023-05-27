@@ -5,6 +5,7 @@ import data.game.NoteManager;
 import data.game.SVDirectionChange;
 import data.skin.NoteSkin;
 import data.song.NoteInfo;
+import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 import sprites.AnimatedSprite;
@@ -40,6 +41,7 @@ class Note extends FlxSpriteGroup
 	var svDirectionChanges:Array<SVDirectionChange>;
 	var currentBodySize:Int;
 	var longNoteSizeDifference:Float;
+	var toUpdate:Array<FlxSprite>;
 
 	public function new(info:NoteInfo, manager:NoteManager, playfield:Playfield)
 	{
@@ -64,6 +66,7 @@ class Note extends FlxSpriteGroup
 		head.visible = true;
 		initialTrackPosition = manager.getPositionFromTime(info.startTime);
 		currentlyBeingHeld = false;
+		toUpdate.resize(1);
 
 		if (!info.isLongNote)
 		{
@@ -81,6 +84,9 @@ class Note extends FlxSpriteGroup
 			if (manager.isSVNegative(info.endTime))
 				flipY = !flipY;
 			tail.flipY = flipY;
+
+			toUpdate.push(body);
+			toUpdate.push(tail);
 		}
 
 		animSuffix = (info.type == 'Alt Animation' ? '-alt' : '');
@@ -90,7 +96,7 @@ class Note extends FlxSpriteGroup
 		noMissAnim = (info.type == 'No Animation');
 		character = null;
 
-		updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
+		updateWithCurrentPositions();
 	}
 
 	public function updateLongNoteSize(offset:Float, curTime:Float)
@@ -138,7 +144,7 @@ class Note extends FlxSpriteGroup
 		if (!info.isLongNote)
 			return;
 
-		body.setGraphicSize(Math.round(body.width), currentBodySize);
+		body.setGraphicSize(body.width, currentBodySize);
 		body.updateHitbox();
 
 		var earliestSpritePosition = hitPosition + getSpritePosition(offset, earliestTrackPosition);
@@ -169,60 +175,71 @@ class Note extends FlxSpriteGroup
 		var tex = texture;
 		if (tex.length < 1)
 			tex = noteSkin.notesImage;
+		if (!Paths.existsPath('images/$tex.png', noteSkin.mod))
+			tex = 'notes/default';
 
-		var frames = Paths.getSpritesheet(tex);
-		if (frames == null)
-			frames = Paths.getSpritesheet('notes/default');
+		if (Paths.isSpritesheet(tex, noteSkin.mod))
+		{
+			var frames = Paths.getSpritesheet(tex, noteSkin.mod);
+			for (spr in [head, body, tail])
+				spr.frames = frames;
+		}
+		else
+		{
+			var image = Paths.getImage(tex, noteSkin.mod);
+			head.loadGraphic(image, true, Math.round(image.width / 4), Math.round(image.height / 5));
 
-		head.frames = frames;
-		head.addAnim({
-			name: 'head',
-			atlasName: noteSkin.notes[info.playerLane].headAnim,
-			fps: 0,
-			loop: false
-		}, true);
+			var holdImage = Paths.getImage(tex + '-ends', noteSkin.mod);
+			for (spr in [body, tail])
+				spr.loadGraphic(holdImage, true, Math.round(holdImage.width / 4), Math.round(holdImage.height / 2));
+		}
+		var data = noteSkin.notes[info.playerLane];
+
 		var scale = noteSkin.notesScale * config.notesScale;
 		head.scale.set(scale, scale);
 		head.offsetScale.set(config.notesScale, config.notesScale);
-		head.updateHitbox();
+		head.addAnim({
+			name: 'head',
+			atlasName: data.headAnim,
+			indices: data.headIndices,
+			fps: 0,
+			loop: false
+		}, true);
 		bodyOffset = head.height / 2;
 		longNoteSizeDifference = head.height / 2;
 
-		body.frames = frames;
+		body.scale.copyFrom(head.scale);
+		body.offsetScale.copyFrom(head.offsetScale);
 		body.addAnim({
 			name: 'body',
-			atlasName: noteSkin.notes[info.playerLane].bodyAnim,
+			atlasName: data.bodyAnim,
+			indices: data.bodyIndices,
 			fps: 0,
 			loop: false
 		}, true);
-		body.scale.copyFrom(head.scale);
-		body.offsetScale.set(config.notesScale, config.notesScale);
-		body.updateHitbox();
 		body.x = x + (head.width / 2) - (body.width / 2);
 
-		tail.frames = frames;
+		tail.scale.copyFrom(head.scale);
+		tail.offsetScale.copyFrom(head.offsetScale);
 		tail.addAnim({
 			name: 'tail',
-			atlasName: noteSkin.notes[info.playerLane].tailAnim,
+			atlasName: data.tailAnim,
+			indices: data.tailIndices,
 			fps: 0,
 			loop: false
 		}, true);
-		tail.scale.copyFrom(head.scale);
-		tail.offsetScale.set(config.notesScale, config.notesScale);
-		tail.updateHitbox();
 		tail.x = x + (head.width / 2) - (tail.width / 2);
 
+		updateWithCurrentPositions();
+	}
+
+	public function updateWithCurrentPositions()
+	{
 		updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
 	}
 
 	override function update(elapsed:Float)
 	{
-		var toUpdate = [head];
-		if (info.isLongNote)
-		{
-			toUpdate.push(body);
-			toUpdate.push(tail);
-		}
 		for (spr in toUpdate)
 		{
 			if (spr != null && spr.exists && spr.active)
@@ -242,6 +259,7 @@ class Note extends FlxSpriteGroup
 		noteSkin = null;
 		config = null;
 		svDirectionChanges = null;
+		toUpdate = null;
 	}
 
 	function initializeSprites()
@@ -254,11 +272,13 @@ class Note extends FlxSpriteGroup
 
 		tail = new AnimatedSprite();
 		tail.antialiasing = noteSkin.antialiasing;
-		tail.alpha = config.transparentHolds ? 0.6 : 1;
+		tail.alpha = body.alpha;
 
 		add(body);
 		add(tail);
 		add(head);
+
+		toUpdate = [head];
 	}
 
 	function getSpritePosition(offset:Float, initialPos:Float)

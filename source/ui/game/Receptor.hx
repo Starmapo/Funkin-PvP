@@ -22,7 +22,14 @@ class Receptor extends AnimatedSprite
 		{
 			var data = skin.receptors[lane];
 
-			frames = Paths.getSpritesheet(skin.receptorsImage);
+			if (Paths.isSpritesheet(skin.receptorsImage, skin.mod))
+				frames = Paths.getSpritesheet(skin.receptorsImage, skin.mod);
+			else
+			{
+				var image = Paths.getImage(skin.receptorsImage, skin.mod);
+				if (image != null)
+					loadGraphic(image, true, Math.round(image.width / 4), Math.round(image.height / 5));
+			}
 			var noteScale = skin.receptorsScale * config.notesScale;
 			scale.scale(noteScale);
 			offsetScale.scale(config.notesScale);
@@ -30,6 +37,7 @@ class Receptor extends AnimatedSprite
 			addAnim({
 				name: 'static',
 				atlasName: data.staticAnim,
+				indices: data.staticIndices,
 				fps: data.staticFPS,
 				offset: data.staticOffset
 			}, true);
@@ -39,6 +47,7 @@ class Receptor extends AnimatedSprite
 			addAnim({
 				name: 'pressed',
 				atlasName: data.pressedAnim,
+				indices: data.pressedIndices,
 				fps: data.pressedFPS,
 				loop: false,
 				offset: data.pressedOffset
@@ -47,6 +56,7 @@ class Receptor extends AnimatedSprite
 			addAnim({
 				name: 'confirm',
 				atlasName: data.confirmAnim,
+				indices: data.confirmIndices,
 				fps: data.confirmFPS,
 				loop: false,
 				offset: data.confirmOffset

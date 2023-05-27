@@ -298,6 +298,11 @@ class Paths
 		return Assets.exists(path) #if sys || FileSystem.exists(path) #end;
 	}
 
+	public static function existsPath(key:String, ?mod:String):Bool
+	{
+		return exists(getPath(key, mod));
+	}
+
 	public static function clear()
 	{
 		clearImages();

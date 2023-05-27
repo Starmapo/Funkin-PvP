@@ -1198,7 +1198,7 @@ class PlayState extends FNFState
 	{
 		deathBG.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
 
-		deathBG.setGraphicSize(Math.ceil(FlxG.camera.viewWidth), Math.ceil(FlxG.camera.viewHeight));
+		deathBG.setGraphicSize(FlxG.camera.viewWidth, FlxG.camera.viewHeight);
 		deathBG.updateHitbox();
 	}
 

@@ -332,7 +332,7 @@ class ControlsPage extends Page
 		}
 
 		pressText.screenCenter();
-		pressBG.setGraphicSize(FlxG.width, Std.int(pressText.height + 4));
+		pressBG.setGraphicSize(FlxG.width, pressText.height + 4);
 		pressBG.updateHitbox();
 		pressBG.y = pressText.y - 2;
 	}

@@ -93,7 +93,7 @@ class NoteManager extends FlxBasic
 	override function destroy()
 	{
 		config = null;
-		noteQueueLanes = destroyLanes(noteQueueLanes);
+		noteQueueLanes = null;
 		activeNoteLanes = destroyLanes(activeNoteLanes);
 		deadNoteLanes = destroyLanes(deadNoteLanes);
 		heldLongNoteLanes = destroyLanes(heldLongNoteLanes);

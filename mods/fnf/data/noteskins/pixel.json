@@ -1,0 +1,77 @@
+{
+	"receptors": [
+		{
+			"staticIndices": [0],
+			"pressedIndices": [4, 8],
+			"pressedFPS": 12,
+			"confirmIndices": [12, 16]
+		},
+		{
+			"staticIndices": [1],
+			"pressedIndices": [5, 9],
+			"pressedFPS": 12,
+			"confirmIndices": [13, 17]
+		},
+		{
+			"staticIndices": [2],
+			"pressedIndices": [6, 10],
+			"pressedFPS": 12,
+			"confirmIndices": [14, 18]
+		},
+		{
+			"staticIndices": [3],
+			"pressedIndices": [7, 11],
+			"pressedFPS": 12,
+			"confirmIndices": [15, 19]
+		}
+	],
+	"receptorsImage": "notes/pixel",
+	"receptorsCenterAnimation": false,
+	"receptorsOffset": [0, 0],
+	"receptorsPadding": 0,
+	"receptorsScale": 6,
+	"notes": [
+		{
+			"headIndices": [4],
+			"bodyIndices": [0],
+			"tailIndices": [4]
+		},
+		{
+			"headIndices": [5],
+			"bodyIndices": [1],
+			"tailIndices": [5]
+		},
+		{
+			"headIndices": [6],
+			"bodyIndices": [2],
+			"tailIndices": [6]
+		},
+		{
+			"headIndices": [7],
+			"bodyIndices": [3],
+			"tailIndices": [7]
+		}
+	],
+	"notesImage": "notes/pixel",
+	"notesScale": 6,
+	"judgementsScale": 0.3,
+	"splashes": [
+		{
+			"anim": "note impact 1 purple",
+			"offset": [35, 35]
+		},
+		{
+			"anim": "note impact 1  blue",
+			"offset": [35, 35]
+		},
+		{
+			"anim": "note impact 1 green",
+			"offset": [35, 35]
+		},
+		{
+			"anim": "note impact 1 red",
+			"offset": [35, 35]
+		}
+	],
+	"antialiasing": false
+}

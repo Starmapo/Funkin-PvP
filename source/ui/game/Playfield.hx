@@ -107,7 +107,7 @@ class Playfield extends FlxGroup
 		{
 			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1], i, noteSkin, config);
 			if (config.downScroll)
-				receptor.y = FlxG.height - receptor.height - 50 + noteSkin.receptorsOffset[1];
+				receptor.y = FlxG.height - receptor.height - receptor.y;
 			receptors.add(receptor);
 
 			curX += receptor.width + noteSkin.receptorsPadding;
