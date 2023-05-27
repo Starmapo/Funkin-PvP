@@ -44,7 +44,7 @@ class AnimatedSprite extends FlxSprite
 			animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
 
 		if (data.offset != null && data.offset.length >= 2)
-			offsets.set(data.name, data.offset.copy());
+			addOffset(data.name, data.offset[0], data.offset[1]);
 
 		if (baseAnim)
 			playAnim(data.name, true);
@@ -84,6 +84,11 @@ class AnimatedSprite extends FlxSprite
 	public function stopAnimCallback()
 	{
 		animation.finishCallback = null;
+	}
+
+	public function addOffset(name:String, x:Float = 0, y:Float = 0)
+	{
+		offsets.set(name, [x, y]);
 	}
 
 	override function destroy()

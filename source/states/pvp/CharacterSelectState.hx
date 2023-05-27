@@ -14,6 +14,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxSort;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
@@ -68,8 +69,21 @@ class CharacterSelectState extends FNFState
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
 
+		var groups = [];
+		for (_ => group in Mods.characterGroups)
+			groups.push(group);
+		groups.sort(function(a, b)
+		{
+			var nameA = a.name.toLowerCase();
+			var nameB = b.name.toLowerCase();
+			if (nameA < nameB)
+				return FlxSort.ASCENDING;
+			else if (nameA > nameB)
+				return -FlxSort.ASCENDING;
+			return 0;
+		});
 		for (i in 0...2)
-			playerGroups.add(new PlayerCharacterSelect(i, camPlayers[i], this));
+			playerGroups.add(new PlayerCharacterSelect(i, camPlayers[i], this, groups));
 
 		stateText = new FlxText(0, 0, 0, 'Character Selection');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -192,7 +206,7 @@ class PlayerCharacterSelect extends FlxGroup
 	var charPortraitWhite:FlxSprite;
 	var charText:FlxText;
 
-	public function new(player:Int, camera:FlxCamera, state:CharacterSelectState)
+	public function new(player:Int, camera:FlxCamera, state:CharacterSelectState, groups:Array<ModCharacterGroup>)
 	{
 		super();
 		this.player = player;
@@ -207,7 +221,7 @@ class PlayerCharacterSelect extends FlxGroup
 		groupMenuList.onChange.add(onGroupChange);
 		groupMenuList.onAccept.add(onGroupAccept);
 
-		for (_ => group in Mods.characterGroups)
+		for (group in groups)
 			groupMenuList.createItem(group);
 		groupMenuList.afterInit();
 

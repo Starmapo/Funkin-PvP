@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="menuStatic.png">
+	<!-- Created with Adobe Animate version 19.0.0.326 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="menuStatic_01.png" x="0" y="1623" width="960" height="540"/>
+	<SubTexture name="menuStatic_02.png" x="0" y="2164" width="960" height="540"/>
+	<SubTexture name="menuStatic_03.png" x="961" y="1623" width="960" height="540"/>
+	<SubTexture name="menuStatic_04.png" x="961" y="0" width="960" height="540"/>
+	<SubTexture name="menuStatic_05.png" x="0" y="0" width="960" height="540"/>
+	<SubTexture name="menuStatic_06.png" x="961" y="2164" width="960" height="540"/>
+	<SubTexture name="menuStatic_07.png" x="961" y="1082" width="960" height="540"/>
+	<SubTexture name="menuStatic_08.png" x="0" y="541" width="960" height="540"/>
+	<SubTexture name="menuStatic_09.png" x="961" y="541" width="960" height="540"/>
+	<SubTexture name="menuStatic_10.png" x="0" y="1082" width="960" height="540"/>
+</TextureAtlas>

@@ -27,6 +27,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import haxe.io.Path;
+import sprites.AnimatedSprite;
 import sprites.game.Character;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
@@ -97,6 +98,7 @@ class PlayState extends FNFState
 	public var msDisplay:FlxTypedGroup<MSDisplay>;
 	// stupidly hardcoded this
 	public var preventUpdate:Array<FlxBasic> = [];
+	public var staticBG:AnimatedSprite;
 
 	var instEnded:Bool = false;
 
@@ -174,7 +176,7 @@ class PlayState extends FNFState
 		checkEvents();
 		checkDeath();
 
-		updateDeathBG();
+		updateBG();
 
 		executeScripts("onUpdatePost", [elapsed]);
 	}
@@ -224,6 +226,8 @@ class PlayState extends FNFState
 		judgementCounters = null;
 		npsDisplay = null;
 		msDisplay = null;
+		preventUpdate = null;
+		staticBG = null;
 	}
 
 	override function openSubState(subState:FlxSubState)
@@ -762,6 +766,15 @@ class PlayState extends FNFState
 
 	function initCharacters()
 	{
+		staticBG = new AnimatedSprite();
+		staticBG.frames = Paths.getSpritesheet('stages/static');
+		staticBG.animation.addByPrefix('static', 'menuStatic_');
+		staticBG.setGraphicSize(FlxG.width, FlxG.height);
+		staticBG.updateHitbox();
+		staticBG.playAnim('static');
+		staticBG.scrollFactor.set();
+		add(staticBG);
+
 		var gfInfo = CharacterInfo.loadCharacterFromName(song.gf);
 		if (gfInfo == null)
 			gfInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
@@ -815,7 +828,7 @@ class PlayState extends FNFState
 		deathBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		deathBG.scrollFactor.set();
 		deathBG.visible = false;
-		updateDeathBG();
+		updateBG();
 
 		camFollow = new FlxObject();
 		updateCamPosition();
@@ -1194,12 +1207,19 @@ class PlayState extends FNFState
 		executeScripts("onBarHit", [bar, decBar]);
 	}
 
-	function updateDeathBG()
+	function updateBG()
 	{
-		deathBG.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
-
-		deathBG.setGraphicSize(FlxG.camera.viewWidth, FlxG.camera.viewHeight);
-		deathBG.updateHitbox();
+		var camWidth = Math.max(FlxG.camera.viewWidth, FlxG.width);
+		var camHeight = Math.max(FlxG.camera.viewHeight, FlxG.height);
+		for (bg in [staticBG, deathBG])
+		{
+			bg.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
+			if (bg.width != camWidth || bg.height != camHeight)
+			{
+				bg.setGraphicSize(camWidth, camHeight);
+				bg.updateHitbox();
+			}
+		}
 	}
 
 	function onDeath(player:Int)

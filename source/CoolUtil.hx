@@ -68,7 +68,9 @@ class CoolUtil
 	**/
 	public static function playScrollSound(volume:Float = 1)
 	{
-		return FlxG.sound.play(Paths.getSound('menus/scrollMenu'), volume);
+		var sound = FlxG.sound.play(Paths.getSound('menus/scrollMenu'), volume);
+		sound.persist = true;
+		return sound;
 	}
 
 	/**
@@ -77,7 +79,9 @@ class CoolUtil
 	**/
 	public static function playConfirmSound(volume:Float = 1)
 	{
-		return FlxG.sound.play(Paths.getSound('menus/confirmMenu'), volume);
+		var sound = FlxG.sound.play(Paths.getSound('menus/confirmMenu'), volume);
+		sound.persist = true;
+		return sound;
 	}
 
 	/**
@@ -86,7 +90,9 @@ class CoolUtil
 	**/
 	public static function playCancelSound(volume:Float = 1)
 	{
-		return FlxG.sound.play(Paths.getSound('menus/cancelMenu'), volume);
+		var sound = FlxG.sound.play(Paths.getSound('menus/cancelMenu'), volume);
+		sound.persist = true;
+		return sound;
 	}
 
 	/**

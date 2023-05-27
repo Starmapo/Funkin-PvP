@@ -30,6 +30,8 @@ class PauseSubState extends FlxSubState
 		super();
 		this.state = state;
 
+		music = FlxG.sound.load(Paths.getMusic('Breakfast'), 0, true, FlxG.sound.defaultMusicGroup);
+
 		camSubState = new FlxCamera();
 		camSubState.bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.6);
 		camSubState.visible = false;
@@ -46,25 +48,30 @@ class PauseSubState extends FlxSubState
 		});
 		menuList.createItem('Restart song', function()
 		{
+			music.stop();
 			state.exit(new PlayState(state.song, state.chars), false);
 		});
 		menuList.createItem('Exit to options', function()
 		{
+			music.stop();
 			state.exit(new OptionsState(new PlayState(state.song, state.chars)), false);
 			CoolUtil.playMenuMusic();
 		});
 		menuList.createItem('Exit to character select', function()
 		{
+			music.stop();
 			state.exit(new CharacterSelectState());
 			CoolUtil.playPvPMusic();
 		});
 		menuList.createItem('Exit to song select', function()
 		{
+			music.stop();
 			state.exit(new SongSelectState());
 			CoolUtil.playPvPMusic();
 		});
 		menuList.createItem('Exit to ruleset settings', function()
 		{
+			music.stop();
 			state.exit(new RulesetState());
 			CoolUtil.playPvPMusic();
 		});
@@ -82,8 +89,6 @@ class PauseSubState extends FlxSubState
 
 		menuList.selectItem(0);
 		camSubState.snapToTarget();
-
-		music = FlxG.sound.load(Paths.getMusic('Breakfast'), 0, true, FlxG.sound.defaultMusicGroup);
 
 		openCallback = function()
 		{

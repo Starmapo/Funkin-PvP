@@ -46,6 +46,7 @@ class NoteSkinPage extends Page
 		items.onAccept.add(onAccept);
 		add(items);
 
+		var found = false;
 		for (skin in Mods.noteSkins)
 		{
 			var item = createItem(skin);
@@ -53,10 +54,12 @@ class NoteSkinPage extends Page
 			{
 				item.color = FlxColor.LIME;
 				lastSkin = item;
+				items.selectItem(item.ID);
+				found = true;
 			}
 		}
-
-		reloadSkin(items.selectedItem);
+		if (!found)
+			reloadSkin(items.selectedItem);
 	}
 
 	override function destroy()

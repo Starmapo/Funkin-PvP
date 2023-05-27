@@ -389,6 +389,9 @@ class CharacterEditorState extends FNFState
 		var offset = char.offsets.get(curAnim.name);
 		offset[0] -= xChange;
 		offset[1] -= yChange;
+		var ghostOffset = ghostChar.offsets.get(curAnim.name);
+		ghostOffset[0] = offset[0];
+		ghostOffset[1] = offset[1];
 
 		char.updateOffset();
 		if (ghostChar.animation.name == char.animation.name)

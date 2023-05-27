@@ -16,6 +16,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxSort;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
@@ -76,8 +77,21 @@ class SongSelectState extends FNFState
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
 
+		var groups = [];
+		for (_ => group in Mods.songGroups)
+			groups.push(group);
+		groups.sort(function(a, b)
+		{
+			var nameA = a.name.toLowerCase();
+			var nameB = b.name.toLowerCase();
+			if (nameA < nameB)
+				return FlxSort.ASCENDING;
+			else if (nameA > nameB)
+				return -FlxSort.ASCENDING;
+			return 0;
+		});
 		for (i in 0...players)
-			playerGroups.add(new PlayerSongSelect(i, camPlayers[i], this));
+			playerGroups.add(new PlayerSongSelect(i, camPlayers[i], this, groups));
 
 		stateText = new FlxText(0, 0, 0, 'Song Selection');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -218,7 +232,7 @@ class PlayerSongSelect extends FlxGroup
 	var lastGroupReset:String = '';
 	var lastSongReset:String = '';
 
-	public function new(player:Int, camera:FlxCamera, state:SongSelectState)
+	public function new(player:Int, camera:FlxCamera, state:SongSelectState, groups:Array<ModSongGroup>)
 	{
 		super();
 		this.player = player;
@@ -236,7 +250,7 @@ class PlayerSongSelect extends FlxGroup
 		groupMenuList.onChange.add(onGroupChange);
 		groupMenuList.onAccept.add(onGroupAccept);
 
-		for (name => group in Mods.songGroups)
+		for (group in groups)
 			groupMenuList.createItem(group);
 		groupMenuList.afterInit();
 
