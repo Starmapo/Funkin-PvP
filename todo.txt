@@ -1,7 +1,8 @@
-add note skins
+add skin groups
 add rating skins
 add note splash skins
-character editor
+character editor (maybe?)
+mods menu
 jerk (2:15)
 bloodpop (2:25)
 like the wind (2:55)
