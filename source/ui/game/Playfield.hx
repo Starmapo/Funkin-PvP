@@ -4,6 +4,7 @@ import data.PlayerConfig;
 import data.Settings;
 import data.game.Judgement;
 import data.skin.NoteSkin;
+import data.skin.SplashSkin;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -126,7 +127,9 @@ class Playfield extends FlxGroup
 		if (!config.noteSplashes)
 			return;
 
+		var skin = SplashSkin.loadSkinFromName(config.splashSkin);
+
 		for (i in 0...4)
-			splashes.add(new NoteSplash(i, noteSkin, receptors.members[i], config));
+			splashes.add(new NoteSplash(i, skin, receptors.members[i], config));
 	}
 }

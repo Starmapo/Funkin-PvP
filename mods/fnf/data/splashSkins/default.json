@@ -1,0 +1,20 @@
+{
+	"splashes": [
+		{
+			"anim": "note impact 1 purple",
+			"offset": [0, 0]
+		},
+		{
+			"anim": "note impact 1  blue",
+			"offset": [0, 0]
+		},
+		{
+			"anim": "note impact 1 green",
+			"offset": [0, 0]
+		},
+		{
+			"anim": "note impact 1 red",
+			"offset": [0, 0]
+		}
+	]
+}

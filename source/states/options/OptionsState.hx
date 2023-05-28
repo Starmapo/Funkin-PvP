@@ -79,6 +79,9 @@ class OptionsState extends FNFState
 
 			var judgementSkinPage = addPage(JudgementSkin(i), new JudgementSkinPage(i));
 			judgementSkinPage.onExit.add(switchPage.bind(Player(i)));
+
+			var splashSkinPage = addPage(SplashSkin(i), new SplashSkinPage(i));
+			splashSkinPage.onExit.add(switchPage.bind(Player(i)));
 		}
 
 		currentPage.onAppear();

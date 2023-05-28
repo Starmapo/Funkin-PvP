@@ -1,4 +1,3 @@
-add note splash skins
 character editor (maybe?)
 mods menu
 jerk (2:15)

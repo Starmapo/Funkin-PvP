@@ -265,16 +265,13 @@ class BootState extends FNFState
 					}
 				}
 
-				var skinGroup:ModSkins = Mods.skins.get(mod.name);
-				if (skinGroup == null)
-				{
-					skinGroup = {
-						name: mod.name,
-						noteskins: [],
-						judgementSkins: []
-					};
-					Mods.skins.set(mod.name, skinGroup);
-				}
+				var skinGroup:ModSkins = {
+					name: mod.name,
+					noteskins: [],
+					judgementSkins: [],
+					splashSkins: []
+				};
+				Mods.skins.set(mod.directory, skinGroup);
 
 				var noteskinList = Path.join([fullPath, 'data/noteskins/skins.txt']);
 				if (FileSystem.exists(noteskinList))
@@ -299,6 +296,21 @@ class BootState extends FNFState
 					{
 						var split = n.trim().split(':');
 						skinGroup.judgementSkins.push({
+							name: split[0],
+							displayName: split[1],
+							mod: mod.directory
+						});
+					}
+				}
+
+				var splashSkinList = Path.join([fullPath, 'data/splashSkins/skins.txt']);
+				if (FileSystem.exists(splashSkinList))
+				{
+					var list = Paths.getContent(splashSkinList).trim().split('\n');
+					for (n in list)
+					{
+						var split = n.trim().split(':');
+						skinGroup.splashSkins.push({
 							name: split[0],
 							displayName: split[1],
 							mod: mod.directory

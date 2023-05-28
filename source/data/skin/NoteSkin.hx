@@ -8,7 +8,7 @@ import haxe.io.Path;
 **/
 class NoteSkin extends JsonObject
 {
-	public static function loadSkin(path:String, ?mod:String)
+	public static function loadSkin(path:String, ?mod:String):NoteSkin
 	{
 		if (!Paths.exists(path))
 			return null;
@@ -24,7 +24,7 @@ class NoteSkin extends JsonObject
 		return skin;
 	}
 
-	public static function loadSkinFromName(name:String)
+	public static function loadSkinFromName(name:String):NoteSkin
 	{
 		var nameInfo = CoolUtil.getNameInfo(name);
 		if (nameInfo.mod.length > 0)
@@ -71,12 +71,20 @@ class NoteSkin extends JsonObject
 	**/
 	public var receptorsCenterAnimation:Bool;
 
+	/**
+		The list of note configurations.
+	**/
 	public var notes:Array<NoteData> = [];
+
+	/**
+		The name of the image for the notes.
+	**/
 	public var notesImage:String;
+
+	/**
+		The scale for the notes.
+	**/
 	public var notesScale:Float;
-	public var splashes:Array<SplashData> = [];
-	public var splashesImage:String;
-	public var splashesScale:Float;
 
 	/**
 		Whether or not the sprites have antialiasing.
@@ -106,13 +114,6 @@ class NoteSkin extends JsonObject
 		}
 		notesImage = readString(data.notesImage, 'notes/default');
 		notesScale = readFloat(data.notesScale, 1, 0.01, 100, 2);
-		for (s in readArray(data.splashes, null, null, 4))
-		{
-			if (s != null)
-				splashes.push(new SplashData(s));
-		}
-		splashesImage = readString(data.splashesImage, 'splashes/noteSplashes');
-		splashesScale = readFloat(data.splashesScale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}
 
@@ -121,7 +122,6 @@ class NoteSkin extends JsonObject
 		receptors = FlxDestroyUtil.destroyArray(receptors);
 		receptorsOffset = null;
 		notes = FlxDestroyUtil.destroyArray(notes);
-		splashes = FlxDestroyUtil.destroyArray(splashes);
 	}
 }
 
@@ -227,24 +227,5 @@ class NoteData extends JsonObject
 		headIndices = null;
 		bodyIndices = null;
 		tailIndices = null;
-	}
-}
-
-class SplashData extends JsonObject
-{
-	public var anim:String;
-	public var fps:Float;
-	public var offset:Array<Float>;
-
-	public function new(data:Dynamic)
-	{
-		anim = readString(data.anim);
-		fps = readFloat(data.fps, 24, 0, 1000, 2);
-		offset = readFloatArray(data.offset, [], null, 2, null, null, 2);
-	}
-
-	override function destroy()
-	{
-		offset = null;
 	}
 }

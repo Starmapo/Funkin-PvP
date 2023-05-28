@@ -49,23 +49,5 @@
 		}
 	],
 	"notesScale": 0.7,
-	"splashes": [
-		{
-			"anim": "note impact 1 purple",
-			"offset": [35, 35]
-		},
-		{
-			"anim": "note impact 1  blue",
-			"offset": [35, 35]
-		},
-		{
-			"anim": "note impact 1 green",
-			"offset": [35, 35]
-		},
-		{
-			"anim": "note impact 1 red",
-			"offset": [35, 35]
-		}
-	],
 	"antialiasing": true
 }

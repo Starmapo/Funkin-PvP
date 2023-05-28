@@ -4,7 +4,7 @@ import haxe.io.Path;
 
 class JudgementSkin extends JsonObject
 {
-	public static function loadSkin(path:String, ?mod:String)
+	public static function loadSkin(path:String, ?mod:String):JudgementSkin
 	{
 		if (!Paths.exists(path))
 			return null;
@@ -20,7 +20,7 @@ class JudgementSkin extends JsonObject
 		return skin;
 	}
 
-	public static function loadSkinFromName(name:String)
+	public static function loadSkinFromName(name:String):JudgementSkin
 	{
 		var nameInfo = CoolUtil.getNameInfo(name);
 		if (nameInfo.mod.length > 0)

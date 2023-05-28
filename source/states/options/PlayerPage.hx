@@ -55,6 +55,11 @@ class PlayerPage extends Page
 			type: ACTION
 		}, switchPage.bind(JudgementSkin(player)));
 		addSetting({
+			displayName: 'Change Splash Skin',
+			description: 'Change your note splash skin.',
+			type: ACTION
+		}, switchPage.bind(SplashSkin(player)));
+		addSetting({
 			name: 'downScroll',
 			displayName: 'Down Scroll',
 			description: 'If enabled, the notes will go down instead of up.',

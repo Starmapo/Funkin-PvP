@@ -68,6 +68,7 @@ typedef ModSkins =
 	var name:String;
 	var noteskins:Array<ModSkin>;
 	var judgementSkins:Array<ModSkin>;
+	var splashSkins:Array<ModSkin>;
 }
 
 typedef ModSkin =

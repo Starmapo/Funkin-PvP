@@ -74,6 +74,8 @@ class PlayerSettings
 				config.noteSkin = 'fnf:default';
 			if (config.judgementSkin == null)
 				config.judgementSkin = 'fnf:default';
+			if (config.splashSkin == null)
+				config.splashSkin = 'fnf:default';
 		}
 
 		for (i in 0...2)
