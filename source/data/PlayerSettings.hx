@@ -72,6 +72,8 @@ class PlayerSettings
 				config.notesScale = 1;
 			if (config.noteSkin == null)
 				config.noteSkin = 'fnf:default';
+			if (config.judgementSkin == null)
+				config.judgementSkin = 'fnf:default';
 		}
 
 		for (i in 0...2)

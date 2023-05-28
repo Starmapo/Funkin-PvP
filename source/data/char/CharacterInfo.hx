@@ -39,16 +39,16 @@ class CharacterInfo extends JsonObject
 		var nameInfo = CoolUtil.getNameInfo(name);
 		if (nameInfo.mod.length > 0)
 		{
-			var path = 'mods/${nameInfo.mod}/data/characters/${nameInfo.name}.json';
+			var path = Paths.getPath('data/characters/${nameInfo.name}.json', nameInfo.mod);
 			if (Paths.exists(path))
 				return loadCharacter(path);
 		}
 
-		var path = 'mods/${Mods.currentMod}/data/characters/$name.json';
+		var path = Paths.getPath('data/characters/$name.json');
 		if (Paths.exists(path))
 			return loadCharacter(path);
 
-		return loadCharacter('mods/fnf/data/characters/$name.json');
+		return loadCharacter(Paths.getPath('data/characters/$name.json', 'fnf'));
 	}
 
 	static function convertPsychCharacter(json:Dynamic)
@@ -106,6 +106,7 @@ class CharacterInfo extends JsonObject
 	public var healthColors:Array<Int>;
 	public var loopAnimsOnHold:Bool;
 	public var holdLoopPoint:Int;
+	public var flipAll:Bool;
 	public var directory:String = '';
 	public var name:String = '';
 	public var mod:String = '';
@@ -129,6 +130,7 @@ class CharacterInfo extends JsonObject
 		healthColors = readIntArray(data.healthColors, [161, 161, 161], null, 3, 0, 255);
 		loopAnimsOnHold = readBool(data.loopAnimsOnHold, true);
 		holdLoopPoint = readInt(data.holdLoopPoint, 0, 0);
+		flipAll = readBool(data.flipAll);
 	}
 
 	override function destroy()
@@ -159,17 +161,26 @@ class CharacterInfo extends JsonObject
 		var data:Dynamic = {
 			image: image,
 			anims: [],
-			danceAnims: danceAnims,
-			flipX: flipX,
-			scale: scale,
-			antialiasing: antialiasing,
 			positionOffset: positionOffset,
 			cameraOffset: cameraOffset,
 			healthIcon: healthIcon,
 			healthColors: healthColors,
-			loopAnimsOnHold: loopAnimsOnHold,
-			holdLoopPoint: holdLoopPoint,
 		}
+		if (danceAnims.length > 1 || danceAnims[0] != 'idle')
+			data.danceAnims = danceAnims;
+		if (scale != 1)
+			data.scale = scale;
+		if (flipX)
+			data.flipX = flipX;
+		if (!antialiasing)
+			data.antialiasing = antialiasing;
+		if (!loopAnimsOnHold)
+			data.loopAnimsOnHold = loopAnimsOnHold;
+		if (holdLoopPoint != 0)
+			data.holdLoopPoint = holdLoopPoint;
+		if (flipAll)
+			data.flipAll = flipAll;
+
 		for (anim in anims)
 		{
 			var animData:Dynamic = {

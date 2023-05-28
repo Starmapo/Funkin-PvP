@@ -1,7 +1,9 @@
 package states.editors;
 
+import data.PlayerSettings;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
+import data.skin.JudgementSkin;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -115,7 +117,7 @@ class SongEditorPlayState extends FNFState
 
 		judgementDisplay = new FlxTypedGroup();
 		for (i in 0...2)
-			judgementDisplay.add(new JudgementDisplay(i, ruleset.playfields[i].noteSkin));
+			judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(PlayerSettings.players[i].config.judgementSkin)));
 		add(judgementDisplay);
 
 		statsDisplay = new FlxTypedGroup();

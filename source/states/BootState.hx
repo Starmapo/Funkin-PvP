@@ -270,7 +270,8 @@ class BootState extends FNFState
 				{
 					skinGroup = {
 						name: mod.name,
-						noteskins: []
+						noteskins: [],
+						judgementSkins: []
 					};
 					Mods.skins.set(mod.name, skinGroup);
 				}
@@ -283,6 +284,21 @@ class BootState extends FNFState
 					{
 						var split = n.trim().split(':');
 						skinGroup.noteskins.push({
+							name: split[0],
+							displayName: split[1],
+							mod: mod.directory
+						});
+					}
+				}
+
+				var judgementSkinList = Path.join([fullPath, 'data/judgementSkins/skins.txt']);
+				if (FileSystem.exists(judgementSkinList))
+				{
+					var list = Paths.getContent(judgementSkinList).trim().split('\n');
+					for (n in list)
+					{
+						var split = n.trim().split(':');
+						skinGroup.judgementSkins.push({
 							name: split[0],
 							displayName: split[1],
 							mod: mod.directory

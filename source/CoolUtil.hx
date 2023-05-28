@@ -124,7 +124,7 @@ class CoolUtil
 		if (group.length == 0)
 			return 0;
 
-		return getGroupMaxX(group) - getGroupMinX(group);
+		return getArrayMaxX(group.members) - getArrayMinX(group.members);
 	}
 
 	/**
@@ -137,7 +137,7 @@ class CoolUtil
 		if (group.length == 0)
 			return 0;
 
-		return getGroupMaxY(group) - getGroupMinY(group);
+		return getArrayMaxY(group.members) - getArrayMinY(group.members);
 	}
 
 	@:generic
@@ -348,74 +348,6 @@ class CoolUtil
 	}
 
 	@:generic
-	static function getGroupMaxX<T:FlxObject>(group:FlxTypedGroup<T>):Float
-	{
-		var value = Math.NEGATIVE_INFINITY;
-		for (member in group)
-		{
-			if (member == null)
-				continue;
-
-			var maxX:Float = member.x + member.width;
-
-			if (maxX > value)
-				value = maxX;
-		}
-		return value;
-	}
-
-	@:generic
-	static function getGroupMinX<T:FlxObject>(group:FlxTypedGroup<T>):Float
-	{
-		var value = Math.POSITIVE_INFINITY;
-		for (member in group)
-		{
-			if (member == null)
-				continue;
-
-			var minX:Float = member.x;
-
-			if (minX < value)
-				value = minX;
-		}
-		return value;
-	}
-
-	@:generic
-	static function getGroupMaxY<T:FlxObject>(group:FlxTypedGroup<T>):Float
-	{
-		var value = Math.NEGATIVE_INFINITY;
-		for (member in group)
-		{
-			if (member == null)
-				continue;
-
-			var maxY:Float = member.y + member.height;
-
-			if (maxY > value)
-				value = maxY;
-		}
-		return value;
-	}
-
-	@:generic
-	static function getGroupMinY<T:FlxObject>(group:FlxTypedGroup<T>):Float
-	{
-		var value = Math.POSITIVE_INFINITY;
-		for (member in group)
-		{
-			if (member == null)
-				continue;
-
-			var minY:Float = member.y;
-
-			if (minY < value)
-				value = minY;
-		}
-		return value;
-	}
-
-	@:generic
 	static function getArrayMaxX<T:FlxObject>(array:Array<T>):Float
 	{
 		var value = Math.NEGATIVE_INFINITY;
@@ -445,6 +377,40 @@ class CoolUtil
 
 			if (minX < value)
 				value = minX;
+		}
+		return value;
+	}
+
+	@:generic
+	static function getArrayMaxY<T:FlxObject>(array:Array<T>):Float
+	{
+		var value = Math.NEGATIVE_INFINITY;
+		for (member in array)
+		{
+			if (member == null)
+				continue;
+
+			var maxY:Float = member.y + member.height;
+
+			if (maxY > value)
+				value = maxY;
+		}
+		return value;
+	}
+
+	@:generic
+	static function getArrayMinY<T:FlxObject>(array:Array<T>):Float
+	{
+		var value = Math.POSITIVE_INFINITY;
+		for (member in array)
+		{
+			if (member == null)
+				continue;
+
+			var minY:Float = member.y;
+
+			if (minY < value)
+				value = minY;
 		}
 		return value;
 	}

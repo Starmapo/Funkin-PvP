@@ -1,5 +1,3 @@
-add skin groups
-add rating skins
 add note splash skins
 character editor (maybe?)
 mods menu

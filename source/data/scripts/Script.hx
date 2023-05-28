@@ -1,6 +1,8 @@
 package data.scripts;
 
 import data.char.CharacterInfo;
+import data.char.IconInfo;
+import data.skin.JudgementSkin;
 import data.skin.NoteSkin;
 import data.song.CameraFocus;
 import data.song.EventObject;
@@ -257,6 +259,8 @@ class Script implements IFlxDestroyable
 		setVariable('DancingSprite', DancingSprite);
 		setVariable('EventObject', EventObject);
 		setVariable('FNFState', FNFState);
+		setVariable('IconInfo', IconInfo);
+		setVariable('JudgementSkin', JudgementSkin);
 		setVariable('LyricStep', LyricStep);
 		setVariable('Mods', Mods);
 		setVariable('Note', Note);

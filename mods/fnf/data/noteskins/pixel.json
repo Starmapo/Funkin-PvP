@@ -54,7 +54,6 @@
 	],
 	"notesImage": "notes/pixel",
 	"notesScale": 6,
-	"judgementsScale": 0.3,
 	"splashes": [
 		{
 			"anim": "note impact 1 purple",

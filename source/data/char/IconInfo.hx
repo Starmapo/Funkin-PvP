@@ -25,16 +25,16 @@ class IconInfo extends JsonObject
 		var nameInfo = CoolUtil.getNameInfo(name);
 		if (nameInfo.mod.length > 0)
 		{
-			var path = 'mods/${nameInfo.mod}/data/icons/${nameInfo.name}.json';
+			var path = Paths.getPath('data/icons/${nameInfo.name}.json', nameInfo.mod);
 			if (Paths.exists(path))
 				return loadIcon(path);
 		}
 
-		var path = 'mods/${Mods.currentMod}/data/icons/$name.json';
+		var path = Paths.getPath('data/icons/$name.json');
 		if (Paths.exists(path))
 			return loadIcon(path);
 
-		return loadIcon('mods/fnf/data/icons/$name.json');
+		return loadIcon(Paths.getPath('data/icons/$name.json', 'fnf'));
 	}
 
 	public var frames:Int;

@@ -1,25 +1,24 @@
 package states.options;
 
+import data.Mods.ModSkins;
 import data.Mods;
 import data.PlayerConfig;
 import data.PlayerSettings;
 import data.Settings;
-import data.skin.NoteSkin;
-import data.song.NoteInfo;
+import data.skin.JudgementSkin;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
-import flixel.util.FlxTimer;
-import ui.game.Note;
-import ui.game.Receptor;
+import ui.game.JudgementDisplay;
+import ui.lists.MenuList.TypedMenuList;
 import ui.lists.SkinCategoryList;
 import ui.lists.SkinList;
-import ui.lists.TextMenuList;
+import ui.lists.TextMenuList.TextMenuItem;
 
-class NoteSkinPage extends Page
+class JudgementSkinPage extends Page
 {
 	var player:Int = 0;
 	var categoryList:SkinCategoryList;
@@ -34,7 +33,7 @@ class NoteSkinPage extends Page
 		super();
 		this.player = player;
 		config = Settings.playerConfigs[player];
-		rpcDetails = 'Player ${player + 1} Noteskin';
+		rpcDetails = 'Player ${player + 1} Judgement Skin';
 
 		skinGroup = new FlxTypedGroup();
 		add(skinGroup);
@@ -60,7 +59,7 @@ class NoteSkinPage extends Page
 		var groups:Array<ModSkins> = [];
 		for (_ => group in Mods.skins)
 		{
-			if (group.noteskins.length > 0)
+			if (group.judgementSkins.length > 0)
 				groups.push(group);
 		}
 		groups.sort(function(a, b)
@@ -145,7 +144,7 @@ class NoteSkinPage extends Page
 			FlxTween.cancelTweensOf(lastSkin);
 			FlxTween.color(lastSkin, 0.5, lastSkin.color, FlxColor.WHITE);
 		}
-		config.noteSkin = item.name;
+		config.judgementSkin = item.name;
 		FlxTween.cancelTweensOf(item);
 		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
 		lastSkin = item;
@@ -156,59 +155,35 @@ class NoteSkinPage extends Page
 	{
 		skinGroup.destroyMembers();
 
-		var skin = NoteSkin.loadSkinFromName(item.skin.mod + ':' + item.skin.name);
-		var curX:Float = FlxG.width / 2;
-		var startY = 5;
-		var receptors:Array<Receptor> = [];
-		for (i in 0...4)
+		var skin = JudgementSkin.loadSkinFromName(item.skin.mod + ':' + item.skin.name);
+		var curY:Float = 0;
+		for (i in 0...6)
 		{
-			var receptor = createReceptor(curX, startY + skin.receptorsOffset[1], i, skin, 'static');
-			receptors.push(receptor);
-			skinGroup.add(receptor);
-			var receptorPressed = createReceptor(curX, startY + 150 + skin.receptorsOffset[1], i, skin, 'pressed');
-			skinGroup.add(receptorPressed);
-			var receptorConfirm = createReceptor(curX, startY + 300 + skin.receptorsOffset[1], i, skin, 'confirm');
-			skinGroup.add(receptorConfirm);
+			var judgement = new FlxSprite(FlxG.width / 2, curY, JudgementDisplay.getJudgementGraphic(i, skin));
+			judgement.scale.scale(skin.scale * 2);
+			judgement.updateHitbox();
+			judgement.antialiasing = skin.antialiasing;
+			judgement.x += (FlxG.width / 2 - judgement.width) / 2;
+			judgement.active = false;
+			judgement.scrollFactor.set();
+			skinGroup.add(judgement);
 
-			var note = new Note(new NoteInfo({
-				lane: i,
-				endTime: 200
-			}), null, null, skin);
-			note.x = curX;
-			note.y = startY + 450;
-			skinGroup.add(note);
-
-			curX += receptor.width + skin.receptorsPadding;
+			curY += judgement.height + 5;
 		}
 
-		var newX = ((FlxG.width / 2) - CoolUtil.getArrayWidth(receptors)) / 2;
+		var newY = (FlxG.height - CoolUtil.getGroupHeight(skinGroup)) / 2;
 		for (obj in skinGroup)
-			obj.x += newX;
-	}
-
-	function createReceptor(x:Float, y:Float, i:Int, skin:NoteSkin, anim:String)
-	{
-		var receptor = new Receptor(x, y, i, skin);
-		receptor.playAnim(anim);
-		if (anim != 'static')
-			new FlxTimer().start(0.5, function(tmr)
-			{
-				if (receptor.exists)
-					receptor.playAnim(anim, true);
-				else
-					tmr.cancel();
-			}, 0);
-		return receptor;
+			obj.y += newY;
 	}
 
 	function reloadSkins(skins:ModSkins)
 	{
 		skinList.destroyMembers();
 		lastSkin = null;
-		for (skin in skins.noteskins)
+		for (skin in skins.judgementSkins)
 		{
 			var item = skinList.createItem(skin);
-			if (skin.mod + ':' + skin.name == config.noteSkin)
+			if (skin.mod + ':' + skin.name == config.judgementSkin)
 			{
 				item.color = FlxColor.LIME;
 				lastSkin = item;

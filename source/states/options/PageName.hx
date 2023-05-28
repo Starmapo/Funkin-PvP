@@ -7,6 +7,7 @@ enum PageName
 	Player(player:Int);
 	Controls(player:Int);
 	NoteSkin(player:Int);
+	JudgementSkin(player:Int);
 	Video;
 	Audio;
 	Gameplay;

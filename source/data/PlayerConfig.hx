@@ -9,6 +9,7 @@ typedef PlayerConfig =
 	var ?scrollSpeed:Float;
 	var downScroll:Bool;
 	var ?noteSkin:String;
+	var ?judgementSkin:String;
 	var ?notesScale:Float;
 	var ?judgementCounter:Bool;
 	var ?npsDisplay:Bool;

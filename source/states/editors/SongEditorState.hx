@@ -90,7 +90,7 @@ class SongEditorState extends FNFState
 		super();
 		if (globalSong == null)
 			globalSong = Song.loadSong('Tutorial/Hard', 'fnf');
-		
+
 		if (song == null)
 			song = globalSong;
 		else
@@ -138,6 +138,7 @@ class SongEditorState extends FNFState
 
 		persistentUpdate = true;
 		destroySubStates = false;
+		checkDropdowns = true;
 
 		actionManager = new SongEditorActionManager(this);
 

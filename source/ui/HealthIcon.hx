@@ -28,7 +28,7 @@ class HealthIcon extends AnimatedSprite
 		{
 			name = 'face';
 			mod = 'fnf';
-			imagePath = 'mods/fnf/images/icons/face.png';
+			imagePath = Paths.getPath('images/icons/face.png', 'fnf');
 		}
 
 		var path = Path.withoutExtension(imagePath);

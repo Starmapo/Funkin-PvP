@@ -115,5 +115,6 @@
 	],
 	"loopAnimsOnHold": true,
 	"antialiasing": true,
-	"scale": 1
+	"scale": 1,
+	"flipAll": true
 }

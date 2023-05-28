@@ -8,6 +8,7 @@ import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.scripts.PlayStateScript;
 import data.scripts.Script;
+import data.skin.JudgementSkin;
 import data.song.Song;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -106,7 +107,7 @@ class PlayState extends FNFState
 	{
 		super();
 		if (map == null)
-			map = Song.loadSong('mods/fnf/songs/Tutorial/Hard');
+			map = Song.loadSong('Tutorial/Hard');
 		song = map;
 		this.chars = chars;
 
@@ -707,7 +708,7 @@ class PlayState extends FNFState
 		{
 			judgementDisplay = new FlxTypedGroup();
 			for (i in 0...2)
-				judgementDisplay.add(new JudgementDisplay(i, ruleset.playfields[i].noteSkin));
+				judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(PlayerSettings.players[i].config.judgementSkin)));
 			judgementDisplay.cameras = [camHUD];
 			add(judgementDisplay);
 
@@ -908,8 +909,11 @@ class PlayState extends FNFState
 		for (sound in introSndPaths)
 			Paths.getSound('countdown/' + sound);
 
-		for (i in 0...5)
-			precacheGraphic(JudgementDisplay.getJudgementGraphic(i));
+		for (display in judgementDisplay)
+		{
+			for (graphic in display.graphics)
+				precacheGraphic(graphic);
+		}
 
 		if (Settings.missSounds)
 		{

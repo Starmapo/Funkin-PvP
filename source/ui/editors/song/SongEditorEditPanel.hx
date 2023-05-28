@@ -1,7 +1,6 @@
 package ui.editors.song;
 
 import data.Settings;
-import data.song.CameraFocus.CameraFocusChar;
 import data.song.CameraFocus;
 import data.song.EventObject;
 import data.song.ITimingObject;
@@ -719,7 +718,6 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorMetronome.value = id;
 		}, this);
 		metronomeDropdown.selectedId = Settings.editorMetronome.value;
-		state.dropdowns.push(metronomeDropdown);
 
 		var beatSnapLabel = new EditorText(metronomeLabel.x, metronomeLabel.y + metronomeLabel.height + spacing + 3, 0, 'Beat Snap:');
 		tab.add(beatSnapLabel);
@@ -734,7 +732,6 @@ class SongEditorEditPanel extends EditorPanel
 		}, this);
 		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
 		state.tooltip.addTooltip(beatSnapDropdown, 'Hotkeys: CTRL + Up/Down/Mouse Wheel');
-		state.dropdowns.push(beatSnapDropdown);
 
 		var liveMappingCheckbox = new EditorCheckbox(beatSnapLabel.x, beatSnapLabel.y + beatSnapLabel.height + spacing, 'Live Mapping', 200);
 		liveMappingCheckbox.button.setAllLabelOffsets(0, -2);
@@ -761,7 +758,6 @@ class SongEditorEditPanel extends EditorPanel
 				}
 			}, this);
 		waveformDropdown.selectedId = state.playfieldNotes.waveform.type;
-		state.dropdowns.push(waveformDropdown);
 
 		var placeOnNearestTickCheckbox = new EditorCheckbox(waveformLabel.x, waveformLabel.y + waveformLabel.height + spacing, 'Place on Nearest Tick', 0);
 		placeOnNearestTickCheckbox.button.setAllLabelOffsets(0, 4);
@@ -1258,7 +1254,6 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				state.actionManager.perform(new ActionChangeCameraFocusChar(state, selectedCameraFocuses.copy(), Std.parseInt(id)));
 			}, this);
-		state.dropdowns.push(charDropdown);
 		cameraFocusesPropertiesGroup.push(charDropdown);
 
 		var selectCurrentButton = new FlxUIButton(0, charDropdown.y + charDropdown.height + spacing, 'Select current camera focus', function()

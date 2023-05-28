@@ -29,16 +29,16 @@ class NoteSkin extends JsonObject
 		var nameInfo = CoolUtil.getNameInfo(name);
 		if (nameInfo.mod.length > 0)
 		{
-			var path = 'mods/${nameInfo.mod}/data/noteskins/${nameInfo.name}.json';
+			var path = Paths.getPath('data/noteskins/${nameInfo.name}.json', nameInfo.mod);
 			if (Paths.exists(path))
 				return loadSkin(path);
 		}
 
-		var path = 'mods/${Mods.currentMod}/data/noteskins/$name.json';
+		var path = Paths.getPath('data/noteskins/$name.json');
 		if (Paths.exists(path))
 			return loadSkin(path);
 
-		return loadSkin('mods/fnf/data/noteskins/$name.json');
+		return loadSkin(Paths.getPath('data/noteskins/$name.json', 'fnf'));
 	}
 
 	/**
@@ -74,8 +74,6 @@ class NoteSkin extends JsonObject
 	public var notes:Array<NoteData> = [];
 	public var notesImage:String;
 	public var notesScale:Float;
-	public var judgementsSkin:String;
-	public var judgementsScale:Float;
 	public var splashes:Array<SplashData> = [];
 	public var splashesImage:String;
 	public var splashesScale:Float;
@@ -108,8 +106,6 @@ class NoteSkin extends JsonObject
 		}
 		notesImage = readString(data.notesImage, 'notes/default');
 		notesScale = readFloat(data.notesScale, 1, 0.01, 100, 2);
-		judgementsSkin = readString(data.judgementsSkin, 'base');
-		judgementsScale = readFloat(data.judgementsScale, 1, 0.01, 100, 2);
 		for (s in readArray(data.splashes, null, null, 4))
 		{
 			if (s != null)

@@ -66,10 +66,11 @@ typedef ModCharacter =
 typedef ModSkins =
 {
 	var name:String;
-	var noteskins:Array<ModNoteSkin>;
+	var noteskins:Array<ModSkin>;
+	var judgementSkins:Array<ModSkin>;
 }
 
-typedef ModNoteSkin =
+typedef ModSkin =
 {
 	var name:String;
 	var displayName:String;

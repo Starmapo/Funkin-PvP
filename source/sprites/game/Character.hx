@@ -356,10 +356,20 @@ class Character extends DancingSprite
 		xDifference = (429 - startWidth);
 		updatePosition();
 
+		singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 		if (flipped)
-			singAnimations = ['singRIGHT', 'singDOWN', 'singUP', 'singLEFT'];
-		else
-			singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+		{
+			var left = singAnimations[0];
+			singAnimations[0] = singAnimations[3];
+			singAnimations[3] = left;
+			
+			if (charInfo.flipAll)
+			{
+				var down = singAnimations[1];
+				singAnimations[1] = singAnimations[2];
+				singAnimations[2] = down;
+			}
+		}
 
 		danceBeats = danceAnims.length > 1 ? 1 : 2;
 	}

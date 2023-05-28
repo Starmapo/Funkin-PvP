@@ -1,49 +1,50 @@
 package ui.game;
 
 import data.game.Judgement;
-import data.skin.NoteSkin;
+import data.skin.JudgementSkin;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.tweens.FlxTween;
 
 class JudgementDisplay extends FlxSprite
 {
-	public static function getJudgementGraphic(judgement:Judgement)
+	public static function getJudgementGraphic(judgement:Judgement, skin:JudgementSkin)
 	{
-		var path = 'judgements/base/';
-		path += switch (judgement)
+		var name = Judgement.getJudgementName(judgement).toLowerCase();
+		var mod = skin.mod;
+		var path = 'judgements/${skin.name}/$name';
+		if (!Paths.existsPath('images/$path.png', mod) && judgement == MARV)
 		{
-			case MARV:
-				'marv';
-			case SICK:
-				'sick';
-			case GOOD:
-				'good';
-			case BAD:
-				'bad';
-			case SHIT:
-				'shit';
-			default:
-				'miss';
+			name = Judgement.getJudgementName(SICK).toLowerCase();
+			path = 'judgements/${skin.name}/$name';
 		}
-		return Paths.getImage(path);
+		if (!Paths.existsPath('images/$path.png', mod))
+		{
+			path = 'judgements/default/$name';
+			mod = 'fnf';
+		}
+		return Paths.getImage(path, mod);
 	}
 
+	public var graphics:Array<FlxGraphic> = [];
+
 	var player:Int;
-	var noteSkin:NoteSkin;
+	var skin:JudgementSkin;
 	var posTween:FlxTween;
 	var alphaTween:FlxTween;
 
-	public function new(player:Int, noteSkin:NoteSkin)
+	public function new(player:Int, skin:JudgementSkin)
 	{
 		super();
 		this.player = player;
-		this.noteSkin = noteSkin;
+		this.skin = skin;
 
 		for (i in 0...6)
-			getJudgementGraphic(i);
+			graphics.push(getJudgementGraphic(i, skin));
 
-		antialiasing = noteSkin.antialiasing;
+		scale.set(skin.scale, skin.scale);
+		antialiasing = skin.antialiasing;
 		kill();
 	}
 
@@ -54,8 +55,7 @@ class JudgementDisplay extends FlxSprite
 
 		revive();
 
-		loadGraphic(getJudgementGraphic(judgement));
-		scale.set(noteSkin.judgementsScale, noteSkin.judgementsScale);
+		loadGraphic(graphics[judgement]);
 		updateHitbox();
 
 		x = (((FlxG.width / 2) - width) / 2) + (FlxG.width / 2) * player;
@@ -80,12 +80,13 @@ class JudgementDisplay extends FlxSprite
 	override function destroy()
 	{
 		super.destroy();
-		noteSkin = null;
+		skin = null;
 		if (posTween != null)
 			posTween.cancel();
 		posTween = null;
 		if (alphaTween != null)
 			alphaTween.cancel();
 		alphaTween = null;
+		graphics = null;
 	}
 }
