@@ -567,7 +567,7 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 	{
 		var songGroup = groupItem.groupData;
 		var midpoint = groupItem.getMidpoint();
-		clear();
+		destroyMembers();
 		for (song in songGroup.songs)
 		{
 			var item = createItem(song, (midpoint.y + (160 * length)));
@@ -648,7 +648,7 @@ class DifficultyMenuList extends TypedMenuList<DifficultyMenuItem>
 	{
 		var songData = songItem.songData;
 		var midpoint = songItem.getMidpoint();
-		clear();
+		destroyMembers();
 		for (diff in songData.difficulties)
 		{
 			var item = createItem(diff, songData, (midpoint.y + (100 * length)));

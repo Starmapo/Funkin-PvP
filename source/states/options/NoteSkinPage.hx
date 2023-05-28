@@ -2,6 +2,7 @@ package states.options;
 
 import data.Mods;
 import data.PlayerConfig;
+import data.PlayerSettings;
 import data.Settings;
 import data.skin.NoteSkin;
 import data.song.NoteInfo;
@@ -10,6 +11,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import ui.game.Note;
 import ui.game.Receptor;
@@ -19,7 +21,8 @@ import ui.lists.TextMenuList;
 class NoteSkinPage extends Page
 {
 	var player:Int = 0;
-	var items:NoteSkinList;
+	var categoryList:CategoryList;
+	var skinList:NoteSkinList;
 	var config:PlayerConfig;
 	var lastSkin:NoteSkinItem;
 	var skinGroup:FlxTypedGroup<FlxSprite>;
@@ -41,60 +44,97 @@ class NoteSkinPage extends Page
 		bg.scrollFactor.set();
 		add(bg);
 
-		items = new NoteSkinList();
-		items.onChange.add(onChange);
-		items.onAccept.add(onAccept);
-		add(items);
+		categoryList = new CategoryList();
+		categoryList.onChange.add(onChangeCategory);
+		categoryList.onAccept.add(onAcceptCategory);
 
-		var found = false;
-		for (skin in Mods.noteSkins)
+		skinList = new NoteSkinList();
+		skinList.onChange.add(onChangeSkin);
+		skinList.onAccept.add(onAcceptSkin);
+		skinList.controlsEnabled = false;
+
+		add(skinList);
+		add(categoryList);
+
+		var groups:Array<ModSkins> = [];
+		for (_ => group in Mods.skins)
 		{
-			var item = createItem(skin);
-			if (config.noteSkin == item.name)
-			{
-				item.color = FlxColor.LIME;
-				lastSkin = item;
-				items.selectItem(item.ID);
-				found = true;
-			}
+			if (group.noteskins.length > 0)
+				groups.push(group);
 		}
-		if (!found)
-			reloadSkin(items.selectedItem);
+		groups.sort(function(a, b)
+		{
+			var nameA = a.name.toLowerCase();
+			var nameB = b.name.toLowerCase();
+			if (nameA < nameB)
+				return FlxSort.ASCENDING;
+			else if (nameA > nameB)
+				return -FlxSort.ASCENDING;
+			return 0;
+		});
+
+		for (group in groups)
+			categoryList.createItem(group);
+
+		categoryList.selectItem(0);
 	}
 
 	override function destroy()
 	{
 		super.destroy();
-		items = null;
+		categoryList = null;
+		skinList = null;
 		config = null;
+	}
+
+	override function updateControls()
+	{
+		if (PlayerSettings.checkAction(BACK_P))
+		{
+			if (skinList.visible)
+			{
+				skinList.visible = skinList.controlsEnabled = false;
+				categoryList.visible = categoryList.controlsEnabled = true;
+				updateCamFollow(categoryList.selectedItem);
+			}
+			else
+				exit();
+			CoolUtil.playCancelSound();
+		}
 	}
 
 	override function onAppear()
 	{
-		updateCamFollow(items.selectedItem);
+		updateCamFollow(categoryList.selectedItem);
 	}
 
-	function createItem(skin:ModNoteSkin)
-	{
-		var item = new NoteSkinItem(0, items.length * 100, skin);
-		item.x = ((FlxG.width / 2 - item.width) / 2);
-		return items.addItem(item.name, item);
-	}
-
-	function updateCamFollow(item:NoteSkinItem)
+	function updateCamFollow(item:TextMenuItem)
 	{
 		var midpoint = item.getMidpoint();
 		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
 
-	function onChange(item:NoteSkinItem)
+	function onChangeCategory(item:CategoryItem)
+	{
+		updateCamFollow(item);
+	}
+
+	function onAcceptCategory(item:CategoryItem)
+	{
+		reloadSkins(item.skins);
+		categoryList.visible = categoryList.controlsEnabled = false;
+		skinList.visible = skinList.controlsEnabled = true;
+		CoolUtil.playScrollSound();
+	}
+
+	function onChangeSkin(item:NoteSkinItem)
 	{
 		updateCamFollow(item);
 		reloadSkin(item);
 	}
 
-	function onAccept(item:NoteSkinItem)
+	function onAcceptSkin(item:NoteSkinItem)
 	{
 		if (lastSkin == item)
 			return;
@@ -159,9 +199,62 @@ class NoteSkinPage extends Page
 			}, 0);
 		return receptor;
 	}
+
+	function reloadSkins(skins:ModSkins)
+	{
+		skinList.destroyMembers();
+		lastSkin = null;
+		for (skin in skins.noteskins)
+		{
+			var item = skinList.createItem(skin);
+			if (skin.mod + ':' + skin.name == config.noteSkin)
+			{
+				item.color = FlxColor.LIME;
+				lastSkin = item;
+			}
+		}
+		skinList.selectItem(0);
+	}
 }
 
-class NoteSkinList extends TypedMenuList<NoteSkinItem> {}
+class CategoryList extends TypedMenuList<CategoryItem>
+{
+	public function createItem(skins:ModSkins)
+	{
+		var item = new CategoryItem(0, length * 100, skins);
+		item.x = ((FlxG.width / 2 - item.width) / 2);
+		return addItem(item.name, item);
+	}
+}
+
+class CategoryItem extends TextMenuItem
+{
+	public var skins:ModSkins;
+
+	var maxWidth:Float = (FlxG.width / 2) - 10;
+
+	public function new(x:Float = 0, y:Float = 0, skins:ModSkins)
+	{
+		this.skins = skins;
+		super(x, y, skins.name, null);
+
+		if (label.width > maxWidth)
+		{
+			var ratio = maxWidth / label.width;
+			label.size = Math.floor(label.size * ratio);
+		}
+	}
+}
+
+class NoteSkinList extends TypedMenuList<NoteSkinItem>
+{
+	public function createItem(skin:ModNoteSkin)
+	{
+		var item = new NoteSkinItem(0, length * 100, skin);
+		item.x = ((FlxG.width / 2 - item.width) / 2);
+		return addItem(item.name, item);
+	}
+}
 
 class NoteSkinItem extends TextMenuItem
 {

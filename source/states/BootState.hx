@@ -265,6 +265,16 @@ class BootState extends FNFState
 					}
 				}
 
+				var skinGroup:ModSkins = Mods.skins.get(mod.name);
+				if (skinGroup == null)
+				{
+					skinGroup = {
+						name: mod.name,
+						noteskins: []
+					};
+					Mods.skins.set(mod.name, skinGroup);
+				}
+
 				var noteskinList = Path.join([fullPath, 'data/noteskins/skins.txt']);
 				if (FileSystem.exists(noteskinList))
 				{
@@ -272,7 +282,7 @@ class BootState extends FNFState
 					for (n in list)
 					{
 						var split = n.trim().split(':');
-						Mods.noteSkins.push({
+						skinGroup.noteskins.push({
 							name: split[0],
 							displayName: split[1],
 							mod: mod.directory

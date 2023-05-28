@@ -557,7 +557,7 @@ class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
 	{
 		var charGroup = groupItem.groupData;
 		var midpoint = groupItem.getMidpoint();
-		clear();
+		destroyMembers();
 		for (song in charGroup.chars)
 		{
 			var item = createItem(song, midpoint.y);

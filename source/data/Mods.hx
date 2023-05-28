@@ -10,7 +10,7 @@ class Mods
 	public static var pvpMusic:Array<String> = [];
 	public static var songGroups:Map<String, ModSongGroup> = [];
 	public static var characterGroups:Map<String, ModCharacterGroup> = [];
-	public static var noteSkins:Array<ModNoteSkin> = [];
+	public static var skins:Map<String, ModSkins> = new Map();
 }
 
 class Mod extends JsonObject
@@ -61,6 +61,12 @@ typedef ModCharacter =
 	var name:String;
 	var displayName:String;
 	var directory:String;
+}
+
+typedef ModSkins =
+{
+	var name:String;
+	var noteskins:Array<ModNoteSkin>;
 }
 
 typedef ModNoteSkin =
