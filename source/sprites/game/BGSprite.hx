@@ -8,9 +8,10 @@ class BGSprite extends AnimatedSprite
 	{
 		super(x, y);
 
+		var nameInfo = CoolUtil.getNameInfo(image);
 		if (daAnimations != null)
 		{
-			frames = Paths.getSpritesheet(image);
+			frames = Paths.getSpritesheet(nameInfo.name, nameInfo.mod);
 			for (anims in daAnimations)
 			{
 				animation.addByPrefix(anims, anims, 24, loopingAnim);
@@ -24,7 +25,7 @@ class BGSprite extends AnimatedSprite
 		}
 		else
 		{
-			loadGraphic(Paths.getImage(image));
+			loadGraphic(Paths.getImage(nameInfo.name, nameInfo.mod));
 			active = false;
 		}
 

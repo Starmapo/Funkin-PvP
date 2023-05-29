@@ -5,7 +5,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -15,19 +14,25 @@ import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import lime.system.System;
 import openfl.display.PNGEncoderOptions;
-import openfl.events.Event;
-import openfl.net.FileReference;
+import sprites.game.BGSprite;
 import sprites.game.Character;
 import sys.io.File;
 import systools.Dialogs;
 import ui.editors.EditorCheckbox;
 import ui.editors.NotificationManager;
+import ui.editors.char.CharacterEditorToolPanel;
 import util.DiscordClient;
+import util.bindable.Bindable;
 
 using StringTools;
 
 class CharacterEditorState extends FNFState
 {
+	static var CHAR_X:Int = 100;
+	static var CHAR_Y:Int = 100;
+
+	public var currentTool:Bindable<MoveTool> = new Bindable(ANIM);
+
 	var charInfo:CharacterInfo;
 	var char:Character;
 	var camPos:FlxObject;
@@ -35,20 +40,20 @@ class CharacterEditorState extends FNFState
 	var timeSinceLastChange:Float = 0;
 	var ghostChar:Character;
 	var ghostAnim:String;
-	var infoText:FlxText;
 	var dragMousePos:FlxPoint;
 	var dragPositionOffset:Array<Float>;
 	var guideChar:Character;
 	var notificationManager:NotificationManager;
 	var uiGroup:FlxGroup;
 	var camIndicator:FlxSprite;
-	var draggingCam:Bool = false;
+	var dragging:Int = 0;
+	var toolPanel:CharacterEditorToolPanel;
 
 	public function new(?charInfo:CharacterInfo)
 	{
 		super();
 		if (charInfo == null)
-			charInfo = CharacterInfo.loadCharacterFromName('fnf:dad');
+			charInfo = CharacterInfo.loadCharacterFromName('fnf:bf');
 		this.charInfo = charInfo;
 
 		persistentUpdate = true;
@@ -62,7 +67,6 @@ class CharacterEditorState extends FNFState
 		camPos = null;
 		animText = null;
 		ghostChar = null;
-		infoText = null;
 		dragMousePos = FlxDestroyUtil.put(dragMousePos);
 		guideChar = null;
 		notificationManager = null;
@@ -74,24 +78,27 @@ class CharacterEditorState extends FNFState
 	{
 		DiscordClient.changePresence(null, "Character Editor");
 
-		var bg = CoolUtil.createMenuBG('menuBGDesat');
-		bg.color = 0xFF222222;
-		bg.scrollFactor.set();
+		var bg = new BGSprite('fnf:stages/stage/stageback', -600, -200, 0.9, 0.9);
 		add(bg);
 
-		guideChar = new Character(0, 0, CharacterInfo.loadCharacterFromName('fnf:dad'));
+		var stageFront = new BGSprite('fnf:stages/stage/stagefront', -650, 600, 0.9, 0.9);
+		stageFront.scale.set(1.1, 1.1);
+		stageFront.updateHitbox();
+		add(stageFront);
+
+		guideChar = new Character(CHAR_X, CHAR_Y, CharacterInfo.loadCharacterFromName('fnf:dad'));
 		guideChar.color = 0xFF886666;
 		guideChar.alpha = 0.6;
 		guideChar.animation.finish();
 		add(guideChar);
 
-		ghostChar = new Character(0, 0, charInfo);
+		ghostChar = new Character(CHAR_X, CHAR_Y, charInfo);
 		ghostChar.visible = false;
 		ghostChar.color = 0xFF666688;
 		ghostChar.alpha = 0.6;
 		add(ghostChar);
 
-		char = new Character(0, 0, charInfo);
+		char = new Character(CHAR_X, CHAR_Y, charInfo);
 		char.alpha = 0.85;
 		char.debugMode = true;
 		add(char);
@@ -107,10 +114,8 @@ class CharacterEditorState extends FNFState
 		animText.scrollFactor.set();
 		add(animText);
 
-		infoText = new FlxText(5, 0, FlxG.width - 10);
-		infoText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-		infoText.scrollFactor.set();
-		add(infoText);
+		toolPanel = new CharacterEditorToolPanel(this);
+		add(toolPanel);
 
 		uiGroup = new FlxTypedGroup();
 		add(uiGroup);
@@ -145,7 +150,6 @@ class CharacterEditorState extends FNFState
 
 			updateCamIndicator();
 			updateAnimText();
-			updateInfoText();
 
 			resetCamPos();
 			FlxG.camera.snapToTarget();
@@ -244,13 +248,13 @@ class CharacterEditorState extends FNFState
 			var canHold = timeSinceLastChange >= 0.1;
 			var mult = FlxG.keys.pressed.SHIFT ? 10 : 1;
 			if (FlxG.keys.justPressed.LEFT || (FlxG.keys.pressed.LEFT && canHold))
-				changeOffsetOrPos(-1 * mult);
+				changeAnimOrPos(-1 * mult);
 			if (FlxG.keys.justPressed.RIGHT || (FlxG.keys.pressed.RIGHT && canHold))
-				changeOffsetOrPos(1 * mult);
+				changeAnimOrPos(1 * mult);
 			if (FlxG.keys.justPressed.UP || (FlxG.keys.pressed.UP && canHold))
-				changeOffsetOrPos(0, -1 * mult);
+				changeAnimOrPos(0, -1 * mult);
 			if (FlxG.keys.justPressed.DOWN || (FlxG.keys.pressed.DOWN && canHold))
-				changeOffsetOrPos(0, 1 * mult);
+				changeAnimOrPos(0, 1 * mult);
 
 			if (FlxG.keys.justPressed.G)
 				setGhostAnim(char.animation.name);
@@ -263,16 +267,27 @@ class CharacterEditorState extends FNFState
 		{
 			var mousePos = FlxG.mouse.getWorldPosition();
 			var delta = mousePos - dragMousePos;
-			var offset = draggingCam ? charInfo.cameraOffset : charInfo.positionOffset;
-			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2);
-			offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2);
-
-			if (!draggingCam)
+			var offset = switch (dragging)
 			{
-				char.updatePosition();
-				ghostChar.updatePosition();
+				case 1: charInfo.positionOffset;
+				case 2: charInfo.cameraOffset;
+				default: char.getCurAnim().offset;
+			};
+			var mult = dragging == 0 ? -1 : 1;
+			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2) * mult;
+			offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2) * mult;
+
+			if (dragging == 0)
+				setAnimOffset(offset[0], offset[1]);
+			else
+			{
+				if (dragging == 1)
+				{
+					char.updatePosition();
+					ghostChar.updatePosition();
+				}
+				updateCamIndicator();
 			}
-			updateCamIndicator();
 
 			if (FlxG.mouse.released)
 			{
@@ -291,13 +306,21 @@ class CharacterEditorState extends FNFState
 			{
 				dragMousePos = mousePos;
 				dragPositionOffset = charInfo.cameraOffset.copy();
-				draggingCam = true;
+				dragging = 2;
 			}
 			else if (FlxG.mouse.overlaps(char))
 			{
 				dragMousePos = mousePos;
-				dragPositionOffset = charInfo.positionOffset.copy();
-				draggingCam = false;
+				if (currentTool.value == POSITION)
+				{
+					dragPositionOffset = charInfo.positionOffset.copy();
+					dragging = 1;
+				}
+				else
+				{
+					dragPositionOffset = char.getCurAnim().offset.copy();
+					dragging = 0;
+				}
 			}
 			else
 				mousePos.put();
@@ -313,7 +336,7 @@ class CharacterEditorState extends FNFState
 		ghostChar.update(elapsed);
 		char.update(elapsed);
 		updateAnimText();
-		updateInfoText();
+		toolPanel.update(elapsed);
 		uiGroup.update(elapsed);
 		notificationManager.update(elapsed);
 
@@ -336,26 +359,12 @@ class CharacterEditorState extends FNFState
 			numFrames = char.animation.curAnim.numFrames;
 		}
 
-		var newText = 'Animation: '
-			+ char.animation.name
-			+ '\nFrame: '
-			+ curFrame
-			+ ' / '
-			+ numFrames
-			+ '\nOffset: '
-			+ char.getCurAnimOffset();
+		var newText = 'Frame: ' + curFrame + ' / ' + numFrames;
+		if (char.animation.paused)
+			newText += '\n(Paused)';
+
 		if (animText.text != newText)
 			animText.text = newText;
-	}
-
-	function updateInfoText()
-	{
-		var newText = 'Position Offset: ' + charInfo.positionOffset + '\nCamera Offset: ' + charInfo.cameraOffset;
-		if (infoText.text != newText)
-		{
-			infoText.text = newText;
-			infoText.y = FlxG.height - infoText.height;
-		}
 	}
 
 	function changeAnimIndex(change:Int)
@@ -380,15 +389,23 @@ class CharacterEditorState extends FNFState
 		char.animation.curAnim.curFrame = FlxMath.wrapInt(char.animation.curAnim.curFrame + change, 0, char.animation.curAnim.numFrames - 1);
 	}
 
-	function changeOffset(xChange:Int, yChange:Int = 0)
+	function changeAnimOffset(xChange:Int, yChange:Int = 0)
 	{
 		var curAnim = char.getCurAnim();
-		curAnim.offset[0] -= xChange;
-		curAnim.offset[1] -= yChange;
+		setAnimOffset(curAnim.offset[0] + xChange, curAnim.offset[1] + yChange);
+
+		timeSinceLastChange = 0;
+	}
+
+	function setAnimOffset(x:Float = 0, y:Float = 0)
+	{
+		var curAnim = char.getCurAnim();
+		curAnim.offset[0] = x;
+		curAnim.offset[1] = y;
 
 		var offset = char.offsets.get(curAnim.name);
-		offset[0] -= xChange;
-		offset[1] -= yChange;
+		offset[0] = x;
+		offset[1] = y;
 		var ghostOffset = ghostChar.offsets.get(curAnim.name);
 		ghostOffset[0] = offset[0];
 		ghostOffset[1] = offset[1];
@@ -396,8 +413,6 @@ class CharacterEditorState extends FNFState
 		char.updateOffset();
 		if (ghostChar.animation.name == char.animation.name)
 			ghostChar.updateOffset();
-
-		timeSinceLastChange = 0;
 	}
 
 	function changePositionOffset(xChange:Int, yChange:Int = 0)
@@ -412,12 +427,12 @@ class CharacterEditorState extends FNFState
 		timeSinceLastChange = 0;
 	}
 
-	function changeOffsetOrPos(xChange:Int, yChange:Int = 0)
+	function changeAnimOrPos(xChange:Int, yChange:Int = 0)
 	{
 		if (FlxG.keys.pressed.ALT)
 			changePositionOffset(xChange, yChange);
 		else
-			changeOffset(xChange, yChange);
+			changeAnimOffset(xChange, yChange);
 	}
 
 	function setGhostAnim(name:String)
@@ -455,5 +470,29 @@ class CharacterEditorState extends FNFState
 		File.saveBytes(filename, bytes);
 		System.openFile(filename);
 		notificationManager.showNotification('Image successfully saved!', SUCCESS);
+	}
+}
+
+enum abstract MoveTool(String) from String to String
+{
+	var ANIM = 'Animation Offset';
+	var POSITION = 'Position Offset';
+
+	public function getIndex()
+	{
+		return switch (this)
+		{
+			case POSITION: 1;
+			default: 0;
+		}
+	}
+
+	public static function fromIndex(index:Int)
+	{
+		return switch (index)
+		{
+			case 1: POSITION;
+			default: ANIM;
+		}
 	}
 }
