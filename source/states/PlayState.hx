@@ -97,8 +97,6 @@ class PlayState extends FNFState
 	public var judgementCounters:FlxTypedGroup<JudgementCounter>;
 	public var npsDisplay:FlxTypedGroup<NPSDisplay>;
 	public var msDisplay:FlxTypedGroup<MSDisplay>;
-	// stupidly hardcoded this
-	public var preventUpdate:Array<FlxBasic> = [];
 	public var staticBG:AnimatedSprite;
 
 	var instEnded:Bool = false;
@@ -158,7 +156,7 @@ class PlayState extends FNFState
 
 		executeScripts("onUpdate", [elapsed]);
 
-		normalUpdate(elapsed);
+		super.update(elapsed);
 
 		timing.update(elapsed);
 
@@ -180,20 +178,6 @@ class PlayState extends FNFState
 		updateBG();
 
 		executeScripts("onUpdatePost", [elapsed]);
-	}
-
-	function normalUpdate(elapsed:Float)
-	{
-		var i:Int = 0;
-		var basic:FlxBasic = null;
-
-		while (i < length)
-		{
-			basic = members[i++];
-
-			if (basic != null && basic.exists && basic.active && !preventUpdate.contains(basic))
-				basic.update(elapsed);
-		}
 	}
 
 	override function destroy()
@@ -227,7 +211,6 @@ class PlayState extends FNFState
 		judgementCounters = null;
 		npsDisplay = null;
 		msDisplay = null;
-		preventUpdate = null;
 		staticBG = null;
 	}
 
@@ -684,14 +667,14 @@ class PlayState extends FNFState
 		for (playfield in ruleset.playfields)
 		{
 			playfield.cameras = [camHUD];
+			playfield.active = false;
 			add(playfield);
-			preventUpdate.push(playfield);
 		}
 		for (manager in ruleset.noteManagers)
 		{
 			manager.cameras = [camHUD];
+			manager.active = false;
 			add(manager);
-			preventUpdate.push(manager);
 		}
 
 		ruleset.lanePressed.add(onLanePressed);

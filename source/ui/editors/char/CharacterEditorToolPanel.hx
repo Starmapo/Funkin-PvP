@@ -16,8 +16,7 @@ class CharacterEditorToolPanel extends EditorPanel
 			}
 		]);
 		resize(250, 60);
-		x = 10;
-		y = FlxG.height - height - 10;
+		setPosition(10, FlxG.height - height - 10);
 		this.state = state;
 
 		var tab = createTab('Move Tool');

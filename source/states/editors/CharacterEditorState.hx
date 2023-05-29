@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
@@ -20,6 +21,8 @@ import sys.io.File;
 import systools.Dialogs;
 import ui.editors.EditorCheckbox;
 import ui.editors.NotificationManager;
+import ui.editors.char.CharacterEditorAnimPanel;
+import ui.editors.char.CharacterEditorEditPanel;
 import ui.editors.char.CharacterEditorToolPanel;
 import util.DiscordClient;
 import util.bindable.Bindable;
@@ -32,13 +35,13 @@ class CharacterEditorState extends FNFState
 	static var CHAR_Y:Int = 100;
 
 	public var currentTool:Bindable<MoveTool> = new Bindable(ANIM);
+	public var charInfo:CharacterInfo;
+	public var char:Character;
+	public var ghostChar:Character;
 
-	var charInfo:CharacterInfo;
-	var char:Character;
 	var camPos:FlxObject;
 	var animText:FlxText;
 	var timeSinceLastChange:Float = 0;
-	var ghostChar:Character;
 	var ghostAnim:String;
 	var dragMousePos:FlxPoint;
 	var dragPositionOffset:Array<Float>;
@@ -48,6 +51,8 @@ class CharacterEditorState extends FNFState
 	var camIndicator:FlxSprite;
 	var dragging:Int = 0;
 	var toolPanel:CharacterEditorToolPanel;
+	var animPanel:CharacterEditorAnimPanel;
+	var editPanel:CharacterEditorEditPanel;
 
 	public function new(?charInfo:CharacterInfo)
 	{
@@ -57,6 +62,7 @@ class CharacterEditorState extends FNFState
 		this.charInfo = charInfo;
 
 		persistentUpdate = true;
+		checkDropdowns = true;
 	}
 
 	override function destroy()
@@ -72,6 +78,9 @@ class CharacterEditorState extends FNFState
 		notificationManager = null;
 		uiGroup = null;
 		camIndicator = null;
+		toolPanel = null;
+		animPanel = null;
+		editPanel = null;
 	}
 
 	override function create()
@@ -89,7 +98,6 @@ class CharacterEditorState extends FNFState
 		guideChar = new Character(CHAR_X, CHAR_Y, CharacterInfo.loadCharacterFromName('fnf:dad'));
 		guideChar.color = 0xFF886666;
 		guideChar.alpha = 0.6;
-		guideChar.animation.finish();
 		add(guideChar);
 
 		ghostChar = new Character(CHAR_X, CHAR_Y, charInfo);
@@ -106,7 +114,6 @@ class CharacterEditorState extends FNFState
 		camIndicator = new FlxSprite().loadGraphic(Paths.getImage('editors/cross'));
 		camIndicator.scale.set(2, 2);
 		camIndicator.updateHitbox();
-		updateCamIndicator();
 		add(camIndicator);
 
 		animText = new FlxText(5, 0, FlxG.width - 10);
@@ -114,11 +121,17 @@ class CharacterEditorState extends FNFState
 		animText.scrollFactor.set();
 		add(animText);
 
-		toolPanel = new CharacterEditorToolPanel(this);
-		add(toolPanel);
-
 		uiGroup = new FlxTypedGroup();
 		add(uiGroup);
+
+		toolPanel = new CharacterEditorToolPanel(this);
+		uiGroup.add(toolPanel);
+
+		animPanel = new CharacterEditorAnimPanel(this);
+		uiGroup.add(animPanel);
+
+		editPanel = new CharacterEditorEditPanel(this);
+		uiGroup.add(editPanel);
 
 		var loadButton = new FlxUIButton(FlxG.width, 0, 'Load', function()
 		{
@@ -145,14 +158,7 @@ class CharacterEditorState extends FNFState
 			}
 
 			this.charInfo = charInfo;
-			ghostChar.charInfo = charInfo;
-			char.charInfo = charInfo;
-
-			updateCamIndicator();
-			updateAnimText();
-
-			resetCamPos();
-			FlxG.camera.snapToTarget();
+			reloadCharInfo();
 		});
 		loadButton.x -= loadButton.width;
 		uiGroup.add(loadButton);
@@ -195,15 +201,33 @@ class CharacterEditorState extends FNFState
 		add(camPos);
 		FlxG.camera.follow(camPos);
 
-		resetCamPos();
-		FlxG.camera.snapToTarget();
+		reloadCharInfo();
 
 		super.create();
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.keys.anyPressed([I, J, K, L]))
+		uiGroup.update(elapsed);
+
+		handleInput(elapsed);
+
+		camPos.update(elapsed);
+		ghostChar.update(elapsed);
+		char.update(elapsed);
+		notificationManager.update(elapsed);
+
+		updateAnimText();
+
+		if (!FlxG.mouse.visible)
+			FlxG.mouse.visible = true;
+	}
+
+	function handleInput(elapsed:Float)
+	{
+		var allowInput = checkAllowInput();
+
+		if (allowInput && FlxG.keys.anyPressed([I, J, K, L]))
 		{
 			var angle = FlxG.keys.angleFromKeys([I, J, K, L]);
 			camPos.velocity.setPolarDegrees(900, angle);
@@ -211,15 +235,14 @@ class CharacterEditorState extends FNFState
 		else
 			camPos.velocity.set();
 
+		timeSinceLastChange += elapsed;
+
+		if (!allowInput)
+			return;
+
 		if (FlxG.keys.justPressed.R)
 			resetCamPos();
 
-		if (FlxG.keys.justPressed.W)
-			changeAnimIndex(-1);
-		if (FlxG.keys.justPressed.S)
-			changeAnimIndex(1);
-
-		timeSinceLastChange += elapsed;
 		if (char.animation.curAnim != null)
 		{
 			if (FlxG.keys.justPressed.SPACE)
@@ -299,7 +322,7 @@ class CharacterEditorState extends FNFState
 			delta.put();
 		}
 
-		if (FlxG.mouse.justPressed)
+		if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(uiGroup))
 		{
 			var mousePos = FlxG.mouse.getWorldPosition();
 			if (FlxG.mouse.overlaps(camIndicator))
@@ -331,17 +354,6 @@ class CharacterEditorState extends FNFState
 			persistentUpdate = false;
 			FlxG.switchState(new ToolboxState());
 		}
-
-		camPos.update(elapsed);
-		ghostChar.update(elapsed);
-		char.update(elapsed);
-		updateAnimText();
-		toolPanel.update(elapsed);
-		uiGroup.update(elapsed);
-		notificationManager.update(elapsed);
-
-		if (!FlxG.mouse.visible)
-			FlxG.mouse.visible = true;
 	}
 
 	function resetCamPos()
@@ -367,21 +379,14 @@ class CharacterEditorState extends FNFState
 			animText.text = newText;
 	}
 
-	function changeAnimIndex(change:Int)
+	public function changeAnim(anim:String)
 	{
-		var index = char.getCurAnimIndex();
-		index = FlxMath.wrapInt(index + change, 0, charInfo.anims.length - 1);
+		var paused = char.animation.paused;
 
-		var anim = charInfo.anims[index];
-		if (anim != null)
-		{
-			var paused = char.animation.paused;
+		char.playAnim(anim, true);
 
-			char.playAnim(anim.name, true);
-
-			if (paused)
-				char.animation.pause();
-		}
+		if (paused)
+			char.animation.pause();
 	}
 
 	function changeFrameIndex(change:Int)
@@ -432,7 +437,7 @@ class CharacterEditorState extends FNFState
 		if (FlxG.keys.pressed.ALT)
 			changePositionOffset(xChange, yChange);
 		else
-			changeAnimOffset(xChange, yChange);
+			changeAnimOffset(-xChange, -yChange);
 	}
 
 	function setGhostAnim(name:String)
@@ -470,6 +475,25 @@ class CharacterEditorState extends FNFState
 		File.saveBytes(filename, bytes);
 		System.openFile(filename);
 		notificationManager.showNotification('Image successfully saved!', SUCCESS);
+	}
+
+	function reloadCharInfo()
+	{
+		var oldGraphic = char.graphic;
+
+		ghostChar.charInfo = charInfo;
+		char.charInfo = charInfo;
+
+		if (oldGraphic != null && oldGraphic.useCount <= 0)
+			FlxG.bitmap.remove(oldGraphic);
+
+		updateCamIndicator();
+		updateAnimText();
+
+		resetCamPos();
+		FlxG.camera.snapToTarget();
+
+		animPanel.reloadDropdown();
 	}
 }
 

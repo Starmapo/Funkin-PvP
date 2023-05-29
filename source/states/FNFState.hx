@@ -108,23 +108,22 @@ class FNFState extends FlxTransitionableState
 
 	function checkDropdown(obj:FlxBasic)
 	{
-		if (Std.isOfType(obj, FlxTypedGroup))
+		if (Std.isOfType(obj, FlxUIDropDownMenu))
 		{
-			var group:FlxGroup = cast obj;
+			var dropdown:FlxUIDropDownMenu = cast obj;
+			dropdowns.push(dropdown);
+		}
+		else if (Std.isOfType(obj, FlxTypedGroup))
+		{
+			var group:FlxTypedGroup<Dynamic> = cast obj;
 			for (obj in group)
 				checkDropdown(obj);
 		}
 		else if (Std.isOfType(obj, FlxTypedSpriteGroup))
 		{
-			var group:FlxSpriteGroup = cast obj;
-			for (obj in group)
+			var group:FlxTypedSpriteGroup<Dynamic> = cast obj;
+			for (obj in group.group)
 				checkDropdown(obj);
-		}
-		else if (Std.isOfType(obj, FlxUIDropDownMenu))
-		{
-			var dropdown:FlxUIDropDownMenu = cast obj;
-			dropdowns.push(dropdown);
-			trace('found dropdown yippee!');
 		}
 	}
 }
