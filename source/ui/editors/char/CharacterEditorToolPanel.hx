@@ -31,4 +31,10 @@ class CharacterEditorToolPanel extends EditorPanel
 
 		addGroup(tab);
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+	}
 }

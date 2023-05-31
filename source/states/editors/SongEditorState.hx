@@ -788,7 +788,7 @@ class SongEditorState extends FNFState
 		}
 		if (tpCount >= song.timingPoints.length)
 		{
-			notificationManager.showNotification('You must have at least 1 timing point in your map!', WARNING);
+			notificationManager.showNotification('You must have at least 1 timing point in your map!', ERROR);
 			return;
 		}
 

@@ -1,6 +1,7 @@
 package ui.editors.char;
 
 import states.editors.CharacterEditorState;
+import util.editors.char.CharacterEditorActionManager;
 
 class CharacterEditorAnimPanel extends EditorPanel
 {
@@ -30,15 +31,35 @@ class CharacterEditorAnimPanel extends EditorPanel
 		tab.add(animDropdown);
 
 		addGroup(tab);
+
+		state.actionManager.onEvent.add(onEvent);
 	}
 
 	public function reloadDropdown()
 	{
+		state.charInfo.sortAnims();
+
 		var anims:Array<String> = [];
 		for (anim in state.charInfo.anims)
 			anims.push(anim.name);
 
 		animDropdown.setData(EditorDropdownMenu.makeStrIdLabelArray(anims));
 		animDropdown.selectedLabel = state.char.animation.name;
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		state = null;
+		animDropdown = null;
+	}
+
+	function onEvent(event:String, params:Dynamic)
+	{
+		switch (event)
+		{
+			case CharacterEditorActionManager.CHANGE_ANIM_NAME:
+				reloadDropdown();
+		}
 	}
 }

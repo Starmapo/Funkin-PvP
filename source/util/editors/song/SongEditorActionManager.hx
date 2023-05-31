@@ -53,6 +53,7 @@ class SongEditorActionManager extends ActionManager
 
 	public function new(state:SongEditorState)
 	{
+		super();
 		this.state = state;
 	}
 

@@ -13,6 +13,8 @@ class ActionManager implements IFlxDestroyable
 	public var hasUnsavedChanges(get, never):Bool;
 	public var onEvent:FlxTypedSignal<String->Dynamic->Void> = new FlxTypedSignal();
 
+	public function new() {}
+
 	public function perform(action:IAction)
 	{
 		action.perform();

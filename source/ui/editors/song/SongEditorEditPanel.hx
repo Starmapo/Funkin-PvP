@@ -403,7 +403,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			if (text.length == 0)
 			{
-				state.notificationManager.showNotification("You can't have an empty difficulty name!", WARNING);
+				state.notificationManager.showNotification("You can't have an empty difficulty name!", ERROR);
 				difficultyInput.text = lastText;
 				return;
 			}
@@ -420,7 +420,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			if (text.length == 0)
 			{
-				state.notificationManager.showNotification("You can't have an empty character name!", WARNING);
+				state.notificationManager.showNotification("You can't have an empty character name!", ERROR);
 				opponentInput.text = lastText;
 				return;
 			}
@@ -437,7 +437,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			if (text.length == 0)
 			{
-				state.notificationManager.showNotification("You can't have an empty character name!", WARNING);
+				state.notificationManager.showNotification("You can't have an empty character name!", ERROR);
 				bfInput.text = lastText;
 				return;
 			}
@@ -454,7 +454,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			if (text.length == 0)
 			{
-				state.notificationManager.showNotification("You can't have an empty character name!", WARNING);
+				state.notificationManager.showNotification("You can't have an empty character name!", ERROR);
 				gfInput.text = lastText;
 				return;
 			}
@@ -471,7 +471,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			if (text.length == 0)
 			{
-				state.notificationManager.showNotification("You can't have an empty stage name!", WARNING);
+				state.notificationManager.showNotification("You can't have an empty stage name!", ERROR);
 				stageInput.text = lastText;
 				return;
 			}

@@ -29,8 +29,7 @@ class Character extends DancingSprite
 	public var isGF:Bool;
 	public var camOffset:FlxPoint = FlxPoint.get();
 	public var danceDisabled:Bool = false;
-
-	var xDifference:Float = 0;
+	public var xDifference:Float = 0;
 
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false, isGF:Bool = false)
 	{
@@ -348,13 +347,8 @@ class Character extends DancingSprite
 		danceStep = -1;
 		playAnim(danceAnims[danceAnims.length - 1], true);
 		animation.finish();
-		startWidth = width;
-		startHeight = height;
-		updateOffset();
+		updateSize();
 		resetColor();
-
-		xDifference = (429 - startWidth);
-		updatePosition();
 
 		singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 		if (flipped)
@@ -362,7 +356,7 @@ class Character extends DancingSprite
 			var left = singAnimations[0];
 			singAnimations[0] = singAnimations[3];
 			singAnimations[3] = left;
-			
+
 			if (charInfo.flipAll)
 			{
 				var down = singAnimations[1];
@@ -372,6 +366,15 @@ class Character extends DancingSprite
 		}
 
 		danceBeats = danceAnims.length > 1 ? 1 : 2;
+	}
+
+	public function updateSize()
+	{
+		startWidth = width;
+		startHeight = height;
+		updateOffset();
+		xDifference = (429 - startWidth);
+		updatePosition();
 	}
 
 	function setCamOffsetFromLane(lane:Int = -1)
