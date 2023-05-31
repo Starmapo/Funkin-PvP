@@ -10,6 +10,8 @@ class CharacterEditorEditPanel extends EditorPanel
 	var state:CharacterEditorState;
 	var nameInput:EditorInputText;
 	var atlasNameInput:EditorInputText;
+	var indicesInput:EditorInputText;
+	var fpsStepper:EditorNumericStepper;
 	var curAnim:AnimInfo;
 	var spacing:Int = 4;
 
@@ -45,6 +47,8 @@ class CharacterEditorEditPanel extends EditorPanel
 		curAnim = state.char.getCurAnim();
 		updateName();
 		updateAtlasName();
+		updateIndices();
+		updateFPS();
 	}
 
 	override function destroy()
@@ -53,6 +57,8 @@ class CharacterEditorEditPanel extends EditorPanel
 		state = null;
 		nameInput = null;
 		atlasNameInput = null;
+		indicesInput = null;
+		fpsStepper = null;
 		curAnim = null;
 	}
 
@@ -98,6 +104,36 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(atlasNameInput);
 
+		var indicesLabel = new EditorText(atlasNameLabel.x, atlasNameLabel.y + atlasNameLabel.height + spacing, 0, 'Indices (Optional):');
+		tab.add(indicesLabel);
+
+		indicesInput = new EditorInputText(indicesLabel.x + inputSpacing, indicesLabel.y - 1, inputWidth);
+		indicesInput.textChanged.add(function(text, lastText)
+		{
+			var indices:Array<Int> = [];
+			for (t in text.split(','))
+			{
+				if (t.length > 0)
+				{
+					var int = Std.parseInt(t);
+					if (int != null)
+						indices.push(int);
+				}
+			}
+			state.actionManager.perform(new ActionChangeAnimIndices(state, curAnim, indices));
+		});
+		tab.add(indicesInput);
+
+		var fpsLabel = new EditorText(indicesLabel.x, indicesLabel.y + indicesLabel.height + spacing, 0, 'Frame rate:');
+		tab.add(fpsLabel);
+
+		fpsStepper = new EditorNumericStepper(fpsLabel.x + inputSpacing, fpsLabel.y - 1, 1, 24, 0, 1000, 2);
+		fpsStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangeAnimFPS(state, curAnim, value));
+		});
+		tab.add(fpsStepper);
+
 		addGroup(tab);
 	}
 
@@ -118,6 +154,16 @@ class CharacterEditorEditPanel extends EditorPanel
 		atlasNameInput.text = curAnim != null ? curAnim.atlasName : '';
 	}
 
+	function updateIndices()
+	{
+		indicesInput.text = curAnim != null ? curAnim.indices.join(',') : '';
+	}
+
+	function updateFPS()
+	{
+		fpsStepper.value = curAnim != null ? curAnim.fps : 0;
+	}
+
 	function onEvent(event:String, params:Dynamic)
 	{
 		switch (event)
@@ -128,6 +174,12 @@ class CharacterEditorEditPanel extends EditorPanel
 			case CharacterEditorActionManager.CHANGE_ANIM_ATLAS_NAME:
 				if (curAnim == params.anim)
 					updateAtlasName();
+			case CharacterEditorActionManager.CHANGE_ANIM_INDICES:
+				if (curAnim == params.anim)
+					updateIndices();
+			case CharacterEditorActionManager.CHANGE_ANIM_FPS:
+				if (curAnim == params.anim)
+					updateFPS();
 		}
 	}
 }

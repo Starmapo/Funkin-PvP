@@ -9,6 +9,8 @@ class CharacterEditorActionManager extends ActionManager
 {
 	public static inline var CHANGE_ANIM_NAME:String = 'change-anim-name';
 	public static inline var CHANGE_ANIM_ATLAS_NAME:String = 'change-anim-atlas-name';
+	public static inline var CHANGE_ANIM_INDICES:String = 'change-anim-indices';
+	public static inline var CHANGE_ANIM_FPS:String = 'change-anim-fps';
 	public static inline var CHANGE_ANIM_OFFSET:String = 'change-anim-offset';
 	public static inline var CHANGE_POSITION_OFFSET:String = 'change-position-offset';
 	public static inline var CHANGE_CAMERA_OFFSET:String = 'change-camera-offset';
@@ -36,6 +38,12 @@ class ActionChangeAnimName implements IAction
 		anim.name = name;
 
 		state.char.animation.rename(lastName, name);
+		if (state.char.animation.name == lastName)
+			state.char.animation.play(name, true, false, state.char.animation.curAnim.curFrame);
+
+		state.ghostChar.animation.rename(lastName, name);
+		if (state.ghostChar.animation.name == lastName)
+			state.ghostChar.animation.play(name, true, false, state.ghostChar.animation.curAnim.curFrame);
 
 		state.actionManager.triggerEvent(type, {
 			anim: anim,
@@ -76,21 +84,7 @@ class ActionChangeAnimAtlasName implements IAction
 		lastName = anim.atlasName;
 		anim.atlasName = name;
 
-		var lastAnim = state.char.animation.name;
-		state.char.addAnim({
-			name: anim.name,
-			atlasName: anim.atlasName,
-			indices: anim.indices.copy(),
-			fps: anim.fps,
-			loop: anim.loop
-		});
-		if (state.charInfo.danceAnims[state.charInfo.danceAnims.length - 1] == anim.name)
-		{
-			state.char.playAnim(anim.name, true);
-			state.updateCharSize();
-		}
-		if (lastAnim != null)
-			state.char.playAnim(lastAnim, lastAnim == anim.name);
+		state.updateAnim(anim);
 
 		state.actionManager.triggerEvent(type, {
 			anim: anim,
@@ -101,6 +95,91 @@ class ActionChangeAnimAtlasName implements IAction
 	public function undo()
 	{
 		new ActionChangeAnimAtlasName(state, anim, lastName).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
+	}
+}
+
+class ActionChangeAnimIndices implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ANIM_INDICES;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+	var indices:Array<Int>;
+	var lastIndices:Array<Int>;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo, indices:Array<Int>)
+	{
+		this.state = state;
+		this.anim = anim;
+		this.indices = indices;
+	}
+
+	public function perform()
+	{
+		lastIndices = anim.indices.copy();
+		anim.indices = indices.copy();
+
+		state.updateAnim(anim);
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim,
+			lastIndices: lastIndices
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeAnimIndices(state, anim, lastIndices).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
+		indices = null;
+		lastIndices = null;
+	}
+}
+
+class ActionChangeAnimFPS implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ANIM_FPS;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+	var fps:Float;
+	var lastFPS:Float;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo, fps:Float)
+	{
+		this.state = state;
+		this.anim = anim;
+		this.fps = fps;
+	}
+
+	public function perform()
+	{
+		lastFPS = anim.fps;
+		anim.fps = fps;
+
+		state.char.animation.getByName(anim.name).frameRate = fps;
+		state.ghostChar.animation.getByName(anim.name).frameRate = fps;
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim,
+			lastFPS: lastFPS
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeAnimFPS(state, anim, lastFPS).perform();
 	}
 
 	public function destroy()

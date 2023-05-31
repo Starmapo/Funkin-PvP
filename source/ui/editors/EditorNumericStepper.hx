@@ -27,7 +27,7 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 	var buttonMinus:FlxUITypedButton<FlxSprite>;
 	var _value:Float;
 
-	public function new(x:Float = 0, y:Float = 0, stepSize:Float = 0, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int)
+	public function new(x:Float = 0, y:Float = 0, stepSize:Float = 1, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int)
 	{
 		super(x, y);
 		this.stepSize = stepSize;
@@ -57,7 +57,6 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 		buttonMinus.autoCenterLabel();
 		add(buttonMinus);
 
-		_value = defaultValue - 1;
 		value = defaultValue;
 	}
 
@@ -68,18 +67,6 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 		buttonPlus = null;
 		buttonMinus = null;
 		super.destroy();
-	}
-
-	public function changeWithoutTrigger(newValue:Float)
-	{
-		if (_value != newValue)
-		{
-			if (decimals != null && decimals >= 0)
-				newValue = FlxMath.roundDecimal(newValue, decimals);
-			newValue = FlxMath.bound(newValue, min, max);
-			inputText.text = Std.string(newValue);
-			_value = newValue;
-		}
 	}
 
 	public function setDisplayText(value:String)
@@ -99,21 +86,30 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 
 	function onTextChanged(text, _)
 	{
+		var oldValue = _value;
 		var parsedText = Std.parseFloat(text);
 		if (text.length < 1 || !Math.isFinite(parsedText))
 			value = defaultValue;
 		else
 			value = parsedText;
+		if (_value != oldValue)
+		valueChanged.dispatch(_value, oldValue);
 	}
 
 	function onPlus()
 	{
+		var oldValue = _value;
 		value += stepSize;
+		if (_value != oldValue)
+			valueChanged.dispatch(_value, oldValue);
 	}
 
 	function onMinus()
 	{
+		var oldValue = _value;
 		value -= stepSize;
+		if (_value != oldValue)
+			valueChanged.dispatch(_value, oldValue);
 	}
 
 	function get_value()
@@ -125,10 +121,11 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 	{
 		if (_value != newValue)
 		{
-			var oldValue = _value;
-			changeWithoutTrigger(newValue);
-			if (_value != oldValue)
-				valueChanged.dispatch(_value, oldValue);
+			if (decimals != null && decimals >= 0)
+				newValue = FlxMath.roundDecimal(newValue, decimals);
+			newValue = FlxMath.bound(newValue, min, max);
+			inputText.text = Std.string(newValue);
+			_value = newValue;
 		}
 		return _value;
 	}

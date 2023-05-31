@@ -145,12 +145,12 @@ class SongEditorEditPanel extends EditorPanel
 
 	public function updateSpeedStepper()
 	{
-		speedStepper.changeWithoutTrigger(Settings.editorScrollSpeed.value);
+		speedStepper.value = Settings.editorScrollSpeed.value;
 	}
 
 	public function updateRateStepper()
 	{
-		rateStepper.changeWithoutTrigger(state.inst.pitch);
+		rateStepper.value = state.inst.pitch;
 	}
 
 	public function updateBeatSnapDropdown()
@@ -1419,7 +1419,7 @@ class SongEditorEditPanel extends EditorPanel
 			case SongEditorActionManager.CHANGE_STAGE:
 				stageInput.text = params.stage;
 			case SongEditorActionManager.CHANGE_INITIAL_SV:
-				velocityStepper.changeWithoutTrigger(params.initialScrollVelocity);
+				velocityStepper.value = params.initialScrollVelocity;
 		}
 	}
 
@@ -1631,17 +1631,17 @@ class SongEditorEditPanel extends EditorPanel
 			if (multipleTime)
 				timingPointTimeStepper.setDisplayText('...');
 			else
-				timingPointTimeStepper.changeWithoutTrigger(selectedTimingPoints[0].startTime);
+				timingPointTimeStepper.value = selectedTimingPoints[0].startTime;
 
 			if (multipleBPM)
 				bpmStepper.setDisplayText('...');
 			else
-				bpmStepper.changeWithoutTrigger(selectedTimingPoints[0].bpm);
+				bpmStepper.value = selectedTimingPoints[0].bpm;
 
 			if (multipleMeter)
 				meterStepper.setDisplayText('...');
 			else
-				meterStepper.changeWithoutTrigger(selectedTimingPoints[0].meter);
+				meterStepper.value = selectedTimingPoints[0].meter;
 
 			for (obj in timingPointPropertiesGroup)
 			{
@@ -1682,12 +1682,12 @@ class SongEditorEditPanel extends EditorPanel
 			if (multipleMult1)
 				multiplierStepper1.setDisplayText('...');
 			else
-				multiplierStepper1.changeWithoutTrigger(selectedScrollVelocities[0].multipliers[0]);
+				multiplierStepper1.value = selectedScrollVelocities[0].multipliers[0];
 
 			if (multipleMult2)
 				multiplierStepper2.setDisplayText('...');
 			else
-				multiplierStepper2.changeWithoutTrigger(selectedScrollVelocities[0].multipliers[1]);
+				multiplierStepper2.value = selectedScrollVelocities[0].multipliers[1];
 
 			if (multipleLinked)
 				linkedCheckbox.checked = false;

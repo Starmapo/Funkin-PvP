@@ -248,7 +248,7 @@ class CharacterEditorState extends FNFState
 		if (FlxG.keys.justPressed.R)
 			resetCamPos();
 
-		if (char.animation.curAnim != null)
+		if (char.animation.curAnim != null && char.animation.curAnim.frames != null)
 		{
 			if (FlxG.keys.justPressed.SPACE)
 			{
@@ -289,76 +289,76 @@ class CharacterEditorState extends FNFState
 
 			if (FlxG.keys.justPressed.H)
 				guideChar.visible = !guideChar.visible;
-		}
 
-		if (dragMousePos != null)
-		{
-			var mousePos = FlxG.mouse.getWorldPosition();
-			var delta = mousePos - dragMousePos;
-			var offset = switch (dragging)
+			if (dragMousePos != null)
 			{
-				case 1: charInfo.positionOffset;
-				case 2: charInfo.cameraOffset;
-				default: char.getCurAnim().offset;
-			};
-			var mult = dragging == 0 ? -1 : 1;
-			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2) * mult;
-			offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2) * mult;
+				var mousePos = FlxG.mouse.getWorldPosition();
+				var delta = mousePos - dragMousePos;
+				var offset = switch (dragging)
+				{
+					case 1: charInfo.positionOffset;
+					case 2: charInfo.cameraOffset;
+					default: char.getCurAnim().offset;
+				};
+				var mult = dragging == 0 ? -1 : 1;
+				offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2) * mult;
+				offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2) * mult;
 
-			switch (dragging)
-			{
-				case 1:
-					updatePosition();
-				case 2:
-					updateCamIndicator();
-				default:
-					setAnimOffset(char.getCurAnim(), offset[0], offset[1]);
-			}
-
-			if (FlxG.mouse.released)
-			{
 				switch (dragging)
 				{
 					case 1:
-						actionManager.perform(new ActionChangePositionOffset(this, charInfo, offset.copy(), dragPositionOffset));
+						updatePosition();
 					case 2:
-						actionManager.perform(new ActionChangeCameraOffset(this, charInfo, offset.copy(), dragPositionOffset));
+						updateCamIndicator();
 					default:
-						actionManager.perform(new ActionChangeAnimOffset(this, char.getCurAnim(), offset.copy(), dragPositionOffset));
+						setAnimOffset(char.getCurAnim(), offset[0], offset[1]);
 				}
-				dragMousePos = null;
-				dragPositionOffset = null;
-			}
 
-			mousePos.put();
-			delta.put();
-		}
-
-		if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(uiGroup))
-		{
-			var mousePos = FlxG.mouse.getWorldPosition();
-			if (FlxG.mouse.overlaps(camIndicator))
-			{
-				dragMousePos = mousePos;
-				dragPositionOffset = charInfo.cameraOffset.copy();
-				dragging = 2;
-			}
-			else if (FlxG.mouse.overlaps(char))
-			{
-				dragMousePos = mousePos;
-				if (currentTool.value == POSITION)
+				if (FlxG.mouse.released)
 				{
-					dragPositionOffset = charInfo.positionOffset.copy();
-					dragging = 1;
+					switch (dragging)
+					{
+						case 1:
+							actionManager.perform(new ActionChangePositionOffset(this, charInfo, offset.copy(), dragPositionOffset));
+						case 2:
+							actionManager.perform(new ActionChangeCameraOffset(this, charInfo, offset.copy(), dragPositionOffset));
+						default:
+							actionManager.perform(new ActionChangeAnimOffset(this, char.getCurAnim(), offset.copy(), dragPositionOffset));
+					}
+					dragMousePos = null;
+					dragPositionOffset = null;
+				}
+
+				mousePos.put();
+				delta.put();
+			}
+
+			if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(uiGroup))
+			{
+				var mousePos = FlxG.mouse.getWorldPosition();
+				if (FlxG.mouse.overlaps(camIndicator))
+				{
+					dragMousePos = mousePos;
+					dragPositionOffset = charInfo.cameraOffset.copy();
+					dragging = 2;
+				}
+				else if (FlxG.mouse.overlaps(char))
+				{
+					dragMousePos = mousePos;
+					if (currentTool.value == POSITION)
+					{
+						dragPositionOffset = charInfo.positionOffset.copy();
+						dragging = 1;
+					}
+					else
+					{
+						dragPositionOffset = char.getCurAnim().offset.copy();
+						dragging = 0;
+					}
 				}
 				else
-				{
-					dragPositionOffset = char.getCurAnim().offset.copy();
-					dragging = 0;
-				}
+					mousePos.put();
 			}
-			else
-				mousePos.put();
 		}
 
 		if (FlxG.keys.pressed.CONTROL)
@@ -535,6 +535,26 @@ class CharacterEditorState extends FNFState
 
 		animPanel.reloadDropdown();
 		editPanel.updateCurAnim();
+	}
+
+	public function updateAnim(anim:AnimInfo)
+	{
+		var lastAnim = char.animation.name;
+		char.animation.remove(anim.name);
+		char.addAnim({
+			name: anim.name,
+			atlasName: anim.atlasName,
+			indices: anim.indices.copy(),
+			fps: anim.fps,
+			loop: anim.loop
+		});
+		if (charInfo.danceAnims[charInfo.danceAnims.length - 1] == anim.name)
+		{
+			char.playAnim(anim.name, true);
+			updateCharSize();
+		}
+		if (lastAnim != null)
+			char.playAnim(lastAnim, lastAnim == anim.name);
 	}
 
 	public function updateCharSize()
