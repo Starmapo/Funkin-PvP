@@ -161,6 +161,7 @@ class CharacterEditorState extends FNFState
 				return;
 			}
 
+			actionManager.reset();
 			this.charInfo = charInfo;
 			reloadCharInfo();
 		});
@@ -342,7 +343,7 @@ class CharacterEditorState extends FNFState
 					dragPositionOffset = charInfo.cameraOffset.copy();
 					dragging = 2;
 				}
-				else if (FlxG.mouse.overlaps(char))
+				else if (char.pixelsOverlapPoint(mousePos, 1))
 				{
 					dragMousePos = mousePos;
 					if (currentTool.value == POSITION)
@@ -442,6 +443,8 @@ class CharacterEditorState extends FNFState
 			char.updateOffset();
 		if (ghostChar.animation.name == anim.name)
 			ghostChar.updateOffset();
+
+		editPanel.updateOffset();
 	}
 
 	function changePositionOffset(xChange:Int, yChange:Int = 0)

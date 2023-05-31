@@ -122,9 +122,9 @@ class EditorInputText extends FlxSpriteGroup
 			case ONLY_ALPHA:
 				~/[^a-zA-Z]*/g;
 			case ONLY_NUMERIC:
-				~/[^0-9.]*/g;
+				~/[^0-9eE.\-+]*/g;
 			case ONLY_ALPHANUMERIC:
-				~/[^a-zA-Z0-9.]*/g;
+				~/[^a-zA-Z0-9.\-+]*/g;
 			case CUSTOM_FILTER(p):
 				p;
 			default:

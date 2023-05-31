@@ -25,7 +25,7 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 
 	var buttonPlus:FlxUITypedButton<FlxSprite>;
 	var buttonMinus:FlxUITypedButton<FlxSprite>;
-	var _value:Float;
+	var _value:Float = Math.NaN;
 
 	public function new(x:Float = 0, y:Float = 0, stepSize:Float = 1, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int)
 	{
@@ -71,7 +71,7 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 
 	public function setDisplayText(value:String)
 	{
-		_value = Math.POSITIVE_INFINITY;
+		_value = Math.NaN;
 		return inputText.displayText = value;
 	}
 
@@ -93,7 +93,7 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 		else
 			value = parsedText;
 		if (_value != oldValue)
-		valueChanged.dispatch(_value, oldValue);
+			valueChanged.dispatch(_value, oldValue);
 	}
 
 	function onPlus()

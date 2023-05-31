@@ -54,6 +54,13 @@ class ActionManager implements IFlxDestroyable
 		onEvent.dispatch(type, args);
 	}
 
+	public function reset()
+	{
+		undoStack.resize(0);
+		redoStack.resize(0);
+		lastSaveAction = null;
+	}
+
 	public function destroy()
 	{
 		undoStack = FlxDestroyUtil.destroyArray(undoStack);

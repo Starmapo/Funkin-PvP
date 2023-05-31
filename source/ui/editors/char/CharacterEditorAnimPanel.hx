@@ -6,7 +6,8 @@ import util.editors.char.CharacterEditorActionManager;
 class CharacterEditorAnimPanel extends EditorPanel
 {
 	var state:CharacterEditorState;
-	var animDropdown:EditorDropdownMenu;
+
+	public var animDropdown:EditorDropdownMenu;
 
 	public function new(state:CharacterEditorState)
 	{

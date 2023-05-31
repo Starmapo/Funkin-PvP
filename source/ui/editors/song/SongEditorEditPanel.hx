@@ -1382,7 +1382,7 @@ class SongEditorEditPanel extends EditorPanel
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		var hideSteppers = beatSnapDropdown.dropPanel.visible || waveformDropdown.dropPanel.visible;
+		var hideSteppers = beatSnapDropdown.dropPanel.exists || waveformDropdown.dropPanel.exists;
 		vocalsVolumeStepper.alpha = instVolumeStepper.alpha = hideSteppers ? 0 : 1;
 		vocalsVolumeStepper.active = instVolumeStepper.active = (selected_tab_id == 'Editor' && !hideSteppers);
 	}
@@ -1737,7 +1737,7 @@ class SongEditorEditPanel extends EditorPanel
 		}
 		else
 		{
-			if (charDropdown.dropPanel.visible)
+			if (charDropdown.dropPanel.exists)
 				charDropdown.header.button.onUp.callback();
 			for (obj in cameraFocusesPropertiesGroup)
 			{

@@ -11,7 +11,9 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var CHANGE_ANIM_ATLAS_NAME:String = 'change-anim-atlas-name';
 	public static inline var CHANGE_ANIM_INDICES:String = 'change-anim-indices';
 	public static inline var CHANGE_ANIM_FPS:String = 'change-anim-fps';
+	public static inline var CHANGE_ANIM_LOOP:String = 'change-anim-loop';
 	public static inline var CHANGE_ANIM_OFFSET:String = 'change-anim-offset';
+	public static inline var CHANGE_ANIM_NEXT:String = 'change-anim-next';
 	public static inline var CHANGE_POSITION_OFFSET:String = 'change-position-offset';
 	public static inline var CHANGE_CAMERA_OFFSET:String = 'change-camera-offset';
 }
@@ -189,6 +191,48 @@ class ActionChangeAnimFPS implements IAction
 	}
 }
 
+class ActionChangeAnimLoop implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ANIM_LOOP;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+	var loop:Bool;
+	var lastLoop:Bool;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo, loop:Bool)
+	{
+		this.state = state;
+		this.anim = anim;
+		this.loop = loop;
+	}
+
+	public function perform()
+	{
+		lastLoop = anim.loop;
+		anim.loop = loop;
+
+		state.char.animation.getByName(anim.name).looped = loop;
+		state.ghostChar.animation.getByName(anim.name).looped = loop;
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim,
+			lastLoop: lastLoop
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeAnimLoop(state, anim, lastLoop).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
+	}
+}
+
 class ActionChangeAnimOffset implements IAction
 {
 	public var type = CharacterEditorActionManager.CHANGE_ANIM_OFFSET;
@@ -229,6 +273,45 @@ class ActionChangeAnimOffset implements IAction
 		anim = null;
 		offset = null;
 		lastOffset = null;
+	}
+}
+
+class ActionChangeAnimNext implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ANIM_NEXT;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+	var nextAnim:String;
+	var lastAnim:String;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo, nextAnim:String)
+	{
+		this.state = state;
+		this.anim = anim;
+		this.nextAnim = nextAnim;
+	}
+
+	public function perform()
+	{
+		lastAnim = anim.nextAnim;
+		anim.nextAnim = nextAnim;
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim,
+			lastAnim: lastAnim
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeAnimNext(state, anim, lastAnim).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
 	}
 }
 

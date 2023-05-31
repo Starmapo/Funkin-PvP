@@ -34,7 +34,7 @@ class FNFState extends FlxTransitionableState
 
 		for (dropdown in dropdowns)
 		{
-			if (dropdown.dropPanel.visible)
+			if (dropdown.dropPanel.exists)
 				return false;
 		}
 

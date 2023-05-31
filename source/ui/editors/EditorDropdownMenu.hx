@@ -15,33 +15,6 @@ class EditorDropdownMenu extends FlxUIDropDownMenu implements IFlxUIClickable im
 		return FlxUIDropDownMenu.makeStrIdLabelArray(stringArray, useIndexID);
 	}
 
-	var tabMenu:FlxUITabMenu;
-
-	public function new(x:Float = 0, y:Float = 0, ?dataList:Array<StrNameLabel>, ?callback:String->Void, ?tabMenu:FlxUITabMenu)
-	{
-		super(x, y, dataList, callback);
-		this.tabMenu = tabMenu;
-	}
-
-	override function destroy()
-	{
-		super.destroy();
-		tabMenu = null;
-	}
-
-	override function showList(b:Bool)
-	{
-		super.showList(b);
-		if (tabMenu != null)
-		{
-			for (asset in tabMenu)
-			{
-				setWidgetSuppression(asset, this, b);
-			}
-			skipButtonUpdate = false;
-		}
-	}
-
 	static function setWidgetSuppression(asset:FlxSprite, butNotThisOne:IFlxUIWidget, suppressed:Bool = true):Void
 	{
 		if ((asset is IFlxUIClickable))
@@ -68,6 +41,33 @@ class EditorDropdownMenu extends FlxUIDropDownMenu implements IFlxUIClickable im
 			{
 				setWidgetSuppression(groupAsset, butNotThisOne, suppressed);
 			}
+		}
+	}
+
+	var tabMenu:FlxUITabMenu;
+
+	public function new(x:Float = 0, y:Float = 0, ?dataList:Array<StrNameLabel>, ?callback:String->Void, ?tabMenu:FlxUITabMenu)
+	{
+		super(x, y, dataList, callback);
+		this.tabMenu = tabMenu;
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		tabMenu = null;
+	}
+
+	override function showList(b:Bool)
+	{
+		super.showList(b);
+		if (tabMenu != null)
+		{
+			for (asset in tabMenu)
+			{
+				setWidgetSuppression(asset, this, b);
+			}
+			skipButtonUpdate = false;
 		}
 	}
 }

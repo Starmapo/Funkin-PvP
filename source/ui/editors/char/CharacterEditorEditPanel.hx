@@ -12,6 +12,10 @@ class CharacterEditorEditPanel extends EditorPanel
 	var atlasNameInput:EditorInputText;
 	var indicesInput:EditorInputText;
 	var fpsStepper:EditorNumericStepper;
+	var loopCheckbox:EditorCheckbox;
+	var offsetXStepper:EditorNumericStepper;
+	var offsetYStepper:EditorNumericStepper;
+	var nextAnimInput:EditorInputText;
 	var curAnim:AnimInfo;
 	var spacing:Int = 4;
 
@@ -35,20 +39,9 @@ class CharacterEditorEditPanel extends EditorPanel
 		createAnimationTab();
 		createCharacterTab();
 
-		updateCurAnim();
-
 		selected_tab_id = 'Character';
 
 		state.actionManager.onEvent.add(onEvent);
-	}
-
-	public function updateCurAnim()
-	{
-		curAnim = state.char.getCurAnim();
-		updateName();
-		updateAtlasName();
-		updateIndices();
-		updateFPS();
 	}
 
 	override function destroy()
@@ -59,6 +52,10 @@ class CharacterEditorEditPanel extends EditorPanel
 		atlasNameInput = null;
 		indicesInput = null;
 		fpsStepper = null;
+		loopCheckbox = null;
+		offsetXStepper = null;
+		offsetYStepper = null;
+		nextAnimInput = null;
 		curAnim = null;
 	}
 
@@ -134,6 +131,42 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(fpsStepper);
 
+		var loopLabel = new EditorText(fpsLabel.x, fpsLabel.y + fpsLabel.height + spacing, 0, 'Looped:');
+		tab.add(loopLabel);
+
+		loopCheckbox = new EditorCheckbox(loopLabel.x + inputSpacing, loopLabel.y - 1, '', 0, function()
+		{
+			state.actionManager.perform(new ActionChangeAnimLoop(state, curAnim, loopCheckbox.checked));
+		});
+		tab.add(loopCheckbox);
+
+		var offsetLabel = new EditorText(loopLabel.x, loopLabel.y + loopLabel.height + spacing, 0, 'Offset:');
+		tab.add(offsetLabel);
+
+		offsetXStepper = new EditorNumericStepper(offsetLabel.x + inputSpacing, offsetLabel.y - 1, 1, 0, null, null, 2);
+		offsetXStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangeAnimOffset(state, curAnim, [value, curAnim.offset[1]], curAnim.offset.copy()));
+		});
+		tab.add(offsetXStepper);
+
+		offsetYStepper = new EditorNumericStepper(offsetXStepper.x + offsetXStepper.width + spacing, offsetXStepper.y, 1, 0, null, null, 2);
+		offsetYStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangeAnimOffset(state, curAnim, [curAnim.offset[0], value], curAnim.offset.copy()));
+		});
+		tab.add(offsetYStepper);
+
+		var nextAnimLabel = new EditorText(offsetLabel.x, offsetLabel.y + offsetLabel.height + spacing, 0, 'Next Animation:');
+		tab.add(nextAnimLabel);
+
+		nextAnimInput = new EditorInputText(nextAnimLabel.x + inputSpacing, nextAnimLabel.y - 1, inputWidth);
+		nextAnimInput.textChanged.add(function(text, lastText)
+		{
+			state.actionManager.perform(new ActionChangeAnimNext(state, curAnim, text));
+		});
+		tab.add(nextAnimInput);
+
 		addGroup(tab);
 	}
 
@@ -142,6 +175,18 @@ class CharacterEditorEditPanel extends EditorPanel
 		var tab = createTab('Character');
 
 		addGroup(tab);
+	}
+
+	public function updateCurAnim()
+	{
+		curAnim = state.char.getCurAnim();
+		updateName();
+		updateAtlasName();
+		updateIndices();
+		updateFPS();
+		updateLoop();
+		updateOffset();
+		updateNextAnim();
 	}
 
 	function updateName()
@@ -164,6 +209,22 @@ class CharacterEditorEditPanel extends EditorPanel
 		fpsStepper.value = curAnim != null ? curAnim.fps : 0;
 	}
 
+	function updateLoop()
+	{
+		loopCheckbox.checked = curAnim != null ? curAnim.loop : false;
+	}
+
+	public function updateOffset()
+	{
+		offsetXStepper.value = curAnim != null ? curAnim.offset[0] : 0;
+		offsetYStepper.value = curAnim != null ? curAnim.offset[1] : 0;
+	}
+
+	function updateNextAnim()
+	{
+		nextAnimInput.text = curAnim != null ? curAnim.nextAnim : '';
+	}
+
 	function onEvent(event:String, params:Dynamic)
 	{
 		switch (event)
@@ -180,6 +241,12 @@ class CharacterEditorEditPanel extends EditorPanel
 			case CharacterEditorActionManager.CHANGE_ANIM_FPS:
 				if (curAnim == params.anim)
 					updateFPS();
+			case CharacterEditorActionManager.CHANGE_ANIM_LOOP:
+				if (curAnim == params.anim)
+					updateLoop();
+			case CharacterEditorActionManager.CHANGE_ANIM_NEXT:
+				if (curAnim == params.anim)
+					updateNextAnim();
 		}
 	}
 }
