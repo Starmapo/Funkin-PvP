@@ -41,6 +41,7 @@ class CharacterEditorState extends FNFState
 	public var ghostChar:Character;
 	public var actionManager:CharacterEditorActionManager;
 	public var notificationManager:NotificationManager;
+	public var guideChar:Character;
 
 	var camPos:FlxObject;
 	var animText:FlxText;
@@ -48,7 +49,6 @@ class CharacterEditorState extends FNFState
 	var ghostAnim:String;
 	var dragMousePos:FlxPoint;
 	var dragPositionOffset:Array<Float>;
-	var guideChar:Character;
 	var uiGroup:FlxGroup;
 	var camIndicator:FlxSprite;
 	var dragging:Int = 0;
@@ -137,67 +137,6 @@ class CharacterEditorState extends FNFState
 		editPanel = new CharacterEditorEditPanel(this);
 		uiGroup.add(editPanel);
 
-		var loadButton = new FlxUIButton(FlxG.width, 0, 'Load', function()
-		{
-			var result = Dialogs.openFile("Select character inside the game's directory to load", '', {
-				count: 1,
-				descriptions: ['JSON files'],
-				extensions: ['*.json']
-			});
-			if (result == null || result[0] == null)
-				return;
-
-			var path = Path.normalize(result[0]);
-			var cwd = Path.normalize(Sys.getCwd());
-			if (!path.startsWith(cwd))
-			{
-				notificationManager.showNotification("You must select a character inside of the game's directory!", ERROR);
-				return;
-			}
-			var charInfo = CharacterInfo.loadCharacter(path.substr(cwd.length + 1));
-			if (charInfo == null)
-			{
-				notificationManager.showNotification("You must select a valid character file!", ERROR);
-				return;
-			}
-
-			actionManager.reset();
-			this.charInfo = charInfo;
-			reloadCharInfo();
-		});
-		loadButton.x -= loadButton.width;
-		uiGroup.add(loadButton);
-
-		var saveButton = new FlxUIButton(FlxG.width, loadButton.y + loadButton.height + 4, 'Save', function()
-		{
-			save();
-		});
-		saveButton.x -= saveButton.width;
-		uiGroup.add(saveButton);
-
-		var saveFrameButton = new FlxUIButton(FlxG.width, saveButton.y + saveButton.height + 4, 'Save Current Frame', function()
-		{
-			saveFrame(charInfo.name + '.png');
-		});
-		saveFrameButton.resize(160, saveFrameButton.height);
-		saveFrameButton.autoCenterLabel();
-		saveFrameButton.x -= saveFrameButton.width;
-		uiGroup.add(saveFrameButton);
-
-		var gfCheckbox:EditorCheckbox = null;
-		gfCheckbox = new EditorCheckbox(FlxG.width, saveFrameButton.y + saveFrameButton.height + 4, 'GF as Guide Character', 100, function()
-		{
-			if (gfCheckbox.checked)
-				guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
-			else
-				guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:dad');
-
-			guideChar.animation.finish();
-		});
-		gfCheckbox.x -= 80;
-		gfCheckbox.scrollFactor.set();
-		uiGroup.add(gfCheckbox);
-
 		add(uiGroup);
 
 		notificationManager = new NotificationManager();
@@ -246,10 +185,12 @@ class CharacterEditorState extends FNFState
 		if (!allowInput)
 			return;
 
+		var hasAnim = char.animation.curAnim != null && char.animation.curAnim.frames != null;
+
 		if (FlxG.keys.justPressed.R)
 			resetCamPos();
 
-		if (char.animation.curAnim != null && char.animation.curAnim.frames != null)
+		if (hasAnim)
 		{
 			if (FlxG.keys.justPressed.SPACE)
 			{
@@ -274,92 +215,95 @@ class CharacterEditorState extends FNFState
 			if (FlxG.keys.justPressed.END && char.animation.curAnim.numFrames > 0)
 				char.animation.curAnim.curFrame = char.animation.curAnim.numFrames - 1;
 
-			var canHold = timeSinceLastChange >= 0.1;
-			var mult = FlxG.keys.pressed.SHIFT ? 10 : 1;
-			if (FlxG.keys.justPressed.LEFT || (FlxG.keys.pressed.LEFT && canHold))
-				changeAnimOrPos(-1 * mult);
-			if (FlxG.keys.justPressed.RIGHT || (FlxG.keys.pressed.RIGHT && canHold))
-				changeAnimOrPos(1 * mult);
-			if (FlxG.keys.justPressed.UP || (FlxG.keys.pressed.UP && canHold))
-				changeAnimOrPos(0, -1 * mult);
-			if (FlxG.keys.justPressed.DOWN || (FlxG.keys.pressed.DOWN && canHold))
-				changeAnimOrPos(0, 1 * mult);
-
 			if (FlxG.keys.justPressed.G)
 				setGhostAnim(char.animation.name);
+		}
 
-			if (FlxG.keys.justPressed.H)
-				guideChar.visible = !guideChar.visible;
+		var canHold = timeSinceLastChange >= 0.1;
+		var mult = FlxG.keys.pressed.SHIFT ? 10 : 1;
+		if (FlxG.keys.justPressed.LEFT || (FlxG.keys.pressed.LEFT && canHold))
+			changeAnimOrPos(-1 * mult, 0, hasAnim);
+		if (FlxG.keys.justPressed.RIGHT || (FlxG.keys.pressed.RIGHT && canHold))
+			changeAnimOrPos(1 * mult, 0, hasAnim);
+		if (FlxG.keys.justPressed.UP || (FlxG.keys.pressed.UP && canHold))
+			changeAnimOrPos(0, -1 * mult, hasAnim);
+		if (FlxG.keys.justPressed.DOWN || (FlxG.keys.pressed.DOWN && canHold))
+			changeAnimOrPos(0, 1 * mult, hasAnim);
 
-			if (dragMousePos != null)
+		if (FlxG.keys.justPressed.H)
+			guideChar.visible = !guideChar.visible;
+
+		if (dragMousePos != null)
+		{
+			var mousePos = FlxG.mouse.getWorldPosition();
+			var delta = mousePos - dragMousePos;
+			var offset = switch (dragging)
 			{
-				var mousePos = FlxG.mouse.getWorldPosition();
-				var delta = mousePos - dragMousePos;
-				var offset = switch (dragging)
-				{
-					case 1: charInfo.positionOffset;
-					case 2: charInfo.cameraOffset;
-					default: char.getCurAnim().offset;
-				};
-				var mult = dragging == 0 ? -1 : 1;
-				offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2) * mult;
-				offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2) * mult;
+				case 1: charInfo.positionOffset;
+				case 2: charInfo.cameraOffset;
+				default: char.getCurAnim().offset;
+			};
+			var mult = dragging == 0 ? -1 : 1;
+			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2) * mult;
+			offset[1] = dragPositionOffset[1] + FlxMath.roundDecimal(delta.y, 2) * mult;
 
+			switch (dragging)
+			{
+				case 1:
+					updatePosition();
+				case 2:
+					updateCamIndicator();
+				default:
+					setAnimOffset(char.getCurAnim(), offset[0], offset[1]);
+			}
+
+			if (FlxG.mouse.released)
+			{
 				switch (dragging)
 				{
 					case 1:
-						updatePosition();
+						actionManager.perform(new ActionChangePositionOffset(this, charInfo, offset.copy(), dragPositionOffset));
 					case 2:
-						updateCamIndicator();
+						actionManager.perform(new ActionChangeCameraOffset(this, charInfo, offset.copy(), dragPositionOffset));
 					default:
-						setAnimOffset(char.getCurAnim(), offset[0], offset[1]);
+						actionManager.perform(new ActionChangeAnimOffset(this, char.getCurAnim(), offset.copy(), dragPositionOffset));
 				}
-
-				if (FlxG.mouse.released)
-				{
-					switch (dragging)
-					{
-						case 1:
-							actionManager.perform(new ActionChangePositionOffset(this, charInfo, offset.copy(), dragPositionOffset));
-						case 2:
-							actionManager.perform(new ActionChangeCameraOffset(this, charInfo, offset.copy(), dragPositionOffset));
-						default:
-							actionManager.perform(new ActionChangeAnimOffset(this, char.getCurAnim(), offset.copy(), dragPositionOffset));
-					}
-					dragMousePos = null;
-					dragPositionOffset = null;
-				}
-
-				mousePos.put();
-				delta.put();
+				dragMousePos = null;
+				dragPositionOffset = null;
 			}
 
-			if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(uiGroup))
+			mousePos.put();
+			delta.put();
+		}
+
+		if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(uiGroup))
+		{
+			var mousePos = FlxG.mouse.getWorldPosition();
+			if (FlxG.mouse.overlaps(camIndicator))
 			{
-				var mousePos = FlxG.mouse.getWorldPosition();
-				if (FlxG.mouse.overlaps(camIndicator))
+				dragMousePos = mousePos;
+				dragPositionOffset = charInfo.cameraOffset.copy();
+				dragging = 2;
+			}
+			else if (char.pixelsOverlapPoint(mousePos, 1))
+			{
+				if (currentTool.value == POSITION)
 				{
 					dragMousePos = mousePos;
-					dragPositionOffset = charInfo.cameraOffset.copy();
-					dragging = 2;
+					dragPositionOffset = charInfo.positionOffset.copy();
+					dragging = 1;
 				}
-				else if (char.pixelsOverlapPoint(mousePos, 1))
+				else if (hasAnim)
 				{
 					dragMousePos = mousePos;
-					if (currentTool.value == POSITION)
-					{
-						dragPositionOffset = charInfo.positionOffset.copy();
-						dragging = 1;
-					}
-					else
-					{
-						dragPositionOffset = char.getCurAnim().offset.copy();
-						dragging = 0;
-					}
+					dragPositionOffset = char.getCurAnim().offset.copy();
+					dragging = 0;
 				}
 				else
 					mousePos.put();
 			}
+			else
+				mousePos.put();
 		}
 
 		if (FlxG.keys.pressed.CONTROL)
@@ -386,13 +330,10 @@ class CharacterEditorState extends FNFState
 
 	function updateAnimText()
 	{
-		var curFrame = 0;
 		var numFrames = 0;
 		if (char.animation.curAnim != null)
-		{
-			curFrame = char.animation.curAnim.curFrame + 1;
 			numFrames = char.animation.curAnim.numFrames;
-		}
+		var curFrame = numFrames > 0 ? char.animation.curAnim.curFrame + 1 : 0;
 
 		var newText = 'Frame: ' + curFrame + ' / ' + numFrames;
 		if (char.animation.paused)
@@ -460,17 +401,16 @@ class CharacterEditorState extends FNFState
 	public function updatePosition()
 	{
 		char.updatePosition();
-		if (ghostChar.animation.name == char.animation.name)
-			ghostChar.updatePosition();
+		ghostChar.updatePosition();
 
 		updateCamIndicator();
 	}
 
-	function changeAnimOrPos(xChange:Int, yChange:Int = 0)
+	function changeAnimOrPos(xChange:Int, yChange:Int = 0, hasAnim:Bool = true)
 	{
 		if (FlxG.keys.pressed.ALT)
 			changePositionOffset(xChange, yChange);
-		else
+		else if (hasAnim)
 			changeAnimOffset(-xChange, -yChange);
 	}
 
@@ -489,7 +429,7 @@ class CharacterEditorState extends FNFState
 		}
 	}
 
-	function save(notif:Bool = true, forceSave:Bool = false)
+	public function save(notif:Bool = true, forceSave:Bool = false)
 	{
 		if (!actionManager.hasUnsavedChanges && !forceSave)
 			return;
@@ -508,7 +448,7 @@ class CharacterEditorState extends FNFState
 		camIndicator.setPosition(char.x + (char.startWidth / 2) + charInfo.cameraOffset[0], char.y + (char.startHeight / 2) + charInfo.cameraOffset[1]);
 	}
 
-	function saveFrame(filename:String)
+	public function saveFrame(filename:String)
 	{
 		var frame = char.frame;
 		if (frame == null)
@@ -520,7 +460,7 @@ class CharacterEditorState extends FNFState
 		notificationManager.showNotification('Image successfully saved!', SUCCESS);
 	}
 
-	function reloadCharInfo()
+	public function reloadCharInfo()
 	{
 		var oldGraphic = char.graphic;
 
@@ -537,12 +477,11 @@ class CharacterEditorState extends FNFState
 		FlxG.camera.snapToTarget();
 
 		animPanel.reloadDropdown();
-		editPanel.updateCurAnim();
+		editPanel.updateChar();
 	}
 
 	public function updateAnim(anim:AnimInfo)
 	{
-		var lastAnim = char.animation.name;
 		char.animation.remove(anim.name);
 		char.addAnim({
 			name: anim.name,
@@ -551,18 +490,45 @@ class CharacterEditorState extends FNFState
 			fps: anim.fps,
 			loop: anim.loop
 		});
-		if (charInfo.danceAnims[charInfo.danceAnims.length - 1] == anim.name)
-		{
-			char.playAnim(anim.name, true);
-			updateCharSize();
-		}
-		if (lastAnim != null)
-			char.playAnim(lastAnim, lastAnim == anim.name);
+		ghostChar.animation.remove(anim.name);
+		ghostChar.addAnim({
+			name: anim.name,
+			atlasName: anim.atlasName,
+			indices: anim.indices.copy(),
+			fps: anim.fps,
+			loop: anim.loop
+		});
+
+		updateCharSize();
+	}
+
+	public function addAnim(anim:AnimInfo)
+	{
+		char.addAnim({
+			name: anim.name,
+			atlasName: anim.atlasName,
+			indices: anim.indices.copy(),
+			fps: anim.fps,
+			loop: anim.loop,
+			offset: anim.offset
+		});
+		ghostChar.addAnim({
+			name: anim.name,
+			atlasName: anim.atlasName,
+			indices: anim.indices.copy(),
+			fps: anim.fps,
+			loop: anim.loop,
+			offset: anim.offset
+		});
+
+		updateCharSize();
+		changeAnim(anim.name);
 	}
 
 	public function updateCharSize()
 	{
 		char.updateSize();
+		ghostChar.updateSize();
 		updateCamIndicator();
 	}
 }

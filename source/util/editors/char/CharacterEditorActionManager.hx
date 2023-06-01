@@ -7,6 +7,9 @@ import util.editors.actions.IAction;
 
 class CharacterEditorActionManager extends ActionManager
 {
+	public static inline var CHANGE_IMAGE:String = 'change-image';
+	public static inline var ADD_ANIM:String = 'add-anim';
+	public static inline var REMOVE_ANIM:String = 'remove-anim';
 	public static inline var CHANGE_ANIM_NAME:String = 'change-anim-name';
 	public static inline var CHANGE_ANIM_ATLAS_NAME:String = 'change-anim-atlas-name';
 	public static inline var CHANGE_ANIM_INDICES:String = 'change-anim-indices';
@@ -16,6 +19,121 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var CHANGE_ANIM_NEXT:String = 'change-anim-next';
 	public static inline var CHANGE_POSITION_OFFSET:String = 'change-position-offset';
 	public static inline var CHANGE_CAMERA_OFFSET:String = 'change-camera-offset';
+}
+
+class ActionChangeImage implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_IMAGE;
+
+	var state:CharacterEditorState;
+	var image:String;
+	var lastImage:String;
+
+	public function new(state:CharacterEditorState, image:String)
+	{
+		this.state = state;
+		this.image = image;
+	}
+
+	public function perform()
+	{
+		lastImage = state.charInfo.image;
+		state.charInfo.image = image;
+
+		state.char.reloadImage();
+		state.ghostChar.reloadImage();
+		state.updateCamIndicator();
+
+		state.actionManager.triggerEvent(type, {
+			image: image
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeImage(state, lastImage).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionAddAnim implements IAction
+{
+	public var type = CharacterEditorActionManager.ADD_ANIM;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo)
+	{
+		this.state = state;
+		this.anim = anim;
+	}
+
+	public function perform()
+	{
+		state.charInfo.anims.push(anim);
+		state.addAnim(anim);
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim
+		});
+	}
+
+	public function undo()
+	{
+		new ActionRemoveAnim(state, anim).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
+	}
+}
+
+class ActionRemoveAnim implements IAction
+{
+	public var type = CharacterEditorActionManager.REMOVE_ANIM;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo)
+	{
+		this.state = state;
+		this.anim = anim;
+	}
+
+	public function perform()
+	{
+		state.charInfo.anims.remove(anim);
+
+		if (state.char.animation.name == anim.name)
+			state.changeAnim(state.charInfo.danceAnims[0]);
+		if (state.ghostChar.animation.name == anim.name)
+			state.ghostChar.animation.play(state.charInfo.danceAnims[0]);
+		state.char.animation.remove(anim.name);
+		state.ghostChar.animation.remove(anim.name);
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim
+		});
+	}
+
+	public function undo()
+	{
+		new ActionAddAnim(state, anim).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
+	}
 }
 
 class ActionChangeAnimName implements IAction
@@ -39,13 +157,16 @@ class ActionChangeAnimName implements IAction
 		lastName = anim.name;
 		anim.name = name;
 
-		state.char.animation.rename(lastName, name);
-		if (state.char.animation.name == lastName)
-			state.char.animation.play(name, true, false, state.char.animation.curAnim.curFrame);
+		if (state.char.animation.exists(lastName))
+		{
+			state.char.animation.rename(lastName, name);
+			if (state.char.animation.name == lastName)
+				state.char.playAnim(name, true, false, state.char.animation.curAnim.curFrame);
 
-		state.ghostChar.animation.rename(lastName, name);
-		if (state.ghostChar.animation.name == lastName)
-			state.ghostChar.animation.play(name, true, false, state.ghostChar.animation.curAnim.curFrame);
+			state.ghostChar.animation.rename(lastName, name);
+			if (state.ghostChar.animation.name == lastName)
+				state.ghostChar.playAnim(name, true, false, state.ghostChar.animation.curAnim.curFrame);
+		}
 
 		state.actionManager.triggerEvent(type, {
 			anim: anim,
@@ -170,8 +291,11 @@ class ActionChangeAnimFPS implements IAction
 		lastFPS = anim.fps;
 		anim.fps = fps;
 
-		state.char.animation.getByName(anim.name).frameRate = fps;
-		state.ghostChar.animation.getByName(anim.name).frameRate = fps;
+		if (state.char.animation.exists(anim.name))
+		{
+			state.char.animation.getByName(anim.name).frameRate = fps;
+			state.ghostChar.animation.getByName(anim.name).frameRate = fps;
+		}
 
 		state.actionManager.triggerEvent(type, {
 			anim: anim,
@@ -212,8 +336,11 @@ class ActionChangeAnimLoop implements IAction
 		lastLoop = anim.loop;
 		anim.loop = loop;
 
-		state.char.animation.getByName(anim.name).looped = loop;
-		state.ghostChar.animation.getByName(anim.name).looped = loop;
+		if (state.char.animation.exists(anim.name))
+		{
+			state.char.animation.getByName(anim.name).looped = loop;
+			state.ghostChar.animation.getByName(anim.name).looped = loop;
+		}
 
 		state.actionManager.triggerEvent(type, {
 			anim: anim,

@@ -309,15 +309,42 @@ class Character extends DancingSprite
 		camOffset = FlxDestroyUtil.put(camOffset);
 	}
 
-	function initializeCharacter()
+	public function initializeCharacter()
 	{
-		frames = Paths.getSpritesheet(charInfo.image, charInfo.mod);
 		danceAnims = charInfo.danceAnims.copy();
 		flipX = charInfo.flipX;
 		if (flipped)
 			flipX = !flipX;
 		antialiasing = charInfo.antialiasing;
 		scale.set(charInfo.scale, charInfo.scale);
+
+		reloadImage();
+
+		state = Idle;
+		resetColor();
+
+		singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+		if (flipped)
+		{
+			var left = singAnimations[0];
+			singAnimations[0] = singAnimations[3];
+			singAnimations[3] = left;
+
+			if (charInfo.flipAll)
+			{
+				var down = singAnimations[1];
+				singAnimations[1] = singAnimations[2];
+				singAnimations[2] = down;
+			}
+		}
+
+		danceBeats = danceAnims.length > 1 ? 1 : 2;
+	}
+
+	public function reloadImage()
+	{
+		var nameInfo = CoolUtil.getNameInfo(charInfo.image, charInfo.mod);
+		frames = Paths.getSpritesheet(nameInfo.name, nameInfo.mod);
 
 		for (anim in charInfo.anims)
 		{
@@ -343,38 +370,25 @@ class Character extends DancingSprite
 			}
 		}
 
-		state = Idle;
 		danceStep = -1;
-		playAnim(danceAnims[danceAnims.length - 1], true);
-		animation.finish();
 		updateSize();
-		resetColor();
 
-		singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
-		if (flipped)
-		{
-			var left = singAnimations[0];
-			singAnimations[0] = singAnimations[3];
-			singAnimations[3] = left;
-
-			if (charInfo.flipAll)
-			{
-				var down = singAnimations[1];
-				singAnimations[1] = singAnimations[2];
-				singAnimations[2] = down;
-			}
-		}
-
-		danceBeats = danceAnims.length > 1 ? 1 : 2;
+		animation.finish();
 	}
 
 	public function updateSize()
 	{
+		var lastAnim = animation.name;
+
+		playAnim(danceAnims[danceAnims.length - 1], true);
 		startWidth = width;
 		startHeight = height;
 		updateOffset();
 		xDifference = (429 - startWidth);
 		updatePosition();
+
+		if (lastAnim != null)
+			playAnim(lastAnim);
 	}
 
 	function setCamOffsetFromLane(lane:Int = -1)
