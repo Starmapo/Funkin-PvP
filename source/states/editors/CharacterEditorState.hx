@@ -24,6 +24,7 @@ import ui.editors.NotificationManager;
 import ui.editors.char.CharacterEditorAnimPanel;
 import ui.editors.char.CharacterEditorEditPanel;
 import ui.editors.char.CharacterEditorToolPanel;
+import ui.game.HealthBar;
 import util.DiscordClient;
 import util.bindable.Bindable;
 import util.editors.char.CharacterEditorActionManager;
@@ -42,6 +43,7 @@ class CharacterEditorState extends FNFState
 	public var actionManager:CharacterEditorActionManager;
 	public var notificationManager:NotificationManager;
 	public var guideChar:Character;
+	public var healthBar:HealthBar;
 
 	var camPos:FlxObject;
 	var animText:FlxText;
@@ -125,6 +127,13 @@ class CharacterEditorState extends FNFState
 		animText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		animText.scrollFactor.set();
 		add(animText);
+
+		healthBar = new HealthBar(null, charInfo);
+		healthBar.x = (FlxG.width - healthBar.bar.width) / 2;
+		updateBar();
+		healthBar.bar.value = 50;
+		updateIcon();
+		add(healthBar);
 
 		uiGroup = new FlxTypedGroup();
 
@@ -254,6 +263,7 @@ class CharacterEditorState extends FNFState
 					editPanel.updatePositionOffset();
 				case 2:
 					updateCamIndicator();
+					editPanel.updateCameraOffset();
 				default:
 					setAnimOffset(char.getCurAnim(), offset[0], offset[1]);
 			}
@@ -533,6 +543,21 @@ class CharacterEditorState extends FNFState
 		char.updateSize();
 		ghostChar.updateSize();
 		updateCamIndicator();
+	}
+
+	public function updateBar()
+	{
+		var healthColor = CoolUtil.getColorFromArray(charInfo.healthColors);
+		healthBar.bar.createFilledBar(healthColor.getDarkened(0.5), healthColor);
+	}
+
+	public function updateIcon()
+	{
+		var iconName = charInfo.healthIcon;
+		if (!iconName.contains(':'))
+			iconName = charInfo.mod + ':' + iconName;
+		healthBar.icon.icon = iconName;
+		healthBar.updateIconPos();
 	}
 }
 

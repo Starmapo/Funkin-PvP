@@ -14,6 +14,7 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var CHANGE_ANTIALIASING:String = 'change-antialiasing';
 	public static inline var CHANGE_POSITION_OFFSET:String = 'change-position-offset';
 	public static inline var CHANGE_CAMERA_OFFSET:String = 'change-camera-offset';
+	public static inline var CHANGE_ICON:String = 'change-icon';
 	public static inline var ADD_ANIM:String = 'add-anim';
 	public static inline var REMOVE_ANIM:String = 'remove-anim';
 	public static inline var CHANGE_ANIM_NAME:String = 'change-anim-name';
@@ -296,6 +297,43 @@ class ActionChangeCameraOffset implements IAction
 		state = null;
 		offset = null;
 		lastOffset = null;
+	}
+}
+
+class ActionChangeIcon implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ICON;
+
+	var state:CharacterEditorState;
+	var icon:String;
+	var lastIcon:String;
+
+	public function new(state:CharacterEditorState, icon:String)
+	{
+		this.state = state;
+		this.icon = icon;
+	}
+
+	public function perform()
+	{
+		lastIcon = state.charInfo.healthIcon;
+		state.charInfo.healthIcon = icon;
+
+		state.updateIcon();
+
+		state.actionManager.triggerEvent(type, {
+			icon: icon
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeIcon(state, lastIcon).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
 	}
 }
 

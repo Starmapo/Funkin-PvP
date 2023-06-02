@@ -29,6 +29,9 @@ class CharacterEditorEditPanel extends EditorPanel
 	var antialiasingCheckbox:EditorCheckbox;
 	var positionXStepper:EditorNumericStepper;
 	var positionYStepper:EditorNumericStepper;
+	var cameraXStepper:EditorNumericStepper;
+	var cameraYStepper:EditorNumericStepper;
+	var healthIconInput:EditorInputText;
 	var spacing:Int = 4;
 	var inputSpacing = 125;
 	var inputWidth = 250;
@@ -283,6 +286,33 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(positionYStepper);
 
+		var cameraLabel = new EditorText(positionLabel.x, positionLabel.y + positionLabel.height + spacing, 0, 'Camera Offset:');
+		tab.add(cameraLabel);
+
+		cameraXStepper = new EditorNumericStepper(cameraLabel.x + inputSpacing, cameraLabel.y - 1, 1, 0, null, null, 2);
+		cameraXStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangeCameraOffset(state, [value, state.charInfo.cameraOffset[1]], state.charInfo.cameraOffset.copy()));
+		});
+		tab.add(cameraXStepper);
+
+		cameraYStepper = new EditorNumericStepper(cameraXStepper.x + cameraXStepper.width + spacing, cameraXStepper.y, 1, 0, null, null, 2);
+		cameraYStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangeCameraOffset(state, [state.charInfo.cameraOffset[0], value], state.charInfo.cameraOffset.copy()));
+		});
+		tab.add(cameraYStepper);
+
+		var healthIconLabel = new EditorText(cameraLabel.x, cameraLabel.y + cameraLabel.height + spacing, 0, 'Health Icon:');
+		tab.add(healthIconLabel);
+
+		healthIconInput = new EditorInputText(healthIconLabel.x + inputSpacing, healthIconLabel.y - 1, inputWidth, state.charInfo.healthIcon);
+		healthIconInput.textChanged.add(function(text, lastText)
+		{
+			state.actionManager.perform(new ActionChangeIcon(state, text));
+		});
+		tab.add(healthIconInput);
+
 		addGroup(tab);
 	}
 
@@ -409,6 +439,8 @@ class CharacterEditorEditPanel extends EditorPanel
 		updateScale();
 		updateAntialiasing();
 		updatePositionOffset();
+		updateCameraOffset();
+		updateHealthIcon();
 
 		updateCurAnim();
 	}
@@ -444,6 +476,17 @@ class CharacterEditorEditPanel extends EditorPanel
 		positionYStepper.value = state.charInfo.positionOffset[1];
 	}
 
+	public function updateCameraOffset()
+	{
+		cameraXStepper.value = state.charInfo.cameraOffset[0];
+		cameraYStepper.value = state.charInfo.cameraOffset[1];
+	}
+
+	function updateHealthIcon()
+	{
+		healthIconInput.text = state.charInfo.healthIcon;
+	}
+
 	function onEvent(event:String, params:Dynamic)
 	{
 		switch (event)
@@ -460,6 +503,10 @@ class CharacterEditorEditPanel extends EditorPanel
 				updateAntialiasing();
 			case CharacterEditorActionManager.CHANGE_POSITION_OFFSET:
 				updatePositionOffset();
+			case CharacterEditorActionManager.CHANGE_CAMERA_OFFSET:
+				updateCameraOffset();
+			case CharacterEditorActionManager.CHANGE_ICON:
+				updateHealthIcon();
 			case CharacterEditorActionManager.CHANGE_ANIM_NAME:
 				if (curAnim == params.anim)
 					updateName();

@@ -24,28 +24,30 @@ class HealthBar extends FlxSpriteGroup
 	var scoreProcessor:ScoreProcessor;
 	var right:Bool;
 
-	public function new(scoreProcessor:ScoreProcessor, charInfo:CharacterInfo)
+	public function new(?scoreProcessor:ScoreProcessor, charInfo:CharacterInfo)
 	{
 		super();
 		this.scoreProcessor = scoreProcessor;
-		var player = scoreProcessor.player;
-		var config = Settings.playerConfigs[player];
+		var player = scoreProcessor != null ? scoreProcessor.player : 0;
+		var config = scoreProcessor != null ? Settings.playerConfigs[player] : null;
 
 		var barWidth = Std.int((FlxG.width / 2) - 200);
 		var barHeight = 20;
 
 		right = (player > 0);
-		setPosition((FlxG.width / 2 - barWidth) / 2 + (right ? FlxG.width / 2 : 0), (config.downScroll ? 100 - barHeight : FlxG.height - 100));
+		setPosition((FlxG.width / 2 - barWidth) / 2 + (right ? FlxG.width / 2 : 0),
+			(config != null && config.downScroll ? 100 - barHeight : FlxG.height - 100));
 
 		bg = new FlxSprite().makeGraphic(barWidth, barHeight, FlxColor.BLACK);
 		add(bg);
 
 		bar = new FlxBar(4, 4, right ? RIGHT_TO_LEFT : LEFT_TO_RIGHT, Std.int(bg.width) - 8, Std.int(bg.height) - 8, scoreProcessor, 'health');
-		if (Settings.healthBarColors)
+		if (Settings.healthBarColors || scoreProcessor == null)
 		{
 			var healthColor = CoolUtil.getColorFromArray(charInfo.healthColors);
 			bar.createFilledBar(healthColor.getDarkened(0.5), healthColor);
-		} else
+		}
+		else
 			bar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		bar.numDivisions = Std.int(bar.width);
 		add(bar);
@@ -57,7 +59,9 @@ class HealthBar extends FlxSpriteGroup
 		icon.flipX = right;
 		add(icon);
 
-		alpha = Settings.healthBarAlpha;
+		if (scoreProcessor != null)
+			alpha = Settings.healthBarAlpha;
+		scrollFactor.set();
 	}
 
 	override function update(elapsed:Float)
