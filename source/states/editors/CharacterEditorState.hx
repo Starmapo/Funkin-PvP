@@ -251,6 +251,7 @@ class CharacterEditorState extends FNFState
 			{
 				case 1:
 					updatePosition();
+					editPanel.updatePositionOffset();
 				case 2:
 					updateCamIndicator();
 				default:
@@ -262,9 +263,9 @@ class CharacterEditorState extends FNFState
 				switch (dragging)
 				{
 					case 1:
-						actionManager.perform(new ActionChangePositionOffset(this, charInfo, offset.copy(), dragPositionOffset));
+						actionManager.perform(new ActionChangePositionOffset(this, offset.copy(), dragPositionOffset));
 					case 2:
-						actionManager.perform(new ActionChangeCameraOffset(this, charInfo, offset.copy(), dragPositionOffset));
+						actionManager.perform(new ActionChangeCameraOffset(this, offset.copy(), dragPositionOffset));
 					default:
 						actionManager.perform(new ActionChangeAnimOffset(this, char.getCurAnim(), offset.copy(), dragPositionOffset));
 				}
@@ -394,6 +395,8 @@ class CharacterEditorState extends FNFState
 		charInfo.positionOffset[1] += yChange;
 
 		updatePosition();
+
+		editPanel.updatePositionOffset();
 
 		timeSinceLastChange = 0;
 	}

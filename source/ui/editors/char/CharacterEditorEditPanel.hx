@@ -1,6 +1,5 @@
 package ui.editors.char;
 
-import data.char.CharacterInfo.AnimInfo;
 import data.char.CharacterInfo;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
@@ -24,6 +23,12 @@ class CharacterEditorEditPanel extends EditorPanel
 	var nextAnimInput:EditorInputText;
 	var curAnim:AnimInfo;
 	var imageInput:EditorInputText;
+	var danceAnimsInput:EditorInputText;
+	var flipXCheckbox:EditorCheckbox;
+	var scaleStepper:EditorNumericStepper;
+	var antialiasingCheckbox:EditorCheckbox;
+	var positionXStepper:EditorNumericStepper;
+	var positionYStepper:EditorNumericStepper;
 	var spacing:Int = 4;
 	var inputSpacing = 125;
 	var inputWidth = 250;
@@ -71,6 +76,12 @@ class CharacterEditorEditPanel extends EditorPanel
 		offsetYStepper = null;
 		nextAnimInput = null;
 		imageInput = null;
+		danceAnimsInput = null;
+		flipXCheckbox = null;
+		scaleStepper = null;
+		antialiasingCheckbox = null;
+		positionXStepper = null;
+		positionYStepper = null;
 		curAnim = null;
 	}
 
@@ -207,6 +218,71 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(imageInput);
 
+		var danceAnimsLabel = new EditorText(imageLabel.x, imageLabel.y + imageLabel.height + spacing, 0, 'Dance Animations:');
+		tab.add(danceAnimsLabel);
+
+		danceAnimsInput = new EditorInputText(danceAnimsLabel.x + inputSpacing, danceAnimsLabel.y - 1, inputWidth, state.charInfo.danceAnims.join(','));
+		danceAnimsInput.textChanged.add(function(text, lastText)
+		{
+			var anims = text.split(',');
+			if (anims.length < 1 || anims[0].length < 1)
+			{
+				danceAnimsInput.text = lastText;
+				state.notificationManager.showNotification('You must have atleast 1 dance animation!', ERROR);
+				return;
+			}
+
+			state.actionManager.perform(new ActionChangeDanceAnims(state, anims));
+		});
+		tab.add(danceAnimsInput);
+
+		var flipXLabel = new EditorText(danceAnimsLabel.x, danceAnimsLabel.y + danceAnimsLabel.height + spacing, 0, 'Flipped Horizontally:');
+		tab.add(flipXLabel);
+
+		flipXCheckbox = new EditorCheckbox(flipXLabel.x + inputSpacing, flipXLabel.y - 1, '', 0, function()
+		{
+			state.actionManager.perform(new ActionChangeFlipX(state, flipXCheckbox.checked));
+		});
+		tab.add(flipXCheckbox);
+
+		var scaleLabel = new EditorText(flipXLabel.x, flipXLabel.y + flipXLabel.height + spacing, 0, 'Scale:');
+		tab.add(scaleLabel);
+
+		scaleStepper = new EditorNumericStepper(scaleLabel.x + inputSpacing, scaleLabel.y - 1, 0.1, 1, 0.01, 100, 2);
+		scaleStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangeScale(state, value));
+		});
+		tab.add(scaleStepper);
+
+		var antialiasingLabel = new EditorText(scaleLabel.x, scaleLabel.y + scaleLabel.height + spacing, 0, 'Antialiasing:');
+		tab.add(antialiasingLabel);
+
+		antialiasingCheckbox = new EditorCheckbox(antialiasingLabel.x + inputSpacing, antialiasingLabel.y - 1, '', 0, function()
+		{
+			state.actionManager.perform(new ActionChangeAntialiasing(state, antialiasingCheckbox.checked));
+		});
+		tab.add(antialiasingCheckbox);
+
+		var positionLabel = new EditorText(antialiasingLabel.x, antialiasingLabel.y + antialiasingLabel.height + spacing, 0, 'Position Offset:');
+		tab.add(positionLabel);
+
+		positionXStepper = new EditorNumericStepper(positionLabel.x + inputSpacing, positionLabel.y - 1, 1, 0, null, null, 2);
+		positionXStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangePositionOffset(state, [value, state.charInfo.positionOffset[1]],
+				state.charInfo.positionOffset.copy()));
+		});
+		tab.add(positionXStepper);
+
+		positionYStepper = new EditorNumericStepper(positionXStepper.x + positionXStepper.width + spacing, positionXStepper.y, 1, 0, null, null, 2);
+		positionYStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangePositionOffset(state, [state.charInfo.positionOffset[0], value],
+				state.charInfo.positionOffset.copy()));
+		});
+		tab.add(positionYStepper);
+
 		addGroup(tab);
 	}
 
@@ -328,6 +404,11 @@ class CharacterEditorEditPanel extends EditorPanel
 	public function updateChar()
 	{
 		updateImage();
+		updateDanceAnims();
+		updateFlipX();
+		updateScale();
+		updateAntialiasing();
+		updatePositionOffset();
 
 		updateCurAnim();
 	}
@@ -337,12 +418,48 @@ class CharacterEditorEditPanel extends EditorPanel
 		imageInput.text = state.charInfo.image;
 	}
 
+	function updateDanceAnims()
+	{
+		danceAnimsInput.text = state.charInfo.danceAnims.join(',');
+	}
+
+	function updateFlipX()
+	{
+		flipXCheckbox.checked = state.charInfo.flipX;
+	}
+
+	function updateScale()
+	{
+		scaleStepper.value = state.charInfo.scale;
+	}
+
+	function updateAntialiasing()
+	{
+		antialiasingCheckbox.checked = state.charInfo.antialiasing;
+	}
+
+	public function updatePositionOffset()
+	{
+		positionXStepper.value = state.charInfo.positionOffset[0];
+		positionYStepper.value = state.charInfo.positionOffset[1];
+	}
+
 	function onEvent(event:String, params:Dynamic)
 	{
 		switch (event)
 		{
 			case CharacterEditorActionManager.CHANGE_IMAGE:
 				updateImage();
+			case CharacterEditorActionManager.CHANGE_DANCE_ANIMS:
+				updateDanceAnims();
+			case CharacterEditorActionManager.CHANGE_FLIP_X:
+				updateFlipX();
+			case CharacterEditorActionManager.CHANGE_SCALE:
+				updateScale();
+			case CharacterEditorActionManager.CHANGE_ANTIALIASING:
+				updateAntialiasing();
+			case CharacterEditorActionManager.CHANGE_POSITION_OFFSET:
+				updatePositionOffset();
 			case CharacterEditorActionManager.CHANGE_ANIM_NAME:
 				if (curAnim == params.anim)
 					updateName();

@@ -8,6 +8,12 @@ import util.editors.actions.IAction;
 class CharacterEditorActionManager extends ActionManager
 {
 	public static inline var CHANGE_IMAGE:String = 'change-image';
+	public static inline var CHANGE_DANCE_ANIMS:String = 'change-dance-anims';
+	public static inline var CHANGE_FLIP_X:String = 'change-flip-x';
+	public static inline var CHANGE_SCALE:String = 'change-scale';
+	public static inline var CHANGE_ANTIALIASING:String = 'change-antialiasing';
+	public static inline var CHANGE_POSITION_OFFSET:String = 'change-position-offset';
+	public static inline var CHANGE_CAMERA_OFFSET:String = 'change-camera-offset';
 	public static inline var ADD_ANIM:String = 'add-anim';
 	public static inline var REMOVE_ANIM:String = 'remove-anim';
 	public static inline var CHANGE_ANIM_NAME:String = 'change-anim-name';
@@ -17,8 +23,6 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var CHANGE_ANIM_LOOP:String = 'change-anim-loop';
 	public static inline var CHANGE_ANIM_OFFSET:String = 'change-anim-offset';
 	public static inline var CHANGE_ANIM_NEXT:String = 'change-anim-next';
-	public static inline var CHANGE_POSITION_OFFSET:String = 'change-position-offset';
-	public static inline var CHANGE_CAMERA_OFFSET:String = 'change-camera-offset';
 }
 
 class ActionChangeImage implements IAction
@@ -57,6 +61,241 @@ class ActionChangeImage implements IAction
 	public function destroy()
 	{
 		state = null;
+	}
+}
+
+class ActionChangeDanceAnims implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_DANCE_ANIMS;
+
+	var state:CharacterEditorState;
+	var danceAnims:Array<String>;
+	var lastAnims:Array<String>;
+
+	public function new(state:CharacterEditorState, danceAnims:Array<String>)
+	{
+		this.state = state;
+		this.danceAnims = danceAnims;
+	}
+
+	public function perform()
+	{
+		// is this too much copying???
+		lastAnims = state.charInfo.danceAnims.copy();
+		state.charInfo.danceAnims = danceAnims.copy();
+
+		state.char.danceAnims = danceAnims.copy();
+		state.ghostChar.danceAnims = danceAnims.copy();
+		state.updateCharSize();
+
+		state.actionManager.triggerEvent(type, {
+			danceAnims: danceAnims
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeDanceAnims(state, lastAnims).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		danceAnims = null;
+		lastAnims = null;
+	}
+}
+
+class ActionChangeFlipX implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_FLIP_X;
+
+	var state:CharacterEditorState;
+	var flipX:Bool;
+	var lastFlipX:Bool;
+
+	public function new(state:CharacterEditorState, flipX:Bool)
+	{
+		this.state = state;
+		this.flipX = flipX;
+	}
+
+	public function perform()
+	{
+		lastFlipX = state.charInfo.flipX;
+		state.charInfo.flipX = flipX;
+
+		state.char.flipX = state.ghostChar.flipX = flipX;
+
+		state.actionManager.triggerEvent(type, {
+			flipX: flipX
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeFlipX(state, lastFlipX).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangeScale implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_SCALE;
+
+	var state:CharacterEditorState;
+	var scale:Float;
+	var lastScale:Float;
+
+	public function new(state:CharacterEditorState, scale:Float)
+	{
+		this.state = state;
+		this.scale = scale;
+	}
+
+	public function perform()
+	{
+		lastScale = state.charInfo.scale;
+		state.charInfo.scale = scale;
+
+		state.char.scale.set(scale, scale);
+		state.ghostChar.scale.copyFrom(state.char.scale);
+		state.updateCharSize();
+
+		state.actionManager.triggerEvent(type, {
+			scale: scale
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeScale(state, lastScale).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangeAntialiasing implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ANTIALIASING;
+
+	var state:CharacterEditorState;
+	var antialiasing:Bool;
+	var lastAntialiasing:Bool;
+
+	public function new(state:CharacterEditorState, antialiasing:Bool)
+	{
+		this.state = state;
+		this.antialiasing = antialiasing;
+	}
+
+	public function perform()
+	{
+		lastAntialiasing = state.charInfo.antialiasing;
+		state.charInfo.antialiasing = antialiasing;
+
+		state.char.antialiasing = state.ghostChar.antialiasing = antialiasing;
+
+		state.actionManager.triggerEvent(type, {
+			antialiasing: antialiasing
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeAntialiasing(state, lastAntialiasing).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangePositionOffset implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_POSITION_OFFSET;
+
+	var state:CharacterEditorState;
+	var offset:Array<Float>;
+	var lastOffset:Array<Float>;
+
+	public function new(state:CharacterEditorState, offset:Array<Float>, lastOffset:Array<Float>)
+	{
+		this.state = state;
+		this.offset = offset;
+		this.lastOffset = lastOffset;
+	}
+
+	public function perform()
+	{
+		state.charInfo.positionOffset[0] = offset[0];
+		state.charInfo.positionOffset[1] = offset[1];
+
+		state.updatePosition();
+
+		state.actionManager.triggerEvent(type, {
+			offset: offset
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangePositionOffset(state, lastOffset, offset).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		offset = null;
+		lastOffset = null;
+	}
+}
+
+class ActionChangeCameraOffset implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_CAMERA_OFFSET;
+
+	var state:CharacterEditorState;
+	var offset:Array<Float>;
+	var lastOffset:Array<Float>;
+
+	public function new(state:CharacterEditorState, offset:Array<Float>, lastOffset:Array<Float>)
+	{
+		this.state = state;
+		this.offset = offset;
+		this.lastOffset = lastOffset;
+	}
+
+	public function perform()
+	{
+		state.charInfo.cameraOffset[0] = offset[0];
+		state.charInfo.cameraOffset[1] = offset[1];
+
+		state.updateCamIndicator();
+
+		state.actionManager.triggerEvent(type, {
+			offset: offset
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeCameraOffset(state, lastOffset, offset).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		offset = null;
+		lastOffset = null;
 	}
 }
 
@@ -439,91 +678,5 @@ class ActionChangeAnimNext implements IAction
 	{
 		state = null;
 		anim = null;
-	}
-}
-
-class ActionChangePositionOffset implements IAction
-{
-	public var type = CharacterEditorActionManager.CHANGE_POSITION_OFFSET;
-
-	var state:CharacterEditorState;
-	var info:CharacterInfo;
-	var offset:Array<Float>;
-	var lastOffset:Array<Float>;
-
-	public function new(state:CharacterEditorState, info:CharacterInfo, offset:Array<Float>, lastOffset:Array<Float>)
-	{
-		this.state = state;
-		this.info = info;
-		this.offset = offset;
-		this.lastOffset = lastOffset;
-	}
-
-	public function perform()
-	{
-		info.positionOffset[0] = offset[0];
-		info.positionOffset[1] = offset[1];
-
-		state.updatePosition();
-
-		state.actionManager.triggerEvent(type, {
-			offset: offset
-		});
-	}
-
-	public function undo()
-	{
-		new ActionChangePositionOffset(state, info, lastOffset, offset).perform();
-	}
-
-	public function destroy()
-	{
-		state = null;
-		info = null;
-		offset = null;
-		lastOffset = null;
-	}
-}
-
-class ActionChangeCameraOffset implements IAction
-{
-	public var type = CharacterEditorActionManager.CHANGE_CAMERA_OFFSET;
-
-	var state:CharacterEditorState;
-	var info:CharacterInfo;
-	var offset:Array<Float>;
-	var lastOffset:Array<Float>;
-
-	public function new(state:CharacterEditorState, info:CharacterInfo, offset:Array<Float>, lastOffset:Array<Float>)
-	{
-		this.state = state;
-		this.info = info;
-		this.offset = offset;
-		this.lastOffset = lastOffset;
-	}
-
-	public function perform()
-	{
-		info.cameraOffset[0] = offset[0];
-		info.cameraOffset[1] = offset[1];
-
-		state.updateCamIndicator();
-
-		state.actionManager.triggerEvent(type, {
-			offset: offset
-		});
-	}
-
-	public function undo()
-	{
-		new ActionChangeCameraOffset(state, info, lastOffset, offset).perform();
-	}
-
-	public function destroy()
-	{
-		state = null;
-		info = null;
-		offset = null;
-		lastOffset = null;
 	}
 }
