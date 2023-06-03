@@ -20,6 +20,8 @@ class CharacterEditorEditPanel extends EditorPanel
 	var indicesInput:EditorInputText;
 	var fpsStepper:EditorNumericStepper;
 	var loopCheckbox:EditorCheckbox;
+	var animFlipXCheckbox:EditorCheckbox;
+	var animFlipYCheckbox:EditorCheckbox;
 	var offsetXStepper:EditorNumericStepper;
 	var offsetYStepper:EditorNumericStepper;
 	var nextAnimInput:EditorInputText;
@@ -81,6 +83,8 @@ class CharacterEditorEditPanel extends EditorPanel
 		indicesInput = null;
 		fpsStepper = null;
 		loopCheckbox = null;
+		animFlipXCheckbox = null;
+		animFlipYCheckbox = null;
 		offsetXStepper = null;
 		offsetYStepper = null;
 		nextAnimInput = null;
@@ -91,6 +95,12 @@ class CharacterEditorEditPanel extends EditorPanel
 		antialiasingCheckbox = null;
 		positionXStepper = null;
 		positionYStepper = null;
+		cameraXStepper = null;
+		cameraYStepper = null;
+		healthIconInput = null;
+		loopAnimsCheckbox = null;
+		loopPointStepper = null;
+		flipAllCheckbox = null;
 		curAnim = null;
 		healthColorPicker = FlxDestroyUtil.destroy(healthColorPicker);
 	}
@@ -181,7 +191,27 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(loopCheckbox);
 
-		var offsetLabel = new EditorText(loopLabel.x, loopLabel.y + loopLabel.height + spacing, 0, 'Offset:');
+		var flipXLabel = new EditorText(loopLabel.x, loopLabel.y + loopLabel.height + spacing, 0, 'Flip X:');
+		tab.add(flipXLabel);
+
+		animFlipXCheckbox = new EditorCheckbox(flipXLabel.x + inputSpacing, flipXLabel.y - 1, '', 0, function()
+		{
+			if (curAnim != null)
+				state.actionManager.perform(new ActionChangeAnimFlipX(state, curAnim, animFlipXCheckbox.checked));
+		});
+		tab.add(animFlipXCheckbox);
+
+		var flipYLabel = new EditorText(flipXLabel.x, flipXLabel.y + flipXLabel.height + spacing, 0, 'Flip Y:');
+		tab.add(flipYLabel);
+
+		animFlipYCheckbox = new EditorCheckbox(flipYLabel.x + inputSpacing, flipYLabel.y - 1, '', 0, function()
+		{
+			if (curAnim != null)
+				state.actionManager.perform(new ActionChangeAnimFlipY(state, curAnim, animFlipYCheckbox.checked));
+		});
+		tab.add(animFlipYCheckbox);
+
+		var offsetLabel = new EditorText(flipYLabel.x, flipYLabel.y + flipYLabel.height + spacing, 0, 'Offset:');
 		tab.add(offsetLabel);
 
 		offsetXStepper = new EditorNumericStepper(offsetLabel.x + inputSpacing, offsetLabel.y - 1, 1, 0, null, null, 2);
@@ -437,6 +467,8 @@ class CharacterEditorEditPanel extends EditorPanel
 		updateIndices();
 		updateFPS();
 		updateLoop();
+		updateAnimFlipX();
+		updateAnimFlipY();
 		updateOffset();
 		updateNextAnim();
 	}
@@ -464,6 +496,16 @@ class CharacterEditorEditPanel extends EditorPanel
 	function updateLoop()
 	{
 		loopCheckbox.checked = curAnim != null ? curAnim.loop : false;
+	}
+
+	function updateAnimFlipX()
+	{
+		animFlipXCheckbox.checked = curAnim != null ? curAnim.flipX : false;
+	}
+
+	function updateAnimFlipY()
+	{
+		animFlipYCheckbox.checked = curAnim != null ? curAnim.flipY : false;
 	}
 
 	public function updateOffset()
@@ -569,6 +611,8 @@ class CharacterEditorEditPanel extends EditorPanel
 				updateHealthColor();
 			case CharacterEditorActionManager.CHANGE_LOOP_ANIMS:
 				updateLoopAnims();
+			case CharacterEditorActionManager.REMOVE_ANIM:
+				updateCurAnim();
 			case CharacterEditorActionManager.CHANGE_ANIM_NAME:
 				if (curAnim == params.anim)
 					updateName();
@@ -584,6 +628,12 @@ class CharacterEditorEditPanel extends EditorPanel
 			case CharacterEditorActionManager.CHANGE_ANIM_LOOP:
 				if (curAnim == params.anim)
 					updateLoop();
+			case CharacterEditorActionManager.CHANGE_ANIM_FLIP_X:
+				if (curAnim == params.anim)
+					updateAnimFlipX();
+			case CharacterEditorActionManager.CHANGE_ANIM_FLIP_Y:
+				if (curAnim == params.anim)
+					updateAnimFlipY();
 			case CharacterEditorActionManager.CHANGE_ANIM_NEXT:
 				if (curAnim == params.anim)
 					updateNextAnim();

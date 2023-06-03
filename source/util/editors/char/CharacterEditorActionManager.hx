@@ -27,6 +27,8 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var CHANGE_ANIM_INDICES:String = 'change-anim-indices';
 	public static inline var CHANGE_ANIM_FPS:String = 'change-anim-fps';
 	public static inline var CHANGE_ANIM_LOOP:String = 'change-anim-loop';
+	public static inline var CHANGE_ANIM_FLIP_X:String = 'change-anim-flip-x';
+	public static inline var CHANGE_ANIM_FLIP_Y:String = 'change-anim-flip-y';
 	public static inline var CHANGE_ANIM_OFFSET:String = 'change-anim-offset';
 	public static inline var CHANGE_ANIM_NEXT:String = 'change-anim-next';
 }
@@ -537,9 +539,9 @@ class ActionRemoveAnim implements IAction
 		state.charInfo.anims.remove(anim);
 
 		if (state.char.animation.name == anim.name)
-			state.changeAnim(state.charInfo.danceAnims[0]);
+			state.changeAnim(state.charInfo.anims[0].name);
 		if (state.ghostChar.animation.name == anim.name)
-			state.ghostChar.animation.play(state.charInfo.danceAnims[0]);
+			state.ghostChar.animation.play(state.charInfo.anims[0].name);
 		state.char.animation.remove(anim.name);
 		state.ghostChar.animation.remove(anim.name);
 
@@ -775,6 +777,96 @@ class ActionChangeAnimLoop implements IAction
 	public function undo()
 	{
 		new ActionChangeAnimLoop(state, anim, lastLoop).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
+	}
+}
+
+class ActionChangeAnimFlipX implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ANIM_FLIP_X;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+	var flip:Bool;
+	var lastFlip:Bool;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo, flip:Bool)
+	{
+		this.state = state;
+		this.anim = anim;
+		this.flip = flip;
+	}
+
+	public function perform()
+	{
+		lastFlip = anim.flipX;
+		anim.flipX = flip;
+
+		if (state.char.animation.exists(anim.name))
+		{
+			state.char.animation.getByName(anim.name).flipX = flip;
+			state.ghostChar.animation.getByName(anim.name).flipX = flip;
+		}
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim,
+			lastFlip: lastFlip
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeAnimFlipX(state, anim, lastFlip).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+		anim = null;
+	}
+}
+
+class ActionChangeAnimFlipY implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_ANIM_FLIP_Y;
+
+	var state:CharacterEditorState;
+	var anim:AnimInfo;
+	var flip:Bool;
+	var lastFlip:Bool;
+
+	public function new(state:CharacterEditorState, anim:AnimInfo, flip:Bool)
+	{
+		this.state = state;
+		this.anim = anim;
+		this.flip = flip;
+	}
+
+	public function perform()
+	{
+		lastFlip = anim.flipY;
+		anim.flipY = flip;
+
+		if (state.char.animation.exists(anim.name))
+		{
+			state.char.animation.getByName(anim.name).flipY = flip;
+			state.ghostChar.animation.getByName(anim.name).flipY = flip;
+		}
+
+		state.actionManager.triggerEvent(type, {
+			anim: anim,
+			lastFlip: lastFlip
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeAnimFlipY(state, anim, lastFlip).perform();
 	}
 
 	public function destroy()

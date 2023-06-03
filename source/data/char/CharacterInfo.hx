@@ -224,6 +224,8 @@ class AnimInfo extends JsonObject
 	public var indices:Array<Int>;
 	public var fps:Float;
 	public var loop:Bool;
+	public var flipX:Bool;
+	public var flipY:Bool;
 	public var offset:Array<Float>;
 	public var nextAnim:String;
 
@@ -234,6 +236,8 @@ class AnimInfo extends JsonObject
 		indices = readIntArray(data.indices, [], null, null, 0);
 		fps = readFloat(data.fps, 24, 0, 1000, 2);
 		loop = readBool(data.loop);
+		flipX = readBool(data.flipX);
+		flipY = readBool(data.flipY);
 		offset = readFloatArray(data.offset, [0, 0], null, 2, null, null, 2);
 		nextAnim = readString(data.nextAnim);
 	}
