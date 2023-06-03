@@ -1,5 +1,6 @@
 package ui.editors;
 
+import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
@@ -27,7 +28,8 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 	var buttonMinus:FlxUITypedButton<FlxSprite>;
 	var _value:Float = Math.NaN;
 
-	public function new(x:Float = 0, y:Float = 0, stepSize:Float = 1, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int)
+	public function new(x:Float = 0, y:Float = 0, stepSize:Float = 1, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int,
+			?textFieldCamera:FlxCamera)
 	{
 		super(x, y);
 		this.stepSize = stepSize;
@@ -36,7 +38,7 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 		this.max = max;
 		this.decimals = decimals;
 
-		inputText = new EditorInputText(0, 0, 40);
+		inputText = new EditorInputText(0, 0, 40, null, 8, true, textFieldCamera);
 		inputText.filterMode = ONLY_NUMERIC;
 		inputText.textChanged.add(onTextChanged);
 		add(inputText);
@@ -119,14 +121,11 @@ class EditorNumericStepper extends FlxUIGroup implements IFlxUIClickable
 
 	function set_value(newValue:Float)
 	{
-		if (_value != newValue)
-		{
-			if (decimals != null && decimals >= 0)
-				newValue = FlxMath.roundDecimal(newValue, decimals);
-			newValue = FlxMath.bound(newValue, min, max);
-			inputText.text = Std.string(newValue);
-			_value = newValue;
-		}
+		if (decimals != null && decimals >= 0)
+			newValue = FlxMath.roundDecimal(newValue, decimals);
+		newValue = FlxMath.bound(newValue, min, max);
+		inputText.text = Std.string(newValue);
+		_value = newValue;
 		return _value;
 	}
 

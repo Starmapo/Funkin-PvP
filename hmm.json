@@ -18,6 +18,13 @@
       "url": "https://github.com/Starmapo/flixel"
     },
     {
+      "name": "hxcpp",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/HaxeFoundation/hxcpp"
+    },
+    {
       "name": "hxcpp-debug-server",
       "type": "haxelib",
       "version": null

@@ -1,6 +1,7 @@
 package util.editors.char;
 
 import data.char.CharacterInfo;
+import flixel.util.FlxColor;
 import states.editors.CharacterEditorState;
 import util.editors.actions.ActionManager;
 import util.editors.actions.IAction;
@@ -15,6 +16,10 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var CHANGE_POSITION_OFFSET:String = 'change-position-offset';
 	public static inline var CHANGE_CAMERA_OFFSET:String = 'change-camera-offset';
 	public static inline var CHANGE_ICON:String = 'change-icon';
+	public static inline var CHANGE_HEALTH_COLOR:String = 'change-health-color';
+	public static inline var CHANGE_LOOP_ANIMS:String = 'change-loop-anims';
+	public static inline var CHANGE_LOOP_POINT:String = 'change-loop-point';
+	public static inline var CHANGE_FLIP_ALL:String = 'change-flip-all';
 	public static inline var ADD_ANIM:String = 'add-anim';
 	public static inline var REMOVE_ANIM:String = 'remove-anim';
 	public static inline var CHANGE_ANIM_NAME:String = 'change-anim-name';
@@ -329,6 +334,148 @@ class ActionChangeIcon implements IAction
 	public function undo()
 	{
 		new ActionChangeIcon(state, lastIcon).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangeHealthColor implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_HEALTH_COLOR;
+
+	var state:CharacterEditorState;
+	var color:FlxColor;
+	var lastColor:FlxColor;
+
+	public function new(state:CharacterEditorState, color:FlxColor)
+	{
+		this.state = state;
+		this.color = color;
+	}
+
+	public function perform()
+	{
+		lastColor = state.charInfo.healthColors;
+		state.charInfo.healthColors = color;
+
+		state.updateBar();
+
+		state.actionManager.triggerEvent(type, {
+			color: color
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeHealthColor(state, lastColor).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangeLoopAnims implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_LOOP_ANIMS;
+
+	var state:CharacterEditorState;
+	var loopAnims:Bool;
+	var lastLoopAnims:Bool;
+
+	public function new(state:CharacterEditorState, loopAnims:Bool)
+	{
+		this.state = state;
+		this.loopAnims = loopAnims;
+	}
+
+	public function perform()
+	{
+		lastLoopAnims = state.charInfo.loopAnimsOnHold;
+		state.charInfo.loopAnimsOnHold = loopAnims;
+
+		state.actionManager.triggerEvent(type, {
+			loopAnims: loopAnims
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeLoopAnims(state, lastLoopAnims).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangeLoopPoint implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_LOOP_POINT;
+
+	var state:CharacterEditorState;
+	var loopPoint:Int;
+	var lastLoopPoint:Int;
+
+	public function new(state:CharacterEditorState, loopPoint:Int)
+	{
+		this.state = state;
+		this.loopPoint = loopPoint;
+	}
+
+	public function perform()
+	{
+		lastLoopPoint = state.charInfo.holdLoopPoint;
+		state.charInfo.holdLoopPoint = loopPoint;
+
+		state.actionManager.triggerEvent(type, {
+			loopPoint: loopPoint
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeLoopPoint(state, lastLoopPoint).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangeFlipAll implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_FLIP_ALL;
+
+	var state:CharacterEditorState;
+	var flipAll:Bool;
+	var lastFlipAll:Bool;
+
+	public function new(state:CharacterEditorState, flipAll:Bool)
+	{
+		this.state = state;
+		this.flipAll = flipAll;
+	}
+
+	public function perform()
+	{
+		lastFlipAll = state.charInfo.flipAll;
+		state.charInfo.flipAll = flipAll;
+
+		state.actionManager.triggerEvent(type, {
+			flipAll: flipAll
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeFlipAll(state, lastFlipAll).perform();
 	}
 
 	public function destroy()

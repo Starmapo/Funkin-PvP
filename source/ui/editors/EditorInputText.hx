@@ -220,9 +220,13 @@ class EditorInputText extends FlxSpriteGroup
 
 class EditorInputTextField extends FlxText
 {
+	var textFieldCamera:FlxCamera;
+
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, textFieldCamera:FlxCamera)
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
+		this.textFieldCamera = textFieldCamera;
+
 		scrollFactor.set();
 		textField.text = text;
 		textField.selectable = true;
@@ -267,6 +271,8 @@ class EditorInputTextField extends FlxText
 		textField.x -= 1;
 		textField.y -= 1;
 		#end
+
+		textField.visible = visible && textFieldCamera.visible;
 	}
 
 	function onGameResized(_, _)
@@ -284,7 +290,7 @@ class EditorInputTextField extends FlxText
 	override function set_visible(value:Bool)
 	{
 		if (textField != null)
-			textField.visible = value;
+			textField.visible = value && textFieldCamera.visible;
 		return super.set_visible(value);
 	}
 

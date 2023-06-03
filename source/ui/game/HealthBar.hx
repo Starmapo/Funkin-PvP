@@ -44,12 +44,12 @@ class HealthBar extends FlxSpriteGroup
 		bar = new FlxBar(4, 4, right ? RIGHT_TO_LEFT : LEFT_TO_RIGHT, Std.int(bg.width) - 8, Std.int(bg.height) - 8, scoreProcessor, 'health');
 		if (Settings.healthBarColors || scoreProcessor == null)
 		{
-			var healthColor = CoolUtil.getColorFromArray(charInfo.healthColors);
-			bar.createFilledBar(healthColor.getDarkened(0.5), healthColor);
+			bar.createFilledBar(charInfo.healthColors.getDarkened(0.5), charInfo.healthColors);
 		}
 		else
 			bar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		bar.numDivisions = Std.int(bar.width);
+		bar.updateBar();
 		add(bar);
 
 		var iconName = charInfo.healthIcon;

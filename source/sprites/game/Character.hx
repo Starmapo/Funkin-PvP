@@ -16,7 +16,7 @@ class Character extends DancingSprite
 	public var charInfo(default, set):CharacterInfo;
 	public var charPosX(default, set):Float;
 	public var charPosY(default, set):Float;
-	public var flipped(default, null):Bool;
+	public var charFlipX(default, set):Bool;
 	public var debugMode:Bool = false;
 	public var startWidth:Float;
 	public var startHeight:Float;
@@ -31,14 +31,14 @@ class Character extends DancingSprite
 	public var danceDisabled:Bool = false;
 	public var xDifference:Float = 0;
 
-	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, flipped:Bool = false, isGF:Bool = false)
+	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, charFlipX:Bool = false, isGF:Bool = false)
 	{
 		super(x, y);
 		if (charInfo == null)
 			charInfo = CharacterInfo.loadCharacterFromName('fnf:bf');
-		this.flipped = flipped;
 		this.isGF = isGF;
 		this.charInfo = charInfo;
+		this.charFlipX = charFlipX;
 		setCharacterPosition(x, y);
 	}
 
@@ -69,7 +69,7 @@ class Character extends DancingSprite
 	{
 		super.updateOffset();
 
-		if (flipped)
+		if (charFlipX)
 			offset.x -= (startWidth - width);
 	}
 
@@ -94,7 +94,7 @@ class Character extends DancingSprite
 
 	public function updatePosition()
 	{
-		if (flipped && !isGF)
+		if (charFlipX && !isGF)
 			x = charPosX - charInfo.positionOffset[0] + xDifference;
 		else
 			x = charPosX + charInfo.positionOffset[0];
@@ -312,32 +312,12 @@ class Character extends DancingSprite
 	public function initializeCharacter()
 	{
 		danceAnims = charInfo.danceAnims.copy();
-		flipX = charInfo.flipX;
-		if (flipped)
-			flipX = !flipX;
 		antialiasing = charInfo.antialiasing;
 		scale.set(charInfo.scale, charInfo.scale);
-
 		reloadImage();
 
 		state = Idle;
 		resetColor();
-
-		singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
-		if (flipped)
-		{
-			var left = singAnimations[0];
-			singAnimations[0] = singAnimations[3];
-			singAnimations[3] = left;
-
-			if (charInfo.flipAll)
-			{
-				var down = singAnimations[1];
-				singAnimations[1] = singAnimations[2];
-				singAnimations[2] = down;
-			}
-		}
-
 		danceBeats = danceAnims.length > 1 ? 1 : 2;
 	}
 
@@ -346,10 +326,16 @@ class Character extends DancingSprite
 		var nameInfo = CoolUtil.getNameInfo(charInfo.image, charInfo.mod);
 		frames = Paths.getSpritesheet(nameInfo.name, nameInfo.mod);
 
+		updateFlipped();
+	}
+
+	public function reloadAnimations()
+	{
+		animation.destroyAnimations();
 		for (anim in charInfo.anims)
 		{
 			var offset = anim.offset.copy();
-			if (flipped)
+			if (charFlipX)
 				offset = [-offset[0], offset[1]];
 
 			addAnim({
@@ -379,6 +365,9 @@ class Character extends DancingSprite
 	public function updateSize()
 	{
 		var lastAnim = animation.name;
+		var lastFrame = 0;
+		if (animation.curAnim != null)
+			lastFrame = animation.curAnim.curFrame;
 
 		playAnim(danceAnims[danceAnims.length - 1], true);
 		startWidth = width;
@@ -388,10 +377,37 @@ class Character extends DancingSprite
 		updatePosition();
 
 		if (lastAnim != null)
-			playAnim(lastAnim);
+			playAnim(lastAnim, false, false, lastFrame);
 	}
 
-	function setCamOffsetFromLane(lane:Int = -1)
+	public function updateFlipped()
+	{
+		reloadAnimations();
+
+		flipX = charInfo.flipX;
+		if (charFlipX)
+			flipX = !flipX;
+
+		singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+		if (charFlipX)
+		{
+			var left = singAnimations[0];
+			singAnimations[0] = singAnimations[3];
+			singAnimations[3] = left;
+
+			if (charInfo.flipAll)
+			{
+				var down = singAnimations[1];
+				singAnimations[1] = singAnimations[2];
+				singAnimations[2] = down;
+			}
+		}
+
+		updateOffset();
+		updatePosition();
+	}
+
+	public function setCamOffsetFromLane(lane:Int = -1)
 	{
 		var offset = 15;
 		switch (lane)
@@ -435,6 +451,16 @@ class Character extends DancingSprite
 		{
 			charPosY = value;
 			updatePosition();
+		}
+		return value;
+	}
+
+	function set_charFlipX(value:Bool)
+	{
+		if (charFlipX != value)
+		{
+			charFlipX = value;
+			updateFlipped();
 		}
 		return value;
 	}

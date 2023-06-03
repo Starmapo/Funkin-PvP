@@ -105,8 +105,9 @@ class JsonObject implements IFlxDestroyable
 		Returns a color value from a JSON file, whether it be an integer, a string, or an array.
 		* @param value 			The property from the JSON file.
 		* @param defaultValue 	A value to return if the property doesn't exist on the JSON file. The default is the color white.
+		* @param allowAlpha		Whether to allow alpha values. If disabled, colors are forced to be opaque.
 	**/
-	function readColor(value:Dynamic, defaultValue:FlxColor = FlxColor.WHITE):FlxColor
+	function readColor(value:Dynamic, defaultValue:FlxColor = FlxColor.WHITE, allowAlpha:Bool = true):FlxColor
 	{
 		var color:Null<FlxColor> = null;
 		if (value != null)
@@ -136,6 +137,8 @@ class JsonObject implements IFlxDestroyable
 
 		if (color == null)
 			color = defaultValue;
+		if (!allowAlpha)
+			color.alpha = 255;
 
 		return color;
 	}

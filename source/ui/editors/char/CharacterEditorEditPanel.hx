@@ -3,8 +3,10 @@ package ui.editors.char;
 import data.char.CharacterInfo;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
+import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import states.editors.CharacterEditorState;
+import subStates.editors.char.HealthColorPicker;
 import systools.Dialogs;
 import util.editors.char.CharacterEditorActionManager;
 
@@ -32,9 +34,13 @@ class CharacterEditorEditPanel extends EditorPanel
 	var cameraXStepper:EditorNumericStepper;
 	var cameraYStepper:EditorNumericStepper;
 	var healthIconInput:EditorInputText;
+	var loopAnimsCheckbox:EditorCheckbox;
+	var loopPointStepper:EditorNumericStepper;
+	var flipAllCheckbox:EditorCheckbox;
 	var spacing:Int = 4;
 	var inputSpacing = 125;
 	var inputWidth = 250;
+	var healthColorPicker:HealthColorPicker;
 
 	public function new(state:CharacterEditorState)
 	{
@@ -86,6 +92,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		positionXStepper = null;
 		positionYStepper = null;
 		curAnim = null;
+		healthColorPicker = FlxDestroyUtil.destroy(healthColorPicker);
 	}
 
 	function createAnimationTab()
@@ -209,6 +216,11 @@ class CharacterEditorEditPanel extends EditorPanel
 
 	function createCharacterTab()
 	{
+		healthColorPicker = new HealthColorPicker(state, state.charInfo.healthColors, function(color)
+		{
+			state.actionManager.perform(new ActionChangeHealthColor(state, color));
+		});
+
 		var tab = createTab('Character');
 
 		var imageLabel = new EditorText(4, 5, 0, 'Image:');
@@ -313,6 +325,42 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(healthIconInput);
 
+		var healthColorButton = new FlxUIButton(0, healthIconLabel.y + healthIconLabel.height + spacing, 'Change Health Color', function()
+		{
+			state.openSubState(healthColorPicker);
+		});
+		healthColorButton.resize(120, healthColorButton.height);
+		healthColorButton.x += (width - healthColorButton.width) / 2;
+		tab.add(healthColorButton);
+
+		var loopAnimsLabel = new EditorText(healthIconLabel.x, healthColorButton.y + healthColorButton.height + spacing, 0, 'Loop Long Note Animations:');
+		tab.add(loopAnimsLabel);
+
+		loopAnimsCheckbox = new EditorCheckbox(loopAnimsLabel.x + loopAnimsLabel.width + spacing, loopAnimsLabel.y - 1, '', 0, function()
+		{
+			state.actionManager.perform(new ActionChangeLoopAnims(state, loopAnimsCheckbox.checked));
+		});
+		tab.add(loopAnimsCheckbox);
+
+		var loopPointLabel = new EditorText(loopAnimsLabel.x, loopAnimsLabel.y + loopAnimsLabel.height + spacing, 0, 'Long Note Loop Point:');
+		tab.add(loopPointLabel);
+
+		loopPointStepper = new EditorNumericStepper(loopPointLabel.x + inputSpacing, loopPointLabel.y - 1, 1, 0, 0, null, 0);
+		loopPointStepper.valueChanged.add(function(value, lastValue)
+		{
+			state.actionManager.perform(new ActionChangeLoopPoint(state, Std.int(value)));
+		});
+		tab.add(loopPointStepper);
+
+		var flipAllLabel = new EditorText(loopPointLabel.x, loopPointLabel.y + loopPointLabel.height + spacing, 0, 'Swap Down & Up Animations when Flipped:');
+		tab.add(flipAllLabel);
+
+		flipAllCheckbox = new EditorCheckbox(flipAllLabel.x + flipAllLabel.width + spacing, flipAllLabel.y - 1, '', 0, function()
+		{
+			state.actionManager.perform(new ActionChangeFlipAll(state, flipAllCheckbox.checked));
+		});
+		tab.add(flipAllCheckbox);
+
 		addGroup(tab);
 	}
 
@@ -374,8 +422,6 @@ class CharacterEditorEditPanel extends EditorPanel
 				state.guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
 			else
 				state.guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:dad');
-
-			state.guideChar.animation.finish();
 		});
 		gfCheckbox.x = (width - (gfCheckbox.width + gfCheckbox.button.label.width)) / 2;
 		tab.add(gfCheckbox);
@@ -441,6 +487,8 @@ class CharacterEditorEditPanel extends EditorPanel
 		updatePositionOffset();
 		updateCameraOffset();
 		updateHealthIcon();
+		updateHealthColor();
+		updateLoopAnims();
 
 		updateCurAnim();
 	}
@@ -487,6 +535,16 @@ class CharacterEditorEditPanel extends EditorPanel
 		healthIconInput.text = state.charInfo.healthIcon;
 	}
 
+	function updateHealthColor()
+	{
+		healthColorPicker.color = state.charInfo.healthColors;
+	}
+
+	function updateLoopAnims()
+	{
+		loopAnimsCheckbox.checked = state.charInfo.loopAnimsOnHold;
+	}
+
 	function onEvent(event:String, params:Dynamic)
 	{
 		switch (event)
@@ -507,6 +565,10 @@ class CharacterEditorEditPanel extends EditorPanel
 				updateCameraOffset();
 			case CharacterEditorActionManager.CHANGE_ICON:
 				updateHealthIcon();
+			case CharacterEditorActionManager.CHANGE_HEALTH_COLOR:
+				updateHealthColor();
+			case CharacterEditorActionManager.CHANGE_LOOP_ANIMS:
+				updateLoopAnims();
 			case CharacterEditorActionManager.CHANGE_ANIM_NAME:
 				if (curAnim == params.anim)
 					updateName();

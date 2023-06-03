@@ -4,9 +4,7 @@ import data.char.CharacterInfo;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
@@ -18,8 +16,6 @@ import openfl.display.PNGEncoderOptions;
 import sprites.game.BGSprite;
 import sprites.game.Character;
 import sys.io.File;
-import systools.Dialogs;
-import ui.editors.EditorCheckbox;
 import ui.editors.NotificationManager;
 import ui.editors.char.CharacterEditorAnimPanel;
 import ui.editors.char.CharacterEditorEditPanel;
@@ -67,6 +63,7 @@ class CharacterEditorState extends FNFState
 
 		persistentUpdate = true;
 		checkDropdowns = true;
+		destroySubStates = false;
 	}
 
 	override function destroy()
@@ -130,9 +127,7 @@ class CharacterEditorState extends FNFState
 
 		healthBar = new HealthBar(null, charInfo);
 		healthBar.x = (FlxG.width - healthBar.bar.width) / 2;
-		updateBar();
 		healthBar.bar.value = 50;
-		updateIcon();
 		add(healthBar);
 
 		uiGroup = new FlxTypedGroup();
@@ -175,6 +170,12 @@ class CharacterEditorState extends FNFState
 
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
+	}
+
+	override function openSubState(subState)
+	{
+		persistentUpdate = false;
+		super.openSubState(subState);
 	}
 
 	function handleInput(elapsed:Float)
@@ -485,6 +486,8 @@ class CharacterEditorState extends FNFState
 
 		updateCamIndicator();
 		updateAnimText();
+		updateIcon();
+		updateBar();
 
 		resetCamPos();
 		FlxG.camera.snapToTarget();
@@ -547,8 +550,8 @@ class CharacterEditorState extends FNFState
 
 	public function updateBar()
 	{
-		var healthColor = CoolUtil.getColorFromArray(charInfo.healthColors);
-		healthBar.bar.createFilledBar(healthColor.getDarkened(0.5), healthColor);
+		healthBar.bar.createFilledBar(charInfo.healthColors.getDarkened(0.5), charInfo.healthColors);
+		healthBar.bar.updateBar();
 	}
 
 	public function updateIcon()

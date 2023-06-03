@@ -419,6 +419,7 @@ class SongEditorState extends FNFState
 		}
 
 		save();
+		persistentUpdate = false;
 		FlxG.switchState(new SongEditorPlayState(song, player, time));
 	}
 
@@ -889,6 +890,7 @@ class SongEditorState extends FNFState
 		{
 			if (option == 'Yes')
 				save();
+			persistentUpdate = false;
 			FlxG.switchState(new ToolboxState());
 		}
 	}

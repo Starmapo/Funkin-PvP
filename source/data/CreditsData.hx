@@ -51,7 +51,7 @@ class Credit extends JsonObject
 	{
 		name = readString(data.name, 'Unknown');
 		description = readString(data.description, 'No Description Given');
-		color = readColor(data.color);
+		color = readColor(data.color, FlxColor.WHITE, false);
 		link = readString(data.link, '');
 	}
 }

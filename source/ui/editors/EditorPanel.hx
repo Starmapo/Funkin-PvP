@@ -135,7 +135,7 @@ class EditorPanel extends FlxUITabMenu
 		calcBounds();
 	}
 
-	function createTab(name:String)
+	public function createTab(name:String)
 	{
 		var tab = new FlxUI(null, this);
 		tab.name = name;

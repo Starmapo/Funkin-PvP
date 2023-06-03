@@ -1,5 +1,6 @@
 package data.char;
 
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.Json;
 import haxe.io.Path;
@@ -103,7 +104,7 @@ class CharacterInfo extends JsonObject
 	public var positionOffset:Array<Float>;
 	public var cameraOffset:Array<Float>;
 	public var healthIcon:String;
-	public var healthColors:Array<Int>;
+	public var healthColors:FlxColor;
 	public var loopAnimsOnHold:Bool;
 	public var holdLoopPoint:Int;
 	public var flipAll:Bool;
@@ -127,7 +128,7 @@ class CharacterInfo extends JsonObject
 		positionOffset = readFloatArray(data.positionOffset, [0, 0], null, 2, null, null, 2);
 		cameraOffset = readFloatArray(data.cameraOffset, [0, 0], null, 2, null, null, 2);
 		healthIcon = readString(data.healthIcon, 'face');
-		healthColors = readIntArray(data.healthColors, [161, 161, 161], null, 3, 0, 255);
+		healthColors = readColor(data.healthColors, FlxColor.fromRGB(161, 161, 161), false);
 		loopAnimsOnHold = readBool(data.loopAnimsOnHold, true);
 		holdLoopPoint = readInt(data.holdLoopPoint, 0, 0);
 		flipAll = readBool(data.flipAll);
@@ -139,7 +140,6 @@ class CharacterInfo extends JsonObject
 		danceAnims = null;
 		positionOffset = null;
 		cameraOffset = null;
-		healthColors = null;
 	}
 
 	public function sortAnims()
@@ -164,7 +164,7 @@ class CharacterInfo extends JsonObject
 			positionOffset: positionOffset,
 			cameraOffset: cameraOffset,
 			healthIcon: healthIcon,
-			healthColors: healthColors,
+			healthColors: [healthColors.red, healthColors.green, healthColors.blue],
 		}
 		if (danceAnims.length > 1 || danceAnims[0] != 'idle')
 			data.danceAnims = danceAnims;

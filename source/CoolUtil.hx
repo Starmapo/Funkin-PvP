@@ -281,6 +281,38 @@ class CoolUtil
 		return FlxColor.fromRGB(array[0], array[1], array[2]);
 	}
 
+	public static function getDominantColor(sprite:FlxSprite):FlxColor
+	{
+		var countByColor:Map<Int, Int> = [];
+		for (col in 0...sprite.frameWidth)
+		{
+			for (row in 0...sprite.frameHeight)
+			{
+				var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
+				if (colorOfThisPixel != 0)
+				{
+					if (countByColor.exists(colorOfThisPixel))
+						countByColor[colorOfThisPixel] = countByColor[colorOfThisPixel] + 1;
+					else
+						countByColor[colorOfThisPixel] = 1;
+				}
+			}
+		}
+		countByColor[FlxColor.BLACK] = 0;
+
+		var maxCount = 0;
+		var maxKey = FlxColor.BLACK;
+		for (key in countByColor.keys())
+		{
+			if (countByColor[key] > maxCount)
+			{
+				maxCount = countByColor[key];
+				maxKey = key;
+			}
+		}
+		return maxKey;
+	}
+
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		var dumbArray:Array<Int> = [];
