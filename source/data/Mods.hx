@@ -37,7 +37,6 @@ typedef ModSongGroup =
 	var name:String;
 	var bg:String;
 	var songs:Array<ModSong>;
-	var directory:String;
 }
 
 typedef ModSong =
@@ -53,7 +52,6 @@ typedef ModCharacterGroup =
 	var name:String;
 	var bg:String;
 	var chars:Array<ModCharacter>;
-	var directory:String;
 }
 
 typedef ModCharacter =

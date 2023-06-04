@@ -113,7 +113,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		super(x, y, label, mod.directory);
 
 		var bg = new FlxSprite().makeGraphic(FlxG.width - 50, Std.int(FlxG.height / 2), FlxColor.TRANSPARENT);
-		FlxSpriteUtil.drawRoundRect(bg, 0, 0, bg.width, bg.height, 20, 20, FlxColor.GRAY, {thickness: 4, color: FlxColor.BLACK});
+		FlxSpriteUtil.drawRoundRect(bg, 0, 0, bg.width, bg.height, 20, 20, FlxColor.GRAY, {thickness: 4});
 
 		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.directory, 'icon']), null, false);
 		if (iconImage == null)
@@ -130,10 +130,15 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 		name.y -= name.height / 2;
 
+		var warning = CoolUtil.getVersionWarning(mod.gameVersion);
+		if (warning.length > 0)
+			name.color = FlxColor.RED;
+
 		var desc = new FlxText(icon.x, icon.y
 			+ icon.height, bg.width
 			- 40,
-			mod.description
+			warning
+			+ mod.description
 			+ '\n\nAuthor(s): '
 			+ mod.author
 			+ '\n\nVersion: '
@@ -144,5 +149,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		label.add(icon);
 		label.add(name);
 		label.add(desc);
+
+		setEmptyBackground();
 	}
 }

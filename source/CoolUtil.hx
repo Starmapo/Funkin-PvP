@@ -384,7 +384,23 @@ class CoolUtil
 		return FlxG.stage.application.meta["version"];
 	}
 
-	public static function isOutdated(version:String) {}
+	public static function getVersionWarning(version:String)
+	{
+		var splitCurVersion = getVersion().split('.');
+		var curMajor = Std.parseInt(splitCurVersion[0]);
+
+		var splitVersion = version.split('.');
+		var major = (splitVersion[0] != null && splitVersion[0].length > 0) ? Std.parseInt(splitVersion[0]) : null;
+		if (major == null)
+			major = curMajor;
+
+		if (major < curMajor)
+			return '[WARNING: This mod was made for a previous major release (v$major) and might not function properly!]\n';
+		if (major > curMajor)
+			return '[WARNING: This mod was made for a future major release (v$major) and might not function properly!]\n';
+
+		return '';
+	}
 
 	@:generic
 	static function getArrayMaxX<T:FlxObject>(array:Array<T>):Float
