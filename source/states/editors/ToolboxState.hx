@@ -37,7 +37,7 @@ class ToolboxState extends FNFState
 		items.onChange.add(onChange);
 		add(items);
 
-		createItem('Character Offset Editor', function()
+		createItem('Character Editor', function()
 		{
 			FlxG.sound.music.stop();
 			FlxG.switchState(new CharacterEditorState());

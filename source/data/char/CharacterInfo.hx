@@ -108,6 +108,7 @@ class CharacterInfo extends JsonObject
 	public var loopAnimsOnHold:Bool;
 	public var holdLoopPoint:Int;
 	public var flipAll:Bool;
+	public var constantLooping:Bool;
 	public var directory:String = '';
 	public var name:String = '';
 	public var mod:String = '';
@@ -132,6 +133,7 @@ class CharacterInfo extends JsonObject
 		loopAnimsOnHold = readBool(data.loopAnimsOnHold, true);
 		holdLoopPoint = readInt(data.holdLoopPoint, 0, 0);
 		flipAll = readBool(data.flipAll);
+		constantLooping = readBool(data.constantLooping);
 	}
 
 	override function destroy()
@@ -180,6 +182,8 @@ class CharacterInfo extends JsonObject
 			data.holdLoopPoint = holdLoopPoint;
 		if (flipAll)
 			data.flipAll = flipAll;
+		if (constantLooping)
+			data.constantLooping = constantLooping;
 
 		for (anim in anims)
 		{

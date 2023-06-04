@@ -39,6 +39,7 @@ class CharacterEditorEditPanel extends EditorPanel
 	var loopAnimsCheckbox:EditorCheckbox;
 	var loopPointStepper:EditorNumericStepper;
 	var flipAllCheckbox:EditorCheckbox;
+	var constantLoopingCheckbox:EditorCheckbox;
 	var spacing:Int = 4;
 	var inputSpacing = 125;
 	var inputWidth = 250;
@@ -60,7 +61,7 @@ class CharacterEditorEditPanel extends EditorPanel
 				label: 'Editor'
 			}
 		]);
-		resize(390, 250);
+		resize(390, 270);
 		x = FlxG.width - width - 10;
 		screenCenter(Y);
 		this.state = state;
@@ -391,6 +392,16 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(flipAllCheckbox);
 
+		var constantLoopingLabel = new EditorText(flipAllLabel.x, flipAllLabel.y + flipAllLabel.height + spacing, 0, 'Constant Animation Looping:');
+		tab.add(constantLoopingLabel);
+
+		constantLoopingCheckbox = new EditorCheckbox(constantLoopingLabel.x + constantLoopingLabel.width + spacing, constantLoopingLabel.y - 1, '', 0,
+			function()
+			{
+				state.actionManager.perform(new ActionChangeConstantLooping(state, constantLoopingCheckbox.checked));
+			});
+		tab.add(constantLoopingCheckbox);
+
 		addGroup(tab);
 	}
 
@@ -531,6 +542,9 @@ class CharacterEditorEditPanel extends EditorPanel
 		updateHealthIcon();
 		updateHealthColor();
 		updateLoopAnims();
+		updateLoopPoint();
+		updateFlipAll();
+		updateConstantLooping();
 
 		updateCurAnim();
 	}
@@ -587,6 +601,21 @@ class CharacterEditorEditPanel extends EditorPanel
 		loopAnimsCheckbox.checked = state.charInfo.loopAnimsOnHold;
 	}
 
+	function updateLoopPoint()
+	{
+		loopPointStepper.value = state.charInfo.holdLoopPoint;
+	}
+
+	function updateFlipAll()
+	{
+		flipAllCheckbox.checked = state.charInfo.flipAll;
+	}
+
+	function updateConstantLooping()
+	{
+		constantLoopingCheckbox.checked = state.charInfo.constantLooping;
+	}
+
 	function onEvent(event:String, params:Dynamic)
 	{
 		switch (event)
@@ -611,6 +640,12 @@ class CharacterEditorEditPanel extends EditorPanel
 				updateHealthColor();
 			case CharacterEditorActionManager.CHANGE_LOOP_ANIMS:
 				updateLoopAnims();
+			case CharacterEditorActionManager.CHANGE_LOOP_POINT:
+				updateLoopPoint();
+			case CharacterEditorActionManager.CHANGE_FLIP_ALL:
+				updateFlipAll();
+			case CharacterEditorActionManager.CHANGE_CONSTANT_LOOPING:
+				updateConstantLooping();
 			case CharacterEditorActionManager.REMOVE_ANIM:
 				updateCurAnim();
 			case CharacterEditorActionManager.CHANGE_ANIM_NAME:

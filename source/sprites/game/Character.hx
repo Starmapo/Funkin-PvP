@@ -44,8 +44,18 @@ class Character extends DancingSprite
 
 	override function playAnim(name, force = false, reversed = false, frame = 0)
 	{
+		if (!animation.exists(name))
+			return;
+
 		stopAnimCallback();
-		super.playAnim(name, force, reversed, frame);
+
+		if (charInfo.constantLooping && animation.curAnim != null)
+			animation.play(name, force, reversed, animation.curAnim.curFrame + 1);
+		else
+			animation.play(name, force, reversed, frame);
+		updateOffset();
+		animPlayed(name);
+		onAnimPlayed.dispatch(name);
 	}
 
 	override function animPlayed(name:String)

@@ -20,6 +20,7 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var CHANGE_LOOP_ANIMS:String = 'change-loop-anims';
 	public static inline var CHANGE_LOOP_POINT:String = 'change-loop-point';
 	public static inline var CHANGE_FLIP_ALL:String = 'change-flip-all';
+	public static inline var CHANGE_CONSTANT_LOOPING:String = 'change-constant-looping';
 	public static inline var ADD_ANIM:String = 'add-anim';
 	public static inline var REMOVE_ANIM:String = 'remove-anim';
 	public static inline var CHANGE_ANIM_NAME:String = 'change-anim-name';
@@ -478,6 +479,41 @@ class ActionChangeFlipAll implements IAction
 	public function undo()
 	{
 		new ActionChangeFlipAll(state, lastFlipAll).perform();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+}
+
+class ActionChangeConstantLooping implements IAction
+{
+	public var type = CharacterEditorActionManager.CHANGE_CONSTANT_LOOPING;
+
+	var state:CharacterEditorState;
+	var constantLooping:Bool;
+	var lastConstantLooping:Bool;
+
+	public function new(state:CharacterEditorState, constantLooping:Bool)
+	{
+		this.state = state;
+		this.constantLooping = constantLooping;
+	}
+
+	public function perform()
+	{
+		lastConstantLooping = state.charInfo.constantLooping;
+		state.charInfo.constantLooping = constantLooping;
+
+		state.actionManager.triggerEvent(type, {
+			constantLooping: constantLooping
+		});
+	}
+
+	public function undo()
+	{
+		new ActionChangeConstantLooping(state, lastConstantLooping).perform();
 	}
 
 	public function destroy()

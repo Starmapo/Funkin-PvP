@@ -139,8 +139,6 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			- 40,
 			warning
 			+ mod.description
-			+ '\n\nAuthor(s): '
-			+ mod.author
 			+ '\n\nVersion: '
 			+ mod.modVersion);
 		desc.setFormat('PhantomMuff 1.5', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
