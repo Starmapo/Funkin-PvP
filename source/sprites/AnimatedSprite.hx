@@ -6,6 +6,8 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
+using StringTools;
+
 /**
 	Handy utilities for animated sprites.
 **/
@@ -36,12 +38,22 @@ class AnimatedSprite extends FlxSprite
 		if (data.indices != null && data.indices.length > 0)
 		{
 			if (data.atlasName != null && data.atlasName.length > 0)
-				animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
+			{
+				if (data.atlasName.startsWith('prefix:'))
+					animation.addByIndices(data.name, data.atlasName.substr(7), data.indices, '', data.fps, data.loop, data.flipX, data.flipY);
+				else
+					animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
+			}
 			else
 				animation.add(data.name, data.indices, data.fps, data.loop, data.flipX, data.flipY);
 		}
 		else
-			animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
+		{
+			if (data.atlasName.startsWith('prefix:'))
+				animation.addByPrefix(data.name, data.atlasName.substr(7), data.fps, data.loop, data.flipX, data.flipY);
+			else
+				animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
+		}
 
 		if (data.offset != null && data.offset.length >= 2)
 			addOffset(data.name, data.offset[0], data.offset[1]);
