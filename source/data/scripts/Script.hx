@@ -59,6 +59,7 @@ import sprites.game.BGSprite;
 import sprites.game.Character;
 import states.FNFState;
 import states.PlayState;
+import subStates.FNFSubState;
 import ui.game.Note;
 import ui.game.NoteSplash;
 import ui.game.Receptor;
@@ -259,6 +260,7 @@ class Script implements IFlxDestroyable
 		setVariable('DancingSprite', DancingSprite);
 		setVariable('EventObject', EventObject);
 		setVariable('FNFState', FNFState);
+		setVariable('FNFSubState', FNFSubState);
 		setVariable('IconInfo', IconInfo);
 		setVariable('JudgementSkin', JudgementSkin);
 		setVariable('LyricStep', LyricStep);

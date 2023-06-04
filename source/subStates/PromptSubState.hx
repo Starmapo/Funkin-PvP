@@ -3,7 +3,6 @@ package subStates;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUIButton;
@@ -12,7 +11,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
 
-class PromptSubState extends FlxSubState
+class PromptSubState extends FNFSubState
 {
 	var promptBG:FlxUI9SliceSprite;
 	var promptText:FlxUIText;

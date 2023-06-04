@@ -5,7 +5,6 @@ import data.Settings;
 import data.game.Judgement;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxSubState;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -15,7 +14,7 @@ import states.PlayState;
 import states.pvp.SongSelectState;
 import ui.game.PlayerStatsDisplay;
 
-class ResultsScreen extends FlxSubState
+class ResultsScreen extends FNFSubState
 {
 	static final PLAYER_1_WIN:String = 'Player 1 wins!';
 	static final PLAYER_2_WIN:String = 'Player 2 wins!';

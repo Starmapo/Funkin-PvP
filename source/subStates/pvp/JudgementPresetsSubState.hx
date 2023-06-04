@@ -5,14 +5,13 @@ import data.Settings;
 import data.game.Judgement;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import states.pvp.RulesetState;
 
-class JudgementPresetsSubState extends FlxSubState
+class JudgementPresetsSubState extends FNFSubState
 {
 	static final DEFAULT:String = 'Default (Quaver Peaceful)';
 

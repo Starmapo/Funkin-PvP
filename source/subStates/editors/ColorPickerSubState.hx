@@ -3,15 +3,10 @@ package subStates.editors;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUIText;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import lime.system.Clipboard;
-import openfl.geom.Rectangle;
 import ui.editors.EditorInputText;
 import ui.editors.EditorNumericStepper;
 import ui.editors.EditorPanel;
@@ -19,7 +14,7 @@ import ui.editors.EditorPanel;
 using StringTools;
 
 // FROM YOSHI ENGINE
-class ColorPickerSubState extends FlxSubState
+class ColorPickerSubState extends FNFSubState
 {
 	public var color:FlxColor;
 

@@ -4,7 +4,6 @@ import data.Mods;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSubState;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -16,7 +15,7 @@ import states.pvp.SongSelectState;
 import ui.lists.MenuList.TypedMenuList;
 import ui.lists.TextMenuList;
 
-class PauseSubState extends FlxSubState
+class PauseSubState extends FNFSubState
 {
 	var state:PlayState;
 	var menuList:PauseMenuList;
