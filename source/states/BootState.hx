@@ -329,7 +329,7 @@ class BootState extends FNFState
 
 	function exit()
 	{
-		FlxG.switchState(new CharacterEditorState());
+		FlxG.switchState(new TitleState());
 	}
 
 	function updateText(text:String)

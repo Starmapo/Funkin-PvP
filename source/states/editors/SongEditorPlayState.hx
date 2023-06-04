@@ -1,6 +1,7 @@
 package states.editors;
 
 import data.PlayerSettings;
+import data.Settings;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.skin.JudgementSkin;
@@ -11,8 +12,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.util.FlxDestroyUtil;
+import ui.game.JudgementCounter;
 import ui.game.JudgementDisplay;
 import ui.game.LyricsDisplay;
+import ui.game.MSDisplay;
+import ui.game.NPSDisplay;
 import ui.game.Note;
 import ui.game.PlayerStatsDisplay;
 import ui.game.SongInfoDisplay;
@@ -37,6 +41,9 @@ class SongEditorPlayState extends FNFState
 	var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
 	var songInfoDisplay:SongInfoDisplay;
 	var lyricsDisplay:LyricsDisplay;
+	var judgementCounters:FlxTypedGroup<JudgementCounter>;
+	var npsDisplay:FlxTypedGroup<NPSDisplay>;
+	var msDisplay:FlxTypedGroup<MSDisplay>;
 
 	public function new(map:Song, player:Int, startTime:Float = 0)
 	{
@@ -72,6 +79,9 @@ class SongEditorPlayState extends FNFState
 		judgementDisplay = null;
 		songInfoDisplay = null;
 		lyricsDisplay = null;
+		judgementCounters = null;
+		npsDisplay = null;
+		msDisplay = null;
 	}
 
 	override function create()
@@ -99,34 +109,79 @@ class SongEditorPlayState extends FNFState
 
 		ruleset = new GameplayRuleset(song, timing);
 		if (player == 0)
+		{
+			ruleset.inputManagers[0].autoplay = false;
 			ruleset.inputManagers[1].autoplay = true;
+		}
 		else
 		{
 			ruleset.inputManagers[0].autoplay = true;
+			ruleset.inputManagers[1].autoplay = false;
 			ruleset.inputManagers[1].changePlayer(0);
 		}
 		for (playfield in ruleset.playfields)
+		{
+			playfield.active = false;
 			add(playfield);
+		}
 		for (manager in ruleset.noteManagers)
+		{
+			manager.active = false;
 			add(manager);
+		}
 
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.laneReleased.add(onLaneReleased);
 		ruleset.noteHit.add(onNoteHit);
 		ruleset.judgementAdded.add(onJudgementAdded);
 
-		judgementDisplay = new FlxTypedGroup();
-		for (i in 0...2)
-			judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(PlayerSettings.players[i].config.judgementSkin)));
-		add(judgementDisplay);
+		if (!Settings.hideHUD)
+		{
+			judgementDisplay = new FlxTypedGroup();
+			for (i in 0...2)
+				judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(PlayerSettings.players[i].config.judgementSkin)));
+			add(judgementDisplay);
 
-		statsDisplay = new FlxTypedGroup();
-		for (i in 0...2)
-			statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
-		add(statsDisplay);
+			statsDisplay = new FlxTypedGroup();
+			for (i in 0...2)
+				statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
+		}
 
-		songInfoDisplay = new SongInfoDisplay(song, inst, timing);
-		add(songInfoDisplay);
+		msDisplay = new FlxTypedGroup();
+		for (i in 0...2)
+		{
+			var display = new MSDisplay(i);
+			display.exists = Settings.playerConfigs[i].msDisplay;
+			msDisplay.add(display);
+		}
+		add(msDisplay);
+
+		judgementCounters = new FlxTypedGroup();
+		for (i in 0...2)
+		{
+			var counter = new JudgementCounter(ruleset.scoreProcessors[i]);
+			counter.exists = Settings.playerConfigs[i].judgementCounter;
+			judgementCounters.add(counter);
+		}
+		add(judgementCounters);
+
+		if (statsDisplay != null)
+			add(statsDisplay);
+
+		npsDisplay = new FlxTypedGroup();
+		for (i in 0...2)
+		{
+			var display = new NPSDisplay(i);
+			display.exists = Settings.playerConfigs[i].npsDisplay;
+			npsDisplay.add(display);
+		}
+		add(npsDisplay);
+
+		if (!Settings.hideHUD || Settings.timeDisplay != DISABLED)
+		{
+			songInfoDisplay = new SongInfoDisplay(song, inst, timing);
+			add(songInfoDisplay);
+		}
 
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
 		add(lyricsDisplay);
@@ -136,16 +191,15 @@ class SongEditorPlayState extends FNFState
 
 	override function update(elapsed:Float)
 	{
+		super.update(elapsed);
+
 		timing.update(elapsed);
 
 		ruleset.updateCurrentTrackPosition();
+		ruleset.update(elapsed);
 
 		handleInput(elapsed);
 
-		ruleset.update(elapsed);
-		judgementDisplay.update(elapsed);
-		statsDisplay.update(elapsed);
-		songInfoDisplay.update(elapsed);
 		lyricsDisplay.updateLyrics(timing.audioPosition);
 
 		if (FlxG.mouse.visible)
@@ -203,14 +257,27 @@ class SongEditorPlayState extends FNFState
 		ruleset.playfields[player].onLaneReleased(lane);
 	}
 
-	function onNoteHit(note:Note, judgement:Judgement, _)
+	function onNoteHit(note:Note, judgement:Judgement, ms:Float)
 	{
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note, judgement);
+
+		npsDisplay.members[player].addTime(Sys.time());
+
+		msDisplay.members[player].showMS(ms, judgement);
+	}
+
+	function onNoteReleased(note:Note, judgement:Judgement, ms:Float)
+	{
+		var player = note.info.player;
+		msDisplay.members[player].showMS(ms, judgement);
 	}
 
 	function onJudgementAdded(judgement:Judgement, player:Int)
 	{
-		judgementDisplay.members[player].showJudgement(judgement);
+		if (judgementDisplay != null)
+			judgementDisplay.members[player].showJudgement(judgement);
+
+		judgementCounters.members[player].updateText();
 	}
 }
