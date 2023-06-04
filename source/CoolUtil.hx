@@ -379,6 +379,13 @@ class CoolUtil
 		return getVarInArray(FlxG.state, objectName);
 	}
 
+	public static function getVersion():String
+	{
+		return FlxG.stage.application.meta["version"];
+	}
+
+	public static function isOutdated(version:String) {}
+
 	@:generic
 	static function getArrayMaxX<T:FlxObject>(array:Array<T>):Float
 	{

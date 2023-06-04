@@ -496,7 +496,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		var thickness = 4;
 
-		var graphic = Paths.getImage(name, groupData.directory, true, graphicKey);
+		var graphic = Paths.getImage(name, groupData.directory, false, true, graphicKey);
 
 		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupData.name);
 		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);

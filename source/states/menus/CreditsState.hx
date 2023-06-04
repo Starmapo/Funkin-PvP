@@ -137,6 +137,7 @@ class CreditsState extends FNFState
 			}
 			else
 			{
+				categoryMenuList.controlsEnabled = false;
 				FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
 					ease: FlxEase.expoIn,
 					onComplete: function(_)

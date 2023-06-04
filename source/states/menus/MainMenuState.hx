@@ -1,6 +1,5 @@
 package states.menus;
 
-import flixel.text.FlxText;
 import data.PlayerSettings;
 import data.Settings;
 import flixel.FlxG;
@@ -8,6 +7,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
 import flixel.math.FlxMath;
+import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -63,6 +63,10 @@ class MainMenuState extends FNFState
 		{
 			FlxG.switchState(new RulesetState());
 		}, false, true);
+		menuList.createItem('Mods', function()
+		{
+			FlxG.switchState(new ModsState());
+		});
 		menuList.createItem('Credits', function()
 		{
 			FlxG.switchState(new CreditsState());
