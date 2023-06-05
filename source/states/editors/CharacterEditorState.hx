@@ -15,6 +15,7 @@ import lime.system.System;
 import openfl.display.PNGEncoderOptions;
 import sprites.game.BGSprite;
 import sprites.game.Character;
+import subStates.editors.char.CharacterEditorSavePrompt;
 import sys.io.File;
 import ui.editors.NotificationManager;
 import ui.editors.char.CharacterEditorAnimPanel;
@@ -53,6 +54,7 @@ class CharacterEditorState extends FNFState
 	var toolPanel:CharacterEditorToolPanel;
 	var animPanel:CharacterEditorAnimPanel;
 	var editPanel:CharacterEditorEditPanel;
+	var savePrompt:CharacterEditorSavePrompt;
 
 	public function new(?charInfo:CharacterInfo)
 	{
@@ -83,6 +85,7 @@ class CharacterEditorState extends FNFState
 		animPanel = null;
 		editPanel = null;
 		actionManager = FlxDestroyUtil.destroy(actionManager);
+		savePrompt = FlxDestroyUtil.destroy(savePrompt);
 	}
 
 	override function create()
@@ -142,6 +145,8 @@ class CharacterEditorState extends FNFState
 		uiGroup.add(editPanel);
 
 		add(uiGroup);
+
+		savePrompt = new CharacterEditorSavePrompt(onSavePrompt);
 
 		notificationManager = new NotificationManager();
 		add(notificationManager);
@@ -336,10 +341,7 @@ class CharacterEditorState extends FNFState
 		}
 
 		if (FlxG.keys.justPressed.ESCAPE)
-		{
-			persistentUpdate = false;
-			FlxG.switchState(new ToolboxState());
-		}
+			leaveEditor();
 	}
 
 	function resetCamPos()
@@ -568,6 +570,25 @@ class CharacterEditorState extends FNFState
 			iconName = charInfo.mod + ':' + iconName;
 		healthBar.icon.icon = iconName;
 		healthBar.updateIconPos();
+	}
+
+	function leaveEditor()
+	{
+		if (actionManager.hasUnsavedChanges)
+			openSubState(savePrompt);
+		else
+			onSavePrompt('No');
+	}
+
+	function onSavePrompt(option:String)
+	{
+		if (option != 'Cancel')
+		{
+			if (option == 'Yes')
+				save();
+			persistentUpdate = false;
+			FlxG.switchState(new ToolboxState());
+		}
 	}
 }
 

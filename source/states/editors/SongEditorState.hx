@@ -22,8 +22,6 @@ import flixel.util.FlxSort;
 import haxe.io.Path;
 import lime.app.Application;
 import subStates.editors.song.SongEditorSavePrompt;
-import sys.FileSystem;
-import sys.io.File;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import ui.editors.song.SongEditorCamFocusDisplay;
