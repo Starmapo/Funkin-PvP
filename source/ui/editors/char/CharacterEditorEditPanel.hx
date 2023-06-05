@@ -61,7 +61,7 @@ class CharacterEditorEditPanel extends EditorPanel
 				label: 'Editor'
 			}
 		]);
-		resize(390, 270);
+		resize(390, 290);
 		x = FlxG.width - width - 10;
 		screenCenter(Y);
 		this.state = state;
@@ -402,14 +402,12 @@ class CharacterEditorEditPanel extends EditorPanel
 			});
 		tab.add(constantLoopingCheckbox);
 
-		addGroup(tab);
-	}
+		var saveButton = new FlxUIButton(0, constantLoopingCheckbox.y + constantLoopingCheckbox.height + spacing, 'Save', function()
+		{
+			state.save();
+		});
 
-	function createEditorTab()
-	{
-		var tab = createTab('Editor');
-
-		var loadButton = new FlxUIButton(0, 4, 'Load', function()
+		var loadButton = new FlxUIButton(saveButton.x + saveButton.width + spacing, saveButton.y, 'Load', function()
 		{
 			var result = Dialogs.openFile("Select character inside the game's directory to load", '', {
 				count: 1,
@@ -437,27 +435,21 @@ class CharacterEditorEditPanel extends EditorPanel
 			state.charInfo = charInfo;
 			state.reloadCharInfo();
 		});
-		loadButton.x = (width - loadButton.width) / 2;
+
+		saveButton.x = (width - CoolUtil.getArrayWidth([saveButton, loadButton])) / 2;
+		loadButton.x = saveButton.x + saveButton.width + spacing;
+		tab.add(saveButton);
 		tab.add(loadButton);
 
-		var saveButton = new FlxUIButton(0, loadButton.y + loadButton.height + 4, 'Save', function()
-		{
-			state.save();
-		});
-		saveButton.x = (width - saveButton.width) / 2;
-		tab.add(saveButton);
+		addGroup(tab);
+	}
 
-		var saveFrameButton = new FlxUIButton(FlxG.width, saveButton.y + saveButton.height + 4, 'Save Current Frame', function()
-		{
-			state.saveFrame(state.charInfo.name + '.png');
-		});
-		saveFrameButton.resize(160, saveFrameButton.height);
-		saveFrameButton.autoCenterLabel();
-		saveFrameButton.x = (width - saveFrameButton.width) / 2;
-		tab.add(saveFrameButton);
+	function createEditorTab()
+	{
+		var tab = createTab('Editor');
 
 		var gfCheckbox:EditorCheckbox = null;
-		gfCheckbox = new EditorCheckbox(FlxG.width, saveFrameButton.y + saveFrameButton.height + 4, 'GF as Guide Character', 0, function()
+		gfCheckbox = new EditorCheckbox(0, 4, 'GF as Guide Character', 0, function()
 		{
 			if (gfCheckbox.checked)
 				state.guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
@@ -466,6 +458,15 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		gfCheckbox.x = (width - (gfCheckbox.width + gfCheckbox.button.label.width)) / 2;
 		tab.add(gfCheckbox);
+
+		var saveFrameButton = new FlxUIButton(0, gfCheckbox.y + gfCheckbox.height + spacing, 'Save Current Frame', function()
+		{
+			state.saveFrame(state.charInfo.name + '.png');
+		});
+		saveFrameButton.resize(160, saveFrameButton.height);
+		saveFrameButton.autoCenterLabel();
+		saveFrameButton.x = (width - saveFrameButton.width) / 2;
+		tab.add(saveFrameButton);
 
 		addGroup(tab);
 	}

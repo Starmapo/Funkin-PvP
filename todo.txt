@@ -1,3 +1,7 @@
+song editor add new chart/song
+character editor select atlas name
+character editor add new character
+erb
 jerk (2:15)
 bloodpop (2:25)
 like the wind (2:55)
@@ -6,4 +10,3 @@ like you would know (3:30)
 happier than ever (4:59)
 biggering (5:01)
 miss you (3:26)
-erb

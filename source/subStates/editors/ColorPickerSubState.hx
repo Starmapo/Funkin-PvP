@@ -23,7 +23,6 @@ class ColorPickerSubState extends FNFSubState
 	var redNumeric:EditorNumericStepper;
 	var greenNumeric:EditorNumericStepper;
 	var blueNumeric:EditorNumericStepper;
-	var colorPickerCamera:FlxCamera;
 	var originalColor:FlxColor;
 	var colorInput:EditorInputText;
 	var tab:FlxUI;
@@ -40,10 +39,7 @@ class ColorPickerSubState extends FNFSubState
 	{
 		super.create();
 
-		colorPickerCamera = new FlxCamera();
-		colorPickerCamera.bgColor = 0x88000000;
-		FlxG.cameras.add(colorPickerCamera, false);
-		cameras = [colorPickerCamera];
+		createCamera();
 
 		uiTabs = new EditorPanel([{name: "colorPicker", label: 'Select a color...'}]);
 		add(uiTabs);
@@ -72,9 +68,9 @@ class ColorPickerSubState extends FNFSubState
 		var rgbLabel = new FlxUIText(10, 75, 400, "RGB");
 		rgbLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 
-		redNumeric = new EditorNumericStepper(10, 75 + rgbLabel.height, 1, 0, 0, 255, 0, colorPickerCamera);
-		greenNumeric = new EditorNumericStepper(20 + redNumeric.width, redNumeric.y, 1, 0, 0, 255, 0, colorPickerCamera);
-		blueNumeric = new EditorNumericStepper(30 + greenNumeric.width + redNumeric.width, redNumeric.y, 1, 0, 0, 255, 0, colorPickerCamera);
+		redNumeric = new EditorNumericStepper(10, 75 + rgbLabel.height, 1, 0, 0, 255, 0, camSubState);
+		greenNumeric = new EditorNumericStepper(20 + redNumeric.width, redNumeric.y, 1, 0, 0, 255, 0, camSubState);
+		blueNumeric = new EditorNumericStepper(30 + greenNumeric.width + redNumeric.width, redNumeric.y, 1, 0, 0, 255, 0, camSubState);
 		redNumeric.valueChanged.add(function(value, lastValue)
 		{
 			color.red = Std.int(value);
@@ -94,7 +90,7 @@ class ColorPickerSubState extends FNFSubState
 		var hexLabel = new FlxUIText(blueNumeric.x + blueNumeric.width + 10, rgbLabel.y, 400, "Hex");
 		hexLabel.setBorderStyle(OUTLINE, FlxColor.BLACK);
 
-		colorInput = new EditorInputText(hexLabel.x, hexLabel.y + hexLabel.height, 0, null, 8, true, colorPickerCamera);
+		colorInput = new EditorInputText(hexLabel.x, hexLabel.y + hexLabel.height, 0, null, 8, true, camSubState);
 		colorInput.textChanged.add(function(text, lastText)
 		{
 			if (text.length < 1)
@@ -150,21 +146,6 @@ class ColorPickerSubState extends FNFSubState
 		add(closeButton);
 
 		uiTabs.addGroup(tab);
-
-		openCallback = function()
-		{
-			if (colorPickerCamera != null)
-				colorPickerCamera.visible = true;
-			updateColor();
-			originalColor = color;
-			redNumeric.visible = greenNumeric.visible = blueNumeric.visible = colorInput.visible = true;
-		}
-		closeCallback = function()
-		{
-			if (colorPickerCamera != null)
-				colorPickerCamera.visible = false;
-			redNumeric.visible = greenNumeric.visible = blueNumeric.visible = colorInput.visible = false;
-		}
 	}
 
 	override function destroy()
@@ -175,10 +156,21 @@ class ColorPickerSubState extends FNFSubState
 		redNumeric = null;
 		greenNumeric = null;
 		blueNumeric = null;
-		if (colorPickerCamera != null)
-			FlxG.cameras.remove(colorPickerCamera);
-		colorPickerCamera = null;
 		colorInput = null;
+	}
+
+	override function onOpen()
+	{
+		updateColor();
+		originalColor = color;
+		redNumeric.visible = greenNumeric.visible = blueNumeric.visible = colorInput.visible = true;
+		super.onOpen();
+	}
+
+	override function onClose()
+	{
+		redNumeric.visible = greenNumeric.visible = blueNumeric.visible = colorInput.visible = false;
+		super.onClose();
 	}
 
 	function updateColor(?e:Dynamic, pick:Bool = true)

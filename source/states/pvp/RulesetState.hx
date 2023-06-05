@@ -53,7 +53,6 @@ class RulesetState extends FNFState
 		FlxG.cameras.add(camOver, false);
 
 		judgementPresetsSubState = new JudgementPresetsSubState(this);
-		judgementPresetsSubState.cameras = [camOver];
 
 		camFollow = new FlxObject(FlxG.width / 2);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);

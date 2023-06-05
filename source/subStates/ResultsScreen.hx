@@ -23,7 +23,6 @@ class ResultsScreen extends FNFSubState
 	public var winner:Int;
 
 	var state:PlayState;
-	var camSubState:FlxCamera;
 	var canExit:Bool = false;
 
 	public function new(state:PlayState)
@@ -31,11 +30,8 @@ class ResultsScreen extends FNFSubState
 		super();
 		this.state = state;
 
-		camSubState = new FlxCamera();
-		camSubState.bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.6);
+		createCamera();
 		camSubState.alpha = 0;
-		FlxG.cameras.add(camSubState, false);
-		cameras = [camSubState];
 
 		var scores = [for (i in 0...2) state.ruleset.scoreProcessors[i]];
 		var winText = '';
@@ -159,7 +155,6 @@ class ResultsScreen extends FNFSubState
 	{
 		super.destroy();
 		state = null;
-		camSubState = null;
 	}
 
 	function compare(a:Float, b:Float)

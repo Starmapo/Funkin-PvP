@@ -19,7 +19,6 @@ class PauseSubState extends FNFSubState
 {
 	var state:PlayState;
 	var menuList:PauseMenuList;
-	var camSubState:FlxCamera;
 	var camFollow:FlxObject;
 	var playerText:FlxText;
 	var music:FlxSound;
@@ -31,14 +30,10 @@ class PauseSubState extends FNFSubState
 
 		music = FlxG.sound.load(Paths.getMusic('Breakfast'), 0, true, FlxG.sound.defaultMusicGroup);
 
-		camSubState = new FlxCamera();
-		camSubState.bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.6);
-		camSubState.visible = false;
-		FlxG.cameras.add(camSubState, false);
+		createCamera();
 
 		menuList = new PauseMenuList();
 		menuList.onChange.add(onChange);
-		menuList.cameras = [camSubState];
 		add(menuList);
 
 		menuList.createItem('Resume', function()
@@ -77,7 +72,6 @@ class PauseSubState extends FNFSubState
 
 		playerText = new FlxText(0, 10);
 		playerText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		playerText.cameras = [camSubState];
 		playerText.scrollFactor.set();
 		add(playerText);
 
@@ -88,18 +82,6 @@ class PauseSubState extends FNFSubState
 
 		menuList.selectItem(0);
 		camSubState.snapToTarget();
-
-		openCallback = function()
-		{
-			camSubState.visible = true;
-			music.volume = 0;
-			music.play(false, FlxG.random.float(0, music.length / 2));
-		}
-		closeCallback = function()
-		{
-			camSubState.visible = false;
-			music.stop();
-		}
 	}
 
 	override function update(elapsed:Float)
@@ -121,7 +103,20 @@ class PauseSubState extends FNFSubState
 		music = null;
 	}
 
-	public function onOpen(player:Int)
+	override function onOpen()
+	{
+		music.volume = 0;
+		music.play(false, FlxG.random.float(0, music.length / 2));
+		super.onOpen();
+	}
+
+	override function onClose()
+	{
+		music.stop();
+		super.onClose();
+	}
+
+	public function setPlayer(player:Int)
 	{
 		menuList.controlsMode = PLAYER(player);
 		playerText.text = 'P' + (player + 1) + ' PAUSE';

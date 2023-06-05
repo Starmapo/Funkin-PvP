@@ -957,7 +957,7 @@ class PlayState extends FNFState
 			{
 				isPaused = true;
 				persistentUpdate = false;
-				pauseSubState.onOpen(i);
+				pauseSubState.setPlayer(i);
 				openSubState(pauseSubState);
 				break;
 			}

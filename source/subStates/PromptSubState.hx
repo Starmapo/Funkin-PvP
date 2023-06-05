@@ -16,7 +16,6 @@ class PromptSubState extends FNFSubState
 	var promptBG:FlxUI9SliceSprite;
 	var promptText:FlxUIText;
 	var buttonGroup:FlxTypedGroup<FlxUIButton>;
-	var camSubState:FlxCamera;
 	var buttons:Array<ButtonData>;
 
 	public function new(message:String, buttons:Array<ButtonData>)
@@ -24,13 +23,7 @@ class PromptSubState extends FNFSubState
 		super();
 		this.buttons = buttons;
 
-		camSubState = new FlxCamera();
-		camSubState.bgColor = 0;
-		camSubState.visible = false;
-		FlxG.cameras.add(camSubState, false);
-		cameras = [camSubState];
-
-		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGBFloat(0, 0, 0, 0.5)));
+		createCamera();
 
 		promptText = new FlxUIText(0, 0, FlxG.width / 2, message);
 		promptText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -45,9 +38,6 @@ class PromptSubState extends FNFSubState
 
 		createButtons();
 
-		openCallback = onOpen;
-		closeCallback = onClose;
-
 		promptBG.resize(promptBG.width, promptText.height + 5 + buttonGroup.members[0].height + 10);
 	}
 
@@ -57,7 +47,6 @@ class PromptSubState extends FNFSubState
 		promptBG = null;
 		promptText = null;
 		buttonGroup = null;
-		camSubState = null;
 	}
 
 	function createButtons()
@@ -79,16 +68,6 @@ class PromptSubState extends FNFSubState
 			curX += button.width + 5;
 		}
 		CoolUtil.screenCenterGroup(buttonGroup, X);
-	}
-
-	function onOpen()
-	{
-		camSubState.visible = true;
-	}
-
-	function onClose()
-	{
-		camSubState.visible = false;
 	}
 }
 

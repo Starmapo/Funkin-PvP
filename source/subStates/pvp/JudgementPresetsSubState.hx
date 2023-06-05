@@ -4,7 +4,6 @@ import data.PlayerSettings;
 import data.Settings;
 import data.game.Judgement;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
@@ -166,12 +165,7 @@ class JudgementPresetsSubState extends FNFSubState
 		if (curSelected < 0)
 			curSelected = 0;
 
-		var bg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		bg.setGraphicSize(FlxG.width, FlxG.height);
-		bg.updateHitbox();
-		bg.alpha = 0.6;
-		bg.scrollFactor.set();
-		add(bg);
+		createCamera();
 
 		nameText = new FlxText(5, 5, FlxG.width - 10);
 		nameText.setFormat('PhantomMuff 1.5', 64, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -199,11 +193,6 @@ class JudgementPresetsSubState extends FNFSubState
 		add(tipText);
 
 		changeSelection();
-
-		openCallback = function()
-		{
-			waitTime = 0.1;
-		}
 	}
 
 	override function update(elapsed:Float)
@@ -258,6 +247,12 @@ class JudgementPresetsSubState extends FNFSubState
 		nameText = null;
 		judgementGroup = null;
 		state = null;
+	}
+
+	override function onOpen()
+	{
+		waitTime = 0.1;
+		super.onOpen();
 	}
 
 	function changeSelection(change:Int = 0)
