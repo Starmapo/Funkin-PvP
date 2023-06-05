@@ -530,7 +530,16 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(saveButton);
 		tab.add(loadButton);
 
-		var playtestP1Button = new FlxUIButton(0, saveButton.y + saveButton.height + spacing, 'Playtest P1', function()
+		var newChartButton = new FlxUIButton(0, loadButton.y + loadButton.height + spacing, 'New Chart', function() {});
+
+		var newSongButton = new FlxUIButton(newChartButton.x + newChartButton.width + spacing, newChartButton.y, 'New Song', function() {});
+
+		newChartButton.x = (width - CoolUtil.getArrayWidth([newChartButton, newSongButton])) / 2;
+		newSongButton.x = newChartButton.x + newChartButton.width + spacing;
+		tab.add(newChartButton);
+		tab.add(newSongButton);
+
+		var playtestP1Button = new FlxUIButton(0, newSongButton.y + newSongButton.height + spacing, 'Playtest P1', function()
 		{
 			state.exitToTestPlay(0, true);
 		});
