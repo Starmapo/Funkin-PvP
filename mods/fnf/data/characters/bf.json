@@ -1,15 +1,11 @@
 {
+	"flipX": true,
 	"positionOffset": [
 		-9,
-		380.4
+		380
 	],
 	"image": "characters/bf",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "bf",
-	"flipX": true,
 	"anims": [
 		{
 			"atlasName": "BF HEY!!",
@@ -109,8 +105,5 @@
 		49,
 		176,
 		209
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

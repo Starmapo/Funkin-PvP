@@ -103,6 +103,13 @@ class HealthBar extends FlxSpriteGroup
 	{
 		var percent = bar.percent / 100;
 		var addX = (right ? bar.width - (bar.width * percent) : bar.width * percent);
-		icon.setPosition(bar.x + addX - (icon.width / 2), bar.y + (bar.height / 2) - (icon.height / 2));
+		icon.setPosition(bar.x
+			+ addX
+			- (icon.width / 2)
+			+ icon.info.positionOffset[0],
+			bar.y
+			+ (bar.height / 2)
+			- (icon.height / 2)
+			+ icon.info.positionOffset[1]);
 	}
 }

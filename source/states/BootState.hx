@@ -13,7 +13,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import lime.app.Application;
-import states.editors.CharacterEditorState;
 import states.menus.TitleState;
 import sys.FileSystem;
 import sys.thread.Thread;
@@ -173,6 +172,19 @@ class BootState extends FNFState
 						Mods.pvpMusic.push(Path.join([fullPath, 'music', pvpMusicList[i]]));
 				}
 
+				var difficulties:Array<String> = ['Easy', 'Normal', 'Hard'];
+				var difficultiesPath = Path.join([fullPath, 'data/difficulties.txt']);
+				if (FileSystem.exists(difficultiesPath))
+				{
+					var diffs = Paths.getContent(difficultiesPath).trim().split('\n');
+					for (diff in diffs)
+					{
+						diff = diff.trim();
+						if (diff.length > 0)
+							difficulties.push(diff);
+					}
+				}
+
 				var songSelectPath = Path.join([fullPath, 'data/songSelect.json']);
 				if (FileSystem.exists(songSelectPath))
 				{
@@ -190,17 +202,29 @@ class BootState extends FNFState
 								icon = mod.directory + ':' + icon;
 
 							var songPath = Paths.getPath('songs/$name', mod.directory);
-							var difficulties:Array<String> = [];
-							for (songFile in FileSystem.readDirectory(songPath))
-							{
-								if (songFile.endsWith('.json') && !songFile.startsWith('!'))
-									difficulties.push(songFile.substr(0, songFile.length - 5));
-							}
+							var songDifficulties:Array<String> = [];
 							if (difficulties.length > 0)
+							{
+								for (diff in difficulties)
+								{
+									var diffPath = Path.join([songPath, diff + '.json']);
+									if (FileSystem.exists(diffPath))
+										songDifficulties.push(diff);
+								}
+							}
+							else
+							{
+								for (songFile in FileSystem.readDirectory(songPath))
+								{
+									if (songFile.endsWith('.json') && !songFile.startsWith('!'))
+										songDifficulties.push(songFile.substr(0, songFile.length - 5));
+								}
+							}
+							if (songDifficulties.length > 0)
 								songs.push({
 									name: name,
 									icon: icon,
-									difficulties: difficulties,
+									difficulties: songDifficulties,
 									directory: mod.directory
 								});
 						}

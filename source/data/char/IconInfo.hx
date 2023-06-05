@@ -37,6 +37,7 @@ class IconInfo extends JsonObject
 		return loadIcon(Paths.getPath('data/icons/$name.json', 'fnf'));
 	}
 
+	public var image:String;
 	public var frames:Int;
 	public var antialiasing:Bool;
 	public var positionOffset:Array<Float>;
@@ -54,16 +55,17 @@ class IconInfo extends JsonObject
 
 	public function new(data:Dynamic)
 	{
+		image = readString(data.image);
 		frames = readInt(data.frames, 2, 1, 3);
 		antialiasing = readBool(data.antialiasing, true);
 		positionOffset = readFloatArray(data.positionOffset, [0, 0], null, 2, null, null, 2);
 		normalAnim = readString(data.normalAnim);
-		normalFPS = readFloat(data.normalFPS, 24, 0, 1000, 2);
+		normalFPS = readFloat(data.normalFPS, 0, 0, 1000, 2);
 		losingAnim = readString(data.losingAnim);
-		losingFPS = readFloat(data.losingFPS, 24, 0, 1000, 2);
+		losingFPS = readFloat(data.losingFPS, 0, 0, 1000, 2);
 		losingOffset = readFloatArray(data.losingOffset, [], null, 2, null, null, 2);
 		winningAnim = readString(data.winningAnim);
-		winningFPS = readFloat(data.winningFPS, 24, 0, 1000, 2);
+		winningFPS = readFloat(data.winningFPS, 0, 0, 1000, 2);
 		winningOffset = readFloatArray(data.winningOffset, [], null, 2, null, null, 2);
 	}
 }

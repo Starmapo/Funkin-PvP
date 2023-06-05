@@ -35,6 +35,7 @@ class Song extends JsonObject
 		if (json == null)
 			return null;
 
+		var converted = false;
 		if (json.song != null)
 		{
 			var sliderVelocities:Array<Dynamic> = json.sliderVelocities;
@@ -51,6 +52,8 @@ class Song extends JsonObject
 					}));
 				}
 			}
+
+			converted = true;
 		}
 
 		var song = new Song(json);
@@ -60,6 +63,8 @@ class Song extends JsonObject
 		song.difficultyName = new Path(path).file;
 		song.mod = split[1];
 		song.sort();
+		if (converted)
+			song.save(path);
 		return song;
 	}
 

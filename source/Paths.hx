@@ -220,14 +220,14 @@ class Paths
 		return getSound(getPath('music/$path/audio'), mod);
 	}
 
-	public static function getSongInst(song:Song, ?mod:String)
+	public static function getSongInst(song:Song)
 	{
-		return getSound('${song.directory}/Inst.ogg', mod);
+		return getSound('${song.directory}/Inst.ogg', song.mod);
 	}
 
-	public static function getSongVocals(song:Song, ?mod:String)
+	public static function getSongVocals(song:Song)
 	{
-		return getSound('${song.directory}/Voices.ogg', mod);
+		return getSound('${song.directory}/Voices.ogg', song.mod);
 	}
 
 	public static function getText(path:String, ?mod:String)

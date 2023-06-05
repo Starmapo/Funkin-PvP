@@ -17,25 +17,31 @@ class HealthIcon extends AnimatedSprite
 
 	function reloadGraphic()
 	{
+		info = IconInfo.loadIconFromName(icon);
+		if (info == null)
+			info = new IconInfo({});
+
 		var nameInfo = CoolUtil.getNameInfo(icon);
 		var name = nameInfo.name;
 		var mod = nameInfo.mod;
 
-		var imagePath = Paths.getPath('images/icons/$name.png', mod);
-		if (!Paths.exists(imagePath))
-			imagePath = Paths.getPath('images/icons/icon-$name.png', mod);
-		if (!Paths.exists(imagePath))
+		var imagePath = '';
+		if (info.image.length > 0)
+			imagePath = Paths.getPath('images/${info.image}.png', mod);
+		else
 		{
-			name = 'face';
-			mod = 'fnf';
-			imagePath = Paths.getPath('images/icons/face.png', 'fnf');
+			imagePath = Paths.getPath('images/icons/$name.png', mod);
+			if (!Paths.exists(imagePath))
+				imagePath = Paths.getPath('images/icons/icon-$name.png', mod);
+			if (!Paths.exists(imagePath))
+			{
+				name = 'face';
+				mod = 'fnf';
+				imagePath = Paths.getPath('images/icons/face.png', 'fnf');
+			}
 		}
 
 		var path = Path.withoutExtension(imagePath);
-
-		info = IconInfo.loadIconFromName(icon);
-		if (info == null)
-			info = new IconInfo({});
 
 		if (Paths.isSpritesheet(path, mod))
 		{

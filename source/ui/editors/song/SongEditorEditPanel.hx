@@ -114,7 +114,7 @@ class SongEditorEditPanel extends EditorPanel
 				label: 'Timing Points'
 			}
 		], 3);
-		resize(390, 500);
+		resize(390, 530);
 		x = FlxG.width - width - 10;
 		screenCenter(Y);
 		this.state = state;
@@ -1092,6 +1092,24 @@ class SongEditorEditPanel extends EditorPanel
 		changeSelectedNoteTypesButton.resize(170, changeSelectedNoteTypesButton.height);
 		changeSelectedNoteTypesButton.x = (width - changeSelectedNoteTypesButton.width) / 2;
 		tab.add(changeSelectedNoteTypesButton);
+
+		var getTypeListButton = new FlxUIButton(0, changeSelectedNoteTypesButton.y + changeSelectedNoteTypesButton.height + spacing, 'Get Note Type List',
+			function()
+			{
+				var types:Array<String> = [];
+				for (note in state.song.notes)
+				{
+					if (note.type.length > 0 && !types.contains(note.type))
+						types.push(note.type);
+				}
+				if (types.length > 0)
+					state.notificationManager.showNotification(types.join(', '));
+				else
+					state.notificationManager.showNotification('No special note types found.');
+			});
+		getTypeListButton.resize(120, getTypeListButton.height);
+		getTypeListButton.x = (width - getTypeListButton.width) / 2;
+		tab.add(getTypeListButton);
 
 		addGroup(tab);
 	}

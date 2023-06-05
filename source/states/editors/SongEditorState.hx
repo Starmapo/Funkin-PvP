@@ -1,5 +1,6 @@
 package states.editors;
 
+import data.Mods;
 import data.Settings;
 import data.song.CameraFocus;
 import data.song.EventObject;
@@ -130,6 +131,7 @@ class SongEditorState extends FNFState
 		camFocusDisplay = null;
 		metronome = FlxDestroyUtil.destroy(metronome);
 		Application.current.onExit.remove(onExit);
+		Mods.currentMod = '';
 	}
 
 	override function create()
@@ -139,6 +141,7 @@ class SongEditorState extends FNFState
 		persistentUpdate = true;
 		destroySubStates = false;
 		checkDropdowns = true;
+		Mods.currentMod = 'fnf';
 
 		actionManager = new SongEditorActionManager(this);
 
