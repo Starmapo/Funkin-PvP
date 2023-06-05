@@ -213,17 +213,24 @@ class CharacterEditorState extends FNFState
 						char.animation.curAnim.restart();
 				}
 			}
-			if (char.animation.curAnim.paused)
+			if (char.animation.curAnim.numFrames > 1)
 			{
-				if (FlxG.keys.justPressed.COMMA)
-					changeFrameIndex(-1);
-				if (FlxG.keys.justPressed.PERIOD)
-					changeFrameIndex(1);
+				if (char.animation.curAnim.paused)
+				{
+					if (FlxG.keys.justPressed.COMMA)
+						changeFrameIndex(-1);
+					if (FlxG.keys.justPressed.PERIOD)
+						changeFrameIndex(1);
+				}
+				if (FlxG.keys.justPressed.HOME)
+				{
+					char.animation.curAnim.curFrame = 0;
+					if (char.animation.finished)
+						char.animation.curAnim.play();
+				}
+				if (FlxG.keys.justPressed.END)
+					char.animation.curAnim.curFrame = char.animation.curAnim.numFrames - 1;
 			}
-			if (FlxG.keys.justPressed.HOME)
-				char.animation.curAnim.curFrame = 0;
-			if (FlxG.keys.justPressed.END && char.animation.curAnim.numFrames > 0)
-				char.animation.curAnim.curFrame = char.animation.curAnim.numFrames - 1;
 
 			if (FlxG.keys.justPressed.G)
 				setGhostAnim(char.animation.name);

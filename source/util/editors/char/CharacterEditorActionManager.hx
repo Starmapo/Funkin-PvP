@@ -577,7 +577,7 @@ class ActionRemoveAnim implements IAction
 		if (state.char.animation.name == anim.name)
 			state.changeAnim(state.charInfo.anims[0].name);
 		if (state.ghostChar.animation.name == anim.name)
-			state.ghostChar.animation.play(state.charInfo.anims[0].name);
+			state.ghostChar.playAnim(state.charInfo.anims[0].name);
 		state.char.animation.remove(anim.name);
 		state.ghostChar.animation.remove(anim.name);
 
@@ -622,10 +622,14 @@ class ActionChangeAnimName implements IAction
 		if (state.char.animation.exists(lastName))
 		{
 			state.char.animation.rename(lastName, name);
+			state.char.offsets.set(name, state.char.offsets.get(lastName));
+			state.char.offsets.remove(lastName);
 			if (state.char.animation.name == lastName)
 				state.char.playAnim(name, true, false, state.char.animation.curAnim.curFrame);
 
 			state.ghostChar.animation.rename(lastName, name);
+			state.ghostChar.offsets.set(name, state.ghostChar.offsets.get(lastName));
+			state.ghostChar.offsets.remove(lastName);
 			if (state.ghostChar.animation.name == lastName)
 				state.ghostChar.playAnim(name, true, false, state.ghostChar.animation.curAnim.curFrame);
 		}
@@ -669,7 +673,13 @@ class ActionChangeAnimAtlasName implements IAction
 		lastName = anim.atlasName;
 		anim.atlasName = name;
 
+		var lastAnim = state.char.animation.name;
+		var lastGhostAnim = state.ghostChar.animation.name;
 		state.updateAnim(anim);
+		if (lastAnim == anim.name)
+			state.changeAnim(anim.name);
+		if (lastGhostAnim == anim.name)
+			state.ghostChar.playAnim(lastGhostAnim, true);
 
 		state.actionManager.triggerEvent(type, {
 			anim: anim,

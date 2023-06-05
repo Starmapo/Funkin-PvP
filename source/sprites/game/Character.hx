@@ -356,14 +356,6 @@ class Character extends DancingSprite
 				loop: anim.loop,
 				offset: offset
 			});
-
-			if (charInfo.psych && charInfo.scale != 1)
-			{
-				playAnim(anim.name, true);
-				var offset = offsets.get(anim.name);
-				offset[0] += (graphicWidth - frameWidth) / 2;
-				offset[1] += (graphicHeight - frameHeight) / 2;
-			}
 		}
 
 		danceStep = -1;

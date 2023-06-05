@@ -220,6 +220,12 @@ class Song extends JsonObject
 						}));
 					continue;
 				}
+				if (noteInfo.lane > 7)
+				{
+					var type = Math.floor(noteInfo.lane / 8);
+					noteInfo.lane %= 8;
+					noteInfo.type = 'Type $type';
+				}
 				if (section.mustHitSection)
 				{
 					if (noteInfo.lane >= 4)

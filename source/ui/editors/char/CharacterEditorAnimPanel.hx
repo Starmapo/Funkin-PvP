@@ -1,6 +1,7 @@
 package ui.editors.char;
 
 import data.char.CharacterInfo.AnimInfo;
+import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.graphics.frames.FlxFramesCollection;
 import states.editors.CharacterEditorState;
@@ -44,11 +45,25 @@ class CharacterEditorAnimPanel extends EditorPanel
 				i++;
 			}
 
-			var atlasName = FlxFramesCollection.getAtlasName(state.char.frames.frames[0].name, state.char.frames.atlasType);
-			var anim = new AnimInfo({
-				name: name,
-				atlasName: atlasName
-			});
+			var anim:AnimInfo = null;
+			var curAnim = state.charInfo.getAnim(animDropdown.selectedLabel);
+			if (curAnim != null && FlxG.keys.released.SHIFT)
+				anim = new AnimInfo({
+					name: name,
+					atlasName: curAnim.atlasName,
+					indices: curAnim.indices.copy(),
+					fps: curAnim.fps,
+					loop: curAnim.loop,
+					flipX: curAnim.flipX,
+					flipY: curAnim.flipY,
+					offset: curAnim.offset.copy(),
+					nextAnim: curAnim.nextAnim
+				});
+			else
+				anim = new AnimInfo({
+					name: name,
+					atlasName: FlxFramesCollection.getAtlasName(state.char.frames.frames[0].name, state.char.frames.atlasType)
+				});
 			state.actionManager.perform(new ActionAddAnim(state, anim));
 			state.changeAnim(name);
 		});
@@ -58,7 +73,7 @@ class CharacterEditorAnimPanel extends EditorPanel
 
 		var removeButton = new FlxUIButton(addButton.x + addButton.width + spacing, addButton.y, 'Remove', function()
 		{
-			var anim = state.char.getCurAnim();
+			var anim = state.charInfo.getAnim(animDropdown.selectedLabel);
 			if (anim != null)
 				state.actionManager.perform(new ActionRemoveAnim(state, anim));
 		});

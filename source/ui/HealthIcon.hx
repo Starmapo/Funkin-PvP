@@ -15,7 +15,7 @@ class HealthIcon extends AnimatedSprite
 		this.icon = icon;
 	}
 
-	function reloadGraphic()
+	public function reloadGraphic()
 	{
 		info = IconInfo.loadIconFromName(icon);
 		if (info == null)
@@ -35,9 +35,14 @@ class HealthIcon extends AnimatedSprite
 				imagePath = Paths.getPath('images/icons/icon-$name.png', mod);
 			if (!Paths.exists(imagePath))
 			{
+				mod = 'fnf';
+				imagePath = Paths.getPath('images/icons/$name.png', mod);
+			}
+			if (!Paths.exists(imagePath))
+			{
 				name = 'face';
 				mod = 'fnf';
-				imagePath = Paths.getPath('images/icons/face.png', 'fnf');
+				imagePath = Paths.getPath('images/icons/$name.png', mod);
 			}
 		}
 

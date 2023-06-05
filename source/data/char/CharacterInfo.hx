@@ -31,7 +31,8 @@ class CharacterInfo extends JsonObject
 		charInfo.name = new Path(path).file;
 		charInfo.mod = charInfo.directory.split('/')[1];
 		charInfo.sortAnims();
-		charInfo.psych = psych;
+		if (psych)
+			charInfo.save(path);
 		return charInfo;
 	}
 
@@ -112,7 +113,6 @@ class CharacterInfo extends JsonObject
 	public var directory:String = '';
 	public var name:String = '';
 	public var mod:String = '';
-	public var psych:Bool = false;
 
 	public function new(data:Dynamic)
 	{

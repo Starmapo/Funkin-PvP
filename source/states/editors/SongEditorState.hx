@@ -106,7 +106,7 @@ class SongEditorState extends FNFState
 		playfieldOther = null;
 		beatSnap = FlxDestroyUtil.destroy(beatSnap);
 		song = null;
-		inst = null;
+		inst = FlxDestroyUtil.destroy(inst);
 		vocals = FlxDestroyUtil.destroy(vocals);
 		availableBeatSnaps = null;
 		FlxDestroyUtil.destroy(songSeeked);
