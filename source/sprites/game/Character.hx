@@ -334,7 +334,10 @@ class Character extends DancingSprite
 	public function reloadImage()
 	{
 		var nameInfo = CoolUtil.getNameInfo(charInfo.image, charInfo.mod);
-		frames = Paths.getSpritesheet(nameInfo.name, nameInfo.mod);
+		var daFrames = Paths.getSpritesheet(nameInfo.name, nameInfo.mod);
+		if (daFrames == null)
+			daFrames = Paths.getSpritesheet(nameInfo.name, 'fnf');
+		frames = daFrames;
 
 		updateFlipped();
 	}

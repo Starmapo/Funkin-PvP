@@ -8,6 +8,7 @@ import haxe.io.Path;
 import states.editors.CharacterEditorState;
 import subStates.editors.char.AtlasNamePrompt;
 import subStates.editors.char.HealthColorPicker;
+import subStates.editors.char.NewCharacterPrompt;
 import systools.Dialogs;
 import util.editors.char.CharacterEditorActionManager;
 
@@ -46,6 +47,7 @@ class CharacterEditorEditPanel extends EditorPanel
 	var inputWidth = 250;
 	var healthColorPicker:HealthColorPicker;
 	var atlasNamePrompt:AtlasNamePrompt;
+	var newCharacterPrompt:NewCharacterPrompt;
 
 	public function new(state:CharacterEditorState)
 	{
@@ -63,7 +65,7 @@ class CharacterEditorEditPanel extends EditorPanel
 				label: 'Editor'
 			}
 		]);
-		resize(390, 290);
+		resize(390, 320);
 		x = FlxG.width - width - 10;
 		screenCenter(Y);
 		this.state = state;
@@ -107,6 +109,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		curAnim = null;
 		healthColorPicker = FlxDestroyUtil.destroy(healthColorPicker);
 		atlasNamePrompt = FlxDestroyUtil.destroy(atlasNamePrompt);
+		newCharacterPrompt = FlxDestroyUtil.destroy(newCharacterPrompt);
 	}
 
 	function createAnimationTab()
@@ -268,6 +271,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		{
 			state.actionManager.perform(new ActionChangeHealthColor(state, color));
 		});
+		newCharacterPrompt = new NewCharacterPrompt(state);
 
 		var tab = createTab('Character');
 
@@ -449,15 +453,20 @@ class CharacterEditorEditPanel extends EditorPanel
 			}
 
 			state.save(false);
-			state.actionManager.reset();
-			state.charInfo = charInfo;
-			state.reloadCharInfo();
+			state.setCharInfo(charInfo);
 		});
 
 		saveButton.x = (width - CoolUtil.getArrayWidth([saveButton, loadButton])) / 2;
 		loadButton.x = saveButton.x + saveButton.width + spacing;
 		tab.add(saveButton);
 		tab.add(loadButton);
+
+		var newCharacterButton = new FlxUIButton(0, loadButton.y + loadButton.height + spacing, 'New Character', function()
+		{
+			state.openSubState(newCharacterPrompt);
+		});
+		newCharacterButton.x += (width - newCharacterButton.width) / 2;
+		tab.add(newCharacterButton);
 
 		addGroup(tab);
 	}
@@ -481,8 +490,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		{
 			state.saveFrame(state.charInfo.name + '.png');
 		});
-		saveFrameButton.resize(160, saveFrameButton.height);
-		saveFrameButton.autoCenterLabel();
+		saveFrameButton.resize(120, saveFrameButton.height);
 		saveFrameButton.x = (width - saveFrameButton.width) / 2;
 		tab.add(saveFrameButton);
 
@@ -568,6 +576,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		updateCurAnim();
 
 		atlasNamePrompt.refreshAtlasNames();
+		newCharacterPrompt.updateMod();
 	}
 
 	function updateImage()

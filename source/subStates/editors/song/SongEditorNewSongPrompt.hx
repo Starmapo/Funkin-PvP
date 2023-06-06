@@ -133,10 +133,16 @@ class SongEditorNewSongPrompt extends FNFSubState
 				return;
 			}
 
+			var path = Path.join([Mods.modsPath, modInput.text, 'songs', songNameInput.text]);
+			if (FileSystem.exists(path))
+			{
+				FlxTween.cancelTweensOf(songNameInput);
+				FlxTween.color(songNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
+				return;
+			}
+
 			state.save(false);
 
-			var path = Path.join([Mods.modsPath, modInput.text, 'songs', songNameInput.text]);
-			trace(path);
 			FileSystem.createDirectory(path);
 			File.copy(instFile, Path.join([path, 'Inst.ogg']));
 			if (vocalsFile.length > 0)
@@ -147,7 +153,6 @@ class SongEditorNewSongPrompt extends FNFSubState
 			song.name = songNameInput.text;
 			song.difficultyName = difficultyNameInput.text;
 			song.mod = modInput.text;
-			song.sort();
 
 			song.save(Path.join([path, song.difficultyName + '.json']));
 			FlxG.switchState(new SongEditorState(song));

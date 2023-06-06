@@ -590,6 +590,13 @@ class CharacterEditorState extends FNFState
 			FlxG.switchState(new ToolboxState());
 		}
 	}
+
+	public function setCharInfo(charInfo:CharacterInfo)
+	{
+		actionManager.reset();
+		this.charInfo = charInfo;
+		reloadCharInfo();
+	}
 }
 
 enum abstract MoveTool(String) from String to String

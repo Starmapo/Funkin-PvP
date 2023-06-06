@@ -116,7 +116,7 @@ class CharacterInfo extends JsonObject
 
 	public function new(data:Dynamic)
 	{
-		image = readString(data.image, 'characters/bf');
+		image = readString(data.image, 'characters/dad');
 		for (a in readArray(data.anims))
 		{
 			if (a != null)
