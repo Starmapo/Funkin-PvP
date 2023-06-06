@@ -12,14 +12,16 @@ import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxTimer;
 import sprites.game.Character;
+import ui.editors.EditorInputText;
 
 class FNFState extends FlxTransitionableState
 {
 	public var dropdowns:Array<FlxUIDropDownMenu> = [];
+	public var inputTexts:Array<EditorInputText> = [];
 
+	var checkObjects:Bool = false;
 	var cachedGraphics:Array<FlxGraphic> = [];
 	var cachedCharacters:Array<String> = [];
-	var checkDropdowns:Bool = false;
 
 	public function new()
 	{
@@ -96,34 +98,40 @@ class FNFState extends FlxTransitionableState
 	{
 		super.destroy();
 		dropdowns = null;
+		inputTexts = null;
 		cachedGraphics = null;
 		cachedCharacters = null;
 	}
 
 	function onMemberAdded(obj:FlxBasic)
 	{
-		if (checkDropdowns)
-			checkDropdown(obj);
+		if (checkObjects)
+			check(obj);
 	}
 
-	function checkDropdown(obj:FlxBasic)
+	function check(obj:FlxBasic)
 	{
 		if (Std.isOfType(obj, FlxUIDropDownMenu))
 		{
 			var dropdown:FlxUIDropDownMenu = cast obj;
 			dropdowns.push(dropdown);
 		}
+		else if (Std.isOfType(obj, EditorInputText))
+		{
+			var inputText:EditorInputText = cast obj;
+			inputTexts.push(inputText);
+		}
 		else if (Std.isOfType(obj, FlxTypedGroup))
 		{
 			var group:FlxTypedGroup<Dynamic> = cast obj;
 			for (obj in group)
-				checkDropdown(obj);
+				check(obj);
 		}
 		else if (Std.isOfType(obj, FlxTypedSpriteGroup))
 		{
 			var group:FlxTypedSpriteGroup<Dynamic> = cast obj;
 			for (obj in group.group)
-				checkDropdown(obj);
+				check(obj);
 		}
 	}
 }

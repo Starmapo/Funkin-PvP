@@ -10,6 +10,8 @@ import flixel.util.FlxColor;
 
 class EditorPanel extends FlxUITabMenu
 {
+	static var TAB_HEIGHT:Int = 18;
+
 	var maxRows:Int;
 
 	public function new(?tabs:Array<{name:String, label:String}>, maxRows:Int = 0)
@@ -61,7 +63,7 @@ class EditorPanel extends FlxUITabMenu
 		}
 
 		if (maxRows > 0)
-			yy = -20 * (rows % maxRows);
+			yy = -TAB_HEIGHT * (rows % maxRows);
 
 		_tabs.sort(sortTabs);
 
@@ -87,7 +89,7 @@ class EditorPanel extends FlxUITabMenu
 				var theWidth = tab_width;
 				if (maxRows > 0 && i >= maxRows * Math.floor(_tabs.length / maxRows))
 					theWidth = last_tab_width;
-				var theHeight:Float = tab.get_height();
+				var theHeight:Float = tab.height;
 				if (i != 0)
 				{
 					// when stretching, if resize_ratios are set, tabs can wind up with wrong heights since they might have different widths.
@@ -121,7 +123,7 @@ class EditorPanel extends FlxUITabMenu
 			if (maxRows > 0 && i % maxRows == 0)
 			{
 				xx = 0;
-				yy += 20;
+				yy += TAB_HEIGHT;
 			}
 		}
 
@@ -147,8 +149,8 @@ class EditorPanel extends FlxUITabMenu
 		if (numTabs == 0)
 			return 0;
 		else if (maxRows > 0)
-			return 20 + (20 * Math.floor((numTabs - 1) / maxRows));
+			return TAB_HEIGHT + (TAB_HEIGHT * Math.floor((numTabs - 1) / maxRows));
 		else
-			return 20;
+			return TAB_HEIGHT;
 	}
 }

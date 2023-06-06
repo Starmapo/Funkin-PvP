@@ -1,4 +1,3 @@
-song editor add new chart/song
 character editor select atlas name
 character editor add new character
 erb

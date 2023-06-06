@@ -138,7 +138,7 @@ class SongEditorState extends FNFState
 
 		persistentUpdate = true;
 		destroySubStates = false;
-		checkDropdowns = true;
+		checkObjects = true;
 		Mods.currentMod = 'fnf';
 
 		actionManager = new SongEditorActionManager(this);

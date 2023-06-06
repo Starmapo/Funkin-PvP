@@ -64,7 +64,7 @@ class CharacterEditorState extends FNFState
 		this.charInfo = charInfo;
 
 		persistentUpdate = true;
-		checkDropdowns = true;
+		checkObjects = true;
 		destroySubStates = false;
 	}
 

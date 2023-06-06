@@ -20,6 +20,7 @@ import subStates.PromptSubState.YesNoPrompt;
 import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorChangeNoteTypePrompt;
 import subStates.editors.song.SongEditorNewChartPrompt;
+import subStates.editors.song.SongEditorNewSongPrompt;
 import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
 import systools.Dialogs;
 import ui.editors.EditorCheckbox;
@@ -353,6 +354,7 @@ class SongEditorEditPanel extends EditorPanel
 			}
 		});
 		var newChartPrompt = new SongEditorNewChartPrompt(state);
+		var newSongPrompt = new SongEditorNewSongPrompt(state);
 
 		var tab = createTab('Song');
 		var inputSpacing = 125;
@@ -501,7 +503,6 @@ class SongEditorEditPanel extends EditorPanel
 
 		var loadButton = new FlxUIButton(saveButton.x + saveButton.width + spacing, saveButton.y, 'Load', function()
 		{
-			state.save(false);
 			var result = Dialogs.openFile("Select chart inside the game's directory to load", '', {
 				count: 1,
 				descriptions: ['JSON files'],
@@ -524,6 +525,7 @@ class SongEditorEditPanel extends EditorPanel
 				return;
 			}
 
+			state.save(false);
 			FlxG.switchState(new SongEditorState(song));
 		});
 
@@ -537,7 +539,10 @@ class SongEditorEditPanel extends EditorPanel
 			state.openSubState(newChartPrompt);
 		});
 
-		var newSongButton = new FlxUIButton(newChartButton.x + newChartButton.width + spacing, newChartButton.y, 'New Song', function() {});
+		var newSongButton = new FlxUIButton(newChartButton.x + newChartButton.width + spacing, newChartButton.y, 'New Song', function()
+		{
+			state.openSubState(newSongPrompt);
+		});
 
 		newChartButton.x = (width - CoolUtil.getArrayWidth([newChartButton, newSongButton])) / 2;
 		newSongButton.x = newChartButton.x + newChartButton.width + spacing;
@@ -549,8 +554,7 @@ class SongEditorEditPanel extends EditorPanel
 			state.exitToTestPlay(0, true);
 		});
 
-		var playtestP2Button = new FlxUIButton(playtestP1Button.x + playtestP1Button.width + spacing, playtestP1Button.y,
-			'Playtest P2', function()
+		var playtestP2Button = new FlxUIButton(playtestP1Button.x + playtestP1Button.width + spacing, playtestP1Button.y, 'Playtest P2', function()
 		{
 			state.exitToTestPlay(1, true);
 		});

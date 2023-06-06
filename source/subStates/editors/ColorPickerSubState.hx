@@ -33,6 +33,7 @@ class ColorPickerSubState extends FNFSubState
 		super();
 		color = startingColor;
 		this.callback = callback;
+		checkObjects = true;
 	}
 
 	override function create()
@@ -162,14 +163,7 @@ class ColorPickerSubState extends FNFSubState
 	{
 		updateColor();
 		originalColor = color;
-		redNumeric.visible = greenNumeric.visible = blueNumeric.visible = colorInput.visible = true;
 		super.onOpen();
-	}
-
-	override function onClose()
-	{
-		redNumeric.visible = greenNumeric.visible = blueNumeric.visible = colorInput.visible = false;
-		super.onClose();
 	}
 
 	function updateColor(?e:Dynamic, pick:Bool = true)

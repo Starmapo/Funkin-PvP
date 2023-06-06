@@ -216,6 +216,13 @@ class EditorInputText extends FlxSpriteGroup
 		updateBGSize();
 		return textField.size;
 	}
+
+	override function set_color(value:FlxColor)
+	{
+		textBorder.color = value;
+		textBG.color = value;
+		return color = value;
+	}
 }
 
 class EditorInputTextField extends FlxText
@@ -256,7 +263,7 @@ class EditorInputTextField extends FlxText
 		super.destroy();
 	}
 
-	function updateTextField()
+	public function updateTextField()
 	{
 		if (textField == null)
 			return;

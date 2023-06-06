@@ -8,12 +8,14 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.util.FlxColor;
+import ui.editors.EditorInputText;
 
 class FNFSubState extends FlxSubState
 {
 	public var dropdowns:Array<FlxUIDropDownMenu> = [];
+	public var inputTexts:Array<EditorInputText> = [];
 
-	var checkDropdowns:Bool = false;
+	var checkObjects:Bool = false;
 	var camSubState:FlxCamera;
 
 	public function new()
@@ -41,6 +43,8 @@ class FNFSubState extends FlxSubState
 	override function destroy()
 	{
 		super.destroy();
+		dropdowns = null;
+		inputTexts = null;
 		if (camSubState != null && FlxG.cameras.list.contains(camSubState))
 			FlxG.cameras.remove(camSubState);
 		camSubState = null;
@@ -50,38 +54,47 @@ class FNFSubState extends FlxSubState
 	{
 		if (camSubState != null)
 			camSubState.visible = true;
+		for (text in inputTexts)
+			text.visible = true;
 	}
 
 	function onClose()
 	{
 		if (camSubState != null)
 			camSubState.visible = false;
+		for (text in inputTexts)
+			text.visible = false;
 	}
 
 	function onMemberAdded(obj:FlxBasic)
 	{
-		if (checkDropdowns)
-			checkDropdown(obj);
+		if (checkObjects)
+			check(obj);
 	}
 
-	function checkDropdown(obj:FlxBasic)
+	function check(obj:FlxBasic)
 	{
 		if (Std.isOfType(obj, FlxUIDropDownMenu))
 		{
 			var dropdown:FlxUIDropDownMenu = cast obj;
 			dropdowns.push(dropdown);
 		}
+		else if (Std.isOfType(obj, EditorInputText))
+		{
+			var inputText:EditorInputText = cast obj;
+			inputTexts.push(inputText);
+		}
 		else if (Std.isOfType(obj, FlxTypedGroup))
 		{
 			var group:FlxTypedGroup<Dynamic> = cast obj;
 			for (obj in group)
-				checkDropdown(obj);
+				check(obj);
 		}
 		else if (Std.isOfType(obj, FlxTypedSpriteGroup))
 		{
 			var group:FlxTypedSpriteGroup<Dynamic> = cast obj;
 			for (obj in group.group)
-				checkDropdown(obj);
+				check(obj);
 		}
 	}
 

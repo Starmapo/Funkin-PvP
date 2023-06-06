@@ -431,6 +431,7 @@ class CharacterEditorEditPanel extends EditorPanel
 				return;
 			}
 
+			state.save(false);
 			state.actionManager.reset();
 			state.charInfo = charInfo;
 			state.reloadCharInfo();

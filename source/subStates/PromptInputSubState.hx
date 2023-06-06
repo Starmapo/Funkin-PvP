@@ -21,6 +21,7 @@ class PromptInputSubState extends PromptSubState
 				name: 'Cancel'
 			}
 		]);
+		checkObjects = true;
 
 		inputText = new EditorInputText(promptBG.x + 5, promptText.y + promptText.height + 5, promptBG.width - 12, text, 16, true, camSubState);
 		inputText.visible = false;
@@ -36,17 +37,5 @@ class PromptInputSubState extends PromptSubState
 	{
 		super.destroy();
 		inputText = null;
-	}
-
-	override function onOpen()
-	{
-		super.onOpen();
-		inputText.visible = true;
-	}
-
-	override function onClose()
-	{
-		super.onClose();
-		inputText.visible = false;
 	}
 }

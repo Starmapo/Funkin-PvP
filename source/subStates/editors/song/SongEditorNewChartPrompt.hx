@@ -20,6 +20,7 @@ class SongEditorNewChartPrompt extends FNFSubState
 	{
 		super();
 		this.state = state;
+		checkObjects = true;
 
 		createCamera();
 
@@ -30,7 +31,6 @@ class SongEditorNewChartPrompt extends FNFSubState
 			}
 		]);
 		tabMenu.resize(270, 100);
-		add(tabMenu);
 
 		var tab = tabMenu.createTab('tab');
 		var spacing = 4;
@@ -138,6 +138,7 @@ class SongEditorNewChartPrompt extends FNFSubState
 		tabMenu.addGroup(tab);
 
 		tabMenu.screenCenter();
+		add(tabMenu);
 
 		var closeButton = new FlxUIButton(tabMenu.x + tabMenu.width - 20 - spacing, tabMenu.y + spacing, "X", function()
 		{
