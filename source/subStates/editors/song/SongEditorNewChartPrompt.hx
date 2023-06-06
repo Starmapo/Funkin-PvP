@@ -29,28 +29,31 @@ class SongEditorNewChartPrompt extends FNFSubState
 				label: 'Create a new chart...'
 			}
 		]);
-		tabMenu.resize(420, 200);
+		tabMenu.resize(270, 100);
 		add(tabMenu);
 
 		var tab = tabMenu.createTab('tab');
 		var spacing = 4;
 
-		var difficultyNameLabel = new EditorText(4, 4, 0, 'Difficulty Name:');
+		var difficultyNameLabel = new EditorText(4, 5, 0, 'Difficulty Name:');
 
-		var difficultyNameInput = new EditorInputText(difficultyNameLabel.x, difficultyNameLabel.y + difficultyNameLabel.height + spacing);
+		var difficultyNameInput = new EditorInputText(difficultyNameLabel.x + difficultyNameLabel.width + spacing, difficultyNameLabel.y - 1, 0, null, 8,
+			true, camSubState);
 
-		var copyMetadataCheckbox = new EditorCheckbox(difficultyNameInput.x, difficultyNameInput.y + difficultyNameInput.height + spacing,
+		var copyMetadataCheckbox = new EditorCheckbox(difficultyNameLabel.x, difficultyNameLabel.y + difficultyNameLabel.height + spacing * 2,
 			"Copy current chart's metadata");
+		copyMetadataCheckbox.checked = true;
 
 		var copyObjectsCheckbox = new EditorCheckbox(copyMetadataCheckbox.x + copyMetadataCheckbox.box.width + copyMetadataCheckbox.button.label.width,
 			copyMetadataCheckbox.y, "Copy current chart's objects");
+		copyObjectsCheckbox.checked = true;
 
-		var createButton = new FlxUIButton(0, copyObjectsCheckbox.y + copyObjectsCheckbox.height + spacing, 'Create', function()
+		var createButton = new FlxUIButton(0, copyObjectsCheckbox.y + copyObjectsCheckbox.height + spacing * 2, 'Create', function()
 		{
 			if (difficultyNameInput.text.length < 1)
 			{
 				FlxTween.cancelTweensOf(difficultyNameInput);
-				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, difficultyNameInput.color, {startDelay: 0.2});
+				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
 
@@ -107,6 +110,8 @@ class SongEditorNewChartPrompt extends FNFSubState
 						params: n.params.join(',')
 					});
 			}
+			else
+				data.timingPoints.push({});
 
 			var difficulty = difficultyNameInput.text;
 			var path = Path.join([state.song.directory, difficulty + '.json']);
@@ -130,7 +135,18 @@ class SongEditorNewChartPrompt extends FNFSubState
 		tab.add(copyObjectsCheckbox);
 		tab.add(createButton);
 
-		tabMenu.add(tab);
+		tabMenu.addGroup(tab);
+
+		tabMenu.screenCenter();
+
+		var closeButton = new FlxUIButton(tabMenu.x + tabMenu.width - 20 - spacing, tabMenu.y + spacing, "X", function()
+		{
+			close();
+		});
+		closeButton.resize(20, 20);
+		closeButton.color = FlxColor.RED;
+		closeButton.label.color = FlxColor.WHITE;
+		add(closeButton);
 	}
 
 	override function destroy()

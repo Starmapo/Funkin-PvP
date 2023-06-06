@@ -19,6 +19,7 @@ import states.editors.SongEditorState;
 import subStates.PromptSubState.YesNoPrompt;
 import subStates.editors.song.SongEditorApplyOffsetPrompt;
 import subStates.editors.song.SongEditorChangeNoteTypePrompt;
+import subStates.editors.song.SongEditorNewChartPrompt;
 import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
 import systools.Dialogs;
 import ui.editors.EditorCheckbox;
@@ -351,6 +352,7 @@ class SongEditorEditPanel extends EditorPanel
 				song.save(path);
 			}
 		});
+		var newChartPrompt = new SongEditorNewChartPrompt(state);
 
 		var tab = createTab('Song');
 		var inputSpacing = 125;
@@ -530,7 +532,10 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(saveButton);
 		tab.add(loadButton);
 
-		var newChartButton = new FlxUIButton(0, loadButton.y + loadButton.height + spacing, 'New Chart', function() {});
+		var newChartButton = new FlxUIButton(0, loadButton.y + loadButton.height + spacing, 'New Chart', function()
+		{
+			state.openSubState(newChartPrompt);
+		});
 
 		var newSongButton = new FlxUIButton(newChartButton.x + newChartButton.width + spacing, newChartButton.y, 'New Song', function() {});
 
@@ -544,7 +549,7 @@ class SongEditorEditPanel extends EditorPanel
 			state.exitToTestPlay(0, true);
 		});
 
-		var playtestP2Button = new FlxUIButton(playtestP1Button.x + playtestP1Button.width + spacing, saveButton.y + saveButton.height + spacing,
+		var playtestP2Button = new FlxUIButton(playtestP1Button.x + playtestP1Button.width + spacing, playtestP1Button.y,
 			'Playtest P2', function()
 		{
 			state.exitToTestPlay(1, true);
