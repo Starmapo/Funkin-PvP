@@ -6,6 +6,7 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import states.editors.CharacterEditorState;
+import subStates.editors.char.AtlasNamePrompt;
 import subStates.editors.char.HealthColorPicker;
 import systools.Dialogs;
 import util.editors.char.CharacterEditorActionManager;
@@ -44,6 +45,7 @@ class CharacterEditorEditPanel extends EditorPanel
 	var inputSpacing = 125;
 	var inputWidth = 250;
 	var healthColorPicker:HealthColorPicker;
+	var atlasNamePrompt:AtlasNamePrompt;
 
 	public function new(state:CharacterEditorState)
 	{
@@ -104,10 +106,13 @@ class CharacterEditorEditPanel extends EditorPanel
 		flipAllCheckbox = null;
 		curAnim = null;
 		healthColorPicker = FlxDestroyUtil.destroy(healthColorPicker);
+		atlasNamePrompt = FlxDestroyUtil.destroy(atlasNamePrompt);
 	}
 
 	function createAnimationTab()
 	{
+		atlasNamePrompt = new AtlasNamePrompt(state);
+
 		var tab = createTab('Animation');
 
 		var nameLabel = new EditorText(4, 5, 0, 'Name:');
@@ -148,7 +153,19 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(atlasNameInput);
 
-		var indicesLabel = new EditorText(atlasNameLabel.x, atlasNameLabel.y + atlasNameLabel.height + spacing, 0, 'Indices (Optional):');
+		var selectAtlasNameButton = new FlxUIButton(0, atlasNameInput.y + atlasNameInput.height + spacing, 'Select Atlas Name', function()
+		{
+			if (curAnim == null)
+				return;
+
+			atlasNamePrompt.anim = curAnim;
+			state.openSubState(atlasNamePrompt);
+		});
+		selectAtlasNameButton.resize(120, selectAtlasNameButton.height);
+		selectAtlasNameButton.x += (width - selectAtlasNameButton.width) / 2;
+		tab.add(selectAtlasNameButton);
+
+		var indicesLabel = new EditorText(atlasNameLabel.x, selectAtlasNameButton.y + selectAtlasNameButton.height + spacing + 1, 0, 'Indices (Optional):');
 		tab.add(indicesLabel);
 
 		indicesInput = new EditorInputText(indicesLabel.x + inputSpacing, indicesLabel.y - 1, inputWidth);
@@ -549,6 +566,8 @@ class CharacterEditorEditPanel extends EditorPanel
 		updateConstantLooping();
 
 		updateCurAnim();
+
+		atlasNamePrompt.refreshAtlasNames();
 	}
 
 	function updateImage()

@@ -148,13 +148,7 @@ class CharacterInfo extends JsonObject
 	{
 		anims.sort(function(a, b)
 		{
-			var animA = a.name.toLowerCase();
-			var animB = b.name.toLowerCase();
-			if (animA < animB)
-				return -1;
-			if (animA > animB)
-				return 1;
-			return 0;
+			return CoolUtil.sortAlphabetically(a.name, b.name);
 		});
 	}
 

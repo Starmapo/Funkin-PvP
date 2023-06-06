@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxSort;
 import data.Mods;
 import data.PlayerSettings;
 import data.game.Judgement;
@@ -400,6 +401,23 @@ class CoolUtil
 			return '[WARNING: This mod was made for a future major release (v$major) and might not function properly!]\n';
 
 		return '';
+	}
+
+	public static function sortAlphabetically(a:String, b:String, order:Int = FlxSort.ASCENDING)
+	{
+		if (a == null)
+			a = '';
+		if (b == null)
+			b = '';
+		
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+
+		if (a < b)
+			return order;
+		if (a > b)
+			return -order;
+		return 0;
 	}
 
 	@:generic

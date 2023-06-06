@@ -125,12 +125,11 @@ class TitleState extends FNFState
 		pressEnter.addAnim({
 			name: 'idle',
 			atlasName: 'Press Enter to Begin'
-		});
+		}, true);
 		pressEnter.addAnim({
 			name: 'press',
 			atlasName: 'ENTER PRESSED'
 		});
-		pressEnter.playAnim('idle');
 		pressEnter.antialiasing = true;
 		add(pressEnter);
 
@@ -361,13 +360,14 @@ class TitleState extends FNFState
 				pressEnter.animation.pause();
 			var duration = Main.getTransitionTime();
 			camHUD.flash(FlxColor.WHITE, duration);
-			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, duration, {ease: FlxEase.backIn});
+			FlxTween.tween(pressEnter, {y: FlxG.height + pressEnter.height}, duration, {ease: FlxEase.backIn, startDelay: 0.2});
 			FlxTween.tween(FlxG.camera, {y: FlxG.height}, duration, {
 				ease: FlxEase.expoIn,
 				onComplete: function(_)
 				{
 					FlxG.switchState(new MainMenuState());
-				}
+				},
+				startDelay: 0.2
 			});
 			CoolUtil.playConfirmSound();
 			transitioning = true;

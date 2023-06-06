@@ -64,13 +64,7 @@ class JudgementSkinPage extends Page
 		}
 		groups.sort(function(a, b)
 		{
-			var nameA = a.name.toLowerCase();
-			var nameB = b.name.toLowerCase();
-			if (nameA < nameB)
-				return FlxSort.ASCENDING;
-			else if (nameA > nameB)
-				return -FlxSort.ASCENDING;
-			return 0;
+			return CoolUtil.sortAlphabetically(a.name, b.name);
 		});
 
 		for (group in groups)

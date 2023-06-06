@@ -43,7 +43,6 @@ class ColorPickerSubState extends FNFSubState
 		createCamera();
 
 		uiTabs = new EditorPanel([{name: "colorPicker", label: 'Select a color...'}]);
-		add(uiTabs);
 
 		tab = uiTabs.createTab("colorPicker");
 
@@ -146,6 +145,7 @@ class ColorPickerSubState extends FNFSubState
 		add(closeButton);
 
 		uiTabs.addGroup(tab);
+		add(uiTabs);
 	}
 
 	override function destroy()

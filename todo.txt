@@ -1,5 +1,5 @@
-character editor select atlas name
 character editor add new character
+try multiline input texts
 erb
 jerk (2:15)
 bloodpop (2:25)

@@ -15,35 +15,6 @@ class EditorDropdownMenu extends FlxUIDropDownMenu implements IFlxUIClickable im
 		return FlxUIDropDownMenu.makeStrIdLabelArray(stringArray, useIndexID);
 	}
 
-	static function setWidgetSuppression(asset:FlxSprite, butNotThisOne:IFlxUIWidget, suppressed:Bool = true):Void
-	{
-		if ((asset is IFlxUIClickable))
-		{
-			var skip:Bool = false;
-			if ((asset is FlxUIDropDownMenu))
-			{
-				var ddasset:FlxUIDropDownMenu = cast asset;
-				if (ddasset == butNotThisOne)
-				{
-					skip = true;
-				}
-			}
-			if (!skip)
-			{
-				var ibtn:IFlxUIClickable = cast asset;
-				ibtn.skipButtonUpdate = suppressed; // skip button updates until further notice
-			}
-		}
-		else if ((asset is FlxUIGroup))
-		{
-			var g:FlxUIGroup = cast asset;
-			for (groupAsset in g.members)
-			{
-				setWidgetSuppression(groupAsset, butNotThisOne, suppressed);
-			}
-		}
-	}
-
 	var tabMenu:FlxUITabMenu;
 
 	public function new(x:Float = 0, y:Float = 0, ?dataList:Array<StrNameLabel>, ?callback:String->Void, ?tabMenu:FlxUITabMenu)
@@ -65,9 +36,34 @@ class EditorDropdownMenu extends FlxUIDropDownMenu implements IFlxUIClickable im
 		{
 			for (asset in tabMenu)
 			{
-				setWidgetSuppression(asset, this, b);
+				setWidgetSuppression(asset, b);
 			}
 			skipButtonUpdate = false;
+		}
+	}
+
+	function setWidgetSuppression(asset:FlxSprite, suppressed:Bool = true):Void
+	{
+		if ((asset is IFlxUIClickable))
+		{
+			var skip:Bool = false;
+			if ((asset is FlxUIDropDownMenu))
+			{
+				var ddasset:FlxUIDropDownMenu = cast asset;
+				if (ddasset == this)
+					skip = true;
+			}
+			if (!skip)
+			{
+				var ibtn:IFlxUIClickable = cast asset;
+				ibtn.skipButtonUpdate = suppressed; // skip button updates until further notice
+			}
+		}
+		else if ((asset is FlxUIGroup))
+		{
+			var g:FlxUIGroup = cast asset;
+			for (groupAsset in g.members)
+				setWidgetSuppression(groupAsset, suppressed);
 		}
 	}
 }
