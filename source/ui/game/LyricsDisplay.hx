@@ -29,7 +29,7 @@ class LyricsDisplay extends FlxText
 		this.lyrics = lyrics;
 	}
 
-	public function updateLyrics(time:Float)
+	public function updateLyrics(time:Float, force:Bool = false)
 	{
 		this.time = time;
 		var i = lines.length - 1;
@@ -37,7 +37,7 @@ class LyricsDisplay extends FlxText
 		{
 			if (lines[i].steps.length > 0 && lines[i].steps[0].startTime <= time)
 			{
-				updateWithLyric(lines[i]);
+				updateWithLyric(lines[i], force);
 				break;
 			}
 			i--;
@@ -102,7 +102,7 @@ class LyricsDisplay extends FlxText
 				splitWords: [''],
 				steps: [finalStep]
 			});
-		updateLyrics(time);
+		updateLyrics(time, true);
 	}
 
 	override function destroy()
@@ -112,7 +112,7 @@ class LyricsDisplay extends FlxText
 		lines = null;
 	}
 
-	function updateWithLyric(lyric:LyricsLine)
+	function updateWithLyric(lyric:LyricsLine, force:Bool = false)
 	{
 		var stepIndex = lyric.steps.length - 1;
 		while (stepIndex >= 0)
@@ -130,8 +130,8 @@ class LyricsDisplay extends FlxText
 				len += lyric.splitWords[i].length;
 		}
 
-		var lyricText = lyric.splitWords.join('');
-		if (text != lyricText || stepIndex != lastIndex)
+		var lyricText = lyric.splitWords.join('').replace('\\s', ' ');
+		if (text != lyricText || stepIndex != lastIndex || force)
 		{
 			text = lyricText;
 			clearFormats();

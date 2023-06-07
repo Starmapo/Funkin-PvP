@@ -203,7 +203,7 @@ class SongEditorState extends FNFState
 		zoomOutButton.autoCenterLabel();
 		tooltip.addTooltip(zoomOutButton, 'Zoom Out (Hotkey: Page Down)');
 
-		refreshLyrics();
+		lyrics = Song.getSongLyrics(song);
 
 		lyricsDisplay = new SongEditorLyricsDisplay(this);
 
@@ -384,11 +384,6 @@ class SongEditorState extends FNFState
 			return;
 
 		setSongTime(seekTime);
-	}
-
-	public function refreshLyrics()
-	{
-		lyrics = Song.getSongLyrics(song);
 	}
 
 	public function exitToTestPlay(player:Int, fromStart:Bool = false)

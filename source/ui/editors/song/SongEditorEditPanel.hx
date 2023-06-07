@@ -77,6 +77,7 @@ class SongEditorEditPanel extends EditorPanel
 	var eventsPropertiesGroup:Array<FlxSprite> = [];
 	var eventIndex:Int = 0;
 	var lastEvent:EventObject = null;
+	var lyricsInput:EditorInputText;
 
 	public function new(state:SongEditorState)
 	{
@@ -99,6 +100,10 @@ class SongEditorEditPanel extends EditorPanel
 					label: 'Extra'
 				},
 			 */
+			{
+				name: 'Lyrics',
+				label: 'Lyrics'
+			},
 			{
 				name: 'Notes',
 				label: 'Notes'
@@ -125,6 +130,7 @@ class SongEditorEditPanel extends EditorPanel
 		createEditorTab();
 		createEventsTab();
 		createExtraTab();
+		createLyricsTab();
 		createNotesTab();
 		createScrollVelocitiesTab();
 		createSongTab();
@@ -572,15 +578,7 @@ class SongEditorEditPanel extends EditorPanel
 		applyOffsetButton.x = (width - applyOffsetButton.width) / 2;
 		tab.add(applyOffsetButton);
 
-		var refreshLyricsButton = new FlxUIButton(0, applyOffsetButton.y + applyOffsetButton.height + spacing, 'Refresh Lyrics', function()
-		{
-			state.refreshLyrics();
-			state.lyricsDisplay.lyrics = state.lyrics;
-		});
-		refreshLyricsButton.x = (width - refreshLyricsButton.width) / 2;
-		tab.add(refreshLyricsButton);
-
-		var pasteMetadataButton = new FlxUIButton(0, refreshLyricsButton.y + refreshLyricsButton.height + spacing, 'Paste metadata into all difficulties',
+		var pasteMetadataButton = new FlxUIButton(0, applyOffsetButton.y + applyOffsetButton.height + spacing, 'Paste metadata into all difficulties',
 			function()
 			{
 				state.openSubState(pasteMetadataPrompt);
@@ -1413,6 +1411,22 @@ class SongEditorEditPanel extends EditorPanel
 		addGroup(tab);
 	}
 
+	function createLyricsTab()
+	{
+		var tab = createTab('Lyrics');
+
+		lyricsInput = new EditorInputText(4, 4, width - 10, state.lyrics);
+		lyricsInput.multiline = true;
+		lyricsInput.resize(0, height - 64);
+		lyricsInput.textChanged.add(function(text, lastText)
+		{
+			state.actionManager.perform(new ActionChangeLyrics(state, lyricsInput.text, state.lyrics));
+		});
+		tab.add(lyricsInput);
+
+		addGroup(tab);
+	}
+
 	function createExtraTab() {}
 
 	override function update(elapsed:Float)
@@ -1456,6 +1470,8 @@ class SongEditorEditPanel extends EditorPanel
 				stageInput.text = params.stage;
 			case SongEditorActionManager.CHANGE_INITIAL_SV:
 				velocityStepper.value = params.initialScrollVelocity;
+			case SongEditorActionManager.CHANGE_LYRICS:
+				lyricsInput.text = params.lyrics;
 		}
 	}
 

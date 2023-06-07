@@ -9,7 +9,9 @@ import data.song.ScrollVelocity;
 import data.song.Song;
 import data.song.TimingPoint;
 import flixel.math.FlxMath;
+import haxe.io.Path;
 import states.editors.SongEditorState;
+import sys.io.File;
 import util.editors.actions.ActionManager;
 import util.editors.actions.IAction;
 
@@ -48,6 +50,7 @@ class SongEditorActionManager extends ActionManager
 	public static inline var CHANGE_GF:String = 'change-gf';
 	public static inline var CHANGE_STAGE:String = 'change-stage';
 	public static inline var CHANGE_INITIAL_SV:String = 'change-initial-sv';
+	public static inline var CHANGE_LYRICS:String = 'change-lyrics';
 
 	var state:SongEditorState;
 
@@ -1451,6 +1454,46 @@ class ActionChangeInitialSV implements IAction
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {initialScrollVelocity: state.song.initialScrollVelocity});
+	}
+}
+
+class ActionChangeLyrics implements IAction
+{
+	public var type:String = SongEditorActionManager.CHANGE_LYRICS;
+
+	var state:SongEditorState;
+	var value:String;
+	var lastValue:String;
+
+	public function new(state:SongEditorState, value:String, lastValue:String)
+	{
+		this.state = state;
+		this.value = value;
+		this.lastValue = lastValue;
+	}
+
+	public function perform()
+	{
+		state.lyrics = value;
+		triggerEvent();
+	}
+
+	public function undo()
+	{
+		state.lyrics = lastValue;
+		triggerEvent();
+	}
+
+	public function destroy()
+	{
+		state = null;
+	}
+
+	function triggerEvent()
+	{
+		state.lyricsDisplay.lyrics = state.lyrics;
+		File.saveContent(Path.join([state.song.directory, 'lyrics.txt']), state.lyrics);
+		state.actionManager.triggerEvent(type, {lyrics: state.lyrics});
 	}
 }
 

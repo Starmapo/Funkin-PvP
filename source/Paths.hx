@@ -282,12 +282,12 @@ class Paths
 	{
 		if (Assets.exists(path))
 		{
-			return Assets.getText(path).trim();
+			return Assets.getText(path).replace('\r', '').trim();
 		}
 		#if sys
 		else if (FileSystem.exists(path))
 		{
-			return File.getContent(path).trim();
+			return File.getContent(path).replace('\r', '').trim();
 		}
 		#end
 		return null;

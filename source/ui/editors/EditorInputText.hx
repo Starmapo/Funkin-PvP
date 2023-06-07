@@ -22,10 +22,10 @@ class EditorInputText extends FlxSpriteGroup
 	public var displayText(get, set):String;
 	public var multiline(get, set):Bool;
 	public var size(get, set):Int;
+	public var textField(default, null):EditorInputTextField;
 
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
-	var textField:EditorInputTextField;
 	var hasFocus:Bool = false;
 	var lastText:String;
 	var _displayText:String;
@@ -84,8 +84,13 @@ class EditorInputText extends FlxSpriteGroup
 
 	public function resize(width:Float, height:Float)
 	{
-		textField.width = width;
-		textField.height = height;
+		if (width <= 0)
+			width = textField.width;
+		if (height <= 0)
+			height = textField.height;
+
+		textField.width = textField.textField.width = width;
+		textField.height = textField.textField.height = height;
 		updateBGSize();
 	}
 
@@ -171,11 +176,12 @@ class EditorInputText extends FlxSpriteGroup
 
 	function set_maxLength(value:Int)
 	{
-		if (maxLength != value)
+		if (maxLength != value && value >= 0)
 		{
 			maxLength = value;
 			if (maxLength > 0)
 				text = text.substr(0, maxLength);
+			textField.textField.maxChars = value;
 		}
 		return value;
 	}
@@ -200,7 +206,6 @@ class EditorInputText extends FlxSpriteGroup
 	function set_multiline(value:Bool)
 	{
 		textField.textField.multiline = value;
-		textField.textField.autoSize = value ? LEFT : NONE;
 		textField.textField.wordWrap = value;
 		return value;
 	}

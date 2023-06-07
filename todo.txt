@@ -1,5 +1,4 @@
-drop song files
-try multiline input texts
+song editor edit lyrics
 erb
 jerk (2:15)
 bloodpop (2:25)
