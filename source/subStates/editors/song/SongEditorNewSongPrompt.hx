@@ -4,9 +4,11 @@ import data.Mods;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import haxe.io.Path;
+import lime.app.Application;
 import states.editors.SongEditorState;
 import sys.FileSystem;
 import sys.io.File;
@@ -15,9 +17,16 @@ import ui.editors.EditorInputText;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 
+using StringTools;
+
 class SongEditorNewSongPrompt extends FNFSubState
 {
 	var state:SongEditorState;
+	var instButton:FlxUIButton;
+	var vocalsButton:FlxUIButton;
+	var instFile:String = '';
+	var vocalsFile:String = '';
+	var onNextUpdate:Void->Void;
 
 	public function new(state:SongEditorState)
 	{
@@ -39,10 +48,6 @@ class SongEditorNewSongPrompt extends FNFSubState
 		var spacing = 4;
 		var inputSpacing = 84;
 
-		var instFile = '';
-		var vocalsFile = '';
-
-		var instButton:FlxUIButton = null;
 		instButton = new FlxUIButton(0, 4, 'Instrumental File', function()
 		{
 			var result = Dialogs.openFile("Select the instrumental file", '', {
@@ -62,13 +67,11 @@ class SongEditorNewSongPrompt extends FNFSubState
 			}
 
 			instFile = Path.normalize(result[0]);
-			FlxTween.cancelTweensOf(instButton);
-			FlxTween.color(instButton, 0.2, instButton.color, FlxColor.LIME);
+			instTween();
 		});
 		instButton.resize(120, instButton.height);
 		instButton.x += (tabMenu.width - instButton.width) / 2;
 
-		var vocalsButton:FlxUIButton = null;
 		vocalsButton = new FlxUIButton(0, instButton.y + instButton.height + spacing, 'Vocals File', function()
 		{
 			var result = Dialogs.openFile("Select the vocals file", '', {
@@ -88,8 +91,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 			}
 
 			vocalsFile = Path.normalize(result[0]);
-			FlxTween.cancelTweensOf(vocalsButton);
-			FlxTween.color(vocalsButton, 0.2, vocalsButton.color, FlxColor.LIME);
+			vocalsTween();
 		});
 		vocalsButton.resize(120, vocalsButton.height);
 		vocalsButton.x += (tabMenu.width - vocalsButton.width) / 2;
@@ -108,7 +110,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 
 		var createButton = new FlxUIButton(0, modLabel.y + modLabel.height + spacing, 'Create', function()
 		{
-			if (instFile.length < 1)
+			if (instFile.length < 1 || !FileSystem.exists(instFile))
 			{
 				FlxTween.cancelTweensOf(instButton);
 				FlxTween.color(instButton, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
@@ -145,7 +147,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 
 			FileSystem.createDirectory(path);
 			File.copy(instFile, Path.join([path, 'Inst.ogg']));
-			if (vocalsFile.length > 0)
+			if (vocalsFile.length > 0 && FileSystem.exists(vocalsFile))
 				File.copy(vocalsFile, Path.join([path, 'Voices.ogg']));
 
 			var song = new Song({title: songNameInput.text, timingPoints: [{}]});
@@ -184,9 +186,67 @@ class SongEditorNewSongPrompt extends FNFSubState
 		add(closeButton);
 	}
 
+	override function update(elapsed:Float)
+	{
+		if (onNextUpdate != null)
+		{
+			onNextUpdate();
+			onNextUpdate = null;
+		}
+
+		super.update(elapsed);
+	}
+
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
+		instButton = null;
+		vocalsButton = null;
+	}
+
+	override function onOpen()
+	{
+		Application.current.window.onDropFile.add(onDropFile);
+		super.onOpen();
+	}
+
+	override function onClose()
+	{
+		Application.current.window.onDropFile.remove(onDropFile);
+		super.onClose();
+	}
+
+	function onDropFile(path:String)
+	{
+		if (!path.endsWith('.ogg'))
+			return;
+
+		// mouse position hasn't been updated yet so i have to wait until the next update
+		onNextUpdate = function()
+		{
+			if (FlxG.mouse.overlaps(instButton, camSubState))
+			{
+				instFile = Path.normalize(path);
+				instTween();
+			}
+			else if (FlxG.mouse.overlaps(vocalsButton, camSubState))
+			{
+				vocalsFile = Path.normalize(path);
+				vocalsTween();
+			}
+		}
+	}
+
+	function instTween()
+	{
+		FlxTween.cancelTweensOf(instButton);
+		FlxTween.color(instButton, 0.2, instButton.color, FlxColor.LIME);
+	}
+
+	function vocalsTween()
+	{
+		FlxTween.cancelTweensOf(vocalsButton);
+		FlxTween.color(vocalsButton, 0.2, vocalsButton.color, FlxColor.LIME);
 	}
 }
