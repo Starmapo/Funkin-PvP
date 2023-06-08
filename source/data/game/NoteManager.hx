@@ -3,7 +3,6 @@ package data.game;
 import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxBasic;
-import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
 import ui.game.Note;
