@@ -177,6 +177,7 @@ class BootState extends FNFState
 				var difficultiesPath = Path.join([fullPath, 'data/difficulties.txt']);
 				if (FileSystem.exists(difficultiesPath))
 				{
+					difficulties = [];
 					var diffs = Paths.getContent(difficultiesPath).trim().split('\n');
 					for (diff in diffs)
 					{

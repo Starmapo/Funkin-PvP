@@ -2,12 +2,17 @@ package ui.game;
 
 import data.PlayerConfig;
 import data.Settings;
+import data.game.GameplayRuleset;
+import data.game.InputManager;
 import data.game.Judgement;
+import data.game.NoteManager;
+import data.game.ScoreProcessor;
 import data.skin.NoteSkin;
 import data.skin.SplashSkin;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.util.FlxDestroyUtil;
 
 class Playfield extends FlxGroup
 {
@@ -17,10 +22,15 @@ class Playfield extends FlxGroup
 	public var receptors(default, null):FlxTypedGroup<Receptor>;
 	public var splashes(default, null):FlxTypedGroup<NoteSplash>;
 	public var alpha:Float = 1;
+	public var ruleset(default, null):GameplayRuleset;
+	public var scoreProcessor(default, null):ScoreProcessor;
+	public var inputManager(default, null):InputManager;
+	public var noteManager(default, null):NoteManager;
 
-	public function new(player:Int = 0)
+	public function new(ruleset:GameplayRuleset, player:Int = 0)
 	{
 		super();
+		this.ruleset = ruleset;
 		this.player = player;
 		config = Settings.playerConfigs[player];
 		noteSkin = new NoteSkin(NoteSkin.loadSkinFromName(config.noteSkin));
@@ -29,6 +39,13 @@ class Playfield extends FlxGroup
 
 		initReceptors();
 		initSplashes();
+
+		scoreProcessor = new ScoreProcessor(ruleset, player);
+		noteManager = new NoteManager(this, player);
+		add(noteManager);
+		inputManager = new InputManager(this, player);
+
+		active = false;
 	}
 
 	public function onLanePressed(lane:Int)
@@ -68,6 +85,12 @@ class Playfield extends FlxGroup
 			splashes.members[note.info.playerLane].startSplash();
 	}
 
+	override function update(elapsed:Float)
+	{
+		noteManager.update(elapsed);
+		super.update(elapsed);
+	}
+
 	override function draw()
 	{
 		var lastSpriteAlphas = new Map<FlxSprite, Float>();
@@ -93,6 +116,10 @@ class Playfield extends FlxGroup
 		noteSkin = null;
 		receptors = null;
 		splashes = null;
+		ruleset = null;
+		scoreProcessor = FlxDestroyUtil.destroy(scoreProcessor);
+		inputManager = FlxDestroyUtil.destroy(inputManager);
+		noteManager = FlxDestroyUtil.destroy(noteManager);
 	}
 
 	function initReceptors()

@@ -159,10 +159,7 @@ class PlayState extends FNFState
 		super.update(elapsed);
 
 		timing.update(elapsed);
-
-		ruleset.updateCurrentTrackPosition();
 		ruleset.update(elapsed);
-
 		handleInput(elapsed);
 
 		if (!hasEnded && isComplete)
@@ -667,14 +664,7 @@ class PlayState extends FNFState
 		for (playfield in ruleset.playfields)
 		{
 			playfield.cameras = [camHUD];
-			playfield.active = false;
 			add(playfield);
-		}
-		for (manager in ruleset.noteManagers)
-		{
-			manager.cameras = [camHUD];
-			manager.active = false;
-			add(manager);
 		}
 
 		ruleset.lanePressed.add(onLanePressed);
@@ -697,7 +687,7 @@ class PlayState extends FNFState
 
 			statsDisplay = new FlxTypedGroup();
 			for (i in 0...2)
-				statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
+				statsDisplay.add(new PlayerStatsDisplay(ruleset.playfields[i].scoreProcessor));
 			statsDisplay.cameras = [camHUD];
 		}
 
@@ -714,7 +704,7 @@ class PlayState extends FNFState
 		judgementCounters = new FlxTypedGroup();
 		for (i in 0...2)
 		{
-			var counter = new JudgementCounter(ruleset.scoreProcessors[i]);
+			var counter = new JudgementCounter(ruleset.playfields[i].scoreProcessor);
 			counter.exists = Settings.playerConfigs[i].judgementCounter;
 			judgementCounters.add(counter);
 		}
@@ -756,6 +746,8 @@ class PlayState extends FNFState
 		staticBG.setGraphicSize(FlxG.width, FlxG.height);
 		staticBG.updateHitbox();
 		staticBG.playAnim('static');
+		if (!Settings.distractions)
+			staticBG.animation.pause();
 		staticBG.scrollFactor.set();
 		add(staticBG);
 
@@ -792,7 +784,7 @@ class PlayState extends FNFState
 			{
 				healthBars = new FlxTypedGroup();
 				for (i in 0...2)
-					healthBars.add(new HealthBar(ruleset.scoreProcessors[i], getPlayerCharacter(i).charInfo));
+					healthBars.add(new HealthBar(ruleset.playfields[i].scoreProcessor, getPlayerCharacter(i).charInfo));
 				healthBars.cameras = [camHUD];
 				add(healthBars);
 			}
@@ -875,9 +867,9 @@ class PlayState extends FNFState
 			event.startTime -= getEventEarlyTrigger(event);
 		events.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
 
-		for (manager in ruleset.noteManagers)
+		for (playfield in ruleset.playfields)
 		{
-			for (lane in manager.activeNoteLanes)
+			for (lane in playfield.noteManager.activeNoteLanes)
 			{
 				for (note in lane)
 					onNoteSpawned(note);
@@ -1261,7 +1253,7 @@ class PlayState extends FNFState
 
 		for (i in 0...2)
 		{
-			var score = ruleset.scoreProcessors[i];
+			var score = ruleset.playfields[i].scoreProcessor;
 			var reset = (!PlayerSettings.players[i].config.noReset && PlayerSettings.checkPlayerAction(i, RESET_P));
 			if (score.failed || reset)
 				onDeath(i);
@@ -1275,8 +1267,9 @@ class PlayState extends FNFState
 
 	function get_isComplete()
 	{
-		for (manager in ruleset.noteManagers)
+		for (playfield in ruleset.playfields)
 		{
+			var manager = playfield.noteManager;
 			for (lane in manager.activeNoteLanes)
 			{
 				if (lane.length > 0)

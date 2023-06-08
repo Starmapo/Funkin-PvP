@@ -33,7 +33,7 @@ class ResultsScreen extends FNFSubState
 		createCamera();
 		camSubState.alpha = 0;
 
-		var scores = [for (i in 0...2) state.ruleset.scoreProcessors[i]];
+		var scores = [for (i in 0...2) state.ruleset.playfields[i].scoreProcessor];
 		var winText = '';
 		if (state.died)
 		{

@@ -138,8 +138,9 @@ class PlayStateScript extends Script
 		setVariable("getCurrentNotes", function()
 		{
 			var notes:Array<Note> = [];
-			for (manager in state.ruleset.noteManagers)
+			for (playfield in state.ruleset.playfields)
 			{
+				var manager = playfield.noteManager;
 				pushLaneNotes(notes, manager.activeNoteLanes);
 				pushLaneNotes(notes, manager.heldLongNoteLanes);
 				pushLaneNotes(notes, manager.deadNoteLanes);
@@ -149,29 +150,29 @@ class PlayStateScript extends Script
 		setVariable("getActiveNotes", function()
 		{
 			var notes:Array<Note> = [];
-			for (manager in state.ruleset.noteManagers)
-				pushLaneNotes(notes, manager.activeNoteLanes);
+			for (playfield in state.ruleset.playfields)
+				pushLaneNotes(notes, playfield.noteManager.activeNoteLanes);
 			return notes;
 		});
 		setVariable("getHeldNotes", function()
 		{
 			var notes:Array<Note> = [];
-			for (manager in state.ruleset.noteManagers)
-				pushLaneNotes(notes, manager.heldLongNoteLanes);
+			for (playfield in state.ruleset.playfields)
+				pushLaneNotes(notes, playfield.noteManager.heldLongNoteLanes);
 			return notes;
 		});
 		setVariable("getDeadNotes", function()
 		{
 			var notes:Array<Note> = [];
-			for (manager in state.ruleset.noteManagers)
-				pushLaneNotes(notes, manager.deadNoteLanes);
+			for (playfield in state.ruleset.playfields)
+				pushLaneNotes(notes, playfield.noteManager.deadNoteLanes);
 			return notes;
 		});
 		setVariable("getQueueNotes", function()
 		{
 			var notes:Array<NoteInfo> = [];
-			for (manager in state.ruleset.noteManagers)
-				pushLaneNotes(notes, manager.noteQueueLanes);
+			for (playfield in state.ruleset.playfields)
+				pushLaneNotes(notes, playfield.noteManager.noteQueueLanes);
 			return notes;
 		});
 		setVariable("getShader", function(name:String, glslVersion:Int = 120)

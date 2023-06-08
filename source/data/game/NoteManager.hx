@@ -6,6 +6,7 @@ import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
 import ui.game.Note;
+import ui.game.Playfield;
 
 class NoteManager extends FlxBasic
 {
@@ -24,8 +25,7 @@ class NoteManager extends FlxBasic
 	public var onBreak(get, never):Bool;
 	public var alpha:Float = 1;
 
-	var ruleset:GameplayRuleset;
-	var song:Song;
+	var playfield:Playfield;
 	var player:Int;
 	var createObjectPositionTreshold:Float;
 	var recycleObjectPositionTreshold:Float;
@@ -35,12 +35,14 @@ class NoteManager extends FlxBasic
 	var currentSvIndex:Int = 0;
 	var initialPoolSizePerLane:Int = 2;
 	var autoplay(get, never):Bool;
+	var song(get, never):Song;
+	var scoreProcessor(get, never):ScoreProcessor;
+	var ruleset(get, never):GameplayRuleset;
 
-	public function new(ruleset:GameplayRuleset, song:Song, player:Int)
+	public function new(playfield:Playfield, player:Int)
 	{
 		super();
-		this.ruleset = ruleset;
-		this.song = song;
+		this.playfield = playfield;
 		this.player = player;
 		config = Settings.playerConfigs[player];
 
@@ -53,12 +55,15 @@ class NoteManager extends FlxBasic
 		if (Settings.breakTransparency && onBreak)
 		{
 			alpha = breakAlpha;
-			ruleset.playfields[player].alpha = alpha;
+			playfield.alpha = alpha;
 		}
+		
+		active = false;
 	}
 
 	override function update(elapsed:Float)
 	{
+		updateCurrentTrackPosition();
 		updateAlpha(elapsed);
 		updateAndScoreActiveObjects(elapsed);
 		updateAndScoreHeldObjects(elapsed);
@@ -96,8 +101,7 @@ class NoteManager extends FlxBasic
 		activeNoteLanes = destroyLanes(activeNoteLanes);
 		deadNoteLanes = destroyLanes(deadNoteLanes);
 		heldLongNoteLanes = destroyLanes(heldLongNoteLanes);
-		ruleset = null;
-		song = null;
+		playfield = null;
 		velocityPositionMarkers = null;
 		super.destroy();
 	}
@@ -296,7 +300,7 @@ class NoteManager extends FlxBasic
 
 	public function createPoolObject(info:NoteInfo)
 	{
-		var note = new Note(info, this, ruleset.playfields[player], ruleset.playfields[player].noteSkin);
+		var note = new Note(info, this, playfield, playfield.noteSkin);
 		activeNoteLanes[info.playerLane].push(note);
 		ruleset.noteSpawned.dispatch(note);
 	}
@@ -381,24 +385,23 @@ class NoteManager extends FlxBasic
 
 		for (lane in activeNoteLanes)
 		{
-			while (lane.length > 0
-				&& currentAudioPosition > lane[0].info.startTime + ruleset.scoreProcessors[player].judgementWindow[Judgement.SHIT])
+			while (lane.length > 0 && currentAudioPosition > lane[0].info.startTime + scoreProcessor.judgementWindow[Judgement.SHIT])
 			{
 				var note = lane.shift();
 
-				var stat = new HitStat(MISS, NONE, note.info, note.info.startTime, MISS, FlxMath.MIN_VALUE_FLOAT, ruleset.scoreProcessors[player].accuracy,
-					ruleset.scoreProcessors[player].health);
-				ruleset.scoreProcessors[player].stats.push(stat);
+				var stat = new HitStat(MISS, NONE, note.info, note.info.startTime, MISS, FlxMath.MIN_VALUE_FLOAT, scoreProcessor.accuracy,
+					scoreProcessor.health);
+				scoreProcessor.stats.push(stat);
 
-				ruleset.scoreProcessors[player].registerScore(MISS);
+				scoreProcessor.registerScore(MISS);
 
 				ruleset.noteReleaseMissed.dispatch(note);
 
 				if (note.info.isLongNote)
 				{
 					killPoolObject(note);
-					ruleset.scoreProcessors[player].registerScore(MISS, true);
-					ruleset.scoreProcessors[player].stats.push(stat);
+					scoreProcessor.registerScore(MISS, true);
+					scoreProcessor.stats.push(stat);
 				}
 				else
 					killPoolObject(note);
@@ -425,7 +428,7 @@ class NoteManager extends FlxBasic
 		if (autoplay)
 			return;
 
-		var window = ruleset.scoreProcessors[player].judgementWindow[Judgement.SHIT] * ruleset.scoreProcessors[player].windowReleaseMultiplier[Judgement.SHIT];
+		var window = scoreProcessor.judgementWindow[Judgement.SHIT] * scoreProcessor.windowReleaseMultiplier[Judgement.SHIT];
 
 		for (lane in heldLongNoteLanes)
 		{
@@ -435,11 +438,11 @@ class NoteManager extends FlxBasic
 
 				var missedReleaseJudgement = Judgement.BAD;
 
-				var stat = new HitStat(MISS, NONE, note.info, note.info.endTime, missedReleaseJudgement, FlxMath.MIN_VALUE_INT,
-					ruleset.scoreProcessors[player].accuracy, ruleset.scoreProcessors[player].health);
-				ruleset.scoreProcessors[player].stats.push(stat);
+				var stat = new HitStat(MISS, NONE, note.info, note.info.endTime, missedReleaseJudgement, FlxMath.MIN_VALUE_INT, scoreProcessor.accuracy,
+					scoreProcessor.health);
+				scoreProcessor.stats.push(stat);
 
-				ruleset.scoreProcessors[player].registerScore(missedReleaseJudgement, true);
+				scoreProcessor.registerScore(missedReleaseJudgement, true);
 
 				recyclePoolObject(note);
 			}
@@ -482,7 +485,7 @@ class NoteManager extends FlxBasic
 			if (alpha > 1)
 				alpha = 1;
 		}
-		ruleset.playfields[player].alpha = alpha;
+		playfield.alpha = alpha;
 	}
 
 	function get_scrollSpeed()
@@ -492,7 +495,7 @@ class NoteManager extends FlxBasic
 
 	function get_autoplay()
 	{
-		return ruleset.inputManagers[player].autoplay;
+		return playfield.inputManager.autoplay;
 	}
 
 	function get_nextNote()
@@ -541,5 +544,20 @@ class NoteManager extends FlxBasic
 			return true;
 
 		return (nextNote.startTime - currentAudioPosition >= 5000 * Settings.playbackRate);
+	}
+
+	function get_song()
+	{
+		return ruleset.song;
+	}
+
+	function get_scoreProcessor()
+	{
+		return playfield.scoreProcessor;
+	}
+
+	function get_ruleset()
+	{
+		return playfield.ruleset;
 	}
 }

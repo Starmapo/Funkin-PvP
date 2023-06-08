@@ -1,7 +1,6 @@
 package data.game;
 
 import data.game.HitStat.KeyPressType;
-import data.song.Song;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
 
@@ -25,7 +24,6 @@ class ScoreProcessor implements IFlxDestroyable
 	public var totalJudgementCount(get, never):Int;
 
 	var ruleset:GameplayRuleset;
-	var song:Song;
 	var totalJudgements:Int;
 	var summedScore:Int;
 	var multiplierCount:Int;
@@ -35,10 +33,9 @@ class ScoreProcessor implements IFlxDestroyable
 	var maxMultiplierCount(get, never):Int;
 	var scoreCount:Int;
 
-	public function new(ruleset:GameplayRuleset, song:Song, player:Int)
+	public function new(ruleset:GameplayRuleset, player:Int)
 	{
 		this.ruleset = ruleset;
-		this.song = song;
 		this.player = player;
 
 		initializeJudgementWindows();
@@ -152,7 +149,6 @@ class ScoreProcessor implements IFlxDestroyable
 		judgementAccuracyWeighting = null;
 		windowReleaseMultiplier = null;
 		ruleset = null;
-		song = null;
 	}
 
 	function initializeJudgementWindows()
@@ -174,7 +170,7 @@ class ScoreProcessor implements IFlxDestroyable
 	function getTotalJudgementCount()
 	{
 		var judgements = 0;
-		for (note in song.notes)
+		for (note in ruleset.song.notes)
 		{
 			if (note.player != player)
 				continue;
@@ -206,7 +202,7 @@ class ScoreProcessor implements IFlxDestroyable
 
 	function initializeHealthWeighting()
 	{
-		var density = song.getActionsPerSecond(Settings.playbackRate);
+		var density = ruleset.song.getActionsPerSecond(Settings.playbackRate);
 		if (density == 0 || density >= 12 || Math.isNaN(density))
 			return;
 		if (density > 0 && density < 2)

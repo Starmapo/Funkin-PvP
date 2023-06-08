@@ -3,28 +3,30 @@ package data.game;
 import data.Controls.Action;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import ui.game.Note;
+import ui.game.Playfield;
 
 class InputManager implements IFlxDestroyable
 {
 	public var autoplay:Bool;
 	public var bindingStore:Array<InputBinding>;
 
-	var ruleset:GameplayRuleset;
+	var playfield:Playfield;
 	var player:Int;
 	var realPlayer:Int;
 	var controls:Controls;
-	var manager:NoteManager;
+	var noteManager(get, never):NoteManager;
 	var config:PlayerConfig;
+	var ruleset(get, never):GameplayRuleset;
+	var scoreProcessor(get, never):ScoreProcessor;
 
-	public function new(ruleset:GameplayRuleset, player:Int)
+	public function new(playfield:Playfield, player:Int)
 	{
-		this.ruleset = ruleset;
+		this.playfield = playfield;
 		this.player = player;
 		realPlayer = player;
 		config = Settings.playerConfigs[player];
 		autoplay = config.autoplay;
 		controls = PlayerSettings.players[player].controls;
-		manager = ruleset.noteManagers[player];
 
 		setInputBinds();
 	}
@@ -33,18 +35,18 @@ class InputManager implements IFlxDestroyable
 	{
 		if (autoplay)
 		{
-			for (lane in manager.heldLongNoteLanes)
+			for (lane in noteManager.heldLongNoteLanes)
 			{
-				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.endTime)
+				while (lane.length > 0 && noteManager.currentAudioPosition >= lane[0].info.endTime)
 				{
 					var note = lane[0];
 					ruleset.laneReleased.dispatch(note.info.playerLane, player);
 					handleKeyRelease(note);
 				}
 			}
-			for (lane in manager.activeNoteLanes)
+			for (lane in noteManager.activeNoteLanes)
 			{
-				while (lane.length > 0 && manager.currentAudioPosition >= lane[0].info.startTime)
+				while (lane.length > 0 && noteManager.currentAudioPosition >= lane[0].info.startTime)
 				{
 					var note = lane[0];
 					ruleset.lanePressed.dispatch(note.info.playerLane, player);
@@ -76,14 +78,14 @@ class InputManager implements IFlxDestroyable
 			if (bind.pressed)
 			{
 				ruleset.lanePressed.dispatch(lane, player);
-				var note = manager.getClosestTap(lane);
+				var note = noteManager.getClosestTap(lane);
 				if (note != null)
 					handleKeyPress(note);
 			}
 			else
 			{
 				ruleset.laneReleased.dispatch(lane, player);
-				var note = manager.getClosestRelease(lane);
+				var note = noteManager.getClosestRelease(lane);
 				if (note != null)
 					handleKeyRelease(note);
 			}
@@ -99,7 +101,7 @@ class InputManager implements IFlxDestroyable
 	public function destroy()
 	{
 		bindingStore = null;
-		ruleset = null;
+		playfield = null;
 		controls = null;
 		config = null;
 	}
@@ -110,7 +112,7 @@ class InputManager implements IFlxDestroyable
 		{
 			bindingStore[i].pressed = false;
 			ruleset.laneReleased.dispatch(i, player);
-			var note = manager.getClosestRelease(i);
+			var note = noteManager.getClosestRelease(i);
 			if (note != null)
 				handleKeyRelease(note);
 		}
@@ -128,63 +130,59 @@ class InputManager implements IFlxDestroyable
 
 	function handleKeyPress(note:Note)
 	{
-		var time = manager.currentAudioPosition;
+		var time = noteManager.currentAudioPosition;
 		var hitDifference = autoplay ? 0 : note.info.startTime - time;
-		var judgement = ruleset.scoreProcessors[player].calculateScore(hitDifference, PRESS);
+		var judgement = scoreProcessor.calculateScore(hitDifference, PRESS);
 		var lane = note.info.playerLane;
 
 		if (judgement == GHOST)
 		{
 			if (!Settings.ghostTapping)
 			{
-				ruleset.scoreProcessors[player].registerScore(MISS);
-				ruleset.scoreProcessors[player].stats.push(new HitStat(MISS, PRESS, null, time, MISS, time, ruleset.scoreProcessors[player].accuracy,
-					ruleset.scoreProcessors[player].health));
+				scoreProcessor.registerScore(MISS);
+				scoreProcessor.stats.push(new HitStat(MISS, PRESS, null, time, MISS, time, scoreProcessor.accuracy, scoreProcessor.health));
 			}
 			ruleset.ghostTap.dispatch(lane, player);
 			return;
 		}
 
-		note = manager.activeNoteLanes[lane].shift();
+		note = noteManager.activeNoteLanes[lane].shift();
 
-		ruleset.scoreProcessors[player].stats.push(new HitStat(HIT, PRESS, note.info, time, judgement, hitDifference,
-			ruleset.scoreProcessors[player].accuracy, ruleset.scoreProcessors[player].health));
+		scoreProcessor.stats.push(new HitStat(HIT, PRESS, note.info, time, judgement, hitDifference, scoreProcessor.accuracy, scoreProcessor.health));
 
 		switch (judgement)
 		{
 			case MISS:
 				if (note.info.isLongNote)
 				{
-					ruleset.scoreProcessors[player].registerScore(MISS, true);
-					ruleset.scoreProcessors[player].stats.push(new HitStat(MISS, PRESS, note.info, time, MISS, time, ruleset.scoreProcessors[player].accuracy,
-						ruleset.scoreProcessors[player].health));
+					scoreProcessor.registerScore(MISS, true);
+					scoreProcessor.stats.push(new HitStat(MISS, PRESS, note.info, time, MISS, time, scoreProcessor.accuracy, scoreProcessor.health));
 				}
 				ruleset.noteMissed.dispatch(note);
-				manager.recyclePoolObject(note);
+				noteManager.recyclePoolObject(note);
 			default:
 				ruleset.noteHit.dispatch(note, judgement, hitDifference);
 				if (note.info.isLongNote)
-					manager.changePoolObjectStatusToHeld(note);
+					noteManager.changePoolObjectStatusToHeld(note);
 				else
-					manager.recyclePoolObject(note);
+					noteManager.recyclePoolObject(note);
 		}
 	}
 
 	function handleKeyRelease(note:Note)
 	{
 		var lane = note.info.playerLane;
-		var time = manager.currentAudioPosition;
-		var endTime = manager.heldLongNoteLanes[lane][0].info.endTime;
+		var time = noteManager.currentAudioPosition;
+		var endTime = noteManager.heldLongNoteLanes[lane][0].info.endTime;
 		var hitDifference = (autoplay || time >= endTime) ? 0 : endTime - time;
 
-		var judgement = ruleset.scoreProcessors[player].calculateScore(hitDifference, RELEASE);
+		var judgement = scoreProcessor.calculateScore(hitDifference, RELEASE);
 
-		note = manager.heldLongNoteLanes[lane].shift();
+		note = noteManager.heldLongNoteLanes[lane].shift();
 
 		if (judgement != GHOST)
 		{
-			ruleset.scoreProcessors[player].stats.push(new HitStat(HIT, RELEASE, note.info, time, judgement, hitDifference,
-				ruleset.scoreProcessors[player].accuracy, ruleset.scoreProcessors[player].health));
+			scoreProcessor.stats.push(new HitStat(HIT, RELEASE, note.info, time, judgement, hitDifference, scoreProcessor.accuracy, scoreProcessor.health));
 
 			ruleset.noteReleased.dispatch(note, judgement, hitDifference);
 
@@ -192,23 +190,37 @@ class InputManager implements IFlxDestroyable
 				ruleset.noteReleaseMissed.dispatch(note);
 
 			if (judgement == MISS || judgement == SHIT)
-				manager.killHoldPoolObject(note, judgement == MISS);
+				noteManager.killHoldPoolObject(note, judgement == MISS);
 			else
-				manager.recyclePoolObject(note);
+				noteManager.recyclePoolObject(note);
 
 			return;
 		}
 
 		final missedJudgement = Judgement.MISS;
 
-		ruleset.scoreProcessors[player].stats.push(new HitStat(HIT, RELEASE, note.info, time, MISS, hitDifference, ruleset.scoreProcessors[player].accuracy,
-			ruleset.scoreProcessors[player].health));
+		scoreProcessor.stats.push(new HitStat(HIT, RELEASE, note.info, time, MISS, hitDifference, scoreProcessor.accuracy, scoreProcessor.health));
 
-		ruleset.scoreProcessors[player].registerScore(missedJudgement, true);
+		scoreProcessor.registerScore(missedJudgement, true);
 
 		ruleset.noteReleaseMissed.dispatch(note);
 
-		manager.killHoldPoolObject(note);
+		noteManager.killHoldPoolObject(note);
+	}
+
+	function get_noteManager()
+	{
+		return playfield.noteManager;
+	}
+
+	function get_ruleset()
+	{
+		return playfield.ruleset;
+	}
+
+	function get_scoreProcessor()
+	{
+		return playfield.scoreProcessor;
 	}
 }
 

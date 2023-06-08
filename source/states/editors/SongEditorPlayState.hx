@@ -110,25 +110,17 @@ class SongEditorPlayState extends FNFState
 		ruleset = new GameplayRuleset(song, timing);
 		if (player == 0)
 		{
-			ruleset.inputManagers[0].autoplay = false;
-			ruleset.inputManagers[1].autoplay = true;
+			ruleset.playfields[0].inputManager.autoplay = false;
+			ruleset.playfields[1].inputManager.autoplay = true;
 		}
 		else
 		{
-			ruleset.inputManagers[0].autoplay = true;
-			ruleset.inputManagers[1].autoplay = false;
-			ruleset.inputManagers[1].changePlayer(0);
+			ruleset.playfields[0].inputManager.autoplay = true;
+			ruleset.playfields[1].inputManager.autoplay = false;
+			ruleset.playfields[1].inputManager.changePlayer(0);
 		}
 		for (playfield in ruleset.playfields)
-		{
-			playfield.active = false;
 			add(playfield);
-		}
-		for (manager in ruleset.noteManagers)
-		{
-			manager.active = false;
-			add(manager);
-		}
 
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.laneReleased.add(onLaneReleased);
@@ -144,7 +136,7 @@ class SongEditorPlayState extends FNFState
 
 			statsDisplay = new FlxTypedGroup();
 			for (i in 0...2)
-				statsDisplay.add(new PlayerStatsDisplay(ruleset.scoreProcessors[i]));
+				statsDisplay.add(new PlayerStatsDisplay(ruleset.playfields[i].scoreProcessor));
 		}
 
 		msDisplay = new FlxTypedGroup();
@@ -159,7 +151,7 @@ class SongEditorPlayState extends FNFState
 		judgementCounters = new FlxTypedGroup();
 		for (i in 0...2)
 		{
-			var counter = new JudgementCounter(ruleset.scoreProcessors[i]);
+			var counter = new JudgementCounter(ruleset.playfields[i].scoreProcessor);
 			counter.exists = Settings.playerConfigs[i].judgementCounter;
 			judgementCounters.add(counter);
 		}
@@ -194,12 +186,8 @@ class SongEditorPlayState extends FNFState
 		super.update(elapsed);
 
 		timing.update(elapsed);
-
-		ruleset.updateCurrentTrackPosition();
 		ruleset.update(elapsed);
-
 		handleInput(elapsed);
-
 		lyricsDisplay.updateLyrics(timing.audioPosition);
 
 		if (FlxG.mouse.visible)
@@ -226,7 +214,7 @@ class SongEditorPlayState extends FNFState
 	{
 		if (FlxG.keys.justPressed.TAB)
 		{
-			var inputManager = ruleset.inputManagers[player];
+			var inputManager = ruleset.playfields[player].inputManager;
 			inputManager.autoplay = !inputManager.autoplay;
 			for (bind in inputManager.bindingStore)
 				bind.pressed = false;
