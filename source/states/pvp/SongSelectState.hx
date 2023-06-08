@@ -213,6 +213,7 @@ class PlayerSongSelect extends FlxGroup
 	static var lastSelectedGroups:Array<Int> = [0, 0];
 	static var lastSelectedSongs:Array<Int> = [0, 0];
 	static var lastSelectedDiffs:Array<Int> = [0, 0];
+	static var lastScreens:Array<Int> = [0, 0];
 
 	public var viewing:Int = 0;
 	public var ready:Bool = false;
@@ -274,7 +275,17 @@ class PlayerSongSelect extends FlxGroup
 		lastSongReset = songMenuList.selectedItem.name;
 		difficultyMenuList.selectItem(lastSelectedDiffs[player]);
 
-		updateCamFollow(groupMenuList.selectedItem);
+		switch (lastScreens[player])
+		{
+			case 1:
+				groupAccept(groupMenuList.selectedItem);
+			case 2:
+				groupAccept(groupMenuList.selectedItem);
+				songAccept(songMenuList.selectedItem);
+			default:
+				updateCamFollow(groupMenuList.selectedItem);
+		}
+
 		camera.snapToTarget();
 	}
 
@@ -298,6 +309,7 @@ class PlayerSongSelect extends FlxGroup
 				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 0.5 : 0.25);
 				updateCamFollow(groupMenuList.selectedItem);
 				viewing = 0;
+				lastScreens[player] = viewing;
 			}
 			else if (viewing == 2)
 			{
@@ -306,6 +318,7 @@ class PlayerSongSelect extends FlxGroup
 				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1.5 : 0.75);
 				updateCamFollow(songMenuList.selectedItem.text);
 				viewing = 1;
+				lastScreens[player] = viewing;
 			}
 			else
 			{
@@ -348,6 +361,12 @@ class PlayerSongSelect extends FlxGroup
 
 	function onGroupAccept(item:SongGroupMenuItem)
 	{
+		groupAccept(item);
+		CoolUtil.playScrollSound();
+	}
+
+	function groupAccept(item:SongGroupMenuItem)
+	{
 		groupMenuList.controlsEnabled = false;
 		songMenuList.controlsEnabled = true;
 		camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1.5 : 0.75);
@@ -360,7 +379,6 @@ class PlayerSongSelect extends FlxGroup
 		else
 			updateCamFollow(songMenuList.selectedItem.text);
 		viewing = 1;
-		CoolUtil.playScrollSound();
 	}
 
 	function updateCamFollow(item:FlxSprite)
@@ -378,6 +396,12 @@ class PlayerSongSelect extends FlxGroup
 
 	function onSongAccept(item:SongMenuItem)
 	{
+		songAccept(item);
+		CoolUtil.playScrollSound();
+	}
+
+	function songAccept(item:SongMenuItem)
+	{
 		songMenuList.controlsEnabled = false;
 		difficultyMenuList.controlsEnabled = true;
 		camFollow.x = FlxG.width * (Settings.singleSongSelection ? 2.5 : 1.25);
@@ -390,7 +414,7 @@ class PlayerSongSelect extends FlxGroup
 		else
 			updateCamFollow(difficultyMenuList.selectedItem);
 		viewing = 2;
-		CoolUtil.playScrollSound();
+		lastScreens[player] = viewing;
 	}
 
 	function onDiffChange(item:DifficultyMenuItem)

@@ -184,8 +184,9 @@ class CharacterSelectState extends FNFState
 
 class PlayerCharacterSelect extends FlxGroup
 {
-	static var lastSelectedGroups:Array<Int> = [0, 0];
+	static var lastSelectedGroups:Array<Int> = [-1, -1];
 	static var lastSelectedChars:Array<Int> = [0, 0];
+	static var lastScreens:Array<Int> = [0, 0];
 
 	public var viewing:Int = 0;
 	public var ready:Bool = false;
@@ -260,7 +261,14 @@ class PlayerCharacterSelect extends FlxGroup
 		lastGroupReset = groupMenuList.selectedItem.name;
 		charMenuList.selectItem(lastSelectedChars[player]);
 
-		updateCamFollow(groupMenuList.selectedItem);
+		switch (lastScreens[player])
+		{
+			case 1:
+				groupAccept(groupMenuList.selectedItem);
+			default:
+				updateCamFollow(groupMenuList.selectedItem);
+		}
+
 		camera.snapToTarget();
 	}
 
@@ -283,6 +291,7 @@ class PlayerCharacterSelect extends FlxGroup
 				camFollow.x = FlxG.width * 0.25;
 				updateCamFollow(groupMenuList.selectedItem);
 				viewing = 0;
+				lastScreens[player] = viewing;
 			}
 			else
 			{
@@ -329,6 +338,12 @@ class PlayerCharacterSelect extends FlxGroup
 
 	function onGroupAccept(item:CharacterGroupMenuItem)
 	{
+		groupAccept(item);
+		CoolUtil.playScrollSound();
+	}
+
+	function groupAccept(item:CharacterGroupMenuItem)
+	{
 		groupMenuList.controlsEnabled = false;
 		charMenuList.controlsEnabled = true;
 		camFollow.x = FlxG.width * 0.75;
@@ -341,7 +356,7 @@ class PlayerCharacterSelect extends FlxGroup
 		else
 			updateCamFollow(charMenuList.selectedItem);
 		viewing = 1;
-		CoolUtil.playScrollSound();
+		lastScreens[player] = viewing;
 	}
 
 	function onCharChange(item:CharacterMenuItem)
