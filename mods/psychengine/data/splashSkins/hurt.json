@@ -1,0 +1,18 @@
+{
+	"splashes": [
+		{
+			"anim": "note splash purple 1"
+		},
+		{
+			"anim": "note splash blue 1"
+		},
+		{
+			"anim": "note splash green 1"
+		},
+		{
+			"anim": "note splash red 1"
+		}
+	],
+	"image": "splashes/psych-hurt",
+	"positionOffset": [0, -35]
+}

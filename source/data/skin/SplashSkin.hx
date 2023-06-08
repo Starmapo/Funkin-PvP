@@ -40,6 +40,7 @@ class SplashSkin extends JsonObject
 
 	public var splashes:Array<SplashData> = [];
 	public var image:String;
+	public var positionOffset:Array<Float>;
 	public var scale:Float;
 	public var antialiasing:Bool;
 	public var directory:String = '';
@@ -54,6 +55,7 @@ class SplashSkin extends JsonObject
 				splashes.push(new SplashData(s));
 		}
 		image = readString(data.image, 'splashes/noteSplashes');
+		positionOffset = readFloatArray(data.positionOffset, [0, 0], null, 2, null, null, 2);
 		scale = readFloat(data.scale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}

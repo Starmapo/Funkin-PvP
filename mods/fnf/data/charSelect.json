@@ -1,86 +1,86 @@
 {
 	"groups": [
 		{
+			"name": "Friday Night Funkin'",
+			"bg": "bg/fnf",
 			"chars": [
 				{
-					"displayName": "Boyfriend",
-					"name": "bf"
+					"name": "bf",
+					"displayName": "Boyfriend"
 				},
 				{
-					"displayName": "Girlfriend",
-					"name": "gf-player"
+					"name": "gf-player",
+					"displayName": "Girlfriend"
 				},
 				{
-					"displayName": "Daddy Dearest",
-					"name": "dad"
+					"name": "dad",
+					"displayName": "Daddy Dearest"
 				},
 				{
-					"displayName": "Skid & Pump",
-					"name": "spooky"
+					"name": "spooky",
+					"displayName": "Skid & Pump"
 				},
 				{
-					"displayName": "Lemon Monster",
-					"name": "monster"
+					"name": "monster",
+					"displayName": "Lemon Monster"
 				},
 				{
-					"displayName": "Pico",
-					"name": "pico"
+					"name": "pico",
+					"displayName": "Pico"
 				},
 				{
-					"displayName": "Boyfriend (Windy)",
-					"name": "bf-car"
+					"name": "bf-car",
+					"displayName": "Boyfriend (Windy)"
 				},
 				{
-					"displayName": "Mommy Mearest",
-					"name": "mom"
+					"name": "mom",
+					"displayName": "Mommy Mearest"
 				},
 				{
-					"displayName": "Mommy Mearest (Windy)",
-					"name": "mom-car"
+					"name": "mom-car",
+					"displayName": "Mommy Mearest (Windy)"
 				},
 				{
-					"displayName": "Boyfriend (Christmas)",
-					"name": "bf-christmas"
+					"name": "bf-christmas",
+					"displayName": "Boyfriend (Christmas)"
 				},
 				{
-					"displayName": "Parents (Christmas)",
-					"name": "parents-christmas"
+					"name": "parents-christmas",
+					"displayName": "Parents (Christmas)"
 				},
 				{
-					"displayName": "Lemon Monster (Christmas)",
-					"name": "monster-christmas"
+					"name": "monster-christmas",
+					"displayName": "Lemon Monster (Christmas)"
 				},
 				{
-					"displayName": "Boyfriend (Pixel)",
-					"name": "bf-pixel"
+					"name": "bf-pixel",
+					"displayName": "Boyfriend (Pixel)"
 				},
 				{
-					"displayName": "Senpai",
-					"name": "senpai"
+					"name": "senpai",
+					"displayName": "Senpai"
 				},
 				{
-					"displayName": "Senpai (Angry)",
-					"name": "senpai-angry"
+					"name": "senpai-angry",
+					"displayName": "Senpai (Angry)"
 				},
 				{
-					"displayName": "Spirit",
-					"name": "spirit"
+					"name": "spirit",
+					"displayName": "Spirit"
 				},
 				{
-					"displayName": "Tankman",
-					"name": "tankman"
+					"name": "tankman",
+					"displayName": "Tankman"
 				},
 				{
-					"displayName": "Boyfriend (Holding Girlfriend)",
-					"name": "bf-holding-gf"
+					"name": "bf-holding-gf",
+					"displayName": "Boyfriend (Holding Girlfriend)"
 				},
 				{
-					"displayName": "Pico (Speakers)",
-					"name": "pico-speaker-player"
+					"name": "pico-speaker-player",
+					"displayName": "Pico (Speakers)"
 				}
-			],
-			"bg": "bg/fnf",
-			"name": "Friday Night Funkin'"
+			]
 		}
 	]
 }

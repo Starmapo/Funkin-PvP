@@ -3,100 +3,100 @@
 		{
 			"songs": [
 				{
-					"icon": "gf",
-					"name": "Tutorial"
+					"name": "Tutorial",
+					"icon": "gf"
 				},
 				{
-					"icon": "dad",
-					"name": "Bopeebo"
+					"name": "Bopeebo",
+					"icon": "dad"
 				},
 				{
-					"icon": "dad",
-					"name": "Fresh"
+					"name": "Fresh",
+					"icon": "dad"
 				},
 				{
-					"icon": "dad",
-					"name": "Dadbattle"
+					"name": "Dadbattle",
+					"icon": "dad"
 				},
 				{
-					"icon": "spooky",
-					"name": "Spookeez"
+					"name": "Spookeez",
+					"icon": "spooky"
 				},
 				{
-					"icon": "spooky",
-					"name": "South"
+					"name": "South",
+					"icon": "spooky"
 				},
 				{
-					"icon": "monster",
-					"name": "Monster"
+					"name": "Monster",
+					"icon": "monster"
 				},
 				{
-					"icon": "pico",
-					"name": "Pico"
+					"name": "Pico",
+					"icon": "pico"
 				},
 				{
-					"icon": "pico",
-					"name": "Philly Nice"
+					"name": "Philly Nice",
+					"icon": "pico"
 				},
 				{
-					"icon": "pico",
-					"name": "Blammed"
+					"name": "Blammed",
+					"icon": "pico"
 				},
 				{
-					"icon": "mom",
-					"name": "Satin Panties"
+					"name": "Satin Panties",
+					"icon": "mom"
 				},
 				{
-					"icon": "mom",
-					"name": "High"
+					"name": "High",
+					"icon": "mom"
 				},
 				{
-					"icon": "mom",
-					"name": "M.I.L.F"
+					"name": "M.I.L.F",
+					"icon": "mom"
 				},
 				{
-					"icon": "parents",
-					"name": "Cocoa"
+					"name": "Cocoa",
+					"icon": "parents"
 				},
 				{
-					"icon": "parents",
-					"name": "Eggnog"
+					"name": "Eggnog",
+					"icon": "parents"
 				},
 				{
-					"icon": "monster",
-					"name": "Winter Horrorland"
+					"name": "Winter Horrorland",
+					"icon": "monster"
 				},
 				{
-					"icon": "senpai",
-					"name": "Senpai"
+					"name": "Senpai",
+					"icon": "senpai"
 				},
 				{
-					"icon": "senpai",
-					"name": "Roses"
+					"name": "Roses",
+					"icon": "senpai"
 				},
 				{
-					"icon": "spirit",
-					"name": "Thorns"
+					"name": "Thorns",
+					"icon": "spirit"
 				},
 				{
-					"icon": "tankman",
-					"name": "Ugh"
+					"name": "Ugh",
+					"icon": "tankman"
 				},
 				{
-					"icon": "tankman",
-					"name": "Guns"
+					"name": "Guns",
+					"icon": "tankman"
 				},
 				{
-					"icon": "tankman",
-					"name": "Stress"
+					"name": "Stress",
+					"icon": "tankman"
 				},
 				{
-					"icon": "bf-pixel",
-					"name": "Test"
+					"name": "Test",
+					"icon": "bf-pixel"
 				}
 			],
-			"bg": "bg/fnf",
-			"name": "Friday Night Funkin'"
+			"name": "Friday Night Funkin'",
+			"bg": "bg/fnf"
 		}
 	]
 }

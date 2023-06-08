@@ -57,7 +57,7 @@ class NoteManager extends FlxBasic
 			alpha = breakAlpha;
 			playfield.alpha = alpha;
 		}
-		
+
 		active = false;
 	}
 

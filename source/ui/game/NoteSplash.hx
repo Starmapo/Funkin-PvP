@@ -75,6 +75,13 @@ class NoteSplash extends AnimatedSprite
 	public function updatePosition()
 	{
 		if (receptor != null)
-			setPosition(receptor.x + (receptor.staticWidth / 2) - (width / 2), receptor.y + (receptor.staticHeight / 2) - (height / 2));
+			setPosition(receptor.x
+				+ (receptor.staticWidth / 2)
+				- (width / 2)
+				+ skin.positionOffset[0],
+				receptor.y
+				+ (receptor.staticHeight / 2)
+				- (height / 2)
+				+ skin.positionOffset[1]);
 	}
 }

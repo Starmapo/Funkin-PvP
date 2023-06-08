@@ -5,6 +5,7 @@ import data.PlayerSettings;
 import data.Settings;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
@@ -13,8 +14,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import lime.app.Application;
-import states.editors.SongEditorState;
-import states.menus.TitleState;
 import sys.FileSystem;
 import sys.thread.Thread;
 import util.DiscordClient;
@@ -24,6 +23,11 @@ using StringTools;
 
 class BootState extends FNFState
 {
+	/**
+		The state to switch to after the game finishes booting up.
+	**/
+	var initialState:Class<FlxState> = states.menus.TitleState;
+
 	var bg:FlxSprite;
 	var loadingText:FlxText;
 	var loadingBG:FlxSprite;
@@ -108,6 +112,8 @@ class BootState extends FNFState
 
 	function initGame()
 	{
+		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
+
 		DiscordClient.initialize();
 		Application.current.window.onClose.add(function()
 		{
@@ -126,7 +132,6 @@ class BootState extends FNFState
 		// create custom transitions
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
-		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
 
 		Paths.init();
 	}
@@ -353,7 +358,7 @@ class BootState extends FNFState
 
 	function exit()
 	{
-		FlxG.switchState(new SongEditorState());
+		FlxG.switchState(Type.createInstance(initialState, []));
 	}
 
 	function updateText(text:String)

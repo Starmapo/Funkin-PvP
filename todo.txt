@@ -1,3 +1,4 @@
+song/character select keeps screen
 erb
 jerk (2:15)
 bloodpop (2:25)
