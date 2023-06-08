@@ -1,0 +1,53 @@
+{
+	"image": "notes/circles",
+	"receptors": [
+		{
+			"staticAnim": "arrowLEFT",
+			"pressedAnim": "left press",
+			"confirmAnim": "left confirm"
+		},
+		{
+			"staticAnim": "arrowDOWN",
+			"pressedAnim": "down press",
+			"confirmAnim": "down confirm"
+		},
+		{
+			"staticAnim": "arrowUP",
+			"pressedAnim": "up press",
+			"confirmAnim": "up confirm"
+		},
+		{
+			"staticAnim": "arrowRIGHT",
+			"pressedAnim": "right press",
+			"confirmAnim": "right confirm"
+		}
+	],
+	"receptorsCenterAnimation": true,
+	"receptorsOffset": [0, 0],
+	"receptorsPadding": 0,
+	"receptorsScale": 0.7,
+	"notes": [
+		{
+			"headAnim": "purple alone",
+			"bodyAnim": "purple hold",
+			"tailAnim": "purple tail"
+		},
+		{
+			"headAnim": "blue alone",
+			"bodyAnim": "blue hold",
+			"tailAnim": "blue tail"
+		},
+		{
+			"headAnim": "green alone",
+			"bodyAnim": "green hold",
+			"tailAnim": "green tail"
+		},
+		{
+			"headAnim": "red alone",
+			"bodyAnim": "red hold",
+			"tailAnim": "red tail"
+		}
+	],
+	"notesScale": 0.7,
+	"antialiasing": true
+}

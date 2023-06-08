@@ -184,7 +184,7 @@ class CharacterSelectState extends FNFState
 
 class PlayerCharacterSelect extends FlxGroup
 {
-	static var lastSelectedGroups:Array<Int> = [-1, -1];
+	static var lastSelectedGroups:Array<Int> = [0, 0];
 	static var lastSelectedChars:Array<Int> = [0, 0];
 	static var lastScreens:Array<Int> = [0, 0];
 

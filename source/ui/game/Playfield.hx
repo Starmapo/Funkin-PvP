@@ -33,9 +33,9 @@ class Playfield extends FlxGroup
 		this.ruleset = ruleset;
 		this.player = player;
 		config = Settings.playerConfigs[player];
-		noteSkin = new NoteSkin(NoteSkin.loadSkinFromName(config.noteSkin));
+		noteSkin = NoteSkin.loadSkinFromName(config.noteSkin);
 		if (noteSkin == null)
-			noteSkin = new NoteSkin(NoteSkin.loadSkinFromName('fnf:default'));
+			noteSkin = NoteSkin.loadSkinFromName('fnf:default');
 
 		initReceptors();
 		initSplashes();

@@ -22,14 +22,11 @@ class Receptor extends AnimatedSprite
 		{
 			var data = skin.receptors[lane];
 
-			if (Paths.isSpritesheet(skin.receptorsImage, skin.mod))
-				frames = Paths.getSpritesheet(skin.receptorsImage, skin.mod);
+			if (Paths.isSpritesheet(skin.image, skin.mod))
+				frames = Paths.getSpritesheet(skin.image, skin.mod);
 			else
-			{
-				var image = Paths.getImage(skin.receptorsImage, skin.mod);
-				if (image != null)
-					loadGraphic(image, true, Math.round(image.width / 4), Math.round(image.height / 5));
-			}
+				loadGraphic(Paths.getImage(skin.image, skin.mod), true, skin.tileWidth, skin.tileHeight);
+
 			var configScale = config != null ? config.notesScale : 1;
 			var noteScale = skin.receptorsScale * configScale;
 			scale.scale(noteScale);

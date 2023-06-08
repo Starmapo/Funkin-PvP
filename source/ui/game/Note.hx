@@ -29,26 +29,28 @@ class Note extends FlxSpriteGroup
 	public var noAnim:Bool;
 	public var noMissAnim:Bool;
 	public var character:Character;
-	public var texture(default, set):String;
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
+	public var needsReload:Bool = true;
 
 	var manager:NoteManager;
 	var playfield:Playfield;
-	var noteSkin:NoteSkin;
+	var skin:NoteSkin;
 	var config:PlayerConfig;
 	var bodyOffset:Float;
 	var svDirectionChanges:Array<SVDirectionChange>;
 	var currentBodySize:Int;
 	var longNoteSizeDifference:Float;
 	var toUpdate:Array<FlxSprite>;
+	// private because it's not well implemented yet
+	var texture(default, set):String;
 
-	public function new(info:NoteInfo, ?manager:NoteManager, ?playfield:Playfield, ?noteSkin:NoteSkin)
+	public function new(info:NoteInfo, ?manager:NoteManager, ?playfield:Playfield, ?skin:NoteSkin)
 	{
 		super();
 		this.playfield = playfield;
 		this.manager = manager;
-		this.noteSkin = noteSkin;
+		this.skin = skin;
 		if (manager != null)
 			config = manager.config;
 
@@ -194,31 +196,42 @@ class Note extends FlxSpriteGroup
 
 	public function reloadTexture()
 	{
-		var tex = texture;
-		if (tex.length < 1)
-			tex = noteSkin.notesImage;
-		if (!Paths.existsPath('images/$tex.png', noteSkin.mod))
-			tex = 'notes/default';
-
-		if (Paths.isSpritesheet(tex, noteSkin.mod))
+		var tex = skin.image;
+		var mod = skin.mod;
+		if (!Paths.existsPath('images/$tex.png', mod))
 		{
-			var frames = Paths.getSpritesheet(tex, noteSkin.mod);
+			tex = 'notes/default';
+			mod = 'fnf';
+		}
+
+		if (Paths.isSpritesheet(tex, mod))
+		{
+			var frames = Paths.getSpritesheet(tex, mod);
 			for (spr in [head, body, tail])
 				spr.frames = frames;
 		}
 		else
 		{
-			var image = Paths.getImage(tex, noteSkin.mod);
-			head.loadGraphic(image, true, Math.round(image.width / 4), Math.round(image.height / 5));
+			var image = Paths.getImage(tex, mod);
+			head.loadGraphic(image, true, skin.tileWidth, skin.tileHeight);
 
-			var holdImage = Paths.getImage(tex + '-ends', noteSkin.mod);
-			for (spr in [body, tail])
-				spr.loadGraphic(holdImage, true, Math.round(holdImage.width / 4), Math.round(holdImage.height / 2));
+			var holdSpr = [body, tail];
+			var holdImage = Paths.getImage(tex + '-ends', mod);
+			if (holdImage != null)
+			{
+				for (spr in holdSpr)
+					spr.loadGraphic(holdImage, true, Math.round(holdImage.width / 4), Math.round(holdImage.height / 2));
+			}
+			else
+			{
+				for (spr in holdSpr)
+					spr.loadGraphic(image, true, skin.tileWidth, skin.tileHeight);
+			}
 		}
-		var data = noteSkin.notes[info.playerLane];
+		var data = skin.notes[info.playerLane];
 
 		var notesScale = config != null ? config.notesScale : 1;
-		var scale = noteSkin.notesScale * notesScale;
+		var scale = skin.notesScale * notesScale;
 		head.scale.set(scale, scale);
 		head.offsetScale.set(notesScale, notesScale);
 		head.addAnim({
@@ -282,7 +295,7 @@ class Note extends FlxSpriteGroup
 		tail = null;
 		manager = null;
 		playfield = null;
-		noteSkin = null;
+		skin = null;
 		config = null;
 		svDirectionChanges = null;
 		toUpdate = null;
@@ -291,13 +304,13 @@ class Note extends FlxSpriteGroup
 	function initializeSprites()
 	{
 		head = new AnimatedSprite();
-		head.antialiasing = noteSkin.antialiasing;
+		head.antialiasing = skin.antialiasing;
 
 		body = new AnimatedSprite();
 		body.alpha = config != null && config.transparentHolds ? 0.6 : 1;
 
 		tail = new AnimatedSprite();
-		tail.antialiasing = noteSkin.antialiasing;
+		tail.antialiasing = skin.antialiasing;
 		tail.alpha = body.alpha;
 
 		add(body);

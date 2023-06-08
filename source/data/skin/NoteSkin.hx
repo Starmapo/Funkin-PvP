@@ -42,14 +42,24 @@ class NoteSkin extends JsonObject
 	}
 
 	/**
+		The name of the image for the notes and receptors.
+	**/
+	public var image:String;
+
+	/**
+		If the image is a grid of sprites, this will indicate how wide each sprite is.
+	**/
+	public var tileWidth:Int;
+
+	/**
+		If the image is a grid of sprites, this will indicate how tall each sprite is.
+	**/
+	public var tileHeight:Int;
+
+	/**
 		The list of receptor configurations.
 	**/
 	public var receptors:Array<ReceptorData> = [];
-
-	/**
-		The name of the image for the receptors.
-	**/
-	public var receptorsImage:String;
 
 	/**
 		The offset for the receptors positions.
@@ -77,11 +87,6 @@ class NoteSkin extends JsonObject
 	public var notes:Array<NoteData> = [];
 
 	/**
-		The name of the image for the notes.
-	**/
-	public var notesImage:String;
-
-	/**
 		The scale for the notes.
 	**/
 	public var notesScale:Float;
@@ -97,13 +102,15 @@ class NoteSkin extends JsonObject
 
 	public function new(data:Dynamic)
 	{
+		image = readString(data.image, 'notes/default');
+		tileWidth = readInt(data.tileWidth, 17, 1);
+		tileHeight = readInt(data.tileHeight, 17, 1);
 		for (r in readArray(data.receptors, null, null, 4))
 		{
 			if (r != null)
 				receptors.push(new ReceptorData(r));
 		}
 		receptorsCenterAnimation = readBool(data.receptorsCenterAnimation, true);
-		receptorsImage = readString(data.receptorsImage, 'notes/default');
 		receptorsOffset = readFloatArray(data.receptorsOffset, [0, 0], null, 2, -1000, 1000, 2);
 		receptorsPadding = readFloat(data.receptorsPadding, 0, -1000, 1000, 2);
 		receptorsScale = readFloat(data.receptorsScale, 1, 0.01, 100, 2);
@@ -112,7 +119,6 @@ class NoteSkin extends JsonObject
 			if (n != null)
 				notes.push(new NoteData(n));
 		}
-		notesImage = readString(data.notesImage, 'notes/default');
 		notesScale = readFloat(data.notesScale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
 	}
