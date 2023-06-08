@@ -8,6 +8,7 @@ import data.Settings;
 import data.skin.JudgementSkin;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -150,10 +151,18 @@ class JudgementSkinPage extends Page
 		skinGroup.destroyMembers();
 
 		var skin = JudgementSkin.loadSkinFromName(item.skin.mod + ':' + item.skin.name);
-		var curY:Float = 0;
+		var graphics:Array<FlxGraphic> = [];
 		for (i in 0...6)
 		{
-			var judgement = new FlxSprite(FlxG.width / 2, curY, JudgementDisplay.getJudgementGraphic(i, skin));
+			var graphic = JudgementDisplay.getJudgementGraphic(i, skin);
+			if (graphic != null && !graphics.contains(graphic))
+				graphics.push(graphic);
+		}
+
+		var curY:Float = 0;
+		for (i in 0...graphics.length)
+		{
+			var judgement = new FlxSprite(FlxG.width / 2, curY, graphics[i]);
 			judgement.scale.scale(skin.scale * 2);
 			judgement.updateHitbox();
 			judgement.antialiasing = skin.antialiasing;

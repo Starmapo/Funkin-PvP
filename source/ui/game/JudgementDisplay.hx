@@ -19,11 +19,13 @@ class JudgementDisplay extends FlxSprite
 			name = Judgement.getJudgementName(SICK).toLowerCase();
 			path = 'judgements/${skin.name}/$name';
 		}
-		if (!Paths.existsPath('images/$path.png', mod))
-		{
-			path = 'judgements/default/$name';
-			mod = 'fnf';
-		}
+		/*
+			if (!Paths.existsPath('images/$path.png', mod))
+			{
+				path = 'judgements/default/$name';
+				mod = 'fnf';
+			}
+		 */
 		return Paths.getImage(path, mod);
 	}
 
@@ -53,20 +55,24 @@ class JudgementDisplay extends FlxSprite
 		if (judgement == GHOST)
 			return;
 
-		revive();
+		var daGraphic = graphics[judgement];
+		if (daGraphic == null)
+			return;
 
-		loadGraphic(graphics[judgement]);
+		revive();
+		loadGraphic(daGraphic);
 		updateHitbox();
+
+		if (posTween != null)
+			posTween.cancel();
+		if (alphaTween != null)
+			alphaTween.cancel();
 
 		x = (((FlxG.width / 2) - width) / 2) + (FlxG.width / 2) * player;
 		y = (FlxG.height * 0.5) - (height / 2) + 20;
 
-		if (posTween != null)
-			posTween.cancel();
 		posTween = FlxTween.tween(this, {y: y + 5}, 0.2);
 
-		if (alphaTween != null)
-			alphaTween.cancel();
 		alpha = 1;
 		alphaTween = FlxTween.tween(this, {alpha: 0}, 0.2, {
 			onComplete: function(_)
