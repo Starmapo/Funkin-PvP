@@ -10,6 +10,9 @@ using StringTools;
 
 class LyricsDisplay extends FlxText
 {
+	static var splitChars:Array<String> = [' ', '/', '-'];
+	static var keepChars:Array<String> = [' ', '-'];
+
 	public var song:Song;
 	public var lyrics(default, set):String;
 	public var lines:Array<LyricsLine> = [];
@@ -62,7 +65,7 @@ class LyricsDisplay extends FlxText
 				splitWords: [],
 				steps: []
 			}
-			if (!lyric.contains(' ') && !lyric.contains('/'))
+			if (!CoolUtil.containsAny(lyric, splitChars))
 				line.splitWords.push(lyric);
 			else
 			{
@@ -71,10 +74,10 @@ class LyricsDisplay extends FlxText
 				while (i < lyric.length)
 				{
 					var char = lyric.charAt(i);
-					if (char == ' ' || char == '/')
+					if (splitChars.contains(char))
 					{
 						var len = i - lastSplit;
-						if (char == ' ')
+						if (keepChars.contains(char))
 							len++;
 						line.splitWords.push(lyric.substr(lastSplit, len));
 						lastSplit = i + 1;
@@ -130,7 +133,7 @@ class LyricsDisplay extends FlxText
 				len += lyric.splitWords[i].length;
 		}
 
-		var lyricText = lyric.splitWords.join('').replace('\\s', ' ');
+		var lyricText = getLyricText(lyric.splitWords.join(''));
 		if (text != lyricText || stepIndex != lastIndex || force)
 		{
 			text = lyricText;
@@ -139,6 +142,11 @@ class LyricsDisplay extends FlxText
 				addFormat(new FlxTextFormat(FlxColor.YELLOW), 0, len);
 		}
 		lastIndex = stepIndex;
+	}
+
+	function getLyricText(text:String)
+	{
+		return text.replace('\\s', ' ').replace('\\h', '-');
 	}
 
 	function set_lyrics(value:String)

@@ -1,6 +1,5 @@
 package;
 
-import flixel.util.FlxSort;
 import data.Mods;
 import data.PlayerSettings;
 import data.game.Judgement;
@@ -12,7 +11,10 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
+import flixel.util.FlxSort;
 import haxe.io.Path;
+
+using StringTools;
 
 class CoolUtil
 {
@@ -409,7 +411,7 @@ class CoolUtil
 			a = '';
 		if (b == null)
 			b = '';
-		
+
 		a = a.toLowerCase();
 		b = b.toLowerCase();
 
@@ -418,6 +420,19 @@ class CoolUtil
 		if (a > b)
 			return -order;
 		return 0;
+	}
+
+	public static function containsAny(s:String, values:Array<String>)
+	{
+		if (values != null)
+		{
+			for (value in values)
+			{
+				if (s.contains(value))
+					return true;
+			}
+		}
+		return false;
 	}
 
 	@:generic
