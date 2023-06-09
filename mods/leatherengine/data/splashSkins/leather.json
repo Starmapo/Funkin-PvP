@@ -1,0 +1,19 @@
+{
+	"splashes": [
+		{
+			"anim": "note splash left"
+		},
+		{
+			"anim": "note splash down"
+		},
+		{
+			"anim": "note splash up"
+		},
+		{
+			"anim": "note splash right"
+		}
+	],
+	"image": "splashes/leather",
+	"scale": 1.49,
+	"positionOffset": [20, 0]
+}
