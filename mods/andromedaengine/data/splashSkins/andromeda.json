@@ -1,0 +1,17 @@
+{
+	"splashes": [
+		{
+			"anim": "splash left"
+		},
+		{
+			"anim": "splash down"
+		},
+		{
+			"anim": "splash up"
+		},
+		{
+			"anim": "splash right"
+		}
+	],
+	"image": "splashes/andromeda"
+}
