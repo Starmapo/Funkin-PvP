@@ -127,18 +127,18 @@ class Playfield extends FlxGroup
 		receptors = new FlxTypedGroup();
 		add(receptors);
 
-		var curX:Float = noteSkin.receptorsOffset[0];
+		var curX:Float = noteSkin.receptorsOffset[0] * config.notesScale;
 		if (player == 1)
 			curX += FlxG.width / 2;
 
 		for (i in 0...4)
 		{
-			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1], i, noteSkin, config);
+			var receptor = new Receptor(curX, 50 + noteSkin.receptorsOffset[1] * config.notesScale, i, noteSkin, config);
 			if (config.downScroll)
 				receptor.y = FlxG.height - receptor.height - receptor.y;
 			receptors.add(receptor);
 
-			curX += receptor.width + noteSkin.receptorsPadding;
+			curX += receptor.width + noteSkin.receptorsPadding * config.notesScale;
 		}
 
 		var newX = ((FlxG.width / 2) - CoolUtil.getGroupWidth(receptors)) / 2;

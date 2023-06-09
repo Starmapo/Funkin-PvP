@@ -1,0 +1,22 @@
+{
+	"splashes": [
+		{
+			"indices": [0, 4, 8, 12]
+		},
+		{
+			"indices": [1, 5, 9, 13]
+		},
+		{
+			"indices": [2, 6, 10, 14]
+		},
+		{
+			"indices": [3, 7, 11, 15]
+		}
+	],
+	"image": "splashes/pixel",
+	"tileWidth": 34,
+	"tileHeight": 34,
+	"positionOffset": [0, -5],
+	"scale": 6,
+	"antialiasing": false
+}

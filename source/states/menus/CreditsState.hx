@@ -1,6 +1,7 @@
 package states.menus;
 
 import data.CreditsData;
+import data.Mods;
 import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -11,6 +12,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import haxe.io.Path;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
 import util.DiscordClient;
@@ -85,6 +87,8 @@ class CreditsState extends FNFState
 		}
 
 		readCredits('assets/data/credits');
+		for (mod in Mods.currentMods)
+			readCredits(Path.join([Mods.modsPath, mod.directory, 'data/credits.json']));
 
 		categoryMenuList.selectItem(lastSelected);
 		categoryMenuList.snapPositions();
@@ -211,7 +215,7 @@ class CreditsState extends FNFState
 		creditDesc.y = 0;
 		creditDesc.text = credit.description;
 		creditLink.y = creditDesc.height + 5;
-		creditLink.text = 'Press ACCEPT to go to:\n${credit.link}';
+		creditLink.text = credit.link.length > 0 ? 'Press ACCEPT to go to:\n${credit.link}' : '';
 		CoolUtil.screenCenterGroup(creditGroup, Y);
 		doColorTween(credit.color);
 	}
@@ -245,8 +249,9 @@ class CreditsState extends FNFState
 
 	function onAcceptCredit()
 	{
-		var selectedItem = creditMenuList.selectedItem;
-		FlxG.openURL(getCredit(selectedItem.ID).link);
+		var credit = getCredit(creditMenuList.selectedItem.ID);
+		if (credit.link.length > 0)
+			FlxG.openURL(credit.link);
 	}
 }
 

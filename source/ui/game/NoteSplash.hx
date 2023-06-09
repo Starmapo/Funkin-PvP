@@ -17,15 +17,21 @@ class NoteSplash extends AnimatedSprite
 	public function new(id:Int, skin:SplashSkin, ?receptor:Receptor, ?config:PlayerConfig)
 	{
 		var configScale = config != null ? config.notesScale : 1;
-		super(0, 0, Paths.getSpritesheet(skin.image, skin.mod), skin.scale * configScale);
+		super(0, 0, null, skin.scale * configScale);
 		this.id = id;
 		this.skin = skin;
 		this.receptor = receptor;
+
+		if (Paths.isSpritesheet(skin.image, skin.mod))
+			frames = Paths.getSpritesheet(skin.image, skin.mod);
+		else
+			loadGraphic(Paths.getImage(skin.image, skin.mod), true, skin.tileWidth, skin.tileHeight);
 
 		splashData = skin.splashes[id];
 		addAnim({
 			name: 'splash',
 			atlasName: splashData.anim,
+			indices: splashData.indices,
 			fps: splashData.fps,
 			loop: false,
 			offset: splashData.offset
@@ -39,8 +45,7 @@ class NoteSplash extends AnimatedSprite
 
 	public function startSplash()
 	{
-		animation.finishCallback = null;
-
+		stopAnimCallback();
 		playAnim('splash', true);
 		if (animation.curAnim != null)
 			animation.curAnim.frameRate = splashData.fps + FlxG.random.int(-2, 2);
@@ -49,7 +54,7 @@ class NoteSplash extends AnimatedSprite
 		updatePosition();
 		animation.finishCallback = function(name)
 		{
-			animation.finishCallback = null;
+			stopAnimCallback();
 			kill();
 		}
 	}
@@ -78,10 +83,10 @@ class NoteSplash extends AnimatedSprite
 			setPosition(receptor.x
 				+ (receptor.staticWidth / 2)
 				- (width / 2)
-				+ skin.positionOffset[0],
+				+ skin.positionOffset[0] * offsetScale.x,
 				receptor.y
 				+ (receptor.staticHeight / 2)
 				- (height / 2)
-				+ skin.positionOffset[1]);
+				+ skin.positionOffset[1] * offsetScale.y);
 	}
 }

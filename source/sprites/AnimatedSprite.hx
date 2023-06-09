@@ -24,7 +24,8 @@ class AnimatedSprite extends FlxSprite
 	public function new(x:Float = 0, y:Float = 0, ?frames:FlxAtlasFrames, scale:Float = 1)
 	{
 		super(x, y);
-		this.frames = frames;
+		if (frames != null)
+			this.frames = frames;
 		this.scale.set(scale, scale);
 	}
 

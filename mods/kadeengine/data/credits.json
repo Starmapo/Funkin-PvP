@@ -1,0 +1,20 @@
+{
+	"groups": [
+		{
+			"name": "Kade Engine",
+			"credits": [
+				{
+					"name": "KadeDeveloper",
+					"description": "Maintainer and Lead Programmer",
+					"link": "https://twitter.com/KadeDeveloper"
+				},
+				{
+					"name": "Engine Page",
+					"description": "View the engine on GitHub!",
+					"color": "#F0F6FC",
+					"link": "https://github.com/KadeDev/Kade-Engine"
+				}
+			]
+		}
+	]
+}

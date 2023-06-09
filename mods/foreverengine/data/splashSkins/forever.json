@@ -1,0 +1,20 @@
+{
+	"splashes": [
+		{
+			"indices": [0, 8, 16, 24, 32]
+		},
+		{
+			"indices": [2, 10, 18, 26, 34]
+		},
+		{
+			"indices": [4, 12, 20, 28, 36]
+		},
+		{
+			"indices": [6, 14, 22, 30, 38]
+		}
+	],
+	"image": "splashes/forever",
+	"tileWidth": 210,
+	"tileHeight": 210,
+	"positionOffset": [-5, -5]
+}

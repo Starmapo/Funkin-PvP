@@ -1,0 +1,39 @@
+{
+	"groups": [
+		{
+			"name": "Psych Engine",
+			"credits": [
+				{
+					"name": "Shadow Mario",
+					"description": "Main Programmer",
+					"color": "#444444",
+					"link": "https://twitter.com/Shadow_Mario_"
+				},
+				{
+					"name": "RiverOaken",
+					"description": "Main Artist/Animator",
+					"color": "#B42F71",
+					"link": "https://twitter.com/RiverOaken"
+				},
+				{
+					"name": "shubs",
+					"description": "Additional Programmer",
+					"color": "#5E99DF",
+					"link": "https://twitter.com/yoshubs"
+				},
+				{
+					"name": "bb-panzu",
+					"description": "Ex-Programmer",
+					"color": "#3E813A",
+					"link": "https://twitter.com/yoshubs"
+				},
+				{
+					"name": "Engine Page",
+					"description": "View the engine on GitHub!",
+					"color": "#F0F6FC",
+					"link": "https://github.com/ShadowMario/FNF-PsychEngine"
+				}
+			]
+		}
+	]
+}

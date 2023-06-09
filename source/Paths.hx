@@ -141,7 +141,9 @@ class Paths
 
 	public static function isSpritesheet(path:String, ?mod:String):Bool
 	{
-		var imagePath = path + '.png';
+		var imagePath = path;
+		if (!imagePath.endsWith('.png'))
+			imagePath += '.png';
 		if (!exists(imagePath))
 		{
 			imagePath = getPath('images/$imagePath', mod);

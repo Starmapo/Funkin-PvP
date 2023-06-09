@@ -155,10 +155,10 @@ class SplashSkinPage extends Page
 		for (i in 0...4)
 		{
 			var splash = new NoteSplash(i, skin);
-			splash.startSplash();
+			if (i == 0)
+				splash.startSplash();
 			splash.x = ((FlxG.width / 2) - splash.width) / 2 + (FlxG.width / 2);
 			splash.screenCenter(Y);
-			splash.visible = (i == 0);
 			skinGroup.add(splash);
 			splashes.push(splash);
 		}

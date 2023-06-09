@@ -40,6 +40,8 @@ class SplashSkin extends JsonObject
 
 	public var splashes:Array<SplashData> = [];
 	public var image:String;
+	public var tileWidth:Int;
+	public var tileHeight:Int;
 	public var positionOffset:Array<Float>;
 	public var scale:Float;
 	public var antialiasing:Bool;
@@ -55,6 +57,8 @@ class SplashSkin extends JsonObject
 				splashes.push(new SplashData(s));
 		}
 		image = readString(data.image, 'splashes/noteSplashes');
+		tileWidth = readInt(data.tileWidth, 210, 1);
+		tileHeight = readInt(data.tileHeight, 210, 1);
 		positionOffset = readFloatArray(data.positionOffset, [0, 0], null, 2, null, null, 2);
 		scale = readFloat(data.scale, 1, 0.01, 100, 2);
 		antialiasing = readBool(data.antialiasing, true);
@@ -69,12 +73,14 @@ class SplashSkin extends JsonObject
 class SplashData extends JsonObject
 {
 	public var anim:String;
+	public var indices:Array<Int>;
 	public var fps:Float;
 	public var offset:Array<Float>;
 
 	public function new(data:Dynamic)
 	{
 		anim = readString(data.anim);
+		indices = readIntArray(data.indices, [], null, null, 0);
 		fps = readFloat(data.fps, 24, 0, 1000, 2);
 		offset = readFloatArray(data.offset, [], null, 2, null, null, 2);
 	}

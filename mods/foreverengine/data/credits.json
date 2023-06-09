@@ -1,0 +1,49 @@
+{
+	"groups": [
+		{
+			"name": "Forever Engine",
+			"credits": [
+				{
+					"name": "Yoshubs",
+					"description": "Engine Creator"
+				},
+				{
+					"name": "Pixloen",
+					"description": "Engine Co-Owner, Artist",
+					"link": "https://github.com/PixlJacket"
+				},
+				{
+					"name": "Gedehari",
+					"description": "Programmer",
+					"link": "https://github.com/gedehari"
+				},
+				{
+					"name": "ImCodist",
+					"description": "Programmer",
+					"link": "https://github.com/ImCodist"
+				},
+				{
+					"name": "Scarlett",
+					"description": "Programmer",
+					"link": "https://github.com/SomeKitten"
+				},
+				{
+					"name": "Oneilr",
+					"description": "Artist and Animator",
+					"link": "https://oneilr.newgrounds.com/"
+				},
+				{
+					"name": "HelloSammu",
+					"description": "Programmer",
+					"link": "https://github.com/hellosammu"
+				},
+				{
+					"name": "Engine Page",
+					"description": "View the engine on GitHub!",
+					"color": "#F0F6FC",
+					"link": "https://github.com/BeastlyGabi/Forever-Engine-Legacy"
+				}
+			]
+		}
+	]
+}
