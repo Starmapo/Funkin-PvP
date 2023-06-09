@@ -1,17 +1,26 @@
 {
 	"splashes": [
 		{
-			"anim": "splash left"
+			"anim": "splash left",
+			"fps": 30,
+			"offset": [-35, 0]
 		},
 		{
-			"anim": "splash down"
+			"anim": "splash down",
+			"fps": 30,
+			"offset": [-5, -2]
 		},
 		{
-			"anim": "splash up"
+			"anim": "splash up",
+			"fps": 30,
+			"offset": [-5, 0]
 		},
 		{
-			"anim": "splash right"
+			"anim": "splash right",
+			"fps": 30,
+			"offset": [-3, 2]
 		}
 	],
-	"image": "splashes/andromeda"
+	"image": "splashes/andromeda",
+	"positionOffset": [-20, -10]
 }
