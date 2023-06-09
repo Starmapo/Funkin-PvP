@@ -82,9 +82,9 @@ class Paths
 		}
 		#end
 
-		if (graphic == null)
-			trace('Graphic \"$originalPath\" not found.');
-		else if (trackingAssets && !trackedGraphics.contains(graphic))
+		/* if (graphic == null)
+			trace('Graphic \"$originalPath\" not found.'); */
+		if (trackingAssets && !trackedGraphics.contains(graphic))
 			trackedGraphics.push(graphic);
 
 		return graphic;
