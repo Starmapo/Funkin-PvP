@@ -1,0 +1,18 @@
+{
+	"splashes": [
+		{
+			"anim": "note impact 1 purple"
+		},
+		{
+			"anim": "note impact 1 blue"
+		},
+		{
+			"anim": "note impact 1 green"
+		},
+		{
+			"anim": "note impact 1 red"
+		}
+	],
+	"image": "splashes/micdup",
+	"positionOffset": [0, 0]
+}
