@@ -228,12 +228,15 @@ class BootState extends FNFState
 								}
 							}
 							if (songDifficulties.length > 0)
+							{
 								songs.push({
 									name: name,
 									icon: icon,
 									difficulties: songDifficulties,
 									directory: mod.directory
 								});
+								mod.songCount++;
+							}
 						}
 
 						if (songs.length > 0)
@@ -272,6 +275,7 @@ class BootState extends FNFState
 									displayName: char.displayName,
 									directory: mod.directory
 								});
+								mod.characterCount++;
 							}
 						}
 
@@ -315,6 +319,7 @@ class BootState extends FNFState
 							displayName: split[1],
 							mod: mod.directory
 						});
+						mod.noteskinCount++;
 					}
 				}
 
@@ -330,6 +335,7 @@ class BootState extends FNFState
 							displayName: split[1],
 							mod: mod.directory
 						});
+						mod.judgementSkinCount++;
 					}
 				}
 
@@ -345,6 +351,7 @@ class BootState extends FNFState
 							displayName: split[1],
 							mod: mod.directory
 						});
+						mod.splashSkinCount++;
 					}
 				}
 			}

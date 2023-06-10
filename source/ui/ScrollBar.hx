@@ -10,6 +10,7 @@ import flixel.math.FlxRect;
 class ScrollBar extends FlxSpriteGroup
 {
 	public var contentHeight(default, set):Float;
+	public var scrollAmount:Float = 25;
 
 	var bg:FlxSprite;
 	var bar:FlxSprite;
@@ -54,7 +55,7 @@ class ScrollBar extends FlxSpriteGroup
 			&& (FlxMath.mouseInFlxRect(false, FlxRect.weak(contentCamera.x, contentCamera.y, contentCamera.width, contentCamera.height))
 				|| FlxMath.mouseInFlxRect(false, bg.getHitbox())))
 		{
-			bar.y += FlxG.mouse.wheel * -50;
+			bar.y += FlxG.mouse.wheel * -scrollAmount;
 			scrolled = true;
 		}
 

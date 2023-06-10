@@ -134,12 +134,17 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		if (warning.length > 0)
 			name.color = FlxColor.RED;
 
+		var count = getCountText(mod);
+
 		var desc = new FlxText(icon.x, icon.y
-			+ icon.height, bg.width
+			+ icon.height
+			+ 5, bg.width
 			- 40,
 			warning
 			+ mod.description
-			+ '\n\nVersion: '
+			+ '\n\n'
+			+ (count.length > 0 ? '($count)\n' : '')
+			+ 'Version: '
 			+ mod.modVersion);
 		desc.setFormat('PhantomMuff 1.5', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 
@@ -149,5 +154,27 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		label.add(desc);
 
 		setEmptyBackground();
+	}
+
+	function getCountText(mod:Mod)
+	{
+		var count = addCount('', mod.songCount, 'song');
+		count = addCount(count, mod.characterCount, 'character');
+		count = addCount(count, mod.noteskinCount, 'note skin');
+		count = addCount(count, mod.judgementSkinCount, 'judgement skin');
+		count = addCount(count, mod.splashSkinCount, 'splash skin');
+		return count;
+	}
+
+	function addCount(text:String, count:Int, thing:String)
+	{
+		if (count <= 0)
+			return text;
+
+		if (text.length > 0)
+			text += ', ';
+		text += count;
+
+		return text + ' ' + thing + (count > 1 ? 's' : '');
 	}
 }

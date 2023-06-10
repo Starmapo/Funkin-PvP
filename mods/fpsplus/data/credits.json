@@ -1,0 +1,20 @@
+{
+	"groups": [
+		{
+			"name": "FPS Plus",
+			"credits": [
+				{
+					"name": "Rozebud",
+					"description": "Engine Creator",
+					"link": "https://twitter.com/helpme_thebigt"
+				},
+				{
+					"name": "Engine Page",
+					"description": "View the engine on GitHub!",
+					"color": "#F0F6FC",
+					"link": "https://github.com/ThatRozebudDude/FPS-Plus-Public"
+				}
+			]
+		}
+	]
+}

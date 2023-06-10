@@ -20,6 +20,11 @@ class Mod extends JsonObject
 	public var description:String;
 	public var modVersion:String;
 	public var gameVersion:String;
+	public var characterCount:Int = 0;
+	public var songCount:Int = 0;
+	public var noteskinCount:Int = 0;
+	public var judgementSkinCount:Int = 0;
+	public var splashSkinCount:Int = 0;
 
 	public function new(data:Dynamic)
 	{

@@ -1,5 +1,6 @@
 package states.pvp;
 
+import flixel.util.FlxStringUtil;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -11,12 +12,10 @@ import flixel.FlxSprite;
 import flixel.addons.display.FlxBackdrop;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.util.FlxSort;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
@@ -508,6 +507,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 	function getBGGraphic(name:String)
 	{
+		name = FlxStringUtil.validate(name);
 		var graphicKey = name + '_edit';
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);

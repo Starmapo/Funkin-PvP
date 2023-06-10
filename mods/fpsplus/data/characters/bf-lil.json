@@ -47,7 +47,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singLEFT",
+			"atlasName": "singRIGHT",
 			"name": "singLEFT",
 			"offset": [
 				0,
@@ -55,7 +55,7 @@
 			]
 		},
 		{
-			"atlasName": "singLEFTmiss",
+			"atlasName": "singRIGHTmiss",
 			"name": "singLEFTmiss",
 			"offset": [
 				0,
@@ -64,7 +64,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singRIGHT",
+			"atlasName": "singLEFT",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -72,7 +72,7 @@
 			]
 		},
 		{
-			"atlasName": "singRIGHTmiss",
+			"atlasName": "singLEFTmiss",
 			"name": "singRIGHTmiss",
 			"offset": [
 				0,
@@ -98,8 +98,8 @@
 		}
 	],
 	"cameraOffset": [
-		135,
-		67
+		-157,
+		68
 	],
 	"healthColors": [
 		255,

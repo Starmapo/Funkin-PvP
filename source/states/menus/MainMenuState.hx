@@ -125,19 +125,27 @@ class MainMenuState extends FNFState
 		var bgY = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
 		bg.y = FlxMath.lerp(bg.y, bgY, elapsed * 6);
 
-		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
+		if (!transitioning)
 		{
-			var duration = Main.getTransitionTime();
-			FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
-				ease: FlxEase.expoIn,
-				onComplete: function(_)
+			if (FlxG.keys.justPressed.SEVEN)
+				exit(null, function()
 				{
-					FlxG.switchState(new TitleState());
-				}
-			});
-			FlxG.camera.fade(FlxColor.WHITE, duration, false, null, true);
-			CoolUtil.playCancelSound();
-			transitioning = true;
+					FlxG.switchState(new ToolboxState());
+				});
+			if (PlayerSettings.checkAction(BACK_P))
+			{
+				var duration = Main.getTransitionTime();
+				FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {
+					ease: FlxEase.expoIn,
+					onComplete: function(_)
+					{
+						FlxG.switchState(new TitleState());
+					}
+				});
+				FlxG.camera.fade(FlxColor.WHITE, duration, false, null, true);
+				CoolUtil.playCancelSound();
+				transitioning = true;
+			}
 		}
 
 		super.update(elapsed);
@@ -168,31 +176,10 @@ class MainMenuState extends FNFState
 			return;
 
 		if (selectedItem.fireInstantly)
-		{
 			selectedItem.callback();
-		}
 		else
 		{
-			transitioning = true;
-			menuList.controlsEnabled = false;
-			var duration = Main.getTransitionTime();
-			menuList.forEach(function(item)
-			{
-				if (item != selectedItem)
-				{
-					FlxTween.tween(item, {x: item.x - FlxG.width}, duration, {ease: FlxEase.backIn});
-				}
-			});
-			FlxG.camera.fade(FlxColor.BLACK, duration, false, null, true);
-			if (selectedItem.fadeMusic)
-			{
-				FlxG.sound.music.fadeOut(duration, 0);
-			}
-			FlxTween.tween(bg, {angle: 45}, duration, {ease: FlxEase.expoIn});
-			FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {ease: FlxEase.expoIn});
-			if (magenta != null)
-				FlxFlicker.flicker(magenta, duration, 0.15, false);
-			FlxFlicker.flicker(selectedItem, duration, 0.06, true, false, function(_)
+			exit(selectedItem, function()
 			{
 				if (selectedItem.fadeMusic)
 					FlxG.sound.music.stop();
@@ -201,6 +188,27 @@ class MainMenuState extends FNFState
 			});
 			CoolUtil.playConfirmSound();
 		}
+	}
+
+	function exit(selectedItem:MainMenuItem, callback:Void->Void)
+	{
+		transitioning = true;
+		menuList.controlsEnabled = false;
+		var duration = Main.getTransitionTime();
+		menuList.forEach(function(item)
+		{
+			if (selectedItem == null || item != selectedItem)
+				FlxTween.tween(item, {x: item.x - FlxG.width}, duration, {ease: FlxEase.backIn});
+		});
+		if (selectedItem != null && selectedItem.fadeMusic)
+			FlxG.sound.music.fadeOut(duration, 0);
+		FlxTween.tween(bg, {angle: 45}, duration, {ease: FlxEase.expoIn});
+		FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {ease: FlxEase.expoIn});
+		if (magenta != null)
+			FlxFlicker.flicker(magenta, duration, 0.15, false);
+		if (selectedItem != null)
+			FlxFlicker.flicker(selectedItem, duration, 0.06, true, false);
+		FlxG.camera.fade(FlxColor.BLACK, duration, false, callback, true);
 	}
 }
 
