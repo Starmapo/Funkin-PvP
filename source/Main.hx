@@ -7,9 +7,12 @@ import lime.utils.Log;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
+import openfl.ui.Keyboard;
 import states.BootState;
+import ui.StatsDisplay;
 
 using StringTools;
 
@@ -20,6 +23,7 @@ class Main extends Sprite
 	static var gameFilters:Array<BitmapFilter> = [];
 	static var colorFilter:ColorMatrixFilter;
 	static var hueFilter:ColorMatrixFilter;
+	static var statsDisplay:StatsDisplay;
 
 	public static function main():Void
 	{
@@ -160,5 +164,25 @@ class Main extends Sprite
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 
 		addChild(new FlxGame(0, 0, BootState, 60, 60, true, false));
+
+		addChild(statsDisplay = new StatsDisplay());
+		statsDisplay.visible = false;
+
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		FlxG.signals.gameResized.add(onGameResized);
+	}
+
+	function onKeyDown(e:KeyboardEvent)
+	{
+		switch (e.keyCode)
+		{
+			case Keyboard.F5:
+				statsDisplay.visible = !statsDisplay.visible;
+		}
+	}
+
+	function onGameResized(width:Int, height:Int)
+	{
+		statsDisplay.onResize(width, height);
 	}
 }
