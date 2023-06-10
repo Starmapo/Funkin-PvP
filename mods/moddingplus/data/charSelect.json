@@ -1,0 +1,21 @@
+{
+	"groups": [
+		{
+			"name": "Modding Plus",
+			"chars": [
+				{
+					"name": "senpai-hd",
+					"displayName": "HD Senpai"
+				},
+				{
+					"name": "senpai-hd-angry",
+					"displayName": "HD Senpai (Angry)"
+				},
+				{
+					"name": "bulb-pixel",
+					"displayName": "Bulby (Pixel)"
+				}
+			]
+		}
+	]
+}

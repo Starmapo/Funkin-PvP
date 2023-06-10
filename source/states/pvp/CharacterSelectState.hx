@@ -254,8 +254,6 @@ class PlayerCharacterSelect extends FlxGroup
 		charText.scrollFactor.copyFrom(charPortraitOutline.scrollFactor);
 		add(charText);
 
-		setControlsEnabled(false);
-
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 		charMenuList.resetGroup(groupMenuList.selectedItem);
 		lastGroupReset = groupMenuList.selectedItem.name;
@@ -270,6 +268,8 @@ class PlayerCharacterSelect extends FlxGroup
 		}
 
 		camera.snapToTarget();
+
+		setControlsEnabled(false);
 	}
 
 	override function update(elapsed:Float)
@@ -320,7 +320,10 @@ class PlayerCharacterSelect extends FlxGroup
 
 	public function setControlsEnabled(value:Bool)
 	{
-		groupMenuList.controlsEnabled = value;
+		if (viewing == 1)
+			charMenuList.controlsEnabled = value;
+		else
+			groupMenuList.controlsEnabled = value;
 	}
 
 	function updateCamFollow(item:MenuItem)

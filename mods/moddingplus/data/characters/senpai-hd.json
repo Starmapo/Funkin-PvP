@@ -1,0 +1,59 @@
+{
+	"positionOffset": [
+		-160,
+		-72.2
+	],
+	"image": "characters/senpai-hd",
+	"healthIcon": "senpai-hd",
+	"anims": [
+		{
+			"atlasName": "Senpai Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "SENPAI DOWN NOTE",
+			"name": "singDOWN",
+			"offset": [
+				-135,
+				-170.4
+			]
+		},
+		{
+			"atlasName": "SENPAI LEFT NOTE",
+			"name": "singLEFT",
+			"offset": [
+				-145,
+				-132.4
+			]
+		},
+		{
+			"atlasName": "SENPAI RIGHT NOTE",
+			"name": "singRIGHT",
+			"offset": [
+				-181,
+				-148.4
+			]
+		},
+		{
+			"atlasName": "SENPAI UP NOTE",
+			"name": "singUP",
+			"offset": [
+				-134,
+				-89.4
+			]
+		}
+	],
+	"cameraOffset": [
+		-7,
+		-181
+	],
+	"healthColors": [
+		255,
+		170,
+		111
+	]
+}

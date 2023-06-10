@@ -1,0 +1,78 @@
+{
+	"groups": [
+		{
+			"name": "Modding Plus",
+			"credits": [
+				{
+					"name": "BulbyVR",
+					"description": "Owner and Programmer",
+					"link": "https://github.com/TheDrawingCoder-Gamer"
+				},
+				{
+					"name": "DJ Popsicle",
+					"description": "Co-Owner and Programmer",
+					"link": "https://gamebanana.com/members/1780306"
+				},
+				{
+					"name": "Mlops",
+					"description": "Artist and Animator",
+					"link": "https://gamebanana.com/members/1767306"
+				},
+				{
+					"name": "AndreDoodles",
+					"description": "Artist and Animator",
+					"link": "https://gamebanana.com/members/1764840"
+				},
+				{
+					"name": "riko",
+					"description": "Artist and Animator",
+					"link": "https://github.com/rikokitsu"
+				},
+				{
+					"name": "Raf",
+					"description": "Artist and Animator"
+				},
+				{
+					"name": "ElBartSinsoJaJa",
+					"description": "Artist and Animator"
+				},
+				{
+					"name": "plum",
+					"description": "Artist and Animator",
+					"link": "https://www.youtube.com/channel/UCXbiI4MJD9Y3FpjW61lG8ZQ"
+				},
+				{
+					"name": "JuliettePink",
+					"description": "Portrait Artist and Animator",
+					"link": "https://gamebanana.com/members/1892442"
+				},
+				{
+					"name": "Alex Directory",
+					"description": "Icon Fixer",
+					"link": "https://gamebanana.com/members/1701629"
+				},
+				{
+					"name": "Drippy",
+					"description": "GitHub Wiki",
+					"link": "https://github.com/TrafficKid"
+				},
+				{
+					"name": "GwebDev",
+					"description": "Edited WebM code",
+					"link": "https://github.com/GrowtopiaFli"
+				},
+				{
+					"name": "Axy",
+					"description": "Additional Help",
+					"link": "https://github.com/timeless13GH"
+				},
+				{
+					"name": "Engine Page",
+					"description": "View the engine on GitHub!",
+					"color": "#F0F6FC",
+					"link": "https://github.com/FunkinModdingPlus/ModdingPlus"
+				}
+			]
+		}
+	]
+}

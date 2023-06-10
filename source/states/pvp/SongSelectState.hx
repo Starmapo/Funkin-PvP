@@ -262,8 +262,6 @@ class PlayerSongSelect extends FlxGroup
 		add(songMenuList);
 		add(groupMenuList);
 
-		setControlsEnabled(false);
-
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 
 		songMenuList.resetGroup(groupMenuList.selectedItem);
@@ -286,6 +284,8 @@ class PlayerSongSelect extends FlxGroup
 		}
 
 		camera.snapToTarget();
+
+		setControlsEnabled(false);
 	}
 
 	override function update(elapsed:Float)

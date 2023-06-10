@@ -499,7 +499,7 @@ class CharacterEditorEditPanel extends EditorPanel
 
 	public function updateCurAnim()
 	{
-		curAnim = state.char.getCurAnim();
+		curAnim = state.charInfo.getAnim(state.curAnim);
 		updateName();
 		updateAtlasName();
 		updateIndices();

@@ -244,6 +244,7 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				var path = Path.join([state.song.directory, difficulty + '.json']);
 				var song = Song.loadSong(path);
+				song.title = state.song.title;
 				song.artist = state.song.artist;
 				song.source = state.song.source;
 				song.save(path);
@@ -290,6 +291,7 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				var path = Path.join([state.song.directory, difficulty + '.json']);
 				var song = Song.loadSong(path);
+				song.initialScrollVelocity = state.song.initialScrollVelocity;
 				song.scrollVelocities.resize(0);
 				for (obj in state.song.scrollVelocities)
 					song.scrollVelocities.push(new ScrollVelocity({

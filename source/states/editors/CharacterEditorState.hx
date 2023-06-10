@@ -42,6 +42,7 @@ class CharacterEditorState extends FNFState
 	public var notificationManager:NotificationManager;
 	public var guideChar:Character;
 	public var healthBar:HealthBar;
+	public var curAnim:String;
 
 	var camPos:FlxObject;
 	var animText:FlxText;
@@ -106,12 +107,14 @@ class CharacterEditorState extends FNFState
 		guideChar = new Character(CHAR_X, CHAR_Y, CharacterInfo.loadCharacterFromName('fnf:dad'));
 		guideChar.color = 0xFF886666;
 		guideChar.alpha = 0.6;
+		guideChar.debugMode = true;
 		add(guideChar);
 
 		ghostChar = new Character(CHAR_X, CHAR_Y, charInfo);
 		ghostChar.visible = false;
 		ghostChar.color = 0xFF666688;
 		ghostChar.alpha = 0.6;
+		ghostChar.debugMode = true;
 		add(ghostChar);
 
 		char = new Character(CHAR_X, CHAR_Y, charInfo);
@@ -264,7 +267,7 @@ class CharacterEditorState extends FNFState
 			{
 				case 1: charInfo.positionOffset;
 				case 2: charInfo.cameraOffset;
-				default: char.getCurAnim().offset;
+				default: charInfo.getAnim(curAnim).offset;
 			};
 			var mult = dragging == 0 ? -1 : 1;
 			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2) * mult;
@@ -279,7 +282,7 @@ class CharacterEditorState extends FNFState
 					updateCamIndicator();
 					editPanel.updateCameraOffset();
 				default:
-					setAnimOffset(char.getCurAnim(), offset[0], offset[1]);
+					setAnimOffset(charInfo.getAnim(curAnim), offset[0], offset[1]);
 			}
 
 			if (FlxG.mouse.released)
@@ -291,7 +294,7 @@ class CharacterEditorState extends FNFState
 					case 2:
 						actionManager.perform(new ActionChangeCameraOffset(this, offset.copy(), dragPositionOffset));
 					default:
-						actionManager.perform(new ActionChangeAnimOffset(this, char.getCurAnim(), offset.copy(), dragPositionOffset));
+						actionManager.perform(new ActionChangeAnimOffset(this, charInfo.getAnim(curAnim), offset.copy(), dragPositionOffset));
 				}
 				dragMousePos = null;
 				dragPositionOffset = null;
@@ -304,7 +307,21 @@ class CharacterEditorState extends FNFState
 		if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(uiGroup))
 		{
 			var mousePos = FlxG.mouse.getWorldPosition();
-			if (FlxG.mouse.overlaps(camIndicator))
+			if (healthBar.icon.pixelsOverlapPoint(mousePos, 1))
+			{
+				var anim = healthBar.icon.animation;
+				var nextAnim = switch (anim.name)
+				{
+					case 'normal':
+						'losing';
+					case 'losing':
+						if (anim.exists('winning')) 'winning'; else 'normal';
+					default: 'normal';
+				}
+				if (anim.exists(nextAnim))
+					healthBar.icon.playAnim(nextAnim);
+			}
+			else if (FlxG.mouse.overlaps(camIndicator))
 			{
 				dragMousePos = mousePos;
 				dragPositionOffset = charInfo.cameraOffset.copy();
@@ -321,7 +338,7 @@ class CharacterEditorState extends FNFState
 				else if (hasAnim)
 				{
 					dragMousePos = mousePos;
-					dragPositionOffset = char.getCurAnim().offset.copy();
+					dragPositionOffset = charInfo.getAnim(curAnim).offset.copy();
 					dragging = 0;
 				}
 				else
@@ -367,6 +384,8 @@ class CharacterEditorState extends FNFState
 
 	public function changeAnim(anim:String)
 	{
+		curAnim = anim;
+
 		var paused = char.animation.paused;
 
 		char.playAnim(anim, true);
@@ -384,7 +403,7 @@ class CharacterEditorState extends FNFState
 
 	function changeAnimOffset(xChange:Int, yChange:Int = 0)
 	{
-		var curAnim = char.getCurAnim();
+		var curAnim = charInfo.getAnim(curAnim);
 		setAnimOffset(curAnim, curAnim.offset[0] + xChange, curAnim.offset[1] + yChange);
 
 		timeSinceLastChange = 0;

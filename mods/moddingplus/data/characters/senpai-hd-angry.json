@@ -1,0 +1,59 @@
+{
+	"positionOffset": [
+		-15,
+		59.8
+	],
+	"image": "characters/senpai-hd",
+	"healthIcon": "senpai-hd-angry",
+	"anims": [
+		{
+			"atlasName": "Angry Senpai Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "Angry Senpai DOWN NOTE",
+			"name": "singDOWN",
+			"offset": [
+				15,
+				-39.4
+			]
+		},
+		{
+			"atlasName": "Angry Senpai LEFT NOTE",
+			"name": "singLEFT",
+			"offset": [
+				11,
+				0.599999999999994
+			]
+		},
+		{
+			"atlasName": "Angry Senpai RIGHT NOTE",
+			"name": "singRIGHT",
+			"offset": [
+				-37,
+				-15.4
+			]
+		},
+		{
+			"atlasName": "Angry Senpai UP NOTE",
+			"name": "singUP",
+			"offset": [
+				11,
+				39.6
+			]
+		}
+	],
+	"cameraOffset": [
+		-22,
+		-221
+	],
+	"healthColors": [
+		255,
+		170,
+		111
+	]
+}

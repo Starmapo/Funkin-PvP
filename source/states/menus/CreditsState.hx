@@ -216,6 +216,13 @@ class CreditsState extends FNFState
 		creditDesc.text = credit.description;
 		creditLink.y = creditDesc.height + 5;
 		creditLink.text = credit.link.length > 0 ? 'Press ACCEPT to go to:\n${credit.link}' : '';
+		if (creditLink.text == '')
+		{
+			// hack to set its height to 0 when empty
+			// otherwise it keeps the previous height. why?
+			creditLink.updateHitbox();
+			creditLink.height = 0;
+		}
 		CoolUtil.screenCenterGroup(creditGroup, Y);
 		doColorTween(credit.color);
 	}

@@ -49,7 +49,7 @@ class Character extends DancingSprite
 
 		stopAnimCallback();
 
-		if (charInfo.constantLooping && animation.curAnim != null)
+		if (charInfo.constantLooping && animation.curAnim != null && !debugMode)
 			animation.play(name, force, reversed, animation.curAnim.curFrame + 1);
 		else
 			animation.play(name, force, reversed, frame);
@@ -364,7 +364,8 @@ class Character extends DancingSprite
 		danceStep = -1;
 		updateSize();
 
-		animation.finish();
+		if (animation.curAnim != null)
+			animation.curAnim.curFrame = animation.curAnim.numFrames - 1;
 	}
 
 	public function updateSize()
@@ -382,7 +383,7 @@ class Character extends DancingSprite
 		updatePosition();
 
 		if (lastAnim != null)
-			playAnim(lastAnim, false, false, lastFrame);
+			playAnim(lastAnim, true, false, lastFrame);
 	}
 
 	public function updateFlipped()
