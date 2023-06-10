@@ -492,7 +492,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		super(x, y, label, name);
 
-		bg = new FlxSprite().loadGraphic(getBGGraphic(groupData.bg));
+		bg = new FlxSprite().loadGraphic(getBGGraphic(groupData.name));
 		bg.antialiasing = true;
 		label.add(bg);
 
@@ -514,8 +514,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		var thickness = 4;
 
-		var bgInfo = CoolUtil.getNameInfo(name);
-		var graphic = Paths.getImage(bgInfo.name, bgInfo.mod, false, true, graphicKey);
+		var graphic = Paths.getImage('bg/$name', groupData.directory, false, true, graphicKey);
 		if (graphic == null)
 			graphic = Paths.getImage('bg/unknown', '', false, true, graphicKey);
 

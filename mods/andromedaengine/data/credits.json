@@ -1,0 +1,20 @@
+{
+	"groups": [
+		{
+			"name": "Andromeda Engine",
+			"credits": [
+				{
+					"name": "Nebula the Zorua",
+					"description": "Engine Creator",
+					"link": "https://twitter.com/Nebula_Zorua"
+				},
+				{
+					"name": "Engine Page",
+					"description": "View the engine on GitHub!",
+					"color": "#F0F6FC",
+					"link": "https://github.com/nebulazorua/andromeda-engine-legacy"
+				}
+			]
+		}
+	]
+}

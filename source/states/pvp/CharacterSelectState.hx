@@ -16,6 +16,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxStringUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
@@ -464,7 +465,7 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		super(x, y, label, name);
 
-		bg = new FlxSprite().loadGraphic(getBGGraphic(groupData.bg));
+		bg = new FlxSprite().loadGraphic(getBGGraphic(groupData.name));
 		bg.antialiasing = true;
 		label.add(bg);
 
@@ -480,14 +481,14 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 	function getBGGraphic(name:String)
 	{
+		name = FlxStringUtil.validate(name);
 		var graphicKey = name + '_edit';
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
 
 		var thickness = 4;
 
-		var bgInfo = CoolUtil.getNameInfo(name);
-		var graphic = Paths.getImage(bgInfo.name, bgInfo.mod, false, true, graphicKey);
+		var graphic = Paths.getImage('bg/$name', groupData.directory, false, true, graphicKey);
 		if (graphic == null)
 			graphic = Paths.getImage('bg/unknown', '', false, true, graphicKey);
 

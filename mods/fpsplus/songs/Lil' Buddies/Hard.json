@@ -1,0 +1,1908 @@
+{
+	"stage": "chart",
+	"timingPoints": [
+		{
+			"bpm": 102
+		}
+	],
+	"vocalsFile": "Voices.ogg",
+	"events": [],
+	"notes": [
+		{
+			"lane": 2,
+			"startTime": 9705.88235294117
+		},
+		{
+			"lane": 3,
+			"startTime": 9901.96078431372
+		},
+		{
+			"lane": 1,
+			"startTime": 10000
+		},
+		{
+			"lane": 1,
+			"startTime": 10294.1176470588
+		},
+		{
+			"startTime": 10588.2352941176
+		},
+		{
+			"lane": 1,
+			"startTime": 10882.3529411765
+		},
+		{
+			"endTime": 11372,
+			"lane": 3,
+			"startTime": 11078.431372549
+		},
+		{
+			"lane": 1,
+			"startTime": 11470.5882352941
+		},
+		{
+			"lane": 2,
+			"startTime": 12058.8235294118
+		},
+		{
+			"lane": 3,
+			"startTime": 12254.9019607843
+		},
+		{
+			"lane": 1,
+			"startTime": 12352.9411764706
+		},
+		{
+			"lane": 1,
+			"startTime": 12647.0588235294
+		},
+		{
+			"lane": 2,
+			"startTime": 12941.1764705882
+		},
+		{
+			"lane": 1,
+			"startTime": 13137.2549019608
+		},
+		{
+			"lane": 3,
+			"startTime": 13431.3725490196
+		},
+		{
+			"startTime": 13529.4117647059
+		},
+		{
+			"lane": 3,
+			"startTime": 13823.5294117647
+		},
+		{
+			"lane": 2,
+			"startTime": 14411.7647058824
+		},
+		{
+			"lane": 3,
+			"startTime": 14607.8431372549
+		},
+		{
+			"lane": 1,
+			"startTime": 14705.8823529412
+		},
+		{
+			"lane": 1,
+			"startTime": 15000
+		},
+		{
+			"lane": 1,
+			"startTime": 15294.1176470588
+		},
+		{
+			"startTime": 15588.2352941176
+		},
+		{
+			"endTime": 16078,
+			"lane": 2,
+			"startTime": 15784.3137254902
+		},
+		{
+			"lane": 3,
+			"startTime": 16176.4705882353
+		},
+		{
+			"lane": 2,
+			"startTime": 16764.7058823529
+		},
+		{
+			"lane": 3,
+			"startTime": 16960.7843137255
+		},
+		{
+			"lane": 1,
+			"startTime": 17058.8235294118
+		},
+		{
+			"lane": 1,
+			"startTime": 17352.9411764706
+		},
+		{
+			"startTime": 17647.0588235294
+		},
+		{
+			"lane": 2,
+			"startTime": 17843.137254902
+		},
+		{
+			"lane": 1,
+			"startTime": 17941.1764705882
+		},
+		{
+			"endTime": 18529,
+			"lane": 3,
+			"startTime": 18235.2941176471
+		},
+		{
+			"lane": 6,
+			"startTime": 19117.6470588235
+		},
+		{
+			"lane": 7,
+			"startTime": 19313.7254901961
+		},
+		{
+			"lane": 5,
+			"startTime": 19411.7647058823
+		},
+		{
+			"lane": 5,
+			"startTime": 19705.8823529412
+		},
+		{
+			"lane": 4,
+			"startTime": 20000
+		},
+		{
+			"lane": 5,
+			"startTime": 20294.1176470588
+		},
+		{
+			"endTime": 20784,
+			"lane": 7,
+			"startTime": 20490.1960784314
+		},
+		{
+			"lane": 5,
+			"startTime": 20882.3529411765
+		},
+		{
+			"lane": 6,
+			"startTime": 21470.5882352941
+		},
+		{
+			"lane": 7,
+			"startTime": 21666.6666666667
+		},
+		{
+			"lane": 5,
+			"startTime": 21764.7058823529
+		},
+		{
+			"lane": 5,
+			"startTime": 22058.8235294118
+		},
+		{
+			"lane": 6,
+			"startTime": 22352.9411764706
+		},
+		{
+			"lane": 5,
+			"startTime": 22549.0196078431
+		},
+		{
+			"lane": 7,
+			"startTime": 22843.137254902
+		},
+		{
+			"lane": 4,
+			"startTime": 22941.1764705882
+		},
+		{
+			"lane": 7,
+			"startTime": 23235.2941176471
+		},
+		{
+			"lane": 6,
+			"startTime": 23823.5294117647
+		},
+		{
+			"lane": 7,
+			"startTime": 24019.6078431373
+		},
+		{
+			"lane": 5,
+			"startTime": 24117.6470588235
+		},
+		{
+			"lane": 5,
+			"startTime": 24411.7647058823
+		},
+		{
+			"lane": 5,
+			"startTime": 24705.8823529412
+		},
+		{
+			"lane": 4,
+			"startTime": 25000
+		},
+		{
+			"endTime": 25490,
+			"lane": 6,
+			"startTime": 25196.0784313725
+		},
+		{
+			"lane": 7,
+			"startTime": 25588.2352941176
+		},
+		{
+			"lane": 6,
+			"startTime": 26176.4705882353
+		},
+		{
+			"lane": 7,
+			"startTime": 26372.5490196078
+		},
+		{
+			"lane": 5,
+			"startTime": 26470.5882352941
+		},
+		{
+			"lane": 5,
+			"startTime": 26764.7058823529
+		},
+		{
+			"lane": 4,
+			"startTime": 27058.8235294118
+		},
+		{
+			"lane": 6,
+			"startTime": 27254.9019607843
+		},
+		{
+			"lane": 5,
+			"startTime": 27352.9411764706
+		},
+		{
+			"endTime": 27941,
+			"lane": 7,
+			"startTime": 27647.0588235294
+		},
+		{
+			"endTime": 28529,
+			"lane": 3,
+			"startTime": 28529.4117647059
+		},
+		{
+			"lane": 2,
+			"startTime": 28823.5294117647
+		},
+		{
+			"startTime": 29019.6078431372
+		},
+		{
+			"lane": 1,
+			"startTime": 29117.6470588235
+		},
+		{
+			"lane": 1,
+			"startTime": 29411.7647058823
+		},
+		{
+			"lane": 1,
+			"startTime": 29705.8823529412
+		},
+		{
+			"lane": 1,
+			"startTime": 30000
+		},
+		{
+			"startTime": 30196.0784313725
+		},
+		{
+			"endTime": 30784,
+			"lane": 2,
+			"startTime": 30490.1960784314
+		},
+		{
+			"lane": 3,
+			"startTime": 30882.3529411765
+		},
+		{
+			"lane": 2,
+			"startTime": 31176.4705882353
+		},
+		{
+			"startTime": 31372.5490196078
+		},
+		{
+			"lane": 1,
+			"startTime": 31470.5882352941
+		},
+		{
+			"lane": 1,
+			"startTime": 31764.7058823529
+		},
+		{
+			"lane": 1,
+			"startTime": 32058.8235294118
+		},
+		{
+			"startTime": 32352.9411764706
+		},
+		{
+			"lane": 2,
+			"startTime": 32549.0196078431
+		},
+		{
+			"startTime": 32647.0588235294
+		},
+		{
+			"endTime": 33137,
+			"startTime": 32843.137254902
+		},
+		{
+			"endTime": 33235,
+			"lane": 3,
+			"startTime": 33235.294117647
+		},
+		{
+			"lane": 2,
+			"startTime": 33529.4117647059
+		},
+		{
+			"startTime": 33725.4901960784
+		},
+		{
+			"lane": 1,
+			"startTime": 33823.5294117647
+		},
+		{
+			"lane": 1,
+			"startTime": 34117.6470588235
+		},
+		{
+			"lane": 1,
+			"startTime": 34411.7647058823
+		},
+		{
+			"lane": 1,
+			"startTime": 34705.8823529412
+		},
+		{
+			"startTime": 34901.9607843137
+		},
+		{
+			"endTime": 35490,
+			"lane": 2,
+			"startTime": 35196.0784313725
+		},
+		{
+			"lane": 3,
+			"startTime": 35588.2352941176
+		},
+		{
+			"lane": 2,
+			"startTime": 35882.3529411765
+		},
+		{
+			"startTime": 36078.431372549
+		},
+		{
+			"lane": 1,
+			"startTime": 36176.4705882353
+		},
+		{
+			"lane": 1,
+			"startTime": 36470.5882352941
+		},
+		{
+			"lane": 1,
+			"startTime": 36764.7058823529
+		},
+		{
+			"startTime": 37058.8235294118
+		},
+		{
+			"lane": 2,
+			"startTime": 37254.9019607843
+		},
+		{
+			"startTime": 37352.9411764706
+		},
+		{
+			"endTime": 37843,
+			"lane": 3,
+			"startTime": 37549.0196078431
+		},
+		{
+			"endTime": 37941,
+			"lane": 7,
+			"startTime": 37941.1764705882
+		},
+		{
+			"lane": 6,
+			"startTime": 38235.2941176471
+		},
+		{
+			"lane": 4,
+			"startTime": 38431.3725490196
+		},
+		{
+			"lane": 5,
+			"startTime": 38529.4117647059
+		},
+		{
+			"lane": 5,
+			"startTime": 38823.5294117647
+		},
+		{
+			"lane": 5,
+			"startTime": 39117.6470588235
+		},
+		{
+			"lane": 5,
+			"startTime": 39411.7647058823
+		},
+		{
+			"lane": 4,
+			"startTime": 39607.8431372549
+		},
+		{
+			"endTime": 40196,
+			"lane": 6,
+			"startTime": 39901.9607843137
+		},
+		{
+			"lane": 7,
+			"startTime": 40294.1176470588
+		},
+		{
+			"lane": 6,
+			"startTime": 40588.2352941176
+		},
+		{
+			"lane": 4,
+			"startTime": 40784.3137254902
+		},
+		{
+			"lane": 5,
+			"startTime": 40882.3529411765
+		},
+		{
+			"lane": 5,
+			"startTime": 41176.4705882353
+		},
+		{
+			"lane": 5,
+			"startTime": 41470.5882352941
+		},
+		{
+			"lane": 4,
+			"startTime": 41764.7058823529
+		},
+		{
+			"lane": 6,
+			"startTime": 41960.7843137255
+		},
+		{
+			"lane": 4,
+			"startTime": 42058.8235294118
+		},
+		{
+			"endTime": 42549,
+			"lane": 4,
+			"startTime": 42254.9019607843
+		},
+		{
+			"endTime": 42647,
+			"lane": 7,
+			"startTime": 42647.0588235294
+		},
+		{
+			"lane": 6,
+			"startTime": 42941.1764705882
+		},
+		{
+			"lane": 4,
+			"startTime": 43137.2549019608
+		},
+		{
+			"lane": 5,
+			"startTime": 43235.294117647
+		},
+		{
+			"lane": 5,
+			"startTime": 43529.4117647059
+		},
+		{
+			"lane": 5,
+			"startTime": 43823.5294117647
+		},
+		{
+			"lane": 5,
+			"startTime": 44117.6470588235
+		},
+		{
+			"lane": 4,
+			"startTime": 44313.7254901961
+		},
+		{
+			"endTime": 44901,
+			"lane": 6,
+			"startTime": 44607.8431372549
+		},
+		{
+			"lane": 7,
+			"startTime": 45000
+		},
+		{
+			"lane": 6,
+			"startTime": 45294.1176470588
+		},
+		{
+			"lane": 4,
+			"startTime": 45490.1960784314
+		},
+		{
+			"lane": 5,
+			"startTime": 45588.2352941176
+		},
+		{
+			"lane": 5,
+			"startTime": 45882.3529411765
+		},
+		{
+			"lane": 5,
+			"startTime": 46176.4705882353
+		},
+		{
+			"lane": 4,
+			"startTime": 46470.5882352941
+		},
+		{
+			"lane": 6,
+			"startTime": 46666.6666666667
+		},
+		{
+			"lane": 4,
+			"startTime": 46764.7058823529
+		},
+		{
+			"endTime": 47401,
+			"lane": 7,
+			"startTime": 46960.7843137255
+		},
+		{
+			"lane": 2,
+			"startTime": 47352.9411764706
+		},
+		{
+			"lane": 1,
+			"startTime": 47549.0196078431
+		},
+		{
+			"lane": 5,
+			"startTime": 47647.0588235294
+		},
+		{
+			"lane": 7,
+			"startTime": 47941.1764705882
+		},
+		{
+			"lane": 7,
+			"startTime": 48235.294117647
+		},
+		{
+			"startTime": 48529.4117647059
+		},
+		{
+			"lane": 2,
+			"startTime": 48725.4901960784
+		},
+		{
+			"lane": 6,
+			"startTime": 49117.6470588235
+		},
+		{
+			"lane": 4,
+			"startTime": 49313.7254901961
+		},
+		{
+			"lane": 4,
+			"startTime": 49607.8431372549
+		},
+		{
+			"lane": 2,
+			"startTime": 49705.8823529412
+		},
+		{
+			"lane": 1,
+			"startTime": 49901.9607843137
+		},
+		{
+			"startTime": 50000
+		},
+		{
+			"lane": 5,
+			"startTime": 50098.0392156863
+		},
+		{
+			"lane": 7,
+			"startTime": 50196.0784313725
+		},
+		{
+			"startTime": 50294.1176470588
+		},
+		{
+			"lane": 6,
+			"startTime": 50490.1960784314
+		},
+		{
+			"lane": 6,
+			"startTime": 50784.3137254902
+		},
+		{
+			"lane": 2,
+			"startTime": 50882.3529411765
+		},
+		{
+			"lane": 1,
+			"startTime": 51078.431372549
+		},
+		{
+			"startTime": 51176.4705882353
+		},
+		{
+			"lane": 5,
+			"startTime": 51274.5098039216
+		},
+		{
+			"lane": 7,
+			"startTime": 51372.5490196078
+		},
+		{
+			"startTime": 51470.5882352941
+		},
+		{
+			"lane": 4,
+			"startTime": 51666.6666666667
+		},
+		{
+			"lane": 7,
+			"startTime": 51764.7058823529
+		},
+		{
+			"lane": 5,
+			"startTime": 52058.8235294118
+		},
+		{
+			"lane": 2,
+			"startTime": 52352.9411764706
+		},
+		{
+			"lane": 3,
+			"startTime": 52647.0588235294
+		},
+		{
+			"lane": 1,
+			"startTime": 52843.137254902
+		},
+		{
+			"lane": 2,
+			"startTime": 53137.2549019608
+		},
+		{
+			"lane": 1,
+			"startTime": 53235.294117647
+		},
+		{
+			"lane": 6,
+			"startTime": 53529.4117647059
+		},
+		{
+			"lane": 4,
+			"startTime": 53823.5294117647
+		},
+		{
+			"lane": 5,
+			"startTime": 54117.6470588235
+		},
+		{
+			"lane": 7,
+			"startTime": 54411.7647058823
+		},
+		{
+			"lane": 4,
+			"startTime": 54705.8823529412
+		},
+		{
+			"lane": 2,
+			"startTime": 55000
+		},
+		{
+			"lane": 1,
+			"startTime": 55196.0784313725
+		},
+		{
+			"lane": 2,
+			"startTime": 55490.1960784314
+		},
+		{
+			"lane": 1,
+			"startTime": 55588.2352941176
+		},
+		{
+			"lane": 6,
+			"startTime": 55882.3529411765
+		},
+		{
+			"lane": 5,
+			"startTime": 56176.4705882353
+		},
+		{
+			"endTime": 56911,
+			"lane": 1,
+			"startTime": 56470.5882352941
+		},
+		{
+			"endTime": 56911,
+			"lane": 7,
+			"startTime": 56470.5882352941
+		},
+		{
+			"startTime": 57058.8235294118
+		},
+		{
+			"lane": 2,
+			"startTime": 57549.0196078431
+		},
+		{
+			"lane": 6,
+			"startTime": 57647.0588235294
+		},
+		{
+			"lane": 2,
+			"startTime": 57843.137254902
+		},
+		{
+			"lane": 6,
+			"startTime": 57843.137254902
+		},
+		{
+			"lane": 3,
+			"startTime": 57941.1764705882
+		},
+		{
+			"startTime": 58235.294117647
+		},
+		{
+			"lane": 5,
+			"startTime": 58235.294117647
+		},
+		{
+			"lane": 2,
+			"startTime": 58529.4117647059
+		},
+		{
+			"lane": 3,
+			"startTime": 58823.5294117647
+		},
+		{
+			"lane": 6,
+			"startTime": 58823.5294117647
+		},
+		{
+			"lane": 3,
+			"startTime": 59019.6078431372
+		},
+		{
+			"lane": 1,
+			"startTime": 59117.6470588235
+		},
+		{
+			"lane": 6,
+			"startTime": 59117.6470588235
+		},
+		{
+			"lane": 1,
+			"startTime": 59411.7647058823
+		},
+		{
+			"lane": 6,
+			"startTime": 59411.7647058823
+		},
+		{
+			"lane": 2,
+			"startTime": 59705.8823529412
+		},
+		{
+			"endTime": 60343,
+			"startTime": 59901.9607843137
+		},
+		{
+			"endTime": 60196,
+			"lane": 6,
+			"startTime": 59901.9607843137
+		},
+		{
+			"endTime": 61029,
+			"lane": 2,
+			"startTime": 60588.2352941176
+		},
+		{
+			"endTime": 61029,
+			"lane": 7,
+			"startTime": 60588.2352941176
+		},
+		{
+			"endTime": 61617,
+			"lane": 5,
+			"startTime": 61176.4705882353
+		},
+		{
+			"endTime": 61617,
+			"lane": 3,
+			"startTime": 61176.4705882353
+		},
+		{
+			"lane": 4,
+			"startTime": 61764.7058823529
+		},
+		{
+			"lane": 6,
+			"startTime": 62254.9019607843
+		},
+		{
+			"lane": 2,
+			"startTime": 62352.9411764706
+		},
+		{
+			"lane": 6,
+			"startTime": 62549.0196078431
+		},
+		{
+			"lane": 2,
+			"startTime": 62549.0196078431
+		},
+		{
+			"lane": 7,
+			"startTime": 62647.0588235294
+		},
+		{
+			"lane": 4,
+			"startTime": 62941.1764705882
+		},
+		{
+			"lane": 1,
+			"startTime": 62941.1764705882
+		},
+		{
+			"lane": 6,
+			"startTime": 63235.294117647
+		},
+		{
+			"lane": 7,
+			"startTime": 63529.4117647059
+		},
+		{
+			"lane": 2,
+			"startTime": 63529.4117647059
+		},
+		{
+			"lane": 7,
+			"startTime": 63725.4901960784
+		},
+		{
+			"lane": 5,
+			"startTime": 63823.5294117647
+		},
+		{
+			"lane": 2,
+			"startTime": 63823.5294117647
+		},
+		{
+			"lane": 5,
+			"startTime": 64117.6470588235
+		},
+		{
+			"lane": 2,
+			"startTime": 64117.6470588235
+		},
+		{
+			"lane": 6,
+			"startTime": 64411.7647058823
+		},
+		{
+			"lane": 4,
+			"startTime": 64607.8431372549
+		},
+		{
+			"endTime": 64901,
+			"lane": 2,
+			"startTime": 64607.8431372549
+		},
+		{
+			"lane": 7,
+			"startTime": 64901.9607843137
+		},
+		{
+			"lane": 6,
+			"startTime": 65000
+		},
+		{
+			"lane": 5,
+			"startTime": 65294.1176470588
+		},
+		{
+			"lane": 4,
+			"startTime": 65588.2352941176
+		},
+		{
+			"lane": 2,
+			"startTime": 66176.4705882353
+		},
+		{
+			"lane": 3,
+			"startTime": 66372.5490196078
+		},
+		{
+			"lane": 1,
+			"startTime": 66470.5882352941
+		},
+		{
+			"lane": 3,
+			"startTime": 66666.6666666667
+		},
+		{
+			"lane": 1,
+			"startTime": 66764.705882353
+		},
+		{
+			"startTime": 67058.8235294118
+		},
+		{
+			"lane": 1,
+			"startTime": 67352.9411764706
+		},
+		{
+			"endTime": 67843,
+			"lane": 3,
+			"startTime": 67549.0196078431
+		},
+		{
+			"lane": 2,
+			"startTime": 67941.1764705882
+		},
+		{
+			"startTime": 68235.294117647
+		},
+		{
+			"lane": 3,
+			"startTime": 68333.3333333333
+		},
+		{
+			"lane": 1,
+			"startTime": 68529.4117647059
+		},
+		{
+			"lane": 2,
+			"startTime": 68725.4901960784
+		},
+		{
+			"lane": 1,
+			"startTime": 68823.5294117647
+		},
+		{
+			"lane": 3,
+			"startTime": 69019.6078431372
+		},
+		{
+			"lane": 1,
+			"startTime": 69117.6470588235
+		},
+		{
+			"lane": 2,
+			"startTime": 69411.7647058823
+		},
+		{
+			"startTime": 69607.8431372549
+		},
+		{
+			"lane": 2,
+			"startTime": 69901.9607843137
+		},
+		{
+			"lane": 1,
+			"startTime": 70000
+		},
+		{
+			"lane": 3,
+			"startTime": 70294.1176470588
+		},
+		{
+			"lane": 2,
+			"startTime": 70588.2352941176
+		},
+		{
+			"startTime": 70882.3529411765
+		},
+		{
+			"lane": 3,
+			"startTime": 71078.431372549
+		},
+		{
+			"lane": 1,
+			"startTime": 71176.4705882353
+		},
+		{
+			"lane": 3,
+			"startTime": 71372.5490196078
+		},
+		{
+			"lane": 1,
+			"startTime": 71470.5882352941
+		},
+		{
+			"lane": 1,
+			"startTime": 71764.7058823529
+		},
+		{
+			"startTime": 72058.8235294118
+		},
+		{
+			"endTime": 72549,
+			"lane": 1,
+			"startTime": 72254.9019607843
+		},
+		{
+			"lane": 2,
+			"startTime": 72647.0588235294
+		},
+		{
+			"lane": 3,
+			"startTime": 72941.1764705882
+		},
+		{
+			"lane": 2,
+			"startTime": 73039.2156862745
+		},
+		{
+			"lane": 1,
+			"startTime": 73137.2549019608
+		},
+		{
+			"lane": 2,
+			"startTime": 73235.294117647
+		},
+		{
+			"lane": 1,
+			"startTime": 73333.3333333333
+		},
+		{
+			"startTime": 73431.3725490196
+		},
+		{
+			"lane": 1,
+			"startTime": 73529.4117647059
+		},
+		{
+			"startTime": 73627.4509803921
+		},
+		{
+			"lane": 3,
+			"startTime": 73725.4901960784
+		},
+		{
+			"startTime": 73823.5294117647
+		},
+		{
+			"lane": 3,
+			"startTime": 73921.568627451
+		},
+		{
+			"lane": 2,
+			"startTime": 74019.6078431372
+		},
+		{
+			"lane": 1,
+			"startTime": 74117.6470588235
+		},
+		{
+			"lane": 3,
+			"startTime": 74313.7254901961
+		},
+		{
+			"lane": 1,
+			"startTime": 74607.8431372549
+		},
+		{
+			"startTime": 74705.8823529412
+		},
+		{
+			"lane": 2,
+			"startTime": 75000
+		},
+		{
+			"lane": 3,
+			"startTime": 75220.5882352941
+		},
+		{
+			"lane": 6,
+			"startTime": 75588.2352941177
+		},
+		{
+			"lane": 7,
+			"startTime": 75784.3137254902
+		},
+		{
+			"lane": 5,
+			"startTime": 75882.3529411765
+		},
+		{
+			"lane": 7,
+			"startTime": 76078.431372549
+		},
+		{
+			"lane": 5,
+			"startTime": 76176.4705882353
+		},
+		{
+			"lane": 4,
+			"startTime": 76470.5882352941
+		},
+		{
+			"lane": 5,
+			"startTime": 76764.7058823529
+		},
+		{
+			"endTime": 77254,
+			"lane": 7,
+			"startTime": 76960.7843137255
+		},
+		{
+			"lane": 6,
+			"startTime": 77352.9411764706
+		},
+		{
+			"lane": 4,
+			"startTime": 77647.0588235294
+		},
+		{
+			"lane": 7,
+			"startTime": 77745.0980392157
+		},
+		{
+			"lane": 5,
+			"startTime": 77941.1764705882
+		},
+		{
+			"lane": 6,
+			"startTime": 78137.2549019608
+		},
+		{
+			"lane": 5,
+			"startTime": 78235.294117647
+		},
+		{
+			"lane": 7,
+			"startTime": 78431.3725490196
+		},
+		{
+			"lane": 5,
+			"startTime": 78529.4117647059
+		},
+		{
+			"lane": 6,
+			"startTime": 78823.5294117647
+		},
+		{
+			"lane": 4,
+			"startTime": 79019.6078431372
+		},
+		{
+			"lane": 6,
+			"startTime": 79313.7254901961
+		},
+		{
+			"lane": 5,
+			"startTime": 79411.7647058823
+		},
+		{
+			"lane": 7,
+			"startTime": 79705.8823529412
+		},
+		{
+			"lane": 6,
+			"startTime": 80000
+		},
+		{
+			"lane": 4,
+			"startTime": 80294.1176470588
+		},
+		{
+			"lane": 7,
+			"startTime": 80490.1960784314
+		},
+		{
+			"lane": 5,
+			"startTime": 80588.2352941177
+		},
+		{
+			"lane": 7,
+			"startTime": 80784.3137254902
+		},
+		{
+			"lane": 5,
+			"startTime": 80882.3529411765
+		},
+		{
+			"lane": 5,
+			"startTime": 81176.4705882353
+		},
+		{
+			"lane": 4,
+			"startTime": 81470.5882352941
+		},
+		{
+			"endTime": 81960,
+			"lane": 5,
+			"startTime": 81666.6666666667
+		},
+		{
+			"lane": 6,
+			"startTime": 82058.8235294117
+		},
+		{
+			"lane": 7,
+			"startTime": 82352.9411764706
+		},
+		{
+			"lane": 6,
+			"startTime": 82450.9803921569
+		},
+		{
+			"lane": 5,
+			"startTime": 82549.0196078431
+		},
+		{
+			"lane": 6,
+			"startTime": 82647.0588235294
+		},
+		{
+			"lane": 5,
+			"startTime": 82745.0980392157
+		},
+		{
+			"lane": 4,
+			"startTime": 82843.1372549019
+		},
+		{
+			"lane": 5,
+			"startTime": 82941.1764705882
+		},
+		{
+			"lane": 4,
+			"startTime": 83039.2156862745
+		},
+		{
+			"lane": 7,
+			"startTime": 83137.2549019608
+		},
+		{
+			"lane": 4,
+			"startTime": 83235.294117647
+		},
+		{
+			"lane": 7,
+			"startTime": 83333.3333333333
+		},
+		{
+			"lane": 6,
+			"startTime": 83431.3725490196
+		},
+		{
+			"lane": 5,
+			"startTime": 83529.4117647059
+		},
+		{
+			"lane": 7,
+			"startTime": 83725.4901960784
+		},
+		{
+			"lane": 5,
+			"startTime": 84019.6078431372
+		},
+		{
+			"lane": 4,
+			"startTime": 84117.6470588235
+		},
+		{
+			"lane": 6,
+			"startTime": 84411.7647058823
+		},
+		{
+			"endTime": 85073,
+			"lane": 7,
+			"startTime": 84632.3529411765
+		},
+		{
+			"endTime": 85000,
+			"lane": 3,
+			"startTime": 85000
+		},
+		{
+			"startTime": 85196.0784313725
+		},
+		{
+			"lane": 2,
+			"startTime": 85294.1176470588
+		},
+		{
+			"startTime": 85490.1960784314
+		},
+		{
+			"lane": 1,
+			"startTime": 85588.2352941177
+		},
+		{
+			"lane": 1,
+			"startTime": 85882.3529411765
+		},
+		{
+			"lane": 1,
+			"startTime": 86176.4705882353
+		},
+		{
+			"lane": 2,
+			"startTime": 86372.5490196078
+		},
+		{
+			"lane": 1,
+			"startTime": 86470.5882352941
+		},
+		{
+			"lane": 6,
+			"startTime": 86470.5882352941
+		},
+		{
+			"startTime": 86666.6666666667
+		},
+		{
+			"lane": 5,
+			"startTime": 86764.7058823529
+		},
+		{
+			"endTime": 87254,
+			"lane": 2,
+			"startTime": 86960.7843137255
+		},
+		{
+			"endTime": 87549,
+			"lane": 5,
+			"startTime": 86960.7843137255
+		},
+		{
+			"lane": 3,
+			"startTime": 87352.9411764706
+		},
+		{
+			"startTime": 87549.0196078431
+		},
+		{
+			"lane": 2,
+			"startTime": 87647.0588235294
+		},
+		{
+			"startTime": 87843.137254902
+		},
+		{
+			"lane": 1,
+			"startTime": 87941.1764705882
+		},
+		{
+			"lane": 1,
+			"startTime": 88235.294117647
+		},
+		{
+			"lane": 1,
+			"startTime": 88529.4117647059
+		},
+		{
+			"lane": 2,
+			"startTime": 88725.4901960784
+		},
+		{
+			"startTime": 88823.5294117647
+		},
+		{
+			"lane": 5,
+			"startTime": 88823.5294117647
+		},
+		{
+			"lane": 3,
+			"startTime": 89019.6078431372
+		},
+		{
+			"lane": 4,
+			"startTime": 89019.6078431372
+		},
+		{
+			"startTime": 89117.6470588235
+		},
+		{
+			"lane": 6,
+			"startTime": 89117.6470588235
+		},
+		{
+			"endTime": 89607,
+			"startTime": 89313.7254901961
+		},
+		{
+			"endTime": 89754,
+			"lane": 6,
+			"startTime": 89313.7254901961
+		},
+		{
+			"endTime": 89705,
+			"lane": 3,
+			"startTime": 89705.8823529412
+		},
+		{
+			"startTime": 89901.9607843137
+		},
+		{
+			"lane": 2,
+			"startTime": 90000
+		},
+		{
+			"startTime": 90196.0784313725
+		},
+		{
+			"lane": 1,
+			"startTime": 90294.1176470588
+		},
+		{
+			"lane": 1,
+			"startTime": 90588.2352941177
+		},
+		{
+			"lane": 1,
+			"startTime": 90882.3529411765
+		},
+		{
+			"lane": 2,
+			"startTime": 91078.431372549
+		},
+		{
+			"lane": 1,
+			"startTime": 91176.4705882353
+		},
+		{
+			"lane": 6,
+			"startTime": 91176.4705882353
+		},
+		{
+			"startTime": 91372.5490196078
+		},
+		{
+			"lane": 5,
+			"startTime": 91470.5882352941
+		},
+		{
+			"endTime": 91960,
+			"lane": 5,
+			"startTime": 91666.6666666666
+		},
+		{
+			"endTime": 91960,
+			"lane": 2,
+			"startTime": 91666.6666666667
+		},
+		{
+			"lane": 7,
+			"startTime": 92058.8235294117
+		},
+		{
+			"lane": 3,
+			"startTime": 92058.8235294118
+		},
+		{
+			"startTime": 92254.9019607843
+		},
+		{
+			"lane": 2,
+			"startTime": 92352.9411764706
+		},
+		{
+			"lane": 6,
+			"startTime": 92352.9411764706
+		},
+		{
+			"startTime": 92549.0196078431
+		},
+		{
+			"lane": 1,
+			"startTime": 92647.0588235294
+		},
+		{
+			"lane": 4,
+			"startTime": 92647.0588235294
+		},
+		{
+			"endTime": 93137,
+			"lane": 5,
+			"startTime": 92843.1372549019
+		},
+		{
+			"lane": 1,
+			"startTime": 92941.1764705882
+		},
+		{
+			"lane": 1,
+			"startTime": 93235.294117647
+		},
+		{
+			"lane": 7,
+			"startTime": 93235.294117647
+		},
+		{
+			"lane": 2,
+			"startTime": 93431.3725490196
+		},
+		{
+			"startTime": 93529.4117647059
+		},
+		{
+			"lane": 6,
+			"startTime": 93529.4117647059
+		},
+		{
+			"lane": 3,
+			"startTime": 93725.4901960784
+		},
+		{
+			"startTime": 93823.5294117647
+		},
+		{
+			"lane": 4,
+			"startTime": 93823.5294117647
+		},
+		{
+			"endTime": 94460,
+			"lane": 3,
+			"startTime": 94019.6078431373
+		},
+		{
+			"endTime": 94411,
+			"lane": 7,
+			"startTime": 94411.7647058823
+		},
+		{
+			"lane": 4,
+			"startTime": 94607.8431372549
+		},
+		{
+			"lane": 6,
+			"startTime": 94705.8823529412
+		},
+		{
+			"lane": 4,
+			"startTime": 94901.9607843137
+		},
+		{
+			"lane": 5,
+			"startTime": 95000
+		},
+		{
+			"lane": 5,
+			"startTime": 95294.1176470588
+		},
+		{
+			"lane": 5,
+			"startTime": 95588.2352941176
+		},
+		{
+			"lane": 6,
+			"startTime": 95784.3137254902
+		},
+		{
+			"lane": 2,
+			"startTime": 95882.3529411764
+		},
+		{
+			"lane": 5,
+			"startTime": 95882.3529411765
+		},
+		{
+			"lane": 4,
+			"startTime": 96078.431372549
+		},
+		{
+			"lane": 1,
+			"startTime": 96176.4705882353
+		},
+		{
+			"endTime": 96666,
+			"lane": 6,
+			"startTime": 96372.5490196078
+		},
+		{
+			"endTime": 96960,
+			"lane": 1,
+			"startTime": 96372.5490196078
+		},
+		{
+			"lane": 7,
+			"startTime": 96764.7058823529
+		},
+		{
+			"lane": 4,
+			"startTime": 96960.7843137255
+		},
+		{
+			"lane": 6,
+			"startTime": 97058.8235294118
+		},
+		{
+			"lane": 4,
+			"startTime": 97254.9019607843
+		},
+		{
+			"lane": 5,
+			"startTime": 97352.9411764706
+		},
+		{
+			"lane": 5,
+			"startTime": 97647.0588235294
+		},
+		{
+			"lane": 5,
+			"startTime": 97941.1764705882
+		},
+		{
+			"lane": 6,
+			"startTime": 98137.2549019608
+		},
+		{
+			"lane": 4,
+			"startTime": 98235.294117647
+		},
+		{
+			"lane": 1,
+			"startTime": 98235.294117647
+		},
+		{
+			"lane": 7,
+			"startTime": 98431.3725490196
+		},
+		{
+			"startTime": 98431.3725490196
+		},
+		{
+			"lane": 4,
+			"startTime": 98529.4117647059
+		},
+		{
+			"lane": 2,
+			"startTime": 98529.4117647059
+		},
+		{
+			"endTime": 99019,
+			"lane": 4,
+			"startTime": 98725.4901960784
+		},
+		{
+			"endTime": 99166,
+			"lane": 2,
+			"startTime": 98725.4901960784
+		},
+		{
+			"endTime": 99117,
+			"lane": 7,
+			"startTime": 99117.6470588235
+		},
+		{
+			"lane": 4,
+			"startTime": 99313.7254901961
+		},
+		{
+			"lane": 6,
+			"startTime": 99411.7647058823
+		},
+		{
+			"lane": 4,
+			"startTime": 99607.8431372549
+		},
+		{
+			"lane": 5,
+			"startTime": 99705.8823529412
+		},
+		{
+			"lane": 5,
+			"startTime": 100000
+		},
+		{
+			"lane": 5,
+			"startTime": 100294.117647059
+		},
+		{
+			"lane": 6,
+			"startTime": 100490.196078431
+		},
+		{
+			"lane": 5,
+			"startTime": 100588.235294118
+		},
+		{
+			"lane": 2,
+			"startTime": 100588.235294118
+		},
+		{
+			"lane": 4,
+			"startTime": 100784.31372549
+		},
+		{
+			"lane": 1,
+			"startTime": 100882.352941176
+		},
+		{
+			"endTime": 101372,
+			"lane": 6,
+			"startTime": 101078.431372549
+		},
+		{
+			"endTime": 101372,
+			"lane": 1,
+			"startTime": 101078.431372549
+		},
+		{
+			"lane": 7,
+			"startTime": 101470.588235294
+		},
+		{
+			"lane": 3,
+			"startTime": 101470.588235294
+		},
+		{
+			"lane": 4,
+			"startTime": 101666.666666667
+		},
+		{
+			"lane": 6,
+			"startTime": 101764.705882353
+		},
+		{
+			"lane": 2,
+			"startTime": 101764.705882353
+		},
+		{
+			"lane": 4,
+			"startTime": 101960.784313725
+		},
+		{
+			"lane": 5,
+			"startTime": 102058.823529412
+		},
+		{
+			"startTime": 102058.823529412
+		},
+		{
+			"endTime": 102549,
+			"lane": 1,
+			"startTime": 102254.901960784
+		},
+		{
+			"lane": 5,
+			"startTime": 102352.941176471
+		},
+		{
+			"lane": 5,
+			"startTime": 102647.058823529
+		},
+		{
+			"lane": 3,
+			"startTime": 102647.058823529
+		},
+		{
+			"lane": 6,
+			"startTime": 102843.137254902
+		},
+		{
+			"lane": 4,
+			"startTime": 102941.176470588
+		},
+		{
+			"lane": 2,
+			"startTime": 102941.176470588
+		},
+		{
+			"lane": 7,
+			"startTime": 103137.254901961
+		},
+		{
+			"lane": 4,
+			"startTime": 103235.294117647
+		},
+		{
+			"startTime": 103235.294117647
+		},
+		{
+			"endTime": 104019,
+			"lane": 7,
+			"startTime": 103431.37254902
+		}
+	],
+	"artist": "Rozebud",
+	"opponent": "guy-lil",
+	"bf": "bf-lil",
+	"gf": "fnf:gf",
+	"lyricSteps": [],
+	"title": "Lil' Buddies",
+	"initialScrollVelocity": 1,
+	"source": "FPS Plus",
+	"instFile": "Inst.ogg",
+	"cameraFocuses": [
+		{},
+		{
+			"char": 1,
+			"startTime": 2352.94117647059
+		},
+		{
+			"startTime": 4705.88235294118
+		},
+		{
+			"char": 1,
+			"startTime": 7058.82352941176
+		},
+		{
+			"startTime": 9411.76470588235
+		},
+		{
+			"char": 1,
+			"startTime": 18823.5294117647
+		},
+		{
+			"startTime": 28235.2941176471
+		},
+		{
+			"char": 1,
+			"startTime": 37647.0588235294
+		},
+		{
+			"startTime": 47058.8235294118
+		},
+		{
+			"char": 1,
+			"startTime": 51764.7058823529
+		},
+		{
+			"startTime": 56470.5882352941
+		},
+		{
+			"char": 1,
+			"startTime": 61176.4705882353
+		},
+		{
+			"startTime": 65882.3529411765
+		},
+		{
+			"char": 1,
+			"startTime": 75294.1176470588
+		},
+		{
+			"startTime": 84705.8823529412
+		},
+		{
+			"char": 1,
+			"startTime": 94117.6470588235
+		}
+	],
+	"scrollVelocities": []
+}

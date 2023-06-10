@@ -16,6 +16,7 @@ import openfl.display.PNGEncoderOptions;
 import sprites.game.BGSprite;
 import sprites.game.Character;
 import subStates.editors.char.CharacterEditorSavePrompt;
+import sys.FileSystem;
 import sys.io.File;
 import ui.editors.NotificationManager;
 import ui.editors.char.CharacterEditorAnimPanel;
@@ -478,8 +479,10 @@ class CharacterEditorState extends FNFState
 			return;
 
 		var bytes = char.pixels.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
-		File.saveBytes(filename, bytes);
-		System.openFile(filename);
+		var path = 'frames/$filename';
+		FileSystem.createDirectory('frames/');
+		File.saveBytes(path, bytes);
+		System.openFile(path);
 		notificationManager.showNotification('Image successfully saved!', SUCCESS);
 	}
 

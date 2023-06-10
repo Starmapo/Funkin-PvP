@@ -1,0 +1,20 @@
+{
+	"groups": [
+		{
+			"name": "Leather Engine",
+			"credits": [
+				{
+					"name": "Leather128",
+					"description": "Engine Creator",
+					"link": "https://github.com/Leather128"
+				},
+				{
+					"name": "Engine Page",
+					"description": "View the engine on GitHub!",
+					"color": "#F0F6FC",
+					"link": "https://github.com/Leather128/LeatherEngine"
+				}
+			]
+		}
+	]
+}

@@ -243,8 +243,8 @@ class BootState extends FNFState
 							{
 								songGroup = {
 									name: group.name,
-									bg: mod.directory + ':' + group.bg,
-									songs: []
+									songs: [],
+									directory: mod.directory
 								};
 								Mods.songGroups.set(group.name, songGroup);
 							}
@@ -282,8 +282,8 @@ class BootState extends FNFState
 							{
 								charGroup = {
 									name: group.name,
-									bg: mod.directory + ':' + group.bg,
-									chars: []
+									chars: [],
+									directory: mod.directory
 								};
 								Mods.characterGroups.set(group.name, charGroup);
 							}

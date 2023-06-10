@@ -1,0 +1,17 @@
+{
+	"groups": [
+		{
+			"name": "FPS Plus",
+			"chars": [
+				{
+					"name": "bf-lil",
+					"displayName": "Lil' Boyfriend"
+				},
+				{
+					"name": "guy-lil",
+					"displayName": "Lil' Opponent"
+				}
+			]
+		}
+	]
+}
