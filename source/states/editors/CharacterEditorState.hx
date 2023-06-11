@@ -319,7 +319,10 @@ class CharacterEditorState extends FNFState
 					default: 'normal';
 				}
 				if (anim.exists(nextAnim))
+				{
 					healthBar.icon.playAnim(nextAnim);
+					healthBar.updateIconPos();
+				}
 			}
 			else if (FlxG.mouse.overlaps(camIndicator))
 			{

@@ -286,10 +286,25 @@ class CoolUtil
 
 	public static function getDominantColor(sprite:FlxSprite):FlxColor
 	{
+		if (sprite.pixels == null)
+			return FlxColor.BLACK;
+
 		var countByColor:Map<Int, Int> = [];
-		for (col in 0...sprite.frameWidth)
+		var x = 0;
+		var y = 0;
+		var width = sprite.pixels.width;
+		var height = sprite.pixels.height;
+		if (sprite.frame != null)
 		{
-			for (row in 0...sprite.frameHeight)
+			var frame = sprite.frame.frame;
+			x = Std.int(frame.x);
+			y = Std.int(frame.y);
+			width = Std.int(frame.width);
+			height = Std.int(frame.height);
+		}
+		for (col in x...x + width)
+		{
+			for (row in y...y + height)
 			{
 				var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
 				if (colorOfThisPixel != 0)
