@@ -49,6 +49,8 @@ class CharacterEditorEditPanel extends EditorPanel
 	var healthColorPicker:HealthColorPicker;
 	var atlasNamePrompt:AtlasNamePrompt;
 	var newCharacterPrompt:NewCharacterPrompt;
+	var createIconSubState:BaseImageSubState;
+	var createPortraitSubState:BaseImageSubState;
 
 	public function new(state:CharacterEditorState)
 	{
@@ -111,6 +113,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		healthColorPicker = FlxDestroyUtil.destroy(healthColorPicker);
 		atlasNamePrompt = FlxDestroyUtil.destroy(atlasNamePrompt);
 		newCharacterPrompt = FlxDestroyUtil.destroy(newCharacterPrompt);
+		createIconSubState = FlxDestroyUtil.destroy(createIconSubState);
 	}
 
 	function createAnimationTab()
@@ -474,7 +477,8 @@ class CharacterEditorEditPanel extends EditorPanel
 
 	function createEditorTab()
 	{
-		var createIconSubState = new BaseImageSubState(state, 80, 80);
+		createIconSubState = new BaseImageSubState(state, 80, 80);
+		createPortraitSubState = new BaseImageSubState(state, 300, 360);
 
 		var tab = createTab('Editor');
 
@@ -489,16 +493,27 @@ class CharacterEditorEditPanel extends EditorPanel
 		gfCheckbox.x = (width - (gfCheckbox.width + gfCheckbox.button.label.width)) / 2;
 		tab.add(gfCheckbox);
 
-		var createIconButton = new FlxUIButton(0, gfCheckbox.y + gfCheckbox.height + spacing, 'Create Icon', function()
+		var createIconButton = new FlxUIButton(0, gfCheckbox.y + gfCheckbox.height + spacing, 'Create Character Select Icon', function()
 		{
 			if (state.char.frame == null)
 				return;
 			state.openSubState(createIconSubState);
 		});
+		createIconButton.resize(160, createIconButton.height);
 		createIconButton.x = (width - createIconButton.width) / 2;
 		tab.add(createIconButton);
 
-		var saveFrameButton = new FlxUIButton(0, createIconButton.y + createIconButton.height + spacing, 'Save Current Frame', function()
+		var createPortraitButton = new FlxUIButton(0, createIconButton.y + createIconButton.height + spacing, 'Create Character Select Portrait', function()
+		{
+			if (state.char.frame == null)
+				return;
+			state.openSubState(createPortraitSubState);
+		});
+		createPortraitButton.resize(170, createPortraitButton.height);
+		createPortraitButton.x = (width - createPortraitButton.width) / 2;
+		tab.add(createPortraitButton);
+
+		var saveFrameButton = new FlxUIButton(0, createPortraitButton.y + createPortraitButton.height + spacing, 'Save Current Frame', function()
 		{
 			state.saveFrame(state.charInfo.name + '.png');
 		});
@@ -589,6 +604,8 @@ class CharacterEditorEditPanel extends EditorPanel
 
 		atlasNamePrompt.refreshAtlasNames();
 		newCharacterPrompt.updateMod();
+		createIconSubState.path = 'images/characterSelect/icons/${state.charInfo.name}.png';
+		createPortraitSubState.path = 'images/characterSelect/portraits/${state.charInfo.name}.png';
 	}
 
 	function updateImage()

@@ -523,6 +523,9 @@ class CharacterEditorState extends FNFState
 		resetCamPos();
 		FlxG.camera.snapToTarget();
 
+		if (char.animation.name != null)
+			curAnim = char.animation.name;
+
 		animPanel.reloadDropdown();
 		editPanel.updateChar();
 	}
