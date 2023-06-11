@@ -11,8 +11,10 @@ import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import haxe.io.Path;
+import hscript.Interp;
 import lime.app.Application;
 import sys.FileSystem;
 import sys.thread.Thread;
@@ -26,7 +28,7 @@ class BootState extends FNFState
 	/**
 		The state to switch to after the game finishes booting up.
 	**/
-	var initialState:Class<FlxState> = states.editors.CharacterEditorState;
+	var initialState:Class<FlxState> = states.menus.TitleState;
 
 	var bg:FlxSprite;
 	var loadingText:FlxText;
@@ -132,6 +134,305 @@ class BootState extends FNFState
 		// create custom transitions
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
+
+		Interp.getRedirects["Int"] = function(obj:Dynamic, name:String):Dynamic
+		{
+			var c:FlxColor = obj;
+			switch (name)
+			{
+				case "alpha":
+					return c.alpha;
+				case "alphaFloat":
+					return c.alphaFloat;
+				case "black":
+					return c.black;
+				case "blue":
+					return c.blue;
+				case "blueFloat":
+					return c.blueFloat;
+				case "brightness":
+					return c.brightness;
+				case "cyan":
+					return c.cyan;
+				case "to24Bit":
+					return c.to24Bit;
+				case "getAnalogousHarmony":
+					return c.getAnalogousHarmony;
+				case "getColorInfo":
+					return c.getColorInfo;
+				case "getComplementHarmony":
+					return c.getComplementHarmony;
+				case "getDarkened":
+					return c.getDarkened;
+				case "getInverted":
+					return c.getInverted;
+				case "getLightened":
+					return c.getLightened;
+				case "toHexString":
+					return c.toHexString;
+				case "getSplitComplementHarmony":
+					return c.getSplitComplementHarmony;
+				case "getTriadicHarmony":
+					return c.getTriadicHarmony;
+				case "toWebString":
+					return c.toWebString;
+				case "green":
+					return c.green;
+				case "greenFloat":
+					return c.greenFloat;
+				case "hue":
+					return c.hue;
+				case "lightness":
+					return c.lightness;
+				case "magenta":
+					return c.magenta;
+				case "red":
+					return c.red;
+				case "redFloat":
+					return c.redFloat;
+				case "rgb":
+					return c.rgb;
+				case "setCMYK":
+					return c.setCMYK;
+				case "setHSB":
+					return c.setHSB;
+				case "setHSL":
+					return c.setHSL;
+				case "setRGB":
+					return c.setRGB;
+				case "setRGBFloat":
+					return c.setRGBFloat;
+				case "saturation":
+					return c.saturation;
+				case "yellow":
+					return c.yellow;
+			}
+			var c:FlxAxes = obj;
+			switch (name)
+			{
+				case "x":
+					return c.x;
+				case "y":
+					return c.y;
+			}
+			return null;
+		}
+		Interp.setRedirects["Int"] = function(obj:Dynamic, name:String, val:Dynamic):Dynamic
+		{
+			var c:FlxColor = obj;
+			switch (name)
+			{
+				case "alpha":
+					c.alpha = val;
+				case "alphaFloat":
+					c.alphaFloat = val;
+				case "black":
+					c.black = val;
+				case "blue":
+					c.blue = val;
+				case "blueFloat":
+					c.blueFloat = val;
+				case "brightness":
+					c.brightness = val;
+				case "cyan":
+					c.cyan = val;
+				case "green":
+					c.green = val;
+				case "greenFloat":
+					c.greenFloat = val;
+				case "hue":
+					c.hue = val;
+				case "lightness":
+					c.lightness = val;
+				case "magenta":
+					c.magenta = val;
+				case "red":
+					c.red = val;
+				case "redFloat":
+					c.redFloat = val;
+				case "rgb":
+					c.rgb = val;
+				case "saturation":
+					c.saturation = val;
+				case "yellow":
+					c.yellow = val;
+			}
+			return c;
+		}
+		Interp.getRedirects["flixel.math.FlxBasePoint"] = function(obj:Dynamic, name:String):Dynamic
+		{
+			var c:FlxPoint = obj;
+			switch (name)
+			{
+				case "add":
+					return c.add;
+				case "addNew":
+					return c.addNew;
+				case "addPoint":
+					return c.addPoint;
+				case "addToFlash":
+					return c.addToFlash;
+				case "bounce":
+					return c.bounce;
+				case "bounceWithFriction":
+					return c.bounceWithFriction;
+				case "ceil":
+					return c.ceil;
+				case "clone":
+					return c.clone;
+				case "copyFrom":
+					return c.copyFrom;
+				case "copyFromFlash":
+					return c.copyFromFlash;
+				case "copyTo":
+					return c.copyTo;
+				case "copyToFlash":
+					return c.copyToFlash;
+				case "crossProductLength":
+					return c.crossProductLength;
+				case "degrees":
+					return c.degrees;
+				case "degreesBetween":
+					return c.degreesBetween;
+				case "degreesFrom":
+					return c.degreesFrom;
+				case "degreesTo":
+					return c.degreesTo;
+				case "dist":
+					return c.dist;
+				case "distSquared":
+					return c.distSquared;
+				case "distanceTo":
+					return c.distanceTo;
+				case "divide":
+					return c.divide;
+				case "divideNew":
+					return c.divideNew;
+				case "dividePoint":
+					return c.dividePoint;
+				case "dot":
+					return c.dot;
+				case "dotProduct":
+					return c.dotProduct;
+				case "dotProdWithNormalizing":
+					return c.dotProdWithNormalizing;
+				case "dx":
+					return c.dx;
+				case "dy":
+					return c.dy;
+				case "findIntersection":
+					return c.findIntersection;
+				case "findIntersectionInBounds":
+					return c.findIntersectionInBounds;
+				case "floor":
+					return c.floor;
+				case "inCoords":
+					return c.inCoords;
+				case "inRect":
+					return c.inRect;
+				case "isNormalized":
+					return c.isNormalized;
+				case "isParallel":
+					return c.isParallel;
+				case "isPerpendicular":
+					return c.isPerpendicular;
+				case "isValid":
+					return c.isValid;
+				case "isZero":
+					return c.isZero;
+				case "leftNormal":
+					return c.leftNormal;
+				case "length":
+					return c.length;
+				case "lengthSquared":
+					return c.lengthSquared;
+				case "lx":
+					return c.lx;
+				case "ly":
+					return c.ly;
+				case "negate":
+					return c.negate;
+				case "negateNew":
+					return c.negateNew;
+				case "normalize":
+					return c.normalize;
+				case "perpProduct":
+					return c.perpProduct;
+				case "pivotDegrees":
+					return c.pivotDegrees;
+				case "pivotRadians":
+					return c.pivotRadians;
+				case "projectTo":
+					return c.projectTo;
+				case "projectToNormalized":
+					return c.projectToNormalized;
+				case "radians":
+					return c.radians;
+				case "radiansBetween":
+					return c.radiansBetween;
+				case "radiansFrom":
+					return c.radiansFrom;
+				case "radiansTo":
+					return c.radiansTo;
+				case "ratio":
+					return c.ratio;
+				case "rightNormal":
+					return c.rightNormal;
+				case "rotateByDegrees":
+					return c.rotateByDegrees;
+				case "rotateByRadians":
+					return c.rotateByRadians;
+				case "rotateWithTrig":
+					return c.rotateWithTrig;
+				case "round":
+					return c.round;
+				case "rx":
+					return c.rx;
+				case "ry":
+					return c.ry;
+				case "setPolarDegrees":
+					return c.setPolarDegrees;
+				case "setPolarRadians":
+					return c.setPolarRadians;
+				case "sign":
+					return c.sign;
+				case "scale":
+					return c.scale;
+				case "scaleNew":
+					return c.scaleNew;
+				case "scalePoint":
+					return c.scalePoint;
+				case "subtract":
+					return c.subtract;
+				case "subtractFromFlash":
+					return c.subtractFromFlash;
+				case "subtractNew":
+					return c.subtractNew;
+				case "subtractPoint":
+					return c.subtractPoint;
+				case "transform":
+					return c.transform;
+				case "truncate":
+					return c.truncate;
+				case "zero":
+					return c.zero;
+			}
+			return null;
+		}
+		Interp.setRedirects["flixel.math.FlxBasePoint"] = function(obj:Dynamic, name:String, val:Dynamic):Dynamic
+		{
+			var c:FlxPoint = obj;
+			switch (name)
+			{
+				case "degrees":
+					c.degrees = val;
+				case "length":
+					c.length = val;
+				case "radians":
+					c.radians = val;
+			}
+			return c;
+		};
 
 		Paths.init();
 	}

@@ -35,6 +35,9 @@ private enum Stop
 
 class Interp
 {
+	public static var getRedirects:Map<String, Dynamic->String->Dynamic> = [];
+	public static var setRedirects:Map<String, Dynamic->String->Dynamic->Dynamic> = [];
+
 	#if haxe3
 	public var variables:Map<String, Dynamic>;
 
@@ -799,6 +802,28 @@ class Interp
 	{
 		if (o == null)
 			error(EInvalidAccess(f));
+
+		var cl = switch (Type.typeof(o))
+		{
+			case TNull:
+				"Null";
+			case TInt:
+				"Int";
+			case TFloat:
+				"Float";
+			case TBool:
+				"Bool";
+			default:
+				Type.getClassName(Type.getClass(o));
+		}
+		var redirect = getRedirects.get(cl);
+		if (redirect != null)
+		{
+			var ret = redirect(o, f);
+			if (ret != null)
+				return ret;
+		}
+
 		return
 		{
 			#if php
@@ -821,6 +846,24 @@ class Interp
 	{
 		if (o == null)
 			error(EInvalidAccess(f));
+
+		var cl = switch (Type.typeof(o))
+		{
+			case TNull:
+				"Null";
+			case TInt:
+				"Int";
+			case TFloat:
+				"Float";
+			case TBool:
+				"Bool";
+			default:
+				Type.getClassName(Type.getClass(o));
+		}
+		var redirect = setRedirects.get(cl);
+		if (redirect != null)
+			return redirect(o, f, v);
+
 		Reflect.setProperty(o, f, v);
 		return v;
 	}

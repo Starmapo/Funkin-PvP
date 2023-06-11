@@ -1,4 +1,5 @@
 try hscript stuff
+stage xmls
 erb
 jerk (2:15)
 bloodpop (2:25)
