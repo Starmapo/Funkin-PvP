@@ -112,8 +112,16 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 
 		super(x, y, label, mod.directory);
 
-		var bg = new FlxSprite().makeGraphic(FlxG.width - 50, Std.int(FlxG.height / 2), FlxColor.TRANSPARENT);
-		FlxSpriteUtil.drawRoundRect(bg, 0, 0, bg.width, bg.height, 20, 20, FlxColor.GRAY, {thickness: 4});
+		var bgGraphic = FlxG.bitmap.get('mod_bg');
+		if (bgGraphic == null)
+		{
+			var spr = new FlxSprite().makeGraphic(FlxG.width - 50, Std.int(FlxG.height / 2), FlxColor.TRANSPARENT, false, 'mod_bg');
+			FlxSpriteUtil.drawRoundRect(spr, 0, 0, spr.width, spr.height, 20, 20, FlxColor.GRAY, {thickness: 4});
+			bgGraphic = spr.graphic;
+			bgGraphic.destroyOnNoUse = false;
+			spr.destroy();
+		}
+		var bg = new FlxSprite(0, 0, bgGraphic);
 
 		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.directory, 'icon']), null, false);
 		if (iconImage == null)

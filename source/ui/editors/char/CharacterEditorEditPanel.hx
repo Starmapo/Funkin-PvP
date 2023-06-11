@@ -7,6 +7,7 @@ import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import states.editors.CharacterEditorState;
 import subStates.editors.char.AtlasNamePrompt;
+import subStates.editors.char.BaseImageSubState;
 import subStates.editors.char.HealthColorPicker;
 import subStates.editors.char.NewCharacterPrompt;
 import systools.Dialogs;
@@ -473,6 +474,8 @@ class CharacterEditorEditPanel extends EditorPanel
 
 	function createEditorTab()
 	{
+		var createIconSubState = new BaseImageSubState(state, 80, 80);
+
 		var tab = createTab('Editor');
 
 		var gfCheckbox:EditorCheckbox = null;
@@ -486,7 +489,16 @@ class CharacterEditorEditPanel extends EditorPanel
 		gfCheckbox.x = (width - (gfCheckbox.width + gfCheckbox.button.label.width)) / 2;
 		tab.add(gfCheckbox);
 
-		var saveFrameButton = new FlxUIButton(0, gfCheckbox.y + gfCheckbox.height + spacing, 'Save Current Frame', function()
+		var createIconButton = new FlxUIButton(0, gfCheckbox.y + gfCheckbox.height + spacing, 'Create Icon', function()
+		{
+			if (state.char.frame == null)
+				return;
+			state.openSubState(createIconSubState);
+		});
+		createIconButton.x = (width - createIconButton.width) / 2;
+		tab.add(createIconButton);
+
+		var saveFrameButton = new FlxUIButton(0, createIconButton.y + createIconButton.height + spacing, 'Save Current Frame', function()
 		{
 			state.saveFrame(state.charInfo.name + '.png');
 		});

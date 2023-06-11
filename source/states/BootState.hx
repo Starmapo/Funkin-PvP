@@ -26,7 +26,7 @@ class BootState extends FNFState
 	/**
 		The state to switch to after the game finishes booting up.
 	**/
-	var initialState:Class<FlxState> = states.menus.TitleState;
+	var initialState:Class<FlxState> = states.editors.CharacterEditorState;
 
 	var bg:FlxSprite;
 	var loadingText:FlxText;

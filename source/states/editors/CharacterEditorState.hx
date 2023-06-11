@@ -497,7 +497,7 @@ class CharacterEditorState extends FNFState
 		if (frame == null)
 			return;
 
-		var bytes = char.pixels.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
+		var bytes = frame.parent.bitmap.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
 		var path = 'frames/$filename';
 		FileSystem.createDirectory('frames/');
 		File.saveBytes(path, bytes);
