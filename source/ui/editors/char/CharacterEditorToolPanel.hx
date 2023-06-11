@@ -5,6 +5,8 @@ import states.editors.CharacterEditorState;
 
 class CharacterEditorToolPanel extends EditorPanel
 {
+	public var tools:EditorRadioGroup;
+
 	var state:CharacterEditorState;
 
 	public function new(state:CharacterEditorState)
@@ -22,7 +24,7 @@ class CharacterEditorToolPanel extends EditorPanel
 		var tab = createTab('Move Tool');
 
 		var toolNames = [MoveTool.ANIM, MoveTool.POSITION];
-		var tools = new EditorRadioGroup(4, 4, toolNames, toolNames, function(id)
+		tools = new EditorRadioGroup(4, 4, toolNames, toolNames, function(id)
 		{
 			state.currentTool.value = id;
 		});
@@ -30,11 +32,20 @@ class CharacterEditorToolPanel extends EditorPanel
 		tab.add(tools);
 
 		addGroup(tab);
+
+		state.currentTool.valueChanged.add(onToolChanged);
 	}
 
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
+		tools = null;
+	}
+
+	function onToolChanged(value:MoveTool, lastValue:MoveTool)
+	{
+		if (tools.selectedId != value)
+			tools.selectedId = value;
 	}
 }

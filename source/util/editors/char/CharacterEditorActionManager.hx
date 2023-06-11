@@ -574,10 +574,11 @@ class ActionRemoveAnim implements IAction
 	{
 		state.charInfo.anims.remove(anim);
 
+		var newAnim = state.charInfo.anims.length > 0 ? state.charInfo.anims[0].name : '';
 		if (state.char.animation.name == anim.name)
-			state.changeAnim(state.charInfo.anims[0].name);
+			state.changeAnim(newAnim);
 		if (state.ghostChar.animation.name == anim.name)
-			state.ghostChar.playAnim(state.charInfo.anims[0].name);
+			state.ghostChar.playAnim(newAnim);
 		state.char.animation.remove(anim.name);
 		state.ghostChar.animation.remove(anim.name);
 

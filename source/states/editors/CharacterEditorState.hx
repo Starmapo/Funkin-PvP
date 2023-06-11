@@ -259,6 +259,11 @@ class CharacterEditorState extends FNFState
 		if (FlxG.keys.justPressed.H)
 			guideChar.visible = !guideChar.visible;
 
+		if (FlxG.keys.justPressed.ONE)
+			currentTool.value = ANIM;
+		if (FlxG.keys.justPressed.TWO)
+			currentTool.value = POSITION;
+
 		if (dragMousePos != null)
 		{
 			var mousePos = FlxG.mouse.getWorldPosition();
