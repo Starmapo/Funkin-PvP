@@ -220,12 +220,12 @@ class PlayState extends FNFState
 			FlxG.sound.pause();
 			FlxTween.globalManager.forEach(function(twn)
 			{
-				if (!twn.finished)
+				if (!twn.finished && !twn.persist)
 					twn.active = false;
 			});
 			FlxTimer.globalManager.forEach(function(tmr)
 			{
-				if (!tmr.finished)
+				if (!tmr.finished && !tmr.persist)
 					tmr.active = false;
 			});
 			FlxG.camera.followActive = false;
@@ -248,12 +248,12 @@ class PlayState extends FNFState
 			persistentUpdate = true;
 			FlxTween.globalManager.forEach(function(twn)
 			{
-				if (!twn.finished)
+				if (!twn.finished && !twn.persist)
 					twn.active = true;
 			});
 			FlxTimer.globalManager.forEach(function(tmr)
 			{
-				if (!tmr.finished)
+				if (!tmr.finished && !tmr.persist)
 					tmr.active = true;
 			});
 			FlxG.camera.followActive = true;

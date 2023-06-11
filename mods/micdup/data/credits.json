@@ -1,0 +1,50 @@
+{
+	"groups": [
+		{
+			"name": "Mic'd Up",
+			"credits": [
+				{
+					"name": "Verwex",
+					"description": "Mod Creator",
+					"link": "https://twitter.com/Vershift"
+				},
+				{
+					"name": "KadeDev",
+					"description": "Programmer",
+					"link": "https://twitter.com/kadedeveloper"
+				},
+				{
+					"name": "Ash237",
+					"description": "Programmer",
+					"link": "https://steamcommunity.com/profiles/76561198353865795"
+				},
+				{
+					"name": "Haya",
+					"description": "Programmer",
+					"link": "https://www.youtube.com/channel/UCqBMDBboJaBHLoxO0H3EBgw"
+				},
+				{
+					"name": "TentaRJ",
+					"description": "Programmer",
+					"link": "https://twitter.com/TentaRJ"
+				},
+				{
+					"name": "Rozebud",
+					"description": "Programmer",
+					"link": "https://twitter.com/helpme_thebigt"
+				},
+				{
+					"name": "Sector03",
+					"description": "Artist",
+					"link": "https://twitter.com/Sector0003"
+				},
+				{
+					"name": "Mod Page",
+					"description": "View the mod on GameBanana!",
+					"color": "#FAE13C",
+					"link": "https://gamebanana.com/mods/44236"
+				}
+			]
+		}
+	]
+}
