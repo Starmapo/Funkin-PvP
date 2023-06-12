@@ -26,7 +26,6 @@ function onCreate()
 
 	if (Settings.distractions)
 	{
-		FlxG.debugger.track(fastCar);
 		resetFastCar();
 
 		Paths.getSound('carPass0');
@@ -38,7 +37,7 @@ function onCreate()
 
 function onBeatHit(beat, decBeat)
 {
-	if (grpLimoDancers != null)
+	if (!Settings.lowQuality && Settings.distractions)
 	{
 		danceDir = !danceDir;
 		grpLimoDancers.forEach(function(dancer)
@@ -50,7 +49,7 @@ function onBeatHit(beat, decBeat)
 		});
 	}
 
-	if (fastCar != null && fastCarCanDrive && FlxG.random.bool(10))
+	if (fastCarCanDrive && FlxG.random.bool(10))
 		fastCarDrive();
 }
 

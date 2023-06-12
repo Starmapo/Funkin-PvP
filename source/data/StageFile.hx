@@ -1,5 +1,7 @@
 package data;
 
+import flixel.FlxBasic;
+import flixel.group.FlxGroup;
 import haxe.io.Path;
 import haxe.xml.Access;
 import sprites.AnimatedSprite.AnimData;
@@ -11,7 +13,9 @@ using StringTools;
 
 class StageFile
 {
-	public var sprites:Map<String, DancingSprite> = new Map();
+	public var sprites:Map<String, FlxBasic> = new Map();
+	public var groups:Map<String, FlxGroup> = new Map();
+	public var found:Bool = false;
 
 	var state:PlayState;
 
@@ -28,7 +32,7 @@ class StageFile
 			return;
 		}
 
-		var xml = new Access(Xml.parse(Paths.getContent(path)).firstElement());
+		var xml = new Access(Paths.getXml(path, mod).firstElement());
 		if (xml.has.zoom)
 		{
 			var zoom = Std.parseFloat(xml.att.zoom);
@@ -48,37 +52,11 @@ class StageFile
 			pushNode(node, elements);
 
 		for (node in elements)
-		{
-			var spr = switch (node.name)
-			{
-				case "sprite", "spr":
-					if (!node.has.name)
-						continue;
-					var spr = createSprite(node, folder, mod);
-					state.add(spr);
-					spr;
-				case "boyfriend", "bf":
-					var char = setupChar(state.bf, node);
-					state.add(char);
-					char;
-				case "opponent", "dad":
-					var char = setupChar(state.opponent, node);
-					state.add(char);
-					char;
-				case "girlfriend", "gf":
-					var char = setupChar(state.gf, node);
-					state.add(char);
-					char;
-				default: null;
-			}
-			if (spr != null)
-			{
-				for (n in node.nodes.property)
-					applyProperty(spr, n, node.att.name);
-			}
-		}
+			createObject(node, folder, mod);
 
 		addMissingChars();
+
+		found = true;
 	}
 
 	function createSprite(node:Access, folder:String, mod:String)
@@ -165,15 +143,25 @@ class StageFile
 		}
 		if (node.has.x)
 		{
-			var x = Std.parseFloat(node.att.x);
-			if (!Math.isNaN(x))
-				spr.x = x;
+			if (node.att.x == 'center')
+				spr.screenCenter(X);
+			else
+			{
+				var x = Std.parseFloat(node.att.x);
+				if (!Math.isNaN(x))
+					spr.x = x;
+			}
 		}
 		if (node.has.y)
 		{
-			var y = Std.parseFloat(node.att.y);
-			if (!Math.isNaN(y))
-				spr.y = y;
+			if (node.att.y == 'center')
+				spr.screenCenter(Y);
+			else
+			{
+				var y = Std.parseFloat(node.att.y);
+				if (!Math.isNaN(y))
+					spr.y = y;
+			}
 		}
 		if (node.has.scroll)
 		{
@@ -219,6 +207,20 @@ class StageFile
 		}
 		if (node.has.antialiasing)
 			spr.antialiasing = node.att.antialiasing == "true";
+		if (node.has.danceAnims)
+			spr.danceAnims = node.att.danceAnims.split(',');
+
+		var graphicWidth = node.has.graphicWidth ? Std.parseFloat(node.att.graphicWidth) : Math.NaN;
+		var graphicHeight = node.has.graphicHeight ? Std.parseFloat(node.att.graphicHeight) : Math.NaN;
+		if (!Math.isNaN(graphicWidth) || !Math.isNaN(graphicHeight))
+		{
+			if (Math.isNaN(graphicHeight))
+				spr.setGraphicSize(graphicWidth);
+			else if (Math.isNaN(graphicWidth))
+				spr.setGraphicSize(0, graphicHeight);
+			else
+				spr.setGraphicSize(graphicWidth, graphicHeight);
+		}
 		var updateHitbox = true;
 		if (node.has.updateHitbox)
 			updateHitbox = node.att.updateHitbox == "true";
@@ -226,6 +228,22 @@ class StageFile
 			spr.updateHitbox();
 		sprites.set(node.att.name, spr);
 		return spr;
+	}
+
+	function createGroup(node:Access, folder:String, mod:String)
+	{
+		var grp = new FlxGroup();
+		var elements:Array<Access> = [];
+		for (n in node.elements)
+		{
+			if (n.name != "property")
+				pushNode(n, elements);
+		}
+		for (n in elements)
+			grp.add(createObject(n, folder, mod));
+		sprites.set(node.att.name, grp);
+		groups.set(node.att.name, grp);
+		return grp;
 	}
 
 	function setupChar(char:Character, node:Access)
@@ -271,7 +289,7 @@ class StageFile
 		return char;
 	}
 
-	function addMissingChars()
+	public function addMissingChars()
 	{
 		var chars = [state.gf, state.opponent, state.bf];
 		for (char in chars)
@@ -334,7 +352,8 @@ class StageFile
 			if (name.contains('['))
 			{
 				var p = name.substr(0, name.indexOf('['));
-				object = Reflect.getProperty(object, name);
+				if (p.length > 0)
+					object = Reflect.getProperty(object, p);
 				var array:Array<Dynamic> = object;
 				while (name.contains('['))
 				{
@@ -382,5 +401,52 @@ class StageFile
 				state.notificationManager.showNotification("Failed to apply XML property: " + e, ERROR);
 			}
 		}
+	}
+
+	function createObject(node:Access, folder:String, mod:String):FlxBasic
+	{
+		var spr = switch (node.name)
+		{
+			case "sprite", "spr":
+				if (!node.has.name)
+					return null;
+				var spr = createSprite(node, folder, mod);
+				if (node.has.group || node.has.grp)
+				{
+					var group = groups.get(node.has.group ? node.att.group : node.att.grp);
+					if (group != null)
+						group.add(spr);
+					else
+						state.add(spr);
+				}
+				else
+					state.add(spr);
+				spr;
+			case "group", "grp":
+				if (!node.has.name)
+					return null;
+				var grp = createGroup(node, folder, mod);
+				state.add(grp);
+				grp;
+			case "boyfriend", "bf":
+				var char = setupChar(state.bf, node);
+				state.add(char);
+				char;
+			case "opponent", "dad":
+				var char = setupChar(state.opponent, node);
+				state.add(char);
+				char;
+			case "girlfriend", "gf":
+				var char = setupChar(state.gf, node);
+				state.add(char);
+				char;
+			default: null;
+		}
+		if (spr != null)
+		{
+			for (n in node.nodes.property)
+				applyProperty(spr, n, node.att.name);
+		}
+		return spr;
 	}
 }

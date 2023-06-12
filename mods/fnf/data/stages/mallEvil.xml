@@ -1,0 +1,8 @@
+<stage zoom="1.05" folder="stages/christmas/">
+	<spr name="bg" image="evilBG" x="-400" y="-500" scroll="0.2" scale="0.8" />
+	<spr name="evilTree" image="evilTree" x="300" y="-300" scroll="0.2" />
+	<spr name="evilSnow" image="evilSnow" x="-200" y="700" />
+	<gf />
+	<dad />
+	<bf x="1090" />
+</stage>

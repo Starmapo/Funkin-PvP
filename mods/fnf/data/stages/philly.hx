@@ -35,10 +35,7 @@ function onCreate()
 				light.shader = lightFadeShader;
 			phillyCityLights.add(light);
 		}
-	}
-
-	if (Settings.distractions)
-	{
+		
 		trainSound = new FlxSound().loadEmbedded(Paths.getSound('train_passes'));
 		trainSound.pitch = playbackRate;
 		FlxG.sound.list.add(trainSound);
@@ -70,9 +67,6 @@ function onUpdate(elapsed)
 
 function onBeatHit(beat, decBeat)
 {
-	if (phillyTrain == null)
-		return;
-
 	if (!trainMoving)
 		trainCooldown += 1;
 

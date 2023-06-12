@@ -822,6 +822,8 @@ class PlayState extends FNFState
 				stageScript.setVariable(name, spr);
 			stageScript.execute("onCreate");
 		}
+		else if (!stageFile.found)
+			stageFile = new StageFile(this, 'fnf:stage');
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * Settings.playbackRate);
 		FlxG.camera.snapToTarget();

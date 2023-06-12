@@ -270,6 +270,29 @@ class Paths
 		return null;
 	}
 
+	public static function getXml(path:String, ?mod:String):Xml
+	{
+		if (!path.endsWith('.xml'))
+			path += '.xml';
+		if (!exists(path))
+			path = getPath('data/$path', mod);
+
+		if (exists(path))
+		{
+			try
+			{
+				var xml = Xml.parse(getContent(path));
+				return xml;
+			}
+			catch (e)
+			{
+				trace(e);
+			}
+		}
+
+		return null;
+	}
+
 	public static function getScriptPath(key:String, ?mod:String)
 	{
 		for (ext in SCRIPT_EXTENSIONS)
