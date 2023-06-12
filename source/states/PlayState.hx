@@ -3,6 +3,7 @@ package states;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
+import data.StageFile;
 import data.char.CharacterInfo;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
@@ -98,6 +99,7 @@ class PlayState extends FNFState
 	public var npsDisplay:FlxTypedGroup<NPSDisplay>;
 	public var msDisplay:FlxTypedGroup<MSDisplay>;
 	public var staticBG:AnimatedSprite;
+	public var stageFile:StageFile;
 
 	var instEnded:Bool = false;
 
@@ -209,6 +211,7 @@ class PlayState extends FNFState
 		npsDisplay = null;
 		msDisplay = null;
 		staticBG = null;
+		stageFile = null;
 	}
 
 	override function openSubState(subState:FlxSubState)
@@ -334,20 +337,21 @@ class PlayState extends FNFState
 		return note.gfSing ? gf : getPlayerCharacter(note.info.player);
 	}
 
-	public function addScript(key:String, mod:String)
+	public function addScript(key:String, mod:String, execute:Bool = true)
 	{
 		var path = Paths.getScriptPath(key, mod);
 		if (Paths.exists(path))
-			return addScriptPath(path, mod);
+			return addScriptPath(path, mod, execute);
 
 		return null;
 	}
 
-	public function addScriptPath(path:String, mod:String)
+	public function addScriptPath(path:String, mod:String, execute:Bool = true)
 	{
 		var script = new PlayStateScript(this, path, mod);
 		scripts.push(script);
-		script.execute("onCreate");
+		if (execute)
+			script.execute("onCreate");
 		return script;
 	}
 
@@ -758,7 +762,6 @@ class PlayState extends FNFState
 		gf = new Character(400, 130, gfInfo, false, true);
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
-		add(gf);
 
 		var opponentName = chars[0] != null ? chars[0] : song.opponent;
 		var opponentInfo = CharacterInfo.loadCharacterFromName(opponentName);
@@ -767,7 +770,6 @@ class PlayState extends FNFState
 
 		opponent = new Character(100, 100, opponentInfo);
 		timing.addDancingSprite(opponent);
-		add(opponent);
 
 		var bfName = chars[1] != null ? chars[1] : song.bf;
 		var bfInfo = CharacterInfo.loadCharacterFromName(bfName);
@@ -776,7 +778,6 @@ class PlayState extends FNFState
 
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
-		add(bf);
 
 		if (!Settings.hideHUD)
 		{
@@ -811,8 +812,16 @@ class PlayState extends FNFState
 		add(camFollow);
 
 		var stage = Settings.forceDefaultStage ? 'fnf:stage' : song.stage;
+		stageFile = new StageFile(this, stage);
+
 		var stageInfo = CoolUtil.getNameInfo(stage);
-		addScript('data/stages/' + stageInfo.name, stageInfo.mod);
+		var stageScript = addScript('data/stages/' + stageInfo.name, stageInfo.mod, false);
+		if (stageScript != null)
+		{
+			for (name => spr in stageFile.sprites)
+				stageScript.setVariable(name, spr);
+			stageScript.execute("onCreate");
+		}
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * Settings.playbackRate);
 		FlxG.camera.snapToTarget();
@@ -1188,8 +1197,8 @@ class PlayState extends FNFState
 
 	function updateBG()
 	{
-		var camWidth = Math.max(FlxG.camera.viewWidth, FlxG.width);
-		var camHeight = Math.max(FlxG.camera.viewHeight, FlxG.height);
+		var camWidth = FlxG.camera.viewWidth;
+		var camHeight = FlxG.camera.viewHeight;
 		for (bg in [staticBG, deathBG])
 		{
 			bg.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);

@@ -1,0 +1,6 @@
+<stage zoom="1.05" folder="stages/spooky/">
+	<spr name="halloweenBG" image="halloween_bg" x="-200" y="-100">
+		<anim name="idle" atlasName="halloweem bg" fps="0" baseAnim="true" />
+		<anim name="lightning" atlasName="halloweem bg lightning strike" loop="false" />
+	</spr>
+</stage>

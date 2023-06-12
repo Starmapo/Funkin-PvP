@@ -1,0 +1,13 @@
+<stage zoom="1.05" folder="stages/philly/">
+	<high-quality>
+		<spr name="bg" image="sky" x="-100" scroll="0.1" />
+	</high-quality>
+	<spr name="city" image="city" x="-10" scroll="0.3" scale="0.85" />
+	<high-quality>
+		<spr name="streetBehind" image="behindTrain" x="-40" y="50" />
+	</high-quality>
+	<distractions>
+		<spr name="phillyTrain" image="train" x="2000" y="360" />
+	</distractions>
+	<spr name="street" image="street" x="-40" y="50" />
+</stage>

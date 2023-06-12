@@ -862,7 +862,11 @@ class Interp
 		}
 		var redirect = setRedirects.get(cl);
 		if (redirect != null)
-			return redirect(o, f, v);
+		{
+			var ret = redirect(o, f, v);
+			if (ret != null)
+				return v;
+		}
 
 		Reflect.setProperty(o, f, v);
 		return v;

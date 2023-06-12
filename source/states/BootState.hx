@@ -223,41 +223,41 @@ class BootState extends FNFState
 			switch (name)
 			{
 				case "alpha":
-					c.alpha = val;
+					return c.alpha = val;
 				case "alphaFloat":
-					c.alphaFloat = val;
+					return c.alphaFloat = val;
 				case "black":
-					c.black = val;
+					return c.black = val;
 				case "blue":
-					c.blue = val;
+					return c.blue = val;
 				case "blueFloat":
-					c.blueFloat = val;
+					return c.blueFloat = val;
 				case "brightness":
-					c.brightness = val;
+					return c.brightness = val;
 				case "cyan":
-					c.cyan = val;
+					return c.cyan = val;
 				case "green":
-					c.green = val;
+					return c.green = val;
 				case "greenFloat":
-					c.greenFloat = val;
+					return c.greenFloat = val;
 				case "hue":
-					c.hue = val;
+					return c.hue = val;
 				case "lightness":
-					c.lightness = val;
+					return c.lightness = val;
 				case "magenta":
-					c.magenta = val;
+					return c.magenta = val;
 				case "red":
-					c.red = val;
+					return c.red = val;
 				case "redFloat":
-					c.redFloat = val;
+					return c.redFloat = val;
 				case "rgb":
-					c.rgb = val;
+					return c.rgb = val;
 				case "saturation":
-					c.saturation = val;
+					return c.saturation = val;
 				case "yellow":
-					c.yellow = val;
+					return c.yellow = val;
 			}
-			return c;
+			return null;
 		}
 		Interp.getRedirects["flixel.math.FlxBasePoint"] = function(obj:Dynamic, name:String):Dynamic
 		{
@@ -425,13 +425,13 @@ class BootState extends FNFState
 			switch (name)
 			{
 				case "degrees":
-					c.degrees = val;
+					return c.degrees = val;
 				case "length":
-					c.length = val;
+					return c.length = val;
 				case "radians":
-					c.radians = val;
+					return c.radians = val;
 			}
-			return c;
+			return null;
 		};
 
 		Paths.init();

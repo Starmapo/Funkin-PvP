@@ -32,6 +32,7 @@ class PlayStateScript extends Script
 		super.setStartingVariables();
 
 		setVariable("state", state);
+		setVariable("members", state.members);
 		setVariable("opponent", state.opponent);
 		setVariable("bf", state.bf);
 		setVariable("gf", state.gf);

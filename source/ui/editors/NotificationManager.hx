@@ -1,5 +1,6 @@
 package ui.editors;
 
+import flixel.FlxG;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIText;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -77,6 +78,9 @@ class Notification extends FlxSpriteGroup
 
 		text = new FlxUIText(0, 0, info);
 		text.setFormat('VCR OSD Mono', 14, getLevelColor(level));
+		var maxWidth = FlxG.width - 20;
+		if (text.width > maxWidth)
+			text.fieldWidth = maxWidth;
 
 		bg.resize(text.width + 10, text.height + 10);
 		text.setPosition((bg.width / 2) - (text.width / 2), (bg.height / 2) - (text.height / 2));

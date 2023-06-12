@@ -1,17 +1,8 @@
-var halloweenBG:FlxSprite;
 var lightningStrikeBeat:Int = 0;
 var lightningOffset:Int = 8;
 
 function onCreate()
 {
-	halloweenBG = new FlxSprite(-200, -100);
-	halloweenBG.frames = Paths.getSpritesheet('stages/spooky/halloween_bg');
-	halloweenBG.animation.addByPrefix('idle', 'halloweem bg0');
-	halloweenBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', 24, false);
-	halloweenBG.animation.play('idle');
-	halloweenBG.antialiasing = true;
-	addBehindChars(halloweenBG);
-
 	if (!Settings.lowQuality && Settings.distractions)
 	{
 		Paths.getSound('thunder_1');
@@ -32,7 +23,7 @@ function onBeatHit(beat, decBeat)
 function lightningStrikeShit(beat:Int)
 {
 	FlxG.sound.play(Paths.getSound('thunder_' + FlxG.random.int(1, 2)));
-	halloweenBG.animation.play('lightning');
+	halloweenBG.playAnim('lightning');
 
 	lightningStrikeBeat = beat;
 	lightningOffset = Math.round(FlxG.random.int(8, 24) * playbackRate);
