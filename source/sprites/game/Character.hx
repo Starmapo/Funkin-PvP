@@ -34,6 +34,7 @@ class Character extends DancingSprite
 	public function new(x:Float = 0, y:Float = 0, charInfo:CharacterInfo, charFlipX:Bool = false, isGF:Bool = false)
 	{
 		super(x, y);
+		frameOffsetAngle = 0;
 		if (charInfo == null)
 			charInfo = CharacterInfo.loadCharacterFromName('fnf:bf');
 		this.isGF = isGF;
@@ -80,7 +81,7 @@ class Character extends DancingSprite
 		super.updateOffset();
 
 		if (charFlipX)
-			offset.x -= (startWidth - width);
+			frameOffset.x -= (startWidth - width);
 	}
 
 	override function dance(force:Bool = false)
@@ -104,12 +105,14 @@ class Character extends DancingSprite
 
 	public function updatePosition()
 	{
+		var scaleX = (frameOffsetScale != null ? scale.x / frameOffsetScale : 1);
 		if (charFlipX && !isGF)
-			x = charPosX - charInfo.positionOffset[0] + xDifference;
+			x = charPosX + (-charInfo.positionOffset[0] + xDifference) * scaleX;
 		else
-			x = charPosX + charInfo.positionOffset[0];
+			x = charPosX + charInfo.positionOffset[0] * scaleX;
 
-		y = charPosY + charInfo.positionOffset[1];
+		var scaleY = (frameOffsetScale != null ? scale.y / frameOffsetScale : 1);
+		y = charPosY + charInfo.positionOffset[1] * scaleY;
 	}
 
 	public function getCurAnim()
@@ -324,6 +327,7 @@ class Character extends DancingSprite
 		danceAnims = charInfo.danceAnims.copy();
 		antialiasing = charInfo.antialiasing;
 		scale.set(charInfo.scale, charInfo.scale);
+		frameOffsetScale = charInfo.scale;
 		reloadImage();
 
 		state = Idle;

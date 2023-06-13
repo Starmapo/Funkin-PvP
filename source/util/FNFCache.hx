@@ -44,9 +44,7 @@ class FNFCache extends AssetCache
 
 		FlxG.signals.preStateSwitch.add(function()
 		{
-			trace(instance.bitmapData);
 			instance.moveToSecondLayer();
-			trace(instance.bitmapData2);
 			if (Settings.forceCacheReset || FlxG.keys.pressed.F5)
 				instance.clearSecondLayer();
 		});
@@ -62,6 +60,7 @@ class FNFCache extends AssetCache
 		bitmapData2 = bitmapData;
 		font2 = font;
 		sound2 = sound;
+
 		bitmapData = [];
 		font = [];
 		sound = [];

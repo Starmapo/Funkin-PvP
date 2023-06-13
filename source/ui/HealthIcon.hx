@@ -12,6 +12,7 @@ class HealthIcon extends AnimatedSprite
 	public function new(x:Float = 0, y:Float = 0, icon:String = 'face')
 	{
 		super(x, y);
+		frameOffsetScale = 1;
 		this.icon = icon;
 	}
 

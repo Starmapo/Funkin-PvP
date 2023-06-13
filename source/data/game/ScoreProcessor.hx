@@ -114,11 +114,7 @@ class ScoreProcessor implements IFlxDestroyable
 			combo = 0;
 
 			if (Settings.noMiss)
-			{
-				health = 0;
 				forceFail = true;
-				return;
-			}
 		}
 
 		multiplierCount = FlxMath.boundInt(multiplierCount, 0, maxMultiplierCount);
@@ -235,7 +231,7 @@ class ScoreProcessor implements IFlxDestroyable
 
 	function get_failed()
 	{
-		return health <= 0 && (Settings.canDie || forceFail);
+		return (health <= 0 && Settings.canDie) || forceFail;
 	}
 
 	function get_maxMultiplierCount()

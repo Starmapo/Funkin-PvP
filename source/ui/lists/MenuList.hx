@@ -404,7 +404,7 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 	override function destroy()
 	{
 		super.destroy();
-		label = null;
+		label = FlxDestroyUtil.destroy(label);
 	}
 
 	/**

@@ -122,7 +122,7 @@ class CharacterEditorState extends FNFState
 		char.debugMode = true;
 		add(char);
 
-		camIndicator = new FlxSprite().loadGraphic(Paths.getImage('editors/cross'));
+		camIndicator = new FlxSprite(0, 0, Paths.getImage('editors/cross'));
 		camIndicator.scale.set(2, 2);
 		camIndicator.updateHitbox();
 		add(camIndicator);

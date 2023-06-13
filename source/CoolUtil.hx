@@ -9,10 +9,15 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
+import flixel.text.FlxText;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
+import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxStringUtil;
 import haxe.io.Path;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 using StringTools;
 
@@ -448,6 +453,60 @@ class CoolUtil
 			}
 		}
 		return false;
+	}
+
+	public static function getBGGraphic(name:String, groupDirectory:String)
+	{
+		var groupName = name;
+		name = FlxStringUtil.validate(name);
+		var graphicKey = name + '_edit';
+		if (FlxG.bitmap.checkCache(graphicKey))
+			return FlxG.bitmap.get(graphicKey);
+
+		var thickness = 4;
+
+		var graphic = Paths.getImage('bg/$name', groupDirectory, false, true, graphicKey);
+		if (graphic == null)
+			graphic = Paths.getImage('bg/unknown', '', false, true, graphicKey);
+
+		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupName);
+		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		text.updateHitbox();
+		text.y -= text.height;
+
+		var textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(graphic.height - text.y), FlxColor.GRAY);
+		graphic.bitmap.copyPixels(textBG.pixels, new Rectangle(0, 0, textBG.width, textBG.height), new Point(textBG.x, textBG.y), null, null, true);
+		textBG.destroy();
+
+		graphic.bitmap.copyPixels(text.pixels, new Rectangle(0, 0, text.width, text.height), new Point(text.x, text.y), null, null, true);
+		text.destroy();
+
+		var mask = FlxG.bitmap.get('groupMask');
+		if (mask == null)
+		{
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
+			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.BLACK);
+			mask = sprite.graphic;
+			mask.destroyOnNoUse = false;
+			sprite.destroy();
+		}
+
+		graphic.bitmap.copyChannel(mask.bitmap, new Rectangle(0, 0, mask.width, mask.height), new Point(), ALPHA, ALPHA);
+
+		var outline = FlxG.bitmap.get('groupOutline');
+		if (outline == null)
+		{
+			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupOutline');
+			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
+				{thickness: thickness, color: FlxColor.WHITE});
+			outline = sprite.graphic;
+			outline.destroyOnNoUse = false;
+			sprite.destroy();
+		}
+
+		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
+
+		return graphic;
 	}
 
 	@:generic

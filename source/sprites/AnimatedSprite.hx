@@ -14,7 +14,6 @@ using StringTools;
 class AnimatedSprite extends FlxSprite
 {
 	public var offsets:Map<String, Array<Float>> = new Map();
-	public var offsetScale:FlxPoint = FlxPoint.get(1, 1);
 
 	/**
 		Gets dispatched when this sprite plays an animation.
@@ -91,7 +90,9 @@ class AnimatedSprite extends FlxSprite
 		updateHitbox();
 		var animOffset = offsets.get(animation.name);
 		if (animOffset != null)
-			offset.add(animOffset[0] * offsetScale.x, animOffset[1] * offsetScale.y);
+			frameOffset.set(animOffset[0], animOffset[1]);
+		else
+			frameOffset.set();
 	}
 
 	public function stopAnimCallback()
@@ -108,7 +109,6 @@ class AnimatedSprite extends FlxSprite
 	{
 		super.destroy();
 		offsets = null;
-		offsetScale = FlxDestroyUtil.put(offsetScale);
 		FlxDestroyUtil.destroy(onAnimPlayed);
 	}
 

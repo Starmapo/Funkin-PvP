@@ -52,6 +52,7 @@ class FNFState extends FlxTransitionableState
 		if (graphic == null || cachedGraphics.contains(graphic))
 			return null;
 
+		graphic.destroyOnNoUse = false;
 		var spr = new FlxSprite(0, 0, graphic);
 		spr.visible = false;
 		spr.scrollFactor.set();
@@ -65,9 +66,9 @@ class FNFState extends FlxTransitionableState
 		return spr;
 	}
 
-	public function precacheImage(image:String)
+	public function precacheImage(image:String, ?mod:String)
 	{
-		return precacheGraphic(Paths.getImage(image));
+		return precacheGraphic(Paths.getImage(image, mod));
 	}
 
 	public function precacheCharacter(char:String)

@@ -13,11 +13,12 @@ class NoteSplash extends AnimatedSprite
 	var skin:SplashSkin;
 	var receptor:Receptor;
 	var splashData:SplashData;
+	var offsetScale:Float;
 
 	public function new(id:Int, skin:SplashSkin, ?receptor:Receptor, ?config:PlayerConfig)
 	{
-		var configScale = config != null ? config.notesScale : 1;
-		super(0, 0, null, skin.scale * configScale);
+		offsetScale = config != null ? config.notesScale : 1;
+		super(0, 0, null, skin.scale * offsetScale);
 		this.id = id;
 		this.skin = skin;
 		this.receptor = receptor;
@@ -36,7 +37,7 @@ class NoteSplash extends AnimatedSprite
 			loop: false,
 			offset: splashData.offset
 		}, true);
-		offsetScale.scale(configScale);
+		frameOffsetScale = skin.scale;
 		antialiasing = skin.antialiasing;
 		scrollFactor.set();
 
@@ -83,10 +84,10 @@ class NoteSplash extends AnimatedSprite
 			setPosition(receptor.x
 				+ (receptor.staticWidth / 2)
 				- (width / 2)
-				+ skin.positionOffset[0] * offsetScale.x,
+				+ skin.positionOffset[0] * offsetScale,
 				receptor.y
 				+ (receptor.staticHeight / 2)
 				- (height / 2)
-				+ skin.positionOffset[1] * offsetScale.y);
+				+ skin.positionOffset[1] * offsetScale);
 	}
 }

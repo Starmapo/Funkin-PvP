@@ -30,7 +30,7 @@ class Receptor extends AnimatedSprite
 			var configScale = config != null ? config.notesScale : 1;
 			var noteScale = skin.receptorsScale * configScale;
 			scale.scale(noteScale);
-			offsetScale.scale(configScale);
+			frameOffsetScale = skin.receptorsScale;
 
 			addAnim({
 				name: 'static',

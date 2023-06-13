@@ -70,7 +70,6 @@ class HealthBar extends FlxSpriteGroup
 
 		var scale = FlxMath.lerp(1, icon.scale.x, 1 - (elapsed * 9 * Settings.playbackRate));
 		icon.scale.set(scale, scale);
-		icon.offsetScale.set(scale, scale);
 		icon.updateOffset();
 
 		var anim = 'normal';
@@ -93,7 +92,6 @@ class HealthBar extends FlxSpriteGroup
 	public function onBeatHit()
 	{
 		icon.scale.set(bopScale, bopScale);
-		icon.offsetScale.set(bopScale, bopScale);
 		icon.updateOffset();
 
 		updateIconPos();

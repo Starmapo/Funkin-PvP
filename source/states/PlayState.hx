@@ -1121,7 +1121,7 @@ class PlayState extends FNFState
 
 	function readySetGo(path:String):Void
 	{
-		var spr = new FlxSprite().loadGraphic(Paths.getImage(path));
+		var spr = new FlxSprite(0, 0, Paths.getImage(path));
 		spr.scrollFactor.set();
 		spr.screenCenter();
 		spr.cameras = [camHUD];
@@ -1229,15 +1229,17 @@ class PlayState extends FNFState
 				timer.cancel();
 		}
 		char.stopAnimCallback();
+		focusOnChar(char);
 		char.angularVelocity = 360;
+		char.x -= char.offset.x;
+		char.y -= char.offset.y;
+		char.offset.set();
 		FlxTween.tween(char.scale, {x: 0, y: 0}, 0.8, {
 			onComplete: function(_)
 			{
 				char.visible = false;
 			}
 		});
-
-		focusOnChar(char);
 
 		if (deathTimer == null)
 			deathTimer = new FlxTimer().start(2, function(_)
@@ -1259,8 +1261,9 @@ class PlayState extends FNFState
 		for (i in 0...2)
 		{
 			var score = ruleset.playfields[i].scoreProcessor;
-			var reset = (!PlayerSettings.players[i].config.noReset && PlayerSettings.checkPlayerAction(i, RESET_P));
-			if (score.failed || reset)
+			if (PlayerSettings.checkPlayerAction(i, RESET_P) && !PlayerSettings.players[i].config.noReset)
+				score.forceFail = true;
+			if (score.failed)
 				onDeath(i);
 		}
 	}

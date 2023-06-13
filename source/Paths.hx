@@ -63,6 +63,8 @@ class Paths
 		{
 			var bitmap = BitmapData.fromFile(path);
 			graphic = FlxGraphic.fromBitmapData(bitmap, unique, key, cache);
+			@:privateAccess
+			graphic.assetsKey = path;
 		}
 		#end
 

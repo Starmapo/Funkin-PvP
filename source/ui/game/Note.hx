@@ -233,7 +233,7 @@ class Note extends FlxSpriteGroup
 		var notesScale = config != null ? config.notesScale : 1;
 		var scale = skin.notesScale * notesScale;
 		head.scale.set(scale, scale);
-		head.offsetScale.set(notesScale, notesScale);
+		head.frameOffsetScale = skin.notesScale;
 		head.addAnim({
 			name: 'head',
 			atlasName: data.headAnim,
@@ -245,7 +245,7 @@ class Note extends FlxSpriteGroup
 		longNoteSizeDifference = head.height / 2;
 
 		body.scale.copyFrom(head.scale);
-		body.offsetScale.copyFrom(head.offsetScale);
+		body.frameOffsetScale = head.frameOffsetScale;
 		body.addAnim({
 			name: 'body',
 			atlasName: data.bodyAnim,
@@ -256,7 +256,7 @@ class Note extends FlxSpriteGroup
 		body.x = x + (head.width / 2) - (body.width / 2);
 
 		tail.scale.copyFrom(head.scale);
-		tail.offsetScale.copyFrom(head.offsetScale);
+		tail.frameOffsetScale = head.frameOffsetScale;
 		tail.addAnim({
 			name: 'tail',
 			atlasName: data.tailAnim,
