@@ -21,6 +21,7 @@ class Settings
 	public static var gamma:Float = 1;
 	public static var filter:FilterType = NONE;
 	public static var flashing:Bool = false;
+	public static var gpuBitmaps:Bool = true;
 	// Audio
 	public static var musicVolume:Float = 1;
 	public static var effectVolume:Float = 1;
