@@ -1,5 +1,6 @@
 package states;
 
+import util.FNFCache;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -8,7 +9,6 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
-import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxAxes;
@@ -116,6 +116,8 @@ class BootState extends FNFState
 	{
 		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
 
+		FNFCache.init();
+
 		DiscordClient.initialize();
 		Application.current.window.onClose.add(function()
 		{
@@ -130,7 +132,6 @@ class BootState extends FNFState
 		FlxG.sound.volumeUpKeys = [NUMPADPLUS];
 		FlxG.sound.volumeDownKeys = [NUMPADMINUS];
 		FlxG.sound.muteKeys = [NUMPADZERO];
-		FlxGraphic.defaultPersist = true; // graphics won't be cleared by default
 		// create custom transitions
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
@@ -433,8 +434,6 @@ class BootState extends FNFState
 			}
 			return null;
 		};
-
-		Paths.init();
 	}
 
 	function loadSave()

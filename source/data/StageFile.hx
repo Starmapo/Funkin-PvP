@@ -141,6 +141,45 @@ class StageFile
 				}
 			}
 		}
+
+		if (node.has.scale)
+		{
+			var scale = Std.parseFloat(node.att.scale);
+			if (!Math.isNaN(scale))
+				spr.scale.set(scale, scale);
+		}
+		else
+		{
+			if (node.has.scaleX)
+			{
+				var scaleX = Std.parseFloat(node.att.scaleX);
+				if (!Math.isNaN(scaleX))
+					spr.scale.x = scaleX;
+			}
+			if (node.has.scaleY)
+			{
+				var scaleY = Std.parseFloat(node.att.scaleY);
+				if (!Math.isNaN(scaleY))
+					spr.scale.y = scaleY;
+			}
+		}
+		var graphicWidth = node.has.graphicWidth ? Std.parseFloat(node.att.graphicWidth) : Math.NaN;
+		var graphicHeight = node.has.graphicHeight ? Std.parseFloat(node.att.graphicHeight) : Math.NaN;
+		if (!Math.isNaN(graphicWidth) || !Math.isNaN(graphicHeight))
+		{
+			if (Math.isNaN(graphicHeight))
+				spr.setGraphicSize(graphicWidth);
+			else if (Math.isNaN(graphicWidth))
+				spr.setGraphicSize(0, graphicHeight);
+			else
+				spr.setGraphicSize(graphicWidth, graphicHeight);
+		}
+		var updateHitbox = true;
+		if (node.has.updateHitbox)
+			updateHitbox = node.att.updateHitbox == "true";
+		if (updateHitbox)
+			spr.updateHitbox();
+
 		if (node.has.x)
 		{
 			if (node.att.x == 'center')
@@ -184,48 +223,23 @@ class StageFile
 					spr.scrollFactor.y = scrollY;
 			}
 		}
-		if (node.has.scale)
-		{
-			var scale = Std.parseFloat(node.att.scale);
-			if (!Math.isNaN(scale))
-				spr.scale.set(scale, scale);
-		}
-		else
-		{
-			if (node.has.scaleX)
-			{
-				var scaleX = Std.parseFloat(node.att.scaleX);
-				if (!Math.isNaN(scaleX))
-					spr.scale.x = scaleX;
-			}
-			if (node.has.scaleY)
-			{
-				var scaleY = Std.parseFloat(node.att.scaleY);
-				if (!Math.isNaN(scaleY))
-					spr.scale.y = scaleY;
-			}
-		}
 		if (node.has.antialiasing)
 			spr.antialiasing = node.att.antialiasing == "true";
 		if (node.has.danceAnims)
 			spr.danceAnims = node.att.danceAnims.split(',');
-
-		var graphicWidth = node.has.graphicWidth ? Std.parseFloat(node.att.graphicWidth) : Math.NaN;
-		var graphicHeight = node.has.graphicHeight ? Std.parseFloat(node.att.graphicHeight) : Math.NaN;
-		if (!Math.isNaN(graphicWidth) || !Math.isNaN(graphicHeight))
+		if (node.has.visible)
+			spr.visible = node.att.visible == "true";
+		if (node.has.camera)
 		{
-			if (Math.isNaN(graphicHeight))
-				spr.setGraphicSize(graphicWidth);
-			else if (Math.isNaN(graphicWidth))
-				spr.setGraphicSize(0, graphicHeight);
-			else
-				spr.setGraphicSize(graphicWidth, graphicHeight);
+			switch (node.att.camera.toLowerCase())
+			{
+				case 'camhud', 'hud':
+					spr.cameras = [state.camHUD];
+				case 'camother', 'other':
+					spr.cameras = [state.camOther];
+			}
 		}
-		var updateHitbox = true;
-		if (node.has.updateHitbox)
-			updateHitbox = node.att.updateHitbox == "true";
-		if (updateHitbox)
-			spr.updateHitbox();
+
 		sprites.set(node.att.name, spr);
 		return spr;
 	}
@@ -241,6 +255,8 @@ class StageFile
 		}
 		for (n in elements)
 			grp.add(createObject(n, folder, mod));
+		if (node.has.visible)
+			grp.visible = node.att.visible == "true";
 		sprites.set(node.att.name, grp);
 		groups.set(node.att.name, grp);
 		return grp;
@@ -285,6 +301,8 @@ class StageFile
 						char.scrollFactor.y = scrollY;
 				}
 			}
+			if (node.has.visible)
+				char.visible = node.att.visible == "true";
 		}
 		return char;
 	}

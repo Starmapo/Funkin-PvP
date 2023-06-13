@@ -1,5 +1,6 @@
 package data.scripts;
 
+import flixel.FlxG;
 import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxBasic;
@@ -43,6 +44,7 @@ class PlayStateScript extends Script
 		setVariable("songName", state.song.name);
 		setVariable("difficultyName", state.song.difficultyName);
 		setVariable("camHUD", state.camHUD);
+		setVariable("camOther", state.camOther);
 		setVariable("songInst", state.songInst);
 		setVariable("songVocals", state.songVocals);
 		setVariable("statsDisplay", state.statsDisplay);
@@ -179,6 +181,15 @@ class PlayStateScript extends Script
 		setVariable("getShader", function(name:String, glslVersion:Int = 120)
 		{
 			return getShader(name, glslVersion);
+		});
+		setVariable("addGameShader", function(shader:FlxRuntimeShader)
+		{
+			if (shader == null)
+				return;
+			
+			var cameras = [FlxG.camera, state.camHUD, state.camOther];
+			for (camera in cameras)
+				camera.addShader(shader);
 		});
 		setVariable("loadDifficulty", function(difficulty:String)
 		{

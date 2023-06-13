@@ -45,7 +45,7 @@ class Settings
 	// Miscellaneous
 	public static var autoPause:Bool = false;
 	public static var fastTransitions:Bool = false;
-	public static var persistentCache:Bool = true;
+	public static var forceCacheReset:Bool = false;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;
 	public static var playbackRate:Float = 1;

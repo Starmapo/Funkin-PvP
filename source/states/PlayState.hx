@@ -58,6 +58,7 @@ class PlayState extends FNFState
 	public var hasStarted:Bool = false;
 	public var hasEnded:Bool = false;
 	public var camHUD:FlxCamera;
+	public var camOther:FlxCamera;
 	public var timing:MusicTiming;
 	public var songInst:FlxSound;
 	public var songVocals:FlxSound;
@@ -125,8 +126,6 @@ class PlayState extends FNFState
 
 		Mods.currentMod = song.mod;
 		FlxAnimationController.globalSpeed = Settings.playbackRate;
-		if (Settings.clearGameplayCache)
-			Paths.trackingAssets = true;
 
 		initCameras();
 		initSong();
@@ -185,6 +184,7 @@ class PlayState extends FNFState
 		song = null;
 		chars = null;
 		camHUD = null;
+		camOther = null;
 		timing = FlxDestroyUtil.destroy(timing);
 		songInst = null;
 		songVocals = FlxDestroyUtil.destroy(songVocals);
@@ -290,16 +290,6 @@ class PlayState extends FNFState
 	{
 		super.finishTransIn();
 		canPause = true;
-	}
-
-	override function finishTransOut()
-	{
-		if (clearCache && Settings.clearGameplayCache)
-		{
-			Paths.clearTrackedAssets();
-			Paths.trackingAssets = false;
-		}
-		super.finishTransOut();
 	}
 
 	public function startSong(timing:MusicTiming)
@@ -619,6 +609,10 @@ class PlayState extends FNFState
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
+
+		camOther = new FlxCamera();
+		camOther.bgColor = 0;
+		FlxG.cameras.add(camOther, false);
 	}
 
 	function initSong()

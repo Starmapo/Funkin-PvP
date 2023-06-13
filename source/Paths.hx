@@ -22,20 +22,6 @@ class Paths
 {
 	public static var SCRIPT_EXTENSIONS:Array<String> = [".hx", ".hscript"];
 
-	public static var cachedSounds:Map<String, Sound> = new Map();
-	public static var trackingAssets:Bool = false;
-	public static var trackedGraphics:Array<FlxGraphic> = [];
-	public static var trackedSounds:Array<String> = [];
-
-	public static function init()
-	{
-		FlxG.signals.preStateSwitch.add(function()
-		{
-			if (!Settings.persistentCache || FlxG.keys.pressed.F5)
-				clear();
-		});
-	}
-
 	public static function getPath(key:String, ?mod:String):String
 	{
 		if (mod == null || mod.length == 0)
@@ -50,8 +36,6 @@ class Paths
 
 	public static function getImage(path:String, ?mod:String, cache:Bool = true, unique:Bool = false, ?key:String):FlxGraphic
 	{
-		var originalPath = path;
-
 		if (!path.endsWith('.png'))
 			path += '.png';
 
@@ -84,8 +68,6 @@ class Paths
 
 		/* if (graphic == null)
 			trace('Graphic \"$originalPath\" not found.'); */
-		if (trackingAssets && !trackedGraphics.contains(graphic))
-			trackedGraphics.push(graphic);
 
 		return graphic;
 	}
@@ -195,8 +177,8 @@ class Paths
 		if (!exists(path))
 			path = getPath('sounds/$path', mod);
 
-		if (cachedSounds.exists(path))
-			return cachedSounds.get(path);
+		if (Assets.cache.hasSound(path))
+			return Assets.cache.getSound(path);
 
 		var sound:Sound = null;
 		if (Assets.exists(path, SOUND))
@@ -207,11 +189,7 @@ class Paths
 		#end
 
 		if (sound != null)
-		{
-			cachedSounds.set(path, sound);
-			if (trackingAssets && !trackedSounds.contains(path))
-				trackedSounds.push(path);
-		}
+			Assets.cache.setSound(path, sound);
 
 		return sound;
 	}
@@ -328,35 +306,5 @@ class Paths
 	public static function existsPath(key:String, ?mod:String):Bool
 	{
 		return exists(getPath(key, mod));
-	}
-
-	public static function clear()
-	{
-		clearImages();
-		clearSounds();
-		Assets.cache.clear('');
-	}
-
-	public static function clearImages()
-	{
-		FlxG.bitmap.reset();
-	}
-
-	public static function clearSounds()
-	{
-		cachedSounds.clear();
-	}
-
-	public static function clearTrackedAssets()
-	{
-		trace('Removing ${trackedGraphics.length} graphic' + (trackedGraphics.length != 1 ? 's' : ''));
-		for (graphic in trackedGraphics)
-			FlxG.bitmap.remove(graphic);
-		trackedGraphics.resize(0);
-
-		trace('Removing ${trackedSounds.length} sound' + (trackedSounds.length != 1 ? 's' : ''));
-		for (key in trackedSounds)
-			cachedSounds.remove(key);
-		trackedSounds.resize(0);
 	}
 }

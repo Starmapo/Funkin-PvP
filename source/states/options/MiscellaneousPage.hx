@@ -30,9 +30,9 @@ class MiscellaneousPage extends BaseSettingsPage
 			FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
 		});
 		addSetting({
-			name: 'persistentCache',
-			displayName: 'Persistent Cache',
-			description: "If enabled, graphics and sounds will be kept in memory even when they're unused.",
+			name: 'forceCacheReset',
+			displayName: 'Force Cache Reset',
+			description: "If enabled, the cache will always be reset after a state switch, reloading everything.",
 			type: CHECKBOX
 		});
 	}

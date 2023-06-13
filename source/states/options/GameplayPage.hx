@@ -103,11 +103,13 @@ class GameplayPage extends BaseSettingsPage
 			description: "If enabled, a results screen is shown after a match.",
 			type: CHECKBOX
 		});
+		/*
 		addSetting({
 			name: 'clearGameplayCache',
 			displayName: 'Clear Gameplay Cache',
 			description: "If enabled, graphics and sounds loaded while in gameplay will be cleared after exiting.",
 			type: CHECKBOX
 		});
+		*/
 	}
 }
