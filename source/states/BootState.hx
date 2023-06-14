@@ -15,21 +15,44 @@ import flixel.util.FlxColor;
 import haxe.io.Path;
 import hscript.Interp;
 import lime.app.Application;
+import openfl.display3D.utils.UInt8Buff;
 import sys.FileSystem;
 import sys.thread.Thread;
 import util.AudioSwitchFix;
-import util.DiscordClient;
 import util.FNFCache;
+import util.MemoryUtil;
 import util.WindowsAPI;
 
 using StringTools;
+
+#if !macro
+import util.DiscordClient;
+#end
 
 class BootState extends FNFState
 {
 	/**
 		The state to switch to after the game finishes booting up.
 	**/
-	var initialState:Class<FlxState> = states.menus.TitleState;
+	static var initialState:Class<FlxState> = states.menus.TitleState;
+
+	static function onStateSwitchPost()
+	{
+		// manual asset clearing since base openfl one doesnt clear lime one
+		// doesnt clear bitmaps since flixel fork does it auto
+
+		@:privateAccess {
+			// clear uint8 pools
+			for (_ => pool in UInt8Buff._pools)
+			{
+				for (b in pool.clear())
+					b.destroy();
+			}
+			UInt8Buff._pools.clear();
+		}
+
+		MemoryUtil.clearMajor();
+	}
 
 	var bg:FlxSprite;
 	var loadingText:FlxText;
@@ -120,11 +143,13 @@ class BootState extends FNFState
 
 		FNFCache.init();
 
+		#if !macro
 		DiscordClient.initialize();
 		Application.current.window.onClose.add(function()
 		{
 			DiscordClient.shutdown();
 		});
+		#end
 
 		FlxG.fixedTimestep = false; // allow elapsed time to be variable
 		FlxG.debugger.toggleKeys = [GRAVEACCENT, BACKSLASH]; // remove F2 from debugger toggle keys
@@ -436,6 +461,8 @@ class BootState extends FNFState
 			}
 			return null;
 		};
+
+		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 	}
 
 	function loadSave()

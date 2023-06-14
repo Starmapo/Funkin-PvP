@@ -465,9 +465,9 @@ class CoolUtil
 
 		var thickness = 4;
 
-		var graphic = Paths.getImage('bg/$name', groupDirectory, false, true, graphicKey);
+		var graphic = Paths.getImage('bg/$name', groupDirectory, false, false, graphicKey);
 		if (graphic == null)
-			graphic = Paths.getImage('bg/unknown', '', false, true, graphicKey);
+			graphic = Paths.getImage('bg/unknown', '', false, false, graphicKey);
 
 		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupName);
 		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -507,6 +507,14 @@ class CoolUtil
 		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
 
 		return graphic;
+	}
+
+	/**
+	 * Gets the macro class created by hscript-improved for an abstract / enum
+	 */
+	public static inline function getMacroAbstractClass(className:String)
+	{
+		return Type.resolveClass('${className}_HSC');
 	}
 
 	@:generic

@@ -565,7 +565,7 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		var thickness = 4;
 
-		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.directory, false, true, graphicKey);
+		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.directory, false, false, graphicKey);
 		if (graphic == null)
 			graphic = FlxGraphic.fromRectangle(80, 80, FlxColor.TRANSPARENT, true, graphicKey);
 

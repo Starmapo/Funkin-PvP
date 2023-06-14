@@ -35,7 +35,6 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
@@ -209,18 +208,18 @@ class Script implements IFlxDestroyable
 		setVariable('Application', Application);
 		setVariable('Assets', Assets);
 		setVariable('BitmapData', BitmapData);
-		setVariable('BlendMode', BlendModeHelper);
+		setVariable('BlendMode', CoolUtil.getMacroAbstractClass("openfl.display.BlendMode"));
 		setVariable('Point', Point);
 		setVariable('Rectangle', Rectangle);
 
 		setVariable('FlxAngle', FlxAngle);
 		setVariable('FlxAssets', FlxAssets);
 		setVariable('FlxAtlasFrames', FlxAtlasFrames);
-		setVariable('FlxAxes', FlxAxesHelper);
+		setVariable('FlxAxes', CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"));
 		setVariable('FlxBackdrop', FlxBackdrop);
 		setVariable('FlxBasic', FlxBasic);
 		setVariable('FlxCamera', FlxCamera);
-		setVariable('FlxColor', FlxColorHelper);
+		setVariable('FlxColor', CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"));
 		setVariable('FlxDestroyUtil', FlxDestroyUtil);
 		setVariable('FlxEase', FlxEase);
 		setVariable('FlxG', FlxG);
@@ -229,7 +228,7 @@ class Script implements IFlxDestroyable
 		setVariable('FlxGroup', FlxGroup);
 		setVariable('FlxMath', FlxMath);
 		setVariable('FlxObject', FlxObject);
-		setVariable('FlxPoint', FlxPointHelper);
+		setVariable('FlxPoint', CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"));
 		setVariable('FlxRect', FlxRect);
 		setVariable('FlxRuntimeShader', FlxRuntimeShader);
 		setVariable('FlxShader', FlxShader);
@@ -240,7 +239,7 @@ class Script implements IFlxDestroyable
 		setVariable('FlxState', FlxState);
 		setVariable('FlxSubState', FlxSubState);
 		setVariable('FlxText', FlxText);
-		setVariable('FlxTextAlign', FlxTextAlignHelper);
+		setVariable('FlxTextAlign', CoolUtil.getMacroAbstractClass("flixel.text.FlxTextAlign"));
 		setVariable('FlxTextBorderStyle', FlxTextBorderStyle);
 		setVariable('FlxTextFormat', FlxTextFormat);
 		setVariable('FlxTilemap', FlxTilemap);

@@ -1,3 +1,5 @@
+song select text
+char select text
 erb
 jerk (2:15)
 bloodpop (2:25)

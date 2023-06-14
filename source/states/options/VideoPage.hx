@@ -120,11 +120,5 @@ class VideoPage extends BaseSettingsPage
 			description: "Whether flashing lights are enabled.",
 			type: CHECKBOX
 		});
-		addSetting({
-			name: 'gpuBitmaps',
-			displayName: 'VRAM-Only Sprites',
-			description: "If enabled, images are stored in the GPU.",
-			type: CHECKBOX
-		});
 	}
 }

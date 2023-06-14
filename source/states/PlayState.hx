@@ -1,5 +1,6 @@
 package states;
 
+import flixel.system.FlxBGSprite;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -90,7 +91,7 @@ class PlayState extends FNFState
 	public var healthBars:FlxTypedGroup<HealthBar>;
 	public var died:Bool = false;
 	public var clearCache:Bool = false;
-	public var deathBG:FlxSprite;
+	public var deathBG:FlxBGSprite;
 	public var deathTimer:FlxTimer;
 	public var isComplete(get, never):Bool;
 	public var backgroundCover:FlxSprite;
@@ -796,9 +797,8 @@ class PlayState extends FNFState
 
 	function initStage()
 	{
-		deathBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		deathBG.scrollFactor.set();
-		deathBG.visible = false;
+		deathBG = new FlxBGSprite();
+		deathBG.color = FlxColor.BLACK;
 		updateBG();
 
 		camFollow = new FlxObject();
@@ -1195,7 +1195,7 @@ class PlayState extends FNFState
 	{
 		var camWidth = FlxG.camera.viewWidth;
 		var camHeight = FlxG.camera.viewHeight;
-		for (bg in [staticBG, deathBG])
+		for (bg in [staticBG])
 		{
 			bg.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
 			if (bg.width != camWidth || bg.height != camHeight)
@@ -1218,7 +1218,6 @@ class PlayState extends FNFState
 			var pos = FlxMath.minInt(FlxMath.minInt(members.indexOf(gf), members.indexOf(opponent)), members.indexOf(bf));
 			insert(pos, deathBG);
 		}
-		deathBG.visible = true;
 
 		var char = getPlayerCharacter(player);
 		if (char.allowDanceTimer.active)

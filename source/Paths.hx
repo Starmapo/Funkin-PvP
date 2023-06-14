@@ -1,3 +1,4 @@
+import util.CompileFix;
 import data.Mods;
 import data.Settings;
 import data.song.Song;
@@ -42,7 +43,7 @@ class Paths
 		if (!exists(path))
 			path = getPath('images/$path', mod);
 
-		if (!cache && !unique)
+		if (cache && !unique)
 		{
 			if (key != null && FlxG.bitmap.checkCache(key))
 				return FlxG.bitmap.get(key);

@@ -1,5 +1,6 @@
 package openfl.media;
 
+import util.CompileFix;
 #if !flash
 import haxe.Int64;
 import openfl.events.Event;
@@ -638,9 +639,9 @@ class Sound extends EventDispatcher
 			return null;
 		}
 
-		if (changeID < Main.changeID)
+		if (changeID < CompileFix.changeID)
 		{
-			changeID = Main.changeID;
+			changeID = CompileFix.changeID;
 			regen();
 		}
 

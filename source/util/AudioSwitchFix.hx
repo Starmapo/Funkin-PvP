@@ -36,7 +36,7 @@ class AudioSwitchFix
 
 			AudioManager.shutdown();
 			AudioManager.init();
-			Main.changeID++;
+			CompileFix.changeID++;
 
 			for (e in playingList)
 				e.sound.play(e.time);

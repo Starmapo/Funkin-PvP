@@ -49,6 +49,9 @@
 	<haxelib name="systools" if="desktop" />
 	<ndll name="systools" haxelib="systools" if="desktop" />
 	<haxelib name="hscript" />
+	<section if="hscript">
+		<haxeflag name="--macro" value="hscript.UsingHandler.init()" />
+	</section>
 	<haxelib name="discord_rpc" if="cpp"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
@@ -83,16 +86,16 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
-	<!-- Makes the game use less RAM -->
+	<!--Allows working memory greater than 1 Gig-->
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="desktop" />
 
 	<!-- Comment this off to prevent unused classes from being compiled.
-		 Reduces compilation time at the cost of limited HScript flexibility. !-->
+		 Reduces compilation time at the cost of limited HScript flexibility. -->
 	<define name="COMPILE_ALL_CLASSES" />
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
-		<haxeflag name="--macro" value="include('flixel')" />
+		<haxeflag name="--macro" value="util.ScriptsMacro.addAdditionalClasses()" />
 	</section>
 
 	<define name="hscriptPos" />
