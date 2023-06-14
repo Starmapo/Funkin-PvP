@@ -200,6 +200,7 @@ class PlayerCharacterSelect extends FlxGroup
 	var charPortrait:FlxSprite;
 	var charPortraitWhite:FlxSprite;
 	var charText:FlxText;
+	var screenText:FlxText;
 
 	public function new(player:Int, camera:FlxCamera, state:CharacterSelectState, groups:Array<ModCharacterGroup>)
 	{
@@ -254,6 +255,12 @@ class PlayerCharacterSelect extends FlxGroup
 		charText.scrollFactor.copyFrom(charPortraitOutline.scrollFactor);
 		add(charText);
 
+		screenText = new FlxText(5, 50, camera.width - 10);
+		screenText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		screenText.scrollFactor.set();
+		screenText.alpha = 0.6;
+		add(screenText);
+
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 		charMenuList.resetGroup(groupMenuList.selectedItem);
 		lastGroupReset = groupMenuList.selectedItem.name;
@@ -290,6 +297,7 @@ class PlayerCharacterSelect extends FlxGroup
 				groupMenuList.controlsEnabled = true;
 				camFollow.x = FlxG.width * 0.25;
 				updateCamFollow(groupMenuList.selectedItem);
+				updateScreenText();
 				viewing = 0;
 				lastScreens[player] = viewing;
 			}
@@ -358,6 +366,7 @@ class PlayerCharacterSelect extends FlxGroup
 		}
 		else
 			updateCamFollow(charMenuList.selectedItem);
+		updateScreenText();
 		viewing = 1;
 		lastScreens[player] = viewing;
 	}
@@ -405,6 +414,14 @@ class PlayerCharacterSelect extends FlxGroup
 		sprite.destroy();
 
 		return outline;
+	}
+
+	function updateScreenText()
+	{
+		if (charMenuList.controlsEnabled)
+			screenText.text = groupMenuList.selectedItem.groupData.name;
+		else
+			screenText.text = '';
 	}
 }
 

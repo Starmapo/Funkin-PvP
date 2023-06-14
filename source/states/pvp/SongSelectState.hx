@@ -1,6 +1,5 @@
 package states.pvp;
 
-import flixel.util.FlxStringUtil;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -17,6 +16,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxStringUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
@@ -33,7 +33,9 @@ class SongSelectState extends FNFState
 
 	var camPlayers:Array<FlxCamera> = [];
 	var camDivision:FlxCamera;
-	var camScroll:FlxCamera;
+
+	public var camScroll:FlxCamera;
+
 	var camOver:FlxCamera;
 	var playerGroups:FlxTypedGroup<PlayerSongSelect>;
 	var iconScroll:FlxBackdrop;
@@ -225,6 +227,7 @@ class PlayerSongSelect extends FlxGroup
 	var camFollow:FlxObject;
 	var lastGroupReset:String = '';
 	var lastSongReset:String = '';
+	var screenText:FlxText;
 
 	public function new(player:Int, camera:FlxCamera, state:SongSelectState, groups:Array<ModSongGroup>)
 	{
@@ -261,6 +264,12 @@ class PlayerSongSelect extends FlxGroup
 		add(difficultyMenuList);
 		add(songMenuList);
 		add(groupMenuList);
+
+		screenText = new FlxText(5, 50, camera.width - 10);
+		screenText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		screenText.scrollFactor.set();
+		screenText.alpha = 0.6;
+		add(screenText);
 
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 
@@ -307,6 +316,7 @@ class PlayerSongSelect extends FlxGroup
 				songMenuList.controlsEnabled = false;
 				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 0.5 : 0.25);
 				updateCamFollow(groupMenuList.selectedItem);
+				updateScreenText();
 				viewing = 0;
 				lastScreens[player] = viewing;
 			}
@@ -316,6 +326,7 @@ class PlayerSongSelect extends FlxGroup
 				difficultyMenuList.controlsEnabled = false;
 				camFollow.x = FlxG.width * (Settings.singleSongSelection ? 1.5 : 0.75);
 				updateCamFollow(songMenuList.selectedItem.text);
+				updateScreenText();
 				viewing = 1;
 				lastScreens[player] = viewing;
 			}
@@ -377,7 +388,9 @@ class PlayerSongSelect extends FlxGroup
 		}
 		else
 			updateCamFollow(songMenuList.selectedItem.text);
+		updateScreenText();
 		viewing = 1;
+		lastScreens[player] = viewing;
 	}
 
 	function updateCamFollow(item:FlxSprite)
@@ -412,6 +425,7 @@ class PlayerSongSelect extends FlxGroup
 		}
 		else
 			updateCamFollow(difficultyMenuList.selectedItem);
+		updateScreenText();
 		viewing = 2;
 		lastScreens[player] = viewing;
 	}
@@ -429,6 +443,16 @@ class PlayerSongSelect extends FlxGroup
 		FlxTween.cancelTweensOf(item);
 		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
 		CoolUtil.playConfirmSound();
+	}
+
+	function updateScreenText()
+	{
+		if (difficultyMenuList.controlsEnabled)
+			screenText.text = groupMenuList.selectedItem.groupData.name + ' - ' + songMenuList.selectedItem.songData.name;
+		else if (songMenuList.controlsEnabled)
+			screenText.text = groupMenuList.selectedItem.groupData.name;
+		else
+			screenText.text = '';
 	}
 }
 
