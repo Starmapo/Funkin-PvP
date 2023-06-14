@@ -20,6 +20,9 @@ class Main extends Sprite
 {
 	public static final TRANSITION_TIME:Float = 0.7;
 
+	public static var audioDisconnected:Bool = false;
+	public static var changeID:Int = 0;
+
 	static var gameFilters:Array<BitmapFilter> = [];
 	static var colorFilter:ColorMatrixFilter;
 	static var hueFilter:ColorMatrixFilter;

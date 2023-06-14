@@ -6,6 +6,7 @@ import lime.graphics.cairo.CairoImageSurface;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 
+// FROM CODENAME ENGINE
 class OptimizedBitmapData extends BitmapData
 {
 	@SuppressWarnings("checkstyle:Dynamic")

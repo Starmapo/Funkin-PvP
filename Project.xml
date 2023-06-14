@@ -86,7 +86,14 @@
 	<!-- Makes the game use less RAM -->
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="desktop" />
 
-	<haxeflag name="--macro" value="include('flixel')" />
+	<!-- Comment this off to prevent unused classes from being compiled.
+		 Reduces compilation time at the cost of limited HScript flexibility. !-->
+	<define name="COMPILE_ALL_CLASSES" />
+
+	<section if="COMPILE_ALL_CLASSES">
+		<haxeflag name="-dce" value="no" />
+		<haxeflag name="--macro" value="include('flixel')" />
+	</section>
 
 	<define name="hscriptPos" />
 

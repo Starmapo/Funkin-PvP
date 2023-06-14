@@ -1,6 +1,5 @@
 package states;
 
-import util.FNFCache;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -18,7 +17,9 @@ import hscript.Interp;
 import lime.app.Application;
 import sys.FileSystem;
 import sys.thread.Thread;
+import util.AudioSwitchFix;
 import util.DiscordClient;
+import util.FNFCache;
 import util.WindowsAPI;
 
 using StringTools;
@@ -115,6 +116,7 @@ class BootState extends FNFState
 	function initGame()
 	{
 		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
+		AudioSwitchFix.init();
 
 		FNFCache.init();
 
