@@ -48,6 +48,10 @@
 					"displayName": "Parents (Christmas)"
 				},
 				{
+					"name": "parents-christmas-alt",
+					"displayName": "Parents (Christmas, Swapped)"
+				},
+				{
 					"name": "monster-christmas",
 					"displayName": "Lemon Monster (Christmas)"
 				},

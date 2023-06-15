@@ -1,5 +1,6 @@
 package states.editors;
 
+import util.MemoryUtil;
 import data.char.CharacterInfo;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -629,6 +630,7 @@ class CharacterEditorState extends FNFState
 		actionManager.reset();
 		this.charInfo = charInfo;
 		reloadCharInfo();
+		MemoryUtil.clearMinor();
 	}
 }
 
