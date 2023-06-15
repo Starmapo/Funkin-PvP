@@ -1,4 +1,3 @@
-xml auto dance
 option page title
 pvp menu bg + transition
 wiki

@@ -207,7 +207,7 @@ class MusicTiming implements IFlxDestroyable
 	**/
 	public function addDancingSprite(sprite:DancingSprite)
 	{
-		if (sprite != null)
+		if (sprite != null && !dancingSprites.contains(sprite))
 			dancingSprites.push(sprite);
 	}
 

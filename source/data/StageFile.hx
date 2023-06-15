@@ -226,7 +226,16 @@ class StageFile
 		if (node.has.antialiasing)
 			spr.antialiasing = node.att.antialiasing == "true";
 		if (node.has.danceAnims)
+		{
 			spr.danceAnims = node.att.danceAnims.split(',');
+			state.timing.addDancingSprite(spr);
+		}
+		if (node.has.danceBeats)
+		{
+			var danceBeats = Std.parseInt(node.att.danceBeats);
+			if (danceBeats != null)
+				spr.danceBeats = danceBeats;
+		}
 		if (node.has.visible)
 			spr.visible = node.att.visible == "true";
 		if (node.has.camera)

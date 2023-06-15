@@ -11,8 +11,6 @@ import ui.game.Note;
 
 class Character extends DancingSprite
 {
-	static var holdTime:Float = ((1 / 24) * 4);
-
 	public var charInfo(default, set):CharacterInfo;
 	public var charPosX(default, set):Float;
 	public var charPosY(default, set):Float;
@@ -148,12 +146,12 @@ class Character extends DancingSprite
 		var lane = note.info.playerLane;
 		playSingAnim(lane, beatLength, false, note.animSuffix);
 
-		if (note.info.isLongNote)
+		if (note.info.isLongNote && animation.curAnim != null)
 		{
 			if (holdTimers[lane] != null)
 				holdTimers[lane].cancel();
 
-			holdTimers[lane] = new FlxTimer().start(holdTime / FlxAnimationController.globalSpeed, function(tmr)
+			holdTimers[lane] = new FlxTimer().start(animation.curAnim.frameDuration * 4 / FlxAnimationController.globalSpeed, function(tmr)
 			{
 				if (note.exists && note.currentlyBeingHeld && note.tail.visible)
 					playSingAnim(lane, beatLength, true, note.animSuffix);

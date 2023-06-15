@@ -101,17 +101,6 @@ function onUpdatePost(elapsed)
 	}
 }
 
-function onBeatHit(beat, decBeat)
-{
-	foregroundSprites.forEach(function(spr)
-	{
-		spr.dance();
-	});
-
-	if (!Settings.lowQuality)
-		tankWatchtower.dance();
-}
-
 function moveTank():Void
 {
 	var daAngleOffset:Float = 1;

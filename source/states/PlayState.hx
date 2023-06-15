@@ -964,7 +964,7 @@ class PlayState extends FNFState
 
 	function handleInput(elapsed:Float)
 	{
-		if (isPaused || hasEnded)
+		if (isPaused || hasEnded || died)
 			return;
 
 		ruleset.handleInput(elapsed);
@@ -1277,6 +1277,9 @@ class PlayState extends FNFState
 				char.visible = false;
 			}
 		});
+
+		for (playfield in ruleset.playfields)
+			playfield.visible = false;
 
 		if (deathTimer == null)
 			deathTimer = new FlxTimer().start(2, function(_)
