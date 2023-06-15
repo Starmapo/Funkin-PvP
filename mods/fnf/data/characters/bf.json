@@ -1,8 +1,8 @@
 {
 	"flipX": true,
 	"positionOffset": [
-		-9,
-		380
+		-39,
+		353
 	],
 	"image": "characters/bf",
 	"healthIcon": "bf",

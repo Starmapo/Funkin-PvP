@@ -1,15 +1,12 @@
 {
+	"antialiasing": false,
+	"scale": 6,
 	"positionOffset": [
 		-220,
-		13
+		45
 	],
 	"image": "characters/spirit",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "spirit",
-	"flipX": false,
 	"anims": [
 		{
 			"atlasName": "idle spirit",
@@ -60,8 +57,5 @@
 		255,
 		60,
 		110
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": false,
-	"scale": 6
+	]
 }

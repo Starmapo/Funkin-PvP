@@ -1,25 +1,16 @@
 {
-	"positionOffset": [
-		-178,
-		84.2
-	],
-	"image": "characters/gf",
+	"flipX": true,
 	"danceAnims": [
 		"danceLeft",
 		"danceRight"
 	],
-	"holdLoopPoint": 0,
+	"positionOffset": [
+		-168,
+		121.2
+	],
+	"image": "characters/gf",
 	"healthIcon": "gf",
-	"flipX": true,
 	"anims": [
-		{
-			"atlasName": "GF Cheer",
-			"name": "hey",
-			"offset": [
-				0,
-				9
-			]
-		},
 		{
 			"indices": [
 				15,
@@ -109,6 +100,14 @@
 			]
 		},
 		{
+			"atlasName": "GF Cheer",
+			"name": "hey",
+			"offset": [
+				0,
+				9
+			]
+		},
+		{
 			"loop": true,
 			"atlasName": "GF FEAR",
 			"name": "scared",
@@ -158,8 +157,5 @@
 		165,
 		0,
 		77
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

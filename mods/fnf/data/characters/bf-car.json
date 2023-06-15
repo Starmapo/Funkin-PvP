@@ -1,15 +1,11 @@
 {
+	"flipX": true,
 	"positionOffset": [
-		-9,
-		380.4
+		-39,
+		353
 	],
 	"image": "characters/bf-car",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "bf",
-	"flipX": true,
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
@@ -172,8 +168,5 @@
 		49,
 		176,
 		209
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

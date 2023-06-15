@@ -26,6 +26,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		this.state = state;
 		scrollFactor.set();
 		visible = false;
+		FlxG.debugger.track(this);
 	}
 
 	override function update(elapsed:Float)

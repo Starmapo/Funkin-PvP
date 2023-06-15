@@ -1,15 +1,10 @@
 {
 	"positionOffset": [
 		-351,
-		-2
+		-13
 	],
 	"image": "characters/parents-christmas",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "parents",
-	"flipX": false,
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
@@ -236,8 +231,5 @@
 		196,
 		94,
 		174
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

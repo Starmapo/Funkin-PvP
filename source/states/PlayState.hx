@@ -1,6 +1,5 @@
 package states;
 
-import flixel.system.FlxBGSprite;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -23,6 +22,7 @@ import flixel.animation.FlxAnimationController;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
+import flixel.system.FlxBGSprite;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -102,6 +102,7 @@ class PlayState extends FNFState
 	public var msDisplay:FlxTypedGroup<MSDisplay>;
 	public var staticBG:AnimatedSprite;
 	public var stageFile:StageFile;
+	public var camBopRate:Null<Int> = null;
 
 	var instEnded:Bool = false;
 
@@ -503,13 +504,41 @@ class PlayState extends FNFState
 				}
 
 			case 'Set Property':
-				if (params[0] != null)
+				if (params[0] != null && params[0].length > 0)
 				{
 					var killMe:Array<String> = params[0].split('.');
 					if (killMe.length > 1)
 						CoolUtil.setVarInArray(CoolUtil.getPropertyLoopThingWhatever(killMe, true), killMe[killMe.length - 1], params[1]);
 					else
 						CoolUtil.setVarInArray(this, params[0], params[1]);
+				}
+
+			case 'Set Camera Bop Rate':
+				if (params[0] != null && params[0].length > 0)
+					camBopRate = Std.parseInt(params[0]);
+				else
+					camBopRate = null;
+
+			case "Set Default Camera Zoom":
+				if (params[0] != null && params[0].length > 0)
+				{
+					var zoom = Std.parseFloat(params[0].trim());
+					if (!Math.isNaN(zoom))
+						defaultCamZoom = zoom;
+				}
+
+			case "Tween Default Camera Zoom":
+				if (params[0] != null && params[0].length > 0)
+				{
+					var zoom = Std.parseFloat(params[0].trim());
+					if (!Math.isNaN(zoom))
+					{
+						var duration = params[1] != null ? Std.parseFloat(params[1].trim()) : Math.NaN;
+						if (Math.isNaN(duration))
+							duration = 1;
+						var ease:Float->Float = params[2] != null ? Reflect.field(FlxEase, params[2].trim()) : null;
+						FlxTween.tween(this, {defaultCamZoom: zoom}, duration, {ease: ease});
+					}
 				}
 		}
 
@@ -1174,6 +1203,9 @@ class PlayState extends FNFState
 				bar.onBeatHit();
 		}
 
+		if (camBopRate != null && beat % camBopRate == 0)
+			doCamBop();
+
 		executeScripts("onBeatHit", [beat, decBeat]);
 	}
 
@@ -1182,13 +1214,19 @@ class PlayState extends FNFState
 		if (hasEnded)
 			return;
 
+		if (camBopRate == null)
+			doCamBop();
+
+		executeScripts("onBarHit", [bar, decBar]);
+	}
+
+	public function doCamBop()
+	{
 		if (Settings.camZooming && camZooming && camBop && FlxG.camera.zoom < 1.35)
 		{
 			FlxG.camera.zoom += 0.015 * camBopMult;
 			camHUD.zoom += 0.03 * camBopMult;
 		}
-
-		executeScripts("onBarHit", [bar, decBar]);
 	}
 
 	function updateBG()

@@ -157,6 +157,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if (existsObjectAtTimeAndLane(time, lane))
 			return;
 
+		var object:ITimingObject = null;
 		switch (state.currentTool.value)
 		{
 			case OBJECT:
@@ -173,34 +174,32 @@ class SongEditorPlayfieldButton extends FlxSprite
 								bpm = curTimingPoint.bpm;
 								meter = curTimingPoint.meter;
 							}
-							state.actionManager.addTimingPoint(time, bpm, meter);
+							object = state.actionManager.addTimingPoint(time, bpm, meter);
 						case 1: // Scroll Velocity
 							var curSV = state.song.getScrollVelocityAt(time);
 							var multipliers:Array<Float> = curSV != null ? curSV.multipliers.copy() : [1, 1];
 							var linked = curSV != null ? curSV.linked : true;
-							state.actionManager.addScrollVelocity(time, multipliers, linked);
+							object = state.actionManager.addScrollVelocity(time, multipliers, linked);
 						case 2: // Camera Focus
 							var char:CameraFocusChar = OPPONENT;
 							var curFocus = state.song.getCameraFocusAt(time);
 							if (curFocus != null && curFocus.char == OPPONENT)
 								char = BF;
-							state.actionManager.addCamFocus(time, char);
+							object = state.actionManager.addCamFocus(time, char);
 						case 3: // Event
-							var curEventObject = state.song.getEventAt(time);
-							var curEvent = curEventObject != null ? curEventObject.events[0] : null;
-							var event = curEvent != null ? curEvent.event : '';
-							var params = curEvent != null ? curEvent.params.join(',') : '';
-							state.actionManager.addEvent(time, event, params);
+							var event = state.editPanel.eventInput.text;
+							var params = state.editPanel.eventParamsInput.text;
+							object = state.actionManager.addEvent(time, event, params);
 						case 4: // Lyric Step
-							state.actionManager.addLyricStep(time);
+							object = state.actionManager.addLyricStep(time);
 					}
 				}
 				else
-					state.actionManager.addNote(lane, time);
+					object = state.actionManager.addNote(lane, time);
 			case LONG_NOTE:
 				if (playfield.type == NOTES)
 				{
-					var info = state.actionManager.addNote(lane, time);
+					var info = object = state.actionManager.addNote(lane, time);
 					var longNote = null;
 					for (note in playfield.noteGroup.notes)
 					{
@@ -215,6 +214,11 @@ class SongEditorPlayfieldButton extends FlxSprite
 				else
 					state.notificationManager.showNotification("You can't place a long note there! Switch to the 'Notes' section.", ERROR);
 			default:
+		}
+		if (object != null)
+		{
+			state.selectedObjects.clear();
+			state.selectedObjects.push(object);
 		}
 	}
 

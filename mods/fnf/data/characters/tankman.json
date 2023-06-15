@@ -1,15 +1,11 @@
 {
+	"flipX": true,
 	"positionOffset": [
 		-41,
-		209
+		193
 	],
 	"image": "characters/tankman",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "tankman",
-	"flipX": true,
 	"anims": [
 		{
 			"atlasName": "Tankman Idle Dance instance 1",
@@ -76,8 +72,5 @@
 		225,
 		225,
 		225
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

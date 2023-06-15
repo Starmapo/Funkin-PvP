@@ -64,6 +64,9 @@ class ToolboxState extends FNFState
 
 		if (PlayerSettings.checkAction(BACK_P))
 			FlxG.switchState(new MainMenuState());
+
+		if (FlxG.mouse.visible)
+			FlxG.mouse.visible = false;
 	}
 
 	function createItem(name:String, callback:Void->Void)

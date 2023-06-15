@@ -1,15 +1,10 @@
 {
 	"positionOffset": [
-		4,
-		-38
+		5,
+		-61
 	],
 	"image": "characters/mom",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "mom",
-	"flipX": false,
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
@@ -140,8 +135,5 @@
 		216,
 		85,
 		142
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

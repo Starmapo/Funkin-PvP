@@ -71,8 +71,10 @@ class SongEditorEditPanel extends EditorPanel
 	var selectedCameraFocuses:Array<CameraFocus> = [];
 	var cameraFocusesPropertiesGroup:Array<FlxSprite> = [];
 	var eventIndexLabel:EditorText;
-	var eventInput:EditorInputText;
-	var eventParamsInput:EditorInputText;
+
+	public var eventInput:EditorInputText;
+	public var eventParamsInput:EditorInputText;
+
 	var selectedEvents:Array<EventObject> = [];
 	var eventsPropertiesGroup:Array<FlxSprite> = [];
 	var eventIndex:Int = 0;

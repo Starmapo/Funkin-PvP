@@ -1,39 +1,16 @@
 {
-	"positionOffset": [
-		-653,
-		-59.1
-	],
-	"image": "characters/pico-speaker",
+	"flipAll": true,
+	"flipX": true,
 	"danceAnims": [
 		"singLEFT"
 	],
-	"holdLoopPoint": 0,
+	"positionOffset": [
+		-653,
+		-22.1
+	],
+	"image": "characters/pico-speaker",
 	"healthIcon": "pico",
-	"flipX": true,
 	"anims": [
-		{
-			"nextAnim": "singLEFT-loop",
-			"atlasName": "Pico shoot 1",
-			"name": "singLEFT",
-			"offset": [
-				0,
-				0
-			]
-		},
-		{
-			"loop": true,
-			"indices": [
-				23,
-				24,
-				25
-			],
-			"atlasName": "Pico shoot 1",
-			"name": "singLEFT-loop",
-			"offset": [
-				0,
-				0
-			]
-		},
 		{
 			"nextAnim": "singDOWN-loop",
 			"atlasName": "Pico shoot 2",
@@ -58,26 +35,26 @@
 			]
 		},
 		{
-			"nextAnim": "singUP-loop",
-			"atlasName": "Pico shoot 3",
-			"name": "singUP",
+			"nextAnim": "singLEFT-loop",
+			"atlasName": "Pico shoot 1",
+			"name": "singLEFT",
 			"offset": [
-				-474,
-				-64
+				0,
+				0
 			]
 		},
 		{
 			"loop": true,
 			"indices": [
-				50,
-				51,
-				52
+				23,
+				24,
+				25
 			],
-			"atlasName": "Pico shoot 3",
-			"name": "singUP-loop",
+			"atlasName": "Pico shoot 1",
+			"name": "singLEFT-loop",
 			"offset": [
-				-474,
-				-64
+				0,
+				0
 			]
 		},
 		{
@@ -102,6 +79,29 @@
 				-474,
 				-19
 			]
+		},
+		{
+			"nextAnim": "singUP-loop",
+			"atlasName": "Pico shoot 3",
+			"name": "singUP",
+			"offset": [
+				-474,
+				-64
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				50,
+				51,
+				52
+			],
+			"atlasName": "Pico shoot 3",
+			"name": "singUP-loop",
+			"offset": [
+				-474,
+				-64
+			]
 		}
 	],
 	"cameraOffset": [
@@ -112,9 +112,5 @@
 		183,
 		216,
 		85
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1,
-	"flipAll": true
+	]
 }

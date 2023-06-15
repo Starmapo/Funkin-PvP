@@ -1,16 +1,14 @@
 {
-	"positionOffset": [
-		-126,
-		210
-	],
-	"image": "characters/spooky",
 	"danceAnims": [
 		"danceLeft",
 		"danceRight"
 	],
-	"holdLoopPoint": 0,
+	"positionOffset": [
+		-126,
+		218
+	],
+	"image": "characters/spooky",
 	"healthIcon": "spooky",
-	"flipX": false,
 	"anims": [
 		{
 			"fps": 12,
@@ -82,8 +80,5 @@
 		213,
 		126,
 		0
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

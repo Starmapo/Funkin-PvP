@@ -1,15 +1,11 @@
 {
+	"flipX": true,
 	"positionOffset": [
-		-68,
-		318
+		-86,
+		292
 	],
 	"image": "characters/pico",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "pico",
-	"flipX": true,
 	"anims": [
 		{
 			"atlasName": "Pico Idle Dance",
@@ -92,8 +88,5 @@
 		183,
 		216,
 		85
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

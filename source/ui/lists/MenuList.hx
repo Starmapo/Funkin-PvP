@@ -2,7 +2,6 @@ package ui.lists;
 
 import data.Controls.Action;
 import data.PlayerSettings;
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
@@ -285,17 +284,23 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return index;
 	}
 
+	// im dumb so this jump code only works with 4 columns (only type i've used so far)
 	function jumpIndex(index:Int, prev:Bool, next:Bool, amount:Int = 1)
 	{
+		var ogIndex = index;
 		if (prev && index < amount)
 		{
 			while (index + amount < length)
 				index += amount;
+			if (index == ogIndex)
+				index = length - 1;
 		}
 		else if (next && members[index + amount] == null)
 		{
 			while (index - amount >= 0)
 				index -= amount;
+			if (index == ogIndex)
+				index = length - 1;
 		}
 		else
 			index = changeIndex(index, prev, amount);
