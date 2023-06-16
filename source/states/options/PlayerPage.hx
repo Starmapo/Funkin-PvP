@@ -152,6 +152,8 @@ class PlayerPage extends Page
 			type: CHECKBOX,
 			defaultValue: false
 		});
+
+		addPageTitle('Player ${player + 1}');
 	}
 
 	override function update(elapsed:Float)

@@ -4,6 +4,8 @@ import data.PlayerSettings;
 import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal;
 
@@ -62,6 +64,15 @@ class Page extends FlxGroup
 	function openSubState(subState:FlxSubState)
 	{
 		onOpenSubState.dispatch(subState);
+	}
+
+	function addPageTitle(text:String)
+	{
+		var title = new FlxText(5, 5, 0, text);
+		title.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		title.scrollFactor.set();
+		title.alpha = 0.6;
+		add(title);
 	}
 
 	function get_camFollow()

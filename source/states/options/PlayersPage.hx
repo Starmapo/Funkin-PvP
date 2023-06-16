@@ -18,6 +18,8 @@ class PlayersPage extends Page
 
 		createItem('Player 1', switchPage.bind(Player(0)));
 		createItem('Player 2', switchPage.bind(Player(1)));
+
+		addPageTitle('Players');
 	}
 
 	override function destroy()

@@ -53,5 +53,7 @@ class AudioPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		*/
+
+		addPageTitle('Audio');
 	}
 }

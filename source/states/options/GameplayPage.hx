@@ -111,5 +111,7 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		*/
+
+		addPageTitle('Gameplay');
 	}
 }

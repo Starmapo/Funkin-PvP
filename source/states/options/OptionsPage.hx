@@ -25,6 +25,8 @@ class OptionsPage extends Page
 		createItem('Exit', exit);
 
 		items.selectItem(lastSelected);
+
+		addPageTitle('Options');
 	}
 
 	override function destroy()

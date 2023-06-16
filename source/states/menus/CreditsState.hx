@@ -90,6 +90,8 @@ class CreditsState extends FNFState
 		for (mod in Mods.currentMods)
 			readCredits(Path.join([Mods.modsPath, mod.directory, 'data/credits.json']));
 
+		if (lastSelected >= categoryMenuList.length)
+			lastSelected = categoryMenuList.length - 1;
 		categoryMenuList.selectItem(lastSelected);
 		categoryMenuList.snapPositions();
 

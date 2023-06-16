@@ -72,6 +72,8 @@ class SplashSkinPage extends Page
 			categoryList.createItem(group);
 
 		categoryList.selectItem(0);
+
+		addPageTitle('Splash Skin');
 	}
 
 	override function destroy()

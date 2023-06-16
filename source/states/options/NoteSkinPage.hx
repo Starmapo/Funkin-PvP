@@ -72,6 +72,8 @@ class NoteSkinPage extends Page
 			categoryList.createItem(group);
 
 		categoryList.selectItem(0);
+
+		addPageTitle('Note Skin');
 	}
 
 	override function destroy()

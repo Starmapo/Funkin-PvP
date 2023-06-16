@@ -35,5 +35,7 @@ class MiscellaneousPage extends BaseSettingsPage
 			description: "If enabled, the cache will always be reset after a state switch, reloading everything.",
 			type: CHECKBOX
 		});
+
+		addPageTitle('Miscellaneous');
 	}
 }

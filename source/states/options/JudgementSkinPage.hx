@@ -72,6 +72,8 @@ class JudgementSkinPage extends Page
 			categoryList.createItem(group);
 
 		categoryList.selectItem(0);
+
+		addPageTitle('Judgement Skin');
 	}
 
 	override function destroy()

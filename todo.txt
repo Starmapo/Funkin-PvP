@@ -1,4 +1,3 @@
-option page title
 pvp menu bg + transition
 wiki
 erb

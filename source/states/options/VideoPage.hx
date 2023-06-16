@@ -120,5 +120,7 @@ class VideoPage extends BaseSettingsPage
 			description: "Whether flashing lights are enabled.",
 			type: CHECKBOX
 		});
+
+		addPageTitle('Video');
 	}
 }
