@@ -19,6 +19,7 @@ import flixel.util.FlxStringUtil;
 import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
+import ui.VoidBG;
 import ui.lists.MenuList.MenuItem;
 import ui.lists.MenuList.TypedMenuItem;
 import ui.lists.MenuList.TypedMenuList;
@@ -65,6 +66,8 @@ class CharacterSelectState extends FNFState
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF21007F;
 		add(bg);
+
+		add(new VoidBG());
 
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);

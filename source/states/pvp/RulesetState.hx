@@ -17,6 +17,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import states.menus.MainMenuState;
 import subStates.pvp.JudgementPresetsSubState;
+import ui.VoidBG;
 import ui.lists.SettingsMenuList;
 import util.DiscordClient;
 
@@ -43,7 +44,6 @@ class RulesetState extends FNFState
 
 		transIn = transOut = null;
 		destroySubStates = false;
-		persistentUpdate = false;
 
 		camScroll = new FlxCamera();
 		camScroll.bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.5);
@@ -61,6 +61,8 @@ class RulesetState extends FNFState
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF21007F;
 		add(bg);
+
+		add(new VoidBG());
 
 		stateText = new FlxText(0, 0, 0, 'Ruleset');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);

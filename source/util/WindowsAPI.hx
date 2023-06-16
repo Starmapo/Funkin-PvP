@@ -42,8 +42,6 @@ package util;
 			  if ((punk) != NULL)  \\
 				{ (punk)->Release(); (punk) = NULL; }
 
-static long lastDefId = 0;
-
 class AudioFixClient : public IMMNotificationClient {
 	LONG _cRef;
 	IMMDeviceEnumerator *_pEnumerator;

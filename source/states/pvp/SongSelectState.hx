@@ -21,6 +21,7 @@ import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import ui.HealthIcon;
+import ui.VoidBG;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
 import util.DiscordClient;
@@ -74,6 +75,8 @@ class SongSelectState extends FNFState
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF21007F;
 		add(bg);
+
+		add(new VoidBG());
 
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
