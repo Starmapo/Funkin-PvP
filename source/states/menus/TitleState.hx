@@ -1,6 +1,5 @@
 package states.menus;
 
-import util.DiscordClient;
 import data.PlayerSettings;
 import data.Settings;
 import data.song.TimingPoint;
@@ -19,6 +18,7 @@ import shaders.ColorSwap;
 import sprites.AnimatedSprite;
 import sprites.DancingSprite;
 import sprites.InfiniteEmitter;
+import util.DiscordClient;
 import util.MusicTiming;
 
 using StringTools;
@@ -174,7 +174,7 @@ class TitleState extends FNFState
 		}
 		else if (!transitioning)
 		{
-			var pressedEnter = FlxG.keys.justPressed.ENTER;
+			var pressedEnter = PlayerSettings.checkAction(ACCEPT_P) || FlxG.keys.justPressed.ENTER;
 			if (!pressedEnter)
 			{
 				for (i in 0...FlxG.gamepads.numActiveGamepads)
@@ -186,14 +186,10 @@ class TitleState extends FNFState
 			}
 
 			if (pressedEnter)
-			{
 				onPressEnter();
-			}
 			#if sys
 			else if (PlayerSettings.checkAction(BACK_P))
-			{
 				onExit();
-			}
 			#end
 		}
 

@@ -20,6 +20,7 @@ import openfl.display.BitmapDataChannel;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import ui.VoidBG;
+import ui.VoidTransition;
 import ui.lists.MenuList.MenuItem;
 import ui.lists.MenuList.TypedMenuItem;
 import ui.lists.MenuList.TypedMenuList;
@@ -114,6 +115,9 @@ class CharacterSelectState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 
+		precacheImage('stages/static');
+		precacheImage('menus/pvp/voidTransition');
+
 		super.create();
 	}
 
@@ -140,7 +144,8 @@ class CharacterSelectState extends FNFState
 			}
 			if (ready)
 			{
-				exitTransition(function(_)
+				transitioning = true;
+				var trans = new VoidTransition(false, function()
 				{
 					var chars = [];
 					for (group in playerGroups)
@@ -150,6 +155,8 @@ class CharacterSelectState extends FNFState
 					}
 					FlxG.switchState(new PlayState(SongSelectState.song, chars));
 				});
+				trans.cameras = [camOver];
+				add(trans);
 			}
 		}
 

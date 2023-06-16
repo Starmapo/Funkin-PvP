@@ -136,9 +136,11 @@ class WindowsAPI
 	#end
 	public static function setWindowToDarkMode() {}
 
+	#if windows
 	@:functionCode('
 	if (!curAudioFix) curAudioFix = new AudioFixClient();
 	')
+	#end
 	public static function registerAudio()
 	{
 		Main.audioDisconnected = false;

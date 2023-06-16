@@ -36,6 +36,7 @@ import states.pvp.SongSelectState;
 import subStates.PauseSubState;
 import subStates.ResultsScreen;
 import sys.FileSystem;
+import ui.VoidTransition;
 import ui.editors.NotificationManager;
 import ui.game.HealthBar;
 import ui.game.JudgementCounter;
@@ -136,6 +137,7 @@ class PlayState extends FNFState
 		initCharacters();
 		initStage();
 		initScripts();
+		initTransition();
 		precache();
 
 		checkEvents();
@@ -286,12 +288,6 @@ class PlayState extends FNFState
 	{
 		if (FlxG.autoPause && !hasEnded)
 			DiscordClient.changePresence(pausedDetailsText, 'In a match');
-	}
-
-	override function finishTransIn()
-	{
-		super.finishTransIn();
-		canPause = true;
 	}
 
 	public function startSong(timing:MusicTiming)
@@ -909,6 +905,21 @@ class PlayState extends FNFState
 					onNoteSpawned(note);
 			}
 		}
+	}
+
+	function initTransition()
+	{
+		var cam = new FlxCamera();
+		cam.bgColor = 0;
+		FlxG.cameras.add(cam, false);
+
+		var trans = new VoidTransition(true, function()
+		{
+			canPause = true;
+			FlxG.cameras.remove(cam);
+		});
+		trans.cameras = [cam];
+		add(trans);
 	}
 
 	function precache()
