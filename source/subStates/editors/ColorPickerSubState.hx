@@ -133,6 +133,8 @@ class ColorPickerSubState extends FNFSubState
 
 		uiTabs.resize(420, okButton.y + 50);
 		uiTabs.screenCenter();
+		uiTabs.addGroup(tab);
+		add(uiTabs);
 
 		var closeButton = new FlxUIButton(uiTabs.x + uiTabs.width - 24, uiTabs.y + 4, "X", function()
 		{
@@ -143,9 +145,6 @@ class ColorPickerSubState extends FNFSubState
 		closeButton.color = FlxColor.RED;
 		closeButton.label.color = FlxColor.WHITE;
 		add(closeButton);
-
-		uiTabs.addGroup(tab);
-		add(uiTabs);
 	}
 
 	override function destroy()

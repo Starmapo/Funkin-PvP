@@ -58,6 +58,7 @@ class CharacterEditorState extends FNFState
 	var animPanel:CharacterEditorAnimPanel;
 	var editPanel:CharacterEditorEditPanel;
 	var savePrompt:CharacterEditorSavePrompt;
+	var changed:Bool = false;
 
 	public function new(?charInfo:CharacterInfo)
 	{
@@ -416,6 +417,7 @@ class CharacterEditorState extends FNFState
 		setAnimOffset(curAnim, curAnim.offset[0] + xChange, curAnim.offset[1] + yChange);
 
 		timeSinceLastChange = 0;
+		changed = true;
 	}
 
 	public function setAnimOffset(anim:AnimInfo, x:Float = 0, y:Float = 0)
@@ -448,6 +450,7 @@ class CharacterEditorState extends FNFState
 		editPanel.updatePositionOffset();
 
 		timeSinceLastChange = 0;
+		changed = true;
 	}
 
 	public function updatePosition()
@@ -483,13 +486,14 @@ class CharacterEditorState extends FNFState
 
 	public function save(notif:Bool = true, forceSave:Bool = false)
 	{
-		if (!actionManager.hasUnsavedChanges && !forceSave)
+		if (!actionManager.hasUnsavedChanges && !forceSave && !changed)
 			return;
 
 		charInfo.save(Path.join([charInfo.directory, charInfo.name + '.json']));
 
 		if (actionManager.undoStack.length > 0)
 			actionManager.lastSaveAction = actionManager.undoStack[0];
+		changed = false;
 
 		if (notif)
 			notificationManager.showNotification('Character successfully saved!', SUCCESS);
