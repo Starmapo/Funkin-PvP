@@ -41,6 +41,7 @@ class BaseImageSubState extends FNFSubState
 	var startPos:FlxPoint;
 	var minSize:Int = 22;
 	var camHUD:FlxCamera;
+	var saveButton:FlxUIButton;
 
 	public function new(state:CharacterEditorState, width:Int, height:Int, path:String = '')
 	{
@@ -83,44 +84,10 @@ class BaseImageSubState extends FNFSubState
 		charBorder = new FlxSprite();
 		add(charBorder);
 
-		var saveButton = new FlxUIButton(0, 10, 'Save');
+		saveButton = new FlxUIButton(0, 10, 'Save');
 		saveButton.onUp.callback = function()
 		{
-			var path = this.path;
-			if (path == null || path.length < 1)
-				return;
-
-			var frame = char.frame;
-			// first we need to make a bitmap with just the frame we're gonna draw
-			// (for some reason, calling `draw` with the original bitmap doesn't work)
-			var frameBitmap = new BitmapData(Std.int(frame.frame.width), Std.int(frame.frame.height), true, FlxColor.TRANSPARENT);
-			frameBitmap.copyPixels(char.pixels, frame.frame.copyToFlash(), new Point(), null, null, true);
-
-			// now we'll make the actual icon
-			var bitmap = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-			// create a matrix for our transformations
-			var matrix = new FlxMatrix();
-			// set frame transformations (offset + flipping horizontally)
-			@:privateAccess
-			frame.prepareMatrix(matrix, ANGLE_0, char.checkFlipX(), char.checkFlipY());
-			matrix.translate(-char.origin.x, -char.origin.y);
-			// scale matrix
-			matrix.scale(char.scale.x, char.scale.y);
-			// translate matrix to the correct position
-			matrix.translate((char.x - border.x) + char.origin.x - char.offset.x, (char.y - border.y) + char.origin.y - char.offset.y);
-			// round the position cause we shouldn't have decimals
-			matrix.tx = Math.floor(matrix.tx);
-			matrix.ty = Math.floor(matrix.ty);
-			// now draw the frame with our matrix
-			bitmap.draw(frameBitmap, matrix, null, null, null, char.antialiasing);
-
-			var imagePath = Path.join([Mods.modsPath, state.charInfo.mod, path]);
-			FileSystem.createDirectory(Path.directory(imagePath));
-			// finally, save the image
-			File.saveBytes(imagePath, bitmap.encode(new Rectangle(0, 0, bitmap.width, bitmap.height), new PNGEncoderOptions()));
-
-			FlxTween.cancelTweensOf(saveButton);
-			FlxTween.color(saveButton, 0.2, FlxColor.LIME, FlxColor.WHITE, {startDelay: 0.2});
+			save();
 		};
 		saveButton.screenCenter(X);
 		saveButton.cameras = [camHUD];
@@ -267,6 +234,8 @@ class BaseImageSubState extends FNFSubState
 		charBorder.setPosition(char.x, char.y);
 		charBorder.visible = drag == null;
 
+		if (FlxG.keys.justPressed.S && FlxG.keys.pressed.CONTROL)
+			save();
 		if (FlxG.keys.justPressed.ESCAPE)
 			close();
 	}
@@ -317,5 +286,43 @@ class BaseImageSubState extends FNFSubState
 			charBorder.makeGraphic(Std.int(char.width), Std.int(char.height), FlxColor.TRANSPARENT);
 			FlxSpriteUtil.drawRect(charBorder, 0, 0, charBorder.width, charBorder.height, FlxColor.TRANSPARENT, {thickness: 2, color: FlxColor.BLUE});
 		}
+	}
+
+	function save()
+	{
+		if (path == null || path.length < 1)
+			return;
+
+		var frame = char.frame;
+		// first we need to make a bitmap with just the frame we're gonna draw
+		// (for some reason, calling `draw` with the original bitmap doesn't work)
+		var frameBitmap = new BitmapData(Std.int(frame.frame.width), Std.int(frame.frame.height), true, FlxColor.TRANSPARENT);
+		frameBitmap.copyPixels(char.pixels, frame.frame.copyToFlash(), new Point(), null, null, true);
+
+		// now we'll make the actual icon
+		var bitmap = new BitmapData(Std.int(border.width), Std.int(border.height), true, FlxColor.TRANSPARENT);
+		// create a matrix for our transformations
+		var matrix = new FlxMatrix();
+		// set frame transformations (offset + flipping horizontally)
+		@:privateAccess
+		frame.prepareMatrix(matrix, ANGLE_0, char.checkFlipX(), char.checkFlipY());
+		matrix.translate(-char.origin.x, -char.origin.y);
+		// scale matrix
+		matrix.scale(char.scale.x, char.scale.y);
+		// translate matrix to the correct position
+		matrix.translate((char.x - border.x) + char.origin.x - char.offset.x, (char.y - border.y) + char.origin.y - char.offset.y);
+		// round the position cause we shouldn't have decimals
+		matrix.tx = Math.floor(matrix.tx);
+		matrix.ty = Math.floor(matrix.ty);
+		// now draw the frame with our matrix
+		bitmap.draw(frameBitmap, matrix, null, null, null, char.antialiasing);
+
+		var imagePath = Path.join([Mods.modsPath, state.charInfo.mod, path]);
+		FileSystem.createDirectory(Path.directory(imagePath));
+		// finally, save the image
+		File.saveBytes(imagePath, bitmap.encode(new Rectangle(0, 0, bitmap.width, bitmap.height), new PNGEncoderOptions()));
+
+		FlxTween.cancelTweensOf(saveButton);
+		FlxTween.color(saveButton, 0.2, FlxColor.LIME, FlxColor.WHITE, {startDelay: 0.2});
 	}
 }
