@@ -47,7 +47,7 @@
 
 	<haxelib name="hxcpp-debug-server" if="desktop" />
 	<haxelib name="systools" if="desktop" />
-	<ndll name="systools" haxelib="systools" if="desktop" />
+	<ndll name="systools" haxelib="systools" if="systools" />
 	<haxelib name="hscript" />
 	<section if="hscript">
 		<haxeflag name="--macro" value="hscript.UsingHandler.init()" />

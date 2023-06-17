@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
+import openfl.system.System;
 import shaders.ColorSwap;
 import sprites.AnimatedSprite;
 import sprites.DancingSprite;
@@ -207,6 +208,9 @@ class TitleState extends FNFState
 		gradient.alpha = gradientAlpha + gradientBop;
 
 		super.update(elapsed);
+
+		if (PlayerSettings.checkAction(RESET_P))
+			CoolUtil.restart();
 	}
 
 	function getIntroText()
@@ -375,7 +379,7 @@ class TitleState extends FNFState
 	{
 		FlxG.camera.fade(FlxColor.BLACK, 1, false, function()
 		{
-			Sys.exit(0);
+			System.exit(0);
 		}, true);
 		FlxG.sound.music.fadeOut(1, 0);
 		transitioning = true;

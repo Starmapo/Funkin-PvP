@@ -334,8 +334,7 @@ class SongEditorState extends FNFState
 
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
 
-		if (actionManager.undoStack.length > 0)
-			actionManager.lastSaveAction = actionManager.undoStack[0];
+		actionManager.lastSaveAction = actionManager.undoStack[0];
 
 		if (notif)
 			notificationManager.showNotification('Song successfully saved!', SUCCESS);

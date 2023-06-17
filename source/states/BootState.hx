@@ -145,10 +145,6 @@ class BootState extends FNFState
 
 		#if !macro
 		DiscordClient.initialize();
-		Application.current.window.onClose.add(function()
-		{
-			DiscordClient.shutdown();
-		});
 		#end
 
 		FlxG.fixedTimestep = false; // allow elapsed time to be variable
@@ -470,10 +466,13 @@ class BootState extends FNFState
 		Settings.loadData(); // load settings
 		PlayerSettings.init(); // initialize players and controls
 
-		// make sure to save settings if the player exits the game
 		Application.current.onExit.add(function(_)
 		{
 			Settings.saveData();
+			#if !macro
+			DiscordClient.shutdown();
+			#end
+			Sys.exit(0);
 		});
 	}
 

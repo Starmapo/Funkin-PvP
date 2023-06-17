@@ -1,6 +1,5 @@
 package states.editors;
 
-import util.MemoryUtil;
 import data.char.CharacterInfo;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -25,6 +24,7 @@ import ui.editors.char.CharacterEditorEditPanel;
 import ui.editors.char.CharacterEditorToolPanel;
 import ui.game.HealthBar;
 import util.DiscordClient;
+import util.MemoryUtil;
 import util.bindable.Bindable;
 import util.editors.char.CharacterEditorActionManager;
 
@@ -294,14 +294,17 @@ class CharacterEditorState extends FNFState
 
 			if (FlxG.mouse.released)
 			{
-				switch (dragging)
+				if (offset[0] != dragPositionOffset[0] || offset[1] != dragPositionOffset[1])
 				{
-					case 1:
-						actionManager.perform(new ActionChangePositionOffset(this, offset.copy(), dragPositionOffset));
-					case 2:
-						actionManager.perform(new ActionChangeCameraOffset(this, offset.copy(), dragPositionOffset));
-					default:
-						actionManager.perform(new ActionChangeAnimOffset(this, charInfo.getAnim(curAnim), offset.copy(), dragPositionOffset));
+					switch (dragging)
+					{
+						case 1:
+							actionManager.perform(new ActionChangePositionOffset(this, offset.copy(), dragPositionOffset));
+						case 2:
+							actionManager.perform(new ActionChangeCameraOffset(this, offset.copy(), dragPositionOffset));
+						default:
+							actionManager.perform(new ActionChangeAnimOffset(this, charInfo.getAnim(curAnim), offset.copy(), dragPositionOffset));
+					}
 				}
 				dragMousePos = null;
 				dragPositionOffset = null;
@@ -491,8 +494,7 @@ class CharacterEditorState extends FNFState
 
 		charInfo.save(Path.join([charInfo.directory, charInfo.name + '.json']));
 
-		if (actionManager.undoStack.length > 0)
-			actionManager.lastSaveAction = actionManager.undoStack[0];
+		actionManager.lastSaveAction = actionManager.undoStack[0];
 		changed = false;
 
 		if (notif)

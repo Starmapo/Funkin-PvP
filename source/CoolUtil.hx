@@ -18,6 +18,8 @@ import flixel.util.FlxStringUtil;
 import haxe.io.Path;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
+import openfl.system.System;
+import systools.win.Tools;
 
 using StringTools;
 
@@ -515,6 +517,20 @@ class CoolUtil
 	public static inline function getMacroAbstractClass(className:String)
 	{
 		return Type.resolveClass('${className}_HSC');
+	}
+
+	public static function restart()
+	{
+		#if windows
+		var app = Sys.programPath();
+		var workingDir = Sys.getCwd();
+
+		var result = Tools.createProcess(app, 'Test.hx', workingDir, false, false);
+		if (result == 0)
+			System.exit(1337);
+		else
+			throw "Failed to restart. Error code: " + result;
+		#end
 	}
 
 	@:generic
