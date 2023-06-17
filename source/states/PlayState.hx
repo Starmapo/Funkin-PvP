@@ -929,10 +929,13 @@ class PlayState extends FNFState
 		for (sound in introSndPaths)
 			Paths.getSound('countdown/' + sound);
 
-		for (display in judgementDisplay)
+		if (judgementDisplay != null)
 		{
-			for (graphic in display.graphics)
-				precacheGraphic(graphic);
+			for (display in judgementDisplay)
+			{
+				for (graphic in display.graphics)
+					precacheGraphic(graphic);
+			}
 		}
 
 		if (Settings.missSounds)

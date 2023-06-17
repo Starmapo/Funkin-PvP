@@ -20,7 +20,7 @@ class MSDisplay extends FlxText
 		this.player = player;
 
 		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		kill();
+		active = false;
 	}
 
 	public function showMS(ms:Float, judgement:Judgement)

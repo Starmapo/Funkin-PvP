@@ -1,3 +1,4 @@
+figure out lag spike
 wiki
 erb
 jerk (2:15)

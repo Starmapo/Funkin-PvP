@@ -9,7 +9,6 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxTimer;
 import sprites.game.Character;
 import ui.editors.EditorInputText;
@@ -43,12 +42,8 @@ class FNFState extends FlxTransitionableState
 		return true;
 	}
 
-	public function precacheGraphic(graphic:FlxGraphicAsset)
+	public function precacheGraphic(graphic:FlxGraphic)
 	{
-		if (graphic == null)
-			return null;
-
-		var graphic = FlxG.bitmap.add(graphic);
 		if (graphic == null || cachedGraphics.contains(graphic))
 			return null;
 
