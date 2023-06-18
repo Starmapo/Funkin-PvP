@@ -929,6 +929,9 @@ class PlayState extends FNFState
 					precacheGraphic(graphic);
 			}
 		}
+		precacheGraphic(opponent.graphic);
+		precacheGraphic(bf.graphic);
+		precacheGraphic(gf.graphic);
 
 		if (Settings.missSounds)
 		{

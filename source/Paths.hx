@@ -1,5 +1,4 @@
 import data.Mods;
-import data.Settings;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
@@ -9,8 +8,10 @@ import haxe.io.Path;
 import haxe.xml.Access;
 import openfl.Assets;
 import openfl.display.BitmapData;
+import openfl.display3D.utils.UInt8Buff;
 import openfl.media.Sound;
-import util.CompileFix;
+import openfl.utils.AssetCache;
+import util.MemoryUtil;
 
 using StringTools;
 
@@ -22,6 +23,21 @@ import sys.io.File;
 class Paths
 {
 	public static var SCRIPT_EXTENSIONS:Array<String> = [".hx", ".hscript"];
+
+	public static var cachedSounds:Map<String, Sound> = [];
+	public static var trackedSounds:Array<String> = [];
+	public static var dumpExclusions:Array<String> = [];
+
+	public static function init()
+	{
+		excludeSound('menus/scrollMenu');
+		excludeSound('menus/confirmMenu');
+		excludeSound('menus/cancelMenu');
+		excludeMusic("Gettin' Freaky");
+
+		FlxG.signals.preStateSwitch.add(onPreStateSwitch);
+		FlxG.signals.postStateSwitch.add(onPostStateSwitch);
+	}
 
 	public static function getPath(key:String, ?mod:String):String
 	{
@@ -174,26 +190,32 @@ class Paths
 
 	public static function getSound(path:String, ?mod:String):Sound
 	{
-		if (!path.endsWith('.ogg') && !path.endsWith('.mp3') && !path.endsWith('.wav'))
+		if (!path.endsWith('.ogg') && !path.endsWith('.wav'))
 			path += '.ogg';
 
 		if (!exists(path))
 			path = getPath('sounds/$path', mod);
 
-		if (Assets.cache.hasSound(path))
-			return Assets.cache.getSound(path);
-
 		var sound:Sound = null;
-		if (Assets.exists(path, SOUND))
-			sound = Assets.getSound(path);
+		if (cachedSounds.exists(path))
+			sound = cachedSounds.get(path);
+		else if (Assets.exists(path, SOUND))
+		{
+			sound = Assets.getSound(path, false);
+			if (sound != null)
+				cachedSounds.set(path, sound);
+		}
 		#if sys
 		else if (FileSystem.exists(path))
 		{
 			sound = Sound.fromFile('./$path');
 			if (sound != null)
-				Assets.cache.setSound(path, sound);
+				cachedSounds.set(path, sound);
 		}
 		#end
+
+		if (sound != null && !trackedSounds.contains(path))
+			trackedSounds.push(path);
 
 		return sound;
 	}
@@ -203,7 +225,7 @@ class Paths
 		if (exists(path))
 			return getSound(path, mod);
 
-		return getSound(getPath('music/$path/audio'), mod);
+		return getSound(getPath('music/$path/audio.ogg'), mod);
 	}
 
 	public static function getSongInst(song:Song)
@@ -310,5 +332,60 @@ class Paths
 	public static function existsPath(key:String, ?mod:String):Bool
 	{
 		return exists(getPath(key, mod));
+	}
+
+	public static function excludeAsset(path:String)
+	{
+		if (!dumpExclusions.contains(path) && exists(path))
+			dumpExclusions.push(path);
+	}
+
+	public static function excludeSound(path:String, ?mod:String)
+	{
+		if (!path.endsWith('.ogg') && !path.endsWith('.wav'))
+			path += '.ogg';
+
+		if (!exists(path))
+			path = getPath('sounds/$path', mod);
+
+		excludeAsset(path);
+	}
+
+	public static function excludeMusic(path:String, ?mod:String)
+	{
+		if (exists(path))
+			return excludeAsset(path);
+
+		return excludeSound(getPath('music/$path/audio.ogg'), mod);
+	}
+
+	static function onPreStateSwitch()
+	{
+		trackedSounds.resize(0);
+	}
+
+	static function onPostStateSwitch()
+	{
+		for (k => s in cachedSounds)
+		{
+			@:privateAccess
+			var isMusic = FlxG.sound.music != null ? FlxG.sound.music._sound == s : false;
+			if (s != null && !trackedSounds.contains(k) && !dumpExclusions.contains(k) && !isMusic)
+			{
+				cachedSounds.remove(k);
+				s.close();
+			}
+		}
+		@:privateAccess {
+			// clear uint8 pools
+			for (_ => pool in UInt8Buff._pools)
+			{
+				for (b in pool.clear())
+					b.destroy();
+			}
+			UInt8Buff._pools.clear();
+		}
+
+		MemoryUtil.clearMajor();
 	}
 }
