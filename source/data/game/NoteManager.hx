@@ -490,7 +490,7 @@ class NoteManager extends FlxBasic
 
 	function get_scrollSpeed()
 	{
-		return config.scrollSpeed / Settings.playbackRate;
+		return config.scrollSpeed / GameplayGlobals.playbackRate;
 	}
 
 	function get_autoplay()
@@ -543,7 +543,7 @@ class NoteManager extends FlxBasic
 		if (nextNote == null)
 			return true;
 
-		return (nextNote.startTime - currentAudioPosition >= 5000 * Settings.playbackRate);
+		return (nextNote.startTime - currentAudioPosition >= 5000 * GameplayGlobals.playbackRate);
 	}
 
 	function get_song()

@@ -1,5 +1,6 @@
 package states.editors;
 
+import data.game.GameplayGlobals;
 import data.PlayerSettings;
 import data.Settings;
 import data.game.GameplayRuleset;
@@ -63,6 +64,8 @@ class SongEditorPlayState extends FNFState
 				song.notes.remove(note);
 			i--;
 		}
+
+		GameplayGlobals.playbackRate = 1;
 	}
 
 	override function destroy()

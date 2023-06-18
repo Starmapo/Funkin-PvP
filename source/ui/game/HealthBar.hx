@@ -4,6 +4,7 @@ import data.PlayerConfig;
 import data.PlayerSettings;
 import data.Settings;
 import data.char.CharacterInfo;
+import data.game.GameplayGlobals;
 import data.game.ScoreProcessor;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -69,7 +70,7 @@ class HealthBar extends FlxSpriteGroup
 	{
 		super.update(elapsed);
 
-		var scale = FlxMath.lerp(1, icon.scale.x, 1 - (elapsed * 9 * Settings.playbackRate));
+		var scale = FlxMath.lerp(1, icon.scale.x, 1 - (elapsed * 9 * GameplayGlobals.playbackRate));
 		icon.scale.set(scale, scale);
 		icon.updateOffset();
 

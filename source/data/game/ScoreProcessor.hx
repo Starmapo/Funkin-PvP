@@ -160,7 +160,7 @@ class ScoreProcessor implements IFlxDestroyable
 	function initializeMods()
 	{
 		for (judgement => _ in judgementWindow)
-			judgementWindow[judgement] *= Settings.playbackRate;
+			judgementWindow[judgement] *= GameplayGlobals.playbackRate;
 	}
 
 	function getTotalJudgementCount()
@@ -198,7 +198,7 @@ class ScoreProcessor implements IFlxDestroyable
 
 	function initializeHealthWeighting()
 	{
-		var density = ruleset.song.getActionsPerSecond(Settings.playbackRate);
+		var density = ruleset.song.getActionsPerSecond(GameplayGlobals.playbackRate);
 		if (density == 0 || density >= 12 || Math.isNaN(density))
 			return;
 		if (density > 0 && density < 2)

@@ -1,9 +1,10 @@
 package data.scripts;
 
-import flixel.FlxG;
+import data.game.GameplayGlobals;
 import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
 import hscript.Expr.ClassDecl;
@@ -52,7 +53,7 @@ class PlayStateScript extends Script
 		setVariable("songInfoDisplay", state.songInfoDisplay);
 		setVariable("lyricsDisplay", state.lyricsDisplay);
 		setVariable("healthBars", state.healthBars);
-		setVariable("playbackRate", Settings.playbackRate);
+		setVariable("playbackRate", GameplayGlobals.playbackRate);
 
 		setVariable("add", state.add);
 		setVariable("insert", state.insert);
@@ -186,7 +187,7 @@ class PlayStateScript extends Script
 		{
 			if (shader == null)
 				return;
-			
+
 			var cameras = [FlxG.camera, state.camHUD, state.camOther];
 			for (camera in cameras)
 				camera.addShader(shader);

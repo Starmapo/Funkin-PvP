@@ -1,5 +1,6 @@
 package states;
 
+import data.game.GameplayGlobals;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
@@ -116,6 +117,8 @@ class PlayState extends FNFState
 
 		persistentUpdate = true;
 		destroySubStates = false;
+
+		GameplayGlobals.playbackRate = Settings.playbackRate;
 	}
 
 	override public function create()
@@ -127,7 +130,7 @@ class PlayState extends FNFState
 		}
 
 		Mods.currentMod = song.mod;
-		FlxAnimationController.globalSpeed = Settings.playbackRate;
+		FlxAnimationController.globalSpeed = GameplayGlobals.playbackRate;
 
 		initCameras();
 		initSong();
@@ -408,7 +411,7 @@ class PlayState extends FNFState
 				var time = Std.parseFloat(value2);
 				if (Math.isNaN(time) || time <= 0)
 					time = 0.6;
-				time /= Settings.playbackRate;
+				time /= GameplayGlobals.playbackRate;
 
 				var bfHey = true;
 				var gfHey = true;
@@ -625,7 +628,7 @@ class PlayState extends FNFState
 
 	public function getBeatLength()
 	{
-		return song.getTimingPointAt(timing.audioPosition).beatLength / Settings.playbackRate;
+		return song.getTimingPointAt(timing.audioPosition).beatLength / GameplayGlobals.playbackRate;
 	}
 
 	function initCameras()
@@ -647,7 +650,7 @@ class PlayState extends FNFState
 			songInst.stop();
 			songInst.time = songInst.length;
 		});
-		songInst.pitch = Settings.playbackRate;
+		songInst.pitch = GameplayGlobals.playbackRate;
 		songInst.resetPositionOnFinish = false;
 
 		var vocals = Paths.getSongVocals(song);
@@ -658,7 +661,7 @@ class PlayState extends FNFState
 			});
 		else
 			songVocals = FlxG.sound.list.add(new FlxSound());
-		songVocals.pitch = Settings.playbackRate;
+		songVocals.pitch = GameplayGlobals.playbackRate;
 		songVocals.resetPositionOnFinish = false;
 
 		timing = new MusicTiming(songInst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
@@ -833,7 +836,7 @@ class PlayState extends FNFState
 		else if (!stageFile.found)
 			stageFile = new StageFile(this, 'fnf:stage');
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04 * Settings.playbackRate);
+		FlxG.camera.follow(camFollow, LOCKON, 0.04 * GameplayGlobals.playbackRate);
 		FlxG.camera.snapToTarget();
 
 		FlxG.camera.zoom = defaultCamZoom;
@@ -965,7 +968,7 @@ class PlayState extends FNFState
 	{
 		if (camZooming)
 		{
-			var lerp = (elapsed * 3 * camZoomingDecay * Settings.playbackRate);
+			var lerp = (elapsed * 3 * camZoomingDecay * GameplayGlobals.playbackRate);
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 1 - lerp);
 			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 1 - lerp);
 		}

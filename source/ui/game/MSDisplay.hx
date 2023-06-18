@@ -1,6 +1,7 @@
 package ui.game;
 
 import data.Settings;
+import data.game.GameplayGlobals;
 import data.game.Judgement;
 import flixel.FlxG;
 import flixel.math.FlxMath;
@@ -27,7 +28,7 @@ class MSDisplay extends FlxText
 	{
 		revive();
 
-		var t = FlxMath.roundDecimal(ms / Settings.playbackRate, 2) + 'ms';
+		var t = FlxMath.roundDecimal(ms / GameplayGlobals.playbackRate, 2) + 'ms';
 		if (text != t)
 			text = t;
 
