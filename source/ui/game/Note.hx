@@ -1,5 +1,6 @@
 package ui.game;
 
+import flixel.util.FlxDestroyUtil;
 import data.PlayerConfig;
 import data.game.NoteManager;
 import data.game.SVDirectionChange;
@@ -290,9 +291,9 @@ class Note extends FlxSpriteGroup
 	{
 		super.destroy();
 		info = null;
-		head = null;
-		body = null;
-		tail = null;
+		head = FlxDestroyUtil.destroy(head);
+		body = FlxDestroyUtil.destroy(body);
+		tail = FlxDestroyUtil.destroy(tail);
 		manager = null;
 		playfield = null;
 		skin = null;

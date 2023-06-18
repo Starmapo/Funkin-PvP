@@ -7,6 +7,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxTimer;
 import openfl.geom.Rectangle;
 
@@ -95,8 +96,8 @@ class Notification extends FlxSpriteGroup
 	override function destroy()
 	{
 		super.destroy();
-		bg = null;
-		text = null;
+		bg = FlxDestroyUtil.destroy(bg);
+		text = FlxDestroyUtil.destroy(text);
 	}
 }
 

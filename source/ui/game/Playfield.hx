@@ -114,8 +114,8 @@ class Playfield extends FlxGroup
 		super.destroy();
 		config = null;
 		noteSkin = null;
-		receptors = null;
-		splashes = null;
+		receptors = FlxDestroyUtil.destroy(receptors);
+		splashes = FlxDestroyUtil.destroy(splashes);
 		ruleset = null;
 		scoreProcessor = FlxDestroyUtil.destroy(scoreProcessor);
 		inputManager = FlxDestroyUtil.destroy(inputManager);

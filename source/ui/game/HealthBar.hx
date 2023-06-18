@@ -11,6 +11,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 using StringTools;
 
@@ -86,6 +87,9 @@ class HealthBar extends FlxSpriteGroup
 	override function destroy()
 	{
 		super.destroy();
+		bg = FlxDestroyUtil.destroy(bg);
+		bar = FlxDestroyUtil.destroy(bar);
+		icon = FlxDestroyUtil.destroy(icon);
 		scoreProcessor = null;
 	}
 

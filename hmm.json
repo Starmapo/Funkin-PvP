@@ -42,6 +42,11 @@
       "dir": null,
       "ref": "master",
       "url": "https://github.com/HaxeFoundation/hscript"
+    },
+    {
+      "name": "hxtelemetry",
+      "type": "haxelib",
+      "version": null
     }
   ]
 }

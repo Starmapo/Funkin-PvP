@@ -102,6 +102,12 @@ class HealthIcon extends AnimatedSprite
 		antialiasing = info.antialiasing;
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		info = null;
+	}
+
 	function set_icon(value:String)
 	{
 		if (value != null && icon != value)

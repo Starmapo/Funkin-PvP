@@ -214,7 +214,7 @@ class PlayState extends FNFState
 		npsDisplay = FlxDestroyUtil.destroy(npsDisplay);
 		msDisplay = FlxDestroyUtil.destroy(msDisplay);
 		staticBG = FlxDestroyUtil.destroy(staticBG);
-		stageFile = null;
+		stageFile = FlxDestroyUtil.destroy(stageFile);
 	}
 
 	override function openSubState(subState:FlxSubState)

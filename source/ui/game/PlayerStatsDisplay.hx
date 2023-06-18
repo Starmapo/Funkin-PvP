@@ -1,6 +1,6 @@
 package ui.game;
 
-import data.PlayerSettings;
+import flixel.util.FlxDestroyUtil;
 import data.Settings;
 import data.game.Judgement;
 import data.game.ScoreProcessor;
@@ -60,10 +60,10 @@ class PlayerStatsDisplay extends FlxGroup
 	{
 		super.destroy();
 		scoreProcessor = null;
-		scoreText = null;
-		gradeText = null;
-		comboText = null;
-		missText = null;
+		scoreText = FlxDestroyUtil.destroy(scoreText);
+		gradeText = FlxDestroyUtil.destroy(gradeText);
+		comboText = FlxDestroyUtil.destroy(comboText);
+		missText = FlxDestroyUtil.destroy(missText);
 	}
 
 	public function updateText()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project>
+<project xmlns="http://lime.openfl.org/project/1.0.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
 
 	<!-- _________________________ Application Settings _________________________ -->
 
@@ -15,7 +15,7 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false" />
+	<window width="1280" height="720" fps="0" background="#000000" hardware="true" vsync="false" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
@@ -43,15 +43,12 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
-	<haxedev set='webgl' if="html5"/>
-
+	<haxelib name="hscript" />
+	<haxeflag name="--macro" value="hscript.UsingHandler.init()" if="hscript" />
+	
 	<haxelib name="hxcpp-debug-server" if="desktop" />
 	<haxelib name="systools" if="desktop" />
 	<ndll name="systools" haxelib="systools" if="systools" />
-	<haxelib name="hscript" />
-	<section if="hscript">
-		<haxeflag name="--macro" value="hscript.UsingHandler.init()" />
-	</section>
 	<haxelib name="discord_rpc" if="cpp"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->

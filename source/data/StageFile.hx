@@ -2,6 +2,7 @@ package data;
 
 import flixel.FlxBasic;
 import flixel.group.FlxGroup;
+import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import haxe.xml.Access;
 import sprites.AnimatedSprite.AnimData;
@@ -11,7 +12,7 @@ import states.PlayState;
 
 using StringTools;
 
-class StageFile
+class StageFile implements IFlxDestroyable
 {
 	public var sprites:Map<String, FlxBasic> = new Map();
 	public var groups:Map<String, FlxGroup> = new Map();
@@ -57,6 +58,23 @@ class StageFile
 		addMissingChars();
 
 		found = true;
+	}
+
+	public function destroy()
+	{
+		if (sprites != null)
+		{
+			for (_ => s in sprites)
+				FlxDestroyUtil.destroy(s);
+			sprites = null;
+		}
+		if (groups != null)
+		{
+			for (_ => g in groups)
+				FlxDestroyUtil.destroy(g);
+			groups = null;
+		}
+		state = null;
 	}
 
 	function createSprite(node:Access, folder:String, mod:String)

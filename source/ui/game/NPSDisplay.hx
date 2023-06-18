@@ -42,6 +42,12 @@ class NPSDisplay extends FlxText
 		super.update(elapsed);
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		currentTimes = null;
+	}
+
 	public function updateText()
 	{
 		var t = 'NPS: $nps';
