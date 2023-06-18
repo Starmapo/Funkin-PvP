@@ -366,16 +366,27 @@ class Paths
 
 	static function onPostStateSwitch()
 	{
+		// Remove all unused sounds from the cache.
+		// Makes sure sounds that are currently playing don't get removed, like music or persistent sounds
+		var playingSounds:Array<Sound> = [];
+		@:privateAccess {
+			if (FlxG.sound.music != null && FlxG.sound.music._sound != null && !playingSounds.contains(FlxG.sound.music._sound))
+				playingSounds.push(FlxG.sound.music._sound);
+			for (sound in FlxG.sound.list)
+			{
+				if (sound != null && sound._sound != null && !playingSounds.contains(sound._sound))
+					playingSounds.push(sound._sound);
+			}
+		}
 		for (k => s in cachedSounds)
 		{
-			@:privateAccess
-			var isMusic = FlxG.sound.music != null ? FlxG.sound.music._sound == s : false;
-			if (s != null && !trackedSounds.contains(k) && !dumpExclusions.contains(k) && !isMusic)
+			if (s != null && !trackedSounds.contains(k) && !dumpExclusions.contains(k) && !playingSounds.contains(s))
 			{
 				cachedSounds.remove(k);
 				s.close();
 			}
 		}
+
 		@:privateAccess {
 			// clear uint8 pools
 			for (_ => pool in UInt8Buff._pools)
@@ -386,6 +397,7 @@ class Paths
 			UInt8Buff._pools.clear();
 		}
 
+		// run garbage collector
 		MemoryUtil.clearMajor();
 	}
 }
