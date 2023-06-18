@@ -432,13 +432,6 @@ class SongEditorEditPanel extends EditorPanel
 		opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y - 1, inputWidth, state.song.opponent);
 		opponentInput.textChanged.add(function(text, lastText)
 		{
-			if (text.length == 0)
-			{
-				state.notificationManager.showNotification("You can't have an empty character name!", ERROR);
-				opponentInput.text = lastText;
-				return;
-			}
-
 			state.actionManager.perform(new ActionChangeOpponent(state, text, lastText));
 		});
 		tab.add(opponentInput);
@@ -449,13 +442,6 @@ class SongEditorEditPanel extends EditorPanel
 		bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y - 1, inputWidth, state.song.bf);
 		bfInput.textChanged.add(function(text, lastText)
 		{
-			if (text.length == 0)
-			{
-				state.notificationManager.showNotification("You can't have an empty character name!", ERROR);
-				bfInput.text = lastText;
-				return;
-			}
-
 			state.actionManager.perform(new ActionChangeBF(state, text, lastText));
 		});
 		tab.add(bfInput);
@@ -466,13 +452,6 @@ class SongEditorEditPanel extends EditorPanel
 		gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y - 1, inputWidth, state.song.gf);
 		gfInput.textChanged.add(function(text, lastText)
 		{
-			if (text.length == 0)
-			{
-				state.notificationManager.showNotification("You can't have an empty character name!", ERROR);
-				gfInput.text = lastText;
-				return;
-			}
-
 			state.actionManager.perform(new ActionChangeGF(state, text, lastText));
 		});
 		tab.add(gfInput);

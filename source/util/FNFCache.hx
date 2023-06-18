@@ -81,6 +81,8 @@ class FNFCache extends AssetCache
 		bitmapData2 = [];
 		font2 = [];
 		sound2 = [];
+
+		trace(LimeAssets.cache.image, bitmapData);
 	}
 
 	/**

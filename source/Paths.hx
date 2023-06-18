@@ -1,4 +1,3 @@
-import util.CompileFix;
 import data.Mods;
 import data.Settings;
 import data.song.Song;
@@ -11,6 +10,7 @@ import haxe.xml.Access;
 import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
+import util.CompileFix;
 
 using StringTools;
 
@@ -185,14 +185,15 @@ class Paths
 
 		var sound:Sound = null;
 		if (Assets.exists(path, SOUND))
-			sound = Assets.getSound(path, false);
+			sound = Assets.getSound(path);
 		#if sys
 		else if (FileSystem.exists(path))
+		{
 			sound = Sound.fromFile('./$path');
+			if (sound != null)
+				Assets.cache.setSound(path, sound);
+		}
 		#end
-
-		if (sound != null)
-			Assets.cache.setSound(path, sound);
 
 		return sound;
 	}

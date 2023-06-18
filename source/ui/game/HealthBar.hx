@@ -42,7 +42,7 @@ class HealthBar extends FlxSpriteGroup
 		add(bg);
 
 		bar = new FlxBar(4, 4, right ? RIGHT_TO_LEFT : LEFT_TO_RIGHT, Std.int(bg.width) - 8, Std.int(bg.height) - 8, scoreProcessor, 'health');
-		if (Settings.healthBarColors || scoreProcessor == null)
+		if (charInfo != null && (Settings.healthBarColors || scoreProcessor == null))
 		{
 			bar.createFilledBar(charInfo.healthColors.getDarkened(0.5), charInfo.healthColors);
 		}
@@ -52,7 +52,7 @@ class HealthBar extends FlxSpriteGroup
 		bar.updateBar();
 		add(bar);
 
-		var iconName = charInfo.healthIcon;
+		var iconName = charInfo != null ? charInfo.healthIcon : 'fnf:face';
 		if (!iconName.contains(':'))
 			iconName = charInfo.mod + ':' + iconName;
 		icon = new HealthIcon(0, 0, iconName);

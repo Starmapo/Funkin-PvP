@@ -145,8 +145,8 @@ class SongEditorDetailsPanel extends EditorPanel
 		var beat = 0;
 		if (point != null)
 		{
-			step = Math.floor((state.inst.time - point.startTime) / point.stepLength);
-			beat = Math.floor((state.inst.time - point.startTime) / point.beatLength);
+			step = Math.floor(Math.round(state.inst.time - point.startTime) / point.stepLength);
+			beat = Math.floor(Math.round(state.inst.time - point.startTime) / point.beatLength);
 		}
 		stepText.text = 'Timing Point Step: $step';
 		beatText.text = 'Timing Point Beat: $beat';

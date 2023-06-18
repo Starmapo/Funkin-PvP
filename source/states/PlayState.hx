@@ -597,8 +597,8 @@ class PlayState extends FNFState
 
 	public function focusOnChar(char:Character)
 	{
-		var camOffsetX = char.charInfo.cameraOffset[0];
-		var camOffsetY = char.charInfo.cameraOffset[1];
+		var camOffsetX = char.charInfo != null ? char.charInfo.cameraOffset[0] : 0;
+		var camOffsetY = char.charInfo != null ? char.charInfo.cameraOffset[1] : 0;
 		if (char.charFlipX)
 			camOffsetX *= -1;
 		if (Settings.cameraNoteMovements)
@@ -776,26 +776,17 @@ class PlayState extends FNFState
 		add(staticBG);
 
 		var gfInfo = CharacterInfo.loadCharacterFromName(song.gf);
-		if (gfInfo == null)
-			gfInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
-
 		gf = new Character(400, 130, gfInfo, false, true);
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
 
-		var opponentName = chars[0] != null ? chars[0] : song.opponent;
+		var opponentName = chars[0] != null && song.opponent.length > 0 ? chars[0] : song.opponent;
 		var opponentInfo = CharacterInfo.loadCharacterFromName(opponentName);
-		if (opponentInfo == null)
-			CharacterInfo.loadCharacterFromName('fnf:dad');
-
 		opponent = new Character(100, 100, opponentInfo);
 		timing.addDancingSprite(opponent);
 
-		var bfName = chars[1] != null ? chars[1] : song.bf;
+		var bfName = chars[1] != null && song.bf.length > 0 ? chars[1] : song.bf;
 		var bfInfo = CharacterInfo.loadCharacterFromName(bfName);
-		if (bfInfo == null)
-			CharacterInfo.loadCharacterFromName('fnf:bf');
-
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
 
@@ -856,7 +847,10 @@ class PlayState extends FNFState
 
 		var characters = [opponent, bf, gf];
 		for (char in characters)
-			addScript('data/characters/' + char.charInfo.name, char.charInfo.mod);
+		{
+			if (char.charInfo != null)
+				addScript('data/characters/' + char.charInfo.name, char.charInfo.mod);
+		}
 
 		var noteTypeMap = new Map<String, Bool>();
 		var eventMap = new Map<String, Bool>();

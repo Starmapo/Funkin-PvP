@@ -16,21 +16,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param value 		The property from the JSON file.
 	 * @param defaultValue 	A value to return if the property doesn't exist on the JSON file.
 	 */
-	@:generic
-	function readProperty<T>(value:T, defaultValue:T):T
-	{
-		if (value == null)
-			return defaultValue;
-
-		return value;
-	}
-
-	/**
-	 * Returns a dynamic property from a JSON file.
-	 * @param value 		The property from the JSON file.
-	 * @param defaultValue 	A value to return if the property doesn't exist on the JSON file.
-	 */
-	function readDynamic(value:Dynamic, ?defaultValue:Dynamic):Dynamic
+	function readProperty(value:Dynamic, defaultValue:Dynamic):Dynamic
 	{
 		if (value == null)
 			return defaultValue;
