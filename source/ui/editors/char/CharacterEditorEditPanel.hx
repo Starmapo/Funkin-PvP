@@ -114,6 +114,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		atlasNamePrompt = FlxDestroyUtil.destroy(atlasNamePrompt);
 		newCharacterPrompt = FlxDestroyUtil.destroy(newCharacterPrompt);
 		createIconSubState = FlxDestroyUtil.destroy(createIconSubState);
+		createPortraitSubState = FlxDestroyUtil.destroy(createPortraitSubState);
 	}
 
 	function createAnimationTab()

@@ -1,5 +1,6 @@
 package subStates;
 
+import flixel.util.FlxDestroyUtil;
 import data.Mods;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -44,13 +45,13 @@ class PauseSubState extends FNFSubState
 		{
 			music.stop();
 			menuList.controlsEnabled = false;
-			state.exit(new PlayState(state.song, state.chars), false);
+			state.exit(new PlayState(state.song, state.chars));
 		});
 		menuList.createItem('Exit to options', function()
 		{
 			music.stop();
 			menuList.controlsEnabled = false;
-			state.exit(new OptionsState(new PlayState(state.song, state.chars)), false);
+			state.exit(new OptionsState(new PlayState(state.song, state.chars)));
 			CoolUtil.playMenuMusic();
 		});
 		menuList.createItem('Exit to character select', function()
@@ -101,11 +102,11 @@ class PauseSubState extends FNFSubState
 	{
 		super.destroy();
 		state = null;
-		menuList = null;
-		camSubState = null;
-		camFollow = null;
-		playerText = null;
-		music = null;
+		menuList = FlxDestroyUtil.destroy(menuList);
+		camSubState = FlxDestroyUtil.destroy(camSubState);
+		camFollow = FlxDestroyUtil.destroy(camFollow);
+		playerText = FlxDestroyUtil.destroy(playerText);
+		music = FlxDestroyUtil.destroy(music);
 	}
 
 	override function onOpen()

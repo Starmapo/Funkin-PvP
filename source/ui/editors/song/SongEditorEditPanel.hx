@@ -14,6 +14,7 @@ import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import states.editors.SongEditorState;
 import subStates.PromptSubState.YesNoPrompt;
@@ -36,6 +37,9 @@ using StringTools;
 
 class SongEditorEditPanel extends EditorPanel
 {
+	public var eventInput:EditorInputText;
+	public var eventParamsInput:EditorInputText;
+
 	var state:SongEditorState;
 	var spacing:Int = 4;
 	var titleInput:EditorInputText;
@@ -71,15 +75,25 @@ class SongEditorEditPanel extends EditorPanel
 	var selectedCameraFocuses:Array<CameraFocus> = [];
 	var cameraFocusesPropertiesGroup:Array<FlxSprite> = [];
 	var eventIndexLabel:EditorText;
-
-	public var eventInput:EditorInputText;
-	public var eventParamsInput:EditorInputText;
-
 	var selectedEvents:Array<EventObject> = [];
 	var eventsPropertiesGroup:Array<FlxSprite> = [];
 	var eventIndex:Int = 0;
 	var lastEvent:EventObject = null;
 	var lyricsInput:EditorInputText;
+	var removeAllNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
+	var removeSelectedNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
+	var changeAllNoteTypePrompt:SongEditorChangeNoteTypePrompt;
+	var changeSelectedNoteTypePrompt:SongEditorChangeNoteTypePrompt;
+	var applyOffsetPrompt:SongEditorApplyOffsetPrompt;
+	var pasteMetadataPrompt:YesNoPrompt;
+	var pasteCharactersPrompt:YesNoPrompt;
+	var pasteTimingPointsPrompt:YesNoPrompt;
+	var pasteScrollVelocitiesPrompt:YesNoPrompt;
+	var pasteCameraFocusesPrompt:YesNoPrompt;
+	var pasteEventsPrompt:YesNoPrompt;
+	var pasteLyricStepsPrompt:YesNoPrompt;
+	var newChartPrompt:SongEditorNewChartPrompt;
+	var newSongPrompt:SongEditorNewSongPrompt;
 
 	public function new(state:SongEditorState)
 	{
@@ -210,11 +224,25 @@ class SongEditorEditPanel extends EditorPanel
 		selectedEvents = null;
 		eventsPropertiesGroup = null;
 		lastEvent = null;
+		removeAllNoteTypePrompt = FlxDestroyUtil.destroy(removeAllNoteTypePrompt);
+		removeSelectedNoteTypePrompt = FlxDestroyUtil.destroy(removeSelectedNoteTypePrompt);
+		changeAllNoteTypePrompt = FlxDestroyUtil.destroy(changeAllNoteTypePrompt);
+		changeSelectedNoteTypePrompt = FlxDestroyUtil.destroy(changeSelectedNoteTypePrompt);
+		applyOffsetPrompt = FlxDestroyUtil.destroy(applyOffsetPrompt);
+		pasteMetadataPrompt = FlxDestroyUtil.destroy(pasteMetadataPrompt);
+		pasteCharactersPrompt = FlxDestroyUtil.destroy(pasteCharactersPrompt);
+		pasteTimingPointsPrompt = FlxDestroyUtil.destroy(pasteTimingPointsPrompt);
+		pasteScrollVelocitiesPrompt = FlxDestroyUtil.destroy(pasteScrollVelocitiesPrompt);
+		pasteCameraFocusesPrompt = FlxDestroyUtil.destroy(pasteCameraFocusesPrompt);
+		pasteEventsPrompt = FlxDestroyUtil.destroy(pasteEventsPrompt);
+		pasteLyricStepsPrompt = FlxDestroyUtil.destroy(pasteLyricStepsPrompt);
+		newChartPrompt = FlxDestroyUtil.destroy(newChartPrompt);
+		newSongPrompt = FlxDestroyUtil.destroy(newSongPrompt);
 	}
 
 	function createSongTab()
 	{
-		var applyOffsetPrompt = new SongEditorApplyOffsetPrompt(function(text)
+		applyOffsetPrompt = new SongEditorApplyOffsetPrompt(function(text)
 		{
 			if (text != null && text.length > 0)
 			{
@@ -238,7 +266,7 @@ class SongEditorEditPanel extends EditorPanel
 				}
 			}
 		});
-		var pasteMetadataPrompt = new YesNoPrompt("Are you sure you want to paste this map's artist and source into all other difficulties? This action is irreversible.",
+		pasteMetadataPrompt = new YesNoPrompt("Are you sure you want to paste this map's artist and source into all other difficulties? This action is irreversible.",
 			function()
 		{
 			var difficulties = getDifficulties();
@@ -252,7 +280,7 @@ class SongEditorEditPanel extends EditorPanel
 				song.save(path);
 			}
 		});
-		var pasteCharactersPrompt = new YesNoPrompt("Are you sure you want to paste this map's characters and stage into all other difficulties? This action is irreversible.",
+		pasteCharactersPrompt = new YesNoPrompt("Are you sure you want to paste this map's characters and stage into all other difficulties? This action is irreversible.",
 			function()
 		{
 			var difficulties = getDifficulties();
@@ -267,7 +295,7 @@ class SongEditorEditPanel extends EditorPanel
 				song.save(path);
 			}
 		});
-		var pasteTimingPointsPrompt = new YesNoPrompt("Are you sure you want to paste this map's timing points into all other difficulties? This action is irreversible.",
+		pasteTimingPointsPrompt = new YesNoPrompt("Are you sure you want to paste this map's timing points into all other difficulties? This action is irreversible.",
 			function()
 		{
 			var difficulties = getDifficulties();
@@ -285,7 +313,7 @@ class SongEditorEditPanel extends EditorPanel
 				song.save(path);
 			}
 		});
-		var pasteScrollVelocitiesPrompt = new YesNoPrompt("Are you sure you want to paste this map's scroll velocities into all other difficulties? This action is irreversible.",
+		pasteScrollVelocitiesPrompt = new YesNoPrompt("Are you sure you want to paste this map's scroll velocities into all other difficulties? This action is irreversible.",
 			function()
 		{
 			var difficulties = getDifficulties();
@@ -304,7 +332,7 @@ class SongEditorEditPanel extends EditorPanel
 				song.save(path);
 			}
 		});
-		var pasteCameraFocusesPrompt = new YesNoPrompt("Are you sure you want to paste this map's camera focuses into all other difficulties? This action is irreversible.",
+		pasteCameraFocusesPrompt = new YesNoPrompt("Are you sure you want to paste this map's camera focuses into all other difficulties? This action is irreversible.",
 			function()
 		{
 			var difficulties = getDifficulties();
@@ -321,7 +349,7 @@ class SongEditorEditPanel extends EditorPanel
 				song.save(path);
 			}
 		});
-		var pasteEventsPrompt = new YesNoPrompt("Are you sure you want to paste this map's events into all other difficulties? This action is irreversible.",
+		pasteEventsPrompt = new YesNoPrompt("Are you sure you want to paste this map's events into all other difficulties? This action is irreversible.",
 			function()
 			{
 				var difficulties = getDifficulties();
@@ -347,7 +375,7 @@ class SongEditorEditPanel extends EditorPanel
 					song.save(path);
 				}
 			});
-		var pasteLyricStepsPrompt = new YesNoPrompt("Are you sure you want to paste this map's lyric steps into all other difficulties? This action is irreversible.",
+		pasteLyricStepsPrompt = new YesNoPrompt("Are you sure you want to paste this map's lyric steps into all other difficulties? This action is irreversible.",
 			function()
 		{
 			var difficulties = getDifficulties();
@@ -363,8 +391,8 @@ class SongEditorEditPanel extends EditorPanel
 				song.save(path);
 			}
 		});
-		var newChartPrompt = new SongEditorNewChartPrompt(state);
-		var newSongPrompt = new SongEditorNewSongPrompt(state);
+		newChartPrompt = new SongEditorNewChartPrompt(state);
+		newSongPrompt = new SongEditorNewSongPrompt(state);
 
 		var tab = createTab('Song');
 		var inputSpacing = 125;
@@ -809,7 +837,7 @@ class SongEditorEditPanel extends EditorPanel
 
 	function createNotesTab()
 	{
-		var removeAllNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		removeAllNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
 		{
 			if (text.length > 0)
 			{
@@ -823,7 +851,7 @@ class SongEditorEditPanel extends EditorPanel
 					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
 			}
 		});
-		var removeSelectedNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		removeSelectedNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
 		{
 			if (text.length > 0)
 			{
@@ -837,7 +865,7 @@ class SongEditorEditPanel extends EditorPanel
 					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
 			}
 		});
-		var changeAllNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
+		changeAllNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
 		{
 			if (type.length > 0)
 			{
@@ -857,7 +885,7 @@ class SongEditorEditPanel extends EditorPanel
 				}
 			}
 		});
-		var changeSelectedNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
+		changeSelectedNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
 		{
 			if (type.length > 0)
 			{

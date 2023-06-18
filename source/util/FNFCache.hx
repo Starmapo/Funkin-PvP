@@ -78,11 +78,9 @@ class FNFCache extends AssetCache
 		for (k => _ in sound2)
 			LimeAssets.cache.audio.remove(k);
 
-		bitmapData2 = [];
-		font2 = [];
-		sound2 = [];
-
-		trace(LimeAssets.cache.image, bitmapData);
+		bitmapData2.clear();
+		font2.clear();
+		sound2.clear();
 	}
 
 	/**

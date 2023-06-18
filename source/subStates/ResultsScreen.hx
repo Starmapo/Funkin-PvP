@@ -146,7 +146,7 @@ class ResultsScreen extends FNFSubState
 			else if (PlayerSettings.checkAction(RESET_P))
 			{
 				canExit = false;
-				state.exit(new PlayState(state.song, state.chars), false);
+				state.exit(new PlayState(state.song, state.chars));
 			}
 		}
 	}

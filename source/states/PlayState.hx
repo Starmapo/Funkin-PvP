@@ -91,7 +91,6 @@ class PlayState extends FNFState
 	public var camBopMult:Float = 1;
 	public var healthBars:FlxTypedGroup<HealthBar>;
 	public var died:Bool = false;
-	public var clearCache:Bool = false;
 	public var deathBG:FlxBGSprite;
 	public var deathTimer:FlxTimer;
 	public var isComplete(get, never):Bool;
@@ -187,34 +186,34 @@ class PlayState extends FNFState
 		super.destroy();
 		song = null;
 		chars = null;
-		camHUD = null;
-		camOther = null;
+		camHUD = FlxDestroyUtil.destroy(camHUD);
+		camOther = FlxDestroyUtil.destroy(camOther);
 		timing = FlxDestroyUtil.destroy(timing);
-		songInst = null;
+		songInst = FlxDestroyUtil.destroy(songInst);
 		songVocals = FlxDestroyUtil.destroy(songVocals);
 		ruleset = FlxDestroyUtil.destroy(ruleset);
-		statsDisplay = null;
-		judgementDisplay = null;
-		songInfoDisplay = null;
-		lyricsDisplay = null;
+		statsDisplay = FlxDestroyUtil.destroy(statsDisplay);
+		judgementDisplay = FlxDestroyUtil.destroy(judgementDisplay);
+		songInfoDisplay = FlxDestroyUtil.destroy(songInfoDisplay);
+		lyricsDisplay = FlxDestroyUtil.destroy(lyricsDisplay);
 		pauseSubState = FlxDestroyUtil.destroy(pauseSubState);
 		introSprPaths = null;
 		introSndPaths = null;
-		opponent = null;
-		bf = null;
-		gf = null;
-		camFollow = null;
+		opponent = FlxDestroyUtil.destroy(opponent);
+		bf = FlxDestroyUtil.destroy(bf);
+		gf = FlxDestroyUtil.destroy(gf);
+		camFollow = FlxDestroyUtil.destroy(camFollow);
 		scripts = FlxDestroyUtil.destroyArray(scripts);
-		notificationManager = null;
+		notificationManager = FlxDestroyUtil.destroy(notificationManager);
 		events = null;
-		healthBars = null;
-		deathBG = null;
+		healthBars = FlxDestroyUtil.destroy(healthBars);
+		deathBG = FlxDestroyUtil.destroy(deathBG);
 		deathTimer = null;
-		backgroundCover = null;
-		judgementCounters = null;
-		npsDisplay = null;
-		msDisplay = null;
-		staticBG = null;
+		backgroundCover = FlxDestroyUtil.destroy(backgroundCover);
+		judgementCounters = FlxDestroyUtil.destroy(judgementCounters);
+		npsDisplay = FlxDestroyUtil.destroy(npsDisplay);
+		msDisplay = FlxDestroyUtil.destroy(msDisplay);
+		staticBG = FlxDestroyUtil.destroy(staticBG);
 		stageFile = null;
 	}
 
@@ -297,12 +296,11 @@ class PlayState extends FNFState
 		executeScripts("onStartSong");
 	}
 
-	public function exit(state:FlxState, clearCache:Bool = true)
+	public function exit(state:FlxState)
 	{
 		timing.stopMusic();
 		persistentUpdate = false;
 		reset();
-		this.clearCache = clearCache;
 		FlxG.switchState(state);
 	}
 
