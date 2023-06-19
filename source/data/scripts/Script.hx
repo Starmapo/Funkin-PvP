@@ -16,21 +16,17 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.FlxSubState;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.addons.effects.FlxTrail;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.tile.FlxGraphicsShader;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.sound.FlxSound;
-import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxEase;
@@ -154,6 +150,7 @@ class Script implements IFlxDestroyable
 	public function destroy()
 	{
 		interp = null;
+		expr = null;
 	}
 
 	function executeFunc(func:String, ?args:Array<Any>):Dynamic
@@ -213,7 +210,6 @@ class Script implements IFlxDestroyable
 		setVariable('Rectangle', Rectangle);
 
 		setVariable('FlxAngle', FlxAngle);
-		setVariable('FlxAssets', FlxAssets);
 		setVariable('FlxAtlasFrames', FlxAtlasFrames);
 		setVariable('FlxAxes', CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"));
 		setVariable('FlxBackdrop', FlxBackdrop);
@@ -224,20 +220,16 @@ class Script implements IFlxDestroyable
 		setVariable('FlxEase', FlxEase);
 		setVariable('FlxG', FlxG);
 		setVariable('FlxGraphic', FlxGraphic);
-		setVariable('FlxGraphicsShader', FlxGraphicsShader);
 		setVariable('FlxGroup', FlxGroup);
 		setVariable('FlxMath', FlxMath);
 		setVariable('FlxObject', FlxObject);
 		setVariable('FlxPoint', CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"));
 		setVariable('FlxRect', FlxRect);
 		setVariable('FlxRuntimeShader', FlxRuntimeShader);
-		setVariable('FlxShader', FlxShader);
 		setVariable('FlxSort', FlxSort);
 		setVariable('FlxSound', FlxSound);
 		setVariable('FlxSprite', FlxSprite);
 		setVariable('FlxSpriteGroup', FlxSpriteGroup);
-		setVariable('FlxState', FlxState);
-		setVariable('FlxSubState', FlxSubState);
 		setVariable('FlxText', FlxText);
 		setVariable('FlxTextAlign', CoolUtil.getMacroAbstractClass("flixel.text.FlxTextAlign"));
 		setVariable('FlxTextBorderStyle', FlxTextBorderStyle);

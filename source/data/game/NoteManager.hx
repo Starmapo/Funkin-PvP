@@ -345,6 +345,14 @@ class NoteManager extends FlxBasic
 		note.head.visible = false;
 	}
 
+	public function handleSkip()
+	{
+		currentSvIndex = 0;
+		updateCurrentTrackPosition();
+		resetNoteInfo();
+		update(0);
+	}
+
 	function destroyLanes<T:IFlxDestroyable>(array:Array<Array<T>>):Array<Array<T>>
 	{
 		if (array != null)
@@ -486,6 +494,41 @@ class NoteManager extends FlxBasic
 				alpha = 1;
 		}
 		playfield.alpha = alpha;
+	}
+
+	function resetNoteInfo()
+	{
+		for (lane in noteQueueLanes)
+		{
+			var i = lane.length - 1;
+			while (i >= 0)
+			{
+				var note = lane[i];
+				if (note.maxTime < currentAudioPosition)
+					lane.remove(note);
+				i--;
+			}
+		}
+
+		var queues = [activeNoteLanes, heldLongNoteLanes, deadNoteLanes];
+		for (queue in queues)
+		{
+			for (lane in queue)
+			{
+				var i = 0;
+				while (i < lane.length)
+				{
+					var note = lane[i];
+					if (note.info.maxTime < currentAudioPosition)
+					{
+						lane.remove(note);
+						recyclePoolObject(note);
+					}
+					else
+						i++;
+				}
+			}
+		}
 	}
 
 	function get_scrollSpeed()

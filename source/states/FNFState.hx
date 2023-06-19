@@ -49,7 +49,7 @@ class FNFState extends FlxTransitionableState
 
 		graphic.destroyOnNoUse = false;
 		var spr = new FlxSprite(0, 0, graphic);
-		spr.visible = false;
+		spr.alpha = 0.00001;
 		spr.scrollFactor.set();
 		add(spr);
 		new FlxTimer().start(1, function(_)
@@ -77,7 +77,7 @@ class FNFState extends FlxTransitionableState
 		else
 			return null;
 
-		spr.visible = false;
+		spr.alpha = 0.00001;
 		spr.scrollFactor.set();
 		add(spr);
 		new FlxTimer().start(1, function(_)

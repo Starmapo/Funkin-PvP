@@ -80,6 +80,12 @@ class GameplayRuleset implements IFlxDestroyable
 		}
 	}
 
+	public function handleSkip()
+	{
+		for (playfield in playfields)
+			playfield.noteManager.handleSkip();
+	}
+
 	public function destroy()
 	{
 		playfields = FlxDestroyUtil.destroyArray(playfields);

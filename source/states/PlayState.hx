@@ -1,11 +1,11 @@
 package states;
 
-import data.game.GameplayGlobals;
 import data.Mods;
 import data.PlayerSettings;
 import data.Settings;
 import data.StageFile;
 import data.char.CharacterInfo;
+import data.game.GameplayGlobals;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.scripts.PlayStateScript;
@@ -83,7 +83,7 @@ class PlayState extends FNFState
 	public var disableCamFollow:Bool = false;
 	public var defaultCamZoom:Float = 1.05;
 	public var canPause:Bool = false;
-	public var scripts:Array<PlayStateScript> = [];
+	public var scripts:Map<String, PlayStateScript> = [];
 	public var notificationManager:NotificationManager;
 	public var events:Array<PlayStateEvent> = [];
 	public var camZooming:Bool = true;
@@ -106,6 +106,7 @@ class PlayState extends FNFState
 	public var camBopRate:Null<Int> = null;
 
 	var instEnded:Bool = false;
+	var debugMode:Bool = false;
 
 	public function new(?map:Song, chars:Array<String>)
 	{
@@ -206,7 +207,12 @@ class PlayState extends FNFState
 		bf = FlxDestroyUtil.destroy(bf);
 		gf = FlxDestroyUtil.destroy(gf);
 		camFollow = FlxDestroyUtil.destroy(camFollow);
-		scripts = FlxDestroyUtil.destroyArray(scripts);
+		if (scripts != null)
+		{
+			for (_ => s in scripts)
+				FlxDestroyUtil.destroy(s);
+			scripts = null;
+		}
 		notificationManager = FlxDestroyUtil.destroy(notificationManager);
 		events = null;
 		healthBars = FlxDestroyUtil.destroy(healthBars);
@@ -337,8 +343,12 @@ class PlayState extends FNFState
 
 	public function addScriptPath(path:String, mod:String, execute:Bool = true)
 	{
+		// Don't add a script more than once!
+		if (scripts.exists(path))
+			return scripts.get(path);
+
 		var script = new PlayStateScript(this, path, mod);
-		scripts.push(script);
+		scripts.set(path, script);
 		if (execute)
 			script.execute("onCreate");
 		return script;
@@ -370,9 +380,9 @@ class PlayState extends FNFState
 			excludeValues = [];
 
 		var ret:Dynamic = Script.FUNCTION_CONTINUE;
-		for (script in scripts)
+		for (path => script in scripts)
 		{
-			if (exclusions.contains(script.path))
+			if (exclusions.contains(path))
 				continue;
 
 			var funcRet:Dynamic = script.execute(func, args);
@@ -391,9 +401,9 @@ class PlayState extends FNFState
 		if (exclusions == null)
 			exclusions = [];
 
-		for (script in scripts)
+		for (path => script in scripts)
 		{
-			if (exclusions.contains(script.path))
+			if (exclusions.contains(path))
 				continue;
 
 			script.setVariable(name, value);
@@ -981,13 +991,20 @@ class PlayState extends FNFState
 
 		ruleset.handleInput(elapsed);
 
-		#if debug
-		if (FlxG.keys.justPressed.F1 && hasStarted)
+		if (FlxG.keys.justPressed.F7)
+			debugMode = true;
+
+		if (debugMode)
 		{
-			killNotes();
-			endSong();
+			if (FlxG.keys.justPressed.F2 && hasStarted)
+				setTime(songInst.time + 10000 * GameplayGlobals.playbackRate);
+
+			if (FlxG.keys.justPressed.F1 && hasStarted)
+			{
+				killNotes();
+				endSong();
+			}
 		}
-		#end
 
 		for (i in 0...2)
 		{
@@ -1323,6 +1340,12 @@ class PlayState extends FNFState
 	function playMissSound()
 	{
 		FlxG.sound.play(Paths.getSound('miss/missnote' + FlxG.random.int(1, 3)), FlxG.random.float(0.1, 0.2));
+	}
+
+	function setTime(time:Float)
+	{
+		timing.setTime(time);
+		ruleset.handleSkip();
 	}
 
 	function get_isComplete()

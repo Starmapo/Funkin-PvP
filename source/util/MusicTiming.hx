@@ -327,7 +327,7 @@ class MusicTiming implements IFlxDestroyable
 			curTimingIndex = 0;
 
 		curTimingPoint = timingPoints[curTimingIndex];
-		curDecStep = (Math.round(audioPosition) - Math.round(curTimingPoint.startTime)) / Math.round(curTimingPoint.stepLength);
+		curDecStep = (audioPosition - curTimingPoint.startTime) / curTimingPoint.stepLength;
 		curDecBeat = curDecStep / 4;
 		curDecBar = curDecBeat / curTimingPoint.meter;
 

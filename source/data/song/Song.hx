@@ -238,14 +238,19 @@ class Song extends JsonObject
 				if (curNotes.exists(string) && curNotes.get(string).contains(noteInfo.lane))
 					continue;
 
-				if (section.altAnim == true && noteInfo.lane < 4)
-					noteInfo.type = 'Alt Animation';
-				if (note[3] != null)
+				if (noteInfo.type == null)
 				{
-					if (note[3] == true)
+					if (section.altAnim == true && noteInfo.lane < 4)
 						noteInfo.type = 'Alt Animation';
-					else if (Std.isOfType(note[3], String))
-						noteInfo.type = note[3];
+					if (note[3] != null)
+					{
+						if (note[3] == true)
+							noteInfo.type = 'Alt Animation';
+						else if (Std.isOfType(note[3], String))
+							noteInfo.type = note[3];
+						else if (Std.isOfType(note[3], Int) && note[3] != 0)
+							noteInfo.type = 'Type ' + note[3];
+					}
 				}
 				song.notes.push(noteInfo);
 

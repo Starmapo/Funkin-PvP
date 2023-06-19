@@ -2,6 +2,7 @@ package ui.editors.song;
 
 import data.song.ITimingObject;
 import data.song.NoteInfo;
+import flixel.math.FlxMath;
 import flixel.util.FlxStringUtil;
 import states.editors.SongEditorState;
 import ui.editors.EditorPanel;
@@ -141,14 +142,14 @@ class SongEditorDetailsPanel extends EditorPanel
 		var length = FlxStringUtil.formatTime(state.inst.length / 1000, true);
 		timeText.text = 'Song Time: $time / $length';
 
-		var step = 0;
-		var beat = 0;
+		var step:Float = 0;
+		var beat:Float = 0;
 		if (point != null)
 		{
-			var time = Math.round(state.inst.time);
-			var startTime = Math.round(point.startTime);
-			step = Math.floor((time - startTime) / Math.round(point.stepLength));
-			beat = Math.floor((time - startTime) / Math.round(point.beatLength));
+			var time = state.inst.time;
+			var startTime = point.startTime;
+			step = FlxMath.roundDecimal((time - startTime) / point.stepLength, 2);
+			beat = FlxMath.roundDecimal((time - startTime) / point.beatLength, 2);
 		}
 		stepText.text = 'Timing Point Step: $step';
 		beatText.text = 'Timing Point Beat: $beat';
