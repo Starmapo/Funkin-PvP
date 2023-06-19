@@ -746,7 +746,7 @@ class PlayState extends FNFState
 			counter.exists = Settings.playerConfigs[i].judgementCounter;
 			judgementCounters.add(counter);
 		}
-		judgementCounters.cameras = [camHUD];
+		judgementCounters.cameras = [camOther];
 		add(judgementCounters);
 
 		npsDisplay = new FlxTypedGroup();
@@ -761,7 +761,7 @@ class PlayState extends FNFState
 		if (!Settings.hideHUD || Settings.timeDisplay != DISABLED)
 		{
 			songInfoDisplay = new SongInfoDisplay(song, songInst, timing);
-			songInfoDisplay.cameras = [camHUD];
+			songInfoDisplay.cameras = [camOther];
 		}
 
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
