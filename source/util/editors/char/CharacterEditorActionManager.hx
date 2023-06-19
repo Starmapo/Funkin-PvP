@@ -174,6 +174,7 @@ class ActionChangeScale implements IAction
 		state.char.scale.set(scale, scale);
 		state.ghostChar.scale.copyFrom(state.char.scale);
 		state.char.frameOffsetScale = scale;
+		state.ghostChar.frameOffsetScale = scale;
 		state.updateCharSize();
 
 		state.actionManager.triggerEvent(type, {

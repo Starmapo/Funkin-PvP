@@ -5,6 +5,7 @@ import flixel.group.FlxGroup;
 import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import haxe.xml.Access;
+import openfl.display.BlendMode;
 import sprites.AnimatedSprite.AnimData;
 import sprites.DancingSprite;
 import sprites.game.Character;
@@ -265,6 +266,12 @@ class StageFile implements IFlxDestroyable
 				case 'camother', 'other':
 					spr.cameras = [state.camOther];
 			}
+		}
+		if (node.has.blend)
+		{
+			var blend:BlendMode = Reflect.field(CoolUtil.getMacroAbstractClass("openfl.display.BlendMode"), node.att.blend.toUpperCase());
+			if (blend != null)
+				spr.blend = blend;
 		}
 
 		sprites.set(node.att.name, spr);
