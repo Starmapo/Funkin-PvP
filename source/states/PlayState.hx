@@ -86,9 +86,9 @@ class PlayState extends FNFState
 	public var scripts:Map<String, PlayStateScript> = [];
 	public var notificationManager:NotificationManager;
 	public var events:Array<PlayStateEvent> = [];
-	public var camZooming:Bool = true;
+	public var camZooming:Bool = false;
 	public var camZoomingDecay:Float = 1;
-	public var camBop:Bool = true;
+	public var camBop:Bool = false;
 	public var camBopMult:Float = 1;
 	public var healthBars:FlxTypedGroup<HealthBar>;
 	public var died:Bool = false;
@@ -107,6 +107,7 @@ class PlayState extends FNFState
 
 	var instEnded:Bool = false;
 	var debugMode:Bool = false;
+	var hitNote:Bool = false;
 
 	public function new(?map:Song, chars:Array<String>)
 	{
@@ -502,6 +503,7 @@ class PlayState extends FNFState
 					var duration:Float = values[0] != null ? Std.parseFloat(values[0].trim()) : Math.NaN;
 					if (Math.isNaN(duration))
 						duration = 0;
+					duration /= GameplayGlobals.playbackRate;
 					var intensity:Float = values[1] != null ? Std.parseFloat(values[1].trim()) : Math.NaN;
 					if (Math.isNaN(intensity))
 						intensity = 0;
@@ -543,6 +545,7 @@ class PlayState extends FNFState
 						var duration = params[1] != null ? Std.parseFloat(params[1].trim()) : Math.NaN;
 						if (Math.isNaN(duration))
 							duration = 1;
+						duration /= GameplayGlobals.playbackRate;
 						var ease:Float->Float = params[2] != null ? Reflect.field(FlxEase, params[2].trim()) : null;
 						FlxTween.tween(this, {defaultCamZoom: zoom}, duration, {ease: ease});
 					}
@@ -1108,6 +1111,9 @@ class PlayState extends FNFState
 
 		msDisplay.members[player].showMS(ms, judgement);
 
+		if (!hitNote)
+			camZooming = camBop = hitNote = true;
+
 		executeScripts("onNoteHit", [note, judgement, ms]);
 	}
 
@@ -1121,6 +1127,9 @@ class PlayState extends FNFState
 
 		if (Settings.missSounds)
 			playMissSound();
+
+		if (!hitNote)
+			camZooming = camBop = hitNote = true;
 
 		executeScripts("onNoteMissed", [note]);
 	}

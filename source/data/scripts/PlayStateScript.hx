@@ -120,6 +120,11 @@ class PlayStateScript extends Script
 		{
 			return state.insert(state.members.indexOf(state.gf) + 1, obj);
 		});
+		setVariable("addBehindUI", function(obj:FlxBasic)
+		{
+			var index = state.backgroundCover != null ? state.members.indexOf(state.backgroundCover) + 1 : 0;
+			return state.insert(index, obj);
+		});
 		setVariable("getCharacters", function(?name:String, ?mod:String)
 		{
 			var characters:Array<Character> = [];

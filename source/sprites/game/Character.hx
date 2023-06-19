@@ -23,7 +23,7 @@ class Character extends DancingSprite
 	public var holdTimers:Array<FlxTimer> = [];
 	public var allowDanceTimer:FlxTimer = new FlxTimer();
 	public var allowMissColor:Bool = true;
-	public var intendedColor:FlxColor = FlxColor.WHITE;
+	public var intendedColor(default, set):FlxColor = FlxColor.WHITE;
 	public var isGF:Bool;
 	public var camOffset:FlxPoint = FlxPoint.get();
 	public var danceDisabled:Bool = false;
@@ -487,6 +487,17 @@ class Character extends DancingSprite
 		{
 			charFlipX = value;
 			updateFlipped();
+		}
+		return value;
+	}
+
+	function set_intendedColor(value:FlxColor)
+	{
+		if (intendedColor != value)
+		{
+			intendedColor = value;
+			if (!state.match(Miss(_)))
+				resetColor();
 		}
 		return value;
 	}
