@@ -22,7 +22,7 @@ class AudioSwitchFix
 			var playingList:Array<PlayingSound> = [];
 			for (e in FlxG.sound.list)
 			{
-				if (e.playing)
+				if (e != null && e.playing)
 				{
 					playingList.push({
 						sound: e,
@@ -31,8 +31,14 @@ class AudioSwitchFix
 					e.stop();
 				}
 			}
-			if (FlxG.sound.music != null)
+			if (FlxG.sound.musicPlaying)
+			{
+				playingList.push({
+					sound: FlxG.sound.music,
+					time: FlxG.sound.music.time
+				});
 				FlxG.sound.music.stop();
+			}
 
 			AudioManager.shutdown();
 			AudioManager.init();

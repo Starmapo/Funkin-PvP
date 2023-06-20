@@ -329,7 +329,9 @@ class Paths
 	{
 		if (!path.endsWith('.mp4') && !path.endsWith('.webm'))
 			path += '.mp4';
-		return getPath('videos/$path', mod);
+		if (!exists(path))
+			path = getPath('videos/$path', mod);
+		return path;
 	}
 
 	public static function exists(path:String):Bool
