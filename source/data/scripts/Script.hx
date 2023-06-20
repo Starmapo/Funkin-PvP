@@ -43,6 +43,8 @@ import haxe.ds.StringMap;
 import hscript.Expr;
 import hscript.Interp;
 import hscript.Parser;
+import hxcodec.flixel.FlxVideo;
+import hxcodec.flixel.FlxVideoSprite;
 import lime.app.Application;
 import openfl.Assets;
 import openfl.display.BitmapData;
@@ -240,6 +242,8 @@ class Script implements IFlxDestroyable
 		setVariable('FlxTween', FlxTween);
 		setVariable('FlxTypedGroup', FlxTypedGroup);
 		setVariable('FlxTypedSpriteGroup', FlxTypedSpriteGroup);
+		setVariable('FlxVideo', FlxVideo);
+		setVariable('FlxVideoSprite', FlxVideoSprite);
 
 		setVariable('AnimatedSprite', AnimatedSprite);
 		setVariable('BGSprite', BGSprite);

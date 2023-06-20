@@ -273,6 +273,8 @@ class StageFile implements IFlxDestroyable
 			if (blend != null)
 				spr.blend = blend;
 		}
+		if (node.has.alpha)
+			spr.alpha = Std.parseFloat(node.att.alpha);
 
 		sprites.set(node.att.name, spr);
 		return spr;

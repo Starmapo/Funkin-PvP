@@ -324,6 +324,13 @@ class Paths
 		return null;
 	}
 
+	public static function getVideo(path:String, ?mod:String)
+	{
+		if (!path.endsWith('.mp4') && !path.endsWith('.webm'))
+			path += '.mp4';
+		return getPath('videos/$path', mod);
+	}
+
 	public static function exists(path:String):Bool
 	{
 		return Assets.exists(path) #if sys || FileSystem.exists(path) #end;

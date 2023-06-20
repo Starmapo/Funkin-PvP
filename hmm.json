@@ -44,9 +44,11 @@
       "url": "https://github.com/HaxeFoundation/hscript"
     },
     {
-      "name": "hxtelemetry",
-      "type": "haxelib",
-      "version": null
+      "name": "hxCodec",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/polybiusproxy/hxCodec"
     }
   ]
 }

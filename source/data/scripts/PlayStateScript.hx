@@ -7,7 +7,8 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
-import hscript.Expr.ClassDecl;
+import hxcodec.flixel.FlxVideo;
+import hxcodec.flixel.FlxVideoSprite;
 import sprites.game.Character;
 import states.PlayState;
 import ui.game.Note;
@@ -15,7 +16,8 @@ import ui.game.Note;
 class PlayStateScript extends Script
 {
 	var state:PlayState;
-	var modules:Map<String, ClassDecl> = new Map();
+
+	// var modules:Map<String, ClassDecl> = new Map();
 
 	public function new(state:PlayState, path:String, mod:String)
 	{
@@ -200,6 +202,32 @@ class PlayStateScript extends Script
 		setVariable("loadDifficulty", function(difficulty:String)
 		{
 			return Song.loadSong('${state.song.name}/$difficulty.json', Mods.currentMod);
+		});
+		setVariable("startVideo", function(name:String, ?mod:String, loop:Bool = false, destroy:Bool = true)
+		{
+			var path = Paths.getVideo(name, mod);
+			if (!Paths.exists(path))
+				return null;
+
+			var video = new FlxVideo();
+			if (destroy)
+				video.onEndReached.add(video.dispose);
+			video.play(path, loop);
+			video.rate = GameplayGlobals.playbackRate;
+			return video;
+		});
+		setVariable("createVideoSprite", function(x:Float = 0, y:Float = 0, name:String, ?mod:String, loop:Bool = false, destroy:Bool = true)
+		{
+			var path = Paths.getVideo(name, mod);
+			if (!Paths.exists(path))
+				return null;
+
+			var video = new FlxVideoSprite();
+			if (destroy)
+				video.bitmap.onEndReached.add(video.destroy);
+			video.play(path, loop);
+			video.bitmap.rate = GameplayGlobals.playbackRate;
+			return video;
 		});
 
 		/*

@@ -104,6 +104,7 @@ class PlayState extends FNFState
 	public var staticBG:AnimatedSprite;
 	public var stageFile:StageFile;
 	public var camBopRate:Null<Int> = null;
+	public var iconBop:Bool = true;
 
 	var instEnded:Bool = false;
 	var debugMode:Bool = false;
@@ -622,6 +623,8 @@ class PlayState extends FNFState
 		}
 
 		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
+
+		executeScripts("onCharFocus", [char]);
 	}
 
 	public function getSongLength()
@@ -1235,7 +1238,7 @@ class PlayState extends FNFState
 		if (hasEnded)
 			return;
 
-		if (healthBars != null)
+		if (healthBars != null && iconBop)
 		{
 			for (bar in healthBars)
 				bar.onBeatHit();

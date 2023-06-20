@@ -50,6 +50,7 @@
 	<haxelib name="systools" if="desktop" />
 	<ndll name="systools" haxelib="systools" if="systools" />
 	<haxelib name="discord_rpc" if="cpp"/>
+	<haxelib name="hxCodec" if="windows || linux || android" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
