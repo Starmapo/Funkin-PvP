@@ -1,4 +1,5 @@
 import data.Mods;
+import data.Settings;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
@@ -369,6 +370,23 @@ class Paths
 	static function onPreStateSwitch()
 	{
 		trackedSounds.resize(0);
+		if (Settings.forceCacheReset || FlxG.keys.pressed.SHIFT)
+		{
+			@:privateAccess
+			{
+				for (k => _ in FlxG.bitmap._cache)
+					FlxG.bitmap.removeByKey(k);
+				FlxG.bitmap._cache.clear();
+				FlxG.bitmap.__countCache.resize(0);
+				FlxG.bitmap.__cacheCopy.clear();
+			}
+			for (k => s in cachedSounds)
+			{
+				cachedSounds.remove(k);
+				if (s != null)
+					s.close();
+			}
+		}
 	}
 
 	static function onPostStateSwitch()

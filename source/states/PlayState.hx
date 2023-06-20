@@ -280,6 +280,8 @@ class PlayState extends FNFState
 				DiscordClient.changePresence(detailsText, 'In a match', null, true, getTimeRemaining());
 			else
 				DiscordClient.changePresence(detailsText, 'In a match');
+
+			executeScripts("onResume");
 		}
 	}
 
@@ -850,7 +852,12 @@ class PlayState extends FNFState
 			stageScript.execute("onCreate");
 		}
 		else if (!stageFile.found)
+		{
+			remove(gf);
+			remove(opponent);
+			remove(bf);
 			stageFile = new StageFile(this, 'fnf:stage');
+		}
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * GameplayGlobals.playbackRate);
 		FlxG.camera.snapToTarget();
@@ -1012,15 +1019,20 @@ class PlayState extends FNFState
 			}
 		}
 
-		for (i in 0...2)
+		// i forgot to use this variable whoops!
+		if (canPause)
 		{
-			if (PlayerSettings.checkPlayerAction(i, PAUSE_P))
+			for (i in 0...2)
 			{
-				isPaused = true;
-				persistentUpdate = false;
-				pauseSubState.setPlayer(i);
-				openSubState(pauseSubState);
-				break;
+				if (PlayerSettings.checkPlayerAction(i, PAUSE_P))
+				{
+					isPaused = true;
+					persistentUpdate = false;
+					pauseSubState.setPlayer(i);
+					openSubState(pauseSubState);
+					executeScripts("onPause", [i]);
+					break;
+				}
 			}
 		}
 	}

@@ -246,7 +246,7 @@ class RulesetState extends FNFState
 		addSetting({
 			name: 'missWindow',
 			displayName: 'Miss Window',
-			description: 'Change the amount of milliseconds you have before missing a note.',
+			description: 'Change the amount of milliseconds you have to hit a note.',
 			type: NUMBER,
 			displayFunction: function(value)
 			{

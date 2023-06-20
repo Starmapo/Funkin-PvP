@@ -1378,6 +1378,8 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			var eventObject = selectedEvents[0];
 			state.actionManager.perform(new ActionAddEvent(state, eventObject, new Event({})));
+			eventIndex = eventObject.events.length - 1;
+			updateEventDisplay();
 		});
 		addButton.resize(addButton.height, addButton.height);
 		addButton.label.size = 12;

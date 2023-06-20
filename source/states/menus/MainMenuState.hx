@@ -261,8 +261,12 @@ class MainMenuItem extends TextMenuItem
 	{
 		if (label != null)
 		{
+			var lastScale = scale.copyTo();
+			scale.set(1, 1);
 			label.color = FlxColor.WHITE;
 			label.borderColor = FlxColor.BLACK;
+			scale.copyFrom(lastScale);
+			lastScale.put();
 		}
 		targetScale = 1;
 	}
@@ -271,8 +275,12 @@ class MainMenuItem extends TextMenuItem
 	{
 		if (label != null)
 		{
+			var lastScale = scale.copyTo();
+			scale.set(1, 1);
 			label.color = FlxColor.BLACK;
 			label.borderColor = FlxColor.WHITE;
+			scale.copyFrom(lastScale);
+			lastScale.put();
 		}
 		targetScale = 1.2;
 	}

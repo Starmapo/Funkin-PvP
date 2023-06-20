@@ -380,7 +380,7 @@ class MusicTiming implements IFlxDestroyable
 		{
 			for (sprite in dancingSprites)
 			{
-				if (sprite.canDance && beat % sprite.danceBeats == 0)
+				if (sprite.exists && sprite.canDance && beat % sprite.danceBeats == 0)
 					sprite.dance();
 			}
 		}
