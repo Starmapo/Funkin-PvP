@@ -137,7 +137,7 @@ class CharacterEditorEditPanel extends EditorPanel
 				state.notificationManager.showNotification("You can't have an empty animation name!", ERROR);
 				return;
 			}
-			for (anim in state.charInfo.anims)
+			for (anim in state.info.anims)
 			{
 				if (anim.name == text)
 				{
@@ -272,7 +272,7 @@ class CharacterEditorEditPanel extends EditorPanel
 
 	function createCharacterTab()
 	{
-		healthColorPicker = new HealthColorPicker(state, state.charInfo.healthColors, function(color)
+		healthColorPicker = new HealthColorPicker(state, state.info.healthColors, function(color)
 		{
 			state.actionManager.perform(new ActionChangeHealthColor(state, color));
 		});
@@ -283,7 +283,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		var imageLabel = new EditorText(4, 5, 0, 'Image:');
 		tab.add(imageLabel);
 
-		imageInput = new EditorInputText(imageLabel.x + inputSpacing, imageLabel.y - 1, inputWidth, state.charInfo.image);
+		imageInput = new EditorInputText(imageLabel.x + inputSpacing, imageLabel.y - 1, inputWidth, state.info.image);
 		imageInput.textChanged.add(function(text, lastText)
 		{
 			state.actionManager.perform(new ActionChangeImage(state, text));
@@ -293,7 +293,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		var danceAnimsLabel = new EditorText(imageLabel.x, imageLabel.y + imageLabel.height + spacing, 0, 'Dance Animations:');
 		tab.add(danceAnimsLabel);
 
-		danceAnimsInput = new EditorInputText(danceAnimsLabel.x + inputSpacing, danceAnimsLabel.y - 1, inputWidth, state.charInfo.danceAnims.join(','));
+		danceAnimsInput = new EditorInputText(danceAnimsLabel.x + inputSpacing, danceAnimsLabel.y - 1, inputWidth, state.info.danceAnims.join(','));
 		danceAnimsInput.textChanged.add(function(text, lastText)
 		{
 			var anims = text.split(',');
@@ -342,16 +342,14 @@ class CharacterEditorEditPanel extends EditorPanel
 		positionXStepper = new EditorNumericStepper(positionLabel.x + inputSpacing, positionLabel.y - 1, 1, 0, null, null, 2);
 		positionXStepper.valueChanged.add(function(value, lastValue)
 		{
-			state.actionManager.perform(new ActionChangePositionOffset(state, [value, state.charInfo.positionOffset[1]],
-				state.charInfo.positionOffset.copy()));
+			state.actionManager.perform(new ActionChangePositionOffset(state, [value, state.info.positionOffset[1]], state.info.positionOffset.copy()));
 		});
 		tab.add(positionXStepper);
 
 		positionYStepper = new EditorNumericStepper(positionXStepper.x + positionXStepper.width + spacing, positionXStepper.y, 1, 0, null, null, 2);
 		positionYStepper.valueChanged.add(function(value, lastValue)
 		{
-			state.actionManager.perform(new ActionChangePositionOffset(state, [state.charInfo.positionOffset[0], value],
-				state.charInfo.positionOffset.copy()));
+			state.actionManager.perform(new ActionChangePositionOffset(state, [state.info.positionOffset[0], value], state.info.positionOffset.copy()));
 		});
 		tab.add(positionYStepper);
 
@@ -361,21 +359,21 @@ class CharacterEditorEditPanel extends EditorPanel
 		cameraXStepper = new EditorNumericStepper(cameraLabel.x + inputSpacing, cameraLabel.y - 1, 1, 0, null, null, 2);
 		cameraXStepper.valueChanged.add(function(value, lastValue)
 		{
-			state.actionManager.perform(new ActionChangeCameraOffset(state, [value, state.charInfo.cameraOffset[1]], state.charInfo.cameraOffset.copy()));
+			state.actionManager.perform(new ActionChangeCameraOffset(state, [value, state.info.cameraOffset[1]], state.info.cameraOffset.copy()));
 		});
 		tab.add(cameraXStepper);
 
 		cameraYStepper = new EditorNumericStepper(cameraXStepper.x + cameraXStepper.width + spacing, cameraXStepper.y, 1, 0, null, null, 2);
 		cameraYStepper.valueChanged.add(function(value, lastValue)
 		{
-			state.actionManager.perform(new ActionChangeCameraOffset(state, [state.charInfo.cameraOffset[0], value], state.charInfo.cameraOffset.copy()));
+			state.actionManager.perform(new ActionChangeCameraOffset(state, [state.info.cameraOffset[0], value], state.info.cameraOffset.copy()));
 		});
 		tab.add(cameraYStepper);
 
 		var healthIconLabel = new EditorText(cameraLabel.x, cameraLabel.y + cameraLabel.height + spacing, 0, 'Health Icon:');
 		tab.add(healthIconLabel);
 
-		healthIconInput = new EditorInputText(healthIconLabel.x + inputSpacing, healthIconLabel.y - 1, inputWidth, state.charInfo.healthIcon);
+		healthIconInput = new EditorInputText(healthIconLabel.x + inputSpacing, healthIconLabel.y - 1, inputWidth, state.info.healthIcon);
 		healthIconInput.textChanged.add(function(text, lastText)
 		{
 			state.actionManager.perform(new ActionChangeIcon(state, text));
@@ -450,15 +448,15 @@ class CharacterEditorEditPanel extends EditorPanel
 				state.notificationManager.showNotification("You must select a character inside of the game's directory!", ERROR);
 				return;
 			}
-			var charInfo = CharacterInfo.loadCharacter(path.substr(cwd.length + 1));
-			if (charInfo == null)
+			var info = CharacterInfo.loadCharacter(path.substr(cwd.length + 1));
+			if (info == null)
 			{
 				state.notificationManager.showNotification("You must select a valid character file!", ERROR);
 				return;
 			}
 
 			state.save(false);
-			state.setCharInfo(charInfo);
+			state.setInfo(info);
 		});
 
 		saveButton.x = (width - CoolUtil.getArrayWidth([saveButton, loadButton])) / 2;
@@ -487,9 +485,9 @@ class CharacterEditorEditPanel extends EditorPanel
 		gfCheckbox = new EditorCheckbox(0, 4, 'GF as Guide Character', 0, function()
 		{
 			if (gfCheckbox.checked)
-				state.guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:gf');
+				state.guideChar.info = CharacterInfo.loadCharacterFromName('fnf:gf');
 			else
-				state.guideChar.charInfo = CharacterInfo.loadCharacterFromName('fnf:dad');
+				state.guideChar.info = CharacterInfo.loadCharacterFromName('fnf:dad');
 		});
 		gfCheckbox.x = (width - (gfCheckbox.width + gfCheckbox.button.label.width)) / 2;
 		tab.add(gfCheckbox);
@@ -516,7 +514,7 @@ class CharacterEditorEditPanel extends EditorPanel
 
 		var saveFrameButton = new FlxUIButton(0, createPortraitButton.y + createPortraitButton.height + spacing, 'Save Current Frame', function()
 		{
-			state.saveFrame(state.charInfo.name + '.png');
+			state.saveFrame(state.info.name + '.png');
 		});
 		saveFrameButton.resize(120, saveFrameButton.height);
 		saveFrameButton.x = (width - saveFrameButton.width) / 2;
@@ -527,7 +525,7 @@ class CharacterEditorEditPanel extends EditorPanel
 
 	public function updateCurAnim()
 	{
-		curAnim = state.charInfo.getAnim(state.curAnim);
+		curAnim = state.info.getAnim(state.curAnim);
 		updateName();
 		updateAtlasName();
 		updateIndices();
@@ -605,75 +603,75 @@ class CharacterEditorEditPanel extends EditorPanel
 
 		atlasNamePrompt.refreshAtlasNames();
 		newCharacterPrompt.updateMod();
-		createIconSubState.path = 'images/characterSelect/icons/${state.charInfo.name}.png';
-		createPortraitSubState.path = 'images/characterSelect/portraits/${state.charInfo.name}.png';
+		createIconSubState.path = 'images/characterSelect/icons/${state.info.name}.png';
+		createPortraitSubState.path = 'images/characterSelect/portraits/${state.info.name}.png';
 	}
 
 	function updateImage()
 	{
-		imageInput.text = state.charInfo.image;
+		imageInput.text = state.info.image;
 	}
 
 	function updateDanceAnims()
 	{
-		danceAnimsInput.text = state.charInfo.danceAnims.join(',');
+		danceAnimsInput.text = state.info.danceAnims.join(',');
 	}
 
 	function updateFlipX()
 	{
-		flipXCheckbox.checked = state.charInfo.flipX;
+		flipXCheckbox.checked = state.info.flipX;
 	}
 
 	function updateScale()
 	{
-		scaleStepper.value = state.charInfo.scale;
+		scaleStepper.value = state.info.scale;
 	}
 
 	function updateAntialiasing()
 	{
-		antialiasingCheckbox.checked = state.charInfo.antialiasing;
+		antialiasingCheckbox.checked = state.info.antialiasing;
 	}
 
 	public function updatePositionOffset()
 	{
-		positionXStepper.value = state.charInfo.positionOffset[0];
-		positionYStepper.value = state.charInfo.positionOffset[1];
+		positionXStepper.value = state.info.positionOffset[0];
+		positionYStepper.value = state.info.positionOffset[1];
 	}
 
 	public function updateCameraOffset()
 	{
-		cameraXStepper.value = state.charInfo.cameraOffset[0];
-		cameraYStepper.value = state.charInfo.cameraOffset[1];
+		cameraXStepper.value = state.info.cameraOffset[0];
+		cameraYStepper.value = state.info.cameraOffset[1];
 	}
 
 	function updateHealthIcon()
 	{
-		healthIconInput.text = state.charInfo.healthIcon;
+		healthIconInput.text = state.info.healthIcon;
 	}
 
 	function updateHealthColor()
 	{
-		healthColorPicker.color = state.charInfo.healthColors;
+		healthColorPicker.color = state.info.healthColors;
 	}
 
 	function updateLoopAnims()
 	{
-		loopAnimsCheckbox.checked = state.charInfo.loopAnimsOnHold;
+		loopAnimsCheckbox.checked = state.info.loopAnimsOnHold;
 	}
 
 	function updateLoopPoint()
 	{
-		loopPointStepper.value = state.charInfo.holdLoopPoint;
+		loopPointStepper.value = state.info.holdLoopPoint;
 	}
 
 	function updateFlipAll()
 	{
-		flipAllCheckbox.checked = state.charInfo.flipAll;
+		flipAllCheckbox.checked = state.info.flipAll;
 	}
 
 	function updateConstantLooping()
 	{
-		constantLoopingCheckbox.checked = state.charInfo.constantLooping;
+		constantLoopingCheckbox.checked = state.info.constantLooping;
 	}
 
 	function onEvent(event:String, params:Dynamic)

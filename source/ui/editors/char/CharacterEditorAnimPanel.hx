@@ -46,7 +46,7 @@ class CharacterEditorAnimPanel extends EditorPanel
 			}
 
 			var anim:AnimInfo = null;
-			var curAnim = state.charInfo.getAnim(animDropdown.selectedLabel);
+			var curAnim = state.info.getAnim(animDropdown.selectedLabel);
 			if (curAnim != null && FlxG.keys.released.SHIFT)
 				anim = new AnimInfo({
 					name: name,
@@ -73,7 +73,7 @@ class CharacterEditorAnimPanel extends EditorPanel
 
 		var removeButton = new FlxUIButton(addButton.x + addButton.width + spacing, addButton.y, 'Remove', function()
 		{
-			var anim = state.charInfo.getAnim(animDropdown.selectedLabel);
+			var anim = state.info.getAnim(animDropdown.selectedLabel);
 			if (anim != null)
 				state.actionManager.perform(new ActionRemoveAnim(state, anim));
 		});
@@ -90,10 +90,10 @@ class CharacterEditorAnimPanel extends EditorPanel
 
 	public function reloadDropdown()
 	{
-		state.charInfo.sortAnims();
+		state.info.sortAnims();
 
 		var anims:Array<String> = [];
-		for (anim in state.charInfo.anims)
+		for (anim in state.info.anims)
 			anims.push(anim.name);
 
 		animDropdown.setData(EditorDropdownMenu.makeStrIdLabelArray(anims));

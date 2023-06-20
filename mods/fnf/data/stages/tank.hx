@@ -23,7 +23,7 @@ function onCreate()
 		moveTank();
 	}
 
-	if (gf.charInfo.name == 'pico-speaker')
+	if (gf.info.name == 'pico-speaker')
 	{
 		gf.danceDisabled = true;
 		if (Settings.distractions)

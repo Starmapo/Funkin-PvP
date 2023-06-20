@@ -614,8 +614,8 @@ class PlayState extends FNFState
 
 	public function focusOnChar(char:Character)
 	{
-		var camOffsetX = char.charInfo != null ? char.charInfo.cameraOffset[0] : 0;
-		var camOffsetY = char.charInfo != null ? char.charInfo.cameraOffset[1] : 0;
+		var camOffsetX = char.info != null ? char.info.cameraOffset[0] : 0;
+		var camOffsetY = char.info != null ? char.info.cameraOffset[1] : 0;
 		if (char.charFlipX)
 			camOffsetX *= -1;
 		if (Settings.cameraNoteMovements)
@@ -815,7 +815,7 @@ class PlayState extends FNFState
 			{
 				healthBars = new FlxTypedGroup();
 				for (i in 0...2)
-					healthBars.add(new HealthBar(ruleset.playfields[i].scoreProcessor, getPlayerCharacter(i).charInfo));
+					healthBars.add(new HealthBar(ruleset.playfields[i].scoreProcessor, getPlayerCharacter(i).info));
 				healthBars.cameras = [camHUD];
 				add(healthBars);
 			}
@@ -872,8 +872,8 @@ class PlayState extends FNFState
 		var characters = [opponent, bf, gf];
 		for (char in characters)
 		{
-			if (char.charInfo != null)
-				addScript('data/characters/' + char.charInfo.name, char.charInfo.mod);
+			if (char.info != null)
+				addScript('data/characters/' + char.info.name, char.info.mod);
 		}
 
 		var noteTypeMap = new Map<String, Bool>();

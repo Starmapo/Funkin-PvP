@@ -50,8 +50,8 @@ class ActionChangeImage implements IAction
 
 	public function perform()
 	{
-		lastImage = state.charInfo.image;
-		state.charInfo.image = image;
+		lastImage = state.info.image;
+		state.info.image = image;
 
 		state.char.reloadImage();
 		state.ghostChar.reloadImage();
@@ -90,8 +90,8 @@ class ActionChangeDanceAnims implements IAction
 	public function perform()
 	{
 		// is this too much copying???
-		lastAnims = state.charInfo.danceAnims.copy();
-		state.charInfo.danceAnims = danceAnims.copy();
+		lastAnims = state.info.danceAnims.copy();
+		state.info.danceAnims = danceAnims.copy();
 
 		state.char.danceAnims = danceAnims.copy();
 		state.ghostChar.danceAnims = danceAnims.copy();
@@ -131,8 +131,8 @@ class ActionChangeFlipX implements IAction
 
 	public function perform()
 	{
-		lastFlipX = state.charInfo.flipX;
-		state.charInfo.flipX = flipX;
+		lastFlipX = state.info.flipX;
+		state.info.flipX = flipX;
 
 		state.char.flipX = state.ghostChar.flipX = flipX;
 
@@ -168,8 +168,8 @@ class ActionChangeScale implements IAction
 
 	public function perform()
 	{
-		lastScale = state.charInfo.scale;
-		state.charInfo.scale = scale;
+		lastScale = state.info.scale;
+		state.info.scale = scale;
 
 		state.char.scale.set(scale, scale);
 		state.ghostChar.scale.copyFrom(state.char.scale);
@@ -209,8 +209,8 @@ class ActionChangeAntialiasing implements IAction
 
 	public function perform()
 	{
-		lastAntialiasing = state.charInfo.antialiasing;
-		state.charInfo.antialiasing = antialiasing;
+		lastAntialiasing = state.info.antialiasing;
+		state.info.antialiasing = antialiasing;
 
 		state.char.antialiasing = state.ghostChar.antialiasing = antialiasing;
 
@@ -247,8 +247,8 @@ class ActionChangePositionOffset implements IAction
 
 	public function perform()
 	{
-		state.charInfo.positionOffset[0] = offset[0];
-		state.charInfo.positionOffset[1] = offset[1];
+		state.info.positionOffset[0] = offset[0];
+		state.info.positionOffset[1] = offset[1];
 
 		state.updatePosition();
 
@@ -287,8 +287,8 @@ class ActionChangeCameraOffset implements IAction
 
 	public function perform()
 	{
-		state.charInfo.cameraOffset[0] = offset[0];
-		state.charInfo.cameraOffset[1] = offset[1];
+		state.info.cameraOffset[0] = offset[0];
+		state.info.cameraOffset[1] = offset[1];
 
 		state.updateCamIndicator();
 
@@ -326,8 +326,8 @@ class ActionChangeIcon implements IAction
 
 	public function perform()
 	{
-		lastIcon = state.charInfo.healthIcon;
-		state.charInfo.healthIcon = icon;
+		lastIcon = state.info.healthIcon;
+		state.info.healthIcon = icon;
 
 		state.updateIcon();
 
@@ -363,8 +363,8 @@ class ActionChangeHealthColor implements IAction
 
 	public function perform()
 	{
-		lastColor = state.charInfo.healthColors;
-		state.charInfo.healthColors = color;
+		lastColor = state.info.healthColors;
+		state.info.healthColors = color;
 
 		state.updateBar();
 
@@ -400,8 +400,8 @@ class ActionChangeLoopAnims implements IAction
 
 	public function perform()
 	{
-		lastLoopAnims = state.charInfo.loopAnimsOnHold;
-		state.charInfo.loopAnimsOnHold = loopAnims;
+		lastLoopAnims = state.info.loopAnimsOnHold;
+		state.info.loopAnimsOnHold = loopAnims;
 
 		state.actionManager.triggerEvent(type, {
 			loopAnims: loopAnims
@@ -435,8 +435,8 @@ class ActionChangeLoopPoint implements IAction
 
 	public function perform()
 	{
-		lastLoopPoint = state.charInfo.holdLoopPoint;
-		state.charInfo.holdLoopPoint = loopPoint;
+		lastLoopPoint = state.info.holdLoopPoint;
+		state.info.holdLoopPoint = loopPoint;
 
 		state.actionManager.triggerEvent(type, {
 			loopPoint: loopPoint
@@ -470,8 +470,8 @@ class ActionChangeFlipAll implements IAction
 
 	public function perform()
 	{
-		lastFlipAll = state.charInfo.flipAll;
-		state.charInfo.flipAll = flipAll;
+		lastFlipAll = state.info.flipAll;
+		state.info.flipAll = flipAll;
 
 		state.actionManager.triggerEvent(type, {
 			flipAll: flipAll
@@ -505,8 +505,8 @@ class ActionChangeConstantLooping implements IAction
 
 	public function perform()
 	{
-		lastConstantLooping = state.charInfo.constantLooping;
-		state.charInfo.constantLooping = constantLooping;
+		lastConstantLooping = state.info.constantLooping;
+		state.info.constantLooping = constantLooping;
 
 		state.actionManager.triggerEvent(type, {
 			constantLooping: constantLooping
@@ -539,7 +539,7 @@ class ActionAddAnim implements IAction
 
 	public function perform()
 	{
-		state.charInfo.anims.push(anim);
+		state.info.anims.push(anim);
 		state.addAnim(anim);
 
 		state.actionManager.triggerEvent(type, {
@@ -574,9 +574,9 @@ class ActionRemoveAnim implements IAction
 
 	public function perform()
 	{
-		state.charInfo.anims.remove(anim);
+		state.info.anims.remove(anim);
 
-		var newAnim = state.charInfo.anims.length > 0 ? state.charInfo.anims[0].name : '';
+		var newAnim = state.info.anims.length > 0 ? state.info.anims[0].name : '';
 		if (state.char.animation.name == anim.name)
 			state.changeAnim(newAnim);
 		if (state.ghostChar.animation.name == anim.name)

@@ -36,7 +36,7 @@ class CharacterEditorState extends FNFState
 	static var CHAR_Y:Int = 100;
 
 	public var currentTool:Bindable<MoveTool> = new Bindable(ANIM);
-	public var charInfo:CharacterInfo;
+	public var info:CharacterInfo;
 	public var char:Character;
 	public var ghostChar:Character;
 	public var actionManager:CharacterEditorActionManager;
@@ -60,12 +60,12 @@ class CharacterEditorState extends FNFState
 	var savePrompt:CharacterEditorSavePrompt;
 	var changed:Bool = false;
 
-	public function new(?charInfo:CharacterInfo)
+	public function new(?info:CharacterInfo)
 	{
 		super();
-		if (charInfo == null)
-			charInfo = CharacterInfo.loadCharacterFromName('fnf:bf');
-		this.charInfo = charInfo;
+		if (info == null)
+			info = CharacterInfo.loadCharacterFromName('fnf:bf');
+		this.info = info;
 
 		persistentUpdate = true;
 		checkObjects = true;
@@ -75,7 +75,7 @@ class CharacterEditorState extends FNFState
 	override function destroy()
 	{
 		super.destroy();
-		charInfo = FlxDestroyUtil.destroy(charInfo);
+		info = FlxDestroyUtil.destroy(info);
 		char = null;
 		camPos = null;
 		animText = null;
@@ -112,14 +112,14 @@ class CharacterEditorState extends FNFState
 		guideChar.debugMode = true;
 		add(guideChar);
 
-		ghostChar = new Character(CHAR_X, CHAR_Y, charInfo);
+		ghostChar = new Character(CHAR_X, CHAR_Y, info);
 		ghostChar.visible = false;
 		ghostChar.color = 0xFF666688;
 		ghostChar.alpha = 0.6;
 		ghostChar.debugMode = true;
 		add(ghostChar);
 
-		char = new Character(CHAR_X, CHAR_Y, charInfo);
+		char = new Character(CHAR_X, CHAR_Y, info);
 		char.alpha = 0.85;
 		char.debugMode = true;
 		add(char);
@@ -134,7 +134,7 @@ class CharacterEditorState extends FNFState
 		animText.scrollFactor.set();
 		add(animText);
 
-		healthBar = new HealthBar(null, charInfo);
+		healthBar = new HealthBar(null, info);
 		healthBar.x = (FlxG.width - healthBar.bar.width) / 2;
 		healthBar.bar.value = 50;
 		add(healthBar);
@@ -161,7 +161,7 @@ class CharacterEditorState extends FNFState
 		add(camPos);
 		FlxG.camera.follow(camPos);
 
-		reloadCharInfo();
+		reloadinfo();
 
 		super.create();
 	}
@@ -272,9 +272,9 @@ class CharacterEditorState extends FNFState
 			var delta = mousePos - dragMousePos;
 			var offset = switch (dragging)
 			{
-				case 1: charInfo.positionOffset;
-				case 2: charInfo.cameraOffset;
-				default: charInfo.getAnim(curAnim).offset;
+				case 1: info.positionOffset;
+				case 2: info.cameraOffset;
+				default: info.getAnim(curAnim).offset;
 			};
 			var mult = dragging == 0 ? -1 : 1;
 			offset[0] = dragPositionOffset[0] + FlxMath.roundDecimal(delta.x, 2) * mult;
@@ -289,7 +289,7 @@ class CharacterEditorState extends FNFState
 					updateCamIndicator();
 					editPanel.updateCameraOffset();
 				default:
-					setAnimOffset(charInfo.getAnim(curAnim), offset[0], offset[1]);
+					setAnimOffset(info.getAnim(curAnim), offset[0], offset[1]);
 			}
 
 			if (FlxG.mouse.released)
@@ -303,7 +303,7 @@ class CharacterEditorState extends FNFState
 						case 2:
 							actionManager.perform(new ActionChangeCameraOffset(this, offset.copy(), dragPositionOffset));
 						default:
-							actionManager.perform(new ActionChangeAnimOffset(this, charInfo.getAnim(curAnim), offset.copy(), dragPositionOffset));
+							actionManager.perform(new ActionChangeAnimOffset(this, info.getAnim(curAnim), offset.copy(), dragPositionOffset));
 					}
 				}
 				dragMousePos = null;
@@ -337,7 +337,7 @@ class CharacterEditorState extends FNFState
 			else if (FlxG.mouse.overlaps(camIndicator))
 			{
 				dragMousePos = mousePos;
-				dragPositionOffset = charInfo.cameraOffset.copy();
+				dragPositionOffset = info.cameraOffset.copy();
 				dragging = 2;
 			}
 			else if (char.pixelsOverlapPoint(mousePos, 1))
@@ -345,13 +345,13 @@ class CharacterEditorState extends FNFState
 				if (currentTool.value == POSITION)
 				{
 					dragMousePos = mousePos;
-					dragPositionOffset = charInfo.positionOffset.copy();
+					dragPositionOffset = info.positionOffset.copy();
 					dragging = 1;
 				}
 				else if (hasAnim)
 				{
 					dragMousePos = mousePos;
-					dragPositionOffset = charInfo.getAnim(curAnim).offset.copy();
+					dragPositionOffset = info.getAnim(curAnim).offset.copy();
 					dragging = 0;
 				}
 				else
@@ -416,7 +416,7 @@ class CharacterEditorState extends FNFState
 
 	function changeAnimOffset(xChange:Int, yChange:Int = 0)
 	{
-		var curAnim = charInfo.getAnim(curAnim);
+		var curAnim = info.getAnim(curAnim);
 		setAnimOffset(curAnim, curAnim.offset[0] + xChange, curAnim.offset[1] + yChange);
 
 		timeSinceLastChange = 0;
@@ -445,8 +445,8 @@ class CharacterEditorState extends FNFState
 
 	function changePositionOffset(xChange:Int, yChange:Int = 0)
 	{
-		charInfo.positionOffset[0] += xChange;
-		charInfo.positionOffset[1] += yChange;
+		info.positionOffset[0] += xChange;
+		info.positionOffset[1] += yChange;
 
 		updatePosition();
 
@@ -492,7 +492,7 @@ class CharacterEditorState extends FNFState
 		if (!actionManager.hasUnsavedChanges && !forceSave && !changed)
 			return;
 
-		charInfo.save(Path.join([charInfo.directory, charInfo.name + '.json']));
+		info.save(Path.join([info.directory, info.name + '.json']));
 
 		actionManager.lastSaveAction = actionManager.undoStack[0];
 		changed = false;
@@ -503,7 +503,7 @@ class CharacterEditorState extends FNFState
 
 	public function updateCamIndicator()
 	{
-		camIndicator.setPosition(char.x + (char.startWidth / 2) + charInfo.cameraOffset[0], char.y + (char.startHeight / 2) + charInfo.cameraOffset[1]);
+		camIndicator.setPosition(char.x + (char.startWidth / 2) + info.cameraOffset[0], char.y + (char.startHeight / 2) + info.cameraOffset[1]);
 	}
 
 	public function saveFrame(filename:String)
@@ -520,12 +520,12 @@ class CharacterEditorState extends FNFState
 		notificationManager.showNotification('Image successfully saved!', SUCCESS);
 	}
 
-	public function reloadCharInfo()
+	public function reloadinfo()
 	{
 		var oldGraphic = char.graphic;
 
-		ghostChar.charInfo = charInfo;
-		char.charInfo = charInfo;
+		ghostChar.info = info;
+		char.info = info;
 
 		if (oldGraphic != null && oldGraphic.useCount <= 0)
 			FlxG.bitmap.remove(oldGraphic);
@@ -599,15 +599,15 @@ class CharacterEditorState extends FNFState
 
 	public function updateBar()
 	{
-		healthBar.bar.createFilledBar(charInfo.healthColors.getDarkened(0.5), charInfo.healthColors);
+		healthBar.bar.createFilledBar(info.healthColors.getDarkened(0.5), info.healthColors);
 		healthBar.bar.updateBar();
 	}
 
 	public function updateIcon()
 	{
-		var iconName = charInfo.healthIcon;
+		var iconName = info.healthIcon;
 		if (!iconName.contains(':'))
-			iconName = charInfo.mod + ':' + iconName;
+			iconName = info.mod + ':' + iconName;
 		healthBar.icon.icon = iconName;
 		healthBar.updateIconPos();
 	}
@@ -631,11 +631,11 @@ class CharacterEditorState extends FNFState
 		}
 	}
 
-	public function setCharInfo(charInfo:CharacterInfo)
+	public function setInfo(info:CharacterInfo)
 	{
 		actionManager.reset();
-		this.charInfo = charInfo;
-		reloadCharInfo();
+		this.info = info;
+		reloadinfo();
 		MemoryUtil.clearMinor();
 	}
 }

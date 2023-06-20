@@ -147,7 +147,7 @@ class AtlasNamePrompt extends FNFSubState
 	function updateAtlasNames()
 	{
 		var usedNames:Array<String> = [];
-		for (anim in state.charInfo.anims)
+		for (anim in state.info.anims)
 		{
 			var name = anim.atlasName;
 			if (name.length > 0 && !usedNames.contains(anim.name))

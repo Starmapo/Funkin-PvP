@@ -126,7 +126,7 @@ class BaseImageSubState extends FNFSubState
 
 			if (FlxG.keys.justPressed.R)
 			{
-				char.scale.set(state.charInfo.scale, state.charInfo.scale);
+				char.scale.set(state.info.scale, state.info.scale);
 				char.updateHitbox();
 				char.screenCenter();
 				updateBorder();
@@ -264,8 +264,8 @@ class BaseImageSubState extends FNFSubState
 
 	function reloadFrame()
 	{
-		char.flipX = state.charInfo.flipX;
-		char.antialiasing = state.charInfo.antialiasing;
+		char.flipX = state.info.flipX;
+		char.antialiasing = state.info.antialiasing;
 
 		var frame = state.char.frame;
 		if (char.frame == frame)
@@ -273,7 +273,7 @@ class BaseImageSubState extends FNFSubState
 
 		char.frames = FlxAtlasFrames.findFrame(frame.parent);
 		char.frame = frame;
-		char.scale.set(state.charInfo.scale, state.charInfo.scale);
+		char.scale.set(state.info.scale, state.info.scale);
 		char.updateHitbox();
 		char.screenCenter();
 		updateBorder();
@@ -317,7 +317,7 @@ class BaseImageSubState extends FNFSubState
 		// now draw the frame with our matrix
 		bitmap.draw(frameBitmap, matrix, null, null, null, char.antialiasing);
 
-		var imagePath = Path.join([Mods.modsPath, state.charInfo.mod, path]);
+		var imagePath = Path.join([Mods.modsPath, state.info.mod, path]);
 		FileSystem.createDirectory(Path.directory(imagePath));
 		// finally, save the image
 		File.saveBytes(imagePath, bitmap.encode(new Rectangle(0, 0, bitmap.width, bitmap.height), new PNGEncoderOptions()));

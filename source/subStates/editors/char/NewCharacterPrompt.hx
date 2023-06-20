@@ -91,7 +91,7 @@ class NewCharacterPrompt extends FNFSubState
 			charInfo.mod = modInput.text;
 
 			charInfo.save(fullPath);
-			state.setCharInfo(charInfo);
+			state.setInfo(charInfo);
             close();
 		});
         createButton.x += (tabMenu.width - createButton.width) / 2;
@@ -120,6 +120,6 @@ class NewCharacterPrompt extends FNFSubState
 
 	public function updateMod()
 	{
-		modInput.text = state.charInfo.mod;
+		modInput.text = state.info.mod;
 	}
 }
