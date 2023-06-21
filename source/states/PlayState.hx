@@ -1256,7 +1256,7 @@ class PlayState extends FNFState
 				bar.onBeatHit();
 		}
 
-		if (camBopRate != null && beat % camBopRate == 0)
+		if (camBopRate != null && camBopRate > 0 && beat % camBopRate == 0)
 			doCamBop();
 
 		executeScripts("onBeatHit", [beat, decBeat]);
