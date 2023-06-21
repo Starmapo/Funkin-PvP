@@ -11,7 +11,6 @@ import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.display3D.utils.UInt8Buff;
 import openfl.media.Sound;
-import openfl.utils.AssetCache;
 import util.MemoryUtil;
 
 using StringTools;
@@ -86,8 +85,8 @@ class Paths
 		}
 		#end
 
-		/* if (graphic == null)
-			trace('Graphic \"$originalPath\" not found.'); */
+		if (graphic != null)
+			graphic.destroyOnNoUse = false;
 
 		return graphic;
 	}

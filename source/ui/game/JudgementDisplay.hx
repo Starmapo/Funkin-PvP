@@ -45,7 +45,6 @@ class JudgementDisplay extends FlxSprite
 		for (i in 0...6)
 		{
 			var graphic = getJudgementGraphic(i, skin);
-			graphic.destroyOnNoUse = false;
 			graphics.push(graphic);
 		}
 
@@ -97,14 +96,6 @@ class JudgementDisplay extends FlxSprite
 		if (alphaTween != null)
 			alphaTween.cancel();
 		alphaTween = null;
-		if (graphics != null)
-		{
-			for (graphic in graphics)
-			{
-				if (graphic != null)
-					graphic.destroyOnNoUse = false;
-			}
-		}
 		graphics = null;
 	}
 }
