@@ -7,7 +7,8 @@ import sprites.AnimatedSprite;
 
 class NoteSplash extends AnimatedSprite
 {
-	public var alphaMult:Float = 0.6;
+	public var defaultAlphaMult:Float = 0.6;
+	public var alphaMult:Float = 0.00001;
 
 	var id:Int;
 	var skin:SplashSkin;
@@ -40,8 +41,6 @@ class NoteSplash extends AnimatedSprite
 		frameOffsetScale = skin.scale;
 		antialiasing = skin.antialiasing;
 		scrollFactor.set();
-
-		kill();
 	}
 
 	public function startSplash()
@@ -51,12 +50,12 @@ class NoteSplash extends AnimatedSprite
 		if (animation.curAnim != null)
 			animation.curAnim.frameRate = splashData.fps + FlxG.random.int(-2, 2);
 
-		revive();
+		alphaMult = defaultAlphaMult;
 		updatePosition();
 		animation.finishCallback = function(name)
 		{
 			stopAnimCallback();
-			kill();
+			alphaMult = 0.00001;
 		}
 	}
 
