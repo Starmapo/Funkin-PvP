@@ -374,6 +374,8 @@ class Character extends DancingSprite
 				indices: anim.indices.copy(),
 				fps: anim.fps,
 				loop: anim.loop,
+				flipX: anim.flipX,
+				flipY: anim.flipY,
 				offset: offset
 			});
 		}

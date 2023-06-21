@@ -13,6 +13,7 @@ import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import lime.system.System;
 import openfl.display.PNGEncoderOptions;
+import sprites.AnimatedSprite.AnimData;
 import sprites.game.BGSprite;
 import sprites.game.Character;
 import subStates.editors.char.CharacterEditorSavePrompt;
@@ -547,44 +548,38 @@ class CharacterEditorState extends FNFState
 
 	public function updateAnim(anim:AnimInfo)
 	{
+		var data:AnimData = {
+			name: anim.name,
+			atlasName: anim.atlasName,
+			indices: anim.indices.copy(),
+			fps: anim.fps,
+			loop: anim.loop,
+			flipX: anim.flipX,
+			flipY: anim.flipY,
+			offset: anim.offset
+		};
 		char.animation.remove(anim.name);
-		char.addAnim({
-			name: anim.name,
-			atlasName: anim.atlasName,
-			indices: anim.indices.copy(),
-			fps: anim.fps,
-			loop: anim.loop
-		});
+		char.addAnim(data);
 		ghostChar.animation.remove(anim.name);
-		ghostChar.addAnim({
-			name: anim.name,
-			atlasName: anim.atlasName,
-			indices: anim.indices.copy(),
-			fps: anim.fps,
-			loop: anim.loop
-		});
+		ghostChar.addAnim(data);
 
 		updateCharSize();
 	}
 
 	public function addAnim(anim:AnimInfo)
 	{
-		char.addAnim({
+		var data:AnimData = {
 			name: anim.name,
 			atlasName: anim.atlasName,
 			indices: anim.indices.copy(),
 			fps: anim.fps,
 			loop: anim.loop,
+			flipX: anim.flipX,
+			flipY: anim.flipY,
 			offset: anim.offset
-		});
-		ghostChar.addAnim({
-			name: anim.name,
-			atlasName: anim.atlasName,
-			indices: anim.indices.copy(),
-			fps: anim.fps,
-			loop: anim.loop,
-			offset: anim.offset
-		});
+		};
+		char.addAnim(data);
+		ghostChar.addAnim(data);
 
 		updateCharSize();
 		changeAnim(anim.name);
