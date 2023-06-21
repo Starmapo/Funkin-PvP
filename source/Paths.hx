@@ -372,7 +372,7 @@ class Paths
 	static function onPreStateSwitch()
 	{
 		trackedSounds.resize(0);
-		if (Settings.forceCacheReset || FlxG.keys.pressed.SHIFT)
+		if (Settings.forceCacheReset || FlxG.keys.pressed.F5)
 		{
 			FlxG.bitmap.reset();
 			for (k => s in cachedSounds)
