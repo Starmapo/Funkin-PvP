@@ -585,6 +585,15 @@ class PlayState extends FNFState
 
 			if (Settings.resultsScreen)
 			{
+				var chars = [gf, opponent, bf];
+				for (char in chars)
+				{
+					if (char.animation.exists('outro'))
+					{
+						char.playSpecialAnim('outro');
+						char.danceDisabled = true;
+					}
+				}
 				var screen = new ResultsScreen(this);
 				if (screen.winner > -1)
 					focusOnChar(getPlayerCharacter(screen.winner));
@@ -808,6 +817,13 @@ class PlayState extends FNFState
 		var bfInfo = CharacterInfo.loadCharacterFromName(bfName);
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
+
+		var chars = [gf, opponent, bf];
+		for (char in chars)
+		{
+			if (char.animation.exists('intro'))
+				char.playSpecialAnim('intro');
+		}
 
 		if (!Settings.hideHUD)
 		{

@@ -66,6 +66,11 @@ class Character extends DancingSprite
 				var anim = info.getAnim(name);
 				if (anim != null && anim.nextAnim.length > 0)
 					playAnim(anim.nextAnim);
+				else if (state == Special && !allowDanceTimer.active && !danceDisabled)
+				{
+					canDance = true;
+					dance();
+				}
 				else
 					stopAnimCallback();
 			}
@@ -261,19 +266,6 @@ class Character extends DancingSprite
 					dance();
 				}
 			});
-		}
-		else
-		{
-			animation.finishCallback = function(_)
-			{
-				if (!danceDisabled)
-				{
-					canDance = true;
-					dance();
-				}
-				else
-					stopAnimCallback();
-			}
 		}
 	}
 
