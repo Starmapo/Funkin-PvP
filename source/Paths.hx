@@ -374,14 +374,7 @@ class Paths
 		trackedSounds.resize(0);
 		if (Settings.forceCacheReset || FlxG.keys.pressed.SHIFT)
 		{
-			@:privateAccess
-			{
-				for (k => _ in FlxG.bitmap._cache)
-					FlxG.bitmap.removeByKey(k);
-				FlxG.bitmap._cache.clear();
-				FlxG.bitmap.__countCache.resize(0);
-				FlxG.bitmap.__cacheCopy.clear();
-			}
+			FlxG.bitmap.reset();
 			for (k => s in cachedSounds)
 			{
 				cachedSounds.remove(k);

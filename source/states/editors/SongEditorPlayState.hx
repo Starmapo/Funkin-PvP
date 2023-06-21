@@ -1,8 +1,8 @@
 package states.editors;
 
-import data.game.GameplayGlobals;
 import data.PlayerSettings;
 import data.Settings;
+import data.game.GameplayGlobals;
 import data.game.GameplayRuleset;
 import data.game.Judgement;
 import data.skin.JudgementSkin;
@@ -45,14 +45,16 @@ class SongEditorPlayState extends FNFState
 	var judgementCounters:FlxTypedGroup<JudgementCounter>;
 	var npsDisplay:FlxTypedGroup<NPSDisplay>;
 	var msDisplay:FlxTypedGroup<MSDisplay>;
+	var editorTime:Float;
 
-	public function new(map:Song, player:Int, startTime:Float = 0)
+	public function new(map:Song, player:Int, startTime:Float = 0, editorTime:Float = 0)
 	{
 		super();
 		song = map.deepClone();
 		originalSong = map;
 		this.player = player;
 		this.startTime = startTime;
+		this.editorTime = editorTime;
 
 		persistentUpdate = true;
 
@@ -235,7 +237,7 @@ class SongEditorPlayState extends FNFState
 		inst.stop();
 		vocals.stop();
 		persistentUpdate = false;
-		FlxG.switchState(new SongEditorState(originalSong));
+		FlxG.switchState(new SongEditorState(originalSong, editorTime));
 	}
 
 	function onLanePressed(lane:Int, player:Int)

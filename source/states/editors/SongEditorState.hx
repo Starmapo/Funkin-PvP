@@ -83,8 +83,9 @@ class SongEditorState extends FNFState
 	var savePrompt:SongEditorSavePrompt;
 	var camFocusDisplay:SongEditorCamFocusDisplay;
 	var metronome:SongEditorMetronome;
+	var time:Float = 0;
 
-	public function new(?song:Song)
+	public function new(?song:Song, time:Float = 0)
 	{
 		super();
 		if (globalSong == null)
@@ -95,6 +96,7 @@ class SongEditorState extends FNFState
 		else
 			globalSong = song;
 		this.song = song;
+		this.time = time;
 	}
 
 	override function destroy()
@@ -235,7 +237,7 @@ class SongEditorState extends FNFState
 		add(notificationManager);
 		add(tooltip);
 
-		setHitsoundNoteIndex();
+		setSongTime(time);
 
 		Application.current.onExit.add(onExit);
 
@@ -415,7 +417,7 @@ class SongEditorState extends FNFState
 
 		save();
 		persistentUpdate = false;
-		FlxG.switchState(new SongEditorPlayState(song, player, time));
+		FlxG.switchState(new SongEditorPlayState(song, player, time, inst.time));
 	}
 
 	function handleInput(elapsed:Float)
