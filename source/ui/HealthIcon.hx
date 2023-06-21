@@ -89,14 +89,16 @@ class HealthIcon extends AnimatedSprite
 					name: 'losing',
 					indices: [1],
 					fps: 0,
-					loop: false
+					loop: false,
+					offset: info.losingOffset
 				});
 			if (info.frames > 2)
 				addAnim({
 					name: 'winning',
 					indices: [2],
 					fps: 0,
-					loop: false
+					loop: false,
+					offset: info.winningOffset
 				});
 		}
 		antialiasing = info.antialiasing;
