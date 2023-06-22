@@ -10,7 +10,7 @@ using StringTools;
 
 class CharacterInfo extends JsonObject
 {
-	public static function loadCharacter(path:String, ?mod:String)
+	public static function loadCharacter(path:String, ?mod:String):CharacterInfo
 	{
 		if (!Paths.exists(path))
 			return null;
@@ -36,7 +36,7 @@ class CharacterInfo extends JsonObject
 		return charInfo;
 	}
 
-	public static function loadCharacterFromName(name:String)
+	public static function loadCharacterFromName(name:String):CharacterInfo
 	{
 		var nameInfo = CoolUtil.getNameInfo(name);
 		if (nameInfo.mod.length > 0)

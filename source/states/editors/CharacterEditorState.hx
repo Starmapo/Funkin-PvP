@@ -95,7 +95,7 @@ class CharacterEditorState extends FNFState
 
 	override function create()
 	{
-		DiscordClient.changePresence(null, "Character Editor");
+		updatePresence();
 
 		actionManager = new CharacterEditorActionManager();
 
@@ -607,6 +607,11 @@ class CharacterEditorState extends FNFState
 		healthBar.updateIconPos();
 	}
 
+	public function updatePresence()
+	{
+		DiscordClient.changePresence("Character: " + info.name, "Character Editor");
+	}
+
 	function leaveEditor()
 	{
 		if (actionManager.hasUnsavedChanges)
@@ -631,6 +636,7 @@ class CharacterEditorState extends FNFState
 		actionManager.reset();
 		this.info = info;
 		reloadinfo();
+		updatePresence();
 		MemoryUtil.clearMinor();
 	}
 }

@@ -136,7 +136,7 @@ class SongEditorState extends FNFState
 
 	override function create()
 	{
-		DiscordClient.changePresence(null, "Song Editor");
+		updatePresence();
 
 		persistentUpdate = true;
 		destroySubStates = false;
@@ -418,6 +418,11 @@ class SongEditorState extends FNFState
 		save();
 		persistentUpdate = false;
 		FlxG.switchState(new SongEditorPlayState(song, player, time, inst.time));
+	}
+
+	public function updatePresence()
+	{
+		DiscordClient.changePresence(song.name + " [" + song.difficultyName + "]", "Song Editor");
 	}
 
 	function handleInput(elapsed:Float)

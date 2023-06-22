@@ -808,18 +808,17 @@ class PlayState extends FNFState
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
 
-		var opponentName = chars[0] != null && song.opponent.length > 0 ? chars[0] : song.opponent;
+		var opponentName = song.opponent.length > 0 ? chars[0] : song.opponent;
 		var opponentInfo = CharacterInfo.loadCharacterFromName(opponentName);
 		opponent = new Character(100, 100, opponentInfo);
 		timing.addDancingSprite(opponent);
 
-		var bfName = chars[1] != null && song.bf.length > 0 ? chars[1] : song.bf;
+		var bfName = song.bf.length > 0 ? chars[1] : song.bf;
 		var bfInfo = CharacterInfo.loadCharacterFromName(bfName);
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
 
-		var chars = [gf, opponent, bf];
-		for (char in chars)
+		for (char in [gf, opponent, bf])
 		{
 			if (char.animation.exists('intro'))
 				char.playSpecialAnim('intro');
@@ -829,9 +828,11 @@ class PlayState extends FNFState
 		{
 			if (Settings.healthBarAlpha > 0)
 			{
+				var infos:Array<CharacterInfo> = [opponentInfo, bfInfo];
 				healthBars = new FlxTypedGroup();
 				for (i in 0...2)
-					healthBars.add(new HealthBar(ruleset.playfields[i].scoreProcessor, getPlayerCharacter(i).info));
+					healthBars.add(new HealthBar(ruleset.playfields[i].scoreProcessor,
+						infos[i] != null ? infos[i] : CharacterInfo.loadCharacterFromName(chars[i])));
 				healthBars.cameras = [camHUD];
 				add(healthBars);
 			}

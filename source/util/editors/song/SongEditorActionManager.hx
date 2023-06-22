@@ -1263,6 +1263,7 @@ class ActionChangeDifficultyName implements IAction
 
 	function triggerEvent()
 	{
+		state.updatePresence();
 		state.actionManager.triggerEvent(type, {difficultyName: state.song.difficultyName});
 	}
 }
