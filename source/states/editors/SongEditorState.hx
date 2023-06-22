@@ -22,6 +22,7 @@ import flixel.util.FlxSort;
 import haxe.io.Path;
 import lime.app.Application;
 import subStates.editors.song.SongEditorSavePrompt;
+import sys.io.File;
 import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import ui.editors.song.SongEditorCamFocusDisplay;
@@ -84,6 +85,7 @@ class SongEditorState extends FNFState
 	var camFocusDisplay:SongEditorCamFocusDisplay;
 	var metronome:SongEditorMetronome;
 	var time:Float = 0;
+	var lastLyrics:String;
 
 	public function new(?song:Song, time:Float = 0)
 	{
@@ -205,7 +207,7 @@ class SongEditorState extends FNFState
 		zoomOutButton.autoCenterLabel();
 		tooltip.addTooltip(zoomOutButton, 'Zoom Out (Hotkey: Page Down)');
 
-		lyrics = Song.getSongLyrics(song);
+		lastLyrics = lyrics = Song.getSongLyrics(song);
 
 		lyricsDisplay = new SongEditorLyricsDisplay(this);
 
@@ -335,6 +337,11 @@ class SongEditorState extends FNFState
 			return;
 
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
+		if (lyrics != lastLyrics)
+		{
+			File.saveContent(Path.join([song.directory, 'lyrics.txt']), lyrics);
+			lastLyrics = lyrics;
+		}
 
 		actionManager.lastSaveAction = actionManager.undoStack[0];
 

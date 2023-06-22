@@ -265,6 +265,7 @@ class MainMenuItem extends TextMenuItem
 			scale.set(1, 1);
 			label.color = FlxColor.WHITE;
 			label.borderColor = FlxColor.BLACK;
+			screenCenter(X);
 			scale.copyFrom(lastScale);
 			lastScale.put();
 		}
@@ -279,6 +280,7 @@ class MainMenuItem extends TextMenuItem
 			scale.set(1, 1);
 			label.color = FlxColor.BLACK;
 			label.borderColor = FlxColor.WHITE;
+			screenCenter(X);
 			scale.copyFrom(lastScale);
 			lastScale.put();
 		}

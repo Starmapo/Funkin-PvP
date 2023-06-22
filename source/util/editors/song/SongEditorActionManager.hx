@@ -9,9 +9,7 @@ import data.song.ScrollVelocity;
 import data.song.Song;
 import data.song.TimingPoint;
 import flixel.math.FlxMath;
-import haxe.io.Path;
 import states.editors.SongEditorState;
-import sys.io.File;
 import util.editors.actions.ActionManager;
 import util.editors.actions.IAction;
 
@@ -1493,7 +1491,6 @@ class ActionChangeLyrics implements IAction
 	function triggerEvent()
 	{
 		state.lyricsDisplay.lyrics = state.lyrics;
-		File.saveContent(Path.join([state.song.directory, 'lyrics.txt']), state.lyrics);
 		state.actionManager.triggerEvent(type, {lyrics: state.lyrics});
 	}
 }
