@@ -11,6 +11,8 @@ import ui.game.Note;
 
 class Character extends DancingSprite
 {
+	static final defaultSingAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+
 	public var info(default, set):CharacterInfo;
 	public var charPosX(default, set):Float;
 	public var charPosY(default, set):Float;
@@ -19,7 +21,7 @@ class Character extends DancingSprite
 	public var startWidth:Float;
 	public var startHeight:Float;
 	public var state:CharacterState = Idle;
-	public var singAnimations:Array<String>;
+	public var singAnimations:Array<String> = defaultSingAnimations.copy();
 	public var holdTimers:Array<FlxTimer> = [];
 	public var allowDanceTimer:FlxTimer = new FlxTimer();
 	public var allowMissColor:Bool = true;
@@ -408,7 +410,7 @@ class Character extends DancingSprite
 		if (charFlipX)
 			flipX = !flipX;
 
-		singAnimations = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+		singAnimations = defaultSingAnimations.copy();
 		if (charFlipX)
 		{
 			var left = singAnimations[0];

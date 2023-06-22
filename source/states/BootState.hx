@@ -510,7 +510,9 @@ class BootState extends FNFState
 							var songData = group.songs[i];
 							var name = songData.name;
 							var icon:String = songData.icon;
-							if (!icon.contains(':'))
+							if (icon == null)
+								icon = '';
+							if (icon.length > 0 && !icon.contains(':'))
 								icon = mod.directory + ':' + icon;
 
 							var songPath = Paths.getPath('songs/$name', mod.directory);

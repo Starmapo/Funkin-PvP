@@ -124,8 +124,7 @@ class PlayStateScript extends Script
 		});
 		setVariable("addBehindUI", function(obj:FlxBasic)
 		{
-			var index = state.backgroundCover != null ? state.members.indexOf(state.backgroundCover) + 1 : 0;
-			return state.insert(index, obj);
+			return state.insert(state.members.indexOf(state.ruleset.playfields[0]), obj);
 		});
 		setVariable("getCharacters", function(?name:String, ?mod:String)
 		{

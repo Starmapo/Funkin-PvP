@@ -1387,6 +1387,7 @@ class PlayState extends FNFState
 	{
 		timing.setTime(time);
 		ruleset.handleSkip();
+		executeScripts("onSetTime", [time]);
 	}
 
 	function get_isComplete()

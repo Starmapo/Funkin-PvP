@@ -572,7 +572,7 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 	public var text:FlxText;
 	public var icon:HealthIcon;
 
-	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 15;
+	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, songData:ModSong)
 	{
@@ -586,17 +586,21 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		text.antialiasing = true;
 		label.add(text);
 
-		icon = new HealthIcon(0, text.height / 2, songData.icon);
-		icon.y -= (icon.height / 2);
-		label.add(icon);
-		maxWidth -= icon.width;
+		if (songData.icon.length > 0)
+		{
+			icon = new HealthIcon(0, text.height / 2, songData.icon);
+			icon.y -= (icon.height / 2);
+			label.add(icon);
+			maxWidth -= icon.width + 5;
+		}
 
 		if (text.width > maxWidth)
 		{
 			var ratio = maxWidth / text.width;
 			text.size = Math.floor(text.size * ratio);
 		}
-		icon.x = text.width + 5;
+		if (icon != null)
+			icon.x = text.width + 5;
 
 		setEmptyBackground();
 	}
