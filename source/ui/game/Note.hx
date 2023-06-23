@@ -52,7 +52,8 @@ class Note extends FlxSpriteGroup
 		this.playfield = playfield;
 		this.manager = manager;
 		this.skin = skin;
-		config = manager?.config;
+		if (manager != null)
+			config = manager.config;
 
 		initializeSprites();
 		initializeObject(info);
@@ -69,7 +70,7 @@ class Note extends FlxSpriteGroup
 		tint = FlxColor.WHITE;
 
 		head.visible = true;
-		initialTrackPosition = manager?.getPositionFromTime(info.startTime) ?? info.startTime;
+		initialTrackPosition = manager != null ? manager.getPositionFromTime(info.startTime) : info.startTime;
 		currentlyBeingHeld = false;
 		toUpdate.resize(1);
 
@@ -80,15 +81,15 @@ class Note extends FlxSpriteGroup
 		}
 		else
 		{
-			svDirectionChanges = manager?.getSVDirectionChanges(info.startTime, info.endTime) ?? [];
-			endTrackPosition = manager?.getPositionFromTime(info.endTime) ?? info.endTime;
+			svDirectionChanges = manager != null ? manager.getSVDirectionChanges(info.startTime, info.endTime) : [];
+			endTrackPosition = manager != null ? manager.getPositionFromTime(info.endTime) : info.endTime;
 			tail.visible = body.visible = true;
 			updateLongNoteSize(initialTrackPosition, info.startTime);
 
 			if (config != null)
 			{
 				var flipY = config.downScroll;
-				if (manager?.isSVNegative(info.endTime))
+				if (manager != null && manager.isSVNegative(info.endTime))
 					flipY = !flipY;
 				tail.flipY = flipY;
 			}
@@ -128,7 +129,7 @@ class Note extends FlxSpriteGroup
 		earliestTrackPosition = earliestPosition;
 		latestTrackPosition = latestPosition;
 
-		currentBodySize = Math.round((latestTrackPosition - earliestTrackPosition) * (manager?.scrollSpeed ?? 1.0) - longNoteSizeDifference);
+		currentBodySize = Math.round((latestTrackPosition - earliestTrackPosition) * (manager != null ? manager.scrollSpeed : 1.0) - longNoteSizeDifference);
 	}
 
 	public function updateSpritePositions(offset:Float, curTime:Float)
@@ -257,7 +258,7 @@ class Note extends FlxSpriteGroup
 
 	public function updateWithCurrentPositions()
 	{
-		updateSpritePositions(manager?.currentTrackPosition ?? 0.0, manager?.currentVisualPosition ?? 0.0);
+		updateSpritePositions(manager != null ? manager.currentTrackPosition : 0, manager != null ? manager.currentVisualPosition : 0);
 	}
 
 	override function update(elapsed:Float)
@@ -306,7 +307,7 @@ class Note extends FlxSpriteGroup
 	function getSpritePosition(offset:Float, initialPos:Float)
 	{
 		var downScroll = config != null ? config.downScroll : false;
-		var speed = manager?.scrollSpeed ?? 1.0;
+		var speed = manager != null ? manager.scrollSpeed : 1.0;
 		return ((initialPos - offset) * (downScroll ? -speed : speed));
 	}
 

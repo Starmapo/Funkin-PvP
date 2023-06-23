@@ -38,8 +38,6 @@ class NPSDisplay extends FlxText
 		if (nps > maxNPS)
 			maxNPS = nps;
 		updateText();
-
-		super.update(elapsed);
 	}
 
 	override function destroy()

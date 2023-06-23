@@ -8,7 +8,6 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import haxe.io.Path;
 import haxe.xml.Access;
-import lime.utils.AssetType;
 import openfl.Assets;
 import openfl.display3D.utils.UInt8Buff;
 import openfl.media.Sound;
@@ -362,11 +361,11 @@ class Paths
 		// Makes sure sounds that are currently playing don't get removed, like music or persistent sounds
 		var playingSounds:Array<Sound> = [];
 		@:privateAccess {
-			if (FlxG.sound.music?._sound != null && !playingSounds.contains(FlxG.sound.music._sound))
+			if (FlxG.sound.music != null && FlxG.sound.music._sound != null && !playingSounds.contains(FlxG.sound.music._sound))
 				playingSounds.push(FlxG.sound.music._sound);
 			for (sound in FlxG.sound.list)
 			{
-				if (sound?._sound != null && !playingSounds.contains(sound._sound))
+				if (sound != null && sound._sound != null && !playingSounds.contains(sound._sound))
 					playingSounds.push(sound._sound);
 			}
 		}

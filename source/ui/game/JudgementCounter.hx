@@ -22,6 +22,8 @@ class JudgementCounter extends FlxText
 		updateText();
 	}
 
+	override function update(elapsed:Float) {}
+
 	public function updateText()
 	{
 		var t = '';

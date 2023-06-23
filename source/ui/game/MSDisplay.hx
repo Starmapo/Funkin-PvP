@@ -24,10 +24,10 @@ class MSDisplay extends FlxText
 		active = false;
 	}
 
+	override function update(elapsed:Float) {}
+
 	public function showMS(ms:Float, judgement:Judgement)
 	{
-		revive();
-
 		var t = FlxMath.roundDecimal(ms / GameplayGlobals.playbackRate, 2) + 'ms';
 		if (text != t)
 			text = t;
@@ -53,10 +53,6 @@ class MSDisplay extends FlxText
 			alphaTween.cancel();
 		alpha = 1;
 		alphaTween = FlxTween.tween(this, {alpha: 0}, 0.2, {
-			onComplete: function(_)
-			{
-				kill();
-			},
 			startDelay: 0.2
 		});
 	}

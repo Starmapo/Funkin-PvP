@@ -1,6 +1,5 @@
 package subStates;
 
-import flixel.util.FlxDestroyUtil;
 import data.Mods;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -8,6 +7,7 @@ import flixel.FlxObject;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import states.PlayState;
 import states.options.OptionsState;
 import states.pvp.CharacterSelectState;
@@ -35,8 +35,6 @@ class PauseSubState extends FNFSubState
 
 		menuList = new PauseMenuList();
 		menuList.onChange.add(onChange);
-		add(menuList);
-
 		menuList.createItem('Resume', function()
 		{
 			close();
@@ -75,13 +73,16 @@ class PauseSubState extends FNFSubState
 			state.exit(new RulesetState());
 			CoolUtil.playPvPMusic();
 		});
+		add(menuList);
 
 		playerText = new FlxText(0, 10);
 		playerText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		playerText.scrollFactor.set();
+		playerText.active = false;
 		add(playerText);
 
 		camFollow = new FlxObject(FlxG.width / 2);
+		camFollow.exists = false;
 		add(camFollow);
 
 		camSubState.follow(camFollow, LOCKON, 0.1);
@@ -148,6 +149,7 @@ class PauseMenuList extends TypedMenuList<TextMenuItem>
 	{
 		var item = new TextMenuItem(0, (156 * length), name, callback);
 		item.screenCenter(X);
+		item.active = false;
 		return addItem(name, item);
 	}
 }

@@ -115,6 +115,8 @@ class LyricsDisplay extends FlxText
 		updateLyrics(time, true);
 	}
 
+	override function update(elapsed:Float) {}
+
 	override function destroy()
 	{
 		super.destroy();

@@ -76,6 +76,7 @@ class ResultsScreen extends FNFSubState
 		var titleText = new FlxText(0, 10, 0, winText);
 		titleText.setFormat('PhantomMuff 1.5', 64, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		titleText.screenCenter(X);
+		titleText.active = false;
 		add(titleText);
 
 		for (i in 0...2)
@@ -101,6 +102,7 @@ class ResultsScreen extends FNFSubState
 
 			var judgementText = new FlxText(5 + addX, display.missText.y + display.missText.height + 50, (FlxG.width / 2) - 10, 'Judgements:');
 			judgementText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+			judgementText.active = false;
 			add(judgementText);
 
 			var curY = judgementText.y + judgementText.height + 2;
@@ -113,6 +115,7 @@ class ResultsScreen extends FNFSubState
 					+ ': '
 					+ scores[i].currentJudgements[judgement]);
 				ratingText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+				ratingText.active = false;
 				add(ratingText);
 				curY += ratingText.height + 2;
 			}
@@ -122,6 +125,7 @@ class ResultsScreen extends FNFSubState
 		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.screenCenter(X);
 		pressText.y -= pressText.height;
+		pressText.active = false;
 		add(pressText);
 
 		FlxTween.tween(camSubState, {alpha: 1}, Main.getTransitionTime(), {

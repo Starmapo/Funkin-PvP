@@ -50,7 +50,7 @@ class JudgementDisplay extends FlxSprite
 
 		scale.set(skin.scale, skin.scale);
 		antialiasing = skin.antialiasing;
-		kill();
+		active = exists = false;
 	}
 
 	public function showJudgement(judgement:Judgement)
@@ -62,7 +62,7 @@ class JudgementDisplay extends FlxSprite
 		if (daGraphic == null)
 			return;
 
-		revive();
+		exists = true;
 		loadGraphic(daGraphic);
 		updateHitbox();
 
@@ -80,7 +80,7 @@ class JudgementDisplay extends FlxSprite
 		alphaTween = FlxTween.tween(this, {alpha: 0}, 0.2, {
 			onComplete: function(_)
 			{
-				kill();
+				exists = false;
 			},
 			startDelay: 0.2
 		});

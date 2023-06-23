@@ -218,6 +218,7 @@ class PlayerCharacterSelect extends FlxGroup
 		cameras = [camera];
 
 		camFollow = new FlxObject(FlxG.width / 4);
+		camFollow.exists = false;
 		camera.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
 
@@ -247,26 +248,31 @@ class PlayerCharacterSelect extends FlxGroup
 		}
 		charPortrait.antialiasing = true;
 		charPortrait.scrollFactor.y = 0;
+		charPortrait.active = false;
 		add(charPortrait);
 
 		charPortraitWhite = new FlxSprite(charPortrait.x, charPortrait.y).makeGraphic(1, 1, FlxColor.WHITE);
 		charPortraitWhite.scrollFactor.copyFrom(charPortrait.scrollFactor);
 		charPortraitWhite.alpha = 0;
+		charPortraitWhite.active = false;
 		add(charPortraitWhite);
 
 		var charPortraitOutline = new FlxSprite(charPortrait.x, charPortrait.y, getPortraitOutlineGraphic());
 		charPortraitOutline.scrollFactor.copyFrom(charPortrait.scrollFactor);
+		charPortraitOutline.active = false;
 		add(charPortraitOutline);
 
 		charText = new FlxText(charPortraitOutline.x, charPortraitOutline.y + charPortraitOutline.height + 10, charPortraitOutline.width, '');
 		charText.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		charText.scrollFactor.copyFrom(charPortraitOutline.scrollFactor);
+		charText.active = false;
 		add(charText);
 
 		screenText = new FlxText(5, 50, camera.width - 10);
 		screenText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		screenText.scrollFactor.set();
 		screenText.alpha = 0.6;
+		screenText.active = false;
 		add(screenText);
 
 		groupMenuList.selectItem(lastSelectedGroups[player]);
@@ -497,6 +503,7 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		label.add(bg);
 
 		setEmptyBackground();
+		active = false;
 	}
 
 	override function destroy()
@@ -573,6 +580,7 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		label.add(bg);
 
 		setEmptyBackground();
+		active = false;
 	}
 
 	override function destroy()
