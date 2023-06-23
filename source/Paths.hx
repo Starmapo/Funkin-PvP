@@ -8,6 +8,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import haxe.io.Path;
 import haxe.xml.Access;
+import lime.utils.AssetType;
 import openfl.Assets;
 import openfl.display3D.utils.UInt8Buff;
 import openfl.media.Sound;

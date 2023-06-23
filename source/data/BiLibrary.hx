@@ -5,55 +5,90 @@ import lime.graphics.Image;
 import lime.media.AudioBuffer;
 import lime.text.Font;
 import lime.utils.AssetLibrary;
+import lime.utils.AssetType;
+import lime.utils.Assets;
 import lime.utils.Bytes;
 import sys.FileSystem;
 
 using StringTools;
 
-// it goes both ways?
-// i couldn't think of a better name, sorry
 class BiLibrary extends AssetLibrary
 {
 	final rootPath = './';
 
-	override function exists(id:String, type:String)
+	var defaultLibrary:AssetLibrary;
+
+	public function new(?defaultLibrary:AssetLibrary)
 	{
+		super();
+		if (defaultLibrary == null)
+			defaultLibrary = Assets.getLibrary("default");
+		this.defaultLibrary = defaultLibrary;
+	}
+
+	/**
+		`type` isn't supported for FileSystem checks!
+	**/
+	override function exists(id:String, type:String):Bool
+	{
+		if (defaultLibrary.exists(id, type))
+			return true;
 		return FileSystem.exists(getSysPath(id));
 	}
 
-	override function getAudioBuffer(id:String)
+	override function getAudioBuffer(id:String):AudioBuffer
 	{
-		return AudioBuffer.fromFile(getSysPath(id));
+		if (defaultLibrary.exists(id, AssetType.SOUND))
+			return defaultLibrary.getAudioBuffer(id);
+		else
+			return AudioBuffer.fromFile(getSysPath(id));
 	}
 
-	override function getBytes(id:String)
+	override function getBytes(id:String):Bytes
 	{
-		return Bytes.fromFile(getSysPath(id));
+		if (defaultLibrary.exists(id, AssetType.BINARY))
+			return defaultLibrary.getBytes(id);
+		else
+			return Bytes.fromFile(getSysPath(id));
 	}
 
-	override function getFont(id:String)
+	override function getFont(id:String):Font
 	{
-		return Font.fromFile(getSysPath(id));
+		if (defaultLibrary.exists(id, AssetType.FONT))
+			return defaultLibrary.getFont(id);
+		else
+			return Font.fromFile(getSysPath(id));
 	}
 
-	override function getImage(id:String)
+	override function getImage(id:String):Image
 	{
-		return Image.fromFile(getSysPath(id));
+		if (defaultLibrary.exists(id, AssetType.IMAGE))
+			return defaultLibrary.getImage(id);
+		else
+			return Image.fromFile(getSysPath(id));
 	}
 
 	override function getText(id:String):String
 	{
-		var bytes = getBytes(id);
-
-		if (bytes == null)
-			return null;
+		if (defaultLibrary.exists(id, AssetType.TEXT))
+			return defaultLibrary.getText(id);
 		else
-			return bytes.getString(0, bytes.length);
+		{
+			var bytes = getBytes(id);
+
+			if (bytes == null)
+				return null;
+			else
+				return bytes.getString(0, bytes.length);
+		}
 	}
 
-	override function list(type:String)
+	/**
+		`type` isn't supported for FileSystem checks!
+	**/
+	override function list(type:String):Array<String>
 	{
-		var items:Array<String> = [];
+		var items:Array<String> = defaultLibrary.list(type);
 
 		function pushFolder(path:String)
 		{
@@ -64,19 +99,18 @@ class BiLibrary extends AssetLibrary
 					var full = Path.join([path, file]);
 					if (FileSystem.isDirectory(full))
 						pushFolder(path);
-					else
-						items.push(Path.normalize(full));
+					else if (!items.contains(full))
+						items.push(full);
 				}
 			}
 		}
 
-		pushFolder('assets/');
 		pushFolder('mods/');
 
 		return items;
 	}
 
-	function getSysPath(id:String)
+	function getSysPath(id:String):String
 	{
 		return rootPath + id;
 	}
