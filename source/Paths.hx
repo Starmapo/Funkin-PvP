@@ -8,7 +8,9 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import haxe.io.Path;
 import haxe.xml.Access;
+import lime.app.Future;
 import openfl.Assets;
+import openfl.display.BitmapData;
 import openfl.display3D.utils.UInt8Buff;
 import openfl.media.Sound;
 import util.MemoryUtil;
@@ -77,6 +79,17 @@ class Paths
 			graphic.destroyOnNoUse = false;
 
 		return graphic;
+	}
+
+	public static function loadImage(path:String, ?mod:String):Future<BitmapData>
+	{
+		if (!path.endsWith('.png'))
+			path += '.png';
+		if (!exists(path))
+			path = getPath('images/$path', mod);
+		if (!exists(path))
+			return Future.withValue(null);
+		return BitmapData.loadFromFile(path);
 	}
 
 	public static function getSpritesheet(path:String, ?mod:String, cache:Bool = true, unique:Bool = false, ?key:String):FlxAtlasFrames

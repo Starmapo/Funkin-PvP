@@ -1,28 +1,19 @@
 package ui;
 
+import data.Mods;
 import data.char.IconInfo;
 import haxe.io.Path;
 import sprites.AnimatedSprite;
 
 class HealthIcon extends AnimatedSprite
 {
-	public var icon(default, set):String;
-	public var info(default, null):IconInfo;
-
-	public function new(x:Float = 0, y:Float = 0, icon:String = 'face')
+	public static function getImagePath(icon:String)
 	{
-		super(x, y);
-		frameOffsetScale = 1;
-		this.icon = icon;
-	}
-
-	public function reloadGraphic()
-	{
-		info = IconInfo.loadIconFromName(icon);
+		var info = IconInfo.loadIconFromName(icon);
 		if (info == null)
 			info = new IconInfo({});
 
-		var nameInfo = CoolUtil.getNameInfo(icon);
+		var nameInfo = CoolUtil.getNameInfo(icon, Mods.currentMod);
 		var name = nameInfo.name;
 		var mod = nameInfo.mod;
 
@@ -39,19 +30,39 @@ class HealthIcon extends AnimatedSprite
 				mod = 'fnf';
 				imagePath = Paths.getPath('images/icons/$name.png', mod);
 			}
-			if (!Paths.exists(imagePath))
-			{
-				name = 'face';
-				mod = 'fnf';
-				imagePath = Paths.getPath('images/icons/$name.png', mod);
-			}
+		}
+		if (!Paths.exists(imagePath))
+		{
+			name = 'face';
+			mod = 'fnf';
+			imagePath = Paths.getPath('images/icons/$name.png', mod);
 		}
 
+		return imagePath;
+	}
+
+	public var icon(default, set):String;
+	public var info(default, null):IconInfo;
+
+	public function new(x:Float = 0, y:Float = 0, icon:String = 'face')
+	{
+		super(x, y);
+		frameOffsetScale = 1;
+		this.icon = icon;
+	}
+
+	public function reloadGraphic()
+	{
+		info = IconInfo.loadIconFromName(icon);
+		if (info == null)
+			info = new IconInfo({});
+
+		var imagePath = getImagePath(icon);
 		var path = Path.withoutExtension(imagePath);
 
-		if (Paths.isSpritesheet(path, mod))
+		if (Paths.isSpritesheet(path))
 		{
-			frames = Paths.getSpritesheet(path, mod);
+			frames = Paths.getSpritesheet(path);
 
 			addAnim({
 				name: 'normal',
@@ -75,7 +86,7 @@ class HealthIcon extends AnimatedSprite
 		}
 		else
 		{
-			var image = Paths.getImage(imagePath, mod);
+			var image = Paths.getImage(imagePath);
 			loadGraphic(image, true, Std.int(image.width / info.frames), image.height);
 
 			addAnim({

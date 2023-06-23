@@ -15,6 +15,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import sys.thread.Mutex;
 import ui.HealthIcon;
 import ui.VoidBG;
 import ui.lists.MenuList;
@@ -542,10 +543,6 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 	{
 		var name = songData.directory + songData.name;
 		var item = new SongMenuItem(0, y, name, songData);
-		if (Settings.singleSongSelection)
-			item.x = FlxG.width + ((FlxG.width - item.width) / 2);
-		else
-			item.x = (FlxG.width / 2) + (((FlxG.width / 2) - item.width) / 2);
 		item.y -= item.text.height / 2;
 		byName[name] = item;
 		item.ID = length;
@@ -573,6 +570,8 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 	public var icon:HealthIcon;
 
 	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
+	var iconReady:Bool = false;
+	var mutex:Mutex;
 
 	public function new(x:Float = 0, y:Float = 0, name:String, songData:ModSong)
 	{
@@ -580,6 +579,7 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		super(x, y, label, name, callback);
 		this.songData = songData;
+		setEmptyBackground();
 
 		text = new FlxText(0, 0, 0, songData.name);
 		text.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
@@ -588,21 +588,42 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		if (songData.icon.length > 0)
 		{
-			icon = new HealthIcon(0, text.height / 2, songData.icon);
-			icon.y -= (icon.height / 2);
-			label.add(icon);
-			maxWidth -= icon.width + 5;
+			var imagePath = HealthIcon.getImagePath(songData.icon);
+			if (FlxG.bitmap.checkCache(imagePath))
+				onIconLoaded(false);
+			else
+			{
+				mutex = new Mutex();
+				Paths.loadImage(imagePath).onComplete(function(bitmap)
+				{
+					if (bitmap == null)
+					{
+						mutex = null;
+						return;
+					}
+
+					mutex.acquire();
+					iconReady = true;
+					mutex.release();
+				});
+			}
 		}
 
-		if (text.width > maxWidth)
+		checkMaxWidth();
+		reposition();
+	}
+
+	override function update(elapsed:Float)
+	{
+		if (mutex != null)
 		{
-			var ratio = maxWidth / text.width;
-			text.size = Math.floor(text.size * ratio);
+			mutex.acquire();
+			if (iconReady)
+				onIconLoaded(true);
+			mutex.release();
+			if (icon != null)
+				mutex = null;
 		}
-		if (icon != null)
-			icon.x = text.width + 5;
-
-		setEmptyBackground();
 	}
 
 	override function destroy()
@@ -611,6 +632,37 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		songData = null;
 		text = null;
 		icon = null;
+	}
+
+	function onIconLoaded(afterInit:Bool)
+	{
+		icon = new HealthIcon(0, text.height / 2, songData.icon);
+		icon.y -= (icon.height / 2);
+		label.add(icon);
+		maxWidth -= icon.width + 5;
+		if (afterInit)
+			checkMaxWidth();
+		icon.x = text.width + 5;
+		if (afterInit)
+			reposition();
+	}
+
+	function checkMaxWidth()
+	{
+		text.size = 65;
+		if (text.width > maxWidth)
+		{
+			var ratio = maxWidth / text.width;
+			text.size = Math.floor(text.size * ratio);
+		}
+	}
+
+	function reposition()
+	{
+		if (Settings.singleSongSelection)
+			x = FlxG.width + ((FlxG.width - width) / 2);
+		else
+			x = (FlxG.width / 2) + (((FlxG.width / 2) - width) / 2);
 	}
 }
 
