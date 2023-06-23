@@ -15,6 +15,8 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import lime.app.Future;
+import openfl.display.BitmapData;
 import sys.thread.Mutex;
 import ui.HealthIcon;
 import ui.VoidBG;
@@ -41,6 +43,7 @@ class SongSelectState extends FNFState
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Song Select");
+		SongMenuItem.loadingIcons.clear();
 
 		transIn = transOut = null;
 		persistentUpdate = true;
@@ -565,6 +568,8 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 
 class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 {
+	public static var loadingIcons:Map<String, Future<BitmapData>> = [];
+
 	public var songData:ModSong;
 	public var text:FlxText;
 	public var icon:HealthIcon;
@@ -584,46 +589,21 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		text = new FlxText(0, 0, 0, songData.name);
 		text.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		text.antialiasing = true;
+		text.active = false;
 		label.add(text);
 
 		if (songData.icon.length > 0)
 		{
-			var imagePath = HealthIcon.getImagePath(songData.icon);
-			if (FlxG.bitmap.checkCache(imagePath))
-				onIconLoaded(false);
-			else
-			{
-				mutex = new Mutex();
-				Paths.loadImage(imagePath).onComplete(function(bitmap)
-				{
-					if (bitmap == null)
-					{
-						mutex = null;
-						return;
-					}
-
-					mutex.acquire();
-					iconReady = true;
-					mutex.release();
-				});
-			}
+			icon = new HealthIcon(0, text.height / 2, songData.icon);
+			icon.y -= (icon.height / 2);
+			maxWidth -= icon.width + 5;
+			label.add(icon);
 		}
 
 		checkMaxWidth();
+		if (icon != null)
+			icon.x = text.width + 5;
 		reposition();
-	}
-
-	override function update(elapsed:Float)
-	{
-		if (mutex != null)
-		{
-			mutex.acquire();
-			if (iconReady)
-				onIconLoaded(true);
-			mutex.release();
-			if (icon != null)
-				mutex = null;
-		}
 	}
 
 	override function destroy()
@@ -632,19 +612,6 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		songData = null;
 		text = null;
 		icon = null;
-	}
-
-	function onIconLoaded(afterInit:Bool)
-	{
-		icon = new HealthIcon(0, text.height / 2, songData.icon);
-		icon.y -= (icon.height / 2);
-		label.add(icon);
-		maxWidth -= icon.width + 5;
-		if (afterInit)
-			checkMaxWidth();
-		icon.x = text.width + 5;
-		if (afterInit)
-			reposition();
 	}
 
 	function checkMaxWidth()

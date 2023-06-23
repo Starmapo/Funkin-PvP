@@ -77,6 +77,8 @@ class Paths
 
 		if (graphic != null)
 			graphic.destroyOnNoUse = false;
+		else
+			trace("Graphic " + path + " not found.");
 
 		return graphic;
 	}
@@ -89,7 +91,13 @@ class Paths
 			path = getPath('images/$path', mod);
 		if (!exists(path))
 			return Future.withValue(null);
-		return BitmapData.loadFromFile(path);
+		return BitmapData.loadFromFile(path).onComplete(function(bitmap)
+		{
+			if (bitmap == null)
+				return;
+			var graphic = FlxG.bitmap.add(bitmap, false, path);
+			graphic.destroyOnNoUse = false;
+		});
 	}
 
 	public static function getSpritesheet(path:String, ?mod:String, cache:Bool = true, unique:Bool = false, ?key:String):FlxAtlasFrames
