@@ -1,6 +1,5 @@
 package ui.game;
 
-import flixel.util.FlxDestroyUtil;
 import data.PlayerConfig;
 import data.game.NoteManager;
 import data.game.SVDirectionChange;
@@ -9,6 +8,7 @@ import data.song.NoteInfo;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import sprites.AnimatedSprite;
 import sprites.game.Character;
 
@@ -52,8 +52,7 @@ class Note extends FlxSpriteGroup
 		this.playfield = playfield;
 		this.manager = manager;
 		this.skin = skin;
-		if (manager != null)
-			config = manager.config;
+		config = manager?.config;
 
 		initializeSprites();
 		initializeObject(info);
@@ -70,10 +69,7 @@ class Note extends FlxSpriteGroup
 		tint = FlxColor.WHITE;
 
 		head.visible = true;
-		if (manager != null)
-			initialTrackPosition = manager.getPositionFromTime(info.startTime);
-		else
-			initialTrackPosition = info.startTime;
+		initialTrackPosition = manager?.getPositionFromTime(info.startTime) ?? info.startTime;
 		currentlyBeingHeld = false;
 		toUpdate.resize(1);
 
@@ -84,23 +80,15 @@ class Note extends FlxSpriteGroup
 		}
 		else
 		{
-			if (manager != null)
-			{
-				svDirectionChanges = manager.getSVDirectionChanges(info.startTime, info.endTime);
-				endTrackPosition = manager.getPositionFromTime(info.endTime);
-			}
-			else
-			{
-				svDirectionChanges = [];
-				endTrackPosition = info.endTime;
-			}
+			svDirectionChanges = manager?.getSVDirectionChanges(info.startTime, info.endTime) ?? [];
+			endTrackPosition = manager?.getPositionFromTime(info.endTime) ?? info.endTime;
 			tail.visible = body.visible = true;
 			updateLongNoteSize(initialTrackPosition, info.startTime);
 
 			if (config != null)
 			{
 				var flipY = config.downScroll;
-				if (manager != null && manager.isSVNegative(info.endTime))
+				if (manager?.isSVNegative(info.endTime))
 					flipY = !flipY;
 				tail.flipY = flipY;
 			}
@@ -123,9 +111,7 @@ class Note extends FlxSpriteGroup
 
 	public function updateLongNoteSize(offset:Float, curTime:Float)
 	{
-		var startPosition = initialTrackPosition;
-		if (curTime >= info.startTime)
-			startPosition = offset;
+		var startPosition = curTime >= info.startTime ? offset : initialTrackPosition;
 
 		var earliestPosition = Math.min(startPosition, endTrackPosition);
 		var latestPosition = Math.max(startPosition, endTrackPosition);
@@ -142,8 +128,7 @@ class Note extends FlxSpriteGroup
 		earliestTrackPosition = earliestPosition;
 		latestTrackPosition = latestPosition;
 
-		var speed = manager != null ? manager.scrollSpeed : 1;
-		currentBodySize = Math.round((latestTrackPosition - earliestTrackPosition) * speed - longNoteSizeDifference);
+		currentBodySize = Math.round((latestTrackPosition - earliestTrackPosition) * (manager?.scrollSpeed ?? 1.0) - longNoteSizeDifference);
 	}
 
 	public function updateSpritePositions(offset:Float, curTime:Float)
@@ -272,10 +257,7 @@ class Note extends FlxSpriteGroup
 
 	public function updateWithCurrentPositions()
 	{
-		if (manager != null)
-			updateSpritePositions(manager.currentTrackPosition, manager.currentVisualPosition);
-		else
-			updateSpritePositions(0, 0);
+		updateSpritePositions(manager?.currentTrackPosition ?? 0.0, manager?.currentVisualPosition ?? 0.0);
 	}
 
 	override function update(elapsed:Float)
@@ -324,7 +306,7 @@ class Note extends FlxSpriteGroup
 	function getSpritePosition(offset:Float, initialPos:Float)
 	{
 		var downScroll = config != null ? config.downScroll : false;
-		var speed = manager != null ? manager.scrollSpeed : 1;
+		var speed = manager?.scrollSpeed ?? 1.0;
 		return ((initialPos - offset) * (downScroll ? -speed : speed));
 	}
 

@@ -293,7 +293,7 @@ class CoolUtil
 
 	public static function getDominantColor(sprite:FlxSprite):FlxColor
 	{
-		if (sprite.pixels == null)
+		if (sprite == null || sprite.pixels == null)
 			return FlxColor.BLACK;
 
 		var countByColor:Map<Int, Int> = [];

@@ -91,7 +91,7 @@ class Script implements IFlxDestroyable
 			return;
 
 		var parser = new Parser();
-		parser.allowTypes = true;
+		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 		try
 		{
 			expr = parser.parseString(script);
