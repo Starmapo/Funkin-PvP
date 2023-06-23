@@ -1,3 +1,4 @@
+import data.BiLibrary;
 import data.Mods;
 import data.Settings;
 import data.song.Song;
@@ -8,17 +9,11 @@ import haxe.Json;
 import haxe.io.Path;
 import haxe.xml.Access;
 import openfl.Assets;
-import openfl.display.BitmapData;
 import openfl.display3D.utils.UInt8Buff;
 import openfl.media.Sound;
 import util.MemoryUtil;
 
 using StringTools;
-
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
 
 class Paths
 {
@@ -30,6 +25,10 @@ class Paths
 
 	public static function init()
 	{
+		// use a modified library so we can get files in the mods folder
+		var lib = new BiLibrary();
+		lime.utils.Assets.registerLibrary("", lib);
+
 		excludeSound('menus/scrollMenu');
 		excludeSound('menus/confirmMenu');
 		excludeSound('menus/cancelMenu');
@@ -71,19 +70,8 @@ class Paths
 			key = path;
 
 		var graphic:FlxGraphic = null;
-		// exists in openfl assets, so get it from there
 		if (Assets.exists(path, IMAGE))
 			graphic = FlxGraphic.fromAssetKey(path, unique, key, cache);
-		#if sys
-		// otherwise, get it from the file
-		else if (FileSystem.exists(path))
-		{
-			var bitmap = BitmapData.fromFile(path);
-			graphic = FlxGraphic.fromBitmapData(bitmap, unique, key, cache);
-			@:privateAccess
-			graphic.assetsKey = path;
-		}
-		#end
 
 		if (graphic != null)
 			graphic.destroyOnNoUse = false;
@@ -205,14 +193,6 @@ class Paths
 			if (sound != null)
 				cachedSounds.set(path, sound);
 		}
-		#if sys
-		else if (FileSystem.exists(path))
-		{
-			sound = Sound.fromFile('./$path');
-			if (sound != null)
-				cachedSounds.set(path, sound);
-		}
-		#end
 
 		if (sound != null && !trackedSounds.contains(path))
 			trackedSounds.push(path);
@@ -312,15 +292,7 @@ class Paths
 	public static function getContent(path:String)
 	{
 		if (Assets.exists(path))
-		{
 			return Assets.getText(path).replace('\r', '').trim();
-		}
-		#if sys
-		else if (FileSystem.exists(path))
-		{
-			return File.getContent(path).replace('\r', '').trim();
-		}
-		#end
 		return null;
 	}
 
@@ -335,7 +307,7 @@ class Paths
 
 	public static function exists(path:String):Bool
 	{
-		return Assets.exists(path) #if sys || FileSystem.exists(path) #end;
+		return Assets.exists(path);
 	}
 
 	public static function existsPath(key:String, ?mod:String):Bool
