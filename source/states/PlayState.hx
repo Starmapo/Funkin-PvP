@@ -340,7 +340,7 @@ class PlayState extends FNFState
 	public function addScript(key:String, mod:String, execute:Bool = true)
 	{
 		var path = Paths.getScriptPath(key, mod);
-		if (Paths.exists(path))
+		if (path != null && Paths.exists(path))
 			return addScriptPath(path, mod, execute);
 
 		return null;
@@ -348,6 +348,9 @@ class PlayState extends FNFState
 
 	public function addScriptPath(path:String, mod:String, execute:Bool = true)
 	{
+		// Don't add a script if the path is null, dummy.
+		if (path == null)
+			return null;
 		// Don't add a script more than once!
 		if (scripts.exists(path))
 			return scripts.get(path);
@@ -365,12 +368,18 @@ class PlayState extends FNFState
 		{
 			for (file in FileSystem.readDirectory(folder))
 			{
-				for (ext in Paths.SCRIPT_EXTENSIONS)
+				var full = Path.join([folder, file]);
+				if (FileSystem.isDirectory(full))
+					addScriptsInFolder(full);
+				else
 				{
-					if (file.endsWith(ext))
+					for (ext in Paths.SCRIPT_EXTENSIONS)
 					{
-						addScriptPath(Path.join([folder, file]), song.mod);
-						break;
+						if (file.endsWith(ext))
+						{
+							addScriptPath(full, song.mod);
+							break;
+						}
 					}
 				}
 			}
@@ -548,7 +557,7 @@ class PlayState extends FNFState
 					{
 						if (defaultCamZoomTween != null)
 							defaultCamZoomTween.cancel();
-						
+
 						var duration = params[1] != null ? Std.parseFloat(params[1].trim()) : Math.NaN;
 						if (Math.isNaN(duration))
 							duration = 1;
@@ -812,12 +821,12 @@ class PlayState extends FNFState
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
 
-		var opponentName = song.opponent.length > 0 ? chars[0] : song.opponent;
+		var opponentName = chars[0] != null && song.opponent.length > 0 ? chars[0] : song.opponent;
 		var opponentInfo = CharacterInfo.loadCharacterFromName(opponentName);
 		opponent = new Character(100, 100, opponentInfo);
 		timing.addDancingSprite(opponent);
 
-		var bfName = song.bf.length > 0 ? chars[1] : song.bf;
+		var bfName = chars[1] != null && song.bf.length > 0 ? chars[1] : song.bf;
 		var bfInfo = CharacterInfo.loadCharacterFromName(bfName);
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
@@ -866,6 +875,7 @@ class PlayState extends FNFState
 
 		var stageInfo = CoolUtil.getNameInfo(stage);
 		var stageScript = addScript('data/stages/' + stageInfo.name, stageInfo.mod, false);
+		trace(stageScript, stageFile.found);
 		if (stageScript != null)
 		{
 			for (name => spr in stageFile.sprites)

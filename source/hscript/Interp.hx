@@ -22,6 +22,7 @@
 
 package hscript;
 
+import data.scripts.Script;
 import haxe.Constraints.IMap;
 import haxe.PosInfos;
 import hscript.Expr;
@@ -58,6 +59,8 @@ class Interp
 	#if hscriptPos
 	var curExpr:Expr;
 	#end
+
+	public var script:Script;
 
 	public function new()
 	{
@@ -348,10 +351,11 @@ class Interp
 	inline function error(e:#if hscriptPos ErrorDef #else Error #end, rethrow = false):Dynamic
 	{
 		#if hscriptPos var e = new Error(e, curExpr.pmin, curExpr.pmax, curExpr.origin, curExpr.line); #end
-		if (rethrow)
-			this.rethrow(e)
-		else
-			throw e;
+		if (script != null)
+		{
+			script.onError(e.toString());
+			script.closed = true;
+		}
 		return null;
 	}
 

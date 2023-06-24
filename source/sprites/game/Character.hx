@@ -325,6 +325,9 @@ class Character extends DancingSprite
 		if (info == null)
 			return;
 
+		var lastAnim = animation.name;
+		var lastFrame = animation.curAnim != null ? animation.curAnim.curFrame : 0;
+
 		danceAnims = info.danceAnims.copy();
 		antialiasing = info.antialiasing;
 		scale.set(info.scale, info.scale);
@@ -334,6 +337,9 @@ class Character extends DancingSprite
 		state = Idle;
 		resetColor();
 		danceBeats = danceAnims.length > 1 ? 1 : 2;
+
+		if (lastAnim != null && animation.exists(lastAnim))
+			playAnim(lastAnim, true, false, lastFrame);
 	}
 
 	public function reloadImage()
@@ -445,6 +451,11 @@ class Character extends DancingSprite
 			default:
 				camOffset.set();
 		}
+	}
+
+	public function changeCharacter(name:String)
+	{
+		info = CharacterInfo.loadCharacterFromName(name);
 	}
 
 	function set_info(value:CharacterInfo)

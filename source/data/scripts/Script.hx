@@ -84,6 +84,7 @@ class Script implements IFlxDestroyable
 		this.mod = mod;
 
 		interp = new Interp();
+		interp.script = this;
 		setStartingVariables();
 
 		var script = Paths.getContent(path);
@@ -180,7 +181,7 @@ class Script implements IFlxDestroyable
 		return null;
 	}
 
-	function onError(message:String)
+	public function onError(message:String)
 	{
 		trace(message);
 	}
@@ -240,6 +241,7 @@ class Script implements IFlxDestroyable
 		setVariable('FlxTimer', FlxTimer);
 		setVariable('FlxTrail', FlxTrail);
 		setVariable('FlxTween', FlxTween);
+		setVariable('FlxTweenType', CoolUtil.getMacroAbstractClass("flixel.tweens.FlxTweenType"));
 		setVariable('FlxTypedGroup', FlxTypedGroup);
 		setVariable('FlxTypedSpriteGroup', FlxTypedSpriteGroup);
 		setVariable('FlxVideo', FlxVideo);

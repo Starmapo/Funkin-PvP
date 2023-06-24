@@ -26,7 +26,8 @@ import util.DiscordClient;
 
 class SongSelectState extends FNFState
 {
-	public static var song:Song = null;
+	public static var song:Song;
+	public static var songData:ModSong;
 
 	public var transitioning:Bool = true;
 
@@ -152,7 +153,10 @@ class SongSelectState extends FNFState
 				reloadSong();
 				exitTransition(function(_)
 				{
-					FlxG.switchState(new CharacterSelectState());
+					if (songData.forceCharacters)
+						FlxG.switchState(new PlayState(song, []));
+					else
+						FlxG.switchState(new CharacterSelectState());
 				});
 			}
 		}
@@ -191,9 +195,10 @@ class SongSelectState extends FNFState
 	function reloadSong()
 	{
 		var group = playerGroups.members[FlxG.random.int(0, playerGroups.length - 1)];
-		var data = group.songMenuList.selectedItem.songData;
+		songData = group.songMenuList.selectedItem.songData;
+
 		var difficulty = group.difficultyMenuList.selectedItem.difficulty;
-		song = Song.loadSong(data.name + '/' + difficulty, data.directory);
+		song = Song.loadSong(songData.name + '/' + difficulty, songData.directory);
 
 		if (Settings.noLongNotes)
 			song.replaceLongNotesWithRegularNotes();
