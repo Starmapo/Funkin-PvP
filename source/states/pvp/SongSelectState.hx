@@ -258,7 +258,7 @@ class PlayerSongSelect extends FlxGroup
 			groupMenuList.createItem(group);
 		groupMenuList.afterInit();
 
-		songMenuList = new SongMenuList(player, controlsMode);
+		songMenuList = new SongMenuList(state, player, controlsMode);
 		songMenuList.onChange.add(onSongChange);
 		songMenuList.onAccept.add(onSongAccept);
 		songMenuList.controlsEnabled = false;
@@ -539,11 +539,13 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 class SongMenuList extends TypedMenuList<SongMenuItem>
 {
+	var state:SongSelectState;
 	var player:Int = 0;
 
-	public function new(player:Int, controlsMode:ControlsMode)
+	public function new(state:SongSelectState, player:Int, controlsMode:ControlsMode)
 	{
 		super(VERTICAL, controlsMode);
+		this.state = state;
 		this.player = player;
 	}
 
@@ -566,6 +568,8 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 		{
 			var item = createItem(song, (midpoint.y + (160 * length)));
 			addItem(item.name, item);
+			if (item.icon != null)
+				state.precacheGraphic(item.icon.graphic);
 		}
 		midpoint.put();
 	}

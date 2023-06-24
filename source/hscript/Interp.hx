@@ -356,6 +356,13 @@ class Interp
 			script.onError(e.toString());
 			script.closed = true;
 		}
+		else
+		{
+			if (rethrow)
+				this.rethrow(e);
+			else
+				throw e;
+		}
 		return null;
 	}
 

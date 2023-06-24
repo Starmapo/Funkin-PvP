@@ -52,13 +52,16 @@ class PauseSubState extends FNFSubState
 			state.exit(new OptionsState(new PlayState(state.song, state.chars)));
 			CoolUtil.playMenuMusic();
 		});
-		menuList.createItem('Exit to character select', function()
+		if (!SongSelectState.songData.forceCharacters)
 		{
-			music.stop();
-			menuList.controlsEnabled = false;
-			state.exit(new CharacterSelectState());
-			CoolUtil.playPvPMusic();
-		});
+			menuList.createItem('Exit to character select', function()
+			{
+				music.stop();
+				menuList.controlsEnabled = false;
+				state.exit(new CharacterSelectState());
+				CoolUtil.playPvPMusic();
+			});
+		}
 		menuList.createItem('Exit to song select', function()
 		{
 			music.stop();
