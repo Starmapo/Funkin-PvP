@@ -105,6 +105,7 @@ class PlayState extends FNFState
 	public var stageFile:StageFile;
 	public var camBopRate:Null<Int> = null;
 	public var iconBop:Bool = true;
+	public var defaultCamZoomTween:FlxTween;
 
 	var instEnded:Bool = false;
 	var debugMode:Bool = false;
@@ -545,12 +546,15 @@ class PlayState extends FNFState
 					var zoom = Std.parseFloat(params[0].trim());
 					if (!Math.isNaN(zoom))
 					{
+						if (defaultCamZoomTween != null)
+							defaultCamZoomTween.cancel();
+						
 						var duration = params[1] != null ? Std.parseFloat(params[1].trim()) : Math.NaN;
 						if (Math.isNaN(duration))
 							duration = 1;
 						duration /= GameplayGlobals.playbackRate;
 						var ease:Float->Float = params[2] != null ? Reflect.field(FlxEase, params[2].trim()) : null;
-						FlxTween.tween(this, {defaultCamZoom: zoom}, duration, {ease: ease});
+						defaultCamZoomTween = FlxTween.tween(this, {defaultCamZoom: zoom}, duration, {ease: ease});
 					}
 				}
 		}
