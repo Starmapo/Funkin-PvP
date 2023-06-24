@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -29,6 +30,10 @@ class EditorInputText extends FlxSpriteGroup
 	var hasFocus:Bool = false;
 	var lastText:String;
 	var _displayText:String;
+	var lastVolumeUpKeys:Array<FlxKey>;
+	var lastVolumeDownKeys:Array<FlxKey>;
+	var lastMuteKeys:Array<FlxKey>;
+	var lastDebugToggleKeys:Array<FlxKey>;
 
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, ?textFieldCamera:FlxCamera)
 	{
@@ -71,6 +76,10 @@ class EditorInputText extends FlxSpriteGroup
 		textField.textField.removeEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		textField.textField.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 		textField = null;
+		lastVolumeUpKeys = null;
+		lastVolumeDownKeys = null;
+		lastMuteKeys = null;
+		lastDebugToggleKeys = null;
 		super.destroy();
 	}
 
@@ -96,6 +105,16 @@ class EditorInputText extends FlxSpriteGroup
 
 	function onFocusIn(event:FocusEvent)
 	{
+		lastVolumeUpKeys = FlxG.sound.volumeUpKeys;
+		lastVolumeDownKeys = FlxG.sound.volumeDownKeys;
+		lastMuteKeys = FlxG.sound.muteKeys;
+		lastDebugToggleKeys = FlxG.debugger.toggleKeys;
+
+		FlxG.sound.volumeUpKeys = null;
+		FlxG.sound.volumeDownKeys = null;
+		FlxG.sound.muteKeys = null;
+		FlxG.debugger.toggleKeys = null;
+
 		if (_displayText != null)
 		{
 			text = '';
@@ -113,6 +132,11 @@ class EditorInputText extends FlxSpriteGroup
 			textChanged.dispatch(text, lastText);
 			lastText = text;
 		}
+
+		FlxG.sound.volumeUpKeys = lastVolumeUpKeys;
+		FlxG.sound.volumeDownKeys = lastVolumeDownKeys;
+		FlxG.sound.muteKeys = lastMuteKeys;
+		FlxG.debugger.toggleKeys = lastDebugToggleKeys;
 	}
 
 	function filter(text:String)

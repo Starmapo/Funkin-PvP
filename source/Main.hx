@@ -163,7 +163,7 @@ class Main extends Sprite
 		if (hasEventListener(Event.ADDED_TO_STAGE))
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 
-		addChild(new FNFGame(0, 0, BootState, 60, 60, true, false));
+		addChild(new FlxGame(0, 0, BootState, 60, 60, true, false));
 
 		addChild(statsDisplay = new StatsDisplay());
 		statsDisplay.visible = false;
