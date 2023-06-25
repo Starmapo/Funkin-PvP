@@ -6,7 +6,6 @@
 			"bpm": 97
 		}
 	],
-	"vocalsFile": "Voices.ogg",
 	"events": [
 		{
 			"startTime": 108965.979381443,
@@ -3615,61 +3614,12 @@
 			"startTime": 98450.5154639175
 		},
 		{
-			"startTime": 99532.9896907216
-		},
-		{
-			"startTime": 99842.2680412371
-		},
-		{
-			"startTime": 101002.06185567
-		},
-		{
-			"startTime": 101543.298969072
-		},
-		{
-			"startTime": 102780.412371134
-		},
-		{
-			"startTime": 103089.690721649
-		},
-		{
-			"startTime": 103398.969072165
-		},
-		{
-			"startTime": 104017.525773196
-		},
-		{
-			"startTime": 104481.443298969
-		},
-		{
-			"startTime": 105022.680412371
-		},
-		{
-			"startTime": 105486.597938144
-		},
-		{
-			"startTime": 105718.556701031
-		},
-		{
-			"startTime": 107264.948453608
-		},
-		{
-			"startTime": 107574.226804124
-		},
-		{
-			"startTime": 107883.505154639
-		},
-		{
-			"startTime": 108038.144329897
-		},
-		{
-			"startTime": 108965.979381443
+			"startTime": 99069.0721649484
 		}
 	],
 	"title": "Babe Ruth vs Lance Armstrong",
 	"initialScrollVelocity": 1,
 	"source": "Epic Rap Battles of History - Season 2",
-	"instFile": "Inst.ogg",
 	"cameraFocuses": [],
 	"scrollVelocities": [
 		{
