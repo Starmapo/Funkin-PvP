@@ -1,3 +1,5 @@
+chart editor from playstate
+song select warnings
 image optimizer
 zip mods
 wiki

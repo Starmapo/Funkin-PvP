@@ -1342,6 +1342,8 @@ class SongEditorEditPanel extends EditorPanel
 		eventInput = new EditorInputText(eventLabel.x, eventLabel.y + eventLabel.height + spacing, inputWidth);
 		eventInput.textChanged.add(function(text, _)
 		{
+			if (selectedEvents[0] == null)
+				return;
 			state.actionManager.perform(new ActionChangeEvent(state, selectedEvents[0].events[eventIndex], text));
 		});
 		tab.add(eventInput);
@@ -1354,6 +1356,8 @@ class SongEditorEditPanel extends EditorPanel
 		eventParamsInput = new EditorInputText(eventParamsLabel.x, eventParamsLabel.y + eventParamsLabel.height + spacing, inputWidth);
 		eventParamsInput.textChanged.add(function(text, _)
 		{
+			if (selectedEvents[0] == null)
+				return;
 			state.actionManager.perform(new ActionChangeEventParams(state, selectedEvents[0].events[eventIndex], text));
 		});
 		tab.add(eventParamsInput);
@@ -1362,8 +1366,10 @@ class SongEditorEditPanel extends EditorPanel
 		var removeButton = new FlxUIButton(0, 4, '-', function()
 		{
 			var eventObject = selectedEvents[0];
+			if (eventObject == null)
+				return;
 			if (eventObject.events.length > 1)
-				state.actionManager.perform(new ActionRemoveEvent(state, eventObject, eventObject.events[eventObject.events.length - 1]));
+				state.actionManager.perform(new ActionRemoveEvent(state, eventObject, eventObject.events[eventIndex], eventIndex));
 			else
 				state.actionManager.perform(new ActionRemoveObject(state, eventObject));
 		});
@@ -1377,8 +1383,10 @@ class SongEditorEditPanel extends EditorPanel
 		var addButton = new FlxUIButton(0, 4, '+', function()
 		{
 			var eventObject = selectedEvents[0];
-			state.actionManager.perform(new ActionAddEvent(state, eventObject, new Event({})));
-			eventIndex = eventObject.events.length - 1;
+			if (eventObject == null)
+				return;
+			state.actionManager.perform(new ActionAddEvent(state, eventObject, new Event({}), eventIndex + 1));
+			eventIndex++;
 			updateEventDisplay();
 		});
 		addButton.resize(addButton.height, addButton.height);

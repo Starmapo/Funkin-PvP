@@ -1,17 +1,21 @@
 package data.scripts;
 
 import data.game.GameplayGlobals;
+import data.skin.NoteSkin;
 import data.song.NoteInfo;
 import data.song.Song;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
+import haxe.io.Path;
 import hxcodec.flixel.FlxVideo;
 import hxcodec.flixel.FlxVideoSprite;
 import sprites.game.Character;
 import states.PlayState;
 import ui.game.Note;
+
+using StringTools;
 
 class PlayStateScript extends Script
 {
@@ -228,6 +232,18 @@ class PlayStateScript extends Script
 			video.bitmap.rate = GameplayGlobals.playbackRate;
 			return video;
 		});
+		setVariable("setupStrumline", function(char:Character, chartName:String)
+		{
+			var song = Song.loadSong(Path.join([state.song.directory, chartName + '.json']), state.song.mod);
+			if (song == null)
+				return null;
+			var strumline = new FakeStrumline(state, char, song.notes);
+			state.afterRulesetUpdate.add(function(elapsed)
+			{
+				strumline.update(elapsed);
+			});
+			return strumline;
+		});
 
 		/*
 			// i tried to do some module shit, gave up
@@ -331,5 +347,116 @@ class PlayStateScript extends Script
 
 		var shader = new FlxRuntimeShader(frag, vert, glslVersion);
 		return shader;
+	}
+}
+
+/**
+	This creates a "fake" strumline, as in it won't be visible on-screen but it'll make a character sing notes.
+**/
+class FakeStrumline extends FlxBasic
+{
+	var state:PlayState;
+	var char:Character;
+	var notes:Array<NoteInfo> = [];
+	var holdingNotes:Array<Note> = [];
+	var skin:NoteSkin;
+
+	public function new(state:PlayState, char:Character, notes:Array<NoteInfo>)
+	{
+		super();
+		this.state = state;
+		this.char = char;
+		this.notes = notes;
+		skin = NoteSkin.loadSkinFromName('fnf:default');
+	}
+
+	override function update(elapsed:Float)
+	{
+		var time = state.timing.audioPosition;
+		while (notes.length > 0 && time >= notes[0].startTime)
+		{
+			var info = notes.shift();
+			var note = new Note(info, null, null, skin);
+			if (!note.noAnim)
+			{
+				if (note.heyNote)
+					char.playSpecialAnim('hey', 0.6 / GameplayGlobals.playbackRate, true);
+				else if (info.type == 'Play Animation')
+				{
+					var anim = info.params[0] != null ? info.params[0].trim() : '';
+					if (char.animation.exists(anim))
+					{
+						var force = true;
+						if (info.params[1] != null)
+						{
+							var param = info.params[1].trim();
+							force = param != 'false' && param != '0';
+						}
+						char.playAnim(anim, force);
+					}
+					else
+						playNoteAnim(note);
+				}
+				else if (info.type == 'Special Animation')
+				{
+					var anim = info.params[0] != null ? info.params[0].trim() : '';
+					if (char.animation.exists(anim))
+					{
+						var time = info.params[1] != null ? Std.parseFloat(info.params[1].trim()) : Math.NaN;
+						if (Math.isNaN(time) || time < 0)
+							time = 0;
+						var force = true;
+						if (info.params[2] != null)
+						{
+							var param = info.params[2].trim();
+							force = param != 'false' && param != '0';
+						}
+						char.playSpecialAnim(anim, time, force);
+					}
+					else
+						playNoteAnim(note);
+				}
+				else
+					playNoteAnim(note);
+			}
+		}
+
+		var i = holdingNotes.length - 1;
+		while (i >= 0)
+		{
+			var note = holdingNotes[i];
+			if (time >= note.info.endTime)
+			{
+				note.currentlyBeingHeld = false;
+				note.destroy();
+				holdingNotes.remove(note);
+			}
+			i--;
+		}
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		notes = null;
+		if (holdingNotes != null)
+		{
+			for (note in holdingNotes)
+				note.destroy();
+		}
+		holdingNotes = null;
+		skin = null;
+	}
+
+	function playNoteAnim(note:Note)
+	{
+		char.playNoteAnim(note, state.getBeatLength());
+		if (note.info.isLongNote)
+		{
+			note.currentlyBeingHeld = true;
+			holdingNotes.push(note);
+		}
+		else
+			note.destroy();
 	}
 }

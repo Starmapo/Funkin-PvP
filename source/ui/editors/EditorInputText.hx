@@ -35,6 +35,10 @@ class EditorInputText extends FlxSpriteGroup
 	var lastMuteKeys:Array<FlxKey>;
 	var lastDebugToggleKeys:Array<FlxKey>;
 
+	#if FLX_RECORD
+	var lastVCRCancelKeys:Array<FlxKey>;
+	#end
+
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, ?textFieldCamera:FlxCamera)
 	{
 		super(x, y);
@@ -109,11 +113,17 @@ class EditorInputText extends FlxSpriteGroup
 		lastVolumeDownKeys = FlxG.sound.volumeDownKeys;
 		lastMuteKeys = FlxG.sound.muteKeys;
 		lastDebugToggleKeys = FlxG.debugger.toggleKeys;
+		#if FLX_RECORD
+		lastVCRCancelKeys = FlxG.vcr.cancelKeys;
+		#end
 
 		FlxG.sound.volumeUpKeys = null;
 		FlxG.sound.volumeDownKeys = null;
 		FlxG.sound.muteKeys = null;
 		FlxG.debugger.toggleKeys = null;
+		#if FLX_RECORD
+		FlxG.vcr.cancelKeys = null;
+		#end
 
 		if (_displayText != null)
 		{
@@ -137,6 +147,9 @@ class EditorInputText extends FlxSpriteGroup
 		FlxG.sound.volumeDownKeys = lastVolumeDownKeys;
 		FlxG.sound.muteKeys = lastMuteKeys;
 		FlxG.debugger.toggleKeys = lastDebugToggleKeys;
+		#if FLX_RECORD
+		FlxG.vcr.cancelKeys = lastVCRCancelKeys;
+		#end
 	}
 
 	function filter(text:String)

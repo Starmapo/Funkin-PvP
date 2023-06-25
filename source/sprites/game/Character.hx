@@ -29,6 +29,7 @@ class Character extends DancingSprite
 	public var isGF:Bool;
 	public var camOffset:FlxPoint = FlxPoint.get();
 	public var danceDisabled:Bool = false;
+	public var singDisabled:Bool = false;
 	public var xDifference:Float = 0;
 
 	public function new(x:Float = 0, y:Float = 0, info:CharacterInfo, charFlipX:Bool = false, isGF:Bool = false)
@@ -179,7 +180,7 @@ class Character extends DancingSprite
 
 	public function playSingAnim(lane:Int, beatLength:Float, hold:Bool = false, suffix:String = '')
 	{
-		if (lane < 0 || lane > singAnimations.length - 1)
+		if (lane < 0 || lane > singAnimations.length - 1 || singDisabled)
 			return;
 
 		var anim = singAnimations[lane] + suffix;
@@ -209,7 +210,7 @@ class Character extends DancingSprite
 
 	public function playMissAnim(lane:Int)
 	{
-		if (lane < 0 || lane > singAnimations.length - 1)
+		if (lane < 0 || lane > singAnimations.length - 1 || singDisabled || state == Special)
 			return;
 
 		var anim = singAnimations[lane] + 'miss';
@@ -334,7 +335,12 @@ class Character extends DancingSprite
 		frameOffsetScale = info.scale;
 		reloadImage();
 
-		state = Idle;
+		if (state != Idle)
+		{
+			state = Idle;
+			allowDanceTimer.cancel();
+			canDance = true;
+		}
 		resetColor();
 		danceBeats = danceAnims.length > 1 ? 1 : 2;
 

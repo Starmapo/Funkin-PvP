@@ -51,6 +51,8 @@ class Note extends FlxSpriteGroup
 		super();
 		this.playfield = playfield;
 		this.manager = manager;
+		if (skin == null)
+			skin = NoteSkin.loadSkinFromName('fnf:default');
 		this.skin = skin;
 		if (manager != null)
 			config = manager.config;

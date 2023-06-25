@@ -28,6 +28,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import haxe.io.Path;
@@ -106,6 +107,7 @@ class PlayState extends FNFState
 	public var camBopRate:Null<Int> = null;
 	public var iconBop:Bool = true;
 	public var defaultCamZoomTween:FlxTween;
+	public var afterRulesetUpdate:FlxTypedSignal<Float->Void> = new FlxTypedSignal();
 
 	var instEnded:Bool = false;
 	var debugMode:Bool = false;
@@ -171,6 +173,8 @@ class PlayState extends FNFState
 
 		timing.update(elapsed);
 		ruleset.update(elapsed);
+		afterRulesetUpdate.dispatch(elapsed);
+
 		handleInput(elapsed);
 
 		if (!hasEnded && isComplete)
@@ -487,6 +491,7 @@ class PlayState extends FNFState
 				var time = params[2] != null ? Std.parseFloat(params[2].trim()) : Math.NaN;
 				if (Math.isNaN(time) || time < 0)
 					time = 0;
+				time /= GameplayGlobals.playbackRate;
 				char.playSpecialAnim(params[0], time, true);
 
 			case 'Camera Follow Pos':
@@ -598,7 +603,7 @@ class PlayState extends FNFState
 
 			if (Settings.resultsScreen)
 			{
-				var chars = [gf, opponent, bf];
+				var chars = [opponent, bf];
 				for (char in chars)
 				{
 					if (char.animation.exists('outro'))
@@ -831,7 +836,7 @@ class PlayState extends FNFState
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
 
-		for (char in [gf, opponent, bf])
+		for (char in [opponent, bf])
 		{
 			if (char.animation.exists('intro'))
 				char.playSpecialAnim('intro');
@@ -875,7 +880,6 @@ class PlayState extends FNFState
 
 		var stageInfo = CoolUtil.getNameInfo(stage);
 		var stageScript = addScript('data/stages/' + stageInfo.name, stageInfo.mod, false);
-		trace(stageScript, stageFile.found);
 		if (stageScript != null)
 		{
 			for (name => spr in stageFile.sprites)
@@ -1113,7 +1117,7 @@ class PlayState extends FNFState
 		{
 			var char = getNoteCharacter(note);
 			if (note.heyNote)
-				char.playSpecialAnim('hey', 0.6, true);
+				char.playSpecialAnim('hey', 0.6 / GameplayGlobals.playbackRate, true);
 			else if (note.info.type == 'Play Animation')
 			{
 				var anim = note.info.params[0] != null ? note.info.params[0].trim() : '';

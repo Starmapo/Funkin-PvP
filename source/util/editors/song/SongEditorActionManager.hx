@@ -1050,24 +1050,26 @@ class ActionAddEvent implements IAction
 	var state:SongEditorState;
 	var eventObject:EventObject;
 	var event:Event;
+	var index:Int;
 
-	public function new(state:SongEditorState, eventObject:EventObject, event:Event)
+	public function new(state:SongEditorState, eventObject:EventObject, event:Event, index:Int)
 	{
 		this.state = state;
 		this.eventObject = eventObject;
 		this.event = event;
+		this.index = index;
 	}
 
 	public function perform()
 	{
-		eventObject.events.push(event);
+		eventObject.events.insert(index, event);
 
-		state.actionManager.triggerEvent(type, {eventObject: eventObject, event: event});
+		state.actionManager.triggerEvent(type, {eventObject: eventObject, event: event, index: index});
 	}
 
 	public function undo()
 	{
-		new ActionRemoveEvent(state, eventObject, event).perform();
+		new ActionRemoveEvent(state, eventObject, event, index).perform();
 	}
 
 	public function destroy()
@@ -1085,12 +1087,14 @@ class ActionRemoveEvent implements IAction
 	var state:SongEditorState;
 	var eventObject:EventObject;
 	var event:Event;
+	var index:Int;
 
-	public function new(state:SongEditorState, eventObject:EventObject, event:Event)
+	public function new(state:SongEditorState, eventObject:EventObject, event:Event, index:Int)
 	{
 		this.state = state;
 		this.eventObject = eventObject;
 		this.event = event;
+		this.index = index;
 	}
 
 	public function perform()
@@ -1102,7 +1106,7 @@ class ActionRemoveEvent implements IAction
 
 	public function undo()
 	{
-		new ActionAddEvent(state, eventObject, event).perform();
+		new ActionAddEvent(state, eventObject, event, index).perform();
 	}
 
 	public function destroy()
