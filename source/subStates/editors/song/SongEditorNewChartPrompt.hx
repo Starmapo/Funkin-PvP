@@ -60,8 +60,6 @@ class SongEditorNewChartPrompt extends FNFSubState
 			state.save(false);
 
 			var data:Dynamic = {
-				instFile: state.song.instFile,
-				vocalsFile: state.song.vocalsFile,
 				timingPoints: [],
 				scrollVelocities: [],
 				cameraFocuses: [],

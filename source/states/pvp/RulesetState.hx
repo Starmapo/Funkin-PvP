@@ -1,7 +1,6 @@
 package states.pvp;
 
 import data.PlayerSettings;
-import data.Settings.WinCondition;
 import data.Settings;
 import data.game.Judgement;
 import flixel.FlxCamera;

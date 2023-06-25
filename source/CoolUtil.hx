@@ -533,6 +533,16 @@ class CoolUtil
 		#end
 	}
 
+	public static function addMultilineText(text:String, add:String)
+	{
+		if (text == null || add == null || add.length < 1)
+			return text;
+		if (text.length > 0)
+			text += '\n';
+		text += add;
+		return text;
+	}
+
 	@:generic
 	static function getArrayMaxX<T:FlxObject>(array:Array<T>):Float
 	{

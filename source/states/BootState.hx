@@ -537,6 +537,7 @@ class BootState extends FNFState
 									name: name,
 									icon: icon,
 									forceCharacters: songData.forceCharacters == true,
+									forceCharacterDifficulties: songData.forceCharacterDifficulties != null ? songData.forceCharacterDifficulties : [],
 									difficulties: songDifficulties,
 									directory: mod.directory
 								});

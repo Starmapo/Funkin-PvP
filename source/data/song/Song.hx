@@ -148,8 +148,6 @@ class Song extends JsonObject
 	{
 		var song:Dynamic = {
 			title: json.song,
-			instFile: 'Inst.ogg',
-			vocalsFile: 'Voices.ogg',
 			scrollSpeed: json.speed,
 			timingPoints: [
 				{
@@ -329,12 +327,12 @@ class Song extends JsonObject
 	/**
 		The name of the instrumental file. Unused for now.
 	**/
-	public var instFile:String;
+	// public var instFile:String;
 
 	/**
 		The name of the vocals file. Unused for now.
 	**/
-	public var vocalsFile:String;
+	// public var vocalsFile:String;
 
 	/**
 		The list of timing points for this map.
@@ -419,8 +417,6 @@ class Song extends JsonObject
 		title = readString(data.title, 'Untitled Song');
 		artist = readString(data.artist, 'Unknown Artist');
 		source = readString(data.source, 'Unknown Source');
-		instFile = readString(data.instFile, 'Inst.ogg');
-		vocalsFile = readString(data.vocalsFile, 'Voices.ogg');
 		bf = readString(data.bf, 'fnf:bf');
 		opponent = readString(data.opponent, 'fnf:dad');
 		gf = readString(data.gf, 'fnf:gf');
@@ -845,8 +841,6 @@ class Song extends JsonObject
 			title: title,
 			artist: artist,
 			source: source,
-			instFile: instFile,
-			vocalsFile: vocalsFile,
 			timingPoints: timingPoints,
 			initialScrollVelocity: initialScrollVelocity,
 			scrollVelocities: scrollVelocities,
@@ -1065,8 +1059,6 @@ class Song extends JsonObject
 			title: title,
 			artist: artist,
 			source: source,
-			instFile: instFile,
-			vocalsFile: vocalsFile,
 			timingPoints: timingPoints,
 			initialScrollVelocity: initialScrollVelocity,
 			scrollVelocities: scrollVelocities,

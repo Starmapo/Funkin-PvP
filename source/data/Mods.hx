@@ -47,6 +47,7 @@ typedef ModSong =
 	var name:String;
 	var icon:String;
 	var forceCharacters:Bool;
+	var forceCharacterDifficulties:Array<String>;
 	var difficulties:Array<String>;
 	var directory:String;
 }

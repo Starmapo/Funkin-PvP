@@ -138,6 +138,10 @@ class PlayState extends FNFState
 			FlxG.sound.music = null;
 		}
 
+		// no thinking outside the box!
+		if (!SongSelectState.canSelectChars && !Settings.forceDefaultStage)
+			chars = [];
+
 		Mods.currentMod = song.mod;
 		FlxAnimationController.globalSpeed = GameplayGlobals.playbackRate;
 
@@ -602,6 +606,8 @@ class PlayState extends FNFState
 			if (songInfoDisplay != null)
 				songInfoDisplay.visible = false;
 			ruleset.stopInput();
+
+			FlxG.bitmap.clearUnused();
 
 			if (Settings.resultsScreen)
 			{

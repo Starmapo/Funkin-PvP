@@ -53,7 +53,7 @@ class PauseSubState extends FNFSubState
 			state.exit(new OptionsState(new PlayState(state.song)));
 			CoolUtil.playMenuMusic();
 		});
-		if (!SongSelectState.songData.forceCharacters || Settings.forceDefaultStage)
+		if (PlayState.chars.length > 0 || Settings.forceDefaultStage)
 		{
 			menuList.createItem('Exit to character select', function()
 			{

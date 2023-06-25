@@ -28,6 +28,7 @@ class SongSelectState extends FNFState
 {
 	public static var song:Song;
 	public static var songData:ModSong;
+	public static var canSelectChars:Bool = true;
 
 	public var transitioning:Bool = true;
 
@@ -153,7 +154,7 @@ class SongSelectState extends FNFState
 				reloadSong();
 				exitTransition(function(_)
 				{
-					if (songData.forceCharacters && !Settings.forceDefaultStage)
+					if (!canSelectChars && !Settings.forceDefaultStage)
 						FlxG.switchState(new PlayState(song, []));
 					else
 						FlxG.switchState(new CharacterSelectState());
@@ -196,6 +197,7 @@ class SongSelectState extends FNFState
 	{
 		var group = playerGroups.members[FlxG.random.int(0, playerGroups.length - 1)];
 		songData = group.songMenuList.selectedItem.songData;
+		canSelectChars = group.canSelectChars;
 
 		var difficulty = group.difficultyMenuList.selectedItem.difficulty;
 		song = Song.loadSong(songData.name + '/' + difficulty, songData.directory);
@@ -213,6 +215,8 @@ class SongSelectState extends FNFState
 			song.mirrorNotes();
 		if (Settings.randomize)
 			song.randomizeLanes();
+
+		return group;
 	}
 }
 
@@ -228,6 +232,7 @@ class PlayerSongSelect extends FlxGroup
 	public var groupMenuList:SongGroupMenuList;
 	public var songMenuList:SongMenuList;
 	public var difficultyMenuList:DifficultyMenuList;
+	public var canSelectChars:Bool = true;
 
 	var player:Int = 0;
 	var state:SongSelectState;
@@ -235,6 +240,8 @@ class PlayerSongSelect extends FlxGroup
 	var lastGroupReset:String = '';
 	var lastSongReset:String = '';
 	var screenText:FlxText;
+	var warningText:FlxText;
+	var warningBG:FlxSprite;
 
 	public function new(player:Int, camera:FlxCamera, state:SongSelectState, groups:Array<ModSongGroup>)
 	{
@@ -271,6 +278,15 @@ class PlayerSongSelect extends FlxGroup
 		add(difficultyMenuList);
 		add(songMenuList);
 		add(groupMenuList);
+
+		warningBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		warningBG.scrollFactor.set();
+		add(warningBG);
+
+		warningText = new FlxText(5, 0, camera.width - 10);
+		warningText.setFormat('PhantomMuff 1.5', 32, 0xffff5252, CENTER, OUTLINE, FlxColor.BLACK);
+		warningText.scrollFactor.set();
+		add(warningText);
 
 		screenText = new FlxText(5, 50, camera.width - 10);
 		screenText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -410,6 +426,7 @@ class PlayerSongSelect extends FlxGroup
 	function onSongChange(item:SongMenuItem)
 	{
 		updateCamFollow(item.text);
+		updateWarningText();
 		lastSelectedSongs[player] = item.ID;
 	}
 
@@ -440,6 +457,7 @@ class PlayerSongSelect extends FlxGroup
 	function onDiffChange(item:DifficultyMenuItem)
 	{
 		updateCamFollow(item);
+		updateWarningText();
 		lastSelectedDiffs[player] = item.ID;
 	}
 
@@ -460,6 +478,45 @@ class PlayerSongSelect extends FlxGroup
 			screenText.text = groupMenuList.selectedItem.groupData.name;
 		else
 			screenText.text = '';
+		updateWarningText();
+	}
+
+	function updateWarningText()
+	{
+		canSelectChars = true;
+
+		var warning = '';
+		var item = songMenuList.selectedItem;
+		if (item.songData.forceCharacters && !Settings.forceDefaultStage)
+		{
+			canSelectChars = false;
+			if (songMenuList.controlsEnabled)
+				warning = CoolUtil.addMultilineText(warning, "You can't pick characters for this song.");
+		}
+
+		if (difficultyMenuList.controlsEnabled)
+		{
+			var item = difficultyMenuList.selectedItem;
+			if (item.songData.forceCharacterDifficulties.contains(item.difficulty) && !Settings.forceDefaultStage && canSelectChars)
+			{
+				canSelectChars = false;
+				warning = CoolUtil.addMultilineText(warning, "You can't pick characters for this difficulty.");
+			}
+		}
+
+		if (warningText.text != warning)
+			warningText.text = warning;
+		warningText.y = FlxG.height - warningText.height - 5;
+
+		if (warning.length > 0)
+		{
+			warningBG.visible = true;
+			warningBG.setGraphicSize(warningText.width + 2, warningText.height + 2);
+			warningBG.updateHitbox();
+			warningBG.setPosition(warningText.x - 1, warningText.y - 1);
+		}
+		else
+			warningBG.visible = false;
 	}
 }
 

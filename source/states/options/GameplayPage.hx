@@ -32,7 +32,7 @@ class GameplayPage extends BaseSettingsPage
 		addSetting({
 			name: 'forceDefaultStage',
 			displayName: 'Force Default Stage',
-			description: "If enabled, the Week 1 stage is forced on every song.",
+			description: "If enabled, the FNF Week 1 stage is forced on every song.",
 			type: CHECKBOX
 		});
 		addSetting({
