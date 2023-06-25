@@ -1,6 +1,7 @@
 package subStates;
 
 import data.Mods;
+import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -43,13 +44,13 @@ class PauseSubState extends FNFSubState
 		{
 			music.stop();
 			menuList.controlsEnabled = false;
-			state.exit(new PlayState(state.song, state.chars));
+			state.exit(new PlayState(state.song));
 		});
 		menuList.createItem('Exit to options', function()
 		{
 			music.stop();
 			menuList.controlsEnabled = false;
-			state.exit(new OptionsState(new PlayState(state.song, state.chars)));
+			state.exit(new OptionsState(new PlayState(state.song)));
 			CoolUtil.playMenuMusic();
 		});
 		if (!SongSelectState.songData.forceCharacters || Settings.forceDefaultStage)

@@ -9,6 +9,7 @@ import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.input.keyboard.FlxKey;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -18,6 +19,10 @@ import util.InputFormatter;
 
 class ControlsPage extends Page
 {
+	static final PREVENT_KEYS:Array<FlxKey> = [
+		ZERO, SEVEN, MINUS, PLUS, BACKSLASH, GRAVEACCENT, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, NUMPADZERO, NUMPADMINUS, NUMPADPLUS
+	];
+
 	var player:Int = 0;
 	var items:FlxTypedGroup<ControlItem>;
 	var pressBG:FlxSprite;
@@ -173,7 +178,12 @@ class ControlsPage extends Page
 				else
 				{
 					var id = settings.controls.firstJustReleased();
-					if (id > -1)
+					var allow = switch (settings.config.device)
+					{
+						case KEYBOARD: !PREVENT_KEYS.contains(id);
+						default: true;
+					}
+					if (id > -1 && allow)
 					{
 						var binds = settings.config.controls.get(curItem.control);
 

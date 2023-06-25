@@ -45,7 +45,7 @@ class ToolboxState extends FNFState
 		createItem('Song Editor', function()
 		{
 			FlxG.sound.music.stop();
-			FlxG.switchState(new SongEditorState());
+			FlxG.switchState(new SongEditorState(null, 0, false));
 		});
 
 		camFollow = new FlxObject(FlxG.width / 2);

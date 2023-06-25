@@ -34,6 +34,7 @@ import flixel.util.FlxTimer;
 import haxe.io.Path;
 import sprites.AnimatedSprite;
 import sprites.game.Character;
+import states.editors.SongEditorState;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
 import subStates.ResultsScreen;
@@ -56,8 +57,9 @@ using StringTools;
 
 class PlayState extends FNFState
 {
+	public static var chars:Array<String> = [];
+
 	public var song:Song;
-	public var chars:Array<String>;
 	public var isPaused:Bool = false;
 	public var hasStarted:Bool = false;
 	public var hasEnded:Bool = false;
@@ -113,13 +115,14 @@ class PlayState extends FNFState
 	var debugMode:Bool = false;
 	var hitNote:Bool = false;
 
-	public function new(?map:Song, chars:Array<String>)
+	public function new(?map:Song, ?chars:Array<String>)
 	{
 		super();
 		if (map == null)
 			map = Song.loadSong('Tutorial/Hard');
 		song = map;
-		this.chars = chars;
+		if (chars != null)
+			PlayState.chars = chars;
 
 		persistentUpdate = true;
 		destroySubStates = false;
@@ -196,7 +199,6 @@ class PlayState extends FNFState
 	{
 		super.destroy();
 		song = null;
-		chars = null;
 		camHUD = FlxDestroyUtil.destroy(camHUD);
 		camOther = FlxDestroyUtil.destroy(camOther);
 		timing = FlxDestroyUtil.destroy(timing);
@@ -1049,6 +1051,12 @@ class PlayState extends FNFState
 			{
 				killNotes();
 				endSong();
+			}
+
+			if (FlxG.keys.justPressed.SEVEN)
+			{
+				exit(new SongEditorState(Song.loadSong(Path.join([song.directory, song.difficultyName + '.json'])), 0, true));
+				return;
 			}
 		}
 

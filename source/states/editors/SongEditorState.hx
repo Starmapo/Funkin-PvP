@@ -45,6 +45,8 @@ import util.editors.song.SongEditorMetronome;
 
 class SongEditorState extends FNFState
 {
+	public static var toPlayState:Bool = false;
+
 	static var globalSong:Song;
 
 	public var hitPositionY:Int = 545;
@@ -87,7 +89,7 @@ class SongEditorState extends FNFState
 	var time:Float = 0;
 	var lastLyrics:String;
 
-	public function new(?song:Song, time:Float = 0)
+	public function new(?song:Song, time:Float = 0, ?toPlayState:Bool)
 	{
 		super();
 		if (globalSong == null)
@@ -99,6 +101,8 @@ class SongEditorState extends FNFState
 			globalSong = song;
 		this.song = song;
 		this.time = time;
+		if (toPlayState != null)
+			SongEditorState.toPlayState = toPlayState;
 	}
 
 	override function destroy()
@@ -900,7 +904,10 @@ class SongEditorState extends FNFState
 			if (option == 'Yes')
 				save();
 			persistentUpdate = false;
-			FlxG.switchState(new ToolboxState());
+			if (toPlayState)
+				FlxG.switchState(new PlayState(song));
+			else
+				FlxG.switchState(new ToolboxState());
 		}
 	}
 
