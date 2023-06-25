@@ -816,8 +816,6 @@ class PlayState extends FNFState
 		staticBG.setGraphicSize(FlxG.width, FlxG.height);
 		staticBG.updateHitbox();
 		staticBG.playAnim('static');
-		if (!Settings.distractions)
-			staticBG.animation.pause();
 		staticBG.scrollFactor.set();
 		add(staticBG);
 

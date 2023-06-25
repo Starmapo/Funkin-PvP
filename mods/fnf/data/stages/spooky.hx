@@ -3,7 +3,7 @@ var lightningOffset:Int = 8;
 
 function onCreate()
 {
-	if (!Settings.lowQuality && Settings.distractions)
+	if (!Settings.lowQuality)
 	{
 		Paths.getSound('thunder_1');
 		Paths.getSound('thunder_2');

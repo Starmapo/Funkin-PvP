@@ -153,7 +153,7 @@ class SongSelectState extends FNFState
 				reloadSong();
 				exitTransition(function(_)
 				{
-					if (songData.forceCharacters)
+					if (songData.forceCharacters && !Settings.forceDefaultStage)
 						FlxG.switchState(new PlayState(song, []));
 					else
 						FlxG.switchState(new CharacterSelectState());

@@ -15,12 +15,14 @@ class GameplayPage extends BaseSettingsPage
 			description: "If enabled, some background details are disabled, improving performance and reducing loading times.",
 			type: CHECKBOX
 		});
+		/*
 		addSetting({
 			name: 'distractions',
 			displayName: 'Distractions',
 			description: "Toggle stage distractions that can hinder your gameplay.",
 			type: CHECKBOX
 		});
+		*/
 		addSetting({
 			name: 'shaders',
 			displayName: 'Shaders',

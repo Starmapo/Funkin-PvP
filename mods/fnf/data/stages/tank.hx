@@ -15,23 +15,16 @@ function onCreate()
 		insert(members.indexOf(bg) + 1, tankSky);
 	}
 
-	if (Settings.distractions)
-	{
-		tankmanRun = new FlxTypedGroup();
-		addBehindChars(tankmanRun);
+	tankmanRun = new FlxTypedGroup();
+	addBehindChars(tankmanRun);
 
-		moveTank();
-	}
+	moveTank();
 
 	if (gf.info.name == 'pico-speaker')
 	{
 		gf.danceDisabled = true;
-		if (Settings.distractions)
-			loadMappedAnims();
+		loadMappedAnims();
 	}
-
-	if (!Settings.distractions)
-		close();
 }
 
 function onUpdate(elapsed)

@@ -6,8 +6,6 @@
 	<high-quality>
 		<spr name="streetBehind" image="behindTrain" x="-40" y="50" />
 	</high-quality>
-	<distractions>
-		<spr name="phillyTrain" image="train" x="2000" y="360" />
-	</distractions>
+	<spr name="phillyTrain" image="train" x="2000" y="360" />
 	<spr name="street" image="street" x="-40" y="50" />
 </stage>

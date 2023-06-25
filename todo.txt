@@ -1,5 +1,7 @@
 chart editor from playstate
 song select warnings
+controls prevent keys
+lil buddies stage
 image optimizer
 zip mods
 wiki

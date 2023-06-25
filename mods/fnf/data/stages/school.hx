@@ -4,7 +4,7 @@ var daPixelZoom:Float = 6;
 
 function onCreate()
 {
-	if (!Settings.lowQuality && Settings.distractions)
+	if (!Settings.lowQuality)
 	{
 		bgGirls = new FlxSprite(-100, 190);
 		bgGirls.frames = Paths.getSpritesheet('stages/weeb/bgFreaks');

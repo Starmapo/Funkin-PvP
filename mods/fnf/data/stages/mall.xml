@@ -1,25 +1,19 @@
 <stage zoom="0.8" folder="stages/christmas/">
 	<spr name="bg" image="bgWalls" x="-1000" y="-500" scroll="0.2" scale="0.8" />
 	<high-quality>
-		<distractions>
-			<spr name="upperBoppers" image="upperBop" x="-240" y="-90" scroll="0.33" scale="0.85" danceAnims="bop" >
-				<anim name="bop" atlasName="Upper Crowd Bob" loop="false" />
-			</spr>
-		</distractions>
+		<spr name="upperBoppers" image="upperBop" x="-240" y="-90" scroll="0.33" scale="0.85" danceAnims="bop" >
+			<anim name="bop" atlasName="Upper Crowd Bob" loop="false" />
+		</spr>
 		<spr name="bgEscalator" image="bgEscalator" x="-1100" y="-600" scroll="0.3" scale="0.9" />
 	</high-quality>
 	<spr name="tree" image="christmasTree" x="370" y="-250" scroll="0.4" />
-	<distractions>
-		<spr name="bottomBoppers" image="bottomBop" x="-300" y="140" scroll="0.9" danceAnims="bop" >
-			<anim name="bop" atlasName="Bottom Level Boppers" loop="false" />
-		</spr>
-	</distractions>
+	<spr name="bottomBoppers" image="bottomBop" x="-300" y="140" scroll="0.9" danceAnims="bop" >
+		<anim name="bop" atlasName="Bottom Level Boppers" loop="false" />
+	</spr>
 	<spr name="fgSnow" image="fgSnow" x="-600" y="700" />
-	<distractions>
-		<spr name="santa" image="santa" x="-840" y="150" danceAnims="idle" >
-			<anim name="idle" atlasName="santa idle in fear" loop="false" />
-		</spr>
-	</distractions>
+	<spr name="santa" image="santa" x="-840" y="150" danceAnims="idle" >
+		<anim name="idle" atlasName="santa idle in fear" loop="false" />
+	</spr>
 	<gf />
 	<dad />
 	<bf x="970" />

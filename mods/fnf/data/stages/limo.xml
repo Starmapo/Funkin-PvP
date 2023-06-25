@@ -11,9 +11,7 @@
 	</spr>
 	<dad />
 	<bf x="1030" y="-160"/>
-	<distractions>
-		<spr name="fastCar" image="fastCarLol" x="-300" y="160" >
-			<property name="active" type="b" value="true" />
-		</spr>
-	</distractions>
+	<spr name="fastCar" image="fastCarLol" x="-300" y="160" >
+		<property name="active" type="b" value="true" />
+	</spr>
 </stage>

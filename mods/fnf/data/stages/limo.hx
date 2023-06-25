@@ -4,7 +4,7 @@ var danceDir:Bool = false;
 
 function onCreate()
 {
-	if (!Settings.lowQuality && Settings.distractions)
+	if (!Settings.lowQuality)
 	{
 		grpLimoDancers = new FlxTypedGroup();
 		insert(members.indexOf(bgLimo) + 1, grpLimoDancers);
@@ -24,20 +24,15 @@ function onCreate()
 		}
 	}
 
-	if (Settings.distractions)
-	{
-		resetFastCar();
+	resetFastCar();
 
-		Paths.getSound('carPass0');
-		Paths.getSound('carPass1');
-	}
-	else
-		close();
+	Paths.getSound('carPass0');
+	Paths.getSound('carPass1');
 }
 
 function onBeatHit(beat, decBeat)
 {
-	if (!Settings.lowQuality && Settings.distractions)
+	if (!Settings.lowQuality)
 	{
 		danceDir = !danceDir;
 		grpLimoDancers.forEach(function(dancer)

@@ -12,47 +12,41 @@
 		<spr name="smokeRight" image="smokeRight" x="1100" y="-100" scroll="0.4" >
 			<anim name="idle" atlasName="SmokeRight instance 1" baseAnim="true" />
 		</spr>
-		<distractions>
-			<spr name="tankWatchtower" image="tankWatchtower" x="100" y="50" scroll="0.5" danceAnims="idle" >
-				<anim name="idle" atlasName="watchtower gradient color instance 1" loop="false" baseAnim="true" />
-			</spr>
-		</distractions>
-	</high-quality>
-	<distractions>
-		<spr name="tankRolling" image="tankRolling" x="300" y="300" scroll="0.5" >
-			<anim name="idle" atlasName="BG tank w lighting instance 1" baseAnim="true" />
+		<spr name="tankWatchtower" image="tankWatchtower" x="100" y="50" scroll="0.5" danceAnims="idle" >
+			<anim name="idle" atlasName="watchtower gradient color instance 1" loop="false" baseAnim="true" />
 		</spr>
-	</distractions>
+	</high-quality>
+	<spr name="tankRolling" image="tankRolling" x="300" y="300" scroll="0.5" >
+		<anim name="idle" atlasName="BG tank w lighting instance 1" baseAnim="true" />
+	</spr>
 	<spr name="tankGround" image="tankGround" x="-420" y="-150" scale="1.15" />
 	<gf />
 	<dad />
 	<bf />
-	<distractions>
-		<grp name="foregroundSprites">
-			<spr name="fgTank0" image="tank0" x="-500" y="650" scrollX="1.7" scrollY="1.5" danceAnims="idle" >
-				<anim name="idle" atlasName="fg tankhead far right instance 1" loop="false" baseAnim="true" />
+	<grp name="foregroundSprites">
+		<spr name="fgTank0" image="tank0" x="-500" y="650" scrollX="1.7" scrollY="1.5" danceAnims="idle" >
+			<anim name="idle" atlasName="fg tankhead far right instance 1" loop="false" baseAnim="true" />
+		</spr>
+		<high-quality>
+			<spr name="fgTank1" image="tank1" x="-300" y="750" scrollX="2" scrollY="0.2" danceAnims="idle" >
+				<anim name="idle" atlasName="fg tankhead 5 instance 1" loop="false" baseAnim="true" />
 			</spr>
-			<high-quality>
-				<spr name="fgTank1" image="tank1" x="-300" y="750" scrollX="2" scrollY="0.2" danceAnims="idle" >
-					<anim name="idle" atlasName="fg tankhead 5 instance 1" loop="false" baseAnim="true" />
-				</spr>
-			</high-quality>
-			<spr name="fgTank2" image="tank2" x="450" y="940" scroll="1.5" danceAnims="idle" >
-				<anim name="idle" atlasName="foreground man 3 instance 1" loop="false" baseAnim="true" />
+		</high-quality>
+		<spr name="fgTank2" image="tank2" x="450" y="940" scroll="1.5" danceAnims="idle" >
+			<anim name="idle" atlasName="foreground man 3 instance 1" loop="false" baseAnim="true" />
+		</spr>
+		<high-quality>
+			<spr name="fgTank4" image="tank4" x="1300" y="900" scroll="1.5" danceAnims="idle" >
+				<anim name="idle" atlasName="fg tankman bobbin 3 instance 1" loop="false" baseAnim="true" />
 			</spr>
-			<high-quality>
-				<spr name="fgTank4" image="tank4" x="1300" y="900" scroll="1.5" danceAnims="idle" >
-					<anim name="idle" atlasName="fg tankman bobbin 3 instance 1" loop="false" baseAnim="true" />
-				</spr>
-			</high-quality>
-			<spr name="fgTank5" image="tank5" x="1620" y="700" scroll="1.5" danceAnims="idle" >
-				<anim name="idle" atlasName="fg tankhead far right instance 1" loop="false" baseAnim="true" />
+		</high-quality>
+		<spr name="fgTank5" image="tank5" x="1620" y="700" scroll="1.5" danceAnims="idle" >
+			<anim name="idle" atlasName="fg tankhead far right instance 1" loop="false" baseAnim="true" />
+		</spr>
+		<high-quality>
+			<spr name="fgTank3" image="tank3" x="1300" y="1200" scrollX="3.5" scrollY="2.5" danceAnims="idle" >
+				<anim name="idle" atlasName="fg tankhead 4 instance 1" loop="false" baseAnim="true" />
 			</spr>
-			<high-quality>
-				<spr name="fgTank3" image="tank3" x="1300" y="1200" scrollX="3.5" scrollY="2.5" danceAnims="idle" >
-					<anim name="idle" atlasName="fg tankhead 4 instance 1" loop="false" baseAnim="true" />
-				</spr>
-			</high-quality>
-		</grp>
-	</distractions>
+		</high-quality>
+	</grp>
 </stage>

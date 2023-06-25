@@ -371,22 +371,6 @@ class StageFile implements IFlxDestroyable
 					pushNode(e, elements);
 			}
 		}
-		else if (node.name == 'distractions')
-		{
-			if (Settings.distractions)
-			{
-				for (e in node.elements)
-					pushNode(e, elements);
-			}
-		}
-		else if (node.name == 'no-distractions')
-		{
-			if (!Settings.distractions)
-			{
-				for (e in node.elements)
-					pushNode(e, elements);
-			}
-		}
 		else
 			elements.push(node);
 	}
