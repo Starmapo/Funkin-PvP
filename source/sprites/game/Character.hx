@@ -11,7 +11,8 @@ import ui.game.Note;
 
 class Character extends DancingSprite
 {
-	static final defaultSingAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	static final MISS_COLOR:FlxColor = 0xFF565694;
+	static final DEFAULT_SING_ANIMS:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
 	public var info(default, set):CharacterInfo;
 	public var charPosX(default, set):Float;
@@ -21,11 +22,10 @@ class Character extends DancingSprite
 	public var startWidth:Float;
 	public var startHeight:Float;
 	public var state:CharacterState = Idle;
-	public var singAnimations:Array<String> = defaultSingAnimations.copy();
+	public var singAnimations:Array<String> = DEFAULT_SING_ANIMS.copy();
 	public var holdTimers:Array<FlxTimer> = [];
 	public var allowDanceTimer:FlxTimer = new FlxTimer();
-	public var allowMissColor:Bool = true;
-	public var intendedColor(default, set):FlxColor = FlxColor.WHITE;
+	public var missColor:Bool = true;
 	public var isGF:Bool;
 	public var camOffset:FlxPoint = FlxPoint.get();
 	public var danceDisabled:Bool = false;
@@ -42,6 +42,33 @@ class Character extends DancingSprite
 		this.info = info;
 		this.charFlipX = charFlipX;
 		setCharacterPosition(x, y);
+
+		animation.finishCallback = function(name:String)
+		{
+			if (!debugMode && info != null)
+			{
+				final anim = info.getAnim(name);
+				if (anim != null && anim.nextAnim.length > 0)
+					playAnim(anim.nextAnim);
+				else if (state == Special && !allowDanceTimer.active && !danceDisabled)
+				{
+					canDance = true;
+					dance();
+				}
+			}
+		}
+	}
+
+	override function draw()
+	{
+		final lastColor = color;
+		if (missColor)
+			color *= MISS_COLOR;
+
+		super.draw();
+
+		if (missColor)
+			color = lastColor;
 	}
 
 	override function playAnim(name, force = false, reversed = false, frame = 0)
@@ -60,27 +87,7 @@ class Character extends DancingSprite
 		onAnimPlayed.dispatch(name);
 	}
 
-	override function animPlayed(name:String)
-	{
-		animation.finishCallback = function(name:String)
-		{
-			if (!debugMode && info != null)
-			{
-				var anim = info.getAnim(name);
-				if (anim != null && anim.nextAnim.length > 0)
-					playAnim(anim.nextAnim);
-				else if (state == Special && !allowDanceTimer.active && !danceDisabled)
-				{
-					canDance = true;
-					dance();
-				}
-				else
-					stopAnimCallback();
-			}
-			else
-				stopAnimCallback();
-		}
-	}
+	override function animPlayed(name:String) {}
 
 	override function updateOffset()
 	{
@@ -114,13 +121,13 @@ class Character extends DancingSprite
 		setPosition(charPosX, charPosY);
 		if (info != null)
 		{
-			var scaleX = (frameOffsetScale != null ? scale.x / frameOffsetScale : 1);
+			final scaleX = (frameOffsetScale != null ? scale.x / frameOffsetScale : 1);
 			if (charFlipX && !isGF)
 				x += (-info.positionOffset[0] + xDifference) * scaleX;
 			else
 				x += info.positionOffset[0] * scaleX;
 
-			var scaleY = (frameOffsetScale != null ? scale.y / frameOffsetScale : 1);
+			final scaleY = (frameOffsetScale != null ? scale.y / frameOffsetScale : 1);
 			y = charPosY + info.positionOffset[1] * scaleY;
 		}
 	}
@@ -148,7 +155,7 @@ class Character extends DancingSprite
 
 	public function getCurAnimOffset()
 	{
-		var anim = getCurAnim();
+		final anim = getCurAnim();
 		if (anim != null && anim.offset.length >= 2)
 			return anim.offset;
 
@@ -157,7 +164,7 @@ class Character extends DancingSprite
 
 	public function playNoteAnim(note:Note, beatLength:Float)
 	{
-		var lane = note.info.playerLane;
+		final lane = note.info.playerLane;
 		playSingAnim(lane, beatLength, false, note.animSuffix);
 
 		if (note.info.isLongNote && animation.curAnim != null)
@@ -195,36 +202,24 @@ class Character extends DancingSprite
 			resetColor();
 			setCamOffsetFromLane(lane);
 
-			if (allowDanceTimer.active)
-				allowDanceTimer.cancel();
-			allowDanceTimer.start((beatLength / 1000) * 1.5, function(_)
-			{
-				if (!danceDisabled)
-				{
-					canDance = true;
-					dance();
-				}
-			});
+			startDanceTimer((beatLength / 1000) * 2);
 		}
 	}
 
-	public function playMissAnim(lane:Int)
+	public function playMissAnim(lane:Int, beatLength:Float)
 	{
 		if (lane < 0 || lane > singAnimations.length - 1 || singDisabled || state == Special)
 			return;
 
 		var anim = singAnimations[lane] + 'miss';
 		var fallback = false;
-		if (!animation.exists(anim) && allowMissColor)
+		if (!animation.exists(anim))
 		{
 			anim = singAnimations[lane];
 			fallback = true;
 		}
 		if (animation.exists(anim))
 		{
-			if (allowDanceTimer.active)
-				allowDanceTimer.cancel();
-
 			canDance = false;
 			state = Miss(lane);
 			playAnim(anim, true, false);
@@ -234,14 +229,7 @@ class Character extends DancingSprite
 				resetColor();
 			setCamOffsetFromLane();
 
-			animation.finishCallback = function(_)
-			{
-				if (!danceDisabled)
-				{
-					canDance = true;
-					dance();
-				}
-			}
+			startDanceTimer((beatLength / 1000) * 2);
 		}
 	}
 
@@ -260,55 +248,22 @@ class Character extends DancingSprite
 		setCamOffsetFromLane();
 
 		if (allowDanceTime > 0)
-		{
-			allowDanceTimer.start(allowDanceTime, function(_)
-			{
-				if (!danceDisabled)
-				{
-					canDance = true;
-					dance();
-				}
-			});
-		}
+			startDanceTimer(allowDanceTime);
 	}
 
-	public function doColorTween(duration:Float, fromColor:FlxColor, toColor:FlxColor, options:TweenOptions)
+	public function doColorTween(duration:Float, fromColor:FlxColor, toColor:FlxColor, ?options:TweenOptions)
 	{
-		if (options == null)
-			options = {type: ONESHOT};
-
-		allowMissColor = false;
-		FlxTween.color(this, duration, fromColor, toColor, {
-			type: options.type,
-			ease: options.ease,
-			onStart: options.onStart,
-			onUpdate: function(twn)
-			{
-				intendedColor = color;
-
-				if (options.onUpdate != null)
-					options.onUpdate(twn);
-			},
-			onComplete: function(twn)
-			{
-				allowMissColor = true;
-
-				if (options.onComplete != null)
-					options.onComplete(twn);
-			},
-			startDelay: options.startDelay,
-			loopDelay: options.loopDelay
-		});
+		FlxTween.color(this, duration, fromColor, toColor, options);
 	}
 
 	public function setMissColor()
 	{
-		color = 0xFF565694;
+		missColor = true;
 	}
 
 	public function resetColor()
 	{
-		color = intendedColor;
+		missColor = false;
 	}
 
 	override function destroy()
@@ -326,8 +281,8 @@ class Character extends DancingSprite
 		if (info == null)
 			return;
 
-		var lastAnim = animation.name;
-		var lastFrame = animation.curAnim != null ? animation.curAnim.curFrame : 0;
+		final lastAnim = animation.name;
+		final lastFrame = animation.curAnim != null ? animation.curAnim.curFrame : 0;
 
 		danceAnims = info.danceAnims.copy();
 		antialiasing = info.antialiasing;
@@ -353,7 +308,7 @@ class Character extends DancingSprite
 		if (info == null)
 			return;
 
-		var nameInfo = CoolUtil.getNameInfo(info.image, info.mod);
+		final nameInfo = CoolUtil.getNameInfo(info.image, info.mod);
 		var daFrames = Paths.getSpritesheet(nameInfo.name, nameInfo.mod);
 		if (daFrames == null)
 			daFrames = Paths.getSpritesheet(nameInfo.name, 'fnf');
@@ -395,10 +350,8 @@ class Character extends DancingSprite
 
 	public function updateSize()
 	{
-		var lastAnim = animation.name;
-		var lastFrame = 0;
-		if (animation.curAnim != null)
-			lastFrame = animation.curAnim.curFrame;
+		final lastAnim = animation.name;
+		final lastFrame = animation.curAnim != null ? animation.curAnim.curFrame : 0;
 
 		playAnim(danceAnims[danceAnims.length - 1], true);
 		startWidth = width;
@@ -422,16 +375,16 @@ class Character extends DancingSprite
 		if (charFlipX)
 			flipX = !flipX;
 
-		singAnimations = defaultSingAnimations.copy();
+		singAnimations = DEFAULT_SING_ANIMS.copy();
 		if (charFlipX)
 		{
-			var left = singAnimations[0];
+			final left = singAnimations[0];
 			singAnimations[0] = singAnimations[3];
 			singAnimations[3] = left;
 
 			if (info.flipAll)
 			{
-				var down = singAnimations[1];
+				final down = singAnimations[1];
 				singAnimations[1] = singAnimations[2];
 				singAnimations[2] = down;
 			}
@@ -443,7 +396,7 @@ class Character extends DancingSprite
 
 	public function setCamOffsetFromLane(lane:Int = -1)
 	{
-		var offset = 15;
+		final offset = 15;
 		switch (lane)
 		{
 			case 0:
@@ -462,6 +415,20 @@ class Character extends DancingSprite
 	public function changeCharacter(name:String)
 	{
 		info = CharacterInfo.loadCharacterFromName(name);
+	}
+
+	public function startDanceTimer(time:Float)
+	{
+		if (allowDanceTimer.active)
+			allowDanceTimer.cancel();
+		allowDanceTimer.start(time, function(_)
+		{
+			if (!danceDisabled)
+			{
+				canDance = true;
+				dance();
+			}
+		});
 	}
 
 	function set_info(value:CharacterInfo)
@@ -500,17 +467,6 @@ class Character extends DancingSprite
 		{
 			charFlipX = value;
 			updateFlipped();
-		}
-		return value;
-	}
-
-	function set_intendedColor(value:FlxColor)
-	{
-		if (intendedColor != value)
-		{
-			intendedColor = value;
-			if (!state.match(Miss(_)))
-				resetColor();
 		}
 		return value;
 	}

@@ -1,0 +1,66 @@
+{
+	"antialiasing": false,
+	"positionOffset": [
+		0,
+		0
+	],
+	"image": "characters/lilOpp",
+	"healthIcon": "face-lil",
+	"anims": [
+		{
+			"loop": true,
+			"fps": 12,
+			"atlasName": "idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singDOWN",
+			"name": "singDOWN",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singLEFT",
+			"name": "singLEFT",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singRIGHT",
+			"name": "singRIGHT",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singUP",
+			"name": "singUP",
+			"offset": [
+				0,
+				0
+			]
+		}
+	],
+	"cameraOffset": [
+		-117,
+		-13
+	],
+	"healthColors": [
+		255,
+		255,
+		255
+	]
+}

@@ -4,7 +4,8 @@
 			"songs": [
 				{
 					"name": "Lil' Buddies",
-					"icon": "face-lil"
+					"icon": "face-lil",
+					"forceCharacters": true
 				}
 			],
 			"name": "FPS Plus"

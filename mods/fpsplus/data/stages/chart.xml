@@ -1,0 +1,5 @@
+<stage zoom="2.8" folder="stages/chart/">
+	<spr name="lilStage" image="lilStage" x="32" y="432" antialiasing="false" />
+	<dad x="32" y="432"/>
+	<bf x="-100" y="432"/>
+</stage>

@@ -1,0 +1,108 @@
+{
+	"antialiasing": false,
+	"flipX": true,
+	"positionOffset": [
+		0,
+		0
+	],
+	"image": "characters/lilBf",
+	"healthIcon": "bf-lil",
+	"anims": [
+		{
+			"fps": 12,
+			"atlasName": "hey",
+			"name": "hey",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"fps": 12,
+			"atlasName": "idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singDOWN",
+			"name": "singDOWN",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "singDOWNmiss",
+			"name": "singDOWNmiss",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singRIGHT",
+			"name": "singLEFT",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "singRIGHTmiss",
+			"name": "singLEFTmiss",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singLEFT",
+			"name": "singRIGHT",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "singLEFTmiss",
+			"name": "singRIGHTmiss",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"atlasName": "singUP",
+			"name": "singUP",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "singUPmiss",
+			"name": "singUPmiss",
+			"offset": [
+				0,
+				0
+			]
+		}
+	],
+	"cameraOffset": [
+		-66,
+		16
+	],
+	"healthColors": [
+		255,
+		255,
+		255
+	]
+}

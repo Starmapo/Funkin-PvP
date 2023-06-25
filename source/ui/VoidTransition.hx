@@ -68,7 +68,11 @@ class VoidTransition extends FlxSpriteGroup
 		{
 			FlxG.state.remove(this);
 			for (spr in members)
-				FlxG.bitmap.remove(spr.graphic);
+			{
+				var g = spr.graphic;
+				spr.graphic = null;
+				FlxG.bitmap.removeIfNoUse(g);
+			}
 			destroy();
 		}
 	}

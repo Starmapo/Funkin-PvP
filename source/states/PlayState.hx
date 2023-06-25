@@ -621,7 +621,7 @@ class PlayState extends FNFState
 					}
 				}
 				var screen = new ResultsScreen(this);
-				if (screen.winner > -1)
+				if (screen.winner > -1 && !disableCamFollow)
 					focusOnChar(getPlayerCharacter(screen.winner));
 				openSubState(screen);
 
@@ -1111,7 +1111,7 @@ class PlayState extends FNFState
 		if (!Settings.ghostTapping)
 		{
 			var char = getPlayerCharacter(player);
-			char.playMissAnim(lane);
+			char.playMissAnim(lane, getBeatLength());
 
 			if (Settings.missSounds)
 				playMissSound();
@@ -1184,7 +1184,7 @@ class PlayState extends FNFState
 		if (!note.noMissAnim)
 		{
 			var char = getNoteCharacter(note);
-			char.playMissAnim(note.info.playerLane);
+			char.playMissAnim(note.info.playerLane, getBeatLength());
 		}
 
 		if (Settings.missSounds)
@@ -1209,7 +1209,7 @@ class PlayState extends FNFState
 		if (!note.noMissAnim)
 		{
 			var char = getNoteCharacter(note);
-			char.playMissAnim(note.info.playerLane);
+			char.playMissAnim(note.info.playerLane, getBeatLength());
 		}
 
 		if (Settings.missSounds)
@@ -1322,7 +1322,7 @@ class PlayState extends FNFState
 
 	public function doCamBop()
 	{
-		if (Settings.camZooming && camZooming && camBop && FlxG.camera.zoom < 1.35)
+		if (Settings.camZooming && camZooming && camBop)
 		{
 			FlxG.camera.zoom += 0.015 * camBopMult;
 			camHUD.zoom += 0.03 * camBopMult;
@@ -1366,7 +1366,8 @@ class PlayState extends FNFState
 				timer.cancel();
 		}
 		char.stopAnimCallback();
-		focusOnChar(char);
+		if (!disableCamFollow)
+			focusOnChar(char);
 		char.angularVelocity = 360;
 		char.x -= char.offset.x;
 		char.y -= char.offset.y;

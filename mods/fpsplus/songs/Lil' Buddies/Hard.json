@@ -1,11 +1,10 @@
 {
-	"stage": "fnf:stage",
+	"stage": "chart",
 	"timingPoints": [
 		{
 			"bpm": 102
 		}
 	],
-	"vocalsFile": "Voices.ogg",
 	"events": [],
 	"notes": [
 		{
@@ -1840,14 +1839,13 @@
 		}
 	],
 	"artist": "Rozebud",
-	"opponent": "guy-lil",
-	"bf": "bf-lil",
-	"gf": "fnf:gf",
+	"opponent": "guy-lil-chart",
+	"bf": "bf-lil-chart",
+	"gf": "",
 	"lyricSteps": [],
 	"title": "Lil' Buddies",
 	"initialScrollVelocity": 1,
 	"source": "FPS Plus",
-	"instFile": "Inst.ogg",
 	"cameraFocuses": [
 		{},
 		{
