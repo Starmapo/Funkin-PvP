@@ -70,7 +70,9 @@ class AnimatedSprite extends FlxSprite
 	**/
 	public function playAnim(name:String, force:Bool = false, reversed:Bool = false, frame:Int = 0)
 	{
-		if (!animation.exists(name))
+		if (name == null || !animation.exists(name))
+			return;
+		if (animation.name == name && !force && !animation.curAnim.finished)
 			return;
 
 		animation.play(name, force, reversed, frame);

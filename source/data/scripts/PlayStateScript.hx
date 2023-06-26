@@ -136,7 +136,7 @@ class PlayStateScript extends Script
 			var allChars = [state.gf, state.opponent, state.bf];
 			for (char in allChars)
 			{
-				if ((name == null || char.info.name == name) && (mod == null || char.info.mod == mod))
+				if (char.info != null && (name == null || char.info.name == name) && (mod == null || char.info.mod == mod))
 					characters.push(char);
 			}
 			return characters;

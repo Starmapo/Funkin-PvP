@@ -50,7 +50,7 @@ class Character extends DancingSprite
 				final anim = info.getAnim(name);
 				if (anim != null && anim.nextAnim.length > 0)
 					playAnim(anim.nextAnim);
-				else if (state == Special && !allowDanceTimer.active && !danceDisabled)
+				else if (state == Special && !allowDanceTimer.active)
 				{
 					canDance = true;
 					dance();
@@ -73,10 +73,10 @@ class Character extends DancingSprite
 
 	override function playAnim(name, force = false, reversed = false, frame = 0)
 	{
-		if (!animation.exists(name))
+		if (name == null || !animation.exists(name))
 			return;
-
-		stopAnimCallback();
+		if (animation.name == name && !force && !animation.curAnim.finished)
+			return;
 
 		if (info != null && info.constantLooping && animation.curAnim != null && !debugMode)
 			animation.play(name, force, reversed, animation.curAnim.curFrame + 1);
@@ -235,7 +235,9 @@ class Character extends DancingSprite
 
 	public function playSpecialAnim(name:String, allowDanceTime:Float = 0, force:Bool = false, reversed:Bool = false, frame:Int = 0)
 	{
-		if (!animation.exists(name))
+		if (name == null || !animation.exists(name))
+			return;
+		if (animation.name == name && !force && !animation.curAnim.finished)
 			return;
 
 		if (allowDanceTimer.active)
@@ -423,11 +425,8 @@ class Character extends DancingSprite
 			allowDanceTimer.cancel();
 		allowDanceTimer.start(time, function(_)
 		{
-			if (!danceDisabled)
-			{
-				canDance = true;
-				dance();
-			}
+			canDance = true;
+			dance();
 		});
 	}
 
