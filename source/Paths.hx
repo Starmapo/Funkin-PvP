@@ -77,8 +77,6 @@ class Paths
 
 		if (graphic != null)
 			graphic.destroyOnNoUse = false;
-		else
-			trace("Graphic " + path + " not found.");
 
 		return graphic;
 	}

@@ -43,23 +43,15 @@ class Mods
 	{
 		pvpMusic.resize(0);
 
-		for (file in FileSystem.readDirectory(modsPath))
+		for (mod in currentMods)
 		{
-			var fullPath = Path.join([modsPath, file]);
-			var jsonPath = Path.join([fullPath, 'mod.json']);
-			if (FileSystem.isDirectory(fullPath) && FileSystem.exists(jsonPath))
+			var fullPath = Path.join([modsPath, mod.directory]);
+			var pvpMusicPath = Path.join([fullPath, 'data/pvpMusic.txt']);
+			if (FileSystem.exists(pvpMusicPath))
 			{
-				var mod = new Mod(Paths.getJson(jsonPath));
-				mod.directory = file;
-				currentMods.push(mod);
-
-				var pvpMusicPath = Path.join([fullPath, 'data/pvpMusic.txt']);
-				if (FileSystem.exists(pvpMusicPath))
-				{
-					var pvpMusicList = Paths.getText(pvpMusicPath).split('\n');
-					for (i in 0...pvpMusicList.length)
-						pvpMusic.push(Path.join([fullPath, 'music', pvpMusicList[i]]));
-				}
+				var pvpMusicList = Paths.getText(pvpMusicPath).split('\n');
+				for (i in 0...pvpMusicList.length)
+					pvpMusic.push(Path.join([fullPath, 'music', pvpMusicList[i]]));
 			}
 		}
 	}
