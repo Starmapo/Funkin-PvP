@@ -202,7 +202,7 @@ class Character extends DancingSprite
 			resetColor();
 			setCamOffsetFromLane(lane);
 
-			startDanceTimer((beatLength / 1000) * 2);
+			startDanceTimer(beatLength / 1000);
 		}
 	}
 
@@ -229,7 +229,7 @@ class Character extends DancingSprite
 				resetColor();
 			setCamOffsetFromLane();
 
-			startDanceTimer((beatLength / 1000) * 2);
+			startDanceTimer(beatLength / 1000);
 		}
 	}
 

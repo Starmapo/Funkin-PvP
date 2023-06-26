@@ -881,7 +881,6 @@ class PlayState extends FNFState
 		updateBG();
 
 		camFollow = new FlxObject();
-		updateCamPosition();
 		add(camFollow);
 
 		var stage = Settings.forceDefaultStage ? 'fnf:stage' : song.stage;
@@ -904,6 +903,7 @@ class PlayState extends FNFState
 		}
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * GameplayGlobals.playbackRate);
+		updateCamPosition();
 		FlxG.camera.snapToTarget();
 
 		FlxG.camera.zoom = defaultCamZoom;

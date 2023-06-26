@@ -119,16 +119,17 @@ class MusicTiming implements IFlxDestroyable
 	var storedSteps:Array<Int> = [];
 	var oldStep:Int = -1;
 	var dancingSprites:Array<DancingSprite> = [];
+	var initialized:Bool = false;
 
-	public function new(music:FlxSound, ?timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = false, startDelay:Float = 0, ?onBeatHit:Int->Float->Void,
+	public function new(music:FlxSound, timingPoints:Array<TimingPoint>, checkSkippedSteps:Bool = false, startDelay:Float = 0, ?onBeatHit:Int->Float->Void,
 			?extraMusic:Array<FlxSound>, ?onStart:MusicTiming->Void)
 	{
+		if (timingPoints == null || timingPoints.length < 1)
+			throw "You must have at least 1 timing point for a song";
 		if (music == null)
 			music = new FlxSound();
 		if (extraMusic == null)
 			extraMusic = [];
-		if (timingPoints == null)
-			timingPoints = [];
 
 		this.music = music;
 		this.timingPoints = timingPoints;
@@ -139,6 +140,8 @@ class MusicTiming implements IFlxDestroyable
 			this.onBeatHit.add(onBeatHit);
 
 		time = -startDelay * music.pitch;
+		updateTimeStuff();
+		initialized = true;
 	}
 
 	public function update(elapsed:Float)
@@ -149,8 +152,7 @@ class MusicTiming implements IFlxDestroyable
 		if (time < 0)
 		{
 			time += elapsed * 1000 * music.pitch;
-			updateAudioPosition();
-			updateCurStep();
+			updateTimeStuff();
 
 			if (time < 0)
 				return;
@@ -171,8 +173,7 @@ class MusicTiming implements IFlxDestroyable
 		}
 
 		resyncExtraMusic();
-		updateAudioPosition();
-		updateCurStep();
+		updateTimeStuff();
 	}
 
 	public function destroy()
@@ -198,8 +199,7 @@ class MusicTiming implements IFlxDestroyable
 		music.time = newTime;
 		for (extra in extraMusic)
 			extra.time = newTime;
-		updateAudioPosition();
-		updateCurStep();
+		updateTimeStuff();
 	}
 
 	/**
@@ -306,14 +306,6 @@ class MusicTiming implements IFlxDestroyable
 
 	function updateCurStep()
 	{
-		if (timingPoints.length == 0)
-		{
-			curTimingPoint = null;
-			curTimingIndex = 0;
-			curDecStep = curDecBeat = curDecBar = -1;
-			return;
-		}
-
 		curTimingIndex = timingPoints.length - 1;
 		while (curTimingIndex >= 0)
 		{
@@ -343,17 +335,21 @@ class MusicTiming implements IFlxDestroyable
 
 			i--;
 		}
-		if (checkSkippedSteps && curStep > oldStep)
-		{
-			for (i in oldStep...curStep)
-			{
-				if (!storedSteps.contains(i) && i >= 0)
-					stepHit(i, i);
-			}
-		}
 
-		if (curStep > oldStep && curStep >= 0 && !storedSteps.contains(curStep))
-			stepHit(curStep, curDecStep);
+		if (initialized)
+		{
+			if (checkSkippedSteps && curStep > oldStep)
+			{
+				for (i in oldStep...curStep)
+				{
+					if (!storedSteps.contains(i) && i >= 0)
+						stepHit(i, i);
+				}
+			}
+			if (curStep > oldStep && curStep >= 0 && !storedSteps.contains(curStep))
+				stepHit(curStep, curDecStep);
+		}
+		
 		oldStep = curStep;
 
 		FlxG.watch.addQuick('Current Step', curStep);
@@ -402,10 +398,13 @@ class MusicTiming implements IFlxDestroyable
 	function reset()
 	{
 		time = 0;
-		curTimingPoint = null;
-		curTimingIndex = 0;
-		curDecStep = curDecBeat = curDecBar = -1;
-		oldStep = -1;
+		updateTimeStuff();
+	}
+
+	function updateTimeStuff()
+	{
+		updateAudioPosition();
+		updateCurStep();
 	}
 
 	function get_curStep()
