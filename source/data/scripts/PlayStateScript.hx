@@ -59,6 +59,12 @@ class PlayStateScript extends Script
 		setVariable("songInfoDisplay", state.songInfoDisplay);
 		setVariable("lyricsDisplay", state.lyricsDisplay);
 		setVariable("healthBars", state.healthBars);
+		setVariable("deathBG", state.deathBG);
+		setVariable("backgroundCover", state.backgroundCover);
+		setVariable("judgementCounters", state.judgementCounters);
+		setVariable("npsDisplay", state.npsDisplay);
+		setVariable("msDisplay", state.msDisplay);
+		setVariable("staticBG", state.staticBG);
 		setVariable("playbackRate", GameplayGlobals.playbackRate);
 
 		setVariable("add", state.add);

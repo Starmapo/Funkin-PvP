@@ -1334,16 +1334,14 @@ class PlayState extends FNFState
 
 	function updateBG()
 	{
-		var camWidth = FlxG.camera.viewWidth;
-		var camHeight = FlxG.camera.viewHeight;
-		for (bg in [staticBG])
+		final camWidth = FlxG.camera.viewWidth;
+		final camHeight = FlxG.camera.viewHeight;
+		
+		staticBG.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
+		if (staticBG.width != camWidth || staticBG.height != camHeight)
 		{
-			bg.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
-			if (bg.width != camWidth || bg.height != camHeight)
-			{
-				bg.setGraphicSize(camWidth, camHeight);
-				bg.updateHitbox();
-			}
+			staticBG.setGraphicSize(camWidth, camHeight);
+			staticBG.updateHitbox();
 		}
 	}
 
