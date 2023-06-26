@@ -1,5 +1,6 @@
 package states.options;
 
+import data.Mods;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -46,6 +47,8 @@ class OptionsState extends FNFState
 		camFollow = new FlxObject(FlxG.width / 2);
 		camPages.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
+
+		Mods.reloadSkins();
 
 		var optionsPage = addPage(Options, new OptionsPage());
 		optionsPage.onExit.add(exitToMainMenu);

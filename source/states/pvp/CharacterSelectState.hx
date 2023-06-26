@@ -71,6 +71,7 @@ class CharacterSelectState extends FNFState
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
 
+		Mods.reloadCharacters();
 		var groups = [];
 		for (_ => group in Mods.characterGroups)
 			groups.push(group);

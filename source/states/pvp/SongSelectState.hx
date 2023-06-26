@@ -82,6 +82,7 @@ class SongSelectState extends FNFState
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
 
+		Mods.reloadSongs();
 		var groups = [];
 		for (_ => group in Mods.songGroups)
 			groups.push(group);

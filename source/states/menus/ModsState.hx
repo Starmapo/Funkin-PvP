@@ -38,6 +38,7 @@ class ModsState extends FNFState
 		items.onChange.add(onChange);
 		add(items);
 
+		Mods.reloadMods();
 		for (mod in Mods.currentMods)
 			items.createItem(mod);
 
