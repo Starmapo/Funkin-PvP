@@ -197,6 +197,9 @@ class PlayState extends FNFState
 		updateBG();
 
 		executeScripts("onUpdatePost", [elapsed]);
+
+		if (FlxG.mouse.visible)
+			FlxG.mouse.visible = false;
 	}
 
 	override function destroy()

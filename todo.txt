@@ -1,3 +1,6 @@
+select note type
+select events
+get event list
 image optimizer
 zip mods
 wiki
