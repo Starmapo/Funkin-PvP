@@ -16,13 +16,13 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		/*
-		addSetting({
-			name: 'distractions',
-			displayName: 'Distractions',
-			description: "Toggle stage distractions that can hinder your gameplay.",
-			type: CHECKBOX
-		});
-		*/
+			addSetting({
+				name: 'distractions',
+				displayName: 'Distractions',
+				description: "Toggle stage distractions that can hinder your gameplay.",
+				type: CHECKBOX
+			});
+		 */
 		addSetting({
 			name: 'shaders',
 			displayName: 'Shaders',
@@ -33,6 +33,12 @@ class GameplayPage extends BaseSettingsPage
 			name: 'forceDefaultStage',
 			displayName: 'Force Default Stage',
 			description: "If enabled, the FNF Week 1 stage is forced on every song.",
+			type: CHECKBOX
+		});
+		addSetting({
+			name: 'staticBG',
+			displayName: 'Background Static',
+			description: "If enabled, static is added to the background to make it less bland if the camera goes out of bounds.",
 			type: CHECKBOX
 		});
 		addSetting({
@@ -106,13 +112,13 @@ class GameplayPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		/*
-		addSetting({
-			name: 'clearGameplayCache',
-			displayName: 'Clear Gameplay Cache',
-			description: "If enabled, graphics and sounds loaded while in gameplay will be cleared after exiting.",
-			type: CHECKBOX
-		});
-		*/
+			addSetting({
+				name: 'clearGameplayCache',
+				displayName: 'Clear Gameplay Cache',
+				description: "If enabled, graphics and sounds loaded while in gameplay will be cleared after exiting.",
+				type: CHECKBOX
+			});
+		 */
 
 		addPageTitle('Gameplay');
 	}
