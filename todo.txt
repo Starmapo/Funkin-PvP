@@ -1,5 +1,3 @@
-add to character select
-add to song select
 image optimizer
 zip mods
 wiki

@@ -703,6 +703,7 @@ class PlayState extends FNFState
 		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
 		{
 			instEnded = true;
+			inst.volume = 0;
 			inst.stop();
 			inst.time = inst.length;
 		});
@@ -710,7 +711,7 @@ class PlayState extends FNFState
 		inst.resetPositionOnFinish = false;
 
 		var vocalsSound = Paths.getSongVocals(song);
-		if (vocals != null)
+		if (vocalsSound != null)
 			vocals = FlxG.sound.load(vocalsSound, 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
 			{
 				vocals.volume = 0;
