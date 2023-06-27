@@ -12,6 +12,7 @@ import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import haxe.io.Path;
 import hscript.Interp;
 import lime.app.Application;
@@ -72,11 +73,12 @@ class BootState extends FNFState
 			func: loadMods
 		});
 
-		Thread.create(function()
+		var i = 0;
+		new FlxTimer().start(0.1, function(tmr)
 		{
-			for (i in 0...loadingSteps.length)
+			if (loadingSteps.length > 0)
 			{
-				var step = loadingSteps[i];
+				var step = loadingSteps.shift();
 				updateText(step.name + '... ' + Math.floor((i / loadingSteps.length) * 100) + '%');
 				step.func();
 
@@ -85,11 +87,16 @@ class BootState extends FNFState
 					CoolUtil.playCancelSound();
 					return;
 				}
-			}
 
-			updateText('Finished!');
-			FlxG.camera.fade(FlxColor.BLACK, Main.getTransitionTime(), false, exit, true);
-			CoolUtil.playConfirmSound();
+				i++;
+				tmr.reset();
+			}
+			else
+			{
+				updateText('Finished!');
+				FlxG.camera.fade(FlxColor.BLACK, Main.getTransitionTime(), false, exit, true);
+				CoolUtil.playConfirmSound();
+			}
 		});
 
 		super.create();

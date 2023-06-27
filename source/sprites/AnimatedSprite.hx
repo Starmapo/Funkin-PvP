@@ -89,7 +89,7 @@ class AnimatedSprite extends FlxSprite
 	public function updateOffset()
 	{
 		updateHitbox();
-		var animOffset = offsets.get(animation.name);
+		final animOffset = offsets.get(animation.name);
 		if (animOffset != null)
 			frameOffset.set(animOffset[0], animOffset[1]);
 		else

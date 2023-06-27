@@ -834,16 +834,19 @@ class PlayState extends FNFState
 		gf = new Character(400, 130, gfInfo, false, true);
 		gf.scrollFactor.set(0.95, 0.95);
 		timing.addDancingSprite(gf);
+		gf.onSing.add(onCharacterSing.bind(gf));
 
 		var opponentName = chars[0] != null && song.opponent.length > 0 ? chars[0] : song.opponent;
 		var opponentInfo = CharacterInfo.loadCharacterFromName(opponentName);
 		opponent = new Character(100, 100, opponentInfo);
 		timing.addDancingSprite(opponent);
+		opponent.onSing.add(onCharacterSing.bind(opponent));
 
 		var bfName = chars[1] != null && song.bf.length > 0 ? chars[1] : song.bf;
 		var bfInfo = CharacterInfo.loadCharacterFromName(bfName);
 		bf = new Character(770, 100, bfInfo, true);
 		timing.addDancingSprite(bf);
+		bf.onSing.add(onCharacterSing.bind(bf));
 
 		for (char in [opponent, bf])
 		{
@@ -1236,6 +1239,11 @@ class PlayState extends FNFState
 		executeScripts("onNoteSpawned", [note]);
 	}
 
+	function onCharacterSing(char:Character, lane:Int, hold:Bool)
+	{
+		executeScripts("onCharacterSing", [char, lane, hold]);
+	}
+
 	function startCountdown()
 	{
 		new FlxTimer().start(song.timingPoints[0].beatLength / 1000, function(tmr)
@@ -1336,7 +1344,7 @@ class PlayState extends FNFState
 	{
 		final camWidth = FlxG.camera.viewWidth;
 		final camHeight = FlxG.camera.viewHeight;
-		
+
 		staticBG.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
 		if (staticBG.width != camWidth || staticBG.height != camHeight)
 		{

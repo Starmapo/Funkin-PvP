@@ -176,6 +176,7 @@ class CharacterEditorState extends FNFState
 		camPos.update(elapsed);
 		ghostChar.update(elapsed);
 		char.update(elapsed);
+		healthBar.icon.update(elapsed);
 		notificationManager.update(elapsed);
 
 		updateAnimText();

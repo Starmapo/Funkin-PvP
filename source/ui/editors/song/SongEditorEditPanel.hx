@@ -17,12 +17,12 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import states.editors.SongEditorState;
+import subStates.PromptInputSubState;
 import subStates.PromptSubState.YesNoPrompt;
 import subStates.editors.song.SongEditorApplyOffsetPrompt;
-import subStates.editors.song.SongEditorChangeNoteTypePrompt;
 import subStates.editors.song.SongEditorNewChartPrompt;
 import subStates.editors.song.SongEditorNewSongPrompt;
-import subStates.editors.song.SongEditorRemoveNoteTypePrompt;
+import subStates.editors.song.SongEditorSelectNoteTypePrompt;
 import systools.Dialogs;
 import ui.editors.EditorCheckbox;
 import ui.editors.EditorDropdownMenu;
@@ -80,10 +80,9 @@ class SongEditorEditPanel extends EditorPanel
 	var eventIndex:Int = 0;
 	var lastEvent:EventObject = null;
 	var lyricsInput:EditorInputText;
-	var removeAllNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
-	var removeSelectedNoteTypePrompt:SongEditorRemoveNoteTypePrompt;
-	var changeAllNoteTypePrompt:SongEditorChangeNoteTypePrompt;
-	var changeSelectedNoteTypePrompt:SongEditorChangeNoteTypePrompt;
+	var selectAllNoteTypePrompt:SongEditorSelectNoteTypePrompt;
+	var selectP1NoteTypePrompt:SongEditorSelectNoteTypePrompt;
+	var selectP2NoteTypePrompt:SongEditorSelectNoteTypePrompt;
 	var applyOffsetPrompt:SongEditorApplyOffsetPrompt;
 	var pasteMetadataPrompt:YesNoPrompt;
 	var pasteCharactersPrompt:YesNoPrompt;
@@ -94,6 +93,7 @@ class SongEditorEditPanel extends EditorPanel
 	var pasteLyricStepsPrompt:YesNoPrompt;
 	var newChartPrompt:SongEditorNewChartPrompt;
 	var newSongPrompt:SongEditorNewSongPrompt;
+	var selectEventPrompt:PromptInputSubState;
 
 	public function new(state:SongEditorState)
 	{
@@ -224,10 +224,9 @@ class SongEditorEditPanel extends EditorPanel
 		selectedEvents = null;
 		eventsPropertiesGroup = null;
 		lastEvent = null;
-		removeAllNoteTypePrompt = FlxDestroyUtil.destroy(removeAllNoteTypePrompt);
-		removeSelectedNoteTypePrompt = FlxDestroyUtil.destroy(removeSelectedNoteTypePrompt);
-		changeAllNoteTypePrompt = FlxDestroyUtil.destroy(changeAllNoteTypePrompt);
-		changeSelectedNoteTypePrompt = FlxDestroyUtil.destroy(changeSelectedNoteTypePrompt);
+		selectAllNoteTypePrompt = FlxDestroyUtil.destroy(selectAllNoteTypePrompt);
+		selectP1NoteTypePrompt = FlxDestroyUtil.destroy(selectP1NoteTypePrompt);
+		selectP2NoteTypePrompt = FlxDestroyUtil.destroy(selectP2NoteTypePrompt);
 		applyOffsetPrompt = FlxDestroyUtil.destroy(applyOffsetPrompt);
 		pasteMetadataPrompt = FlxDestroyUtil.destroy(pasteMetadataPrompt);
 		pasteCharactersPrompt = FlxDestroyUtil.destroy(pasteCharactersPrompt);
@@ -238,6 +237,7 @@ class SongEditorEditPanel extends EditorPanel
 		pasteLyricStepsPrompt = FlxDestroyUtil.destroy(pasteLyricStepsPrompt);
 		newChartPrompt = FlxDestroyUtil.destroy(newChartPrompt);
 		newSongPrompt = FlxDestroyUtil.destroy(newSongPrompt);
+		selectEventPrompt = FlxDestroyUtil.destroy(selectEventPrompt);
 	}
 
 	function createSongTab()
@@ -837,73 +837,38 @@ class SongEditorEditPanel extends EditorPanel
 
 	function createNotesTab()
 	{
-		removeAllNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		selectAllNoteTypePrompt = new SongEditorSelectNoteTypePrompt(function(text)
 		{
-			if (text.length > 0)
+			var notes:Array<NoteInfo> = [];
+			for (note in state.song.notes)
 			{
-				var notes:Array<NoteInfo> = [];
-				for (note in state.song.notes)
-				{
-					if (note.type == text)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
+				if (note.type == text)
+					notes.push(note);
 			}
+			state.selectedObjects.clear();
+			state.selectedObjects.pushMultiple(cast notes);
 		});
-		removeSelectedNoteTypePrompt = new SongEditorRemoveNoteTypePrompt(function(text)
+		selectP1NoteTypePrompt = new SongEditorSelectNoteTypePrompt(function(text)
 		{
-			if (text.length > 0)
+			var notes:Array<NoteInfo> = [];
+			for (note in state.song.notes)
 			{
-				var notes:Array<NoteInfo> = [];
-				for (note in selectedNotes)
-				{
-					if (note.type == text)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-					state.actionManager.perform(new ActionRemoveObjectBatch(state, cast notes));
+				if (note.type == text && note.player == 0)
+					notes.push(note);
 			}
+			state.selectedObjects.clear();
+			state.selectedObjects.pushMultiple(cast notes);
 		});
-		changeAllNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
+		selectP2NoteTypePrompt = new SongEditorSelectNoteTypePrompt(function(text)
 		{
-			if (type.length > 0)
+			var notes:Array<NoteInfo> = [];
+			for (note in state.song.notes)
 			{
-				var notes:Array<NoteInfo> = [];
-				for (note in state.song.notes)
-				{
-					if (note.type == type)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-				{
-					var changeType = new ActionChangeNoteType(state, cast notes, newType);
-					if (params.length > 0)
-						state.actionManager.performBatch([changeType, new ActionChangeNoteParams(state, notes, params)]);
-					else
-						state.actionManager.perform(changeType);
-				}
+				if (note.type == text && note.player == 1)
+					notes.push(note);
 			}
-		});
-		changeSelectedNoteTypePrompt = new SongEditorChangeNoteTypePrompt(function(type, newType, params)
-		{
-			if (type.length > 0)
-			{
-				var notes:Array<NoteInfo> = [];
-				for (note in selectedNotes)
-				{
-					if (note.type == type)
-						notes.push(note);
-				}
-				if (notes.length > 0)
-				{
-					var changeType = new ActionChangeNoteType(state, cast notes, newType);
-					if (params.length > 0)
-						state.actionManager.performBatch([changeType, new ActionChangeNoteParams(state, notes, params)]);
-					else
-						state.actionManager.perform(changeType);
-				}
-			}
+			state.selectedObjects.clear();
+			state.selectedObjects.pushMultiple(cast notes);
 		});
 
 		var tab = createTab('Notes');
@@ -1085,56 +1050,46 @@ class SongEditorEditPanel extends EditorPanel
 		duetButton.x = (width - duetButton.width) / 2;
 		tab.add(duetButton);
 
-		var removeAllNoteTypesButton = new FlxUIButton(0, duetButton.y + duetButton.height + spacing, 'Remove all notes of type', function()
+		var selectAllNoteTypeButton = new FlxUIButton(0, duetButton.y + duetButton.height + spacing, 'Select all notes of type', function()
 		{
-			state.openSubState(removeAllNoteTypePrompt);
+			state.openSubState(selectAllNoteTypePrompt);
 		});
-		removeAllNoteTypesButton.resize(140, removeAllNoteTypesButton.height);
-		removeAllNoteTypesButton.x = (width - removeAllNoteTypesButton.width) / 2;
-		tab.add(removeAllNoteTypesButton);
+		selectAllNoteTypeButton.resize(130, selectAllNoteTypeButton.height);
+		selectAllNoteTypeButton.x = (width - selectAllNoteTypeButton.width) / 2;
+		tab.add(selectAllNoteTypeButton);
 
-		var removeSelectedNoteTypesButton = new FlxUIButton(0, removeAllNoteTypesButton.y + removeAllNoteTypesButton.height + spacing,
-			'Remove selected notes of type', function()
-		{
-			state.openSubState(removeSelectedNoteTypePrompt);
-		});
-		removeSelectedNoteTypesButton.resize(160, removeSelectedNoteTypesButton.height);
-		removeSelectedNoteTypesButton.x = (width - removeSelectedNoteTypesButton.width) / 2;
-		tab.add(removeSelectedNoteTypesButton);
-
-		var changeAllNoteTypesButton = new FlxUIButton(0, removeSelectedNoteTypesButton.y + removeSelectedNoteTypesButton.height + spacing,
-			'Change all notes of type', function()
-		{
-			state.openSubState(changeAllNoteTypePrompt);
-		});
-		changeAllNoteTypesButton.resize(140, changeAllNoteTypesButton.height);
-		changeAllNoteTypesButton.x = (width - changeAllNoteTypesButton.width) / 2;
-		tab.add(changeAllNoteTypesButton);
-
-		var changeSelectedNoteTypesButton = new FlxUIButton(0, changeAllNoteTypesButton.y + changeAllNoteTypesButton.height + spacing,
-			'Change selected notes of type', function()
-		{
-			state.openSubState(changeSelectedNoteTypePrompt);
-		});
-		changeSelectedNoteTypesButton.resize(170, changeSelectedNoteTypesButton.height);
-		changeSelectedNoteTypesButton.x = (width - changeSelectedNoteTypesButton.width) / 2;
-		tab.add(changeSelectedNoteTypesButton);
-
-		var getTypeListButton = new FlxUIButton(0, changeSelectedNoteTypesButton.y + changeSelectedNoteTypesButton.height + spacing, 'Get Note Type List',
+		var selectP1NoteTypeButton = new FlxUIButton(0, selectAllNoteTypeButton.y + selectAllNoteTypeButton.height + spacing, 'Select P1 notes of type',
 			function()
 			{
-				var types:Array<String> = [];
-				for (note in state.song.notes)
-				{
-					if (note.type.length > 0 && !types.contains(note.type))
-						types.push(note.type);
-				}
-				if (types.length > 0)
-					state.notificationManager.showNotification(types.join(', '));
-				else
-					state.notificationManager.showNotification('No special note types found.');
+				state.openSubState(selectP1NoteTypePrompt);
 			});
-		getTypeListButton.resize(120, getTypeListButton.height);
+		selectP1NoteTypeButton.resize(130, selectP1NoteTypeButton.height);
+		selectP1NoteTypeButton.x = (width - selectP1NoteTypeButton.width) / 2;
+		tab.add(selectP1NoteTypeButton);
+
+		var selectP2NoteTypeButton = new FlxUIButton(0, selectP1NoteTypeButton.y + selectP1NoteTypeButton.height + spacing, 'Select P2 notes of type',
+			function()
+			{
+				state.openSubState(selectP2NoteTypePrompt);
+			});
+		selectP2NoteTypeButton.resize(130, selectP2NoteTypeButton.height);
+		selectP2NoteTypeButton.x = (width - selectP2NoteTypeButton.width) / 2;
+		tab.add(selectP2NoteTypeButton);
+
+		var getTypeListButton = new FlxUIButton(0, selectP2NoteTypeButton.y + selectP2NoteTypeButton.height + spacing, 'Get Note Type List', function()
+		{
+			var types:Array<String> = [];
+			for (note in state.song.notes)
+			{
+				if (note.type.length > 0 && !types.contains(note.type))
+					types.push(note.type);
+			}
+			if (types.length > 0)
+				state.notificationManager.showNotification(types.join(', '));
+			else
+				state.notificationManager.showNotification('No special note types found.');
+		});
+		getTypeListButton.resize(110, getTypeListButton.height);
 		getTypeListButton.x = (width - getTypeListButton.width) / 2;
 		tab.add(getTypeListButton);
 
@@ -1327,6 +1282,24 @@ class SongEditorEditPanel extends EditorPanel
 
 	function createEventsTab()
 	{
+		selectEventPrompt = new PromptInputSubState("Enter an event to select.", function(text)
+		{
+			var events:Array<EventObject> = [];
+			for (event in state.song.events)
+			{
+				for (e in event.events)
+				{
+					if (e.event == text)
+					{
+						events.push(event);
+						break;
+					}
+				}
+			}
+			state.selectedObjects.clear();
+			state.selectedObjects.pushMultiple(cast events);
+		});
+
 		var tab = createTab('Events');
 
 		var inputWidth = width - 10;
@@ -1428,6 +1401,34 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(addButton);
 		tab.add(moveLeftButton);
 		tab.add(moveRightButton);
+
+		var selectAllEventButton = new FlxUIButton(0, eventParamsInput.y + eventParamsInput.height + spacing, "Select events with name", function()
+		{
+			state.openSubState(selectEventPrompt);
+		});
+		selectAllEventButton.resize(130, selectAllEventButton.height);
+		selectAllEventButton.x = (width - selectAllEventButton.width) / 2;
+		tab.add(selectAllEventButton);
+
+		var getEventListButton = new FlxUIButton(0, selectAllEventButton.y + selectAllEventButton.height + spacing, 'Get Event List', function()
+		{
+			var types:Array<String> = [];
+			for (event in state.song.events)
+			{
+				for (e in event.events)
+				{
+					if (e.event.length > 0 && !types.contains(e.event))
+						types.push(e.event);
+				}
+			}
+			if (types.length > 0)
+				state.notificationManager.showNotification(types.join(', '));
+			else
+				state.notificationManager.showNotification('No events found.');
+		});
+		getEventListButton.resize(110, getEventListButton.height);
+		getEventListButton.x = (width - getEventListButton.width) / 2;
+		tab.add(getEventListButton);
 
 		addGroup(tab);
 	}

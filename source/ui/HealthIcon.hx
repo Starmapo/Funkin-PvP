@@ -115,6 +115,16 @@ class HealthIcon extends AnimatedSprite
 		antialiasing = info.antialiasing;
 	}
 
+	override function updateOffset()
+	{
+		updateHitbox();
+		final animOffset = offsets.get(animation.name);
+		if (animOffset != null)
+			frameOffset.set(animOffset[0] * (flipX ? -1 : 1), animOffset[1]);
+		else
+			frameOffset.set();
+	}
+
 	override function destroy()
 	{
 		super.destroy();
@@ -127,6 +137,16 @@ class HealthIcon extends AnimatedSprite
 		{
 			icon = value;
 			reloadGraphic();
+		}
+		return value;
+	}
+
+	override function set_flipX(value:Bool)
+	{
+		if (flipX != value)
+		{
+			flipX = value;
+			updateOffset();
 		}
 		return value;
 	}

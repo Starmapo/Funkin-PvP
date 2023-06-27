@@ -6,6 +6,7 @@ import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxTimer;
 import ui.game.Note;
 
@@ -31,6 +32,7 @@ class Character extends DancingSprite
 	public var danceDisabled:Bool = false;
 	public var singDisabled:Bool = false;
 	public var xDifference:Float = 0;
+	public var onSing:FlxTypedSignal<Int->Bool->Void> = new FlxTypedSignal();
 
 	public function new(x:Float = 0, y:Float = 0, info:CharacterInfo, charFlipX:Bool = false, isGF:Bool = false)
 	{
@@ -203,6 +205,8 @@ class Character extends DancingSprite
 			setCamOffsetFromLane(lane);
 
 			startDanceTimer(beatLength / 1000);
+
+			onSing.dispatch(lane, hold);
 		}
 	}
 
@@ -276,6 +280,7 @@ class Character extends DancingSprite
 		holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
 		allowDanceTimer = FlxDestroyUtil.destroy(allowDanceTimer);
 		camOffset = FlxDestroyUtil.put(camOffset);
+		FlxDestroyUtil.destroy(onSing);
 	}
 
 	public function initializeCharacter()
