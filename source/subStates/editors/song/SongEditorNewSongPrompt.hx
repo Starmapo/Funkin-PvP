@@ -1,6 +1,5 @@
 package subStates.editors.song;
 
-import flixel.util.FlxStringUtil;
 import data.Mods;
 import data.song.Song;
 import flixel.FlxG;
@@ -8,12 +7,14 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 import haxe.io.Path;
 import lime.app.Application;
 import states.editors.SongEditorState;
 import sys.FileSystem;
 import sys.io.File;
 import systools.Dialogs;
+import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
@@ -43,7 +44,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 				label: 'Create a new song...'
 			}
 		]);
-		tabMenu.resize(244, 150);
+		tabMenu.resize(244, 155);
 
 		var tab = tabMenu.createTab('tab');
 		var spacing = 4;
@@ -107,9 +108,10 @@ class SongEditorNewSongPrompt extends FNFSubState
 
 		var modLabel = new EditorText(difficultyNameLabel.x, difficultyNameLabel.y + difficultyNameLabel.height + spacing, 0, 'Mod:');
 
-		var modInput = new EditorInputText(modLabel.x + inputSpacing, modLabel.y - 1, 0, Mods.currentMod, 8, true, camSubState);
+		var modDropdown = new EditorDropdownMenu(modLabel.x + inputSpacing, modLabel.y, EditorDropdownMenu.makeStrIdLabelArray(Mods.getMods()), null, tabMenu);
+		modDropdown.selectedLabel = Mods.currentMod;
 
-		var createButton = new FlxUIButton(0, modLabel.y + modLabel.height + spacing, 'Create', function()
+		var createButton = new FlxUIButton(0, modDropdown.y + modDropdown.height + spacing, 'Create', function()
 		{
 			if (instFile.length < 1 || !FileSystem.exists(instFile))
 			{
@@ -117,26 +119,23 @@ class SongEditorNewSongPrompt extends FNFSubState
 				FlxTween.color(instButton, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-			if (songNameInput.text.length < 1 || FlxStringUtil.hasInvalidChars(songNameInput.text))
+			var songName = songNameInput.text;
+			if (songName.length < 1 || FlxStringUtil.hasInvalidChars(songName))
 			{
 				FlxTween.cancelTweensOf(songNameInput);
 				FlxTween.color(songNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-			if (difficultyNameInput.text.length < 1 || FlxStringUtil.hasInvalidChars(difficultyNameInput.text))
+			var diff = difficultyNameInput.text;
+			if (diff.length < 1 || FlxStringUtil.hasInvalidChars(diff))
 			{
 				FlxTween.cancelTweensOf(difficultyNameInput);
 				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-			if (modInput.text.length < 1)
-			{
-				FlxTween.cancelTweensOf(modInput);
-				FlxTween.color(modInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
-				return;
-			}
 
-			var path = Path.join([Mods.modsPath, modInput.text, 'songs', songNameInput.text]);
+			var mod = modDropdown.selectedLabel;
+			var path = Path.join([Mods.modsPath, mod, 'songs', songName]);
 			if (FileSystem.exists(path))
 			{
 				FlxTween.cancelTweensOf(songNameInput);
@@ -151,11 +150,11 @@ class SongEditorNewSongPrompt extends FNFSubState
 			if (vocalsFile.length > 0 && FileSystem.exists(vocalsFile))
 				File.copy(vocalsFile, Path.join([path, 'Voices.ogg']));
 
-			var song = new Song({title: songNameInput.text, timingPoints: [{}]});
+			var song = new Song({title: songName, timingPoints: [{}]});
 			song.directory = path;
-			song.name = songNameInput.text;
+			song.name = songName;
 			song.difficultyName = difficultyNameInput.text;
-			song.mod = modInput.text;
+			song.mod = mod;
 
 			song.save(Path.join([path, song.difficultyName + '.json']));
 			FlxG.switchState(new SongEditorState(song));
@@ -169,11 +168,10 @@ class SongEditorNewSongPrompt extends FNFSubState
 		tab.add(difficultyNameLabel);
 		tab.add(difficultyNameInput);
 		tab.add(modLabel);
-		tab.add(modInput);
 		tab.add(createButton);
-
+		tab.add(modDropdown);
+		
 		tabMenu.addGroup(tab);
-
 		tabMenu.screenCenter();
 		add(tabMenu);
 

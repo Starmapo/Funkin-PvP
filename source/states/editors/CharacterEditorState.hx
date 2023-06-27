@@ -35,6 +35,7 @@ class CharacterEditorState extends FNFState
 {
 	static var CHAR_X:Int = 100;
 	static var CHAR_Y:Int = 100;
+	static var globalInfo:CharacterInfo;
 
 	public var currentTool:Bindable<MoveTool> = new Bindable(ANIM);
 	public var info:CharacterInfo;
@@ -64,8 +65,13 @@ class CharacterEditorState extends FNFState
 	public function new(?info:CharacterInfo)
 	{
 		super();
+		if (globalInfo == null)
+			globalInfo = CharacterInfo.loadCharacterFromName('fnf:bf');
+
 		if (info == null)
-			info = CharacterInfo.loadCharacterFromName('fnf:bf');
+			info = globalInfo;
+		else
+			globalInfo = info;
 		this.info = info;
 
 		persistentUpdate = true;
@@ -635,7 +641,7 @@ class CharacterEditorState extends FNFState
 	public function setInfo(info:CharacterInfo)
 	{
 		actionManager.reset();
-		this.info = info;
+		globalInfo = this.info = info;
 		reloadinfo();
 		updatePresence();
 		MemoryUtil.clearMinor();

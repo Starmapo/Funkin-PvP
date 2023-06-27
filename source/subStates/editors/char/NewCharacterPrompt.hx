@@ -9,6 +9,7 @@ import flixel.util.FlxStringUtil;
 import haxe.io.Path;
 import states.editors.CharacterEditorState;
 import sys.FileSystem;
+import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
@@ -16,7 +17,7 @@ import ui.editors.EditorText;
 class NewCharacterPrompt extends FNFSubState
 {
 	var state:CharacterEditorState;
-	var modInput:EditorInputText;
+	var modDropdown:EditorDropdownMenu;
 
 	public function new(state:CharacterEditorState)
 	{
@@ -32,7 +33,7 @@ class NewCharacterPrompt extends FNFSubState
 				label: 'Create a new character...'
 			}
 		]);
-		tabMenu.resize(278, 82);
+		tabMenu.resize(278, 90);
 
 		var tab = tabMenu.createTab('tab');
 		var spacing = 4;
@@ -47,25 +48,21 @@ class NewCharacterPrompt extends FNFSubState
 		var modLabel = new EditorText(charNameLabel.x, charNameLabel.y + charNameLabel.height + spacing, 0, 'Mod:');
 		tab.add(modLabel);
 
-		modInput = new EditorInputText(modLabel.x + inputSpacing, modLabel.y - 1, 0, null, 8, true, camSubState);
-		tab.add(modInput);
+		modDropdown = new EditorDropdownMenu(modLabel.x + inputSpacing, modLabel.y, EditorDropdownMenu.makeStrIdLabelArray(Mods.getMods()), null, tabMenu);
+		modDropdown.selectedLabel = Mods.currentMod;
 
-		var createButton = new FlxUIButton(0, modLabel.y + modLabel.height + spacing, 'Create', function()
+		var createButton = new FlxUIButton(0, modDropdown.y + modDropdown.height + spacing, 'Create', function()
 		{
-			if (charNameInput.text.length < 1 || FlxStringUtil.hasInvalidChars(charNameInput.text))
+			var char = charNameInput.text;
+			if (char.length < 1 || FlxStringUtil.hasInvalidChars(char))
 			{
 				FlxTween.cancelTweensOf(charNameInput);
 				FlxTween.color(charNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-			if (modInput.text.length < 1)
-			{
-				FlxTween.cancelTweensOf(modInput);
-				FlxTween.color(modInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
-				return;
-			}
 
-			var fullPath = Path.join([Mods.modsPath, modInput.text, 'data/characters', charNameInput.text + '.json']);
+			var mod = modDropdown.selectedLabel;
+			var fullPath = Path.join([Mods.modsPath, mod, 'data/characters', char + '.json']);
 			if (FileSystem.exists(fullPath))
 			{
 				FlxTween.cancelTweensOf(charNameInput);
@@ -88,8 +85,8 @@ class NewCharacterPrompt extends FNFSubState
 				]
 			});
 			charInfo.directory = path;
-			charInfo.name = charNameInput.text;
-			charInfo.mod = modInput.text;
+			charInfo.name = char;
+			charInfo.mod = mod;
 
 			charInfo.save(fullPath);
 			state.setInfo(charInfo);
@@ -98,8 +95,8 @@ class NewCharacterPrompt extends FNFSubState
 		createButton.x += (tabMenu.width - createButton.width) / 2;
 		tab.add(createButton);
 
+		tab.add(modDropdown);
 		tabMenu.addGroup(tab);
-
 		tabMenu.screenCenter();
 		add(tabMenu);
 
@@ -121,6 +118,6 @@ class NewCharacterPrompt extends FNFSubState
 
 	public function updateMod()
 	{
-		modInput.text = state.info.mod;
+		modDropdown.selectedLabel = state.info.mod;
 	}
 }

@@ -270,6 +270,14 @@ class Mods
 			}
 		}
 	}
+
+	public static function getMods()
+	{
+		var mods:Array<String> = [];
+		for (mod in currentMods)
+			mods.push(mod.directory);
+		return mods;
+	}
 }
 
 class Mod extends JsonObject

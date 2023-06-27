@@ -1,11 +1,12 @@
-difficulty-specific stuff
-make mod input a dropdown
+add to character select
+add to song select
 image optimizer
 zip mods
 wiki
 
 indie cross
 plantoids plus
+ourple guy gobb
 friday night incident
 yung lixo
 tails gets trolled

@@ -1,6 +1,5 @@
 package states.options;
 
-import data.Mods.ModSkins;
 import data.Mods;
 import data.PlayerConfig;
 import data.PlayerSettings;
@@ -12,9 +11,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.util.FlxSort;
 import ui.game.JudgementDisplay;
-import ui.lists.MenuList.TypedMenuList;
 import ui.lists.SkinCategoryList;
 import ui.lists.SkinList;
 import ui.lists.TextMenuList.TextMenuItem;
