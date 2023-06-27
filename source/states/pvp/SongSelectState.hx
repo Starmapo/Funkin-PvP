@@ -224,8 +224,8 @@ class SongSelectState extends FNFState
 class PlayerSongSelect extends FlxGroup
 {
 	static var lastSelectedGroups:Array<Int> = [0, 0];
-	static var lastSelectedSongs:Array<Int> = [0, 0];
-	static var lastSelectedDiffs:Array<Int> = [0, 0];
+	static var lastSelectedSongs:Array<Int> = [-1, -1];
+	static var lastSelectedDiffs:Array<Int> = [-1, -1];
 	static var lastScreens:Array<Int> = [0, 0];
 
 	public var viewing:Int = 0;
@@ -299,19 +299,27 @@ class PlayerSongSelect extends FlxGroup
 			lastSelectedGroups[player] = groupMenuList.length - 1;
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 
-		songMenuList.resetGroup(groupMenuList.selectedItem);
-		lastGroupReset = groupMenuList.selectedItem.name;
+		var selectedSong = lastSelectedSongs[player];
+		if (selectedSong >= 0)
+		{
+			songMenuList.resetGroup(groupMenuList.selectedItem);
+			lastGroupReset = groupMenuList.selectedItem.name;
+			
+			if (selectedSong >= songMenuList.length)
+				selectedSong = songMenuList.length - 1;
+			songMenuList.selectItem(selectedSong);
 
-		if (lastSelectedSongs[player] >= songMenuList.length)
-			lastSelectedSongs[player] = songMenuList.length - 1;
-		songMenuList.selectItem(lastSelectedSongs[player]);
+			var selectedDiff = lastSelectedDiffs[player];
+			if (selectedDiff >= 0)
+			{
+				difficultyMenuList.resetSong(songMenuList.selectedItem);
+				lastSongReset = songMenuList.selectedItem.name;
 
-		difficultyMenuList.resetSong(songMenuList.selectedItem);
-		lastSongReset = songMenuList.selectedItem.name;
-
-		if (lastSelectedDiffs[player] >= difficultyMenuList.length)
-			lastSelectedDiffs[player] = difficultyMenuList.length - 1;
-		difficultyMenuList.selectItem(lastSelectedDiffs[player]);
+				if (selectedDiff >= difficultyMenuList.length)
+					selectedDiff = difficultyMenuList.length - 1;
+				difficultyMenuList.selectItem(selectedDiff);
+			}
+		}
 
 		switch (lastScreens[player])
 		{
@@ -452,8 +460,12 @@ class PlayerSongSelect extends FlxGroup
 		camFollow.x = FlxG.width * (Settings.singleSongSelection ? 2.5 : 1.25);
 		if (lastSongReset != item.name)
 		{
+			var lastDiff = difficultyMenuList.selectedItem?.name;
 			difficultyMenuList.resetSong(item);
-			difficultyMenuList.selectItem(0);
+			if (lastDiff != null && difficultyMenuList.hasItem(lastDiff))
+				difficultyMenuList.selectItem(difficultyMenuList.getItemByName(lastDiff).ID);
+			else
+				difficultyMenuList.selectItem(0);
 			lastSongReset = item.name;
 		}
 		else
@@ -617,25 +629,37 @@ class SongMenuList extends TypedMenuList<SongMenuItem>
 
 	public function createItem(songData:ModSong, y:Float)
 	{
-		var name = songData.directory + songData.name;
-		var item = new SongMenuItem(0, y, name, songData);
-		item.y -= item.text.height / 2;
-		byName[name] = item;
-		item.ID = length;
-		return item;
+		var item = new SongMenuItem(0, y, songData);
+		return addItem(item.name, item);
 	}
 
 	public function resetGroup(groupItem:SongGroupMenuItem)
 	{
 		var songGroup = groupItem.groupData;
 		var midpoint = groupItem.getMidpoint();
-		destroyMembers();
-		for (song in songGroup.songs)
+
+		for (i in 0...songGroup.songs.length)
 		{
-			var item = createItem(song, (midpoint.y + (160 * length)));
-			addItem(item.name, item);
+			var song = songGroup.songs[i];
+			var itemY = (midpoint.y + (160 * i));
+			var item = members[i];
+			if (item == null)
+				item = createItem(song, itemY);
+			else
+			{
+				item.y = itemY;
+				byName.remove(item.name);
+				item.setSongData(song);
+				byName[item.name] = item;
+			}
+			item.y -= item.text.height / 2;
 			if (item.icon != null)
 				state.precacheGraphic(item.icon.graphic);
+		}
+		while (length > songGroup.songs.length)
+		{
+			var item = remove(members[length - 1], true);
+			item.destroy();
 		}
 		midpoint.put();
 	}
@@ -649,35 +673,56 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 	public var text:FlxText;
 	public var icon:HealthIcon;
 
-	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
+	var defaultMaxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
+	var maxWidth:Float;
 	var iconReady:Bool = false;
 	var mutex:Mutex;
 
-	public function new(x:Float = 0, y:Float = 0, name:String, songData:ModSong)
+	public function new(x:Float = 0, y:Float = 0, songData:ModSong)
 	{
 		var label = new FlxSpriteGroup();
 
-		super(x, y, label, name, callback);
-		this.songData = songData;
+		super(x, y, label, null, callback);
 		setEmptyBackground();
 
-		text = new FlxText(0, 0, 0, songData.name);
+		text = new FlxText();
 		text.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		text.antialiasing = true;
 		text.active = false;
 		label.add(text);
 
+		setSongData(songData);
+	}
+
+	public function setSongData(songData:ModSong)
+	{
+		this.songData = songData;
+		maxWidth = defaultMaxWidth;
+
+		name = songData.directory + songData.name;
+
+		text.text = songData.name;
+
 		if (songData.icon.length > 0)
 		{
-			icon = new HealthIcon(0, text.height / 2, songData.icon);
-			icon.y -= (icon.height / 2);
+			if (icon == null)
+				icon = new HealthIcon(0, 0, songData.icon);
+			else
+				icon.icon = songData.icon;
 			maxWidth -= icon.width + 5;
 			label.add(icon);
+			icon.y = text.y + (text.height / 2) - (icon.height / 2);
+		}
+		else if (icon != null)
+		{
+			label.remove(icon);
+			icon.destroy();
+			icon = null;
 		}
 
 		checkMaxWidth();
 		if (icon != null)
-			icon.x = text.width + 5;
+			icon.x = text.x + text.width + 5;
 		reposition();
 	}
 
@@ -720,26 +765,34 @@ class DifficultyMenuList extends TypedMenuList<DifficultyMenuItem>
 
 	public function createItem(diff:String, songData:ModSong, y:Float)
 	{
-		var name = songData.directory + songData.name + diff;
-		var item = new DifficultyMenuItem(0, y, name, diff, songData);
-		if (Settings.singleSongSelection)
-			item.x = FlxG.width * 2 + ((FlxG.width - item.width) / 2);
-		else
-			item.x = FlxG.width + (((FlxG.width / 2) - item.width) / 2);
-		item.y -= item.height / 2;
-		byName[name] = item;
-		return item;
+		var item = new DifficultyMenuItem(0, y, diff, songData);
+		return addItem(item.name, item);
 	}
 
 	public function resetSong(songItem:SongMenuItem)
 	{
 		var songData = songItem.songData;
 		var midpoint = songItem.getMidpoint();
-		destroyMembers();
-		for (diff in songData.difficulties)
+		for (i in 0...songData.difficulties.length)
 		{
-			var item = createItem(diff, songData, (midpoint.y + (100 * length)));
-			addItem(item.name, item);
+			var diff = songData.difficulties[i];
+			var itemY = (midpoint.y + (100 * i));
+			var item = members[i];
+			if (item == null)
+				item = createItem(diff, songData, itemY);
+			else
+			{
+				item.y = itemY;
+				byName.remove(item.name);
+				item.setSongData(songData, diff);
+				byName[item.name] = item;
+			}
+			item.y -= item.height / 2;
+		}
+		while (length > songData.difficulties.length)
+		{
+			var item = remove(members[length - 1], true);
+			item.destroy();
 		}
 		midpoint.put();
 	}
@@ -752,18 +805,34 @@ class DifficultyMenuItem extends TextMenuItem
 
 	var maxWidth:Float = (FlxG.width * (Settings.singleSongSelection ? 1 : 0.5)) - 10;
 
-	public function new(x:Float = 0, y:Float = 0, name:String, difficulty:String, songData:ModSong)
+	public function new(x:Float = 0, y:Float = 0, difficulty:String, songData:ModSong)
 	{
-		super(x, y, name, callback);
-		this.songData = songData;
-		this.difficulty = difficulty;
+		super(x, y, null, callback);
 
-		label.text = difficulty;
+		setSongData(songData, difficulty);
+	}
+
+	public function setSongData(songData:ModSong, difficulty:String)
+	{
+		this.songData = songData;
+		label.text = name = this.difficulty = difficulty;
+
+		label.size = 65;
 		if (label.width > maxWidth)
 		{
 			var ratio = maxWidth / label.width;
 			label.size = Math.floor(label.size * ratio);
 		}
+
+		reposition();
+	}
+
+	public function reposition()
+	{
+		if (Settings.singleSongSelection)
+			x = FlxG.width * 2 + ((FlxG.width - width) / 2);
+		else
+			x = FlxG.width + (((FlxG.width / 2) - width) / 2);
 	}
 
 	override function destroy()

@@ -21,8 +21,12 @@ class Mods
 		currentMods.resize(0);
 		currentMod = '';
 
+		var directories:Array<String> = [];
+
 		for (file in FileSystem.readDirectory(modsPath))
 		{
+			if (directories.contains(file))
+				continue;
 			var fullPath = Path.join([modsPath, file]);
 			var jsonPath = Path.join([fullPath, 'mod.json']);
 			if (FileSystem.isDirectory(fullPath) && FileSystem.exists(jsonPath))
@@ -30,6 +34,7 @@ class Mods
 				var mod = new Mod(Paths.getJson(jsonPath));
 				mod.directory = file;
 				currentMods.push(mod);
+				directories.push(file);
 			}
 		}
 

@@ -1,3 +1,4 @@
+difficulty-specific stuff
 make mod input a dropdown
 image optimizer
 zip mods

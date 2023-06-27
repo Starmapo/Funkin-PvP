@@ -194,7 +194,7 @@ class CharacterSelectState extends FNFState
 class PlayerCharacterSelect extends FlxGroup
 {
 	static var lastSelectedGroups:Array<Int> = [0, 0];
-	static var lastSelectedChars:Array<Int> = [0, 0];
+	static var lastSelectedChars:Array<Int> = [-1, -1];
 	static var lastScreens:Array<Int> = [0, 0];
 
 	public var viewing:Int = 0;
@@ -280,12 +280,16 @@ class PlayerCharacterSelect extends FlxGroup
 			lastSelectedGroups[player] = groupMenuList.length - 1;
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 
-		charMenuList.resetGroup(groupMenuList.selectedItem);
-		lastGroupReset = groupMenuList.selectedItem.name;
+		var selectedChar = lastSelectedChars[player];
+		if (selectedChar >= 0)
+		{
+			charMenuList.resetGroup(groupMenuList.selectedItem);
+			lastGroupReset = groupMenuList.selectedItem.name;
 
-		if (lastSelectedChars[player] >= charMenuList.length)
-			lastSelectedChars[player] = charMenuList.length - 1;
-		charMenuList.selectItem(lastSelectedChars[player]);
+			if (selectedChar >= charMenuList.length)
+				selectedChar = charMenuList.length - 1;
+			charMenuList.selectItem(selectedChar);
+		}
 
 		switch (lastScreens[player])
 		{
@@ -539,8 +543,7 @@ class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
 
 	public function createItem(charData:ModCharacter, y:Float)
 	{
-		var name = charData.directory + charData.name;
-		var item = new CharacterMenuItem(gridSize * (length % columns), y + gridSize * Math.floor(length / columns), name, charData);
+		var item = new CharacterMenuItem(gridSize * (length % columns), y, charData);
 		if (player == 0)
 			item.x += (FlxG.width * 0.75) - 5;
 		else
@@ -548,21 +551,35 @@ class CharacterMenuList extends TypedMenuList<CharacterMenuItem>
 			item.x += (FlxG.width * 0.5) + 5;
 			item.flipX = true;
 		}
-		item.y -= item.height / 2;
-		byName[name] = item;
-		item.ID = length;
-		return item;
+		return addItem(item.name, item);
 	}
 
 	public function resetGroup(groupItem:CharacterGroupMenuItem)
 	{
 		var charGroup = groupItem.groupData;
 		var midpoint = groupItem.getMidpoint();
-		destroyMembers();
-		for (song in charGroup.chars)
+
+		// some stupid coding here
+		for (i in 0...charGroup.chars.length)
 		{
-			var item = createItem(song, midpoint.y);
-			addItem(item.name, item);
+			var char = charGroup.chars[i];
+			var itemY = midpoint.y + gridSize * Math.floor(i / columns);
+			var item = members[i];
+			if (item == null)
+				item = createItem(char, itemY);
+			else
+			{
+				item.y = itemY;
+				byName.remove(item.name);
+				item.setCharData(char);
+				byName[item.name] = item;
+			}
+			item.y -= item.height / 2;
+		}
+		while (length > charGroup.chars.length)
+		{
+			var item = remove(members[length - 1], true);
+			item.destroy();
 		}
 		midpoint.put();
 	}
@@ -574,20 +591,20 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 	var bg:FlxSprite;
 
-	public function new(x:Float = 0, y:Float = 0, name:String, charData:ModCharacter)
+	public function new(x:Float = 0, y:Float = 0, charData:ModCharacter)
 	{
-		this.charData = charData;
-
 		var label = new FlxSpriteGroup();
 
-		super(x, y, label, name);
+		super(x, y, label, null);
 
-		bg = new FlxSprite(0, 0, getBGGraphic());
+		bg = new FlxSprite();
 		bg.antialiasing = true;
 		label.add(bg);
 
 		setEmptyBackground();
 		active = false;
+
+		setCharData(charData);
 	}
 
 	override function destroy()
@@ -595,6 +612,14 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		super.destroy();
 		charData = null;
 		bg = null;
+	}
+
+	public function setCharData(charData:ModCharacter)
+	{
+		this.charData = charData;
+		name = charData.directory + charData.name;
+
+		bg.loadGraphic(getBGGraphic());
 	}
 
 	function getBGGraphic()

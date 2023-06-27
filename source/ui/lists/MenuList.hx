@@ -159,6 +159,11 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		return byName.get(name);
 	}
 
+	public function hasItem(name:String)
+	{
+		return byName.exists(name);
+	}
+
 	function updateControls(elapsed:Float)
 	{
 		if (length > 1)
