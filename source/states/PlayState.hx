@@ -66,8 +66,8 @@ class PlayState extends FNFState
 	public var camHUD:FlxCamera;
 	public var camOther:FlxCamera;
 	public var timing:MusicTiming;
-	public var songInst:FlxSound;
-	public var songVocals:FlxSound;
+	public var inst:FlxSound;
+	public var vocals:FlxSound;
 	public var ruleset:GameplayRuleset;
 	public var statsDisplay:FlxTypedGroup<PlayerStatsDisplay>;
 	public var judgementDisplay:FlxTypedGroup<JudgementDisplay>;
@@ -169,9 +169,9 @@ class PlayState extends FNFState
 		// so i gotta set it manually
 		if (instEnded)
 		{
-			songInst.time = songInst.length;
-			if (timing.time < songInst.time)
-				timing.setTime(songInst.time);
+			inst.time = inst.length;
+			if (timing.time < inst.time)
+				timing.setTime(inst.time);
 		}
 
 		executeScripts("onUpdate", [elapsed]);
@@ -209,8 +209,8 @@ class PlayState extends FNFState
 		camHUD = FlxDestroyUtil.destroy(camHUD);
 		camOther = FlxDestroyUtil.destroy(camOther);
 		timing = FlxDestroyUtil.destroy(timing);
-		songInst = FlxDestroyUtil.destroy(songInst);
-		songVocals = FlxDestroyUtil.destroy(songVocals);
+		inst = FlxDestroyUtil.destroy(inst);
+		vocals = FlxDestroyUtil.destroy(vocals);
 		ruleset = FlxDestroyUtil.destroy(ruleset);
 		statsDisplay = FlxDestroyUtil.destroy(statsDisplay);
 		judgementDisplay = FlxDestroyUtil.destroy(judgementDisplay);
@@ -595,11 +595,11 @@ class PlayState extends FNFState
 		{
 			hasEnded = true;
 			camBop = false;
-			if (songInst.playing)
+			if (inst.playing)
 				timing.pauseMusic();
 			timing.paused = true;
-			songInst.time = songInst.length;
-			songVocals.stop();
+			inst.time = inst.length;
+			vocals.stop();
 			lyricsDisplay.visible = false;
 			if (statsDisplay != null)
 			{
@@ -669,12 +669,12 @@ class PlayState extends FNFState
 
 	public function getSongLength()
 	{
-		return (songInst.length / songInst.pitch) - Settings.globalOffset;
+		return (inst.length / inst.pitch) - Settings.globalOffset;
 	}
 
 	public function getTimeRemaining()
 	{
-		return getSongLength() - (timing.time / songInst.pitch) + Settings.globalOffset;
+		return getSongLength() - (timing.time / inst.pitch) + Settings.globalOffset;
 	}
 
 	public function playNoteAnim(char:Character, note:Note)
@@ -700,27 +700,27 @@ class PlayState extends FNFState
 
 	function initSong()
 	{
-		songInst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
+		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
 		{
 			instEnded = true;
-			songInst.stop();
-			songInst.time = songInst.length;
+			inst.stop();
+			inst.time = inst.length;
 		});
-		songInst.pitch = GameplayGlobals.playbackRate;
-		songInst.resetPositionOnFinish = false;
+		inst.pitch = GameplayGlobals.playbackRate;
+		inst.resetPositionOnFinish = false;
 
-		var vocals = Paths.getSongVocals(song);
+		var vocalsSound = Paths.getSongVocals(song);
 		if (vocals != null)
-			songVocals = FlxG.sound.load(vocals, 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
+			vocals = FlxG.sound.load(vocalsSound, 1, false, FlxG.sound.defaultMusicGroup, false, false, null, function()
 			{
-				songVocals.volume = 0;
+				vocals.volume = 0;
 			});
 		else
-			songVocals = FlxG.sound.list.add(new FlxSound());
-		songVocals.pitch = GameplayGlobals.playbackRate;
-		songVocals.resetPositionOnFinish = false;
+			vocals = FlxG.sound.list.add(new FlxSound());
+		vocals.pitch = GameplayGlobals.playbackRate;
+		vocals.resetPositionOnFinish = false;
 
-		timing = new MusicTiming(songInst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, [songVocals], startSong);
+		timing = new MusicTiming(inst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, [vocals], startSong);
 		timing.onStepHit.add(onStepHit);
 		timing.onBeatHit.add(onBeatHit);
 		timing.onBarHit.add(onBarHit);
@@ -803,7 +803,7 @@ class PlayState extends FNFState
 
 		if (!Settings.hideHUD || Settings.timeDisplay != DISABLED)
 		{
-			songInfoDisplay = new SongInfoDisplay(song, songInst, timing);
+			songInfoDisplay = new SongInfoDisplay(song, inst, timing);
 			songInfoDisplay.cameras = [camOther];
 		}
 
@@ -1060,7 +1060,7 @@ class PlayState extends FNFState
 		if (debugMode)
 		{
 			if (FlxG.keys.justPressed.F2 && hasStarted)
-				setTime(songInst.time + 10000 * GameplayGlobals.playbackRate);
+				setTime(inst.time + 10000 * GameplayGlobals.playbackRate);
 
 			if (FlxG.keys.justPressed.F1 && hasStarted)
 			{
@@ -1454,7 +1454,7 @@ class PlayState extends FNFState
 			}
 		}
 
-		return timing.audioPosition > songInst.length;
+		return timing.audioPosition > inst.length;
 	}
 }
 

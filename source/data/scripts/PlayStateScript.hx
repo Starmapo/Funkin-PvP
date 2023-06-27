@@ -52,8 +52,8 @@ class PlayStateScript extends Script
 		setVariable("difficultyName", state.song.difficultyName);
 		setVariable("camHUD", state.camHUD);
 		setVariable("camOther", state.camOther);
-		setVariable("songInst", state.songInst);
-		setVariable("songVocals", state.songVocals);
+		setVariable("inst", state.inst);
+		setVariable("vocals", state.vocals);
 		setVariable("statsDisplay", state.statsDisplay);
 		setVariable("judgementDisplay", state.judgementDisplay);
 		setVariable("songInfoDisplay", state.songInfoDisplay);
