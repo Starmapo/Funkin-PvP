@@ -85,7 +85,7 @@ class Song extends JsonObject
 
 			song.save(path);
 		}
-			
+
 		return song;
 	}
 
@@ -158,11 +158,20 @@ class Song extends JsonObject
 
 	public static function getSongLyrics(song:Song)
 	{
-		var path = Path.join([song.directory, 'lyrics.txt']);
+		var path = getSongLyricsPath(song);
 		if (Paths.exists(path))
 			return Paths.getContent(path);
 		else
 			return '';
+	}
+
+	public static function getSongLyricsPath(song:Song)
+	{
+		var diffPath = Path.join([song.directory, 'lyrics-' + song.difficultyName.toLowerCase() + '.txt']);
+		if (Paths.exists(diffPath))
+			return diffPath;
+		else
+			return Path.join([song.directory, 'lyrics.txt']);
 	}
 
 	static function convertFNFSong(json:Dynamic)

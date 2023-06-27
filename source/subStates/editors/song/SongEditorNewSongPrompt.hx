@@ -1,5 +1,6 @@
 package subStates.editors.song;
 
+import flixel.util.FlxStringUtil;
 import data.Mods;
 import data.song.Song;
 import flixel.FlxG;
@@ -116,13 +117,13 @@ class SongEditorNewSongPrompt extends FNFSubState
 				FlxTween.color(instButton, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-			if (songNameInput.text.length < 1)
+			if (songNameInput.text.length < 1 || FlxStringUtil.hasInvalidChars(songNameInput.text))
 			{
 				FlxTween.cancelTweensOf(songNameInput);
 				FlxTween.color(songNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-			if (difficultyNameInput.text.length < 1)
+			if (difficultyNameInput.text.length < 1 || FlxStringUtil.hasInvalidChars(difficultyNameInput.text))
 			{
 				FlxTween.cancelTweensOf(difficultyNameInput);
 				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});

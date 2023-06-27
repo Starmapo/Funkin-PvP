@@ -229,12 +229,20 @@ class Paths
 
 	public static function getSongInst(song:Song)
 	{
-		return getSound(Path.join([song.directory, "Inst.ogg"]), song.mod);
+		var diffSound = getSound(Path.join([song.directory, "Inst-" + song.difficultyName.toLowerCase() + ".ogg"]), song.mod);
+		if (diffSound != null)
+			return diffSound;
+		else
+			return getSound(Path.join([song.directory, "Inst.ogg"]), song.mod);
 	}
 
 	public static function getSongVocals(song:Song)
 	{
-		return getSound(Path.join([song.directory, "Voices.ogg"]), song.mod);
+		var diffSound = getSound(Path.join([song.directory, "Voices-" + song.difficultyName.toLowerCase() + ".ogg"]), song.mod);
+		if (diffSound != null)
+			return diffSound;
+		else
+			return getSound(Path.join([song.directory, "Voices.ogg"]), song.mod);
 	}
 
 	public static function getText(path:String, ?mod:String)

@@ -343,7 +343,7 @@ class SongEditorState extends FNFState
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
 		if (lyrics != lastLyrics)
 		{
-			File.saveContent(Path.join([song.directory, 'lyrics.txt']), lyrics);
+			File.saveContent(Song.getSongLyricsPath(song), lyrics);
 			lastLyrics = lyrics;
 		}
 

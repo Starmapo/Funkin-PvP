@@ -1,5 +1,6 @@
 package subStates.editors.song;
 
+import flixel.util.FlxStringUtil;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
@@ -50,7 +51,8 @@ class SongEditorNewChartPrompt extends FNFSubState
 
 		var createButton = new FlxUIButton(0, copyObjectsCheckbox.y + copyObjectsCheckbox.height + spacing * 2, 'Create', function()
 		{
-			if (difficultyNameInput.text.length < 1)
+			var diff = difficultyNameInput.text;
+			if (diff.length < 1 || FlxStringUtil.hasInvalidChars(diff))
 			{
 				FlxTween.cancelTweensOf(difficultyNameInput);
 				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
@@ -111,14 +113,13 @@ class SongEditorNewChartPrompt extends FNFSubState
 			else
 				data.timingPoints.push({});
 
-			var difficulty = difficultyNameInput.text;
-			var path = Path.join([state.song.directory, difficulty + '.json']);
+			var path = Path.join([state.song.directory, diff + '.json']);
 
 			var song = new Song(data);
 			song.directory = Path.normalize(Path.directory(path));
 			var split = song.directory.split('/');
 			song.name = split[split.length - 1];
-			song.difficultyName = difficulty;
+			song.difficultyName = diff;
 			song.mod = state.song.mod;
 			song.sort();
 

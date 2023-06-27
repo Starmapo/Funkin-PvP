@@ -5,6 +5,7 @@ import data.char.CharacterInfo;
 import flixel.addons.ui.FlxUIButton;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 import haxe.io.Path;
 import states.editors.CharacterEditorState;
 import sys.FileSystem;
@@ -51,7 +52,7 @@ class NewCharacterPrompt extends FNFSubState
 
 		var createButton = new FlxUIButton(0, modLabel.y + modLabel.height + spacing, 'Create', function()
 		{
-			if (charNameInput.text.length < 1)
+			if (charNameInput.text.length < 1 || FlxStringUtil.hasInvalidChars(charNameInput.text))
 			{
 				FlxTween.cancelTweensOf(charNameInput);
 				FlxTween.color(charNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
@@ -92,13 +93,13 @@ class NewCharacterPrompt extends FNFSubState
 
 			charInfo.save(fullPath);
 			state.setInfo(charInfo);
-            close();
+			close();
 		});
-        createButton.x += (tabMenu.width - createButton.width) / 2;
+		createButton.x += (tabMenu.width - createButton.width) / 2;
 		tab.add(createButton);
 
 		tabMenu.addGroup(tab);
-        
+
 		tabMenu.screenCenter();
 		add(tabMenu);
 
