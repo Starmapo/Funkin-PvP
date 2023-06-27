@@ -1268,6 +1268,7 @@ class PlayState extends FNFState
 		spr.scrollFactor.set();
 		spr.screenCenter();
 		spr.cameras = [camHUD];
+		spr.antialiasing = true;
 		add(spr);
 		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / 1000, {
 			ease: FlxEase.cubeInOut,
