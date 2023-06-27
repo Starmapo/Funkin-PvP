@@ -106,11 +106,23 @@ class MusicTiming implements IFlxDestroyable
 	public var onBarHit:FlxTypedSignal<Int->Float->Void> = new FlxTypedSignal();
 
 	/**
+		Whether or not this should do step/beat/bar hits.
+	**/
+	public var doStepHits:Bool = true;
+
+	/**
 		Whether or not this will detect if it missed a step hit and replay it before the current step.
 	**/
 	public var checkSkippedSteps:Bool;
 
+	/**
+		Whether or not to make sprites dance when a beat is hit.
+	**/
 	public var dance:Bool = true;
+
+	/**
+		Whether or not the timing is paused.
+	**/
 	public var paused:Bool = false;
 
 	var music:FlxSound;
@@ -255,6 +267,7 @@ class MusicTiming implements IFlxDestroyable
 		{
 			extra.stop();
 		}
+		doStepHits = false;
 		reset();
 		paused = false;
 	}
@@ -349,7 +362,7 @@ class MusicTiming implements IFlxDestroyable
 			if (curStep > oldStep && curStep >= 0 && !storedSteps.contains(curStep))
 				stepHit(curStep, curDecStep);
 		}
-		
+
 		oldStep = curStep;
 
 		FlxG.watch.addQuick('Current Step', curStep);
@@ -358,6 +371,9 @@ class MusicTiming implements IFlxDestroyable
 
 	function stepHit(step:Int, decStep:Float)
 	{
+		if (!doStepHits)
+			return;
+
 		onStepHit.dispatch(step, decStep);
 
 		if (step % 4 == 0)
@@ -372,6 +388,9 @@ class MusicTiming implements IFlxDestroyable
 
 	function beatHit(beat:Int, decBeat:Float)
 	{
+		if (!doStepHits)
+			return;
+		
 		if (dance)
 		{
 			for (sprite in dancingSprites)
@@ -392,6 +411,9 @@ class MusicTiming implements IFlxDestroyable
 
 	function barHit(bar:Int, decBar:Float)
 	{
+		if (!doStepHits)
+			return;
+		
 		onBarHit.dispatch(bar, decBar);
 	}
 
