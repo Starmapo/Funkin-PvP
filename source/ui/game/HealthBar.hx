@@ -109,7 +109,7 @@ class HealthBar extends FlxSpriteGroup
 		icon.setPosition(bar.x
 			+ addX
 			- (icon.width / 2)
-			+ icon.info.positionOffset[0],
+			+ icon.info.positionOffset[0] * (right ? -1 : 1),
 			bar.y
 			+ (bar.height / 2)
 			- (icon.height / 2)

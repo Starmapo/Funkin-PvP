@@ -63,8 +63,29 @@ class Song extends JsonObject
 		song.difficultyName = new Path(path).file;
 		song.mod = split[1];
 		song.sort();
+
+		// remove any notes that appear after the instrumental has ended
+		// this happens with a VS Garcello chart?
 		if (converted)
+		{
+			var inst = Paths.getSongInst(song);
+			if (inst != null && inst.length > 0)
+			{
+				var i = song.notes.length - 1;
+				while (i >= 0)
+				{
+					var note = song.notes[i];
+					if (note.startTime >= inst.length)
+						song.notes.remove(note);
+					else if (note.endTime >= inst.length)
+						note.endTime = inst.length - 1;
+					i--;
+				}
+			}
+
 			song.save(path);
+		}
+			
 		return song;
 	}
 
@@ -328,7 +349,6 @@ class Song extends JsonObject
 		The name of the instrumental file. Unused for now.
 	**/
 	// public var instFile:String;
-
 	/**
 		The name of the vocals file. Unused for now.
 	**/

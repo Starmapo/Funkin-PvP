@@ -295,14 +295,22 @@ class PlayerSongSelect extends FlxGroup
 		screenText.alpha = 0.6;
 		add(screenText);
 
+		if (lastSelectedGroups[player] >= groupMenuList.length)
+			lastSelectedGroups[player] = groupMenuList.length - 1;
 		groupMenuList.selectItem(lastSelectedGroups[player]);
 
 		songMenuList.resetGroup(groupMenuList.selectedItem);
 		lastGroupReset = groupMenuList.selectedItem.name;
+
+		if (lastSelectedSongs[player] >= songMenuList.length)
+			lastSelectedSongs[player] = songMenuList.length - 1;
 		songMenuList.selectItem(lastSelectedSongs[player]);
 
 		difficultyMenuList.resetSong(songMenuList.selectedItem);
 		lastSongReset = songMenuList.selectedItem.name;
+
+		if (lastSelectedDiffs[player] >= difficultyMenuList.length)
+			lastSelectedDiffs[player] = difficultyMenuList.length - 1;
 		difficultyMenuList.selectItem(lastSelectedDiffs[player]);
 
 		switch (lastScreens[player])

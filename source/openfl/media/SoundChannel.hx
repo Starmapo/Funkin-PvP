@@ -165,7 +165,7 @@ import lime.media.AudioSource;
 			return 0;
 
 		#if lime
-		__source.currentTime = value - __source.offset;
+		__source.currentTime = Std.int(value) - __source.offset;
 		#end
 		return value;
 	}

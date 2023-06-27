@@ -821,14 +821,17 @@ class PlayState extends FNFState
 
 	function initCharacters()
 	{
-		staticBG = new AnimatedSprite();
-		staticBG.frames = Paths.getSpritesheet('stages/static');
-		staticBG.animation.addByPrefix('static', 'menuStatic_');
-		staticBG.setGraphicSize(FlxG.width, FlxG.height);
-		staticBG.updateHitbox();
-		staticBG.playAnim('static');
-		staticBG.scrollFactor.set();
-		add(staticBG);
+		if (Settings.staticBG)
+		{
+			staticBG = new AnimatedSprite();
+			staticBG.frames = Paths.getSpritesheet('stages/static');
+			staticBG.animation.addByPrefix('static', 'menuStatic_');
+			staticBG.setGraphicSize(FlxG.width, FlxG.height);
+			staticBG.updateHitbox();
+			staticBG.playAnim('static');
+			staticBG.scrollFactor.set();
+			add(staticBG);
+		}
 
 		var gfInfo = CharacterInfo.loadCharacterFromName(song.gf);
 		gf = new Character(400, 130, gfInfo, false, true);
@@ -1342,6 +1345,9 @@ class PlayState extends FNFState
 
 	function updateBG()
 	{
+		if (staticBG == null)
+			return;
+
 		final camWidth = FlxG.camera.viewWidth;
 		final camHeight = FlxG.camera.viewHeight;
 

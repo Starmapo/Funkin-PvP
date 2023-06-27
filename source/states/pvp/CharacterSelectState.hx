@@ -276,9 +276,15 @@ class PlayerCharacterSelect extends FlxGroup
 		screenText.active = false;
 		add(screenText);
 
+		if (lastSelectedGroups[player] >= groupMenuList.length)
+			lastSelectedGroups[player] = groupMenuList.length - 1;
 		groupMenuList.selectItem(lastSelectedGroups[player]);
+
 		charMenuList.resetGroup(groupMenuList.selectedItem);
 		lastGroupReset = groupMenuList.selectedItem.name;
+
+		if (lastSelectedChars[player] >= charMenuList.length)
+			lastSelectedChars[player] = charMenuList.length - 1;
 		charMenuList.selectItem(lastSelectedChars[player]);
 
 		switch (lastScreens[player])
