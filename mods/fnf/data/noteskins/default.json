@@ -8,8 +8,7 @@
 		{
 			"staticAnim": "arrow static instance 2",
 			"pressedAnim": "down press instance 1",
-			"confirmAnim": "down confirm instance 1",
-			"confirmOffset": [-1.5, 0]
+			"confirmAnim": "down confirm instance 1"
 		},
 		{
 			"staticAnim": "arrow static instance 4",

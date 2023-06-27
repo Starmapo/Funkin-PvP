@@ -1,5 +1,6 @@
 package states.pvp;
 
+import data.Settings;
 import data.Mods;
 import data.PlayerSettings;
 import flixel.FlxCamera;
@@ -71,7 +72,8 @@ class CharacterSelectState extends FNFState
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
 
-		Mods.reloadCharacters();
+		if (Settings.reloadMods)
+			Mods.reloadCharacters();
 		var groups = [];
 		for (_ => group in Mods.characterGroups)
 			groups.push(group);

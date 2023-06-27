@@ -45,6 +45,7 @@ class Settings
 	// Miscellaneous
 	public static var autoPause:Bool = false;
 	public static var fastTransitions:Bool = false;
+	public static var reloadMods:Bool = false;
 	public static var forceCacheReset:Bool = false;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;

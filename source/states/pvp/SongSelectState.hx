@@ -82,7 +82,8 @@ class SongSelectState extends FNFState
 		playerGroups = new FlxTypedGroup();
 		add(playerGroups);
 
-		Mods.reloadSongs();
+		if (Settings.reloadMods)
+			Mods.reloadSongs();
 		var groups = [];
 		for (_ => group in Mods.songGroups)
 			groups.push(group);
@@ -304,7 +305,7 @@ class PlayerSongSelect extends FlxGroup
 		{
 			songMenuList.resetGroup(groupMenuList.selectedItem);
 			lastGroupReset = groupMenuList.selectedItem.name;
-			
+
 			if (selectedSong >= songMenuList.length)
 				selectedSong = songMenuList.length - 1;
 			songMenuList.selectItem(selectedSong);

@@ -139,8 +139,9 @@ class BootState extends FNFState
 		FlxG.mouse.useSystemCursor = true; // use system cursor instead of HaxeFlixel one
 		FlxG.mouse.visible = false; // hide mouse by default
 		// create custom transitions
-		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, -1), null);
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, FlxPoint.get(0, 1), null);
+		var time = Main.getTransitionTime();
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, time, FlxPoint.get(0, -1), null);
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, time, FlxPoint.get(0, 1), null);
 
 		Interp.getRedirects["Int"] = function(obj:Dynamic, name:String):Dynamic
 		{

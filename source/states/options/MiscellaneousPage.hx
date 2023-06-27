@@ -30,6 +30,12 @@ class MiscellaneousPage extends BaseSettingsPage
 			FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
 		});
 		addSetting({
+			name: 'reloadMods',
+			displayName: 'Reload Mod Content',
+			description: "If enabled, mod content will be refreshed when needed (for example, entering the song select screen will refresh what the current songs are). Useful if you're making a mod.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'forceCacheReset',
 			displayName: 'Force Cache Reset',
 			description: "If enabled, the cache will always be reset after a state switch, reloading everything.",
