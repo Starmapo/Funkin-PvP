@@ -234,27 +234,35 @@ class ImageOptimizerState extends FNFState
 				mutex.acquire();
 				oxipng = true;
 				mutex.release();
-				Sys.command("oxipng", images);
+				// if the command is too long it won't work.
+				// so i gotta do each image one by one to prevent that
+				for (image in images)
+					Sys.command("oxipng", [image]);
 			}
 
 			mutex.acquire();
 			doneSpritesheets = true;
 			optimizing = oxipng = false;
 			mutex.release();
+			return;
 		});
 	}
 
 	function optimize(path:String)
 	{
+		mutex.acquire();
 		var frames = Paths.getSpritesheet(path);
+		mutex.release();
 		if (frames == null)
 			return;
 		var image = frames.parent;
 
 		function dispose()
 		{
+			mutex.acquire();
 			FlxG.bitmap.remove(frames.parent);
 			frames.destroy();
+			mutex.release();
 		}
 
 		var maxX = 0;
