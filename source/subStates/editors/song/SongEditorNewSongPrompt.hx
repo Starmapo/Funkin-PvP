@@ -63,8 +63,8 @@ class SongEditorNewSongPrompt extends FNFSubState
 				{
 					FlxTween.cancelTweensOf(instButton);
 					FlxTween.color(instButton, 0.2, instButton.color, FlxColor.RED);
+					instFile = '';
 				}
-				instFile = '';
 				return;
 			}
 

@@ -47,6 +47,11 @@ class ToolboxState extends FNFState
 			FlxG.sound.music.stop();
 			FlxG.switchState(new SongEditorState(null, 0, false));
 		});
+		createItem('Image Optimizer', function()
+		{
+			FlxG.sound.music.stop();
+			FlxG.switchState(new ImageOptimizerState());
+		});
 
 		camFollow = new FlxObject(FlxG.width / 2);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
