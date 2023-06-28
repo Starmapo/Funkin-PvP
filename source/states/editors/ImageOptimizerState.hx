@@ -1,5 +1,6 @@
 package states.editors;
 
+import data.Mods;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.text.FlxText;
@@ -13,23 +14,27 @@ import openfl.display.PNGEncoderOptions;
 import openfl.geom.Rectangle;
 import sys.FileSystem;
 import sys.io.File;
+import sys.io.Process;
 import sys.thread.Mutex;
 import sys.thread.Thread;
 import systools.Dialogs;
+import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorPanel;
 
 using StringTools;
 
 class ImageOptimizerState extends FNFState
 {
-	var folder:String = '';
-	var selectFolderButton:FlxUIButton;
+	var folderDropdown:EditorDropdownMenu;
 	var bar:FlxBar;
 	var progressText:FlxText;
 	var canExit:Bool = true;
 	var mutex:Mutex;
 	var progress:ProgressData;
 	var doneSpritesheets:Bool = false;
+	var oxipng:Bool = false;
+	var folders:Array<String> = [];
+	var optimizing:Bool = false;
 
 	public function new()
 	{
@@ -46,60 +51,6 @@ class ImageOptimizerState extends FNFState
 		bg.color = 0xFF353535;
 		add(bg);
 
-		var tabMenu = new EditorPanel([
-			{
-				name: 'tab',
-				label: 'Image Optimizer'
-			}
-		]);
-		tabMenu.resize(270, 75);
-
-		var tab = tabMenu.createTab('tab');
-		var spacing = 4;
-
-		selectFolderButton = new FlxUIButton(0, 4, 'Select Folder', function()
-		{
-			var result = Dialogs.folder("Select folder to optimize", "");
-			if (result == null)
-			{
-				if (folder.length > 0)
-				{
-					folderTween(FlxColor.RED);
-					folder = '';
-				}
-				return;
-			}
-
-			folder = Path.normalize(result);
-			folderTween(FlxColor.LIME);
-		});
-		selectFolderButton.x += (tabMenu.width - selectFolderButton.width) / 2;
-		tab.add(selectFolderButton);
-
-		var optimizeButton = new FlxUIButton(0, selectFolderButton.y + selectFolderButton.height + spacing, "Optimize Images", function()
-		{
-			if (folder.length < 1 || !FileSystem.exists(folder))
-			{
-				folderTween(FlxColor.RED);
-				return;
-			}
-			var cwd = Path.normalize(Sys.getCwd());
-			if (!folder.startsWith(cwd))
-			{
-				folderTween(FlxColor.RED);
-				return;
-			}
-
-			startOptimize();
-		});
-		optimizeButton.resize(120, optimizeButton.height);
-		optimizeButton.x += (tabMenu.width - optimizeButton.width) / 2;
-		tab.add(optimizeButton);
-
-		tabMenu.addGroup(tab);
-		tabMenu.screenCenter();
-		add(tabMenu);
-
 		progressText = new FlxText(0, FlxG.height * 0.65);
 		progressText.setFormat(null, 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		progressText.exists = false;
@@ -111,6 +62,46 @@ class ImageOptimizerState extends FNFState
 		bar.createFilledBar(FlxColor.BLACK, FlxColor.WHITE);
 		add(bar);
 
+		var tabMenu = new EditorPanel([
+			{
+				name: 'tab',
+				label: 'Image Optimizer'
+			}
+		]);
+		tabMenu.resize(270, 75);
+
+		var tab = tabMenu.createTab('tab');
+		var spacing = 4;
+
+		folders.push("assets/");
+		for (mod in Mods.currentMods)
+		{
+			if (mod.zip)
+				continue;
+
+			var folder = Path.join([Mods.modsPath, mod.directory]);
+			if (!folder.endsWith("/"))
+				folder += "/";
+			folders.push(folder);
+		}
+
+		folderDropdown = new EditorDropdownMenu(0, 4, EditorDropdownMenu.makeStrIdLabelArray(folders), null, tabMenu, 160);
+		folderDropdown.x += (tabMenu.width - folderDropdown.width) / 2;
+
+		var optimizeButton = new FlxUIButton(0, folderDropdown.y + folderDropdown.height + spacing, "Optimize Images", function()
+		{
+			if (!optimizing)
+				startOptimize();
+		});
+		optimizeButton.resize(120, optimizeButton.height);
+		optimizeButton.x += (tabMenu.width - optimizeButton.width) / 2;
+		tab.add(optimizeButton);
+
+		tab.add(folderDropdown);
+		tabMenu.addGroup(tab);
+		tabMenu.screenCenter();
+		add(tabMenu);
+
 		Application.current.window.onDropFile.add(onDropFile);
 
 		super.create();
@@ -121,12 +112,26 @@ class ImageOptimizerState extends FNFState
 		if (progress != null)
 		{
 			mutex.acquire();
-			var text = progress.current + "/" + progress.total + " (" + (progress.current / progress.total * 100) + ")";
+			var text = if (oxipng)
+			{
+				"Optimizing with Oxipng...";
+			}
+			else
+			{progress.current
+				+ "/"
+				+ progress.total
+				+ " ("
+				+ (progress.total > 0 ? Math.round(progress.current / progress.total * 100) : 0)
+				+ "%)";
+			}
 			if (progressText.text != text)
+			{
 				progressText.text = text;
+				progressText.screenCenter(X);
+			}
 			if (bar.value != progress.current)
 				bar.value = progress.current;
-			if (doneSpritesheets)
+			if (doneSpritesheets && !oxipng)
 			{
 				CoolUtil.playConfirmSound();
 				doneSpritesheets = false;
@@ -134,6 +139,8 @@ class ImageOptimizerState extends FNFState
 			}
 			mutex.release();
 		}
+		if (FlxG.keys.justPressed.SPACE && oxipng)
+			trace(Sys.stdout());
 		if (FlxG.keys.justPressed.ESCAPE && canExit)
 		{
 			persistentUpdate = false;
@@ -150,10 +157,11 @@ class ImageOptimizerState extends FNFState
 	{
 		super.destroy();
 		Application.current.window.onDropFile.remove(onDropFile);
-		selectFolderButton = null;
+		folderDropdown = null;
 		bar = null;
 		progressText = null;
 		mutex = null;
+		progress = null;
 	}
 
 	function onDropFile(path:String)
@@ -161,18 +169,20 @@ class ImageOptimizerState extends FNFState
 		if (!FileSystem.isDirectory(path))
 			return;
 
-		folder = Path.normalize(path);
-		folderTween(FlxColor.LIME);
-	}
+		path = Path.normalize(path);
+		var cwd = Path.normalize(Sys.getCwd());
+		if (!path.startsWith(cwd))
+			return;
 
-	function folderTween(color:FlxColor)
-	{
-		FlxTween.cancelTweensOf(selectFolderButton);
-		FlxTween.color(selectFolderButton, 0.2, selectFolderButton.color, color);
+		path = path.substr(cwd.length);
+		if (!path.endsWith('/'))
+			path += '/';
+		folderDropdown.selectedLabel = path;
 	}
 
 	function startOptimize()
 	{
+		var folder = folderDropdown.selectedLabel;
 		var images:Array<String> = [];
 		var spritesheets:Array<String> = [];
 		function readFolder(path:String)
@@ -195,35 +205,43 @@ class ImageOptimizerState extends FNFState
 		if (images.length < 1)
 			return;
 
-		canExit = false;
+		optimizing = true;
+		doneSpritesheets = canExit = false;
 
-		if (spritesheets.length > 0)
+		progress = {current: 0, total: spritesheets.length};
+		progressText.exists = true;
+		progressText.text = "0/" + progress.total + " (0%)";
+		progressText.screenCenter(X);
+		bar.exists = true;
+		bar.setRange(0, Math.max(spritesheets.length, 1));
+		bar.value = 0;
+
+		var i = 0;
+		Thread.create(function()
 		{
-			progress = {current: 0, total: spritesheets.length};
-			progressText.exists = true;
-			progressText.text = "0/" + progress.total + " (0%)";
-			progressText.screenCenter(X);
-			bar.exists = true;
-			bar.setRange(0, spritesheets.length);
-			bar.value = 0;
-
-			var i = 0;
-			Thread.create(function()
+			while (i < spritesheets.length)
 			{
-				while (i < spritesheets.length)
-				{
-					optimize(spritesheets[i]);
+				optimize(spritesheets[i]);
 
-					i++;
-					mutex.acquire();
-					progress.current = i;
-					mutex.release();
-				}
+				i++;
 				mutex.acquire();
-				doneSpritesheets = true;
+				progress.current = i;
 				mutex.release();
-			});
-		}
+			}
+
+			if (FileSystem.exists('./oxipng.exe'))
+			{
+				mutex.acquire();
+				oxipng = true;
+				mutex.release();
+				Sys.command("oxipng", images);
+			}
+
+			mutex.acquire();
+			doneSpritesheets = true;
+			optimizing = oxipng = false;
+			mutex.release();
+		});
 	}
 
 	function optimize(path:String)
@@ -232,6 +250,12 @@ class ImageOptimizerState extends FNFState
 		if (frames == null)
 			return;
 		var image = frames.parent;
+
+		function dispose()
+		{
+			FlxG.bitmap.remove(frames.parent);
+			frames.destroy();
+		}
 
 		var maxX = 0;
 		var maxY = 0;
@@ -244,15 +268,15 @@ class ImageOptimizerState extends FNFState
 			if (y > maxY)
 				maxY = Std.int(y);
 		}
-		if (maxX == 0 || maxY == 0)
+		if (maxX <= 0 || maxY <= 0 || (image.width <= maxX && image.height <= maxY))
+		{
+			dispose();
 			return;
-		if (image.width <= maxX && image.height <= maxY)
-			return;
+		}
 
 		File.saveBytes(path + ".png", image.bitmap.encode(new Rectangle(0, 0, maxX, maxY), new PNGEncoderOptions()));
-        
-		FlxG.bitmap.remove(frames.parent);
-        frames.destroy();
+
+		dispose();
 	}
 }
 

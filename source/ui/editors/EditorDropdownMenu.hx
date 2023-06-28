@@ -17,9 +17,9 @@ class EditorDropdownMenu extends FlxUIDropDownMenu implements IFlxUIClickable im
 
 	var tabMenu:FlxUITabMenu;
 
-	public function new(x:Float = 0, y:Float = 0, ?dataList:Array<StrNameLabel>, ?callback:String->Void, ?tabMenu:FlxUITabMenu)
+	public function new(x:Float = 0, y:Float = 0, ?dataList:Array<StrNameLabel>, ?callback:String->Void, ?tabMenu:FlxUITabMenu, width:Int = 120)
 	{
-		super(x, y, dataList, callback);
+		super(x, y, dataList, callback, new FlxUIDropDownHeader(width));
 		this.tabMenu = tabMenu;
 	}
 

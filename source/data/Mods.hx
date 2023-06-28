@@ -282,11 +282,14 @@ class Mods
 
 class Mod extends JsonObject
 {
-	public var directory:String;
 	public var name:String;
 	public var description:String;
 	public var modVersion:String;
 	public var gameVersion:String;
+
+	// internal stuff
+	public var directory:String;
+	public var zip:Bool = false;
 	public var characterCount:Int = 0;
 	public var songCount:Int = 0;
 	public var noteskinCount:Int = 0;
