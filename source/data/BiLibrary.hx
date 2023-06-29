@@ -19,7 +19,8 @@ class BiLibrary extends AssetLibrary
 	final rootPath = './';
 
 	var defaultLibrary:AssetLibrary;
-	var zipAssets:Map<String, Entry> = [];
+
+	// var zipAssets:Map<String, Entry> = [];
 
 	public function new(?defaultLibrary:AssetLibrary)
 	{
@@ -29,33 +30,34 @@ class BiLibrary extends AssetLibrary
 		this.defaultLibrary = defaultLibrary;
 	}
 
-	public function addZipMod(list:List<Entry>, modPath:String)
-	{
-		if (list == null)
-			return;
-		if (!modPath.endsWith('/'))
-			modPath += '/';
-		for (entry in list)
+	/*
+		public function addZipMod(list:List<Entry>, modPath:String)
 		{
-			var name = entry.fileName;
-			if (Path.extension(name).length < 1)
-				continue;
-			zipAssets.set(modPath + name, entry);
-			trace(modPath + name);
+			if (list == null)
+				return;
+			if (!modPath.endsWith('/'))
+				modPath += '/';
+			for (entry in list)
+			{
+				var name = entry.fileName;
+				if (Path.extension(name).length < 1)
+					continue;
+				zipAssets.set(modPath + name, entry);
+				trace(modPath + name);
+			}
 		}
-	}
 
-	public function clearZipMods()
-	{
-		zipAssets.clear();
-	}
-
+		public function clearZipMods()
+		{
+			zipAssets.clear();
+		}
+	 */
 	/**
 		`type` isn't supported for FileSystem checks!
 	**/
 	override function exists(id:String, type:String):Bool
 	{
-		if (defaultLibrary.exists(id, type) || zipAssets.exists(id))
+		if (defaultLibrary.exists(id, type))
 			return true;
 		return FileSystem.exists(getSysPath(id));
 	}
@@ -64,8 +66,6 @@ class BiLibrary extends AssetLibrary
 	{
 		if (defaultLibrary.exists(id, AssetType.SOUND))
 			return defaultLibrary.getAudioBuffer(id);
-		else if (zipAssets.exists(id))
-			return AudioBuffer.fromBytes(getZipData(id));
 		else
 			return AudioBuffer.fromFile(getSysPath(id));
 	}
@@ -74,8 +74,6 @@ class BiLibrary extends AssetLibrary
 	{
 		if (defaultLibrary.exists(id, AssetType.BINARY))
 			return defaultLibrary.getBytes(id);
-		else if (zipAssets.exists(id))
-			return getZipData(id);
 		else
 			return Bytes.fromFile(getSysPath(id));
 	}
@@ -84,8 +82,6 @@ class BiLibrary extends AssetLibrary
 	{
 		if (defaultLibrary.exists(id, AssetType.FONT))
 			return defaultLibrary.getFont(id);
-		else if (zipAssets.exists(id))
-			return Font.fromBytes(getZipData(id));
 		else
 			return Font.fromFile(getSysPath(id));
 	}
@@ -94,8 +90,6 @@ class BiLibrary extends AssetLibrary
 	{
 		if (defaultLibrary.exists(id, AssetType.IMAGE))
 			return defaultLibrary.getImage(id);
-		else if (zipAssets.exists(id))
-			return Image.fromBytes(getZipData(id));
 		else
 			return Image.fromFile(getSysPath(id));
 	}
@@ -104,8 +98,6 @@ class BiLibrary extends AssetLibrary
 	{
 		if (defaultLibrary.exists(id, AssetType.TEXT))
 			return defaultLibrary.getText(id);
-		else if (zipAssets.exists(id))
-			return getZipData(id).toString();
 		else
 		{
 			var bytes = getBytes(id);
@@ -141,9 +133,6 @@ class BiLibrary extends AssetLibrary
 
 		pushFolder('mods/');
 
-		for (asset in zipAssets.keys())
-			items.push(asset);
-
 		return items;
 	}
 
@@ -151,9 +140,10 @@ class BiLibrary extends AssetLibrary
 	{
 		return rootPath + id;
 	}
-
-	function getZipData(id:String)
-	{
-		return Zip.unzip(zipAssets.get(id)).data;
-	}
+	/*
+		function getZipData(id:String)
+		{
+			return Zip.unzip(zipAssets.get(id)).data;
+		}
+	 */
 }
