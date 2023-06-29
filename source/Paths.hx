@@ -11,7 +11,6 @@ import haxe.xml.Access;
 import lime.app.Future;
 import openfl.Assets;
 import openfl.display.BitmapData;
-import openfl.display3D.utils.UInt8Buff;
 import openfl.media.Sound;
 import util.MemoryUtil;
 
@@ -411,16 +410,6 @@ class Paths
 				cachedSounds.remove(k);
 				s.close();
 			}
-		}
-
-		@:privateAccess {
-			// clear uint8 pools
-			for (_ => pool in UInt8Buff._pools)
-			{
-				for (b in pool.clear())
-					b.destroy();
-			}
-			UInt8Buff._pools.clear();
 		}
 
 		// run garbage collector
