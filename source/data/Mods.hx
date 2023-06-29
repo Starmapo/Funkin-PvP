@@ -3,6 +3,7 @@ package data;
 import flixel.FlxG;
 import haxe.io.Path;
 import sys.FileSystem;
+import util.Zip;
 
 using StringTools;
 
@@ -20,6 +21,7 @@ class Mods
 	{
 		currentMods.resize(0);
 		currentMod = '';
+		// Paths.library.clearZipMods();
 
 		var directories:Array<String> = [];
 
@@ -28,6 +30,29 @@ class Mods
 			if (directories.contains(file))
 				continue;
 			var fullPath = Path.join([modsPath, file]);
+			/*
+				// failed to add zip mods :(
+				if (file.endsWith(".zip"))
+				{
+					var zip = Zip.getZipContent(fullPath);
+					for (entry in zip)
+					{
+						if (entry.fileName == "mod.json")
+						{
+							var modFolder = Path.withoutExtension(fullPath);
+							Paths.library.addZipMod(zip, modFolder);
+							var jsonPath = Path.join([modFolder, "mod.json"]);
+							var mod = new Mod(Paths.getJson(jsonPath));
+							mod.directory = file.substr(0, zip.length - 4);
+							currentMods.push(mod);
+							directories.push(mod.directory);
+							break;
+						}
+					}
+				}
+				else
+				{
+			 */
 			var jsonPath = Path.join([fullPath, 'mod.json']);
 			if (FileSystem.isDirectory(fullPath) && FileSystem.exists(jsonPath))
 			{
@@ -36,8 +61,8 @@ class Mods
 				currentMods.push(mod);
 				directories.push(file);
 			}
+			// }
 		}
-
 		reloadPvPMusic();
 		reloadSongs();
 		reloadCharacters();

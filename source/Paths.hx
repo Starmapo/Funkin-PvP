@@ -24,12 +24,13 @@ class Paths
 	public static var cachedSounds:Map<String, Sound> = [];
 	public static var trackedSounds:Array<String> = [];
 	public static var dumpExclusions:Array<String> = [];
+	public static var library:BiLibrary;
 
 	public static function init()
 	{
 		// use a modified library so we can get files in the mods folder
-		var lib = new BiLibrary();
-		lime.utils.Assets.registerLibrary("", lib);
+		library = new BiLibrary();
+		lime.utils.Assets.registerLibrary("", library);
 
 		excludeSound('menus/scrollMenu');
 		excludeSound('menus/confirmMenu');
@@ -72,7 +73,7 @@ class Paths
 			key = path;
 
 		var graphic:FlxGraphic = null;
-		if (Assets.exists(path, IMAGE))
+		if (exists(path))
 			graphic = FlxGraphic.fromAssetKey(path, unique, key, cache);
 
 		if (graphic != null)
@@ -206,7 +207,7 @@ class Paths
 		var sound:Sound = null;
 		if (cachedSounds.exists(path))
 			sound = cachedSounds.get(path);
-		else if (Assets.exists(path, SOUND))
+		else if (exists(path))
 		{
 			sound = Assets.getSound(path, false);
 			if (sound != null)
@@ -318,8 +319,15 @@ class Paths
 
 	public static function getContent(path:String)
 	{
-		if (Assets.exists(path))
+		if (exists(path))
 			return Assets.getText(path).replace('\r', '').trim();
+		return null;
+	}
+
+	public static function getBytes(path:String)
+	{
+		if (exists(path))
+			return Assets.getBytes(path);
 		return null;
 	}
 
