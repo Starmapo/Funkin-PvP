@@ -82,7 +82,7 @@ class CharacterEditorState extends FNFState
 	override function destroy()
 	{
 		super.destroy();
-		info = FlxDestroyUtil.destroy(info);
+		info = null;
 		char = null;
 		camPos = null;
 		animText = null;

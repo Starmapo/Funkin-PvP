@@ -19,11 +19,11 @@ class CharacterInfo extends JsonObject
 		if (json == null)
 			return null;
 
-		var psych = false;
+		var converted = false;
 		if (json.sing_duration != null)
 		{
 			json = convertPsychCharacter(json);
-			psych = true;
+			converted = true;
 		}
 
 		var charInfo = new CharacterInfo(json);
@@ -31,7 +31,7 @@ class CharacterInfo extends JsonObject
 		charInfo.name = new Path(path).file;
 		charInfo.mod = charInfo.directory.split('/')[1];
 		charInfo.sortAnims();
-		if (psych)
+		if (converted)
 			charInfo.save(path);
 		return charInfo;
 	}
