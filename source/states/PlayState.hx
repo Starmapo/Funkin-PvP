@@ -110,6 +110,10 @@ class PlayState extends FNFState
 	public var iconBop:Bool = true;
 	public var defaultCamZoomTween:FlxTween;
 	public var afterRulesetUpdate:FlxTypedSignal<Float->Void> = new FlxTypedSignal();
+	public var minScrollX:Null<Float>;
+	public var maxScrollX:Null<Float>;
+	public var minScrollY:Null<Float>;
+	public var maxScrollY:Null<Float>;
 
 	var instEnded:Bool = false;
 	var debugMode:Bool = false;
@@ -259,7 +263,7 @@ class PlayState extends FNFState
 				if (!tmr.finished && !tmr.persist)
 					tmr.active = false;
 			});
-			FlxG.camera.followActive = false;
+			FlxG.camera.fxActive = FlxG.camera.followActive = false;
 
 			DiscordClient.changePresence(pausedDetailsText, 'In a match');
 		}
@@ -287,7 +291,7 @@ class PlayState extends FNFState
 				if (!tmr.finished && !tmr.persist)
 					tmr.active = true;
 			});
-			FlxG.camera.followActive = true;
+			FlxG.camera.fxActive = FlxG.camera.followActive = true;
 			FlxG.sound.resume();
 
 			if (hasStarted)
@@ -512,7 +516,7 @@ class PlayState extends FNFState
 					var y = params[1] != null ? Std.parseFloat(params[1].trim()) : Math.NaN;
 					if (Math.isNaN(y))
 						y = 0;
-					camFollow.setPosition(x, y);
+					setCamFollow(x, y);
 					disableCamFollow = true;
 				}
 				else
@@ -662,9 +666,27 @@ class PlayState extends FNFState
 			camOffsetY += char.camOffset.y;
 		}
 
-		camFollow.setPosition(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
+		setCamFollow(char.x + (char.startWidth / 2) + camOffsetX, char.y + (char.startHeight / 2) + camOffsetY);
 
 		executeScripts("onCharFocus", [char]);
+	}
+
+	public function setCamFollow(x:Float = 0, y:Float = 0, ignoreBounds:Bool = false)
+	{
+		if (ignoreBounds)
+		{
+			camFollow.setPosition(x, y);
+			return;
+		}
+		
+		final camera = FlxG.camera;
+		final minX:Null<Float> = minScrollX == null ? null : minScrollX - (camera.zoom - 1) * camera.width / (2 * camera.zoom);
+		final maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (camera.zoom - 1) * camera.width / (2 * camera.zoom);
+		final minY:Null<Float> = minScrollY == null ? null : minScrollY - (camera.zoom - 1) * camera.height / (2 * camera.zoom);
+		final maxY:Null<Float> = maxScrollY == null ? null : maxScrollY + (camera.zoom - 1) * camera.height / (2 * camera.zoom);
+
+		camFollow.x = FlxMath.bound(x, minX, (maxX != null) ? maxX - camera.width : null);
+		camFollow.y = FlxMath.bound(y, minY, (maxY != null) ? maxY - camera.height : null);
 	}
 
 	public function getSongLength()
