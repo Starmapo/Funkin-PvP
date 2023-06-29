@@ -20,6 +20,7 @@ import sys.thread.Thread;
 import systools.Dialogs;
 import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorPanel;
+import util.DiscordClient;
 
 using StringTools;
 
@@ -45,6 +46,8 @@ class ImageOptimizerState extends FNFState
 
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Image Optimizer");
+
 		mutex = new Mutex();
 
 		var bg = CoolUtil.createMenuBG('menuBGDesat');

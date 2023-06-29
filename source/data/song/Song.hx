@@ -233,13 +233,13 @@ class Song extends JsonObject
 							var mult = val != null ? Std.parseFloat(val.trim()) : Math.NaN;
 							if (Math.isNaN(mult))
 								mult = 1;
-							json.scrollVelocities.push(new ScrollVelocity({
+							json.scrollVelocities.push({
 								startTime: note[0],
 								multipliers: [mult, mult]
-							}));
+							});
 						}
 						else
-							song.events.push(new EventObject({
+							song.events.push({
 								startTime: note[0],
 								events: [
 									{
@@ -247,7 +247,7 @@ class Song extends JsonObject
 										params: note[3] + (note[4].length > 0 ? ',' + note[4] : '')
 									}
 								]
-							}));
+							});
 						continue;
 					}
 					if (noteInfo.lane > 7)
@@ -297,7 +297,7 @@ class Song extends JsonObject
 			var events:Array<Array<Dynamic>> = json.events;
 			for (event in events)
 			{
-				var subEvents = [];
+				var subEvents:Array<Dynamic> = [];
 				var subs:Array<Array<String>> = event[1];
 				for (sub in subs)
 				{
@@ -307,22 +307,22 @@ class Song extends JsonObject
 						var mult = val != null ? Std.parseFloat(val.trim()) : Math.NaN;
 						if (Math.isNaN(mult))
 							mult = 1;
-						json.scrollVelocities.push(new ScrollVelocity({
+						json.scrollVelocities.push({
 							startTime: sub[0],
 							multipliers: [mult, mult]
-						}));
+						});
 					}
 					else
-						subEvents.push(new Event({
+						subEvents.push({
 							event: sub[0],
 							params: sub[1] + (sub[2].length > 0 ? ',' + sub[2] : '')
-						}));
+						});
 				}
 				if (subEvents.length > 0)
-					song.events.push(new EventObject({
+					song.events.push({
 						startTime: event[0],
 						events: subEvents
-					}));
+					});
 			}
 		}
 
