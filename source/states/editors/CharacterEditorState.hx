@@ -474,7 +474,7 @@ class CharacterEditorState extends FNFState
 
 	function changeAnimOrPos(xChange:Int, yChange:Int = 0, hasAnim:Bool = true)
 	{
-		if (FlxG.keys.pressed.ALT)
+		if (currentTool.value == POSITION)
 			changePositionOffset(xChange, yChange);
 		else if (hasAnim)
 			changeAnimOffset(-xChange, -yChange);
