@@ -189,105 +189,108 @@ class Song extends JsonObject
 			notes: [],
 			bf: json.player1,
 			opponent: json.player2,
-			gf: json.gfVersion,
+			gf: json.gfVersion != null ? json.gfVersion : json.player3,
 			stage: json.stage,
 			scrollVelocities: []
 		};
 
-		var curTime:Float = 0;
-		var curBPM:Float = json.bpm;
-		var curFocus:Null<CameraFocusChar> = null;
-		var curNotes:Map<String, Array<Int>> = new Map();
-		for (i in 0...json.notes.length)
+		if (json.notes != null)
 		{
-			var section = json.notes[i];
-			if (section.changeBPM == true)
+			var curTime:Float = 0;
+			var curBPM:Float = json.bpm;
+			var curFocus:Null<CameraFocusChar> = null;
+			var curNotes:Map<String, Array<Int>> = new Map();
+			for (i in 0...json.notes.length)
 			{
-				song.timingPoints.push({
-					startTime: curTime,
-					bpm: section.bpm
-				});
-				curBPM = section.bpm;
-			}
-			var sectionFocus = resolveCameraFocus(section, curTime);
-			if (curFocus == null || curFocus != sectionFocus.char)
-			{
-				song.cameraFocuses.push(sectionFocus);
-				curFocus = sectionFocus.char;
-			}
-			for (i in 0...section.sectionNotes.length)
-			{
-				var note:Array<Dynamic> = section.sectionNotes[i];
-				var noteInfo:Dynamic = {
-					startTime: note[0],
-					lane: note[1],
-					endTime: note[2] > 0 ? note[0] + note[2] : 0,
-				};
-				if (noteInfo.lane < 0)
+				var section = json.notes[i];
+				if (section.changeBPM == true)
 				{
-					if (note[2] == 'Change Scroll Speed')
+					song.timingPoints.push({
+						startTime: curTime,
+						bpm: section.bpm
+					});
+					curBPM = section.bpm;
+				}
+				var sectionFocus = resolveCameraFocus(section, curTime);
+				if (curFocus == null || curFocus != sectionFocus.char)
+				{
+					song.cameraFocuses.push(sectionFocus);
+					curFocus = sectionFocus.char;
+				}
+				for (i in 0...section.sectionNotes.length)
+				{
+					var note:Array<Dynamic> = section.sectionNotes[i];
+					var noteInfo:Dynamic = {
+						startTime: note[0],
+						lane: note[1],
+						endTime: note[2] > 0 ? note[0] + note[2] : 0,
+					};
+					if (noteInfo.lane < 0)
 					{
-						var val:String = note[3];
-						var mult = val != null ? Std.parseFloat(val.trim()) : Math.NaN;
-						if (Math.isNaN(mult))
-							mult = 1;
-						json.scrollVelocities.push(new ScrollVelocity({
-							startTime: note[0],
-							multipliers: [mult, mult]
-						}));
+						if (note[2] == 'Change Scroll Speed')
+						{
+							var val:String = note[3];
+							var mult = val != null ? Std.parseFloat(val.trim()) : Math.NaN;
+							if (Math.isNaN(mult))
+								mult = 1;
+							json.scrollVelocities.push(new ScrollVelocity({
+								startTime: note[0],
+								multipliers: [mult, mult]
+							}));
+						}
+						else
+							song.events.push(new EventObject({
+								startTime: note[0],
+								events: [
+									{
+										event: note[2],
+										params: note[3] + (note[4].length > 0 ? ',' + note[4] : '')
+									}
+								]
+							}));
+						continue;
 					}
-					else
-						song.events.push(new EventObject({
-							startTime: note[0],
-							events: [
-								{
-									event: note[2],
-									params: note[3] + (note[4].length > 0 ? ',' + note[4] : '')
-								}
-							]
-						}));
-					continue;
-				}
-				if (noteInfo.lane > 7)
-				{
-					var type = Math.floor(noteInfo.lane / 8);
-					noteInfo.lane %= 8;
-					noteInfo.type = 'Type $type';
-				}
-				if (section.mustHitSection)
-				{
-					if (noteInfo.lane >= 4)
-						noteInfo.lane -= 4;
-					else
-						noteInfo.lane += 4;
-				}
-
-				var string = Std.string(noteInfo.startTime);
-				if (curNotes.exists(string) && curNotes.get(string).contains(noteInfo.lane))
-					continue;
-
-				if (noteInfo.type == null)
-				{
-					if (section.altAnim == true && noteInfo.lane < 4)
-						noteInfo.type = 'Alt Animation';
-					if (note[3] != null)
+					if (noteInfo.lane > 7)
 					{
-						if (note[3] == true)
+						var type = Math.floor(noteInfo.lane / 8);
+						noteInfo.lane %= 8;
+						noteInfo.type = 'Type $type';
+					}
+					if (section.mustHitSection)
+					{
+						if (noteInfo.lane >= 4)
+							noteInfo.lane -= 4;
+						else
+							noteInfo.lane += 4;
+					}
+
+					var string = Std.string(noteInfo.startTime);
+					if (curNotes.exists(string) && curNotes.get(string).contains(noteInfo.lane))
+						continue;
+
+					if (noteInfo.type == null)
+					{
+						if (section.altAnim == true && noteInfo.lane < 4)
 							noteInfo.type = 'Alt Animation';
-						else if (Std.isOfType(note[3], String))
-							noteInfo.type = note[3];
-						else if (Std.isOfType(note[3], Int) && note[3] != 0)
-							noteInfo.type = 'Type ' + note[3];
+						if (note[3] != null)
+						{
+							if (note[3] == true)
+								noteInfo.type = 'Alt Animation';
+							else if (Std.isOfType(note[3], String))
+								noteInfo.type = note[3];
+							else if (Std.isOfType(note[3], Int) && note[3] != 0)
+								noteInfo.type = 'Type ' + note[3];
+						}
 					}
-				}
-				song.notes.push(noteInfo);
+					song.notes.push(noteInfo);
 
-				if (curNotes.exists(string) && !curNotes.get(string).contains(noteInfo.lane))
-					curNotes.get(string).push(noteInfo.lane);
-				else
-					curNotes.set(string, [noteInfo.lane]);
+					if (curNotes.exists(string) && !curNotes.get(string).contains(noteInfo.lane))
+						curNotes.get(string).push(noteInfo.lane);
+					else
+						curNotes.set(string, [noteInfo.lane]);
+				}
+				curTime += section.lengthInSteps * (15000 / curBPM);
 			}
-			curTime += section.lengthInSteps * (15000 / curBPM);
 		}
 		if (json.events != null)
 		{
