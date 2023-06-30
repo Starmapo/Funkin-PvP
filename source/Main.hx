@@ -1,3 +1,5 @@
+package;
+
 import data.Settings;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -14,10 +16,19 @@ import ui.StatsDisplay;
 
 using StringTools;
 
+/**
+	The main sprite which contains everything, including the game.
+**/
 class Main extends Sprite
 {
+	/**
+		Duration of transitions between screens.
+	**/
 	public static final TRANSITION_TIME:Float = 0.7;
 
+	/**
+		Internal variable to track if the audio was disconnected.
+	**/
 	public static var audioDisconnected:Bool = false;
 
 	static var gameFilters:Array<BitmapFilter> = [];
@@ -30,16 +41,17 @@ class Main extends Sprite
 		Lib.current.addChild(new Main());
 	}
 
-	public static function updateFilters()
+	/**
+		Gets the proper transition time, taking `Settings.fastTransitions` into account.
+	**/
+	public static function getTransitionTime()
 	{
-		updateColorFilter();
-		updateHueFilter();
-
-		gameFilters = [colorFilter, hueFilter];
-		FlxG.game.filtersEnabled = true;
-		FlxG.game.setFilters(gameFilters);
+		return TRANSITION_TIME * (Settings.fastTransitions ? 0.4 : 1);
 	}
 
+	/**
+		Updates the color filter based on `Settings.filter`, `Settings.gamma`, and `Settings.brightness`.
+	**/
 	public static function updateColorFilter()
 	{
 		if (colorFilter == null)
@@ -113,6 +125,22 @@ class Main extends Sprite
 		}
 	}
 
+	/**
+		Updates the game's filters.
+	**/
+	public static function updateFilters()
+	{
+		updateColorFilter();
+		updateHueFilter();
+
+		gameFilters = [colorFilter, hueFilter];
+		FlxG.game.filtersEnabled = true;
+		FlxG.game.setFilters(gameFilters);
+	}
+
+	/**
+		Updates the hue filter based on `Settings.hue`.
+	**/
 	public static function updateHueFilter()
 	{
 		if (hueFilter == null)
@@ -141,11 +169,6 @@ class Main extends Sprite
 		];
 	}
 
-	public static function getTransitionTime()
-	{
-		return TRANSITION_TIME * (Settings.fastTransitions ? 0.4 : 1);
-	}
-
 	public function new()
 	{
 		Log.level = NONE; // no lime logs
@@ -172,6 +195,11 @@ class Main extends Sprite
 		FlxG.signals.gameResized.add(onGameResized);
 	}
 
+	function onGameResized(width:Int, height:Int)
+	{
+		statsDisplay.onResize(width, height);
+	}
+
 	function onKeyDown(e:KeyboardEvent)
 	{
 		switch (e.keyCode)
@@ -179,10 +207,5 @@ class Main extends Sprite
 			case Keyboard.F3:
 				statsDisplay.visible = !statsDisplay.visible;
 		}
-	}
-
-	function onGameResized(width:Int, height:Int)
-	{
-		statsDisplay.onResize(width, height);
 	}
 }

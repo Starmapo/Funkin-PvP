@@ -102,6 +102,22 @@ class CoolUtil
 	}
 
 	/**
+		Returns if `s` ends with any of the strings in `values`.
+	**/
+	public static function endsWithAny(s:String, values:Array<String>):Bool
+	{
+		if (values != null)
+		{
+			for (value in values)
+			{
+				if (s.endsWith(value))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 		Formats a number to an ordinal number.
 
 		If the number is 0 or less, it won't be formatted.
@@ -528,7 +544,7 @@ class CoolUtil
 			return;
 
 		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
-		FlxG.sound.playMusic(Paths.getMusic(Path.join([music, 'audio.ogg'])), volume);
+		FlxG.sound.playMusic(Paths.getMusic(Path.join([music, 'audio'])), volume);
 	}
 
 	/**

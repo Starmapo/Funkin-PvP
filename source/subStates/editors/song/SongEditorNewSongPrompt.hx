@@ -53,9 +53,9 @@ class SongEditorNewSongPrompt extends FNFSubState
 		instButton = new FlxUIButton(0, 4, 'Instrumental File', function()
 		{
 			var result = Dialogs.openFile("Select the instrumental file", '', {
-				count: 1,
-				descriptions: ['OGG files'],
-				extensions: ['*.ogg']
+				count: 2,
+				descriptions: ['OGG files', 'WAV files'],
+				extensions: ['*.ogg', '*.wav']
 			});
 			if (result == null || result[0] == null)
 			{
@@ -77,9 +77,9 @@ class SongEditorNewSongPrompt extends FNFSubState
 		vocalsButton = new FlxUIButton(0, instButton.y + instButton.height + spacing, 'Vocals File', function()
 		{
 			var result = Dialogs.openFile("Select the vocals file", '', {
-				count: 1,
-				descriptions: ['OGG files'],
-				extensions: ['*.ogg']
+				count: 2,
+				descriptions: ['OGG files', 'WAV files'],
+				extensions: ['*.ogg', '*.wav']
 			});
 			if (result == null || result[0] == null)
 			{
@@ -146,9 +146,9 @@ class SongEditorNewSongPrompt extends FNFSubState
 			state.save(false);
 
 			FileSystem.createDirectory(path);
-			File.copy(instFile, Path.join([path, 'Inst.ogg']));
+			File.copy(instFile, Path.join([path, 'Inst.' + Path.extension(instFile)]));
 			if (vocalsFile.length > 0 && FileSystem.exists(vocalsFile))
-				File.copy(vocalsFile, Path.join([path, 'Voices.ogg']));
+				File.copy(vocalsFile, Path.join([path, 'Voices.' + Path.extension(vocalsFile)]));
 
 			var song = new Song({title: songName, timingPoints: [{}]});
 			song.directory = path;
@@ -170,7 +170,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 		tab.add(modLabel);
 		tab.add(createButton);
 		tab.add(modDropdown);
-		
+
 		tabMenu.addGroup(tab);
 		tabMenu.screenCenter();
 		add(tabMenu);
@@ -218,7 +218,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 
 	function onDropFile(path:String)
 	{
-		if (!path.endsWith('.ogg'))
+		if (!CoolUtil.endsWithAny(path, Paths.SOUND_EXTENSIONS))
 			return;
 
 		// mouse position hasn't been updated yet so i have to wait until the next update

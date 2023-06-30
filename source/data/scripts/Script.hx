@@ -185,6 +185,7 @@ class Script implements IFlxDestroyable
 	function setStartingVariables()
 	{
 		setVariable('this', this);
+		setVariable('mod', mod);
 		setVariable('window', Application.current.window);
 
 		setVariable('Date', Date);
