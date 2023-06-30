@@ -38,7 +38,7 @@ class StageFile implements IFlxDestroyable
 		if (elem == null)
 			return;
 
-		var data = new Access(xml);
+		var data = new Access(elem);
 		if (data.has.zoom)
 		{
 			var zoom = Std.parseFloat(data.att.zoom);
