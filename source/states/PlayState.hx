@@ -924,12 +924,7 @@ class PlayState extends FNFState
 			stageScript.execute("onCreate");
 		}
 		else if (!stageFile.found)
-		{
-			remove(gf);
-			remove(opponent);
-			remove(bf);
 			stageFile = new StageFile(this, 'fnf:stage');
-		}
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04 * GameplayGlobals.playbackRate);
 		updateCamPosition();

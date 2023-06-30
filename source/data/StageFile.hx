@@ -29,28 +29,32 @@ class StageFile implements IFlxDestroyable
 		var mod = nameInfo.mod;
 		var path = Paths.getPath('data/stages/' + nameInfo.name + '.xml', mod);
 		if (!Paths.exists(path))
-		{
-			addMissingChars();
 			return;
-		}
 
-		var xml = new Access(Paths.getXml(path, mod).firstElement());
-		if (xml.has.zoom)
+		var xml = Paths.getXml(path, mod);
+		if (xml == null)
+			return;
+		var elem = xml.firstElement();
+		if (elem == null)
+			return;
+
+		var data = new Access(xml);
+		if (data.has.zoom)
 		{
-			var zoom = Std.parseFloat(xml.att.zoom);
+			var zoom = Std.parseFloat(data.att.zoom);
 			if (!Math.isNaN(zoom))
 				state.defaultCamZoom = zoom;
 		}
 		var folder = '';
-		if (xml.has.folder)
+		if (data.has.folder)
 		{
-			folder = Path.normalize(xml.att.folder);
+			folder = Path.normalize(data.att.folder);
 			if (!folder.endsWith('/'))
 				folder += '/';
 		}
 
 		var elements:Array<Access> = [];
-		for (node in xml.elements)
+		for (node in data.elements)
 			pushNode(node, elements);
 
 		for (node in elements)
