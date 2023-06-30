@@ -274,7 +274,7 @@ class Character extends DancingSprite
 
 	override function destroy()
 	{
-		info = FlxDestroyUtil.destroy(info);
+		info = null;
 		super.destroy();
 		singAnimations = null;
 		holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
