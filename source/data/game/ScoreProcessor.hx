@@ -6,6 +6,27 @@ import flixel.util.FlxDestroyUtil;
 
 class ScoreProcessor implements IFlxDestroyable
 {
+	/**
+		Returns a grade from a player's accuracy.
+	**/
+	public static function getGradeFromAccuracy(accuracy:Float)
+	{
+		if (accuracy >= 100)
+			return 'X';
+		else if (accuracy >= 99)
+			return 'SS';
+		else if (accuracy >= 95)
+			return 'S';
+		else if (accuracy >= 90)
+			return 'A';
+		else if (accuracy >= 80)
+			return 'B';
+		else if (accuracy >= 70)
+			return 'C';
+
+		return 'D';
+	}
+
 	public var player:Int;
 	public var score:Int;
 	public var accuracy:Float;
@@ -84,6 +105,23 @@ class ScoreProcessor implements IFlxDestroyable
 			registerScore(judgement, keyPressType == RELEASE);
 
 		return judgement;
+	}
+
+	/**
+		Returns an FC rating of this score processor.
+	**/
+	public function getFCText()
+	{
+		if (currentJudgements[Judgement.MISS] > 0 || currentJudgements[Judgement.SHIT] > 0 || totalJudgementCount == 0)
+			return '';
+		if (currentJudgements[Judgement.BAD] > 0)
+			return ' [FC]';
+		if (currentJudgements[Judgement.GOOD] > 0)
+			return ' [Good FC]';
+		if (currentJudgements[Judgement.SICK] > 0)
+			return ' [Sick FC]';
+
+		return ' [Marvelous FC]';
 	}
 
 	public function registerScore(judgement:Judgement, isLongNoteRelease:Bool = false)

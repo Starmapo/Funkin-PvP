@@ -2,13 +2,13 @@ package;
 
 import data.Mods;
 import data.PlayerSettings;
-import data.game.Judgement;
-import data.game.ScoreProcessor;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
@@ -16,6 +16,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 import haxe.io.Path;
+import lime.app.Application;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.system.System;
@@ -23,24 +24,70 @@ import systools.win.Tools;
 
 using StringTools;
 
+/**
+	A class containing a bunch of cool utilities.
+**/
 class CoolUtil
 {
-	public static function getLerp(lerp:Float)
+	/**
+		Adds `s` to `text`, creating a new line if `text` isn't empty.
+	**/
+	public static function addMultilineText(text:String, s:String):String
 	{
-		return FlxMath.bound(lerp * (60 / FlxG.updateFramerate), 0, 1);
+		if (text == null || text.length < 1)
+			return s;
+		if (s == null || s.length < 1)
+			return text;
+		text += '\n' + s;
+		return text;
 	}
 
-	public static function lerp(a:Float, b:Float, ratio:Float)
+	/**
+		Shows an alert for the user to see, unless fullscreen is on (as that could break stuff).
+	**/
+	public static function alert(?message:String, ?title:String):Void
 	{
-		return FlxMath.lerp(a, b, getLerp(ratio));
+		if (!FlxG.fullscreen)
+			Application.current.window.alert(message, title);
+		var traceText = (title.length > 0 ? title + ': ' : '') + message;
+		if (traceText.length > 0)
+			trace(traceText);
 	}
 
-	public static function reverseLerp(a:Float, b:Float, ratio:Float)
+	/**
+		Returns if anything has just been inputted. This includes the keyboard, gamepads, and mouse buttons.
+	**/
+	public static function anyJustInputted():Bool
 	{
-		return FlxMath.lerp(a, b, 1 - getLerp(ratio));
+		return (PlayerSettings.anyJustPressed() || FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed || FlxG.mouse.justPressedMiddle
+			|| FlxG.mouse.justPressedRight);
 	}
 
-	public static function createMenuBG(image:String = 'menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0)
+	/**
+		Returns if `s` contains any of the strings in `values`.
+	**/
+	public static function containsAny(s:String, values:Array<String>):Bool
+	{
+		if (values != null)
+		{
+			for (value in values)
+			{
+				if (s.contains(value))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+		Creates a menu background sprite.
+
+		@param	image	The image name to use. Defaults to `menuBG`.
+		@param	scale	The scaling factor. Defaults to `1`, or no scaling.
+		@param	scrollX	The horizontal scroll factor. Defaults to `0`, or no scrolling.
+		@param	scrollY The vertical scroll factor. Defaults to `0`, or no scrolling.
+	**/
+	public static function createMenuBG(image:String = 'menuBG', scale:Float = 1, scrollX:Float = 0, scrollY:Float = 0):FlxSprite
 	{
 		var bg = new FlxSprite(0, 0, Paths.getImage('menus/$image'));
 		bg.scrollFactor.set(scrollX, scrollY);
@@ -55,131 +102,11 @@ class CoolUtil
 	}
 
 	/**
-		Plays the menu music.
-		@param volume The volume that the music should start at. Defaults to 1, or full volume.
+		Formats a number to an ordinal number.
+
+		If the number is 0 or less, it won't be formatted.
 	**/
-	public static function playMenuMusic(volume:Float = 1)
-	{
-		FlxG.sound.playMusic(Paths.getMusic("Gettin' Freaky"), volume);
-	}
-
-	public static function playPvPMusic(volume:Float = 1)
-	{
-		if (Mods.pvpMusic.length == 0)
-			return;
-
-		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
-		FlxG.sound.playMusic(Paths.getMusic(Path.join([music, 'audio.ogg'])), volume);
-	}
-
-	/**
-		Plays the scroll sound for menus.
-		@param volume The volume that the sound should play at. Defaults to 1, or full volume.
-	**/
-	public static function playScrollSound(volume:Float = 1)
-	{
-		var sound = FlxG.sound.play(Paths.getSound('menus/scrollMenu'), volume);
-		sound.persist = true;
-		return sound;
-	}
-
-	/**
-		Plays the confirm sound for menus.
-		@param volume The volume that the sound should play at. Defaults to 1, or full volume.
-	**/
-	public static function playConfirmSound(volume:Float = 1)
-	{
-		var sound = FlxG.sound.play(Paths.getSound('menus/confirmMenu'), volume);
-		sound.persist = true;
-		return sound;
-	}
-
-	/**
-		Plays the cancel sound for menus.
-		@param volume The volume that the sound should play at. Defaults to 1, or full volume.
-	**/
-	public static function playCancelSound(volume:Float = 1)
-	{
-		var sound = FlxG.sound.play(Paths.getSound('menus/cancelMenu'), volume);
-		sound.persist = true;
-		return sound;
-	}
-
-	/**
-		Centers a group of objects on the screen.
-		@param group 	The group that contains objects.
-		@param axes 	The axes to center it to.
-	**/
-	@:generic
-	public static function screenCenterGroup<T:FlxObject>(group:FlxTypedGroup<T>, axes:FlxAxes = XY)
-	{
-		var centerX = (FlxG.width - getGroupWidth(group)) / 2;
-		var centerY = (FlxG.height - getGroupHeight(group)) / 2;
-		for (member in group)
-		{
-			if (axes.x)
-				member.x += centerX;
-			if (axes.y)
-				member.y += centerY;
-		}
-	}
-
-	/**
-		Returns the width of an FlxGroup.
-		@param group The group that contains objects.
-	**/
-	@:generic
-	public static function getGroupWidth<T:FlxObject>(group:FlxTypedGroup<T>):Float
-	{
-		if (group.length == 0)
-			return 0;
-
-		return getArrayMaxX(group.members) - getArrayMinX(group.members);
-	}
-
-	/**
-		Returns the height of an FlxGroup.
-		@param group The group that contains objects.
-	**/
-	@:generic
-	public static function getGroupHeight<T:FlxObject>(group:FlxTypedGroup<T>):Float
-	{
-		if (group.length == 0)
-			return 0;
-
-		return getArrayMaxY(group.members) - getArrayMinY(group.members);
-	}
-
-	@:generic
-	public static function getArrayWidth<T:FlxObject>(array:Array<T>):Float
-	{
-		if (array.length == 0)
-			return 0;
-
-		return getArrayMaxX(array) - getArrayMinX(array);
-	}
-
-	/**
-		Returns an array containing all the values of this map.
-		@param map The map.
-	**/
-	@:generic
-	public static function getMapArray<T1, T2>(map:Map<T1, T2>):Array<T2>
-	{
-		var array:Array<T2> = [for (value in map.iterator()) value];
-		return array;
-	}
-
-	/**
-		Returns if anything has been inputted. This includes the keyboard, gamepads, and the mouse.
-	**/
-	public static function anyJustInputted()
-	{
-		return (PlayerSettings.anyJustPressed() || FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed || FlxG.mouse.justPressedMiddle
-			|| FlxG.mouse.justPressedRight);
-	}
-
-	public static function formatOrdinal(num:Int)
+	public static function formatOrdinal(num:Int):String
 	{
 		if (num <= 0)
 			return Std.string(num);
@@ -203,7 +130,34 @@ class CoolUtil
 		}
 	}
 
-	public static function getBeatSnapColor(snap:Int)
+	/**
+		Returns the height of an array of objects.
+	**/
+	@:generic
+	public static function getArrayHeight<T:FlxObject>(array:Array<T>):Float
+	{
+		if (array == null || array.length == 0)
+			return 0;
+
+		return getArrayMaxY(array) - getArrayMinY(array);
+	}
+
+	/**
+		Returns the width of an array of objects.
+	**/
+	@:generic
+	public static function getArrayWidth<T:FlxObject>(array:Array<T>):Float
+	{
+		if (array == null || array.length == 0)
+			return 0;
+
+		return getArrayMaxX(array) - getArrayMinX(array);
+	}
+
+	/**
+		Gets the color of a beat snap. The default is `FlxColor.WHITE`.
+	**/
+	public static function getBeatSnapColor(snap:Int):FlxColor
 	{
 		return switch (snap)
 		{
@@ -226,71 +180,20 @@ class CoolUtil
 		}
 	}
 
-	public static function inBetween(num:Float, start:Float, end:Float)
-	{
-		return num >= start && num <= end;
-	}
-
-	public static function getNameInfo(name:String, defaultMod:String = ''):NameInfo
-	{
-		var realName = name;
-		var mod = defaultMod;
-
-		var colonIndex = name.indexOf(':');
-		if (colonIndex > 0)
-		{
-			realName = name.substr(colonIndex + 1);
-			mod = name.substr(0, colonIndex);
-		}
-
-		return {
-			name: realName,
-			mod: mod
-		}
-	}
-
-	public static function getGradeFromAccuracy(accuracy:Float)
-	{
-		if (accuracy >= 100)
-			return 'X';
-		else if (accuracy >= 99)
-			return 'SS';
-		else if (accuracy >= 95)
-			return 'S';
-		else if (accuracy >= 90)
-			return 'A';
-		else if (accuracy >= 80)
-			return 'B';
-		else if (accuracy >= 70)
-			return 'C';
-
-		return 'D';
-	}
-
-	public static function getFCText(scoreProcessor:ScoreProcessor)
-	{
-		if (scoreProcessor.currentJudgements[MISS] > 0
-			|| scoreProcessor.currentJudgements[SHIT] > 0
-			|| scoreProcessor.totalJudgementCount == 0)
-			return '';
-		if (scoreProcessor.currentJudgements[BAD] > 0)
-			return ' [FC]';
-		if (scoreProcessor.currentJudgements[GOOD] > 0)
-			return ' [Good FC]';
-		if (scoreProcessor.currentJudgements[SICK] > 0)
-			return ' [Sick FC]';
-
-		return ' [Marvelous FC]';
-	}
-
-	public static function getColorFromArray(array:Array<Int>)
+	/**
+		Returns a color from an array containing RGB values. It should have atleast 3 elements to work.
+	**/
+	public static function getColorFromArray(array:Array<Int>):FlxColor
 	{
 		if (array == null || array.length < 3)
-			return new FlxColor();
+			return FlxColor.WHITE;
 
 		return FlxColor.fromRGB(array[0], array[1], array[2]);
 	}
 
+	/**
+		Gets the dominant color of a sprite's frame.
+	**/
 	public static function getDominantColor(sprite:FlxSprite):FlxColor
 	{
 		if (sprite == null || sprite.pixels == null)
@@ -338,126 +241,10 @@ class CoolUtil
 		return maxKey;
 	}
 
-	public static function numberArray(max:Int, ?min = 0):Array<Int>
-	{
-		var dumbArray:Array<Int> = [];
-		for (i in min...max)
-			dumbArray.push(i);
-		return dumbArray;
-	}
-
-	public static function getVarInArray(instance:Dynamic, variable:String):Any
-	{
-		var shit:Array<String> = variable.split('[');
-		if (shit.length > 1)
-		{
-			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
-
-			for (i in 1...shit.length)
-			{
-				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
-				blah = blah[leNum];
-			}
-			return blah;
-		}
-
-		return Reflect.getProperty(instance, variable);
-	}
-
-	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any
-	{
-		var shit:Array<String> = variable.split('[');
-		if (shit.length > 1)
-		{
-			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
-
-			for (i in 1...shit.length)
-			{
-				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
-				if (i >= shit.length - 1)
-					blah[leNum] = value;
-				else
-					blah = blah[leNum];
-			}
-			return blah;
-		}
-
-		Reflect.setProperty(instance, variable, value);
-		return true;
-	}
-
-	public static function getPropertyLoopThingWhatever(killMe:Array<String>, ?getProperty:Bool = true):Dynamic
-	{
-		var coverMeInPiss:Dynamic = getObjectDirectly(killMe[0]);
-		var end = killMe.length;
-		if (getProperty)
-			end = killMe.length - 1;
-
-		for (i in 1...end)
-			coverMeInPiss = getVarInArray(coverMeInPiss, killMe[i]);
-
-		return coverMeInPiss;
-	}
-
-	public static function getObjectDirectly(objectName:String):Dynamic
-	{
-		return getVarInArray(FlxG.state, objectName);
-	}
-
-	public static function getVersion():String
-	{
-		return FlxG.stage.application.meta["version"];
-	}
-
-	public static function getVersionWarning(version:String)
-	{
-		var splitCurVersion = getVersion().split('.');
-		var curMajor = Std.parseInt(splitCurVersion[0]);
-
-		var splitVersion = version.split('.');
-		var major = (splitVersion[0] != null && splitVersion[0].length > 0) ? Std.parseInt(splitVersion[0]) : null;
-		if (major == null)
-			major = curMajor;
-
-		if (major < curMajor)
-			return '[WARNING: This mod was made for a previous major release (v$major) and might not function properly!]\n';
-		if (major > curMajor)
-			return '[WARNING: This mod was made for a future major release (v$major) and might not function properly!]\n';
-
-		return '';
-	}
-
-	public static function sortAlphabetically(a:String, b:String, order:Int = FlxSort.ASCENDING)
-	{
-		if (a == null)
-			a = '';
-		if (b == null)
-			b = '';
-
-		a = a.toLowerCase();
-		b = b.toLowerCase();
-
-		if (a < b)
-			return order;
-		if (a > b)
-			return -order;
-		return 0;
-	}
-
-	public static function containsAny(s:String, values:Array<String>)
-	{
-		if (values != null)
-		{
-			for (value in values)
-			{
-				if (s.contains(value))
-					return true;
-			}
-		}
-		return false;
-	}
-
-	public static function getBGGraphic(name:String, groupDirectory:String)
+	/**
+		Returns a group graphic for character/song select screens.
+	**/
+	public static function getGroupGraphic(name:String, groupDirectory:String):FlxGraphic
 	{
 		var groupName = name;
 		name = FlxStringUtil.validate(name);
@@ -512,14 +299,255 @@ class CoolUtil
 	}
 
 	/**
-	 * Gets the macro class created by hscript-improved for an abstract / enum
-	 */
-	public static inline function getMacroAbstractClass(className:String)
+		Returns the height of an `FlxGroup`.
+	**/
+	@:generic
+	public static function getGroupHeight<T:FlxObject>(group:FlxTypedGroup<T>):Float
+	{
+		if (group == null || group.length == 0)
+			return 0;
+
+		return getArrayMaxY(group.members) - getArrayMinY(group.members);
+	}
+
+	/**
+		Returns the width of an `FlxGroup`.
+	**/
+	@:generic
+	public static function getGroupWidth<T:FlxObject>(group:FlxTypedGroup<T>):Float
+	{
+		if (group == null || group.length == 0)
+			return 0;
+
+		return getArrayMaxX(group.members) - getArrayMinX(group.members);
+	}
+
+	/**
+		Adjusts a lerp value depending on the current framerate. Also bounds it between 0 and 1.
+	**/
+	public static function getLerp(lerp:Float):Float
+	{
+		return FlxMath.bound(lerp * (60 / FlxG.updateFramerate), 0, 1);
+	}
+
+	/**
+		Gets the macro class created by `util.ScriptsMacro` for an abstract/enum.
+	**/
+	public static inline function getMacroAbstractClass(className:String):Class<Dynamic>
 	{
 		return Type.resolveClass('${className}_HSC');
 	}
 
-	public static function restart()
+	/**
+		Returns a `NameInfo` structure from a name, describing the mod directory if there is one.
+
+		@param	defaultMod	If no mod is specified in the name, this will be used as the mod directory.
+	**/
+	public static function getNameInfo(name:String, defaultMod:String = ''):NameInfo
+	{
+		var realName = name;
+		var mod = defaultMod;
+
+		var colonIndex = name.indexOf(':');
+		if (colonIndex > 0)
+		{
+			realName = name.substr(colonIndex + 1);
+			mod = name.substr(0, colonIndex);
+		}
+
+		return {
+			name: realName,
+			mod: mod
+		}
+	}
+
+	/**
+		Returns an array containing all the values of this map.
+	**/
+	@:generic
+	public static function getMapArray<T1, T2>(map:Map<T1, T2>):Array<T2>
+	{
+		if (map == null)
+			return null;
+
+		var array:Array<T2> = [for (value in map.iterator()) value];
+		return array;
+	}
+
+	/**
+		Gets an object in the current state.
+	**/
+	public static function getObjectDirectly(objectName:String):Dynamic
+	{
+		return getVarInArray(FlxG.state, objectName);
+	}
+
+	/**
+		Gets a property in an array of strings indicating an object.
+
+		@param	getProperty	If true, the second to last variable will be returned.
+	**/
+	public static function getPropertyLoopThingWhatever(killMe:Array<String>, ?getProperty:Bool = true):Dynamic
+	{
+		var coverMeInPiss:Dynamic = getObjectDirectly(killMe[0]);
+		var end = killMe.length;
+		if (getProperty)
+			end = killMe.length - 1;
+
+		for (i in 1...end)
+			coverMeInPiss = getVarInArray(coverMeInPiss, killMe[i]);
+
+		return coverMeInPiss;
+	}
+
+	/**
+		Gets a variable from an instance. Supports array access.
+	**/
+	public static function getVarInArray(instance:Dynamic, variable:String):Any
+	{
+		var shit:Array<String> = variable.split('[');
+		if (shit.length > 1)
+		{
+			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
+
+			for (i in 1...shit.length)
+			{
+				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
+				blah = blah[leNum];
+			}
+			return blah;
+		}
+
+		return Reflect.getProperty(instance, variable);
+	}
+
+	/**
+		Gets the program's version.
+	**/
+	public static function getVersion():String
+	{
+		return FlxG.stage.application.meta["version"];
+	}
+
+	/**
+		Returns a warning if `version` is outdated from the current version.
+	**/
+	public static function getVersionWarning(version:String):String
+	{
+		var splitCurVersion = getVersion().split('.');
+		var curMajor = Std.parseInt(splitCurVersion[0]);
+
+		var splitVersion = version.split('.');
+		var major = (splitVersion[0] != null && splitVersion[0].length > 0) ? Std.parseInt(splitVersion[0]) : null;
+		if (major == null)
+			major = curMajor;
+
+		if (major < curMajor)
+			return '[WARNING: This mod was made for a previous major release (v$major) and might not function properly!]\n';
+		else if (major > curMajor)
+			return '[WARNING: This mod was made for a future major release (v$major) and might not function properly!]\n';
+		else
+			return '';
+	}
+
+	/**
+		Returns if `num` is in between `start` and `end`.
+	**/
+	public static function inBetween(num:Float, start:Float, end:Float):Bool
+	{
+		return num >= start && num <= end;
+	}
+
+	/**
+		Returns the linear interpolation of two numbers, adjusting the ratio depending on the framerate.
+
+		@param	a		The starting number.
+		@param	b		The end number.
+		@param	ratio	The ratio for the linear interpolation.
+	**/
+	public static function lerp(a:Float, b:Float, ratio:Float):Float
+	{
+		return FlxMath.lerp(a, b, getLerp(ratio));
+	}
+
+	/**
+		Returns an array of integers from `min` to `max`.
+	**/
+	public static function numberArray(max:Int, ?min = 0):Array<Int>
+	{
+		var dumbArray:Array<Int> = [];
+		for (i in min...max)
+			dumbArray.push(i);
+		return dumbArray;
+	}
+
+	/**
+		Plays the cancel sound for menus.
+
+		@param	volume	The volume that the sound should play at. Defaults to `1`, or full volume.
+		@return	The new `FlxSound` object.
+	**/
+	public static function playCancelSound(volume:Float = 1):FlxSound
+	{
+		var sound = FlxG.sound.play(Paths.getSound('menus/cancelMenu'), volume);
+		sound.persist = true;
+		return sound;
+	}
+
+	/**
+		Plays the confirm sound for menus.
+
+		@param	volume	The volume that the sound should play at. Defaults to `1`, or full volume.
+		@return	The new `FlxSound` object.
+	**/
+	public static function playConfirmSound(volume:Float = 1):FlxSound
+	{
+		var sound = FlxG.sound.play(Paths.getSound('menus/confirmMenu'), volume);
+		sound.persist = true;
+		return sound;
+	}
+
+	/**
+		Plays the menu music.
+
+		@param	volume	The volume that the music should start at. Defaults to `1`, or full volume.
+	**/
+	public static function playMenuMusic(volume:Float = 1):Void
+	{
+		FlxG.sound.playMusic(Paths.getMusic("Gettin' Freaky"), volume);
+	}
+
+	/**
+		Plays the PvP menu music.
+
+		@param	volume	The volume that the music should start at. Defaults to `1`, or full volume.
+	**/
+	public static function playPvPMusic(volume:Float = 1):Void
+	{
+		if (Mods.pvpMusic.length == 0)
+			return;
+
+		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
+		FlxG.sound.playMusic(Paths.getMusic(Path.join([music, 'audio.ogg'])), volume);
+	}
+
+	/**
+		Plays the scroll sound for menus.
+
+		@param	volume	The volume that the sound should play at. Defaults to `1`, or full volume.
+		@return	The new `FlxSound` object.
+	**/
+	public static function playScrollSound(volume:Float = 1):FlxSound
+	{
+		var sound = FlxG.sound.play(Paths.getSound('menus/scrollMenu'), volume);
+		sound.persist = true;
+		return sound;
+	}
+
+	/**
+		Restarts the program. Only works on Windows.
+	**/
+	public static function restart():Void
 	{
 		#if windows
 		var app = Sys.programPath();
@@ -533,14 +561,85 @@ class CoolUtil
 		#end
 	}
 
-	public static function addMultilineText(text:String, add:String)
+	/**
+		Returns the linear interpolation of two numbers, adjusting the ratio depending on the framerate and then
+		subtracting it from `1`.
+
+		@param	a		The starting number.
+		@param	b		The end number.
+		@param	ratio	The ratio for the linear interpolation.
+	**/
+	public static function reverseLerp(a:Float, b:Float, ratio:Float):Float
 	{
-		if (text == null || add == null || add.length < 1)
-			return text;
-		if (text.length > 0)
-			text += '\n';
-		text += add;
-		return text;
+		return FlxMath.lerp(a, b, 1 - getLerp(ratio));
+	}
+
+	/**
+		Centers a group of objects on the screen.
+
+		@param	axes	The axes to center it to.
+	**/
+	@:generic
+	public static function screenCenterGroup<T:FlxObject>(group:FlxTypedGroup<T>, axes:FlxAxes = XY):Void
+	{
+		if (group == null)
+			return;
+
+		var centerX = (FlxG.width - getGroupWidth(group)) / 2;
+		var centerY = (FlxG.height - getGroupHeight(group)) / 2;
+		for (member in group)
+		{
+			if (axes.x)
+				member.x += centerX;
+			if (axes.y)
+				member.y += centerY;
+		}
+	}
+
+	/**
+		Sets a variable of an instance. Supports array access.
+	**/
+	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any
+	{
+		var shit:Array<String> = variable.split('[');
+		if (shit.length > 1)
+		{
+			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
+			for (i in 1...shit.length)
+			{
+				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
+				if (i >= shit.length - 1)
+					blah[leNum] = value;
+				else
+					blah = blah[leNum];
+			}
+			return value;
+		}
+
+		Reflect.setProperty(instance, variable, value);
+		return value;
+	}
+
+	/**
+		Sorts two strings alphabetically.
+
+		@param	order	The order to use for sorting. You can use `FlxSort.ASCENDING` (default) or `FlxSort.DESCENDING`.
+	**/
+	public static function sortAlphabetically(a:String, b:String, order:Int = FlxSort.ASCENDING):Int
+	{
+		if (a == null)
+			a = '';
+		if (b == null)
+			b = '';
+
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+
+		if (a < b)
+			return order;
+		if (a > b)
+			return -order;
+		return 0;
 	}
 
 	@:generic
@@ -612,8 +711,16 @@ class CoolUtil
 	}
 }
 
+/**
+	Info for a name along with its directory. Use `CoolUtil.getNameInfo` to get this structure.
+
+	Examples:
+
+	- `"bf"`		->	{name: `"bf"`, mod: `""`}
+	- `"fnf:gf"`	->	{name: `"gf"`, mod: `"fnf"`}
+**/
 typedef NameInfo =
 {
 	var name:String;
-	var ?mod:String;
+	var mod:String;
 }

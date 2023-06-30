@@ -274,7 +274,7 @@ class Paths
 			}
 			catch (e)
 			{
-				trace(e);
+				CoolUtil.alert(e.message, "JSON Error");
 			}
 		}
 
@@ -297,7 +297,7 @@ class Paths
 			}
 			catch (e)
 			{
-				trace(e);
+				CoolUtil.alert(e.message, "XML Error");
 			}
 		}
 

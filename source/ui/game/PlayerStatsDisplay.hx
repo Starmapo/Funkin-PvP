@@ -1,6 +1,5 @@
 package ui.game;
 
-import flixel.util.FlxDestroyUtil;
 import data.Settings;
 import data.game.Judgement;
 import data.game.ScoreProcessor;
@@ -9,6 +8,7 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 class PlayerStatsDisplay extends FlxGroup
 {
@@ -71,7 +71,7 @@ class PlayerStatsDisplay extends FlxGroup
 		scoreText.text = 'Score: ' + scoreProcessor.score;
 
 		var accuracy = FlxMath.roundDecimal(scoreProcessor.accuracy, 2);
-		gradeText.text = 'Grade: ' + CoolUtil.getGradeFromAccuracy(accuracy) + ' (' + accuracy + '%)' + CoolUtil.getFCText(scoreProcessor);
+		gradeText.text = 'Grade: ' + ScoreProcessor.getGradeFromAccuracy(accuracy) + ' (' + accuracy + '%)' + CoolUtil.getFCText(scoreProcessor);
 
 		var maxCombo = scoreProcessor.maxCombo;
 		comboText.text = 'Combo: ' + scoreProcessor.combo + (maxCombo > 0 ? ' (Max: $maxCombo)' : '');

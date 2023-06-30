@@ -99,9 +99,7 @@ class Script implements IFlxDestroyable
 		}
 		catch (e)
 		{
-			if (!FlxG.fullscreen)
-				Application.current.window.alert('Failed to parse the script located at "$path".\n${Std.string(e)} at line ${parser.line}', 'Script Error');
-			trace(e.message);
+			CoolUtil.alert('Failed to parse the script located at "$path".\n${Std.string(e)} at line ${parser.line}', 'Script Error');
 		}
 
 		if (expr == null)
@@ -113,9 +111,7 @@ class Script implements IFlxDestroyable
 		}
 		catch (e)
 		{
-			if (!FlxG.fullscreen)
-				Application.current.window.alert(e.message, 'Script Error');
-			trace(e.message);
+			CoolUtil.alert(e.message, 'Script Error');
 		}
 	}
 

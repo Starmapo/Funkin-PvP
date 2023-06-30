@@ -511,7 +511,7 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 		super(x, y, label, name);
 
-		bg = new FlxSprite(0, 0, CoolUtil.getBGGraphic(groupData.name, groupData.directory));
+		bg = new FlxSprite(0, 0, CoolUtil.getGroupGraphic(groupData.name, groupData.directory));
 		bg.antialiasing = true;
 		label.add(bg);
 

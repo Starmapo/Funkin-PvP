@@ -8,14 +8,22 @@ import sys.io.File;
 
 using StringTools;
 
+/**
+	JSON info for a character.
+**/
 class CharacterInfo extends JsonObject
 {
-	public static function loadCharacter(path:String, ?mod:String):CharacterInfo
+	/**
+		Loads a character file from a path to a JSON file.
+
+		@return	A new `CharacterInfo` object, or `null` if the path doesn't exist or if the JSON file couldn't be parsed.
+	**/
+	public static function loadCharacter(path:String):CharacterInfo
 	{
 		if (!Paths.exists(path))
 			return null;
 
-		var json:Dynamic = Paths.getJson(path, mod);
+		var json:Dynamic = Paths.getJson(path);
 		if (json == null)
 			return null;
 
@@ -36,6 +44,14 @@ class CharacterInfo extends JsonObject
 		return charInfo;
 	}
 
+	/**
+		Loads a character file from a name.
+
+		@param	name	The name of the character to load. If it contains a colon `:`, it will use the name before it as
+						the mod directory.
+		@return	A new `CharacterInfo` object, or `null` if the file couldn't be found or if the JSON file couldn't be
+				parsed.
+	**/
 	public static function loadCharacterFromName(name:String):CharacterInfo
 	{
 		var nameInfo = CoolUtil.getNameInfo(name);
@@ -53,7 +69,7 @@ class CharacterInfo extends JsonObject
 		return loadCharacter(Paths.getPath('data/characters/$name.json', 'fnf'));
 	}
 
-	static function convertPsychCharacter(json:Dynamic)
+	static function convertPsychCharacter(json:Dynamic):Dynamic
 	{
 		var charInfo:Dynamic = {
 			anims: [],
@@ -96,24 +112,99 @@ class CharacterInfo extends JsonObject
 		return charInfo;
 	}
 
+	/**
+		The name of the image file for this character. If it contains a colon `:`, it will use the name before it as the
+		mod directory. Defaults to Daddy Dearest's spritesheet.
+	**/
 	public var image:String;
+
+	/**
+		An array of animations for this character.
+	**/
 	public var anims:Array<AnimInfo> = [];
+
+	/**
+		An array of animation names to use for this character's dance. Defaults to `["idle"]`.
+	**/
 	public var danceAnims:Array<String>;
+
+	/**
+		Whether or not the character should be flipped horizontally on the left side. Defaults to `false`.
+	**/
 	public var flipX:Bool;
+
+	/**
+		The scaling factor for this character. Defaults to `1`, or no scaling.
+	**/
 	public var scale:Float;
+
+	/**
+		Whether or not the character should have antialiasing. Defaults to `true`.
+	**/
 	public var antialiasing:Bool;
+
+	/**
+		The position offset for this character. Will be automatically flipped when playing on the right side.
+	**/
 	public var positionOffset:Array<Float>;
+
+	/**
+		The camera offset for this character. Will be automatically flipped when playing on the right side.
+	**/
 	public var cameraOffset:Array<Float>;
+
+	/**
+		The name for this character's health bar icon. If it contains a colon `:`, it will use the name before it as the
+		mod directory. Defaults to `"face"`.
+	**/
 	public var healthIcon:String;
+
+	/**
+		The health bar color for this character. Defaults to `0xFFA1A1A1`.
+	**/
 	public var healthColors:FlxColor;
+
+	/**
+		Whether or not long notes should repeat the character's sing animation. Defaults to `true`.
+	**/
 	public var loopAnimsOnHold:Bool;
+
+	/**
+		The frame index to start the sing animation at for long notes. Defaults to `0`, or from the beginning.
+	**/
 	public var holdLoopPoint:Int;
+
+	/**
+		If enabled, the down and up sing animations will also be flipped when this character is on the right side.
+		Defaults to `false`.
+	**/
 	public var flipAll:Bool;
+
+	/**
+		If enabled, playing an animation will force it to start from the previous animation's frame index + `1`, if there
+		was a previous animation. Only useful for running/moving characters. Defaults to `false`.
+	**/
 	public var constantLooping:Bool;
+
+	/**
+		The full directory path this character was in.
+	**/
 	public var directory:String = '';
+
+	/**
+		The name of the character.
+	**/
 	public var name:String = '';
+
+	/**
+		The mod directory this character was in.
+	**/
 	public var mod:String = '';
 
+	/**
+		Creates a new `CharacterInfo` object.
+		@param	data	The JSON file to parse data from.
+	**/
 	public function new(data:Dynamic)
 	{
 		image = readString(data.image, 'characters/dad');
@@ -129,14 +220,14 @@ class CharacterInfo extends JsonObject
 		positionOffset = readFloatArray(data.positionOffset, [0, 0], null, 2, null, null, 2);
 		cameraOffset = readFloatArray(data.cameraOffset, [0, 0], null, 2, null, null, 2);
 		healthIcon = readString(data.healthIcon, 'face');
-		healthColors = readColor(data.healthColors, FlxColor.fromRGB(161, 161, 161), false);
+		healthColors = readColor(data.healthColors, 0xFFA1A1A1, false);
 		loopAnimsOnHold = readBool(data.loopAnimsOnHold, true);
 		holdLoopPoint = readInt(data.holdLoopPoint, 0, 0);
 		flipAll = readBool(data.flipAll);
 		constantLooping = readBool(data.constantLooping);
 	}
 
-	override function destroy()
+	override function destroy():Void
 	{
 		anims = FlxDestroyUtil.destroyArray(anims);
 		danceAnims = null;
@@ -144,15 +235,29 @@ class CharacterInfo extends JsonObject
 		cameraOffset = null;
 	}
 
-	public function sortAnims()
+	/**
+		Gets an animation info by name.
+
+		@return	An `AnimInfo` object, or `null` if the animation couldn't be found.
+	**/
+	public function getAnim(name:String):AnimInfo
 	{
-		anims.sort(function(a, b)
+		if (name == null)
+			return null;
+
+		for (anim in anims)
 		{
-			return CoolUtil.sortAlphabetically(a.name, b.name);
-		});
+			if (anim.name == name)
+				return anim;
+		}
+
+		return null;
 	}
 
-	public function save(path:String)
+	/**
+		Saves this character info to a JSON file.
+	**/
+	public function save(path:String):Void
 	{
 		var data:Dynamic = {
 			image: image,
@@ -200,33 +305,79 @@ class CharacterInfo extends JsonObject
 		File.saveContent(path, Json.stringify(data, "\t"));
 	}
 
-	public function getAnim(name:String)
+	/**
+		Sorts the animations by name.
+	**/
+	public function sortAnims():Void
 	{
-		if (name == null)
-			return null;
-
-		for (anim in anims)
+		anims.sort(function(a, b)
 		{
-			if (anim.name == name)
-				return anim;
-		}
-
-		return null;
+			return CoolUtil.sortAlphabetically(a.name, b.name);
+		});
 	}
 }
 
+/**
+	JSON info for a character's animation.
+**/
 class AnimInfo extends JsonObject
 {
+	/**
+		The name of this animation.
+	**/
 	public var name:String;
+
+	/**
+		The name of this animation in the character's spritesheet.
+
+		NOTE: This uses the new `addByAtlasName` function instead of `addByPrefix`, which will use frames that have the
+		exact animation name (minus the frame numbers) instead of starting with it. If you want to use `addByPrefix`,
+		add `prefix:` to the start of the name.
+	**/
 	public var atlasName:String;
+
+	/**
+		Optional frame indices for this animation. If `atlasName` is empty, this will be used as indices in the overall
+		spritesheet.
+	**/
 	public var indices:Array<Int>;
+
+	/**
+		The framerate, or frames per second, of this animation. Defaults to `24`.
+	**/
 	public var fps:Float;
+
+	/**
+		Whether or not this animation should loop. Defaults to `false`.
+	**/
 	public var loop:Bool;
+
+	/**
+		Whether or not this animation should be flipped horizontally. Defaults to `false`.
+	**/
 	public var flipX:Bool;
+
+	/**
+		Whether or not this animation should be flipped vertically. Defaults to `false`.
+	**/
 	public var flipY:Bool;
+
+	/**
+		The visual offset for this animation. Values are substracted, so a value of `[5, -10]` will move the graphic 5
+		pixels left and 10 pixels down.
+	**/
 	public var offset:Array<Float>;
+
+	/**
+		Optional name of the animation to change to after this one is finished.
+	**/
 	public var nextAnim:String;
 
+	/**
+		Creates a new `AnimInfo` object.
+
+		@param	data	The JSON file to parse data from.
+	**/
 	public function new(data:Dynamic)
 	{
 		name = readString(data.name);
