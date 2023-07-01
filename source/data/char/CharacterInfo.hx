@@ -202,7 +202,6 @@ class CharacterInfo extends JsonObject
 	public var mod:String = '';
 
 	/**
-		Creates a new `CharacterInfo` object.
 		@param	data	The JSON file to parse data from.
 	**/
 	public function new(data:Dynamic)
@@ -343,7 +342,7 @@ class AnimInfo extends JsonObject
 	public var indices:Array<Int>;
 
 	/**
-		The framerate, or frames per second, of this animation. Defaults to `24`.
+		The frame rate, or frames per second, of this animation. Defaults to `24`.
 	**/
 	public var fps:Float;
 
@@ -363,8 +362,11 @@ class AnimInfo extends JsonObject
 	public var flipY:Bool;
 
 	/**
-		The visual offset for this animation. Values are substracted, so a value of `[5, -10]` will move the graphic 5
-		pixels left and 10 pixels down.
+		The visual offset for this animation.
+		
+		Values are substracted, so a value of `[5, -10]` will move the graphic 5 pixels left and 10 pixels down.
+		
+		Will be automatically flipped when playing on the right side.
 	**/
 	public var offset:Array<Float>;
 

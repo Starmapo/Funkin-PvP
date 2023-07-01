@@ -339,7 +339,7 @@ class CoolUtil
 	}
 
 	/**
-		Adjusts a lerp value depending on the current framerate. Also bounds it between 0 and 1.
+		Adjusts a lerp value depending on the current frame rate. Also bounds it between 0 and 1.
 	**/
 	public static function getLerp(lerp:Float):Float
 	{
@@ -475,7 +475,7 @@ class CoolUtil
 	}
 
 	/**
-		Returns the linear interpolation of two numbers, adjusting the ratio depending on the framerate.
+		Returns the linear interpolation of two numbers, adjusting the ratio depending on the frame rate.
 
 		@param	a		The starting number.
 		@param	b		The end number.
@@ -578,7 +578,7 @@ class CoolUtil
 	}
 
 	/**
-		Returns the linear interpolation of two numbers, adjusting the ratio depending on the framerate and then
+		Returns the linear interpolation of two numbers, adjusting the ratio depending on the frame rate and then
 		subtracting it from `1`.
 
 		@param	a		The starting number.

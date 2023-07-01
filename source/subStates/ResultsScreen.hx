@@ -108,12 +108,7 @@ class ResultsScreen extends FNFSubState
 			var curY = judgementText.y + judgementText.height + 2;
 			for (judgement in 0...5)
 			{
-				var ratingText = new FlxText(5
-					+ addX, curY, (FlxG.width / 2)
-					- 10,
-					Judgement.getJudgementName(judgement)
-					+ ': '
-					+ scores[i].currentJudgements[judgement]);
+				var ratingText = new FlxText(5 + addX, curY, (FlxG.width / 2) - 10, (judgement : Judgement).getName() + ': ' + scores[i].currentJudgements[judgement]);
 				ratingText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 				ratingText.active = false;
 				add(ratingText);

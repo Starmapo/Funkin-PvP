@@ -7,15 +7,10 @@ import sprites.AnimatedSprite;
 
 class HealthIcon extends AnimatedSprite
 {
-	public static function getImagePath(icon:String)
+	public static function getImagePath(info:IconInfo)
 	{
-		var info = IconInfo.loadIconFromName(icon);
-		if (info == null)
-			info = new IconInfo({});
-
-		var nameInfo = CoolUtil.getNameInfo(icon, Mods.currentMod);
-		var name = nameInfo.name;
-		var mod = nameInfo.mod;
+		var name = info.name;
+		var mod = info.mod;
 
 		var imagePath = '';
 		if (info.image.length > 0)
@@ -57,7 +52,7 @@ class HealthIcon extends AnimatedSprite
 		if (info == null)
 			info = new IconInfo({});
 
-		var imagePath = getImagePath(icon);
+		var imagePath = getImagePath(info);
 		var path = Path.withoutExtension(imagePath);
 
 		if (Paths.isSpritesheet(path))

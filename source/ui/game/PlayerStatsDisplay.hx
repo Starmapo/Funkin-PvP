@@ -71,7 +71,12 @@ class PlayerStatsDisplay extends FlxGroup
 		scoreText.text = 'Score: ' + scoreProcessor.score;
 
 		var accuracy = FlxMath.roundDecimal(scoreProcessor.accuracy, 2);
-		gradeText.text = 'Grade: ' + ScoreProcessor.getGradeFromAccuracy(accuracy) + ' (' + accuracy + '%)' + CoolUtil.getFCText(scoreProcessor);
+		gradeText.text = 'Grade: '
+			+ ScoreProcessor.getGradeFromAccuracy(accuracy)
+			+ ' ('
+			+ accuracy
+			+ '%)'
+			+ scoreProcessor.getFCText();
 
 		var maxCombo = scoreProcessor.maxCombo;
 		comboText.text = 'Combo: ' + scoreProcessor.combo + (maxCombo > 0 ? ' (Max: $maxCombo)' : '');

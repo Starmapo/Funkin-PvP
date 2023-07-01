@@ -221,8 +221,7 @@ class SongEditorPlayState extends FNFState
 		{
 			var inputManager = ruleset.playfields[player].inputManager;
 			inputManager.autoplay = !inputManager.autoplay;
-			for (bind in inputManager.bindingStore)
-				bind.pressed = false;
+			inputManager.stopInput();
 		}
 	}
 

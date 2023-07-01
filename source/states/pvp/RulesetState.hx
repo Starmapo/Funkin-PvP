@@ -269,7 +269,7 @@ class RulesetState extends FNFState
 			type: NUMBER,
 			displayFunction: function(value)
 			{
-				return Judgement.getJudgementName(value);
+				return (value : Judgement).getName();
 			},
 			minValue: 1,
 			maxValue: 5,

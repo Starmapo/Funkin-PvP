@@ -11,12 +11,12 @@ class JudgementDisplay extends FlxSprite
 {
 	public static function getJudgementGraphic(judgement:Judgement, skin:JudgementSkin)
 	{
-		var name = Judgement.getJudgementName(judgement).toLowerCase();
+		var name = judgement.getName().toLowerCase();
 		var mod = skin.mod;
 		var path = 'judgements/${skin.name}/$name';
 		if (!Paths.existsPath('images/$path.png', mod) && judgement == MARV)
 		{
-			name = Judgement.getJudgementName(SICK).toLowerCase();
+			name = Judgement.SICK.getName().toLowerCase();
 			path = 'judgements/${skin.name}/$name';
 		}
 		/*

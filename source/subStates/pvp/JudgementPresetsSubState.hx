@@ -274,7 +274,7 @@ class JudgementPresetsSubState extends FNFSubState
 				default: preset.marvWindow;
 			}
 			var text = judgementGroup.members[i];
-			text.text = Judgement.getJudgementName(i) + ': ' + window + 'ms';
+			text.text = (i : Judgement).getName() + ': ' + window + 'ms';
 			text.screenCenter(X);
 		}
 

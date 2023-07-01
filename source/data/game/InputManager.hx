@@ -5,11 +5,17 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import ui.game.Note;
 import ui.game.Playfield;
 
+/**
+	Handles note input for gameplay.
+**/
 class InputManager implements IFlxDestroyable
 {
+	/**
+		Whether this side should be automatically played.
+	**/
 	public var autoplay:Bool;
-	public var bindingStore:Array<InputBinding>;
 
+	var bindingStore:Array<InputBinding>;
 	var playfield:Playfield;
 	var player:Int;
 	var realPlayer:Int;
@@ -92,12 +98,18 @@ class InputManager implements IFlxDestroyable
 		}
 	}
 
+	/**
+		Changes the player that will play this side.
+	**/
 	public function changePlayer(player:Int)
 	{
 		realPlayer = player;
 		controls = PlayerSettings.players[player].controls;
 	}
 
+	/**
+		Frees up memory.
+	**/
 	public function destroy()
 	{
 		bindingStore = null;
@@ -106,6 +118,9 @@ class InputManager implements IFlxDestroyable
 		config = null;
 	}
 
+	/**
+		Stops all current input.
+	**/
 	public function stopInput()
 	{
 		for (i in 0...bindingStore.length)

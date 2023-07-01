@@ -41,7 +41,7 @@ class AnimatedSprite extends FlxSprite
 				if (data.atlasName.startsWith('prefix:'))
 					animation.addByIndices(data.name, data.atlasName.substr(7), data.indices, '', data.fps, data.loop, data.flipX, data.flipY);
 				else
-					animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, data.fps, data.loop, data.flipX, data.flipY);
+					animation.addByAtlasNameIndices(data.name, data.atlasName, data.indices, '', data.fps, data.loop, data.flipX, data.flipY);
 			}
 			else
 				animation.add(data.name, data.indices, data.fps, data.loop, data.flipX, data.flipY);

@@ -8,21 +8,74 @@ import flixel.util.FlxDestroyUtil;
 import ui.game.Note;
 import ui.game.Playfield;
 
+/**
+	Handles notes for gameplay.
+**/
 class NoteManager extends FlxBasic
 {
-	static var breakAlpha:Float = 0.2;
+	/**
+		The opacity for the strums when it's break time.
+	**/
+	static final BREAK_ALPHA:Float = 0.2;
 
+	/**
+		The next note to hit. Can be `null`.
+	**/
 	public var nextNote(get, never):NoteInfo;
-	public var currentAudioPosition:Float = 0;
-	public var currentVisualPosition:Float = 0;
+
+	/**
+		The current timing position of the song, taking the global offset into account.
+	**/
+	public var currentAudioPosition(get, never):Float;
+
+	/**
+		The current visual position of the song.
+	**/
+	public var currentVisualPosition(get, never):Float;
+
+	/**
+		The current track position of the song, taking scroll velocities into account.
+	**/
 	public var currentTrackPosition:Float = 0;
+
+	/**
+		The player configuration for this manager.
+	**/
 	public var config:PlayerConfig;
+
+	/**
+		Gets the current scroll speed, taking the playback rate into account.
+	**/
 	public var scrollSpeed(get, never):Float;
+
+	/**
+		List of lanes containing notes yet to be spawned.
+	**/
 	public var noteQueueLanes:Array<Array<NoteInfo>> = [];
+
+	/**
+		List of lanes containing currently active notes.
+	**/
 	public var activeNoteLanes:Array<Array<Note>> = [];
+
+	/**
+		List of lanes containing dead notes (those which were missed).
+	**/
 	public var deadNoteLanes:Array<Array<Note>> = [];
+
+	/**
+		List of lanes containing currently held long notes.
+	**/
 	public var heldLongNoteLanes:Array<Array<Note>> = [];
+
+	/**
+		Whether the song is currently on break (no notes nearby).
+	**/
 	public var onBreak(get, never):Bool;
+
+	/**
+		The current opacity for the notes. Modified when it's break time.
+	**/
 	public var alpha:Float = 1;
 
 	var playfield:Playfield;
@@ -54,7 +107,7 @@ class NoteManager extends FlxBasic
 
 		if (Settings.breakTransparency && onBreak)
 		{
-			alpha = breakAlpha;
+			alpha = BREAK_ALPHA;
 			playfield.alpha = alpha;
 		}
 
@@ -106,6 +159,9 @@ class NoteManager extends FlxBasic
 		super.destroy();
 	}
 
+	/**
+		Gets the track position of a time point, taking scroll velocities into account.
+	**/
 	public function getPositionFromTime(time:Float)
 	{
 		var i = 0;
@@ -120,21 +176,9 @@ class NoteManager extends FlxBasic
 		return getPositionFromTimeIndex(time, i);
 	}
 
-	public function getPositionFromTimeIndex(time:Float, index:Int)
-	{
-		if (Settings.noSliderVelocity)
-			return time;
-
-		if (index == 0)
-			return time * song.initialScrollVelocity;
-
-		index--;
-
-		var curPos = velocityPositionMarkers[index];
-		curPos += ((time - song.scrollVelocities[index].startTime) * song.scrollVelocities[index].multipliers[player]);
-		return curPos;
-	}
-
+	/**
+		Returns the scroll velocity direction changes during `startTime` and `endTime`.
+	**/
 	public function getSVDirectionChanges(startTime:Float, endTime:Float)
 	{
 		var changes:Array<SVDirectionChange> = [];
@@ -183,6 +227,9 @@ class NoteManager extends FlxBasic
 		return changes;
 	}
 
+	/**
+		Returns if the scroll velocity at `time` is going backwards.
+	**/
 	public function isSVNegative(time:Float)
 	{
 		if (Settings.noSliderVelocity)
@@ -213,6 +260,9 @@ class NoteManager extends FlxBasic
 		return song.scrollVelocities[i].multipliers[player] < 0;
 	}
 
+	/**
+		Gets the closest note that can be hit in a lane.
+	**/
 	public function getClosestTap(lane:Int)
 	{
 		return activeNoteLanes[lane].length > 0 ? activeNoteLanes[lane][0] : null;
@@ -223,79 +273,11 @@ class NoteManager extends FlxBasic
 		return heldLongNoteLanes[lane].length > 0 ? heldLongNoteLanes[lane][0] : null;
 	}
 
-	function updatePoolingPositions()
-	{
-		recycleObjectPositionTreshold = objectPositionMagnitude / scrollSpeed;
-		createObjectPositionTreshold = objectPositionMagnitude / scrollSpeed;
-		createObjectTimeTreshold = objectPositionMagnitude / scrollSpeed;
-	}
-
-	function initializePositionMarkers()
-	{
-		if (song.scrollVelocities.length == 0)
-			return;
-
-		var position = song.scrollVelocities[0].startTime * song.initialScrollVelocity;
-		velocityPositionMarkers.push(position);
-		for (i in 1...song.scrollVelocities.length)
-		{
-			position += ((song.scrollVelocities[i].startTime - song.scrollVelocities[i - 1].startTime) * song.scrollVelocities[i - 1].multipliers[player]);
-			velocityPositionMarkers.push(position);
-		}
-	}
-
 	public function updateCurrentTrackPosition()
 	{
-		currentAudioPosition = currentVisualPosition = ruleset.timing.audioPosition;
 		while (currentSvIndex < song.scrollVelocities.length && currentVisualPosition >= song.scrollVelocities[currentSvIndex].startTime)
 			currentSvIndex++;
 		currentTrackPosition = getPositionFromTimeIndex(currentVisualPosition, currentSvIndex);
-	}
-
-	function initializeInfoPools(skipObjects:Bool = false)
-	{
-		for (i in 0...4)
-		{
-			noteQueueLanes.push([]);
-			activeNoteLanes.push([]);
-			deadNoteLanes.push([]);
-			heldLongNoteLanes.push([]);
-		}
-
-		for (note in song.notes)
-		{
-			if (note.player != player)
-				continue;
-
-			if (skipObjects)
-			{
-				if (!note.isLongNote)
-				{
-					if (note.startTime < currentAudioPosition)
-						continue;
-				}
-				else
-				{
-					if (note.startTime < currentAudioPosition && note.endTime < currentAudioPosition)
-						continue;
-				}
-			}
-
-			noteQueueLanes[note.playerLane].push(note);
-		}
-	}
-
-	function initializeObjectPool()
-	{
-		for (lane in noteQueueLanes)
-		{
-			var i = 0;
-			while (i < initialPoolSizePerLane && lane.length > 0)
-			{
-				createPoolObject(lane.shift());
-				i++;
-			}
-		}
 	}
 
 	public function createPoolObject(info:NoteInfo)
@@ -351,6 +333,88 @@ class NoteManager extends FlxBasic
 		updateCurrentTrackPosition();
 		resetNoteInfo();
 		update(0);
+	}
+
+	function getPositionFromTimeIndex(time:Float, index:Int)
+	{
+		if (Settings.noSliderVelocity)
+			return time;
+
+		if (index == 0)
+			return time * song.initialScrollVelocity;
+
+		index--;
+
+		var curPos = velocityPositionMarkers[index];
+		curPos += ((time - song.scrollVelocities[index].startTime) * song.scrollVelocities[index].multipliers[player]);
+		return curPos;
+	}
+
+	function updatePoolingPositions()
+	{
+		recycleObjectPositionTreshold = objectPositionMagnitude / scrollSpeed;
+		createObjectPositionTreshold = objectPositionMagnitude / scrollSpeed;
+		createObjectTimeTreshold = objectPositionMagnitude / scrollSpeed;
+	}
+
+	function initializePositionMarkers()
+	{
+		if (song.scrollVelocities.length == 0)
+			return;
+
+		var position = song.scrollVelocities[0].startTime * song.initialScrollVelocity;
+		velocityPositionMarkers.push(position);
+		for (i in 1...song.scrollVelocities.length)
+		{
+			position += ((song.scrollVelocities[i].startTime - song.scrollVelocities[i - 1].startTime) * song.scrollVelocities[i - 1].multipliers[player]);
+			velocityPositionMarkers.push(position);
+		}
+	}
+
+	function initializeInfoPools(skipObjects:Bool = false)
+	{
+		for (i in 0...4)
+		{
+			noteQueueLanes.push([]);
+			activeNoteLanes.push([]);
+			deadNoteLanes.push([]);
+			heldLongNoteLanes.push([]);
+		}
+
+		for (note in song.notes)
+		{
+			if (note.player != player)
+				continue;
+
+			if (skipObjects)
+			{
+				if (!note.isLongNote)
+				{
+					if (note.startTime < currentAudioPosition)
+						continue;
+				}
+				else
+				{
+					if (note.startTime < currentAudioPosition && note.endTime < currentAudioPosition)
+						continue;
+				}
+			}
+
+			noteQueueLanes[note.playerLane].push(note);
+		}
+	}
+
+	function initializeObjectPool()
+	{
+		for (lane in noteQueueLanes)
+		{
+			var i = 0;
+			while (i < initialPoolSizePerLane && lane.length > 0)
+			{
+				createPoolObject(lane.shift());
+				i++;
+			}
+		}
 	}
 
 	function destroyLanes<T:IFlxDestroyable>(array:Array<Array<T>>):Array<Array<T>>
@@ -481,11 +545,11 @@ class NoteManager extends FlxBasic
 		if (!Settings.breakTransparency)
 			return;
 
-		if (onBreak && alpha > breakAlpha)
+		if (onBreak && alpha > BREAK_ALPHA)
 		{
 			alpha -= elapsed * 3;
-			if (alpha < breakAlpha)
-				alpha = breakAlpha;
+			if (alpha < BREAK_ALPHA)
+				alpha = BREAK_ALPHA;
 		}
 		else if (!onBreak && alpha < 1)
 		{
@@ -602,5 +666,15 @@ class NoteManager extends FlxBasic
 	function get_ruleset()
 	{
 		return playfield.ruleset;
+	}
+
+	function get_currentAudioPosition()
+	{
+		return ruleset.timing.audioPosition;
+	}
+
+	function get_currentVisualPosition()
+	{
+		return ruleset.timing.audioPosition;
 	}
 }

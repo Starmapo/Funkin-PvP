@@ -29,7 +29,7 @@ class JudgementCounter extends FlxText
 		var t = '';
 		for (i in 0...5)
 		{
-			t += (Judgement.getJudgementName(i)) + ': ' + scoreProcessor.currentJudgements[i];
+			t += ((i : Judgement).getName()) + ': ' + scoreProcessor.currentJudgements[i];
 			if (i < 4)
 				t += '\n';
 		}
