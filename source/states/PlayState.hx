@@ -417,8 +417,16 @@ class PlayState extends FNFState
 				continue;
 
 			var funcRet:Dynamic = script.execute(func, args);
-			if (funcRet == Script.FUNCTION_STOP_SCRIPTS && !ignoreStops)
-				break;
+			if (!ignoreStops)
+			{
+				if (funcRet == Script.FUNCTION_BREAK)
+					break;
+				else if (funcRet == Script.FUNCTION_STOP_BREAK)
+				{
+					ret = Script.FUNCTION_STOP;
+					break;
+				}
+			}
 
 			if (funcRet != null && funcRet != Script.FUNCTION_CONTINUE && !excludeValues.contains(funcRet))
 				ret = funcRet;
@@ -678,7 +686,7 @@ class PlayState extends FNFState
 			camFollow.setPosition(x, y);
 			return;
 		}
-		
+
 		final camera = FlxG.camera;
 		final minX:Null<Float> = minScrollX == null ? null : minScrollX - (camera.zoom - 1) * camera.width / (2 * camera.zoom);
 		final maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (camera.zoom - 1) * camera.width / (2 * camera.zoom);

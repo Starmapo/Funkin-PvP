@@ -63,17 +63,54 @@ import ui.game.Receptor;
 
 using StringTools;
 
-// Some stuff here is from Yoshi Engine or Psych Engine
+/**
+	An object which runs HScript code.
+**/
 class Script implements IFlxDestroyable
 {
-	public static final FUNCTION_STOP:String = "FUNCTIONSTOP";
-	public static final FUNCTION_CONTINUE:String = "FUNCTIONCONTINUE";
-	public static final FUNCTION_STOP_SCRIPTS:String = "FUNCTIONSTOPSCRIPTS";
+	/**
+		Default return value.
+	**/
+	public static final FUNCTION_CONTINUE:String = "::FUNCTION_CONTINUE::";
 
+	/**
+		Stops a function, if supported.
+	**/
+	public static final FUNCTION_STOP:String = "::FUNCTION_STOP::";
+
+	/**
+		Breaks the script iterator, preventing any more return values.
+	**/
+	public static final FUNCTION_BREAK:String = "::FUNCTION_BREAK::";
+
+	/**
+		Breaks the script iterator and returns `FUNCTION_STOP`.
+	**/
+	public static final FUNCTION_STOP_BREAK:String = "::FUNCTION_STOP_BREAK::";
+
+	/**
+		The HScript interpretator for this object.
+	**/
 	public var interp:Interp;
+
+	/**
+		The HScript expression for this object.
+	**/
 	public var expr:Expr;
+
+	/**
+		The path of the script file.
+	**/
 	public var path:String;
+
+	/**
+		The mod directory of this script file.
+	**/
 	public var mod:String;
+
+	/**
+		Whether this script was closed or not. Closed scripts won't execute functions.
+	**/
 	public var closed:Bool = false;
 
 	public function new(path:String, mod:String)
@@ -115,6 +152,9 @@ class Script implements IFlxDestroyable
 		}
 	}
 
+	/**
+		Executes `func` with the arguments `args`.
+	**/
 	public function execute(func:String, ?args:Array<Any>):Dynamic
 	{
 		if (closed)
@@ -130,6 +170,9 @@ class Script implements IFlxDestroyable
 		return r;
 	}
 
+	/**
+		Sets a variable in the interpretator.
+	**/
 	public function setVariable(name:String, value:Dynamic)
 	{
 		if (interp == null)
@@ -138,6 +181,9 @@ class Script implements IFlxDestroyable
 		interp.variables.set(name, value);
 	}
 
+	/**
+		Gets a variable from the interpretator.
+	**/
 	public function getVariable(name:String)
 	{
 		if (interp == null)
@@ -146,10 +192,21 @@ class Script implements IFlxDestroyable
 		return interp.variables.get(name);
 	}
 
+	/**
+		Frees up memory.
+	**/
 	public function destroy()
 	{
 		interp = null;
 		expr = null;
+	}
+
+	/**
+		Called when there's an error in the HScript interpretator.
+	**/
+	public function onError(message:String)
+	{
+		trace(message);
 	}
 
 	function executeFunc(func:String, ?args:Array<Any>):Dynamic
@@ -177,16 +234,16 @@ class Script implements IFlxDestroyable
 		return null;
 	}
 
-	public function onError(message:String)
-	{
-		trace(message);
-	}
-
 	function setStartingVariables()
 	{
 		setVariable('this', this);
 		setVariable('mod', mod);
 		setVariable('window', Application.current.window);
+
+		setVariable('FUNCTION_CONTINUE', FUNCTION_CONTINUE);
+		setVariable('FUNCTION_STOP', FUNCTION_STOP);
+		setVariable('FUNCTION_BREAK', FUNCTION_BREAK);
+		setVariable('FUNCTION_STOP_BREAK', FUNCTION_STOP_BREAK);
 
 		setVariable('Date', Date);
 		setVariable('EnumValueMap', EnumValueMap);

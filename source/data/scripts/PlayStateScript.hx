@@ -17,6 +17,9 @@ import ui.game.Note;
 
 using StringTools;
 
+/**
+	A script for the gameplay  screen (`PlayState`).
+**/
 class PlayStateScript extends Script
 {
 	var state:PlayState;
