@@ -112,20 +112,23 @@ class NoteSkin extends JsonObject
 	public var antialiasing:Bool;
 
 	/**
-		The full directory path this judgement skin was in.
+		The full directory path this note skin was in.
 	**/
 	public var directory:String = '';
 
 	/**
-		The name of the judgement skin.
+		The name of the note skin.
 	**/
 	public var name:String = '';
 
 	/**
-		The mod directory this judgement skin was in.
+		The mod directory this note skin was in.
 	**/
 	public var mod:String = '';
 
+	/**
+		@param	data	The JSON file to parse data from.
+	**/
 	public function new(data:Dynamic)
 	{
 		image = readString(data.image, 'notes/default');
@@ -196,32 +199,38 @@ class ReceptorData extends JsonObject
 	public var confirmIndices:Array<Int>;
 
 	/**
-		The FPS for the static animation.
+		The frame rate, or frames per second, for the static animation.
 	**/
 	public var staticFPS:Float;
 
 	/**
-		The FPS for the pressed animation.
+		The frame rate, or frames per second, for the pressed animation.
 	**/
 	public var pressedFPS:Float;
 
 	/**
-		The FPS for the confirm animation.
+		The frame rate, or frames per second, for the confirm animation.
 	**/
 	public var confirmFPS:Float;
 
 	/**
-		The offset for the static animation. Overrides `receptorsCenterAnimation`.
+		The visual offset for the static animation. Overrides `receptorsCenterAnimation`.
+
+		Values are substracted, so a value of `[5, -10]` will move the graphic 5 pixels left and 10 pixels down.
 	**/
 	public var staticOffset:Array<Float>;
 
 	/**
-		The offset for the pressed animation. Overrides `receptorsCenterAnimation`.
+		The visual offset for the pressed animation. Overrides `receptorsCenterAnimation`.
+
+		Values are substracted, so a value of `[5, -10]` will move the graphic 5 pixels left and 10 pixels down.
 	**/
 	public var pressedOffset:Array<Float>;
 
 	/**
-		The offset for the confirm animation. Overrides `receptorsCenterAnimation`.
+		The visual offset for the confirm animation. Overrides `receptorsCenterAnimation`.
+
+		Values are substracted, so a value of `[5, -10]` will move the graphic 5 pixels left and 10 pixels down.
 	**/
 	public var confirmOffset:Array<Float>;
 
@@ -252,13 +261,42 @@ class ReceptorData extends JsonObject
 	}
 }
 
+/**
+	JSON info for a note lane.
+**/
 class NoteData extends JsonObject
 {
+	/**
+		The name for the head (regular note) animation in the spritesheet.
+	**/
 	public var headAnim:String;
+
+	/**
+		The name for the long note's body animation in the spritesheet.
+	**/
 	public var bodyAnim:String;
+
+	/**
+		The name for the long note's tail animation in the spritesheet.
+	**/
 	public var tailAnim:String;
+
+	/**
+		Optional frame indices for the head animation. If `headAnim` is empty, this will be used as indices in the
+		overall spritesheet.
+	**/
 	public var headIndices:Array<Int>;
+
+	/**
+		Optional frame indices for the body animation. If `bodyAnim` is empty, this will be used as indices in the
+		overall spritesheet.
+	**/
 	public var bodyIndices:Array<Int>;
+
+	/**
+		Optional frame indices for the tail animation. If `tailAnim` is empty, this will be used as indices in the
+		overall spritesheet.
+	**/
 	public var tailIndices:Array<Int>;
 
 	public function new(data:Dynamic)

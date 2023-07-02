@@ -78,6 +78,9 @@ class JudgementSkin extends JsonObject
 	**/
 	public var mod:String = '';
 
+	/**
+		@param	data	The JSON file to parse data from.
+	**/
 	public function new(data:Dynamic)
 	{
 		scale = readFloat(data.scale, 1, 0.01, 100, 2);
