@@ -268,11 +268,17 @@ class NoteManager extends FlxBasic
 		return activeNoteLanes[lane].length > 0 ? activeNoteLanes[lane][0] : null;
 	}
 
+	/**
+		Gets the closest long note that can be released in a lane.
+	**/
 	public function getClosestRelease(lane:Int)
 	{
 		return heldLongNoteLanes[lane].length > 0 ? heldLongNoteLanes[lane][0] : null;
 	}
 
+	/**
+		Updates the current track position.
+	**/
 	public function updateCurrentTrackPosition()
 	{
 		while (currentSvIndex < song.scrollVelocities.length && currentVisualPosition >= song.scrollVelocities[currentSvIndex].startTime)
@@ -280,6 +286,9 @@ class NoteManager extends FlxBasic
 		currentTrackPosition = getPositionFromTimeIndex(currentVisualPosition, currentSvIndex);
 	}
 
+	/**
+		Creates a new note from a `NoteInfo`.
+	**/
 	public function createPoolObject(info:NoteInfo)
 	{
 		var note = new Note(info, this, playfield, playfield.noteSkin);
@@ -287,12 +296,18 @@ class NoteManager extends FlxBasic
 		ruleset.noteSpawned.dispatch(note);
 	}
 
+	/**
+		Kills a note and adds it to the dead lanes.
+	**/
 	public function killPoolObject(note:Note)
 	{
 		note.killNote();
 		deadNoteLanes[note.info.playerLane].push(note);
 	}
 
+	/**
+		Kills a long note and adds it to the dead lanes.
+	**/
 	public function killHoldPoolObject(note:Note, setTint:Bool = true)
 	{
 		note.initialTrackPosition = getPositionFromTime(currentVisualPosition);
@@ -305,6 +320,9 @@ class NoteManager extends FlxBasic
 		deadNoteLanes[note.info.playerLane].push(note);
 	}
 
+	/**
+		Recycles a note for the next note in the lane if possible, or destroys it if not.
+	**/
 	public function recyclePoolObject(note:Note)
 	{
 		note.currentlyBeingHeld = false;
@@ -320,6 +338,9 @@ class NoteManager extends FlxBasic
 			note.destroy();
 	}
 
+	/**
+		Changes a note to being currently held.
+	**/
 	public function changePoolObjectStatusToHeld(note:Note)
 	{
 		heldLongNoteLanes[note.info.playerLane].push(note);
@@ -327,6 +348,9 @@ class NoteManager extends FlxBasic
 		note.head.visible = false;
 	}
 
+	/**
+		Handles skipping forward in the song.
+	**/
 	public function handleSkip()
 	{
 		currentSvIndex = 0;
