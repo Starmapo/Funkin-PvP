@@ -363,9 +363,9 @@ class AnimInfo extends JsonObject
 
 	/**
 		The visual offset for this animation.
-		
+
 		Values are substracted, so a value of `[5, -10]` will move the graphic 5 pixels left and 10 pixels down.
-		
+
 		Will be automatically flipped when playing on the right side.
 	**/
 	public var offset:Array<Float>;

@@ -4,10 +4,15 @@ import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 
 /**
-	Configuration for a note skin.
+	JSON info for a note skin.
 **/
 class NoteSkin extends JsonObject
 {
+	/**
+		Loads a note skin from a path to a JSON file.
+
+		@return	A new `NoteSkin` object, or `null` if the path doesn't exist or if the JSON file couldn't be parsed.
+	**/
 	public static function loadSkin(path:String, ?mod:String):NoteSkin
 	{
 		if (!Paths.exists(path))
@@ -24,6 +29,14 @@ class NoteSkin extends JsonObject
 		return skin;
 	}
 
+	/**
+		Loads a note skin from a name.
+
+		@param	name	The name of the skin to load. If it contains a colon `:`, it will use the name before it as
+						the mod directory.
+		@return	A new `NoteSkin` object, or `null` if the file couldn't be found or if the JSON file couldn't be
+				parsed.
+	**/
 	public static function loadSkinFromName(name:String):NoteSkin
 	{
 		var nameInfo = CoolUtil.getNameInfo(name);
@@ -47,12 +60,14 @@ class NoteSkin extends JsonObject
 	public var image:String;
 
 	/**
-		If the image is a grid of sprites, this will indicate how wide each sprite is.
+		If the image is a grid of sprites, this will indicate how wide each sprite is. Defaults to `17`, for compatibility
+		with the original pixel notes.
 	**/
 	public var tileWidth:Int;
 
 	/**
-		If the image is a grid of sprites, this will indicate how tall each sprite is.
+		If the image is a grid of sprites, this will indicate how tall each sprite is. Defaults to `17`, for compatibility
+		with the original pixel notes.
 	**/
 	public var tileHeight:Int;
 
@@ -67,12 +82,12 @@ class NoteSkin extends JsonObject
 	public var receptorsOffset:Array<Float>;
 
 	/**
-		Extra horizontal padding for the receptors.
+		Extra horizontal padding for the receptors. Defaults to `0`.
 	**/
 	public var receptorsPadding:Float;
 
 	/**
-		The scale for the receptors.
+		The scaling factor for the receptors. Defaults to `1`.
 	**/
 	public var receptorsScale:Float;
 
@@ -87,17 +102,28 @@ class NoteSkin extends JsonObject
 	public var notes:Array<NoteData> = [];
 
 	/**
-		The scale for the notes.
+		The scaling factor for the notes. Defaults to `1`.
 	**/
 	public var notesScale:Float;
 
 	/**
-		Whether or not the sprites have antialiasing.
+		Whether or not the sprites have antialiasing. Defaults to `true`.
 	**/
 	public var antialiasing:Bool;
 
+	/**
+		The full directory path this judgement skin was in.
+	**/
 	public var directory:String = '';
+
+	/**
+		The name of the judgement skin.
+	**/
 	public var name:String = '';
+
+	/**
+		The mod directory this judgement skin was in.
+	**/
 	public var mod:String = '';
 
 	public function new(data:Dynamic)
@@ -131,6 +157,9 @@ class NoteSkin extends JsonObject
 	}
 }
 
+/**
+	JSON info for a note receptor.
+**/
 class ReceptorData extends JsonObject
 {
 	/**
@@ -148,8 +177,22 @@ class ReceptorData extends JsonObject
 	**/
 	public var confirmAnim:String;
 
+	/**
+		Optional frame indices for the static animation. If `staticAnim` is empty, this will be used as indices in the
+		overall spritesheet.
+	**/
 	public var staticIndices:Array<Int>;
+
+	/**
+		Optional frame indices for the pressed animation. If `pressedAnim` is empty, this will be used as indices in the
+		overall spritesheet.
+	**/
 	public var pressedIndices:Array<Int>;
+
+	/**
+		Optional frame indices for the confirm animation. If `confirmAnim` is empty, this will be used as indices in the
+		overall spritesheet.
+	**/
 	public var confirmIndices:Array<Int>;
 
 	/**
