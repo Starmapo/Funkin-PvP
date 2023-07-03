@@ -2,6 +2,9 @@ package data.song;
 
 import flixel.util.FlxStringUtil;
 
+/**
+	An object to switch the camera focus in a song.
+**/
 class CameraFocus extends JsonObject implements ITimingObject
 {
 	/**
@@ -29,9 +32,23 @@ class CameraFocus extends JsonObject implements ITimingObject
 	}
 }
 
+/**
+	Characters you can focus on. Can be passed to and from `Int`.
+**/
 enum abstract CameraFocusChar(Int) from Int to Int
 {
+	/**
+		Focuses on the opponent (player 1 / left side).
+	**/
 	var OPPONENT = 0;
+
+	/**
+		Focuses on Boyfriend (player 2 / right side).
+	**/
 	var BF = 1;
+
+	/**
+		Focuses on Girlfriend.
+	**/
 	var GF = 2;
 }

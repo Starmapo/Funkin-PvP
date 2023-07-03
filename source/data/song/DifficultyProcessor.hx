@@ -5,11 +5,15 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
 /**
+	Calculates the difficulty of a given song.
+
 	Literally everything here comes from Quaver, huge thanks to the Quaver team.
-	And no, I don't understand most of the code that's here. If something isn't right I probably won't notice lol.
 **/
 class DifficultyProcessor implements IFlxDestroyable
 {
+	/**
+		Gets the name of a difficulty.
+	**/
 	public static function getDifficultyName(difficulty:Float)
 	{
 		if (difficulty < 1)
@@ -30,6 +34,9 @@ class DifficultyProcessor implements IFlxDestroyable
 		return '???';
 	}
 
+	/**
+		Gets the color of a difficulty.
+	**/
 	public static function getDifficultyColor(difficulty:Float)
 	{
 		if (difficulty < 1)
@@ -53,8 +60,19 @@ class DifficultyProcessor implements IFlxDestroyable
 	static var laneToFinger:Map<Int, FingerState> = [0 => MIDDLE, 1 => INDEX, 2 => INDEX, 3 => MIDDLE];
 	static var laneToHand:Map<Int, Hand> = [0 => LEFT, 1 => LEFT, 2 => RIGHT, 3 => RIGHT];
 
+	/**
+		The overall difficulty of the entire song.
+	**/
 	public var overallDifficulty:Float = 0;
+
+	/**
+		Average note density of the entire song.
+	**/
 	public var averageNoteDensity:Float = 0;
+
+	/**
+		List of `StrainSolverData` structures for this processor.
+	**/
 	public var strainSolverData:Array<StrainSolverData> = [];
 
 	var song:Song;
@@ -63,7 +81,7 @@ class DifficultyProcessor implements IFlxDestroyable
 	var rollInaccuracyConfidence:Int = 0;
 	var vibroInaccuracyConfidence:Int = 0;
 
-	public function new(song:Song, rightSide:Bool = false, rate:Float = 1)
+	public function new(song:Song, rightSide:Bool = false, playbackRate:Float = 1)
 	{
 		this.song = song;
 		this.rightSide = rightSide;
@@ -86,9 +104,12 @@ class DifficultyProcessor implements IFlxDestroyable
 		if (notes.length < 2)
 			return;
 
-		calculateDifficulty(rate);
+		calculateDifficulty(playbackRate);
 	}
 
+	/**
+		Frees up memory.
+	**/
 	public function destroy()
 	{
 		strainSolverData = FlxDestroyUtil.destroyArray(strainSolverData);
