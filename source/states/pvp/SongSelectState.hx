@@ -156,7 +156,7 @@ class SongSelectState extends FNFState
 				reloadSong();
 				exitTransition(function(_)
 				{
-					if (!canSelectChars && !Settings.forceDefaultStage)
+					if (!canSelectChars)
 						FlxG.switchState(new PlayState(song, []));
 					else
 						FlxG.switchState(new CharacterSelectState());
@@ -509,7 +509,7 @@ class PlayerSongSelect extends FlxGroup
 
 		var warning = '';
 		var item = songMenuList.selectedItem;
-		if (item.songData.forceCharacters && !Settings.forceDefaultStage)
+		if (item.songData.forceCharacters)
 		{
 			canSelectChars = false;
 			if (songMenuList.controlsEnabled)
@@ -519,7 +519,7 @@ class PlayerSongSelect extends FlxGroup
 		if (difficultyMenuList.controlsEnabled)
 		{
 			var item = difficultyMenuList.selectedItem;
-			if (item.songData.forceCharacterDifficulties.contains(item.difficulty) && !Settings.forceDefaultStage && canSelectChars)
+			if (item.songData.forceCharacterDifficulties.contains(item.difficulty) && canSelectChars)
 			{
 				canSelectChars = false;
 				warning = CoolUtil.addMultilineText(warning, "You can't pick characters for this difficulty.");

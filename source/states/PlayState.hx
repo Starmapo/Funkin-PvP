@@ -143,7 +143,7 @@ class PlayState extends FNFState
 		}
 
 		// no thinking outside the box!
-		if (!SongSelectState.canSelectChars && !Settings.forceDefaultStage)
+		if (!SongSelectState.canSelectChars)
 			chars = [];
 
 		Mods.currentMod = song.mod;
@@ -920,7 +920,7 @@ class PlayState extends FNFState
 		camFollow = new FlxObject();
 		add(camFollow);
 
-		var stage = Settings.forceDefaultStage ? 'fnf:stage' : song.stage;
+		var stage = song.stage;
 		stageFile = new StageFile(this, stage);
 
 		var stageInfo = CoolUtil.getNameInfo(stage);
