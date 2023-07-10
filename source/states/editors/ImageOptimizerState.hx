@@ -176,6 +176,8 @@ class ImageOptimizerState extends FNFState
 			return;
 
 		path = path.substr(cwd.length);
+		if (path.startsWith('/'))
+			path = path.substr(1);
 		if (!path.endsWith('/'))
 			path += '/';
 		folderDropdown.selectedLabel = path;
