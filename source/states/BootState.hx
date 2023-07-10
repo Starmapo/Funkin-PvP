@@ -100,6 +100,10 @@ class BootState extends FNFState
 		});
 
 		super.create();
+
+		trace(WindowsAPI.getVSync());
+		WindowsAPI.setVSync(1);
+		trace(WindowsAPI.getVSync());
 	}
 
 	override function update(elapsed:Float)

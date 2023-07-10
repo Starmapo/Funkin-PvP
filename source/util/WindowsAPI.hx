@@ -2,41 +2,24 @@ package util;
 
 #if windows
 @:buildXml('
-<compilerflag value="/DelayLoad:ComCtl32.dll"/>
-
 <target id="haxe">
     <lib name="dwmapi.lib" if="windows" />
-    <lib name="shell32.lib" if="windows" />
-    <lib name="gdi32.lib" if="windows" />
 	<lib name="ole32.lib" if="windows" />
-	<lib name="uxtheme.lib" if="windows" />
 </target>
-')
-@:headerCode('
-#pragma comment(linker,"/manifestdependency:\\"type=\'win32\' name=\'Microsoft.Windows.Common-Controls\' " "version=\'6.0.0.0\' processorArchitecture=\'*\' publicKeyToken=\'6595b64144ccf1df\' language=\'*\'\\"")
-#include <Windows.h>
-#include <cstdio>
-#include <iostream>
-#include <tchar.h>
-#include <dwmapi.h>
-#include <winuser.h>
-#include <Shlobj.h>
-#include <wingdi.h>
-#include <shellapi.h>
+<files id="haxe" append="true">
+    <compilerflag value="-I${haxelib:linc_sdl}/lib/sdl/include/" />
+
+	<compilerflag value="-I${haxelib:linc_sdl}/lib/sdl/include/configs/default/"    unless="windows"/>
+	<compilerflag value="-I${haxelib:linc_sdl}/lib/sdl/include/configs/windows/"    if="windows"/>
+</files>
 ')
 @:cppFileCode('
-#include "mmdeviceapi.h"
-#include "combaseapi.h"
-#include <iostream>
-#include <Windows.h>
-#include <cstdio>
-#include <tchar.h>
+#define SDL_MAIN_HANDLED 1
+#include <combaseapi.h>
 #include <dwmapi.h>
-#include <winuser.h>
-#include <Shlobj.h>
-#include <wingdi.h>
-#include <shellapi.h>
-#include <uxtheme.h>
+#include <mmdeviceapi.h>
+#include <SDL.h>
+#include <SDL_video.h>
 
 #define SAFE_RELEASE(punk)  \\
 			  if ((punk) != NULL)  \\
@@ -126,6 +109,26 @@ class WindowsAPI
 {
 	#if windows
 	@:functionCode('
+		return SDL_GL_GetSwapInterval();
+	')
+	#end
+	public static function getVSync():Int
+	{
+		return 0;
+	}
+
+	#if windows
+	@:functionCode('
+	if (!curAudioFix) curAudioFix = new AudioFixClient();
+	')
+	#end
+	public static function registerAudio():Void
+	{
+		Main.audioDisconnected = false;
+	}
+
+	#if windows
+	@:functionCode('
         int darkMode = 1;
         HWND window = GetActiveWindow();
         if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
@@ -134,15 +137,12 @@ class WindowsAPI
         UpdateWindow(window);
     ')
 	#end
-	public static function setWindowToDarkMode() {}
+	public static function setWindowToDarkMode():Void {}
 
 	#if windows
 	@:functionCode('
-	if (!curAudioFix) curAudioFix = new AudioFixClient();
+		SDL_GL_SetSwapInterval(value);
 	')
 	#end
-	public static function registerAudio()
-	{
-		Main.audioDisconnected = false;
-	}
+	public static function setVSync(value:Int):Void {}
 }

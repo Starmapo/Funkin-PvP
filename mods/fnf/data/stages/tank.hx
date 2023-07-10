@@ -122,8 +122,6 @@ function loadMappedAnims()
 				tankmanRun.add(tankman);
 			}
 		}
-		trace(tankmanRun.members[0].frames.frames[12].frame);
-		trace(tankmanRun.members[0].frames.frames[12].sourceSize);
 	}
 }
 

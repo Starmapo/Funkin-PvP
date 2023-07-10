@@ -395,7 +395,6 @@ class ControlsPage extends Page
 		{
 			controls.set(key, [-1, -1]);
 		}
-		trace(settings.config.controls);
 		reloadControls();
 		updateButtons();
 	}

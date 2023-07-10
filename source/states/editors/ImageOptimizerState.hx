@@ -142,8 +142,6 @@ class ImageOptimizerState extends FNFState
 			}
 			mutex.release();
 		}
-		if (FlxG.keys.justPressed.SPACE && oxipng)
-			trace(Sys.stdout());
 		if (FlxG.keys.justPressed.ESCAPE && canExit)
 		{
 			persistentUpdate = false;

@@ -52,6 +52,8 @@
 	<haxelib name="discord_rpc" if="cpp"/>
 	<haxelib name="hxCodec" if="windows || linux || android" />
 
+	<define name="linc_sdl" />
+
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Enable the Flixel core recording system-->
