@@ -6,20 +6,11 @@ package util;
     <lib name="dwmapi.lib" if="windows" />
 	<lib name="ole32.lib" if="windows" />
 </target>
-<files id="haxe" append="true">
-    <compilerflag value="-I${haxelib:linc_sdl}/lib/sdl/include/" />
-
-	<compilerflag value="-I${haxelib:linc_sdl}/lib/sdl/include/configs/default/"    unless="windows"/>
-	<compilerflag value="-I${haxelib:linc_sdl}/lib/sdl/include/configs/windows/"    if="windows"/>
-</files>
 ')
 @:cppFileCode('
-#define SDL_MAIN_HANDLED 1
 #include <combaseapi.h>
 #include <dwmapi.h>
 #include <mmdeviceapi.h>
-#include <SDL.h>
-#include <SDL_video.h>
 
 #define SAFE_RELEASE(punk)  \\
 			  if ((punk) != NULL)  \\
@@ -107,15 +98,7 @@ AudioFixClient *curAudioFix;
 #end
 class WindowsAPI
 {
-	#if windows
-	@:functionCode('
-		return SDL_GL_GetSwapInterval();
-	')
-	#end
-	public static function getVSync():Int
-	{
-		return 0;
-	}
+	// public static function getVSync():Void {}
 
 	#if windows
 	@:functionCode('
@@ -139,10 +122,5 @@ class WindowsAPI
 	#end
 	public static function setWindowToDarkMode():Void {}
 
-	#if windows
-	@:functionCode('
-		SDL_GL_SetSwapInterval(value);
-	')
-	#end
-	public static function setVSync(value:Int):Void {}
+	// public static function setVSync(value:Bool):Void {}
 }

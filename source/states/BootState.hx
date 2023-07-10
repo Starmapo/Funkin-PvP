@@ -13,11 +13,9 @@ import flixel.text.FlxText;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import haxe.io.Path;
 import hscript.Interp;
 import lime.app.Application;
 import sys.FileSystem;
-import sys.thread.Thread;
 import util.AudioSwitchFix;
 import util.WindowsAPI;
 
@@ -100,10 +98,6 @@ class BootState extends FNFState
 		});
 
 		super.create();
-
-		trace(WindowsAPI.getVSync());
-		WindowsAPI.setVSync(1);
-		trace(WindowsAPI.getVSync());
 	}
 
 	override function update(elapsed:Float)

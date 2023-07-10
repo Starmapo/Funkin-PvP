@@ -39,13 +39,6 @@
       "version": null
     },
     {
-      "name": "linc_sdl",
-      "type": "git",
-      "dir": null,
-      "ref": "master",
-      "url": "https://github.com/snowkit/linc_sdl.git"
-    },
-    {
       "name": "openfl",
       "type": "haxelib",
       "version": null
