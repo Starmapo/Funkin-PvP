@@ -49,8 +49,6 @@ class HealthIcon extends AnimatedSprite
 	public function reloadGraphic()
 	{
 		info = IconInfo.loadIconFromName(icon);
-		if (info == null)
-			info = new IconInfo({});
 
 		var imagePath = getImagePath(info);
 		var path = Path.withoutExtension(imagePath);

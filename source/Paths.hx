@@ -199,17 +199,13 @@ class Paths
 	/**
 		Returns music.
 
-		@param	path	The music path. Can be a full path or just the key inside `music/`. Will add the extension if it's
-						missing.
+		@param	key		The music's name. Will add the extension if it's missing.
 		@param	mod		Optional mod directory to use. If unspecified, the current mod will be used.
 		@return	A `Sound` object, or `null` if it couldn't be found.
 	**/
-	public static function getMusic(path:String, ?mod:String):Sound
+	public static function getMusic(key:String, ?mod:String):Sound
 	{
-		if (exists(path))
-			return getSound(path, mod);
-		else
-			return getSound('music/$path/audio', mod);
+		return getSound('music/$key/audio', mod);
 	}
 
 	/**
@@ -293,8 +289,11 @@ class Paths
 		if (!CoolUtil.endsWithAny(path, SOUND_EXTENSIONS))
 			path += SOUND_EXTENSIONS[0];
 
+		var ogPath = path;
 		if (!exists(path))
-			path = getPath('sounds/$path', mod);
+			path = getPath(ogPath, mod);
+		if (!exists(path))
+			path = getPath('sounds/$ogPath', mod);
 
 		var sound:Sound = null;
 		if (cachedSounds.exists(path))

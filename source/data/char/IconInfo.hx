@@ -46,11 +46,18 @@ class IconInfo extends JsonObject
 				return loadIcon(path);
 		}
 
-		var path = Paths.getPath('data/icons/$name.json');
+		var path = Paths.getPath('data/icons/${nameInfo.name}.json');
 		if (Paths.exists(path))
 			return loadIcon(path);
 
-		return loadIcon(Paths.getPath('data/icons/$name.json', 'fnf'));
+		path = Paths.getPath('data/icons/${nameInfo.name}.json', 'fnf');
+		if (Paths.exists(path))
+			return loadIcon(path);
+
+		var info = new IconInfo({});
+		info.name = nameInfo.name;
+		info.mod = nameInfo.mod;
+		return info;
 	}
 
 	/**

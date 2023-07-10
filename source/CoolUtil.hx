@@ -544,7 +544,7 @@ class CoolUtil
 			return;
 
 		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
-		FlxG.sound.playMusic(Paths.getMusic(Path.join([music, 'audio'])), volume);
+		FlxG.sound.playMusic(Paths.getMusic(music.name, music.mod), volume);
 	}
 
 	/**

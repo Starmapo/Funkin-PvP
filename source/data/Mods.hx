@@ -1,9 +1,9 @@
 package data;
 
+import CoolUtil.NameInfo;
 import flixel.FlxG;
 import haxe.io.Path;
 import sys.FileSystem;
-import util.Zip;
 
 using StringTools;
 
@@ -12,7 +12,7 @@ class Mods
 	public static final modsPath:String = 'mods';
 	public static var currentMods:Array<Mod> = [];
 	public static var currentMod:String = '';
-	public static var pvpMusic:Array<String> = [];
+	public static var pvpMusic:Array<NameInfo> = [];
 	public static var songGroups:Map<String, ModSongGroup> = [];
 	public static var characterGroups:Map<String, ModCharacterGroup> = [];
 	public static var skins:Map<String, ModSkins> = new Map();
@@ -81,7 +81,10 @@ class Mods
 			{
 				var pvpMusicList = Paths.getText(pvpMusicPath).split('\n');
 				for (i in 0...pvpMusicList.length)
-					pvpMusic.push(Path.join([fullPath, 'music', pvpMusicList[i]]));
+					pvpMusic.push({
+						name: pvpMusicList[i].trim(),
+						mod: mod.directory
+					});
 			}
 		}
 	}
