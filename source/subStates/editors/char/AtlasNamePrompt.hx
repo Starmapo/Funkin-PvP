@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.FlxUITypedButton;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.ui.FlxButton;

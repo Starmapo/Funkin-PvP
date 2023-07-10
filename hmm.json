@@ -35,8 +35,10 @@
     },
     {
       "name": "lime",
-      "type": "haxelib",
-      "version": null
+      "type": "git",
+      "dir": null,
+      "ref": "develop",
+      "url": "https://github.com/Starmapo/lime"
     },
     {
       "name": "openfl",

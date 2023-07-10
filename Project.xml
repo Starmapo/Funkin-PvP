@@ -42,6 +42,7 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
+	<haxelib name="lime" />
 	<haxelib name="flixel" />
 	<haxelib name="hscript" />
 	<haxeflag name="--macro" value="hscript.UsingHandler.init()" if="hscript" />
