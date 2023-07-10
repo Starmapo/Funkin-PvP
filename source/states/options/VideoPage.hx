@@ -1,5 +1,6 @@
 package states.options;
 
+import lime.app.Application;
 import data.Settings;
 import flixel.FlxG;
 import openfl.Lib;
@@ -45,6 +46,15 @@ class VideoPage extends BaseSettingsPage
 		}, function()
 		{
 			FlxG.setFramerate(Settings.fpsCap);
+		});
+		addSetting({
+			name: 'vsync',
+			displayName: 'VSync',
+			description: "Whether vertical sync is enabled, eliminating screen tearing but possibly slowing down performance.",
+			type: CHECKBOX
+		}, function()
+		{
+			Application.current.window.vsync = Settings.vsync;
 		});
 		addSetting({
 			name: 'antialiasing',

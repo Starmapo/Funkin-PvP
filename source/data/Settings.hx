@@ -1,11 +1,11 @@
 package data;
 
+import lime.app.Application;
 import data.game.Judgement;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import util.bindable.Bindable;
 import util.bindable.BindableFloat;
-import util.bindable.BindableInt;
 
 @:keep
 class Settings
@@ -15,6 +15,7 @@ class Settings
 	// Video
 	public static var resolution:Float = 1;
 	public static var fpsCap:Int = 60;
+	public static var vsync:Bool = false;
 	public static var antialiasing:Bool = true;
 	public static var hue:Int = 0;
 	public static var brightness:Int = 0;
@@ -105,6 +106,7 @@ class Settings
 		if (!FlxG.fullscreen)
 			FlxG.resizeWindow(Math.round(FlxG.width * resolution), Math.round(FlxG.height * resolution));
 		FlxG.setFramerate(fpsCap);
+		Application.current.window.vsync = vsync;
 		FlxG.forceNoAntialiasing = !antialiasing;
 		Main.updateFilters();
 
