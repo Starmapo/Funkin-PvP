@@ -93,10 +93,12 @@ class Script implements IFlxDestroyable
 	**/
 	public static final DENY_CLASSES:Array<String> = [
 		"Sys",
+		"Type",
 		"cpp.NativeProcess",
 		"cpp.NativeSocket",
 		"cpp.NativeSsl",
 		"cpp.NativeSys",
+		"flixel.FlxG",
 		"flixel.addons.ui.U",
 		"flixel.util.FlxSharedObject",
 		"haxe.Http",
@@ -314,7 +316,7 @@ class Script implements IFlxDestroyable
 		setVariable('FlxColor', CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"));
 		setVariable('FlxDestroyUtil', FlxDestroyUtil);
 		setVariable('FlxEase', FlxEase);
-		setVariable('FlxG', FlxG);
+		setVariable('FlxG', FlxGHelper);
 		setVariable('FlxGraphic', FlxGraphic);
 		setVariable('FlxGroup', FlxGroup);
 		setVariable('FlxMath', FlxMath);
@@ -380,7 +382,7 @@ class Script implements IFlxDestroyable
 				return;
 			if (DENY_CLASSES.contains(className))
 			{
-				onError("You can't use `" + className + "`.");
+				onError("You can't import class / enum `" + className + "`.");
 				return;
 			}
 
