@@ -985,7 +985,7 @@ class PlayState extends FNFState
 			addScript('data/events/${eventInfo.name}', eventInfo.mod);
 		}
 
-		addScriptsInFolder('data/globalScripts');
+		addScriptsInFolder(Path.join([Mods.modsPath, Mods.currentMod, 'data/globalScripts']));
 
 		for (event in events)
 			event.startTime -= getEventEarlyTrigger(event);

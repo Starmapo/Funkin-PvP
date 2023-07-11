@@ -89,6 +89,31 @@ class Script implements IFlxDestroyable
 	public static final FUNCTION_STOP_BREAK:String = "::FUNCTION_STOP_BREAK::";
 
 	/**
+		Prevents these classes from being imported, for safety measures.
+	**/
+	public static final DENY_CLASSES:Array<String> = [
+		"Sys",
+		"flixel.addons.ui.U",
+		"flixel.util.FlxSharedObject",
+		"haxe.Http",
+		"lime.system.System",
+		"lime.tools.CLIHelper",
+		"lime.tools.CommandHelper",
+		"lime.tools.ConfigHelper",
+		"lime.tools.HXProject",
+		"lime.tools.TizenHelper",
+		"lime.ui.FileDialog",
+		"openfl.Lib",
+		"openfl.filesystem.File",
+		"openfl.filesystem.FileStream",
+		"openfl.net.FileReference",
+		"openfl.net.SharedObject",
+		"sys.FileSystem",
+		"sys.Http",
+		"sys.io.File"
+	];
+
+	/**
 		The HScript interpretator for this object.
 	**/
 	public var interp:Interp;
@@ -252,12 +277,9 @@ class Script implements IFlxDestroyable
 		setVariable('Json', Json);
 		setVariable('Math', Math);
 		setVariable('ObjectMap', ObjectMap);
-		setVariable('Reflect', Reflect);
 		setVariable('Std', Std);
 		setVariable('StringMap', StringMap);
 		setVariable('StringTools', StringTools);
-		setVariable('Sys', Sys);
-		setVariable('Type', Type);
 
 		setVariable('Application', Application);
 		setVariable('Assets', Assets);
@@ -336,13 +358,21 @@ class Script implements IFlxDestroyable
 		setVariable("import", function(className:String)
 		{
 			var splitClassName = [for (e in className.split(".")) e.trim()];
-			var realClassName = splitClassName.join(".");
-			var cl = Type.resolveClass(realClassName);
-			var en = Type.resolveEnum(realClassName);
-			if (cl == null && en == null)
-				onError('Class / Enum at "$realClassName" does not exist.');
+			className = splitClassName.join(".");
+			if (className.length < 1)
+				return;
+			if (DENY_CLASSES.contains(className))
+			{
+				onError("You can't use `" + className + "`.");
+				return;
+			}
+
+			var cl = Type.resolveClass(className);
+			if (cl != null)
+				setVariable(splitClassName[splitClassName.length - 1], cl);
 			else
 			{
+				var en = Type.resolveEnum(className);
 				if (en != null)
 				{
 					var enumThingy = {};
@@ -352,7 +382,7 @@ class Script implements IFlxDestroyable
 					setVariable(splitClassName[splitClassName.length - 1], enumThingy);
 				}
 				else
-					setVariable(splitClassName[splitClassName.length - 1], cl);
+					onError("Couldn't find class / enum at `" + className + "`.");
 			}
 		});
 	}
