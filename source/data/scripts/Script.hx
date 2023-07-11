@@ -93,6 +93,10 @@ class Script implements IFlxDestroyable
 	**/
 	public static final DENY_CLASSES:Array<String> = [
 		"Sys",
+		"cpp.NativeProcess",
+		"cpp.NativeSocket",
+		"cpp.NativeSsl",
+		"cpp.NativeSys",
 		"flixel.addons.ui.U",
 		"flixel.util.FlxSharedObject",
 		"haxe.Http",
@@ -110,7 +114,20 @@ class Script implements IFlxDestroyable
 		"openfl.net.SharedObject",
 		"sys.FileSystem",
 		"sys.Http",
-		"sys.io.File"
+		"sys.db.Mysql",
+		"sys.db.Sqlite",
+		"sys.db.SqliteConnection",
+		"sys.db.SqliteResultSet",
+		"sys.io.File",
+		"sys.io.Process",
+		"sys.net.Host",
+		"sys.net.Socket",
+		"sys.net.SocketInput",
+		"sys.net.SocketOutput",
+		"sys.net.UdpSocket",
+		"sys.ssl.Socket",
+		"sys.ssl.SocketInput",
+		"sys.ssl.SocketOutput"
 	];
 
 	/**
