@@ -4,26 +4,21 @@ package hscript;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
+#end
 
 using StringTools;
 
-class UsingHandler
+class HScriptUtil
 {
-	public var usedClass:Class<Dynamic>;
-	public var className:String;
-
-	public function new(className:String, usedClass:Class<Dynamic>)
-	{
-		this.className = className;
-		this.usedClass = usedClass;
-	}
-
 	public static function init()
 	{
-		Compiler.addGlobalMetadata('flixel', '@:build(hscript.UsingHandler.build())');
-		Compiler.addGlobalMetadata('openfl.display.BlendMode', '@:build(hscript.UsingHandler.build())');
+		#if macro
+		Compiler.addGlobalMetadata('flixel', '@:build(hscript.HScriptUtil.build())');
+		Compiler.addGlobalMetadata('openfl.display.BlendMode', '@:build(hscript.HScriptUtil.build())');
+		#end
 	}
 
+	#if macro
 	public static function build():Array<Field>
 	{
 		var fields = Context.getBuildFields();
@@ -105,11 +100,5 @@ class UsingHandler
 
 		return fields;
 	}
+	#end
 }
-#else
-class UsingHandler
-{
-	public var usedClass:Class<Dynamic>;
-	public var className:String;
-}
-#end

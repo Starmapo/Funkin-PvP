@@ -45,13 +45,14 @@
 	<haxelib name="lime" />
 	<haxelib name="flixel" />
 	<haxelib name="hscript" />
-	<haxeflag name="--macro" value="hscript.UsingHandler.init()" if="hscript" />
+	<haxeflag name="--macro" value="hscript.HScriptUtil.init()" if="hscript" />
 	
 	<haxelib name="hxcpp-debug-server" if="desktop" />
 	<haxelib name="systools" if="desktop" />
 	<ndll name="systools" haxelib="systools" if="systools" />
 	<haxelib name="discord_rpc" if="cpp"/>
 	<haxelib name="hxCodec" if="windows || linux || android" />
+	<haxelib name="polymod"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

@@ -1,11 +1,23 @@
 {
   "dependencies": [
     {
+      "name": "discord_rpc",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/Aidan63/linc_discord-rpc"
+    },
+    {
       "name": "flixel",
       "type": "git",
       "dir": null,
       "ref": "master",
       "url": "https://github.com/Starmapo/flixel"
+    },
+    {
+      "name": "format",
+      "type": "haxelib",
+      "version": null
     },
     {
       "name": "hscript",
@@ -34,6 +46,11 @@
       "version": null
     },
     {
+      "name": "hxp",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "lime",
       "type": "git",
       "dir": null,
@@ -42,6 +59,11 @@
     },
     {
       "name": "openfl",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "polymod",
       "type": "haxelib",
       "version": null
     },
