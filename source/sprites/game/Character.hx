@@ -184,7 +184,6 @@ class Character extends DancingSprite
 					holdTimers[lane] = null;
 					startDanceTimer(beatLength / 1000);
 				}
-				trace(tmr.active, tmr.finished, tmr.elapsedLoops);
 			}, 0);
 		}
 	}
