@@ -63,11 +63,6 @@
       "version": null
     },
     {
-      "name": "polymod",
-      "type": "haxelib",
-      "version": null
-    },
-    {
       "name": "systools",
       "type": "git",
       "dir": null,
