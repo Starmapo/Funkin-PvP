@@ -99,6 +99,7 @@
 	</section>
 
 	<define name="hscriptPos" />
+	<define name="no-deprecation-warnings" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 

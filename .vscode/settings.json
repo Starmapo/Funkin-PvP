@@ -1,4 +1,7 @@
 {
+	"haxecheckstyle.sourceFolders": [
+		"source"
+	],
 	"search.exclude": {
 		"export/**/*.hx": true
 	},
