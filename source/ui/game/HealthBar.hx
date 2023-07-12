@@ -44,26 +44,18 @@ class HealthBar extends FlxSpriteGroup
 		add(bg);
 
 		bar = new FlxBar(4, 4, right ? RIGHT_TO_LEFT : LEFT_TO_RIGHT, Std.int(bg.width) - 8, Std.int(bg.height) - 8, scoreProcessor, 'health');
-		if (charInfo != null && (Settings.healthBarColors || scoreProcessor == null))
-		{
-			bar.createFilledBar(charInfo.healthColors.getDarkened(0.5), charInfo.healthColors);
-		}
-		else
-			bar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		bar.numDivisions = Std.int(bar.width);
-		bar.updateBar();
 		add(bar);
 
-		var iconName = charInfo != null ? charInfo.healthIcon : 'fnf:face';
-		if (!iconName.contains(':'))
-			iconName = charInfo.mod + ':' + iconName;
-		icon = new HealthIcon(0, 0, iconName);
+		icon = new HealthIcon(0, 0);
 		icon.flipX = right;
 		add(icon);
 
 		if (scoreProcessor != null)
 			alpha = Settings.healthBarAlpha;
 		scrollFactor.set();
+
+		setCharInfo(charInfo);
 	}
 
 	override function update(elapsed:Float)
@@ -114,5 +106,19 @@ class HealthBar extends FlxSpriteGroup
 			+ (bar.height / 2)
 			- (icon.height / 2)
 			+ icon.info.positionOffset[1]);
+	}
+
+	public function setCharInfo(charInfo:CharacterInfo)
+	{
+		if (charInfo != null && (Settings.healthBarColors || scoreProcessor == null))
+			bar.createFilledBar(charInfo.healthColors.getDarkened(0.5), charInfo.healthColors);
+		else
+			bar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		bar.updateBar();
+
+		var iconName = charInfo != null ? charInfo.healthIcon : 'fnf:face';
+		if (!iconName.contains(':'))
+			iconName = charInfo.mod + ':' + iconName;
+		icon.icon = iconName;
 	}
 }
