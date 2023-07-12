@@ -167,7 +167,7 @@ class Character extends DancingSprite
 	public function playNoteAnim(note:Note, beatLength:Float)
 	{
 		final lane = note.info.playerLane;
-		playSingAnim(lane, beatLength, false, note.animSuffix);
+		playSingAnim(lane, beatLength, false, note.animSuffix, !note.info.isLongNote);
 
 		if (note.info.isLongNote && animation.curAnim != null)
 		{
@@ -177,17 +177,19 @@ class Character extends DancingSprite
 			holdTimers[lane] = new FlxTimer().start(animation.curAnim.frameDuration * 4 / FlxAnimationController.globalSpeed, function(tmr)
 			{
 				if (note.exists && note.currentlyBeingHeld && note.tail.visible)
-					playSingAnim(lane, beatLength, true, note.animSuffix);
+					playSingAnim(lane, beatLength, true, note.animSuffix, false);
 				else
 				{
 					tmr.cancel();
 					holdTimers[lane] = null;
+					startDanceTimer(beatLength / 1000);
 				}
+				trace(tmr.active, tmr.finished, tmr.elapsedLoops);
 			}, 0);
 		}
 	}
 
-	public function playSingAnim(lane:Int, beatLength:Float, hold:Bool = false, suffix:String = '')
+	public function playSingAnim(lane:Int, beatLength:Float, hold:Bool = false, suffix:String = '', danceTimer:Bool = true)
 	{
 		if (lane < 0 || lane > singAnimations.length - 1 || singDisabled)
 			return;
@@ -204,7 +206,10 @@ class Character extends DancingSprite
 			resetColor();
 			setCamOffsetFromLane(lane);
 
-			startDanceTimer(beatLength / 1000);
+			if (danceTimer)
+				startDanceTimer(beatLength / 1000);
+			else
+				cancelDanceTimer();
 
 			onSing.dispatch(lane, hold);
 		}
@@ -244,8 +249,7 @@ class Character extends DancingSprite
 		if (animation.name == name && !force && !animation.curAnim.finished)
 			return;
 
-		if (allowDanceTimer.active)
-			allowDanceTimer.cancel();
+		cancelDanceTimer();
 
 		canDance = false;
 		state = Special;
@@ -277,7 +281,15 @@ class Character extends DancingSprite
 		info = null;
 		super.destroy();
 		singAnimations = null;
-		holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
+		if (holdTimers != null)
+		{
+			for (timer in holdTimers)
+			{
+				if (timer != null)
+					timer.cancel();
+			}
+			holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
+		}
 		allowDanceTimer = FlxDestroyUtil.destroy(allowDanceTimer);
 		camOffset = FlxDestroyUtil.put(camOffset);
 		FlxDestroyUtil.destroy(onSing);
@@ -300,7 +312,7 @@ class Character extends DancingSprite
 		if (state != Idle)
 		{
 			state = Idle;
-			allowDanceTimer.cancel();
+			cancelDanceTimer();
 			canDance = true;
 		}
 		resetColor();
@@ -426,13 +438,18 @@ class Character extends DancingSprite
 
 	public function startDanceTimer(time:Float)
 	{
-		if (allowDanceTimer.active)
-			allowDanceTimer.cancel();
+		cancelDanceTimer();
 		allowDanceTimer.start(time, function(_)
 		{
 			canDance = true;
 			dance();
 		});
+	}
+
+	public function cancelDanceTimer()
+	{
+		if (allowDanceTimer.active)
+			allowDanceTimer.cancel();
 	}
 
 	function set_info(value:CharacterInfo)

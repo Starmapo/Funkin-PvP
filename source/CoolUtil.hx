@@ -262,24 +262,29 @@ class CoolUtil
 	**/
 	public static function getGroupGraphic(name:String, groupDirectory:String):FlxGraphic
 	{
-		var groupName = name;
+		final groupName = name;
 		name = FlxStringUtil.validate(name);
-		var graphicKey = name + '_edit';
+		final graphicKey = name + '_edit';
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
 
-		var thickness = 4;
-
-		var graphic = Paths.getImage('bg/$name', groupDirectory, false, false, graphicKey);
+		var graphic = Paths.getImage('bg/$name', groupDirectory, true, false, graphicKey);
 		if (graphic == null)
-			graphic = Paths.getImage('bg/unknown', '', false, false, graphicKey);
+		{
+			final unknownKey = '::groupUnknown::_edit';
+			if (FlxG.bitmap.checkCache(unknownKey))
+				return FlxG.bitmap.get(unknownKey);
+			graphic = Paths.getImage('bg/unknown', '', true, false, unknownKey);
+		}
 
-		var text = new FlxText(0, graphic.height - thickness, graphic.width, groupName);
+		final thickness = 4;
+
+		final text = new FlxText(0, graphic.height - thickness, graphic.width, groupName);
 		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		text.updateHitbox();
 		text.y -= text.height;
 
-		var textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(graphic.height - text.y), FlxColor.GRAY);
+		final textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(graphic.height - text.y), FlxColor.GRAY);
 		graphic.bitmap.copyPixels(textBG.pixels, new Rectangle(0, 0, textBG.width, textBG.height), new Point(textBG.x, textBG.y), null, null, true);
 		textBG.destroy();
 
@@ -289,7 +294,7 @@ class CoolUtil
 		var mask = FlxG.bitmap.get('groupMask');
 		if (mask == null)
 		{
-			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
+			final sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupMask');
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.BLACK);
 			mask = sprite.graphic;
 			mask.destroyOnNoUse = false;
@@ -301,7 +306,7 @@ class CoolUtil
 		var outline = FlxG.bitmap.get('groupOutline');
 		if (outline == null)
 		{
-			var sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupOutline');
+			final sprite = new FlxSprite().makeGraphic(158, 158, FlxColor.TRANSPARENT, false, 'groupOutline');
 			FlxSpriteUtil.drawRoundRect(sprite, 0, 0, sprite.width, sprite.height, 20, 20, FlxColor.TRANSPARENT,
 				{thickness: thickness, color: FlxColor.WHITE});
 			outline = sprite.graphic;

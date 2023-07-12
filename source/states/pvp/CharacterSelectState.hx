@@ -1,8 +1,8 @@
 package states.pvp;
 
-import data.Settings;
 import data.Mods;
 import data.PlayerSettings;
+import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -626,20 +626,25 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 
 	function getBGGraphic()
 	{
-		var graphicKey = name + '_edit';
+		final graphicKey = name + '_edit';
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
 
-		var thickness = 4;
+		final thickness = 4;
 
-		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.directory, false, false, graphicKey);
+		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.directory, true, false, graphicKey);
 		if (graphic == null)
-			graphic = FlxGraphic.fromRectangle(80, 80, FlxColor.TRANSPARENT, true, graphicKey);
+		{
+			final unknownKey = '::charUnknown::_edit';
+			if (FlxG.bitmap.checkCache(unknownKey))
+				return FlxG.bitmap.get(unknownKey);
+			graphic = FlxGraphic.fromRectangle(80, 80, FlxColor.TRANSPARENT, true, unknownKey);
+		}
 
 		var outline = FlxG.bitmap.get('charOutline');
 		if (outline == null)
 		{
-			var sprite = new FlxSprite().makeGraphic(80, 80, FlxColor.TRANSPARENT, false, 'charOutline');
+			final sprite = new FlxSprite().makeGraphic(80, 80, FlxColor.TRANSPARENT, false, 'charOutline');
 			FlxSpriteUtil.drawRect(sprite, 0, 0, sprite.width, sprite.height, FlxColor.TRANSPARENT, {thickness: thickness, color: FlxColor.WHITE});
 			outline = sprite.graphic;
 			outline.destroyOnNoUse = false;

@@ -1136,6 +1136,7 @@ class PlayState extends FNFState
 		{
 			timer.cancel();
 			char.holdTimers[lane] = null;
+			char.startDanceTimer(getBeatLength() / 1000);
 		}
 
 		executeScripts("onLaneReleased", [lane, player]);
