@@ -97,7 +97,7 @@ class Mods
 					var songs:Array<ModSong> = [];
 					for (i in 0...group.songs.length)
 					{
-						var songData = group.songs[i];
+						var songData:Dynamic = group.songs[i];
 						var name = songData.name;
 						var icon:String = songData.icon;
 						if (icon == null)
@@ -126,10 +126,11 @@ class Mods
 						}
 						if (songDifficulties.length > 0)
 						{
+							var forceCharacters:Bool = songData.forceCharacters;
 							songs.push({
 								name: name,
 								icon: icon,
-								forceCharacters: songData.forceCharacters == true,
+								forceCharacters: forceCharacters,
 								forceCharacterDifficulties: songData.forceCharacterDifficulties != null ? songData.forceCharacterDifficulties : [],
 								difficulties: songDifficulties,
 								directory: mod.directory
