@@ -11,16 +11,16 @@ class VoidTransition extends FlxSpriteGroup
 {
 	var transIn:Bool;
 	var onComplete:Void->Void;
-
+	
 	public function new(transIn:Bool = false, ?onComplete:Void->Void)
 	{
 		super();
 		this.transIn = transIn;
 		this.onComplete = onComplete;
-
+		
 		var black = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(black);
-
+		
 		var staticBG = new FlxSprite();
 		staticBG.frames = Paths.getSpritesheet('stages/static');
 		staticBG.animation.add('idle', [4, 9, 2], 8);
@@ -28,16 +28,16 @@ class VoidTransition extends FlxSpriteGroup
 		staticBG.setGraphicSize(FlxG.width, FlxG.height);
 		staticBG.updateHitbox();
 		add(staticBG);
-
+		
 		var image = Paths.getImage('menus/pvp/voidTransition');
 		var void = new FlxSprite().loadGraphic(image, true, image.width, Std.int(image.height / 3));
 		void.animation.add('idle', [0, 1, 2], 8);
 		void.animation.play('idle');
 		void.screenCenter(X);
 		add(void);
-
+		
 		scrollFactor.set();
-
+		
 		if (transIn)
 		{
 			void.flipY = true;
@@ -53,13 +53,13 @@ class VoidTransition extends FlxSpriteGroup
 			FlxTween.tween(this, {y: 0}, Main.getTransitionTime(), {onComplete: complete});
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		onComplete = null;
 	}
-
+	
 	function complete(_)
 	{
 		if (onComplete != null)

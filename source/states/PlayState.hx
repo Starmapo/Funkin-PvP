@@ -672,7 +672,7 @@ class PlayState extends FNFState
 	{
 		if (char == null)
 			return;
-		
+			
 		var camX:Null<Float> = if (char == opponent) opponentCamX else if (char == bf) bfCamX else if (char == gf) gfCamX else null;
 		var camY:Null<Float> = if (char == opponent) opponentCamY else if (char == bf) bfCamY else if (char == gf) gfCamY else null;
 		if (camX == null)
@@ -684,7 +684,7 @@ class PlayState extends FNFState
 		}
 		if (camY == null)
 			camY = char.y + (char.startHeight / 2) + (char.info != null ? char.info.cameraOffset[1] : 0);
-		
+			
 		if (Settings.cameraNoteMovements)
 		{
 			camX += char.camOffset.x;

@@ -41,7 +41,7 @@ class CoolUtil
 		text += '\n' + s;
 		return text;
 	}
-
+	
 	/**
 		Shows an alert for the user to see, unless fullscreen is on (as that could break stuff).
 	**/
@@ -53,7 +53,7 @@ class CoolUtil
 		if (traceText.length > 0)
 			trace(traceText);
 	}
-
+	
 	/**
 		Returns if anything has just been inputted. This includes the keyboard, gamepads, and mouse buttons.
 	**/
@@ -62,7 +62,7 @@ class CoolUtil
 		return (PlayerSettings.anyJustPressed() || FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed || FlxG.mouse.justPressedMiddle
 			|| FlxG.mouse.justPressedRight);
 	}
-
+	
 	/**
 		Returns if `s` contains any of the strings in `values`.
 	**/
@@ -78,7 +78,7 @@ class CoolUtil
 		}
 		return false;
 	}
-
+	
 	/**
 		Creates a menu background sprite.
 
@@ -100,7 +100,7 @@ class CoolUtil
 		bg.antialiasing = true;
 		return bg;
 	}
-
+	
 	/**
 		Returns if `s` ends with any of the strings in `values`.
 	**/
@@ -116,7 +116,7 @@ class CoolUtil
 		}
 		return false;
 	}
-
+	
 	/**
 		Formats a number to an ordinal number.
 
@@ -126,13 +126,13 @@ class CoolUtil
 	{
 		if (num <= 0)
 			return Std.string(num);
-
+			
 		switch (num % 100)
 		{
 			case 11, 12, 13:
 				return num + "th";
 		}
-
+		
 		return switch (num % 10)
 		{
 			case 1:
@@ -145,7 +145,7 @@ class CoolUtil
 				num + "th";
 		}
 	}
-
+	
 	/**
 		Returns the height of an array of objects.
 	**/
@@ -154,10 +154,10 @@ class CoolUtil
 	{
 		if (array == null || array.length == 0)
 			return 0;
-
+			
 		return getArrayMaxY(array) - getArrayMinY(array);
 	}
-
+	
 	/**
 		Returns the width of an array of objects.
 	**/
@@ -166,10 +166,10 @@ class CoolUtil
 	{
 		if (array == null || array.length == 0)
 			return 0;
-
+			
 		return getArrayMaxX(array) - getArrayMinX(array);
 	}
-
+	
 	/**
 		Gets the color of a beat snap. The default is `FlxColor.WHITE`.
 	**/
@@ -195,7 +195,7 @@ class CoolUtil
 				FlxColor.WHITE;
 		}
 	}
-
+	
 	/**
 		Returns a color from an array containing RGB values. It should have atleast 3 elements to work.
 	**/
@@ -203,10 +203,10 @@ class CoolUtil
 	{
 		if (array == null || array.length < 3)
 			return FlxColor.WHITE;
-
+			
 		return FlxColor.fromRGB(array[0], array[1], array[2]);
 	}
-
+	
 	/**
 		Gets the dominant color of a sprite's frame.
 	**/
@@ -214,7 +214,7 @@ class CoolUtil
 	{
 		if (sprite == null || sprite.pixels == null)
 			return FlxColor.BLACK;
-
+			
 		var countByColor:Map<Int, Int> = [];
 		var x = 0;
 		var y = 0;
@@ -243,7 +243,7 @@ class CoolUtil
 			}
 		}
 		countByColor[FlxColor.BLACK] = 0;
-
+		
 		var maxCount = 0;
 		var maxKey = FlxColor.BLACK;
 		for (key in countByColor.keys())
@@ -256,7 +256,7 @@ class CoolUtil
 		}
 		return maxKey;
 	}
-
+	
 	/**
 		Returns a group graphic for character/song select screens.
 	**/
@@ -267,7 +267,7 @@ class CoolUtil
 		final graphicKey = name + '_edit';
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
-
+			
 		var graphic = Paths.getImage('bg/$name', groupDirectory, true, false, graphicKey);
 		if (graphic == null)
 		{
@@ -276,21 +276,21 @@ class CoolUtil
 				return FlxG.bitmap.get(unknownKey);
 			graphic = Paths.getImage('bg/unknown', '', true, false, unknownKey);
 		}
-
+		
 		final thickness = 4;
-
+		
 		final text = new FlxText(0, graphic.height - thickness, graphic.width, groupName);
 		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		text.updateHitbox();
 		text.y -= text.height;
-
+		
 		final textBG = new FlxSprite(text.x, text.y).makeGraphic(Std.int(text.width), Std.int(graphic.height - text.y), FlxColor.GRAY);
 		graphic.bitmap.copyPixels(textBG.pixels, new Rectangle(0, 0, textBG.width, textBG.height), new Point(textBG.x, textBG.y), null, null, true);
 		textBG.destroy();
-
+		
 		graphic.bitmap.copyPixels(text.pixels, new Rectangle(0, 0, text.width, text.height), new Point(text.x, text.y), null, null, true);
 		text.destroy();
-
+		
 		var mask = FlxG.bitmap.get('groupMask');
 		if (mask == null)
 		{
@@ -300,9 +300,9 @@ class CoolUtil
 			mask.destroyOnNoUse = false;
 			sprite.destroy();
 		}
-
+		
 		graphic.bitmap.copyChannel(mask.bitmap, new Rectangle(0, 0, mask.width, mask.height), new Point(), ALPHA, ALPHA);
-
+		
 		var outline = FlxG.bitmap.get('groupOutline');
 		if (outline == null)
 		{
@@ -313,12 +313,12 @@ class CoolUtil
 			outline.destroyOnNoUse = false;
 			sprite.destroy();
 		}
-
+		
 		graphic.bitmap.copyPixels(outline.bitmap, new Rectangle(0, 0, outline.width, outline.height), new Point(), null, null, true);
-
+		
 		return graphic;
 	}
-
+	
 	/**
 		Returns the height of an `FlxGroup`.
 	**/
@@ -327,10 +327,10 @@ class CoolUtil
 	{
 		if (group == null || group.length == 0)
 			return 0;
-
+			
 		return getArrayMaxY(group.members) - getArrayMinY(group.members);
 	}
-
+	
 	/**
 		Returns the width of an `FlxGroup`.
 	**/
@@ -339,10 +339,10 @@ class CoolUtil
 	{
 		if (group == null || group.length == 0)
 			return 0;
-
+			
 		return getArrayMaxX(group.members) - getArrayMinX(group.members);
 	}
-
+	
 	/**
 		Adjusts a lerp value depending on the current frame rate. Also bounds it between 0 and 1.
 	**/
@@ -350,7 +350,7 @@ class CoolUtil
 	{
 		return FlxMath.bound(lerp * (60 / FlxG.updateFramerate), 0, 1);
 	}
-
+	
 	/**
 		Gets the macro class created by `util.ScriptsMacro` for an abstract/enum.
 	**/
@@ -358,7 +358,7 @@ class CoolUtil
 	{
 		return Type.resolveClass('${className}_HSC');
 	}
-
+	
 	/**
 		Returns a `NameInfo` structure from a name, describing the mod directory if there is one.
 
@@ -368,20 +368,20 @@ class CoolUtil
 	{
 		var realName = name;
 		var mod = defaultMod;
-
+		
 		var colonIndex = name.indexOf(':');
 		if (colonIndex > 0)
 		{
 			realName = name.substr(colonIndex + 1);
 			mod = name.substr(0, colonIndex);
 		}
-
+		
 		return {
 			name: realName,
 			mod: mod
 		}
 	}
-
+	
 	/**
 		Returns an array containing all the values of this map.
 	**/
@@ -390,11 +390,11 @@ class CoolUtil
 	{
 		if (map == null)
 			return null;
-
+			
 		var array:Array<T2> = [for (value in map.iterator()) value];
 		return array;
 	}
-
+	
 	/**
 		Gets an object in the current state.
 	**/
@@ -402,7 +402,7 @@ class CoolUtil
 	{
 		return getVarInArray(FlxG.state, objectName);
 	}
-
+	
 	/**
 		Gets a property in an array of strings indicating an object.
 
@@ -414,13 +414,13 @@ class CoolUtil
 		var end = killMe.length;
 		if (getProperty)
 			end = killMe.length - 1;
-
+			
 		for (i in 1...end)
 			coverMeInPiss = getVarInArray(coverMeInPiss, killMe[i]);
-
+			
 		return coverMeInPiss;
 	}
-
+	
 	/**
 		Gets a variable from an instance. Supports array access.
 	**/
@@ -430,7 +430,7 @@ class CoolUtil
 		if (shit.length > 1)
 		{
 			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
-
+			
 			for (i in 1...shit.length)
 			{
 				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
@@ -438,10 +438,10 @@ class CoolUtil
 			}
 			return blah;
 		}
-
+		
 		return Reflect.getProperty(instance, variable);
 	}
-
+	
 	/**
 		Gets the program's version.
 	**/
@@ -449,7 +449,7 @@ class CoolUtil
 	{
 		return FlxG.stage.application.meta["version"];
 	}
-
+	
 	/**
 		Returns a warning if `version` is outdated from the current version.
 	**/
@@ -457,12 +457,12 @@ class CoolUtil
 	{
 		var splitCurVersion = getVersion().split('.');
 		var curMajor = Std.parseInt(splitCurVersion[0]);
-
+		
 		var splitVersion = version.split('.');
 		var major = (splitVersion[0] != null && splitVersion[0].length > 0) ? Std.parseInt(splitVersion[0]) : null;
 		if (major == null)
 			major = curMajor;
-
+			
 		if (major < curMajor)
 			return '[WARNING: This mod was made for a previous major release (v$major) and might not function properly!]\n';
 		else if (major > curMajor)
@@ -470,7 +470,7 @@ class CoolUtil
 		else
 			return '';
 	}
-
+	
 	/**
 		Returns if `num` is in between `start` and `end`.
 	**/
@@ -478,7 +478,7 @@ class CoolUtil
 	{
 		return num >= start && num <= end;
 	}
-
+	
 	/**
 		Returns the linear interpolation of two numbers, adjusting the ratio depending on the frame rate.
 
@@ -490,7 +490,7 @@ class CoolUtil
 	{
 		return FlxMath.lerp(a, b, getLerp(ratio));
 	}
-
+	
 	/**
 		Returns an array of integers from `min` to `max`.
 	**/
@@ -501,7 +501,7 @@ class CoolUtil
 			dumbArray.push(i);
 		return dumbArray;
 	}
-
+	
 	/**
 		Plays the cancel sound for menus.
 
@@ -514,7 +514,7 @@ class CoolUtil
 		sound.persist = true;
 		return sound;
 	}
-
+	
 	/**
 		Plays the confirm sound for menus.
 
@@ -527,7 +527,7 @@ class CoolUtil
 		sound.persist = true;
 		return sound;
 	}
-
+	
 	/**
 		Plays the menu music.
 
@@ -537,7 +537,7 @@ class CoolUtil
 	{
 		FlxG.sound.playMusic(Paths.getMusic("Gettin' Freaky"), volume);
 	}
-
+	
 	/**
 		Plays the PvP menu music.
 
@@ -547,11 +547,11 @@ class CoolUtil
 	{
 		if (Mods.pvpMusic.length == 0)
 			return;
-
+			
 		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
 		FlxG.sound.playMusic(Paths.getMusic(music.name, music.mod), volume);
 	}
-
+	
 	/**
 		Plays the scroll sound for menus.
 
@@ -564,7 +564,7 @@ class CoolUtil
 		sound.persist = true;
 		return sound;
 	}
-
+	
 	/**
 		Restarts the program. Only works on Windows.
 	**/
@@ -573,7 +573,7 @@ class CoolUtil
 		#if windows
 		var app = Sys.programPath();
 		var workingDir = Sys.getCwd();
-
+		
 		var result = Tools.createProcess(app, 'Test.hx', workingDir, false, false);
 		if (result == 0)
 			System.exit(1337);
@@ -581,7 +581,7 @@ class CoolUtil
 			throw "Failed to restart. Error code: " + result;
 		#end
 	}
-
+	
 	/**
 		Returns the linear interpolation of two numbers, adjusting the ratio depending on the frame rate and then
 		subtracting it from `1`.
@@ -594,7 +594,7 @@ class CoolUtil
 	{
 		return FlxMath.lerp(a, b, 1 - getLerp(ratio));
 	}
-
+	
 	/**
 		Centers a group of objects on the screen.
 
@@ -605,7 +605,7 @@ class CoolUtil
 	{
 		if (group == null)
 			return;
-
+			
 		var centerX = (FlxG.width - getGroupWidth(group)) / 2;
 		var centerY = (FlxG.height - getGroupHeight(group)) / 2;
 		for (member in group)
@@ -616,7 +616,7 @@ class CoolUtil
 				member.y += centerY;
 		}
 	}
-
+	
 	/**
 		Sets a variable of an instance. Supports array access.
 	**/
@@ -636,11 +636,11 @@ class CoolUtil
 			}
 			return value;
 		}
-
+		
 		Reflect.setProperty(instance, variable, value);
 		return value;
 	}
-
+	
 	/**
 		Sorts two strings alphabetically.
 
@@ -652,17 +652,17 @@ class CoolUtil
 			a = '';
 		if (b == null)
 			b = '';
-
+			
 		a = a.toLowerCase();
 		b = b.toLowerCase();
-
+		
 		if (a < b)
 			return order;
 		if (a > b)
 			return -order;
 		return 0;
 	}
-
+	
 	@:generic
 	static function getArrayMaxX<T:FlxObject>(array:Array<T>):Float
 	{
@@ -671,15 +671,15 @@ class CoolUtil
 		{
 			if (member == null)
 				continue;
-
+				
 			var maxX:Float = member.x + member.width;
-
+			
 			if (maxX > value)
 				value = maxX;
 		}
 		return value;
 	}
-
+	
 	@:generic
 	static function getArrayMinX<T:FlxObject>(array:Array<T>):Float
 	{
@@ -688,15 +688,15 @@ class CoolUtil
 		{
 			if (member == null)
 				continue;
-
+				
 			var minX:Float = member.x;
-
+			
 			if (minX < value)
 				value = minX;
 		}
 		return value;
 	}
-
+	
 	@:generic
 	static function getArrayMaxY<T:FlxObject>(array:Array<T>):Float
 	{
@@ -705,15 +705,15 @@ class CoolUtil
 		{
 			if (member == null)
 				continue;
-
+				
 			var maxY:Float = member.y + member.height;
-
+			
 			if (maxY > value)
 				value = maxY;
 		}
 		return value;
 	}
-
+	
 	@:generic
 	static function getArrayMinY<T:FlxObject>(array:Array<T>):Float
 	{
@@ -722,9 +722,9 @@ class CoolUtil
 		{
 			if (member == null)
 				continue;
-
+				
 			var minY:Float = member.y;
-
+			
 			if (minY < value)
 				value = minY;
 		}

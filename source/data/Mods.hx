@@ -16,14 +16,14 @@ class Mods
 	public static var songGroups:Map<String, ModSongGroup> = [];
 	public static var characterGroups:Map<String, ModCharacterGroup> = [];
 	public static var skins:Map<String, ModSkins> = new Map();
-
+	
 	public static function reloadMods()
 	{
 		currentMods.resize(0);
 		currentMod = '';
-
+		
 		var directories:Array<String> = [];
-
+		
 		for (file in FileSystem.readDirectory(modsPath))
 		{
 			if (directories.contains(file))
@@ -43,11 +43,11 @@ class Mods
 		reloadCharacters();
 		reloadSkins();
 	}
-
+	
 	public static function reloadPvPMusic()
 	{
 		pvpMusic.resize(0);
-
+		
 		for (mod in currentMods)
 		{
 			var fullPath = Path.join([modsPath, mod.directory]);
@@ -63,21 +63,20 @@ class Mods
 			}
 		}
 	}
-
+	
 	public static function reloadSongs()
 	{
 		songGroups.clear();
 		for (mod in currentMods)
 		{
 			mod.songCount = 0;
-
+			
 			var fullPath = Path.join([modsPath, mod.directory]);
-
-			var difficulties:Array<String> = ['Easy', 'Normal', 'Hard'];
+			
+			var difficulties:Array<String> = [];
 			var difficultiesPath = Path.join([fullPath, 'data/difficulties.txt']);
 			if (FileSystem.exists(difficultiesPath))
 			{
-				difficulties = [];
 				var diffs = Paths.getContent(difficultiesPath).trim().split('\n');
 				for (diff in diffs)
 				{
@@ -86,7 +85,10 @@ class Mods
 						difficulties.push(diff);
 				}
 			}
-
+			
+			if (difficulties.length < 1)
+				difficulties = ['Easy', 'Normal', 'Hard'];
+				
 			var songSelectPath = Path.join([fullPath, 'data/songSelect.json']);
 			if (FileSystem.exists(songSelectPath))
 			{
@@ -104,25 +106,14 @@ class Mods
 							icon = '';
 						if (icon.length > 0 && !icon.contains(':'))
 							icon = mod.directory + ':' + icon;
-
+							
 						var songPath = Paths.getPath('songs/$name', mod.directory);
 						var songDifficulties:Array<String> = [];
-						if (difficulties.length > 0)
+						for (diff in difficulties)
 						{
-							for (diff in difficulties)
-							{
-								var diffPath = Path.join([songPath, diff + '.json']);
-								if (FileSystem.exists(diffPath))
-									songDifficulties.push(diff);
-							}
-						}
-						else
-						{
-							for (songFile in FileSystem.readDirectory(songPath))
-							{
-								if (songFile.endsWith('.json') && !songFile.startsWith('!'))
-									songDifficulties.push(songFile.substr(0, songFile.length - 5));
-							}
+							var diffPath = Path.join([songPath, diff + '.json']);
+							if (FileSystem.exists(diffPath))
+								songDifficulties.push(diff);
 						}
 						if (songDifficulties.length > 0)
 						{
@@ -138,7 +129,7 @@ class Mods
 							mod.songCount++;
 						}
 					}
-
+					
 					if (songs.length > 0)
 					{
 						var songGroup = songGroups.get(group.name);
@@ -158,14 +149,14 @@ class Mods
 			}
 		}
 	}
-
+	
 	public static function reloadCharacters()
 	{
 		characterGroups.clear();
 		for (mod in currentMods)
 		{
 			mod.characterCount = 0;
-
+			
 			var fullPath = Path.join([modsPath, mod.directory]);
 			var characterSelectPath = Path.join([fullPath, 'data/charSelect.json']);
 			if (FileSystem.exists(characterSelectPath))
@@ -188,7 +179,7 @@ class Mods
 							mod.characterCount++;
 						}
 					}
-
+					
 					if (chars.length > 0)
 					{
 						var charGroup = characterGroups.get(group.name);
@@ -208,14 +199,14 @@ class Mods
 			}
 		}
 	}
-
+	
 	public static function reloadSkins()
 	{
 		skins.clear();
 		for (mod in currentMods)
 		{
 			mod.splashSkinCount = mod.judgementSkinCount = mod.noteskinCount = 0;
-
+			
 			var fullPath = Path.join([modsPath, mod.directory]);
 			var skinGroup:ModSkins = {
 				name: mod.name,
@@ -224,7 +215,7 @@ class Mods
 				splashSkins: []
 			};
 			skins.set(mod.directory, skinGroup);
-
+			
 			var noteskinList = Path.join([fullPath, 'data/noteskins/skins.txt']);
 			if (FileSystem.exists(noteskinList))
 			{
@@ -240,7 +231,7 @@ class Mods
 					mod.noteskinCount++;
 				}
 			}
-
+			
 			var judgementSkinList = Path.join([fullPath, 'data/judgementSkins/skins.txt']);
 			if (FileSystem.exists(judgementSkinList))
 			{
@@ -256,7 +247,7 @@ class Mods
 					mod.judgementSkinCount++;
 				}
 			}
-
+			
 			var splashSkinList = Path.join([fullPath, 'data/splashSkins/skins.txt']);
 			if (FileSystem.exists(splashSkinList))
 			{
@@ -274,7 +265,7 @@ class Mods
 			}
 		}
 	}
-
+	
 	public static function getMods()
 	{
 		var mods:Array<String> = [];
@@ -290,7 +281,7 @@ class Mod extends JsonObject
 	public var description:String;
 	public var modVersion:String;
 	public var gameVersion:String;
-
+	
 	// internal stuff
 	public var directory:String;
 	public var characterCount:Int = 0;
@@ -298,7 +289,7 @@ class Mod extends JsonObject
 	public var noteskinCount:Int = 0;
 	public var judgementSkinCount:Int = 0;
 	public var splashSkinCount:Int = 0;
-
+	
 	public function new(data:Dynamic)
 	{
 		name = readString(data.name, 'Unknown Mod');

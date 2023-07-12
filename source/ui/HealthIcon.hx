@@ -11,7 +11,7 @@ class HealthIcon extends AnimatedSprite
 	{
 		var name = info.name;
 		var mod = info.mod;
-
+		
 		var imagePath = '';
 		if (info.image.length > 0)
 			imagePath = Paths.getPath('images/${info.image}.png', mod);
@@ -32,31 +32,31 @@ class HealthIcon extends AnimatedSprite
 			mod = 'fnf';
 			imagePath = Paths.getPath('images/icons/$name.png', mod);
 		}
-
+		
 		return imagePath;
 	}
-
+	
 	public var icon(default, set):String;
 	public var info(default, null):IconInfo;
-
+	
 	public function new(x:Float = 0, y:Float = 0, icon:String = 'face')
 	{
 		super(x, y);
 		frameOffsetScale = 1;
 		this.icon = icon;
 	}
-
+	
 	public function reloadGraphic()
 	{
 		info = IconInfo.loadIconFromName(icon);
-
+		
 		var imagePath = getImagePath(info);
 		var path = Path.withoutExtension(imagePath);
-
+		
 		if (Paths.isSpritesheet(path))
 		{
 			frames = Paths.getSpritesheet(path);
-
+			
 			addAnim({
 				name: 'normal',
 				atlasName: info.normalAnim,
@@ -81,7 +81,7 @@ class HealthIcon extends AnimatedSprite
 		{
 			var image = Paths.getImage(imagePath);
 			loadGraphic(image, true, Std.int(image.width / info.frames), image.height);
-
+			
 			addAnim({
 				name: 'normal',
 				indices: [0],
@@ -107,7 +107,7 @@ class HealthIcon extends AnimatedSprite
 		}
 		antialiasing = info.antialiasing;
 	}
-
+	
 	override function updateOffset()
 	{
 		updateHitbox();
@@ -117,13 +117,13 @@ class HealthIcon extends AnimatedSprite
 		else
 			frameOffset.set();
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		info = null;
 	}
-
+	
 	function set_icon(value:String)
 	{
 		if (value != null && icon != value)
@@ -133,7 +133,7 @@ class HealthIcon extends AnimatedSprite
 		}
 		return value;
 	}
-
+	
 	override function set_flipX(value:Bool)
 	{
 		if (flipX != value)

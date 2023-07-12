@@ -29,32 +29,32 @@ class Paths
 		Array of possible extensions for sound files.
 	**/
 	public static final SOUND_EXTENSIONS:Array<String> = [".ogg", ".wav"];
-
+	
 	/**
 		Array of possible extensions for script files.
 	**/
 	public static final SCRIPT_EXTENSIONS:Array<String> = [".hx", ".hscript"];
-
+	
 	/**
 		A map of currently cached sounds.
 	**/
 	public static var cachedSounds:Map<String, Sound> = [];
-
+	
 	/**
 		List of sounds to exclude from dumping (removing from the cache).
 	**/
 	public static var dumpExclusions:Array<String> = [];
-
+	
 	/**
 		The main library, which supports the `mods` folder.
 	**/
 	public static var library:BiLibrary;
-
+	
 	/**
 		List of sounds currently in use.
 	**/
 	public static var trackedSounds:Array<String> = [];
-
+	
 	/**
 		Excludes music from being dumped (removed from the cache).
 
@@ -69,7 +69,7 @@ class Paths
 		else
 			excludeSound(getPath('music/$path/audio'), mod);
 	}
-
+	
 	/**
 		Excludes a sound from being dumped (removed from the cache).
 
@@ -81,13 +81,13 @@ class Paths
 	{
 		if (!CoolUtil.endsWithAny(path, SOUND_EXTENSIONS))
 			path += SOUND_EXTENSIONS[0];
-
+			
 		if (!exists(path))
 			path = getPath('sounds/$path', mod);
-
+			
 		excludeAsset(path);
 	}
-
+	
 	/**
 		Returns whether or not a file path exists.
 	**/
@@ -95,7 +95,7 @@ class Paths
 	{
 		return Assets.exists(path);
 	}
-
+	
 	/**
 		Returns whether or not a file path exists, using `getPath`.
 
@@ -105,7 +105,7 @@ class Paths
 	{
 		return exists(getPath(key, mod));
 	}
-
+	
 	/**
 		Gets the bytes content of a file.
 	**/
@@ -115,7 +115,7 @@ class Paths
 			return Assets.getBytes(path);
 		return null;
 	}
-
+	
 	/**
 		Gets the text content of a file.
 	**/
@@ -125,7 +125,7 @@ class Paths
 			return Assets.getText(path).replace('\r', '').trim();
 		return null;
 	}
-
+	
 	/**
 		Returns an image.
 
@@ -141,10 +141,10 @@ class Paths
 	{
 		if (!path.endsWith('.png'))
 			path += '.png';
-
+			
 		if (!exists(path))
 			path = getPath('images/$path', mod);
-
+			
 		if (cache && !unique)
 		{
 			if (key != null && FlxG.bitmap.checkCache(key))
@@ -152,19 +152,19 @@ class Paths
 			if (FlxG.bitmap.checkCache(path))
 				return FlxG.bitmap.get(path);
 		}
-
+		
 		if (!exists(path))
 			return null;
-
+			
 		if (key == null)
 			key = path;
-
+			
 		var graphic:FlxGraphic = FlxGraphic.fromAssetKey(path, unique, key, cache);
 		if (graphic != null)
 			graphic.destroyOnNoUse = false;
 		return graphic;
 	}
-
+	
 	/**
 		Returns a JSON file.
 
@@ -179,7 +179,7 @@ class Paths
 			path += '.json';
 		if (!exists(path))
 			path = getPath('data/$path', mod);
-
+			
 		if (exists(path))
 		{
 			try
@@ -192,10 +192,10 @@ class Paths
 				CoolUtil.alert(e.message, "JSON Error");
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	/**
 		Returns music.
 
@@ -207,7 +207,7 @@ class Paths
 	{
 		return getSound('music/$key/audio', mod);
 	}
-
+	
 	/**
 		Gets a path to an asset using `key`.
 
@@ -217,17 +217,17 @@ class Paths
 	{
 		if (exists(key))
 			return key;
-
+			
 		if (mod == null || mod.length == 0)
 			mod = Mods.currentMod;
-
+			
 		var modPath = Path.join([Mods.modsPath, mod, key]);
 		if (exists(modPath))
 			return modPath;
-
+			
 		return 'assets/$key';
 	}
-
+	
 	/**
 		Gets the path to a script.
 
@@ -242,10 +242,10 @@ class Paths
 			if (exists(path))
 				return path;
 		}
-
+		
 		return null;
 	}
-
+	
 	/**
 		Returns a song's instrumental. Takes the difficulty into account.
 	**/
@@ -253,14 +253,14 @@ class Paths
 	{
 		if (song == null)
 			return null;
-
+			
 		var diffSound = getSound(Path.join([song.directory, "Inst-" + song.difficultyName.toLowerCase()]), song.mod);
 		if (diffSound != null)
 			return diffSound;
 		else
 			return getSound(Path.join([song.directory, "Inst"]), song.mod);
 	}
-
+	
 	/**
 		Returns a song's vocals. Takes the difficulty into account.
 	**/
@@ -268,14 +268,14 @@ class Paths
 	{
 		if (song == null)
 			return null;
-
+			
 		var diffSound = getSound(Path.join([song.directory, "Voices-" + song.difficultyName.toLowerCase()]), song.mod);
 		if (diffSound != null)
 			return diffSound;
 		else
 			return getSound(Path.join([song.directory, "Voices"]), song.mod);
 	}
-
+	
 	/**
 		Returns a sound.
 
@@ -288,13 +288,13 @@ class Paths
 	{
 		if (!CoolUtil.endsWithAny(path, SOUND_EXTENSIONS))
 			path += SOUND_EXTENSIONS[0];
-
+			
 		var ogPath = path;
 		if (!exists(path))
 			path = getPath(ogPath, mod);
 		if (!exists(path))
 			path = getPath('sounds/$ogPath', mod);
-
+			
 		var sound:Sound = null;
 		if (cachedSounds.exists(path))
 			sound = cachedSounds.get(path);
@@ -304,13 +304,13 @@ class Paths
 			if (sound != null)
 				cachedSounds.set(path, sound);
 		}
-
+		
 		if (sound != null && !trackedSounds.contains(path))
 			trackedSounds.push(path);
-
+			
 		return sound;
 	}
-
+	
 	/**
 		Returns spritesheet frames.
 
@@ -326,22 +326,22 @@ class Paths
 	public static function getSpritesheet(path:String, ?mod:String, cache:Bool = true, unique:Bool = false, ?key:String):FlxAtlasFrames
 	{
 		var originalPath = path;
-
+		
 		var imagePath = path;
 		if (!imagePath.endsWith('.png'))
 			imagePath += '.png';
 		if (!exists(imagePath))
 			imagePath = getPath('images/$imagePath', mod);
 		path = Path.withoutExtension(imagePath);
-
+		
 		var image = getImage(imagePath, mod, cache, unique, key);
 		if (image == null)
 			return null;
-
+			
 		var frames:FlxAtlasFrames = FlxAtlasFrames.findFrame(image);
 		if (frames != null)
 			return frames;
-
+			
 		var description:String = getContent('$path.xml');
 		if (description != null)
 		{
@@ -349,7 +349,7 @@ class Paths
 			if (frames != null)
 				return frames;
 		}
-
+		
 		description = getContent('$path.txt');
 		if (description != null)
 		{
@@ -357,7 +357,7 @@ class Paths
 			if (frames != null)
 				return frames;
 		}
-
+		
 		description = getContent('$path.json');
 		if (description != null)
 		{
@@ -365,11 +365,11 @@ class Paths
 			if (frames != null)
 				return frames;
 		}
-
+		
 		FlxG.log.warn('Spritesheet \"$originalPath\" not found.');
 		return null;
 	}
-
+	
 	/**
 		Returns a text file.
 
@@ -384,13 +384,13 @@ class Paths
 			path += '.txt';
 		if (!exists(path))
 			path = getPath('data/$path', mod);
-
+			
 		if (exists(path))
 			return getContent(path);
-
+			
 		return null;
 	}
-
+	
 	/**
 		Gets the path to a video file.
 
@@ -404,7 +404,7 @@ class Paths
 			path = getPath('videos/$path', mod);
 		return path;
 	}
-
+	
 	/**
 		Returns an XML file.
 
@@ -419,7 +419,7 @@ class Paths
 			path += '.xml';
 		if (!exists(path))
 			path = getPath('data/$path', mod);
-
+			
 		if (exists(path))
 		{
 			try
@@ -432,10 +432,10 @@ class Paths
 				CoolUtil.alert(e.message, "XML Error");
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	/**
 		Returns if the image is a spritesheet or not.
 
@@ -455,7 +455,7 @@ class Paths
 		}
 		if (!exists(imagePath))
 			return false;
-
+			
 		var xml = getContent('$path.xml');
 		if (xml != null)
 		{
@@ -467,7 +467,7 @@ class Paths
 			}
 			catch (e) {}
 		}
-
+		
 		var txt = getContent('$path.txt');
 		if (txt != null)
 		{
@@ -475,7 +475,7 @@ class Paths
 			if (lines.length > 0 && lines[0].contains('='))
 				return true;
 		}
-
+		
 		var json = getContent('$path.json');
 		if (json != null)
 		{
@@ -487,10 +487,10 @@ class Paths
 			}
 			catch (e) {}
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 		Initializes things.
 	**/
@@ -499,16 +499,16 @@ class Paths
 		// use a modified library so we can get files in the mods folder
 		library = new BiLibrary();
 		lime.utils.Assets.registerLibrary("", library);
-
+		
 		excludeSound('menus/scrollMenu');
 		excludeSound('menus/confirmMenu');
 		excludeSound('menus/cancelMenu');
 		excludeMusic("Gettin' Freaky");
-
+		
 		FlxG.signals.preStateSwitch.add(onPreStateSwitch);
 		FlxG.signals.postStateSwitch.add(onPostStateSwitch);
 	}
-
+	
 	/**
 		Loads an image from a path.
 
@@ -525,10 +525,10 @@ class Paths
 			path = getPath('images/$path', mod);
 		if (!exists(path))
 			return Future.withValue(null);
-
+			
 		var promise = new Promise<FlxGraphic>();
 		var future = BitmapData.loadFromFile(path);
-
+		
 		future.onProgress(promise.progress);
 		future.onError(promise.error);
 		future.onComplete(function(bitmap)
@@ -539,16 +539,16 @@ class Paths
 			graphic.destroyOnNoUse = false;
 			promise.complete(graphic);
 		});
-
+		
 		return promise.future;
 	}
-
+	
 	static function excludeAsset(path:String)
 	{
 		if (!dumpExclusions.contains(path) && exists(path))
 			dumpExclusions.push(path);
 	}
-
+	
 	static function onPostStateSwitch()
 	{
 		// Remove all unused sounds from the cache.
@@ -571,11 +571,11 @@ class Paths
 				s.close();
 			}
 		}
-
+		
 		// run garbage collector
 		MemoryUtil.clearMajor();
 	}
-
+	
 	static function onPreStateSwitch()
 	{
 		trackedSounds.resize(0);

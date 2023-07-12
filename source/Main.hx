@@ -25,22 +25,22 @@ class Main extends Sprite
 		Duration of transitions between screens.
 	**/
 	public static final TRANSITION_TIME:Float = 0.7;
-
+	
 	/**
 		Internal variable to track if the audio was disconnected.
 	**/
 	public static var audioDisconnected:Bool = false;
-
+	
 	static var gameFilters:Array<BitmapFilter> = [];
 	static var colorFilter:ColorMatrixFilter;
 	static var hueFilter:ColorMatrixFilter;
 	static var statsDisplay:StatsDisplay;
-
+	
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());
 	}
-
+	
 	/**
 		Gets the proper transition time, taking `Settings.fastTransitions` into account.
 	**/
@@ -48,7 +48,7 @@ class Main extends Sprite
 	{
 		return TRANSITION_TIME * (Settings.fastTransitions ? 0.4 : 1);
 	}
-
+	
 	/**
 		Updates the color filter based on `Settings.filter`, `Settings.gamma`, and `Settings.brightness`.
 	**/
@@ -56,7 +56,7 @@ class Main extends Sprite
 	{
 		if (colorFilter == null)
 			colorFilter = new ColorMatrixFilter();
-
+			
 		colorFilter.matrix = switch (Settings.filter)
 		{
 			case NONE:
@@ -124,7 +124,7 @@ class Main extends Sprite
 				];
 		}
 	}
-
+	
 	/**
 		Updates the game's filters.
 	**/
@@ -132,12 +132,12 @@ class Main extends Sprite
 	{
 		updateColorFilter();
 		updateHueFilter();
-
+		
 		gameFilters = [colorFilter, hueFilter];
 		FlxG.game.filtersEnabled = true;
 		FlxG.game.setFilters(gameFilters);
 	}
-
+	
 	/**
 		Updates the hue filter based on `Settings.hue`.
 	**/
@@ -145,22 +145,22 @@ class Main extends Sprite
 	{
 		if (hueFilter == null)
 			hueFilter = new ColorMatrixFilter();
-
+			
 		var cosA:Float = Math.cos(-Settings.hue * Math.PI / 180);
 		var sinA:Float = Math.sin(-Settings.hue * Math.PI / 180);
-
+		
 		var a1:Float = cosA + (1.0 - cosA) / 3.0;
 		var a2:Float = 1.0 / 3.0 * (1.0 - cosA) - Math.sqrt(1.0 / 3.0) * sinA;
 		var a3:Float = 1.0 / 3.0 * (1.0 - cosA) + Math.sqrt(1.0 / 3.0) * sinA;
-
+		
 		var b1:Float = a3;
 		var b2:Float = cosA + 1.0 / 3.0 * (1.0 - cosA);
 		var b3:Float = a2;
-
+		
 		var c1:Float = a2;
 		var c2:Float = a3;
 		var c3:Float = b2;
-
+		
 		hueFilter.matrix = [
 			a1, b1, c1, 0, 0,
 			a2, b2, c2, 0, 0,
@@ -168,38 +168,38 @@ class Main extends Sprite
 			 0,  0,  0, 1, 0
 		];
 	}
-
+	
 	public function new()
 	{
 		Log.level = NONE; // no lime logs
-
+		
 		super();
-
+		
 		if (stage != null)
 			init();
 		else
 			addEventListener(Event.ADDED_TO_STAGE, init);
 	}
-
+	
 	function init(?E:Event):Void
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-
+			
 		addChild(new FlxGame(0, 0, BootState, 60, 60, true, false));
-
+		
 		addChild(statsDisplay = new StatsDisplay());
 		statsDisplay.visible = false;
-
+		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.signals.gameResized.add(onGameResized);
 	}
-
+	
 	function onGameResized(width:Int, height:Int)
 	{
 		statsDisplay.onResize(width, height);
 	}
-
+	
 	function onKeyDown(e:KeyboardEvent)
 	{
 		switch (e.keyCode)
