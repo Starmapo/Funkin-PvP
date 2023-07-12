@@ -108,7 +108,7 @@ class HealthBar extends FlxSpriteGroup
 			+ icon.info.positionOffset[1]);
 	}
 
-	public function setCharInfo(charInfo:CharacterInfo)
+	public function setCharInfo(?charInfo:CharacterInfo)
 	{
 		if (charInfo != null && (Settings.healthBarColors || scoreProcessor == null))
 			bar.createFilledBar(charInfo.healthColors.getDarkened(0.5), charInfo.healthColors);
