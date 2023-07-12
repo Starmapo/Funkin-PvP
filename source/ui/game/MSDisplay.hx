@@ -14,24 +14,24 @@ class MSDisplay extends FlxText
 	var player:Int;
 	var posTween:FlxTween;
 	var alphaTween:FlxTween;
-
+	
 	public function new(player:Int)
 	{
 		super();
 		this.player = player;
-
+		
 		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		active = false;
 	}
-
+	
 	override function update(elapsed:Float) {}
-
+	
 	public function showMS(ms:Float, judgement:Judgement)
 	{
 		var t = FlxMath.roundDecimal(ms / GameplayGlobals.playbackRate, 2) + 'ms';
 		if (text != t)
 			text = t;
-
+			
 		color = switch (judgement)
 		{
 			case GOOD:
@@ -41,14 +41,14 @@ class MSDisplay extends FlxText
 			default:
 				FlxColor.CYAN;
 		}
-
+		
 		x = (((FlxG.width / 2) - width) / 2) + (FlxG.width / 2) * player;
 		y = (FlxG.height * 0.5) - (height / 2) - 10;
-
+		
 		if (posTween != null)
 			posTween.cancel();
 		posTween = FlxTween.tween(this, {y: y + 5}, 0.2);
-
+		
 		if (alphaTween != null)
 			alphaTween.cancel();
 		alpha = 1;
@@ -56,7 +56,7 @@ class MSDisplay extends FlxText
 			startDelay: 0.2
 		});
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

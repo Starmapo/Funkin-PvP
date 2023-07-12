@@ -18,26 +18,26 @@ class StageFile implements IFlxDestroyable
 	public var sprites:Map<String, FlxBasic> = new Map();
 	public var groups:Map<String, FlxGroup> = new Map();
 	public var found:Bool = false;
-
+	
 	var state:PlayState;
-
+	
 	public function new(state:PlayState, stage:String)
 	{
 		this.state = state;
-
+		
 		var nameInfo = CoolUtil.getNameInfo(stage);
 		var mod = nameInfo.mod;
 		var path = Paths.getPath('data/stages/' + nameInfo.name + '.xml', mod);
 		if (!Paths.exists(path))
 			return;
-
+			
 		var xml = Paths.getXml(path, mod);
 		if (xml == null)
 			return;
 		var elem = xml.firstElement();
 		if (elem == null)
 			return;
-
+			
 		var data = new Access(elem);
 		if (data.has.zoom)
 		{
@@ -52,19 +52,19 @@ class StageFile implements IFlxDestroyable
 			if (!folder.endsWith('/'))
 				folder += '/';
 		}
-
+		
 		var elements:Array<Access> = [];
 		for (node in data.elements)
 			pushNode(node, elements);
-
+			
 		for (node in elements)
 			createObject(node, folder, mod);
-
+			
 		addMissingChars();
-
+		
 		found = true;
 	}
-
+	
 	public function destroy()
 	{
 		if (sprites != null)
@@ -81,7 +81,7 @@ class StageFile implements IFlxDestroyable
 		}
 		state = null;
 	}
-
+	
 	function createSprite(node:Access, folder:String, mod:String)
 	{
 		var spr = new DancingSprite();
@@ -114,7 +114,7 @@ class StageFile implements IFlxDestroyable
 				{
 					if (!anim.has.name)
 						continue;
-
+						
 					var animData:AnimData = {name: anim.att.name, indices: [], offset: []};
 					if (anim.has.atlasName)
 						animData.atlasName = anim.att.atlasName;
@@ -159,12 +159,12 @@ class StageFile implements IFlxDestroyable
 					var baseAnim = false;
 					if (anim.has.baseAnim)
 						baseAnim = anim.att.baseAnim == "true";
-
+						
 					spr.addAnim(animData, baseAnim);
 				}
 			}
 		}
-
+		
 		if (node.has.scale)
 		{
 			var scale = Std.parseFloat(node.att.scale);
@@ -202,7 +202,7 @@ class StageFile implements IFlxDestroyable
 			updateHitbox = node.att.updateHitbox == "true";
 		if (updateHitbox)
 			spr.updateHitbox();
-
+			
 		if (node.has.x)
 		{
 			if (node.att.x == 'center')
@@ -279,11 +279,11 @@ class StageFile implements IFlxDestroyable
 		}
 		if (node.has.alpha)
 			spr.alpha = Std.parseFloat(node.att.alpha);
-
+			
 		sprites.set(node.att.name, spr);
 		return spr;
 	}
-
+	
 	function createGroup(node:Access, folder:String, mod:String)
 	{
 		var grp = new FlxGroup();
@@ -301,7 +301,7 @@ class StageFile implements IFlxDestroyable
 		groups.set(node.att.name, grp);
 		return grp;
 	}
-
+	
 	function setupChar(char:Character, node:Access)
 	{
 		if (node != null)
@@ -346,7 +346,7 @@ class StageFile implements IFlxDestroyable
 		}
 		return char;
 	}
-
+	
 	public function addMissingChars()
 	{
 		var chars = [state.gf, state.opponent, state.bf];
@@ -356,7 +356,7 @@ class StageFile implements IFlxDestroyable
 				state.add(char);
 		}
 	}
-
+	
 	function pushNode(node:Access, elements:Array<Access>)
 	{
 		if (node.name == 'high-quality')
@@ -378,12 +378,12 @@ class StageFile implements IFlxDestroyable
 		else
 			elements.push(node);
 	}
-
+	
 	function applyProperty(spr:Dynamic, node:Access, name:String)
 	{
 		if (!node.has.name || !node.has.type || !node.has.value)
 			return;
-
+			
 		var split = node.att.name.split('.');
 		// i have to mark this as dynamic for some reason?
 		// haxe stop being weird
@@ -433,7 +433,7 @@ class StageFile implements IFlxDestroyable
 			}
 			if (value == null)
 				return;
-
+				
 			try
 			{
 				Reflect.setProperty(object, split[0], value);
@@ -444,7 +444,7 @@ class StageFile implements IFlxDestroyable
 			}
 		}
 	}
-
+	
 	function createObject(node:Access, folder:String, mod:String):FlxBasic
 	{
 		var spr = switch (node.name)

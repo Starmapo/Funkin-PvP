@@ -9,11 +9,11 @@ class ColorSwap
 	public var colorToReplace(default, set):FlxColor;
 	public var newColor(default, set):FlxColor;
 	public var daTime(default, set):Float;
-
+	
 	public var hasOutline(default, set):Bool = false;
-
+	
 	public var hueShit:Float = 0;
-
+	
 	public function new():Void
 	{
 		shader = new ColorSwapShader();
@@ -21,30 +21,30 @@ class ColorSwap
 		shader.data.money.value = [0];
 		shader.data.awesomeOutline.value = [hasOutline];
 	}
-
+	
 	public function update(elapsed:Float):Void
 	{
 		shader.data.uTime.value[0] += elapsed;
 		hueShit += elapsed;
 	}
-
+	
 	function set_colorToReplace(color:FlxColor):FlxColor
 	{
 		colorToReplace = color;
 		return color;
 	}
-
+	
 	function set_hasOutline(lol:Bool):Bool
 	{
 		shader.data.awesomeOutline.value = [lol];
 		return lol;
 	}
-
+	
 	function set_daTime(daTime:Float):Float
 	{
 		return daTime;
 	}
-
+	
 	function set_newColor(color:FlxColor):FlxColor
 	{
 		newColor = color;

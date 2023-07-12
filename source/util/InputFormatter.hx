@@ -7,7 +7,7 @@ import flixel.input.keyboard.FlxKey;
 class InputFormatter
 {
 	static var dirReg = ~/^((l|r).?)-(left|right|down|up|click)$/;
-
+	
 	public static function format(id:Int, settings:PlayerSettings):String
 	{
 		return switch (settings.config.device)
@@ -17,7 +17,7 @@ class InputFormatter
 			case NONE: '[?]';
 		}
 	}
-
+	
 	public static function getKeyName(id:FlxKey):String
 	{
 		return switch (id)
@@ -68,7 +68,7 @@ class InputFormatter
 			default: titleCase(FlxKey.toStringMap[id]);
 		}
 	}
-
+	
 	inline static public function getButtonName(id:FlxGamepadInputID):String
 	{
 		return switch (id)
@@ -77,17 +77,17 @@ class InputFormatter
 			default: "Button " + (id : Int);
 		}
 	}
-
+	
 	static function titleCase(str:String)
 	{
 		if (str == null || str.length < 1)
 			return '[?]';
 		if (str.length < 2)
 			return str.toUpperCase();
-
+			
 		return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
 	}
-
+	
 	static function shortenButtonName(name:String)
 	{
 		return switch (name == null ? "" : name.toLowerCase())

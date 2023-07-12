@@ -25,35 +25,35 @@ class JudgementSkinPage extends Page
 	var lastSkin:SkinItem;
 	var skinGroup:FlxTypedGroup<FlxSprite>;
 	var bg:FlxSprite;
-
+	
 	public function new(player:Int)
 	{
 		super();
 		this.player = player;
 		config = Settings.playerConfigs[player];
 		rpcDetails = 'Player ${player + 1} Judgement Skin';
-
+		
 		skinGroup = new FlxTypedGroup();
 		add(skinGroup);
-
+		
 		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.fromRGBFloat(0, 0, 0, 0.6));
 		bg.setGraphicSize(FlxG.width / 2, FlxG.height);
 		bg.updateHitbox();
 		bg.scrollFactor.set();
 		add(bg);
-
+		
 		categoryList = new SkinCategoryList();
 		categoryList.onChange.add(onChangeCategory);
 		categoryList.onAccept.add(onAcceptCategory);
-
+		
 		skinList = new SkinList();
 		skinList.onChange.add(onChangeSkin);
 		skinList.onAccept.add(onAcceptSkin);
 		skinList.controlsEnabled = false;
-
+		
 		add(skinList);
 		add(categoryList);
-
+		
 		var groups:Array<ModSkins> = [];
 		for (_ => group in Mods.skins)
 		{
@@ -64,15 +64,15 @@ class JudgementSkinPage extends Page
 		{
 			return CoolUtil.sortAlphabetically(a.name, b.name);
 		});
-
+		
 		for (group in groups)
 			categoryList.createItem(group);
-
+			
 		categoryList.selectItem(0);
-
+		
 		addPageTitle('Judgement Skin');
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -80,7 +80,7 @@ class JudgementSkinPage extends Page
 		skinList = null;
 		config = null;
 	}
-
+	
 	override function updateControls()
 	{
 		if (PlayerSettings.checkAction(BACK_P))
@@ -96,24 +96,24 @@ class JudgementSkinPage extends Page
 			CoolUtil.playCancelSound();
 		}
 	}
-
+	
 	override function onAppear()
 	{
 		updateCamFollow(categoryList.selectedItem);
 	}
-
+	
 	function updateCamFollow(item:TextMenuItem)
 	{
 		var midpoint = item.getMidpoint();
 		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
-
+	
 	function onChangeCategory(item:SkinCategoryItem)
 	{
 		updateCamFollow(item);
 	}
-
+	
 	function onAcceptCategory(item:SkinCategoryItem)
 	{
 		reloadSkins(item.skins);
@@ -121,18 +121,18 @@ class JudgementSkinPage extends Page
 		skinList.visible = skinList.controlsEnabled = true;
 		CoolUtil.playScrollSound();
 	}
-
+	
 	function onChangeSkin(item:SkinItem)
 	{
 		updateCamFollow(item);
 		reloadSkin(item);
 	}
-
+	
 	function onAcceptSkin(item:SkinItem)
 	{
 		if (lastSkin == item)
 			return;
-
+			
 		if (lastSkin != null)
 		{
 			FlxTween.cancelTweensOf(lastSkin);
@@ -144,11 +144,11 @@ class JudgementSkinPage extends Page
 		lastSkin = item;
 		CoolUtil.playConfirmSound();
 	}
-
+	
 	function reloadSkin(item:SkinItem)
 	{
 		skinGroup.destroyMembers();
-
+		
 		var skin = JudgementSkin.loadSkinFromName(item.skin.mod + ':' + item.skin.name);
 		var graphics:Array<FlxGraphic> = [];
 		for (i in 0...6)
@@ -157,7 +157,7 @@ class JudgementSkinPage extends Page
 			if (graphic != null && !graphics.contains(graphic))
 				graphics.push(graphic);
 		}
-
+		
 		var curY:Float = 0;
 		for (i in 0...graphics.length)
 		{
@@ -169,15 +169,15 @@ class JudgementSkinPage extends Page
 			judgement.active = false;
 			judgement.scrollFactor.set();
 			skinGroup.add(judgement);
-
+			
 			curY += judgement.height + 5;
 		}
-
+		
 		var newY = (FlxG.height - CoolUtil.getGroupHeight(skinGroup)) / 2;
 		for (obj in skinGroup)
 			obj.y += newY;
 	}
-
+	
 	function reloadSkins(skins:ModSkins)
 	{
 		skinList.destroyMembers();

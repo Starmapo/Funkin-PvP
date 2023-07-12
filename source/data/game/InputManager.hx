@@ -14,7 +14,7 @@ class InputManager implements IFlxDestroyable
 		Whether this side should be automatically played.
 	**/
 	public var autoplay:Bool;
-
+	
 	var bindingStore:Array<InputBinding>;
 	var playfield:Playfield;
 	var player:Int;
@@ -24,7 +24,7 @@ class InputManager implements IFlxDestroyable
 	var config:PlayerConfig;
 	var ruleset(get, never):GameplayRuleset;
 	var scoreProcessor(get, never):ScoreProcessor;
-
+	
 	public function new(playfield:Playfield, player:Int)
 	{
 		this.playfield = playfield;
@@ -33,10 +33,10 @@ class InputManager implements IFlxDestroyable
 		config = Settings.playerConfigs[player];
 		autoplay = config.autoplay;
 		controls = PlayerSettings.players[player].controls;
-
+		
 		setInputBinds();
 	}
-
+	
 	public function handleInput(elapsed:Float)
 	{
 		if (autoplay)
@@ -61,12 +61,12 @@ class InputManager implements IFlxDestroyable
 			}
 			return;
 		}
-
+		
 		for (lane in 0...bindingStore.length)
 		{
 			var needsUpdating = false;
 			var bind = bindingStore[lane];
-
+			
 			if (!bind.pressed && controls.checkByName(bind.justPressedAction))
 			{
 				bind.pressed = true;
@@ -77,10 +77,10 @@ class InputManager implements IFlxDestroyable
 				bind.pressed = false;
 				needsUpdating = true;
 			}
-
+			
 			if (!needsUpdating)
 				continue;
-
+				
 			if (bind.pressed)
 			{
 				ruleset.lanePressed.dispatch(lane, player);
@@ -97,7 +97,7 @@ class InputManager implements IFlxDestroyable
 			}
 		}
 	}
-
+	
 	/**
 		Changes the player that will play this side.
 	**/
@@ -106,7 +106,7 @@ class InputManager implements IFlxDestroyable
 		realPlayer = player;
 		controls = PlayerSettings.players[player].controls;
 	}
-
+	
 	/**
 		Frees up memory.
 	**/
@@ -117,7 +117,7 @@ class InputManager implements IFlxDestroyable
 		controls = null;
 		config = null;
 	}
-
+	
 	/**
 		Stops all current input.
 	**/
@@ -132,7 +132,7 @@ class InputManager implements IFlxDestroyable
 				handleKeyRelease(note);
 		}
 	}
-
+	
 	function setInputBinds()
 	{
 		bindingStore = [
@@ -142,14 +142,14 @@ class InputManager implements IFlxDestroyable
 			new InputBinding(NOTE_RIGHT_P, NOTE_RIGHT, NOTE_RIGHT_R)
 		];
 	}
-
+	
 	function handleKeyPress(note:Note)
 	{
 		var time = noteManager.currentAudioPosition;
 		var hitDifference = autoplay ? 0 : note.info.startTime - time;
 		var judgement = scoreProcessor.calculateScore(hitDifference, PRESS);
 		var lane = note.info.playerLane;
-
+		
 		if (judgement == GHOST)
 		{
 			if (!Settings.ghostTapping)
@@ -160,11 +160,11 @@ class InputManager implements IFlxDestroyable
 			ruleset.ghostTap.dispatch(lane, player);
 			return;
 		}
-
+		
 		note = noteManager.activeNoteLanes[lane].shift();
-
+		
 		scoreProcessor.stats.push(new HitStat(HIT, PRESS, note.info, time, judgement, hitDifference, scoreProcessor.accuracy, scoreProcessor.health));
-
+		
 		switch (judgement)
 		{
 			case MISS:
@@ -183,56 +183,56 @@ class InputManager implements IFlxDestroyable
 					noteManager.recyclePoolObject(note);
 		}
 	}
-
+	
 	function handleKeyRelease(note:Note)
 	{
 		var lane = note.info.playerLane;
 		var time = noteManager.currentAudioPosition;
 		var endTime = noteManager.heldLongNoteLanes[lane][0].info.endTime;
 		var hitDifference = (autoplay || time >= endTime) ? 0 : endTime - time;
-
+		
 		var judgement = scoreProcessor.calculateScore(hitDifference, RELEASE);
-
+		
 		note = noteManager.heldLongNoteLanes[lane].shift();
-
+		
 		if (judgement != GHOST)
 		{
 			scoreProcessor.stats.push(new HitStat(HIT, RELEASE, note.info, time, judgement, hitDifference, scoreProcessor.accuracy, scoreProcessor.health));
-
+			
 			ruleset.noteReleased.dispatch(note, judgement, hitDifference);
-
+			
 			if (judgement == MISS)
 				ruleset.noteReleaseMissed.dispatch(note);
-
+				
 			if (judgement == MISS || judgement == SHIT)
 				noteManager.killHoldPoolObject(note, judgement == MISS);
 			else
 				noteManager.recyclePoolObject(note);
-
+				
 			return;
 		}
-
+		
 		final missedJudgement = Judgement.MISS;
-
+		
 		scoreProcessor.stats.push(new HitStat(HIT, RELEASE, note.info, time, MISS, hitDifference, scoreProcessor.accuracy, scoreProcessor.health));
-
+		
 		scoreProcessor.registerScore(missedJudgement, true);
-
+		
 		ruleset.noteReleaseMissed.dispatch(note);
-
+		
 		noteManager.killHoldPoolObject(note);
 	}
-
+	
 	function get_noteManager()
 	{
 		return playfield.noteManager;
 	}
-
+	
 	function get_ruleset()
 	{
 		return playfield.ruleset;
 	}
-
+	
 	function get_scoreProcessor()
 	{
 		return playfield.scoreProcessor;
@@ -245,7 +245,7 @@ class InputBinding
 	public var pressedAction:Action;
 	public var justReleasedAction:Action;
 	public var pressed:Bool;
-
+	
 	public function new(justPressedAction:Action, pressedAction:Action, justReleasedAction:Action)
 	{
 		this.justPressedAction = justPressedAction;

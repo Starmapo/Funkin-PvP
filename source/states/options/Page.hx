@@ -16,22 +16,22 @@ class Page extends FlxGroup
 	public var onExit(default, null) = new FlxSignal();
 	public var onOpenSubState(default, null):FlxTypedSignal<FlxSubState->Void> = new FlxTypedSignal();
 	public var rpcDetails:String = '';
-
+	
 	var camFollow(get, never):FlxObject;
-
+	
 	public function new()
 	{
 		super();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (controlsEnabled)
 			updateControls();
-
+			
 		super.update(elapsed);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -39,9 +39,9 @@ class Page extends FlxGroup
 		FlxDestroyUtil.destroy(onExit);
 		FlxDestroyUtil.destroy(onOpenSubState);
 	}
-
+	
 	public function onAppear() {}
-
+	
 	function updateControls()
 	{
 		if (PlayerSettings.checkAction(BACK_P))
@@ -50,22 +50,22 @@ class Page extends FlxGroup
 			exit();
 		}
 	}
-
+	
 	function exit()
 	{
 		onExit.dispatch();
 	}
-
+	
 	function switchPage(name:PageName)
 	{
 		onSwitch.dispatch(name);
 	}
-
+	
 	function openSubState(subState:FlxSubState)
 	{
 		onOpenSubState.dispatch(subState);
 	}
-
+	
 	function addPageTitle(text:String)
 	{
 		var title = new FlxText(5, 5, 0, text);
@@ -74,12 +74,12 @@ class Page extends FlxGroup
 		title.alpha = 0.6;
 		add(title);
 	}
-
+	
 	function get_camFollow()
 	{
 		return OptionsState.camFollow;
 	}
-
+	
 	function set_controlsEnabled(value:Bool)
 	{
 		return controlsEnabled = value;

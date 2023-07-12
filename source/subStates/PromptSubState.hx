@@ -17,30 +17,30 @@ class PromptSubState extends FNFSubState
 	var promptText:FlxUIText;
 	var buttonGroup:FlxTypedGroup<FlxUIButton>;
 	var buttons:Array<ButtonData>;
-
+	
 	public function new(message:String, buttons:Array<ButtonData>)
 	{
 		super();
 		this.buttons = buttons;
-
+		
 		createCamera();
-
+		
 		promptText = new FlxUIText(0, 0, FlxG.width / 2, message);
 		promptText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		promptText.screenCenter();
-
+		
 		promptBG = new FlxUI9SliceSprite(promptText.x - 5, promptText.y - 5, FlxUIAssets.IMG_CHROME_FLAT, new Rectangle(0, 0, (FlxG.width / 2) + 10, 0));
 		add(promptBG);
 		add(promptText);
-
+		
 		buttonGroup = new FlxTypedGroup();
 		add(buttonGroup);
-
+		
 		createButtons();
-
+		
 		promptBG.resize(promptBG.width, promptText.height + 5 + buttonGroup.members[0].height + 10);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -48,7 +48,7 @@ class PromptSubState extends FNFSubState
 		promptText = null;
 		buttonGroup = null;
 	}
-
+	
 	function createButtons()
 	{
 		var curX:Float = 0;
@@ -58,7 +58,7 @@ class PromptSubState extends FNFSubState
 			{
 				if (buttons[i].callback != null)
 					buttons[i].callback();
-
+					
 				close();
 			});
 			button.label.size = 16;

@@ -17,11 +17,11 @@ using StringTools;
 class BiLibrary extends AssetLibrary
 {
 	final rootPath = './';
-
+	
 	var defaultLibrary:AssetLibrary;
-
+	
 	// var zipAssets:Map<String, Entry> = [];
-
+	
 	public function new(?defaultLibrary:AssetLibrary)
 	{
 		super();
@@ -29,7 +29,7 @@ class BiLibrary extends AssetLibrary
 			defaultLibrary = Assets.getLibrary("default");
 		this.defaultLibrary = defaultLibrary;
 	}
-
+	
 	/*
 		public function addZipMod(list:List<Entry>, modPath:String)
 		{
@@ -61,7 +61,7 @@ class BiLibrary extends AssetLibrary
 			return true;
 		return FileSystem.exists(getSysPath(id));
 	}
-
+	
 	override function getAudioBuffer(id:String):AudioBuffer
 	{
 		if (defaultLibrary.exists(id, AssetType.SOUND))
@@ -69,7 +69,7 @@ class BiLibrary extends AssetLibrary
 		else
 			return AudioBuffer.fromFile(getSysPath(id));
 	}
-
+	
 	override function getBytes(id:String):Bytes
 	{
 		if (defaultLibrary.exists(id, AssetType.BINARY))
@@ -77,7 +77,7 @@ class BiLibrary extends AssetLibrary
 		else
 			return Bytes.fromFile(getSysPath(id));
 	}
-
+	
 	override function getFont(id:String):Font
 	{
 		if (defaultLibrary.exists(id, AssetType.FONT))
@@ -85,7 +85,7 @@ class BiLibrary extends AssetLibrary
 		else
 			return Font.fromFile(getSysPath(id));
 	}
-
+	
 	override function getImage(id:String):Image
 	{
 		if (defaultLibrary.exists(id, AssetType.IMAGE))
@@ -93,7 +93,7 @@ class BiLibrary extends AssetLibrary
 		else
 			return Image.fromFile(getSysPath(id));
 	}
-
+	
 	override function getText(id:String):String
 	{
 		if (defaultLibrary.exists(id, AssetType.TEXT))
@@ -101,21 +101,21 @@ class BiLibrary extends AssetLibrary
 		else
 		{
 			var bytes = getBytes(id);
-
+			
 			if (bytes == null)
 				return null;
 			else
 				return bytes.getString(0, bytes.length);
 		}
 	}
-
+	
 	/**
 		`type` isn't supported for FileSystem checks!
 	**/
 	override function list(type:String):Array<String>
 	{
 		var items:Array<String> = defaultLibrary.list(type);
-
+		
 		function pushFolder(path:String)
 		{
 			if (FileSystem.exists(path) && FileSystem.isDirectory(path))
@@ -130,12 +130,12 @@ class BiLibrary extends AssetLibrary
 				}
 			}
 		}
-
+		
 		pushFolder('mods/');
-
+		
 		return items;
 	}
-
+	
 	function getSysPath(id:String):String
 	{
 		return rootPath + id;

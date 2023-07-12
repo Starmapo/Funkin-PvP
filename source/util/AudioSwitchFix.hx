@@ -39,19 +39,19 @@ class AudioSwitchFix
 				});
 				FlxG.sound.music.stop();
 			}
-
+			
 			AudioManager.shutdown();
 			AudioManager.init();
 			CompileFix.changeID++;
-
+			
 			for (e in playingList)
 				e.sound.play(e.time);
-
+				
 			Main.audioDisconnected = false;
 		}
 		#end
 	}
-
+	
 	public static function init()
 	{
 		#if windows

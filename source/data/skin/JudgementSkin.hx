@@ -16,18 +16,18 @@ class JudgementSkin extends JsonObject
 	{
 		if (!Paths.exists(path))
 			return null;
-
+			
 		var json:Dynamic = Paths.getJson(path, mod);
 		if (json == null)
 			return null;
-
+			
 		var skin = new JudgementSkin(json);
 		skin.directory = Path.normalize(Path.directory(path));
 		skin.name = new Path(path).file;
 		skin.mod = skin.directory.split('/')[1];
 		return skin;
 	}
-
+	
 	/**
 		Loads a judgement skin from a name.
 
@@ -45,39 +45,39 @@ class JudgementSkin extends JsonObject
 			if (Paths.exists(path))
 				return loadSkin(path);
 		}
-
+		
 		var path = Paths.getPath('data/judgementSkins/$name.json');
 		if (Paths.exists(path))
 			return loadSkin(path);
-
+			
 		return loadSkin(Paths.getPath('data/judgementSkins/$name.json', 'fnf'));
 	}
-
+	
 	/**
 		The scaling factor for the sprites. Defaults to `1`.
 	**/
 	public var scale:Float;
-
+	
 	/**
 		Whether or not the sprites have antialiasing. Defaults to `true`.
 	**/
 	public var antialiasing:Bool;
-
+	
 	/**
 		The full directory path this judgement skin was in.
 	**/
 	public var directory:String = '';
-
+	
 	/**
 		The name of the judgement skin.
 	**/
 	public var name:String = '';
-
+	
 	/**
 		The mod directory this judgement skin was in.
 	**/
 	public var mod:String = '';
-
+	
 	/**
 		@param	data	The JSON file to parse data from.
 	**/

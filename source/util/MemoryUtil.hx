@@ -12,7 +12,7 @@ class MemoryUtil
 		Gc.run(false);
 		#end
 	}
-
+	
 	public static function clearMajor()
 	{
 		#if cpp

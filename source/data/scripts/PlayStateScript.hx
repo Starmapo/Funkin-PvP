@@ -23,25 +23,25 @@ using StringTools;
 class PlayStateScript extends Script
 {
 	var state:PlayState;
-
+	
 	// var modules:Map<String, ClassDecl> = new Map();
-
+	
 	public function new(state:PlayState, path:String, mod:String)
 	{
 		this.state = state;
 		super(path, mod);
 	}
-
+	
 	override function destroy()
 	{
 		state = null;
 		super.destroy();
 	}
-
+	
 	override function setStartingVariables()
 	{
 		super.setStartingVariables();
-
+		
 		setVariable("state", state);
 		setVariable("members", state.members);
 		setVariable("opponent", state.opponent);
@@ -69,7 +69,7 @@ class PlayStateScript extends Script
 		setVariable("msDisplay", state.msDisplay);
 		setVariable("staticBG", state.staticBG);
 		setVariable("playbackRate", GameplayGlobals.playbackRate);
-
+		
 		setVariable("add", state.add);
 		setVariable("insert", state.insert);
 		setVariable("remove", state.remove);
@@ -89,7 +89,7 @@ class PlayStateScript extends Script
 			}
 			state.notificationManager.showNotification(posInfo);
 		}));
-
+		
 		setVariable("getOrder", function(obj:FlxBasic)
 		{
 			return state.members.indexOf(obj);
@@ -206,7 +206,7 @@ class PlayStateScript extends Script
 		{
 			if (shader == null)
 				return;
-
+				
 			var cameras = [FlxG.camera, state.camHUD, state.camOther];
 			for (camera in cameras)
 				camera.addShader(shader);
@@ -220,7 +220,7 @@ class PlayStateScript extends Script
 			var path = Paths.getVideo(name, mod);
 			if (!Paths.exists(path))
 				return null;
-
+				
 			var video = new FlxVideo();
 			if (destroy)
 				video.onEndReached.add(video.dispose);
@@ -233,7 +233,7 @@ class PlayStateScript extends Script
 			var path = Paths.getVideo(name, mod);
 			if (!Paths.exists(path))
 				return null;
-
+				
 			var video = new FlxVideoSprite();
 			if (destroy)
 				video.bitmap.onEndReached.add(video.destroy);
@@ -253,7 +253,7 @@ class PlayStateScript extends Script
 			});
 			return strumline;
 		});
-
+		
 		/*
 			// i tried to do some module shit, gave up
 			// it MIGHT be possible, but i dont think its worth the time
@@ -326,13 +326,13 @@ class PlayStateScript extends Script
 			});
 		 */
 	}
-
+	
 	override function onError(message:String)
 	{
 		state.notificationManager.showNotification(message, ERROR);
 		super.onError(message);
 	}
-
+	
 	function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)
 	{
 		for (lane in array)
@@ -341,7 +341,7 @@ class PlayStateScript extends Script
 				to.push(note);
 		}
 	}
-
+	
 	function getShader(name:String, glslVersion:Int = 120):FlxRuntimeShader
 	{
 		var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
@@ -353,7 +353,7 @@ class PlayStateScript extends Script
 			onError("Couldn't find shader \"" + name + '".');
 			return null;
 		}
-
+		
 		var shader = new FlxRuntimeShader(frag, vert, glslVersion);
 		return shader;
 	}
@@ -369,7 +369,7 @@ class FakeStrumline extends FlxBasic
 	var notes:Array<NoteInfo> = [];
 	var holdingNotes:Array<Note> = [];
 	var skin:NoteSkin;
-
+	
 	public function new(state:PlayState, char:Character, notes:Array<NoteInfo>)
 	{
 		super();
@@ -378,7 +378,7 @@ class FakeStrumline extends FlxBasic
 		this.notes = notes;
 		skin = NoteSkin.loadSkinFromName('fnf:default');
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		var time = state.timing.audioPosition;
@@ -429,7 +429,7 @@ class FakeStrumline extends FlxBasic
 					playNoteAnim(note);
 			}
 		}
-
+		
 		var i = holdingNotes.length - 1;
 		while (i >= 0)
 		{
@@ -443,7 +443,7 @@ class FakeStrumline extends FlxBasic
 			i--;
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -456,7 +456,7 @@ class FakeStrumline extends FlxBasic
 		holdingNotes = null;
 		skin = null;
 	}
-
+	
 	function playNoteAnim(note:Note)
 	{
 		char.playNoteAnim(note, state.getBeatLength());

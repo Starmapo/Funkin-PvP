@@ -11,37 +11,37 @@ enum abstract Judgement(Int) from Int to Int
 		"Marvelous" rating.
 	**/
 	var MARV = 0;
-
+	
 	/**
 		"Sick" rating.
 	**/
 	var SICK = 1;
-
+	
 	/**
 		"Good" rating.
 	**/
 	var GOOD = 2;
-
+	
 	/**
 		"Bad" rating.
 	**/
 	var BAD = 3;
-
+	
 	/**
 		"Shit" rating.
 	**/
 	var SHIT = 4;
-
+	
 	/**
 		"Miss" rating.
 	**/
 	var MISS = 5;
-
+	
 	/**
 		Ghost tap.
 	**/
 	var GHOST = 6;
-
+	
 	/**
 		Gets the name of this judgement.
 	**/

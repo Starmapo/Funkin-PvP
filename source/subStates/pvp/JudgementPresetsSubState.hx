@@ -13,7 +13,7 @@ import states.pvp.RulesetState;
 class JudgementPresetsSubState extends FNFSubState
 {
 	static final DEFAULT:String = 'Default (Quaver Peaceful)';
-
+	
 	static var presets:Array<JudgementPreset> = [
 		{
 			name: 'Andromeda Engine',
@@ -142,18 +142,18 @@ class JudgementPresetsSubState extends FNFSubState
 			missWindow: 164
 		}
 	];
-
+	
 	var curSelected:Int = -1;
 	var nameText:FlxText;
 	var judgementGroup:FlxTypedGroup<FlxText>;
 	var state:RulesetState;
 	var waitTime:Float;
-
+	
 	public function new(state:RulesetState)
 	{
 		super();
 		this.state = state;
-
+		
 		for (i in 0...presets.length)
 		{
 			if (presets[i].name == DEFAULT)
@@ -164,14 +164,14 @@ class JudgementPresetsSubState extends FNFSubState
 		}
 		if (curSelected < 0)
 			curSelected = 0;
-
+			
 		createCamera();
-
+		
 		nameText = new FlxText(5, 5, FlxG.width - 10);
 		nameText.setFormat('PhantomMuff 1.5', 64, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		nameText.scrollFactor.set();
 		add(nameText);
-
+		
 		judgementGroup = new FlxTypedGroup();
 		var curY:Float = 220;
 		for (i in 0...6)
@@ -180,36 +180,36 @@ class JudgementPresetsSubState extends FNFSubState
 			judgementText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 			judgementText.scrollFactor.set();
 			judgementGroup.add(judgementText);
-
+			
 			curY += judgementText.height + 5;
 		}
 		add(judgementGroup);
-
+		
 		var tipText = new FlxText(0, FlxG.height - 5, 0, 'Press ACCEPT to apply this preset and exit\nPress BACK to exit');
 		tipText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		tipText.y -= tipText.height;
 		tipText.screenCenter(X);
 		tipText.scrollFactor.set();
 		add(tipText);
-
+		
 		changeSelection();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
+		
 		if (waitTime > 0)
 		{
 			waitTime -= elapsed;
 			return;
 		}
-
+		
 		if (PlayerSettings.checkAction(UI_LEFT_P))
 			changeSelection(-1);
 		if (PlayerSettings.checkAction(UI_RIGHT_P))
 			changeSelection(1);
-
+			
 		if (PlayerSettings.checkAction(ACCEPT_P))
 		{
 			var preset = presets[curSelected];
@@ -219,7 +219,7 @@ class JudgementPresetsSubState extends FNFSubState
 			Settings.badWindow = preset.badWindow;
 			Settings.shitWindow = preset.shitWindow;
 			Settings.missWindow = preset.missWindow;
-
+			
 			var windows = [
 				'marvWindow',
 				'sickWindow',
@@ -233,14 +233,14 @@ class JudgementPresetsSubState extends FNFSubState
 				if (windows.contains(item.data.name))
 					item.updateValueText();
 			}
-
+			
 			close();
 			CoolUtil.playConfirmSound();
 		}
 		else if (PlayerSettings.checkAction(BACK_P))
 			close();
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -248,20 +248,20 @@ class JudgementPresetsSubState extends FNFSubState
 		judgementGroup = null;
 		state = null;
 	}
-
+	
 	override function onOpen()
 	{
 		waitTime = 0.1;
 		super.onOpen();
 	}
-
+	
 	function changeSelection(change:Int = 0)
 	{
 		curSelected = FlxMath.wrapInt(curSelected + change, 0, presets.length - 1);
-
+		
 		var preset = presets[curSelected];
 		nameText.text = preset.name;
-
+		
 		for (i in 0...judgementGroup.length)
 		{
 			var window = switch (i)
@@ -277,7 +277,7 @@ class JudgementPresetsSubState extends FNFSubState
 			text.text = (i : Judgement).getName() + ': ' + window + 'ms';
 			text.screenCenter(X);
 		}
-
+		
 		CoolUtil.playScrollSound();
 	}
 }

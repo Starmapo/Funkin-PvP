@@ -18,11 +18,11 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 {
 	var itemHoldTime:Float = 0;
 	var itemLastHoldTime:Float = 0;
-
+	
 	override function updateControls(elapsed:Float)
 	{
 		super.updateControls(elapsed);
-
+		
 		if (selectedItem != null)
 		{
 			if (!selectedItem.canAccept)
@@ -31,76 +31,76 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 				{
 					if (selectedItem.callback != null)
 						selectedItem.callback();
-
+						
 					if (playScrollSound)
 						CoolUtil.playScrollSound();
 				}
 			}
-
+			
 			if (checkAction(RESET_P) && selectedItem.data.type != ACTION)
 			{
 				var defaultValue = selectedItem.getDefaultValue();
 				if (selectedItem.value != defaultValue)
 				{
 					selectedItem.value = defaultValue;
-
+					
 					if (selectedItem.callback != null)
 						selectedItem.callback();
-
+						
 					if (playScrollSound)
 						CoolUtil.playScrollSound();
 				}
 			}
 		}
 	}
-
+	
 	override function accept()
 	{
 		onAccept.dispatch(selectedItem);
-
+		
 		if (selectedItem != null && selectedItem.data.type == CHECKBOX)
 		{
 			selectedItem.value = !selectedItem.value;
-
+			
 			if (playScrollSound)
 				CoolUtil.playScrollSound();
 		}
-
+		
 		if (fireCallbacks && selectedItem.callback != null && selectedItem.canAccept)
 			selectedItem.callback();
 	}
-
+	
 	function navigateItem(elapsed:Float, item:T, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
 	{
 		var canHold = holdEnabled && item.data.type != STRING;
 		if (prev == next && (!canHold || prevHold == nextHold))
 			return false;
-
+			
 		var lastValue = item.value;
-
+		
 		if (prev || next)
 		{
 			itemHoldTime = itemLastHoldTime = 0;
 			changeItemValue(item, prev);
-
+			
 			return item.value != lastValue;
 		}
 		else if (canHold && (prevHold || nextHold))
 		{
 			itemHoldTime += elapsed;
-
+			
 			if (itemHoldTime >= minScrollTime && itemHoldTime - itemLastHoldTime >= item.data.holdDelay)
 			{
 				changeItemValue(item, prevHold, item.data.holdMult);
 				itemLastHoldTime = itemHoldTime;
 			}
-
+			
 			return item.value != lastValue;
 		}
-
+		
 		return false;
 	}
-
+	
 	function changeItemValue(item:T, prev:Bool, mult:Float = 1)
 	{
 		var value:Dynamic = item.value;
@@ -123,7 +123,7 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 			case STRING:
 				if (item.data.options == null || item.data.options.length <= 1)
 					return;
-
+					
 				var index = item.data.options.indexOf(value);
 				if (index < 0)
 					index = 0;
@@ -155,30 +155,30 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 	public var valueText:FlxText;
 	public var value(get, set):Dynamic;
 	public var canAccept(get, never):Bool;
-
+	
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, data:SettingData)
 	{
 		this.data = resolveSettingData(data);
-
+		
 		var label = new FlxSpriteGroup();
-
+		
 		/*
 			nameBG = new FlxUI9SliceSprite(2, 0, Paths.getImage('menus/9SliceBlack'), new Rectangle(0, 0, 18, 18));
 			nameBG.alpha = 0.2;
 			label.add(nameBG);
 		 */
-
+		
 		nameText = new FlxText(5, 0, 0, '', 65);
 		nameText.setFormat('PhantomMuff 1.5', nameText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		nameText.antialiasing = true;
 		label.add(nameText);
-
+		
 		super(x, y, label, name, callback);
-
+		
 		setEmptyBackground();
 		setData(name, callback);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -187,11 +187,11 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		checkbox = null;
 		valueText = null;
 	}
-
+	
 	override function setData(name:String, ?callback:Void->Void)
 	{
 		super.setData(name, callback);
-
+		
 		if (label != null)
 		{
 			if (checkbox != null)
@@ -204,7 +204,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 				label.remove(valueText, true);
 				valueText = FlxDestroyUtil.destroy(valueText);
 			}
-
+			
 			nameText.text = data.displayName;
 			nameText.size = 65;
 			var maxWidth = (FlxG.width / 2) - 10;
@@ -236,15 +236,15 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			 */
 		}
 	}
-
+	
 	public function updateValueText()
 	{
 		if (valueText == null)
 			return;
-
+			
 		var displayText = Std.string(data.displayFunction(value));
 		valueText.text = '< ' + displayText + ' >';
-
+		
 		valueText.size = 65;
 		var maxWidth = (FlxG.width / 2) - 10;
 		if (valueText.width > maxWidth)
@@ -254,12 +254,12 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 		valueText.x = (FlxG.width / 2) + 5 + ((maxWidth - valueText.width) / 2);
 	}
-
+	
 	public function getDefaultValue()
 	{
 		return Settings.defaultValues.get(data.name);
 	}
-
+	
 	function resolveSettingData(data:SettingData)
 	{
 		if (data.displayFunction == null)
@@ -279,30 +279,30 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 					};
 			}
 		}
-
+		
 		if (data.decimals == null)
 			data.decimals = (data.type == PERCENT ? 2 : 0);
-
+			
 		if (data.changeAmount == null)
 			data.changeAmount = (data.decimals > 0 ? 0.1 : 1);
-
+			
 		if (data.holdDelay == null)
 			data.holdDelay = (data.type == PERCENT ? 0.05 : 0);
-
+			
 		if (data.holdMult == null)
 			data.holdMult = 1;
-
+			
 		if (data.wrap == null)
 			data.wrap = (data.type == STRING);
-
+			
 		return data;
 	}
-
+	
 	function get_value():Dynamic
 	{
 		return Reflect.getProperty(Settings, data.name);
 	}
-
+	
 	function set_value(value:Dynamic):Dynamic
 	{
 		Reflect.setProperty(Settings, data.name, value);
@@ -316,7 +316,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 		return value;
 	}
-
+	
 	function get_canAccept()
 	{
 		return data.type == CHECKBOX || data.type == ACTION;
@@ -326,11 +326,11 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 class Checkbox extends AnimatedSprite
 {
 	public var value(default, set):Bool;
-
+	
 	public function new(x:Float = 0, y:Float = 0, value:Bool = false)
 	{
 		super(x, y, Paths.getSpritesheet('menus/options/checkboxThingie'), 0.7);
-
+		
 		addAnim({
 			name: 'static',
 			atlasName: 'Check Box unselected',
@@ -342,12 +342,12 @@ class Checkbox extends AnimatedSprite
 			loop: false,
 			offset: [17, 70]
 		});
-
+		
 		this.value = value;
 		animation.finish();
 		antialiasing = true;
 	}
-
+	
 	function set_value(newValue:Bool)
 	{
 		if (value != newValue)
@@ -357,7 +357,7 @@ class Checkbox extends AnimatedSprite
 			else
 				playAnim('static');
 		}
-
+		
 		return value = newValue;
 	}
 }

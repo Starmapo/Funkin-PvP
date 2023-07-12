@@ -21,13 +21,13 @@ import util.DiscordClient;
 class MainMenuState extends FNFState
 {
 	static var lastSelected:Int = 0;
-
+	
 	var transitioning:Bool = true;
 	var menuList:MainMenuList;
 	var camFollow:FlxObject;
 	var bg:FlxSprite;
 	var magenta:FlxSprite;
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -36,28 +36,28 @@ class MainMenuState extends FNFState
 		bg = null;
 		magenta = null;
 	}
-
+	
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Main Menu");
-
+		
 		transIn = transOut = null;
-
+		
 		bg = CoolUtil.createMenuBG('menuBG', 1.2);
 		bg.angle = 180;
 		add(bg);
-
+		
 		if (Settings.flashing)
 		{
 			magenta = CoolUtil.createMenuBG('menuBGMagenta', 1.2);
 			magenta.visible = false;
 			add(magenta);
 		}
-
+		
 		camFollow = new FlxObject(FlxG.width / 2);
 		add(camFollow);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
-
+		
 		menuList = new MainMenuList();
 		menuList.createItem('PvP', function()
 		{
@@ -84,19 +84,19 @@ class MainMenuState extends FNFState
 		menuList.selectItem(lastSelected);
 		menuList.controlsEnabled = false;
 		add(menuList);
-
+		
 		FlxG.camera.snapToTarget();
 		bg.y = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
 		if (magenta != null)
 			magenta.y = bg.y;
-
+			
 		var version = FlxG.stage.application.meta["version"];
 		var versionText = new FlxText(5, FlxG.height - 5, FlxG.width - 10, 'Version: $version');
 		versionText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		versionText.y -= versionText.height;
 		versionText.scrollFactor.set();
 		add(versionText);
-
+		
 		FlxG.camera.zoom = 3;
 		var duration = Main.getTransitionTime();
 		FlxTween.tween(bg, {angle: 0}, duration, {ease: FlxEase.quartInOut});
@@ -109,22 +109,22 @@ class MainMenuState extends FNFState
 			}
 		});
 		FlxG.camera.fade(FlxColor.BLACK, duration, true, null, true);
-
+		
 		CoolUtil.playConfirmSound(0);
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playMenuMusic(0);
 			FlxG.sound.music.fadeIn(duration);
 		}
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		var bgY = FlxMath.remapToRange(menuList.selectedIndex, 0, menuList.length - 1, 0, FlxG.height - bg.height);
 		bg.y = FlxMath.lerp(bg.y, bgY, elapsed * 6);
-
+		
 		if (!transitioning)
 		{
 			if (FlxG.keys.justPressed.SEVEN)
@@ -147,34 +147,34 @@ class MainMenuState extends FNFState
 				transitioning = true;
 			}
 		}
-
+		
 		super.update(elapsed);
-
+		
 		if (magenta != null)
 		{
 			magenta.y = bg.y;
 			magenta.angle = bg.angle;
 		}
 	}
-
+	
 	function updateCamFollow()
 	{
 		var midpoint = menuList.selectedItem.getMidpoint();
 		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
-
+	
 	function onChange(item:MainMenuItem)
 	{
 		updateCamFollow();
 		lastSelected = item.ID;
 	}
-
+	
 	function onAccept(selectedItem:MainMenuItem)
 	{
 		if (selectedItem.callback == null || transitioning)
 			return;
-
+			
 		if (selectedItem.fireInstantly)
 			selectedItem.callback();
 		else
@@ -183,13 +183,13 @@ class MainMenuState extends FNFState
 			{
 				if (selectedItem.fadeMusic)
 					FlxG.sound.music.stop();
-
+					
 				selectedItem.callback();
 			});
 			CoolUtil.playConfirmSound();
 		}
 	}
-
+	
 	function exit(selectedItem:MainMenuItem, callback:Void->Void)
 	{
 		transitioning = true;
@@ -220,7 +220,7 @@ class MainMenuList extends TypedMenuList<MainMenuItem>
 		fireCallbacks = false;
 		CoolUtil.playConfirmSound(0);
 	}
-
+	
 	public function createItem(name:String, ?callback:Void->Void, fireInstantly:Bool = false, fadeMusic:Bool = false)
 	{
 		var item = new MainMenuItem(0, 150 * length, name, callback, fireInstantly, fadeMusic);
@@ -237,10 +237,10 @@ class MainMenuItem extends TextMenuItem
 {
 	public var fireInstantly:Bool = false;
 	public var fadeMusic:Bool = false;
-
+	
 	var targetScale:Float = 1;
 	var lerp:Float = 15;
-
+	
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, fireInstantly:Bool = false, fadeMusic:Bool = false)
 	{
 		super(x, y, name, callback, 98);
@@ -248,15 +248,15 @@ class MainMenuItem extends TextMenuItem
 		this.fadeMusic = fadeMusic;
 		label.scale.set(targetScale, targetScale);
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (label != null)
 			label.scale.set(FlxMath.lerp(label.scale.x, targetScale, elapsed * lerp), FlxMath.lerp(label.scale.y, targetScale, elapsed * lerp));
-
+			
 		super.update(elapsed);
 	}
-
+	
 	override function idle()
 	{
 		if (label != null)
@@ -271,7 +271,7 @@ class MainMenuItem extends TextMenuItem
 		}
 		targetScale = 1;
 	}
-
+	
 	override function select()
 	{
 		if (label != null)

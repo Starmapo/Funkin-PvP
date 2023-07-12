@@ -16,7 +16,7 @@ class SongInfoDisplay extends FlxText
 	var length:Float;
 	var lengthDisplay:String;
 	var timing:MusicTiming;
-
+	
 	public function new(song:Song, inst:FlxSound, timing:MusicTiming)
 	{
 		super();
@@ -25,12 +25,12 @@ class SongInfoDisplay extends FlxText
 		this.timing = timing;
 		length = inst.length - Settings.globalOffset;
 		lengthDisplay = FlxStringUtil.formatTime(length / inst.pitch / 1000);
-
+		
 		fieldWidth = FlxG.width - 10;
 		setFormat('VCR OSD Mono', (Settings.hideHUD ? 32 : 16), FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		x = 5;
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		var prefix = !Settings.hideHUD ? (song.artist + ' - ' + song.title + ' [' + song.difficultyName + ']\n' + song.source + '\n') : '';
@@ -50,7 +50,7 @@ class SongInfoDisplay extends FlxText
 		if (text != newText)
 			text = newText;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

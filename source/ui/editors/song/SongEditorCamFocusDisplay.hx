@@ -6,7 +6,7 @@ import states.editors.SongEditorState;
 class SongEditorCamFocusDisplay extends AnimatedSprite
 {
 	var state:SongEditorState;
-
+	
 	public function new(x:Float = 0, y:Float = 0, state:SongEditorState)
 	{
 		super(x, y);
@@ -18,18 +18,18 @@ class SongEditorCamFocusDisplay extends AnimatedSprite
 		scrollFactor.set();
 		antialiasing = true;
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		updateDisplay();
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
 	}
-
+	
 	public function updateDisplay()
 	{
 		var anim:String = null;

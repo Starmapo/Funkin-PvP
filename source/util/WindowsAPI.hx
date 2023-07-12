@@ -99,7 +99,6 @@ AudioFixClient *curAudioFix;
 class WindowsAPI
 {
 	// public static function getVSync():Void {}
-
 	#if windows
 	@:functionCode('
 	if (!curAudioFix) curAudioFix = new AudioFixClient();
@@ -109,7 +108,7 @@ class WindowsAPI
 	{
 		Main.audioDisconnected = false;
 	}
-
+	
 	#if windows
 	@:functionCode('
         int darkMode = 1;
@@ -121,6 +120,6 @@ class WindowsAPI
     ')
 	#end
 	public static function setWindowToDarkMode():Void {}
-
+	
 	// public static function setVSync(value:Bool):Void {}
 }

@@ -39,7 +39,7 @@ class SongEditorEditPanel extends EditorPanel
 {
 	public var eventInput:EditorInputText;
 	public var eventParamsInput:EditorInputText;
-
+	
 	var state:SongEditorState;
 	var spacing:Int = 4;
 	var titleInput:EditorInputText;
@@ -94,7 +94,7 @@ class SongEditorEditPanel extends EditorPanel
 	var newChartPrompt:SongEditorNewChartPrompt;
 	var newSongPrompt:SongEditorNewSongPrompt;
 	var selectEventPrompt:PromptInputSubState;
-
+	
 	public function new(state:SongEditorState)
 	{
 		super([
@@ -141,7 +141,7 @@ class SongEditorEditPanel extends EditorPanel
 		x = FlxG.width - width - 10;
 		screenCenter(Y);
 		this.state = state;
-
+		
 		createCameraFocusesTab();
 		createEditorTab();
 		createEventsTab();
@@ -151,7 +151,7 @@ class SongEditorEditPanel extends EditorPanel
 		createScrollVelocitiesTab();
 		createSongTab();
 		createTimingPointsTab();
-
+		
 		selected_tab_id = 'Song';
 		updateSelectedCameraFocuses();
 		updateSelectedEvents();
@@ -159,29 +159,29 @@ class SongEditorEditPanel extends EditorPanel
 		updateSelectedScrollVelocities();
 		updateSelectedTimingPoints();
 		onClick = onClickTab;
-
+		
 		state.actionManager.onEvent.add(onEvent);
 		state.selectedObjects.itemAdded.add(onSelectedObject);
 		state.selectedObjects.itemRemoved.add(onDeselectedObject);
 		state.selectedObjects.multipleItemsAdded.add(onMultipleObjectsSelected);
 		state.selectedObjects.arrayCleared.add(onAllObjectsDeselected);
 	}
-
+	
 	public function updateSpeedStepper()
 	{
 		speedStepper.value = Settings.editorScrollSpeed.value;
 	}
-
+	
 	public function updateRateStepper()
 	{
 		rateStepper.value = state.inst.pitch;
 	}
-
+	
 	public function updateBeatSnapDropdown()
 	{
 		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -239,7 +239,7 @@ class SongEditorEditPanel extends EditorPanel
 		newSongPrompt = FlxDestroyUtil.destroy(newSongPrompt);
 		selectEventPrompt = FlxDestroyUtil.destroy(selectEventPrompt);
 	}
-
+	
 	function createSongTab()
 	{
 		applyOffsetPrompt = new SongEditorApplyOffsetPrompt(function(text)
@@ -366,7 +366,7 @@ class SongEditorEditPanel extends EditorPanel
 								event: sub.event,
 								params: sub.params.join(',')
 							});
-
+							
 						song.events.push(new EventObject({
 							startTime: obj.startTime,
 							events: events
@@ -393,53 +393,53 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		newChartPrompt = new SongEditorNewChartPrompt(state);
 		newSongPrompt = new SongEditorNewSongPrompt(state);
-
+		
 		var tab = createTab('Song');
 		var inputSpacing = 125;
 		var inputWidth = 250;
-
+		
 		var titleLabel = new EditorText(4, 5, 0, 'Title:');
 		tab.add(titleLabel);
-
+		
 		titleInput = new EditorInputText(titleLabel.x + inputSpacing, 4, inputWidth, state.song.title);
 		titleInput.textChanged.add(function(text, lastText)
 		{
 			if (text.length == 0)
 				titleInput.text = text = 'Untitled Song';
-
+				
 			state.actionManager.perform(new ActionChangeTitle(state, text, lastText));
 		});
 		tab.add(titleInput);
-
+		
 		var artistLabel = new EditorText(titleLabel.x, titleLabel.y + titleLabel.height + spacing, 0, 'Artist:');
 		tab.add(artistLabel);
-
+		
 		artistInput = new EditorInputText(artistLabel.x + inputSpacing, artistLabel.y - 1, inputWidth, state.song.artist);
 		artistInput.textChanged.add(function(text, lastText)
 		{
 			if (text.length == 0)
 				artistInput.text = text = 'Unknown Artist';
-
+				
 			state.actionManager.perform(new ActionChangeArtist(state, text, lastText));
 		});
 		tab.add(artistInput);
-
+		
 		var sourceLabel = new EditorText(artistLabel.x, artistLabel.y + artistLabel.height + spacing, 0, 'Source:');
 		tab.add(sourceLabel);
-
+		
 		sourceInput = new EditorInputText(sourceLabel.x + inputSpacing, sourceLabel.y - 1, inputWidth, state.song.source);
 		sourceInput.textChanged.add(function(text, lastText)
 		{
 			if (text.length == 0)
 				sourceInput.text = text = 'Unknown Source';
-
+				
 			state.actionManager.perform(new ActionChangeSource(state, text, lastText));
 		});
 		tab.add(sourceInput);
-
+		
 		var difficultyLabel = new EditorText(sourceLabel.x, sourceLabel.y + sourceLabel.height + spacing, 0, 'Difficulty Name:');
 		tab.add(difficultyLabel);
-
+		
 		difficultyInput = new EditorInputText(difficultyLabel.x + inputSpacing, difficultyLabel.y - 1, inputWidth, state.song.difficultyName);
 		difficultyInput.textChanged.add(function(text, lastText)
 		{
@@ -449,44 +449,44 @@ class SongEditorEditPanel extends EditorPanel
 				difficultyInput.text = lastText;
 				return;
 			}
-
+			
 			state.actionManager.perform(new ActionChangeDifficultyName(state, text, lastText));
 		});
 		tab.add(difficultyInput);
-
+		
 		var opponentLabel = new EditorText(difficultyLabel.x, difficultyLabel.y + difficultyLabel.height + spacing, 0, 'P1/Opponent Character:');
 		tab.add(opponentLabel);
-
+		
 		opponentInput = new EditorInputText(opponentLabel.x + inputSpacing, opponentLabel.y - 1, inputWidth, state.song.opponent);
 		opponentInput.textChanged.add(function(text, lastText)
 		{
 			state.actionManager.perform(new ActionChangeOpponent(state, text, lastText));
 		});
 		tab.add(opponentInput);
-
+		
 		var bfLabel = new EditorText(opponentLabel.x, opponentLabel.y + opponentLabel.height + spacing, 0, 'P2/Boyfriend Character:');
 		tab.add(bfLabel);
-
+		
 		bfInput = new EditorInputText(bfLabel.x + inputSpacing, bfLabel.y - 1, inputWidth, state.song.bf);
 		bfInput.textChanged.add(function(text, lastText)
 		{
 			state.actionManager.perform(new ActionChangeBF(state, text, lastText));
 		});
 		tab.add(bfInput);
-
+		
 		var gfLabel = new EditorText(bfLabel.x, bfLabel.y + bfLabel.height + spacing, 0, 'Girlfriend Character:');
 		tab.add(gfLabel);
-
+		
 		gfInput = new EditorInputText(gfLabel.x + inputSpacing, gfLabel.y - 1, inputWidth, state.song.gf);
 		gfInput.textChanged.add(function(text, lastText)
 		{
 			state.actionManager.perform(new ActionChangeGF(state, text, lastText));
 		});
 		tab.add(gfInput);
-
+		
 		var stageLabel = new EditorText(gfLabel.x, gfLabel.y + gfLabel.height + spacing, 0, 'Stage:');
 		tab.add(stageLabel);
-
+		
 		stageInput = new EditorInputText(stageLabel.x + inputSpacing, stageLabel.y - 1, inputWidth, state.song.stage);
 		stageInput.textChanged.add(function(text, lastText)
 		{
@@ -496,14 +496,14 @@ class SongEditorEditPanel extends EditorPanel
 				stageInput.text = lastText;
 				return;
 			}
-
+			
 			state.actionManager.perform(new ActionChangeStage(state, text, lastText));
 		});
 		tab.add(stageInput);
-
+		
 		var velocityLabel = new EditorText(stageLabel.x, stageLabel.y + stageLabel.height + spacing, 0, 'Initial Scroll Velocity:');
 		tab.add(velocityLabel);
-
+		
 		velocityStepper = new EditorNumericStepper(velocityLabel.x + inputSpacing, velocityLabel.y - 1, 0.1, 1, 0, 10, 2);
 		velocityStepper.value = state.song.initialScrollVelocity;
 		velocityStepper.valueChanged.add(function(value, lastValue)
@@ -511,13 +511,13 @@ class SongEditorEditPanel extends EditorPanel
 			state.actionManager.perform(new ActionChangeInitialSV(state, value, lastValue));
 		});
 		tab.add(velocityStepper);
-
+		
 		var saveButton = new FlxUIButton(0, velocityStepper.y + velocityStepper.height + spacing, 'Save', function()
 		{
 			state.save();
 		});
 		state.tooltip.addTooltip(saveButton, 'Hotkey: CTRL + S');
-
+		
 		var loadButton = new FlxUIButton(saveButton.x + saveButton.width + spacing, saveButton.y, 'Load', function()
 		{
 			var result = Dialogs.openFile("Select chart inside the game's directory to load", '', {
@@ -527,7 +527,7 @@ class SongEditorEditPanel extends EditorPanel
 			});
 			if (result == null || result[0] == null)
 				return;
-
+				
 			var path = Path.normalize(result[0]);
 			var cwd = Path.normalize(Sys.getCwd());
 			if (!path.startsWith(cwd))
@@ -541,46 +541,46 @@ class SongEditorEditPanel extends EditorPanel
 				state.notificationManager.showNotification("You must select a valid song file!", ERROR);
 				return;
 			}
-
+			
 			state.save(false);
 			FlxG.switchState(new SongEditorState(song));
 		});
-
+		
 		saveButton.x = (width - CoolUtil.getArrayWidth([saveButton, loadButton])) / 2;
 		loadButton.x = saveButton.x + saveButton.width + spacing;
 		tab.add(saveButton);
 		tab.add(loadButton);
-
+		
 		var newChartButton = new FlxUIButton(0, loadButton.y + loadButton.height + spacing, 'New Chart', function()
 		{
 			state.openSubState(newChartPrompt);
 		});
-
+		
 		var newSongButton = new FlxUIButton(newChartButton.x + newChartButton.width + spacing, newChartButton.y, 'New Song', function()
 		{
 			state.openSubState(newSongPrompt);
 		});
-
+		
 		newChartButton.x = (width - CoolUtil.getArrayWidth([newChartButton, newSongButton])) / 2;
 		newSongButton.x = newChartButton.x + newChartButton.width + spacing;
 		tab.add(newChartButton);
 		tab.add(newSongButton);
-
+		
 		var playtestP1Button = new FlxUIButton(0, newSongButton.y + newSongButton.height + spacing, 'Playtest P1', function()
 		{
 			state.exitToTestPlay(0, true);
 		});
-
+		
 		var playtestP2Button = new FlxUIButton(playtestP1Button.x + playtestP1Button.width + spacing, playtestP1Button.y, 'Playtest P2', function()
 		{
 			state.exitToTestPlay(1, true);
 		});
-
+		
 		playtestP1Button.x = (width - CoolUtil.getArrayWidth([playtestP1Button, playtestP2Button])) / 2;
 		playtestP2Button.x = playtestP1Button.x + playtestP1Button.width + spacing;
 		tab.add(playtestP1Button);
 		tab.add(playtestP2Button);
-
+		
 		var applyOffsetButton = new FlxUIButton(0, playtestP2Button.y + playtestP2Button.height + spacing, 'Apply Offset to Song', function()
 		{
 			state.openSubState(applyOffsetPrompt);
@@ -588,7 +588,7 @@ class SongEditorEditPanel extends EditorPanel
 		applyOffsetButton.resize(120, applyOffsetButton.height);
 		applyOffsetButton.x = (width - applyOffsetButton.width) / 2;
 		tab.add(applyOffsetButton);
-
+		
 		var pasteMetadataButton = new FlxUIButton(0, applyOffsetButton.y + applyOffsetButton.height + spacing, 'Paste metadata into all difficulties',
 			function()
 			{
@@ -597,7 +597,7 @@ class SongEditorEditPanel extends EditorPanel
 		pasteMetadataButton.resize(190, pasteMetadataButton.height);
 		pasteMetadataButton.x = (width - pasteMetadataButton.width) / 2;
 		tab.add(pasteMetadataButton);
-
+		
 		var pasteCharactersButton = new FlxUIButton(0, pasteMetadataButton.y + pasteMetadataButton.height + spacing,
 			'Paste characters & stage into all difficulties', function()
 		{
@@ -606,7 +606,7 @@ class SongEditorEditPanel extends EditorPanel
 		pasteCharactersButton.resize(220, pasteCharactersButton.height);
 		pasteCharactersButton.x = (width - pasteCharactersButton.width) / 2;
 		tab.add(pasteCharactersButton);
-
+		
 		var pasteTimingPointsButton = new FlxUIButton(0, pasteCharactersButton.y + pasteCharactersButton.height + spacing,
 			'Paste timing points into all difficulties', function()
 		{
@@ -615,7 +615,7 @@ class SongEditorEditPanel extends EditorPanel
 		pasteTimingPointsButton.resize(200, pasteTimingPointsButton.height);
 		pasteTimingPointsButton.x = (width - pasteTimingPointsButton.width) / 2;
 		tab.add(pasteTimingPointsButton);
-
+		
 		var pasteScrollVelocitiesButton = new FlxUIButton(0, pasteTimingPointsButton.y + pasteTimingPointsButton.height + spacing,
 			'Paste scroll velocities into all difficulties', function()
 		{
@@ -624,7 +624,7 @@ class SongEditorEditPanel extends EditorPanel
 		pasteScrollVelocitiesButton.resize(210, pasteScrollVelocitiesButton.height);
 		pasteScrollVelocitiesButton.x = (width - pasteScrollVelocitiesButton.width) / 2;
 		tab.add(pasteScrollVelocitiesButton);
-
+		
 		var pasteCameraFocusesButton = new FlxUIButton(0, pasteScrollVelocitiesButton.y + pasteScrollVelocitiesButton.height + spacing,
 			'Paste camera focuses into all difficulties', function()
 		{
@@ -633,7 +633,7 @@ class SongEditorEditPanel extends EditorPanel
 		pasteCameraFocusesButton.resize(210, pasteCameraFocusesButton.height);
 		pasteCameraFocusesButton.x = (width - pasteCameraFocusesButton.width) / 2;
 		tab.add(pasteCameraFocusesButton);
-
+		
 		var pasteEventsButton = new FlxUIButton(0, pasteCameraFocusesButton.y + pasteCameraFocusesButton.height + spacing,
 			'Paste events into all difficulties', function()
 		{
@@ -642,7 +642,7 @@ class SongEditorEditPanel extends EditorPanel
 		pasteEventsButton.resize(180, pasteEventsButton.height);
 		pasteEventsButton.x = (width - pasteEventsButton.width) / 2;
 		tab.add(pasteEventsButton);
-
+		
 		var pasteLyricStepsButton = new FlxUIButton(0, pasteEventsButton.y + pasteEventsButton.height + spacing, 'Paste lyric steps into all difficulties',
 			function()
 			{
@@ -651,19 +651,19 @@ class SongEditorEditPanel extends EditorPanel
 		pasteLyricStepsButton.resize(190, pasteLyricStepsButton.height);
 		pasteLyricStepsButton.x = (width - pasteLyricStepsButton.width) / 2;
 		tab.add(pasteLyricStepsButton);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createEditorTab()
 	{
 		var tab = createTab('Editor');
-
+		
 		var inputSpacing = 125;
-
+		
 		var speedLabel = new EditorText(4, 5, 0, 'Scroll Speed:');
 		tab.add(speedLabel);
-
+		
 		speedStepper = new EditorNumericStepper(speedLabel.x + inputSpacing, speedLabel.y - 1, 0.05, Settings.editorScrollSpeed.defaultValue,
 			Settings.editorScrollSpeed.minValue, Settings.editorScrollSpeed.maxValue, 2);
 		speedStepper.value = Settings.editorScrollSpeed.value;
@@ -672,10 +672,10 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorScrollSpeed.value = value;
 		});
 		tab.add(speedStepper);
-
+		
 		var rateLabel = new EditorText(speedLabel.x, speedLabel.y + speedLabel.height + spacing, 0, 'Playback Rate:');
 		tab.add(rateLabel);
-
+		
 		rateStepper = new EditorNumericStepper(rateLabel.x + inputSpacing, rateLabel.y - 1, 0.25, 1, 0.25, 2, 2);
 		rateStepper.value = state.inst.pitch;
 		rateStepper.valueChanged.add(function(value, _)
@@ -684,7 +684,7 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(rateStepper);
 		state.tooltip.addTooltip(rateStepper, 'Hotkeys: CTRL + -/+');
-
+		
 		var scaleSpeedCheckbox = new EditorCheckbox(rateLabel.x, rateLabel.y + rateLabel.height + spacing, 'Scale Speed with Playback Rate', 0);
 		scaleSpeedCheckbox.button.setAllLabelOffsets(0, 8);
 		scaleSpeedCheckbox.checked = Settings.editorScaleSpeedWithRate.value;
@@ -693,10 +693,10 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorScaleSpeedWithRate.value = scaleSpeedCheckbox.checked;
 		};
 		tab.add(scaleSpeedCheckbox);
-
+		
 		var longNoteAlphaLabel = new EditorText(scaleSpeedCheckbox.x, scaleSpeedCheckbox.y + scaleSpeedCheckbox.height + spacing, 0, 'Long Note Opacity:');
 		tab.add(longNoteAlphaLabel);
-
+		
 		var longNoteAlphaStepper = new EditorNumericStepper(longNoteAlphaLabel.x + inputSpacing, longNoteAlphaLabel.y - 1, 10,
 			Settings.editorLongNoteAlpha.defaultValue * 100, Settings.editorLongNoteAlpha.minValue * 100, Settings.editorLongNoteAlpha.maxValue * 100, 0);
 		longNoteAlphaStepper.value = Settings.editorLongNoteAlpha.value * 100;
@@ -705,10 +705,10 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorLongNoteAlpha.value = value / 100;
 		});
 		tab.add(longNoteAlphaStepper);
-
+		
 		var hitsoundLabel = new EditorText(longNoteAlphaLabel.x, longNoteAlphaLabel.y + longNoteAlphaLabel.height + spacing, 0, 'Hitsound Volume:');
 		tab.add(hitsoundLabel);
-
+		
 		var hitsoundStepper = new EditorNumericStepper(hitsoundLabel.x + inputSpacing, hitsoundLabel.y - 1, 10,
 			Settings.editorHitsoundVolume.defaultValue * 100, Settings.editorHitsoundVolume.minValue * 100, Settings.editorHitsoundVolume.maxValue * 100, 0);
 		hitsoundStepper.value = Settings.editorHitsoundVolume.value * 100;
@@ -717,7 +717,7 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorHitsoundVolume.value = value / 100;
 		});
 		tab.add(hitsoundStepper);
-
+		
 		var opponentHitsoundsCheckbox = new EditorCheckbox(hitsoundStepper.x + hitsoundStepper.width + spacing, hitsoundStepper.y - 10, 'Opponent Hitsounds');
 		opponentHitsoundsCheckbox.checked = Settings.editorOpponentHitsounds.value;
 		opponentHitsoundsCheckbox.callback = function()
@@ -725,7 +725,7 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorOpponentHitsounds.value = opponentHitsoundsCheckbox.checked;
 		};
 		tab.add(opponentHitsoundsCheckbox);
-
+		
 		var bfHitsoundsCheckbox = new EditorCheckbox(opponentHitsoundsCheckbox.x + 80 + spacing, opponentHitsoundsCheckbox.y, 'BF Hitsounds');
 		bfHitsoundsCheckbox.button.setAllLabelOffsets(0, -2);
 		bfHitsoundsCheckbox.checked = Settings.editorBFHitsounds.value;
@@ -734,10 +734,10 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorBFHitsounds.value = bfHitsoundsCheckbox.checked;
 		};
 		tab.add(bfHitsoundsCheckbox);
-
+		
 		var metronomeLabel = new EditorText(hitsoundLabel.x, hitsoundLabel.y + hitsoundLabel.height + spacing + 3, 0, 'Metronome:');
 		tab.add(metronomeLabel);
-
+		
 		var metronomeTypes:Array<MetronomeType> = [NONE, EVERY_BEAT, EVERY_HALF_BEAT];
 		var metronomeDropdown = new EditorDropdownMenu(metronomeLabel.x + inputSpacing, metronomeLabel.y - 4,
 			EditorDropdownMenu.makeStrIdLabelArray(metronomeTypes), function(id)
@@ -745,10 +745,10 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorMetronome.value = id;
 		}, this);
 		metronomeDropdown.selectedId = Settings.editorMetronome.value;
-
+		
 		var beatSnapLabel = new EditorText(metronomeLabel.x, metronomeLabel.y + metronomeLabel.height + spacing + 3, 0, 'Beat Snap:');
 		tab.add(beatSnapLabel);
-
+		
 		var beatSnaps = [
 			for (snap in state.availableBeatSnaps)
 				new StrNameLabel(Std.string(snap), '1/${CoolUtil.formatOrdinal(snap)}')
@@ -759,7 +759,7 @@ class SongEditorEditPanel extends EditorPanel
 		}, this);
 		beatSnapDropdown.selectedId = Std.string(state.beatSnap.value);
 		state.tooltip.addTooltip(beatSnapDropdown, 'Hotkeys: CTRL + Up/Down/Mouse Wheel');
-
+		
 		var liveMappingCheckbox = new EditorCheckbox(beatSnapLabel.x, beatSnapLabel.y + beatSnapLabel.height + spacing, 'Live Mapping', 200);
 		liveMappingCheckbox.button.setAllLabelOffsets(0, -2);
 		liveMappingCheckbox.checked = Settings.editorLiveMapping.value;
@@ -768,10 +768,10 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorLiveMapping.value = liveMappingCheckbox.checked;
 		};
 		tab.add(liveMappingCheckbox);
-
+		
 		var waveformLabel = new EditorText(liveMappingCheckbox.x, liveMappingCheckbox.y + liveMappingCheckbox.height + spacing + 2, 0, 'Waveform:');
 		tab.add(waveformLabel);
-
+		
 		var waveformTypes = [WaveformType.NONE, WaveformType.INST, WaveformType.VOCALS];
 		waveformDropdown = new EditorDropdownMenu(waveformLabel.x + inputSpacing, waveformLabel.y - 4, EditorDropdownMenu.makeStrIdLabelArray(waveformTypes),
 			function(id)
@@ -785,7 +785,7 @@ class SongEditorEditPanel extends EditorPanel
 				}
 			}, this);
 		waveformDropdown.selectedId = state.playfieldNotes.waveform.type;
-
+		
 		var placeOnNearestTickCheckbox = new EditorCheckbox(waveformLabel.x, waveformLabel.y + waveformLabel.height + spacing, 'Place on Nearest Tick', 0);
 		placeOnNearestTickCheckbox.button.setAllLabelOffsets(0, 4);
 		placeOnNearestTickCheckbox.checked = Settings.editorPlaceOnNearestTick.value;
@@ -794,11 +794,11 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorPlaceOnNearestTick.value = placeOnNearestTickCheckbox.checked;
 		};
 		tab.add(placeOnNearestTickCheckbox);
-
+		
 		var instVolumeLabel = new EditorText(placeOnNearestTickCheckbox.x, placeOnNearestTickCheckbox.y + placeOnNearestTickCheckbox.height + spacing, 0,
 			'Instrumental Volume:');
 		tab.add(instVolumeLabel);
-
+		
 		instVolumeStepper = new EditorNumericStepper(instVolumeLabel.x + inputSpacing, instVolumeLabel.y - 1, 10,
 			Settings.editorInstVolume.defaultValue * 100, Settings.editorInstVolume.minValue * 100, Settings.editorInstVolume.maxValue * 100, 0);
 		instVolumeStepper.value = Settings.editorInstVolume.value * 100;
@@ -807,10 +807,10 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorInstVolume.value = state.inst.volume = value / 100;
 		});
 		tab.add(instVolumeStepper);
-
+		
 		var vocalsVolumeLabel = new EditorText(instVolumeLabel.x, instVolumeLabel.y + instVolumeLabel.height + spacing, 0, 'Vocals Volume:');
 		tab.add(vocalsVolumeLabel);
-
+		
 		vocalsVolumeStepper = new EditorNumericStepper(vocalsVolumeLabel.x + inputSpacing, vocalsVolumeLabel.y - 1, 10,
 			Settings.editorVocalsVolume.defaultValue * 100, Settings.editorVocalsVolume.minValue * 100, Settings.editorVocalsVolume.maxValue * 100, 0);
 		vocalsVolumeStepper.value = Settings.editorVocalsVolume.value * 100;
@@ -819,7 +819,7 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorVocalsVolume.value = state.vocals.volume = value / 100;
 		});
 		tab.add(vocalsVolumeStepper);
-
+		
 		var saveOnExitCheckbox = new EditorCheckbox(vocalsVolumeLabel.x, vocalsVolumeLabel.y + vocalsVolumeLabel.height + spacing, 'Save on Exit', 0);
 		saveOnExitCheckbox.checked = Settings.editorSaveOnExit.value;
 		saveOnExitCheckbox.callback = function()
@@ -827,14 +827,14 @@ class SongEditorEditPanel extends EditorPanel
 			Settings.editorSaveOnExit.value = saveOnExitCheckbox.checked;
 		};
 		tab.add(saveOnExitCheckbox);
-
+		
 		tab.add(waveformDropdown);
 		tab.add(beatSnapDropdown);
 		tab.add(metronomeDropdown);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createNotesTab()
 	{
 		selectAllNoteTypePrompt = new SongEditorSelectNoteTypePrompt(function(text)
@@ -870,15 +870,15 @@ class SongEditorEditPanel extends EditorPanel
 			state.selectedObjects.clear();
 			state.selectedObjects.pushMultiple(cast notes);
 		});
-
+		
 		var tab = createTab('Notes');
-
+		
 		var inputWidth = width - 10;
-
+		
 		var typeLabel = new EditorText(4, 4, 0, 'Type:');
 		tab.add(typeLabel);
 		notePropertiesGroup.push(typeLabel);
-
+		
 		typeInput = new EditorInputText(typeLabel.x, typeLabel.y + typeLabel.height + spacing, inputWidth);
 		typeInput.textChanged.add(function(text, lastText)
 		{
@@ -886,11 +886,11 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(typeInput);
 		notePropertiesGroup.push(typeInput);
-
+		
 		var paramsLabel = new EditorText(typeInput.x, typeInput.y + typeInput.height + spacing, 0, 'Extra parameters:');
 		tab.add(paramsLabel);
 		notePropertiesGroup.push(paramsLabel);
-
+		
 		noteParamsInput = new EditorInputText(paramsLabel.x, paramsLabel.y + paramsLabel.height + spacing, inputWidth);
 		noteParamsInput.textChanged.add(function(text, lastText)
 		{
@@ -898,7 +898,7 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(noteParamsInput);
 		notePropertiesGroup.push(noteParamsInput);
-
+		
 		var selectP1NotesButton = new FlxUIButton(0, noteParamsInput.y + noteParamsInput.height + spacing, 'Select P1 notes', function()
 		{
 			var notes:Array<NoteInfo> = [];
@@ -912,7 +912,7 @@ class SongEditorEditPanel extends EditorPanel
 		selectP1NotesButton.resize(90, selectP1NotesButton.height);
 		selectP1NotesButton.x = (width - selectP1NotesButton.width) / 2;
 		tab.add(selectP1NotesButton);
-
+		
 		var selectP2NotesButton = new FlxUIButton(0, selectP1NotesButton.y + selectP1NotesButton.height + spacing, 'Select P2 notes', function()
 		{
 			var notes:Array<NoteInfo> = [];
@@ -926,7 +926,7 @@ class SongEditorEditPanel extends EditorPanel
 		selectP2NotesButton.resize(90, selectP2NotesButton.height);
 		selectP2NotesButton.x = (width - selectP2NotesButton.width) / 2;
 		tab.add(selectP2NotesButton);
-
+		
 		var resnapAllToCurrentButton = new FlxUIButton(0, selectP2NotesButton.y + selectP2NotesButton.height + spacing,
 			'Resnap all notes to currently selected snap', function()
 		{
@@ -936,7 +936,7 @@ class SongEditorEditPanel extends EditorPanel
 		resnapAllToCurrentButton.resize(230, resnapAllToCurrentButton.height);
 		resnapAllToCurrentButton.x = (width - resnapAllToCurrentButton.width) / 2;
 		tab.add(resnapAllToCurrentButton);
-
+		
 		var resnapAllToDefaultButton = new FlxUIButton(0, resnapAllToCurrentButton.y + resnapAllToCurrentButton.height + spacing,
 			'Resnap all notes to 1/16 and 1/12 snaps', function()
 		{
@@ -946,7 +946,7 @@ class SongEditorEditPanel extends EditorPanel
 		resnapAllToDefaultButton.resize(200, resnapAllToDefaultButton.height);
 		resnapAllToDefaultButton.x = (width - resnapAllToDefaultButton.width) / 2;
 		tab.add(resnapAllToDefaultButton);
-
+		
 		var resnapSelectedToCurrentButton = new FlxUIButton(0, resnapAllToDefaultButton.y + resnapAllToDefaultButton.height + spacing,
 			'Resnap selected notes to currently selected snap', function()
 		{
@@ -962,7 +962,7 @@ class SongEditorEditPanel extends EditorPanel
 		resnapSelectedToCurrentButton.resize(250, resnapSelectedToCurrentButton.height);
 		resnapSelectedToCurrentButton.x = (width - resnapSelectedToCurrentButton.width) / 2;
 		tab.add(resnapSelectedToCurrentButton);
-
+		
 		var resnapSelectedToDefaultButton = new FlxUIButton(0, resnapSelectedToCurrentButton.y + resnapSelectedToCurrentButton.height + spacing,
 			'Resnap selected notes to 1/16 and 1/12 snaps', function()
 		{
@@ -978,7 +978,7 @@ class SongEditorEditPanel extends EditorPanel
 		resnapSelectedToDefaultButton.resize(230, resnapSelectedToDefaultButton.height);
 		resnapSelectedToDefaultButton.x = (width - resnapSelectedToDefaultButton.width) / 2;
 		tab.add(resnapSelectedToDefaultButton);
-
+		
 		var mirrorNotesButton = new FlxUIButton(0, resnapSelectedToDefaultButton.y + resnapSelectedToDefaultButton.height + spacing, 'Mirror all notes',
 			function()
 			{
@@ -988,7 +988,7 @@ class SongEditorEditPanel extends EditorPanel
 		mirrorNotesButton.resize(100, mirrorNotesButton.height);
 		mirrorNotesButton.x = (width - mirrorNotesButton.width) / 2;
 		tab.add(mirrorNotesButton);
-
+		
 		var noLongNotesButton = new FlxUIButton(0, mirrorNotesButton.y + mirrorNotesButton.height + spacing, 'No long notes', function()
 		{
 			if (state.song.notes.length > 0)
@@ -997,7 +997,7 @@ class SongEditorEditPanel extends EditorPanel
 		noLongNotesButton.resize(100, noLongNotesButton.height);
 		noLongNotesButton.x = (width - noLongNotesButton.width) / 2;
 		tab.add(noLongNotesButton);
-
+		
 		var fullLongNotesButton = new FlxUIButton(0, noLongNotesButton.y + noLongNotesButton.height + spacing, 'Full long notes', function()
 		{
 			if (state.song.notes.length > 0)
@@ -1006,7 +1006,7 @@ class SongEditorEditPanel extends EditorPanel
 		fullLongNotesButton.resize(100, fullLongNotesButton.height);
 		fullLongNotesButton.x = (width - fullLongNotesButton.width) / 2;
 		tab.add(fullLongNotesButton);
-
+		
 		var inverseButton = new FlxUIButton(0, fullLongNotesButton.y + fullLongNotesButton.height + spacing, 'Invert notes', function()
 		{
 			if (state.song.notes.length > 0)
@@ -1015,7 +1015,7 @@ class SongEditorEditPanel extends EditorPanel
 		inverseButton.resize(100, inverseButton.height);
 		inverseButton.x = (width - inverseButton.width) / 2;
 		tab.add(inverseButton);
-
+		
 		var duetButton = new FlxUIButton(0, inverseButton.y + inverseButton.height + spacing, 'Duet selected notes', function()
 		{
 			if (selectedNotes.length > 0)
@@ -1049,7 +1049,7 @@ class SongEditorEditPanel extends EditorPanel
 		duetButton.resize(120, duetButton.height);
 		duetButton.x = (width - duetButton.width) / 2;
 		tab.add(duetButton);
-
+		
 		var selectAllNoteTypeButton = new FlxUIButton(0, duetButton.y + duetButton.height + spacing, 'Select all notes of type', function()
 		{
 			state.openSubState(selectAllNoteTypePrompt);
@@ -1057,7 +1057,7 @@ class SongEditorEditPanel extends EditorPanel
 		selectAllNoteTypeButton.resize(130, selectAllNoteTypeButton.height);
 		selectAllNoteTypeButton.x = (width - selectAllNoteTypeButton.width) / 2;
 		tab.add(selectAllNoteTypeButton);
-
+		
 		var selectP1NoteTypeButton = new FlxUIButton(0, selectAllNoteTypeButton.y + selectAllNoteTypeButton.height + spacing, 'Select P1 notes of type',
 			function()
 			{
@@ -1066,7 +1066,7 @@ class SongEditorEditPanel extends EditorPanel
 		selectP1NoteTypeButton.resize(130, selectP1NoteTypeButton.height);
 		selectP1NoteTypeButton.x = (width - selectP1NoteTypeButton.width) / 2;
 		tab.add(selectP1NoteTypeButton);
-
+		
 		var selectP2NoteTypeButton = new FlxUIButton(0, selectP1NoteTypeButton.y + selectP1NoteTypeButton.height + spacing, 'Select P2 notes of type',
 			function()
 			{
@@ -1075,7 +1075,7 @@ class SongEditorEditPanel extends EditorPanel
 		selectP2NoteTypeButton.resize(130, selectP2NoteTypeButton.height);
 		selectP2NoteTypeButton.x = (width - selectP2NoteTypeButton.width) / 2;
 		tab.add(selectP2NoteTypeButton);
-
+		
 		var getTypeListButton = new FlxUIButton(0, selectP2NoteTypeButton.y + selectP2NoteTypeButton.height + spacing, 'Get Note Type List', function()
 		{
 			var types:Array<String> = [];
@@ -1092,18 +1092,18 @@ class SongEditorEditPanel extends EditorPanel
 		getTypeListButton.resize(110, getTypeListButton.height);
 		getTypeListButton.x = (width - getTypeListButton.width) / 2;
 		tab.add(getTypeListButton);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createTimingPointsTab()
 	{
 		var tab = createTab('Timing Points');
-
+		
 		var timingPointTimeLabel = new EditorText(4, 4, 0, 'Time:');
 		tab.add(timingPointTimeLabel);
 		timingPointPropertiesGroup.push(timingPointTimeLabel);
-
+		
 		timingPointTimeStepper = new EditorNumericStepper(timingPointTimeLabel.x, timingPointTimeLabel.y + timingPointTimeLabel.height + spacing, 1, 0, 0);
 		timingPointTimeStepper.valueChanged.add(function(value, _)
 		{
@@ -1111,11 +1111,11 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(timingPointTimeStepper);
 		timingPointPropertiesGroup.push(timingPointTimeStepper);
-
+		
 		var bpmLabel = new EditorText(timingPointTimeStepper.x + timingPointTimeStepper.width + spacing, timingPointTimeLabel.y, 0, 'BPM:');
 		tab.add(bpmLabel);
 		timingPointPropertiesGroup.push(bpmLabel);
-
+		
 		bpmStepper = new EditorNumericStepper(bpmLabel.x, bpmLabel.y + bpmLabel.height + spacing, 1, 120, 1, 1000, 3);
 		bpmStepper.valueChanged.add(function(value, _)
 		{
@@ -1123,11 +1123,11 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(bpmStepper);
 		timingPointPropertiesGroup.push(bpmStepper);
-
+		
 		var meterLabel = new EditorText(bpmStepper.x + bpmStepper.width + spacing, bpmLabel.y, 0, 'Meter:');
 		tab.add(meterLabel);
 		timingPointPropertiesGroup.push(meterLabel);
-
+		
 		meterStepper = new EditorNumericStepper(meterLabel.x, meterLabel.y + meterLabel.height + spacing, 1, 4, 1, 16, 0);
 		meterStepper.valueChanged.add(function(value, _)
 		{
@@ -1135,7 +1135,7 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(meterStepper);
 		timingPointPropertiesGroup.push(meterStepper);
-
+		
 		var selectCurrentButton = new FlxUIButton(0, meterStepper.y + meterStepper.height + spacing, 'Select current timing point', function()
 		{
 			var point = state.song.getTimingPointAt(state.inst.time);
@@ -1154,18 +1154,18 @@ class SongEditorEditPanel extends EditorPanel
 		selectCurrentButton.resize(150, selectCurrentButton.height);
 		selectCurrentButton.x = (width - selectCurrentButton.width) / 2;
 		tab.add(selectCurrentButton);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createScrollVelocitiesTab()
 	{
 		var tab = createTab('Scroll Velocities');
-
+		
 		var multiplierLabel1 = new EditorText(4, 4, 0, 'P1 Multiplier:');
 		tab.add(multiplierLabel1);
 		scrollVelocitiesPropertiesGroup.push(multiplierLabel1);
-
+		
 		multiplierStepper1 = new EditorNumericStepper(multiplierLabel1.x, multiplierLabel1.y + multiplierLabel1.height + spacing, 0.1, 1, -100, 100, 2);
 		multiplierStepper1.valueChanged.add(function(value, lastValue)
 		{
@@ -1185,11 +1185,11 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(multiplierStepper1);
 		scrollVelocitiesPropertiesGroup.push(multiplierStepper1);
-
+		
 		var multiplierLabel2 = new EditorText(multiplierStepper1.x + multiplierStepper1.width + spacing, multiplierLabel1.y, 0, 'P2 Multiplier:');
 		tab.add(multiplierLabel2);
 		scrollVelocitiesPropertiesGroup.push(multiplierLabel2);
-
+		
 		multiplierStepper2 = new EditorNumericStepper(multiplierLabel2.x, multiplierLabel2.y + multiplierLabel2.height + spacing, 0.1, 1, -100, 100, 2);
 		multiplierStepper2.valueChanged.add(function(value, _)
 		{
@@ -1209,7 +1209,7 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(multiplierStepper2);
 		scrollVelocitiesPropertiesGroup.push(multiplierStepper2);
-
+		
 		linkedCheckbox = new EditorCheckbox(multiplierStepper2.x + multiplierStepper2.width + spacing, multiplierStepper2.y, 'Linked');
 		linkedCheckbox.callback = function()
 		{
@@ -1217,7 +1217,7 @@ class SongEditorEditPanel extends EditorPanel
 		};
 		tab.add(linkedCheckbox);
 		scrollVelocitiesPropertiesGroup.push(linkedCheckbox);
-
+		
 		var selectCurrentButton = new FlxUIButton(0, linkedCheckbox.y + linkedCheckbox.height + spacing, 'Select current scroll velocity', function()
 		{
 			var sv = state.song.getScrollVelocityAt(state.inst.time);
@@ -1236,18 +1236,18 @@ class SongEditorEditPanel extends EditorPanel
 		selectCurrentButton.resize(150, selectCurrentButton.height);
 		selectCurrentButton.x = (width - selectCurrentButton.width) / 2;
 		tab.add(selectCurrentButton);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createCameraFocusesTab()
 	{
 		var tab = createTab('Camera Focuses');
-
+		
 		var charLabel = new EditorText(4, 4, 0, 'Character:');
 		tab.add(charLabel);
 		cameraFocusesPropertiesGroup.push(charLabel);
-
+		
 		var chars = ['Opponent', 'Boyfriend', 'Girlfriend'];
 		charDropdown = new EditorDropdownMenu(charLabel.x, charLabel.y + charLabel.height + spacing, EditorDropdownMenu.makeStrIdLabelArray(chars, true),
 			function(id)
@@ -1255,7 +1255,7 @@ class SongEditorEditPanel extends EditorPanel
 				state.actionManager.perform(new ActionChangeCameraFocusChar(state, selectedCameraFocuses.copy(), Std.parseInt(id)));
 			}, this);
 		cameraFocusesPropertiesGroup.push(charDropdown);
-
+		
 		var selectCurrentButton = new FlxUIButton(0, charDropdown.y + charDropdown.height + spacing, 'Select current camera focus', function()
 		{
 			var focus = state.song.getCameraFocusAt(state.inst.time);
@@ -1274,12 +1274,12 @@ class SongEditorEditPanel extends EditorPanel
 		selectCurrentButton.resize(150, selectCurrentButton.height);
 		selectCurrentButton.x = (width - selectCurrentButton.width) / 2;
 		tab.add(selectCurrentButton);
-
+		
 		tab.add(charDropdown);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createEventsTab()
 	{
 		selectEventPrompt = new PromptInputSubState("Enter an event to select.", function(text)
@@ -1299,19 +1299,19 @@ class SongEditorEditPanel extends EditorPanel
 			state.selectedObjects.clear();
 			state.selectedObjects.pushMultiple(cast events);
 		});
-
+		
 		var tab = createTab('Events');
-
+		
 		var inputWidth = width - 10;
-
+		
 		eventIndexLabel = new EditorText(4, 4, 0, 'Selected Event: 0 / 0');
 		tab.add(eventIndexLabel);
 		eventsPropertiesGroup.push(eventIndexLabel);
-
+		
 		var eventLabel = new EditorText(eventIndexLabel.x, eventIndexLabel.y + eventIndexLabel.height + spacing, 0, 'Event Name:');
 		tab.add(eventLabel);
 		eventsPropertiesGroup.push(eventLabel);
-
+		
 		eventInput = new EditorInputText(eventLabel.x, eventLabel.y + eventLabel.height + spacing, inputWidth);
 		eventInput.textChanged.add(function(text, _)
 		{
@@ -1321,11 +1321,11 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(eventInput);
 		eventsPropertiesGroup.push(eventInput);
-
+		
 		var eventParamsLabel = new EditorText(eventInput.x, eventInput.y + eventInput.height + spacing, 0, 'Event Parameters:');
 		tab.add(eventParamsLabel);
 		eventsPropertiesGroup.push(eventParamsLabel);
-
+		
 		eventParamsInput = new EditorInputText(eventParamsLabel.x, eventParamsLabel.y + eventParamsLabel.height + spacing, inputWidth);
 		eventParamsInput.textChanged.add(function(text, _)
 		{
@@ -1335,7 +1335,7 @@ class SongEditorEditPanel extends EditorPanel
 		});
 		tab.add(eventParamsInput);
 		eventsPropertiesGroup.push(eventParamsInput);
-
+		
 		var removeButton = new FlxUIButton(0, 4, '-', function()
 		{
 			var eventObject = selectedEvents[0];
@@ -1352,7 +1352,7 @@ class SongEditorEditPanel extends EditorPanel
 		removeButton.color = FlxColor.RED;
 		removeButton.label.color = FlxColor.WHITE;
 		eventsPropertiesGroup.push(removeButton);
-
+		
 		var addButton = new FlxUIButton(0, 4, '+', function()
 		{
 			var eventObject = selectedEvents[0];
@@ -1368,7 +1368,7 @@ class SongEditorEditPanel extends EditorPanel
 		addButton.color = FlxColor.GREEN;
 		addButton.label.color = FlxColor.WHITE;
 		eventsPropertiesGroup.push(addButton);
-
+		
 		var moveLeftButton = new FlxUIButton(0, 4, '<', function()
 		{
 			eventIndex--;
@@ -1380,7 +1380,7 @@ class SongEditorEditPanel extends EditorPanel
 		moveLeftButton.label.size = 12;
 		moveLeftButton.autoCenterLabel();
 		eventsPropertiesGroup.push(moveLeftButton);
-
+		
 		var moveRightButton = new FlxUIButton(0, 4, '>', function()
 		{
 			eventIndex++;
@@ -1392,7 +1392,7 @@ class SongEditorEditPanel extends EditorPanel
 		moveRightButton.label.size = 12;
 		moveRightButton.autoCenterLabel();
 		eventsPropertiesGroup.push(moveRightButton);
-
+		
 		moveRightButton.x = width - moveRightButton.width - 4;
 		moveLeftButton.x = moveRightButton.x - moveLeftButton.width - 4;
 		addButton.x = moveLeftButton.x - addButton.width - 4;
@@ -1401,7 +1401,7 @@ class SongEditorEditPanel extends EditorPanel
 		tab.add(addButton);
 		tab.add(moveLeftButton);
 		tab.add(moveRightButton);
-
+		
 		var selectAllEventButton = new FlxUIButton(0, eventParamsInput.y + eventParamsInput.height + spacing, "Select events with name", function()
 		{
 			state.openSubState(selectEventPrompt);
@@ -1409,7 +1409,7 @@ class SongEditorEditPanel extends EditorPanel
 		selectAllEventButton.resize(130, selectAllEventButton.height);
 		selectAllEventButton.x = (width - selectAllEventButton.width) / 2;
 		tab.add(selectAllEventButton);
-
+		
 		var getEventListButton = new FlxUIButton(0, selectAllEventButton.y + selectAllEventButton.height + spacing, 'Get Event List', function()
 		{
 			var types:Array<String> = [];
@@ -1429,14 +1429,14 @@ class SongEditorEditPanel extends EditorPanel
 		getEventListButton.resize(110, getEventListButton.height);
 		getEventListButton.x = (width - getEventListButton.width) / 2;
 		tab.add(getEventListButton);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createLyricsTab()
 	{
 		var tab = createTab('Lyrics');
-
+		
 		lyricsInput = new EditorInputText(4, 4, width - 10, state.lyrics);
 		lyricsInput.multiline = true;
 		lyricsInput.resize(0, height - 64);
@@ -1445,12 +1445,12 @@ class SongEditorEditPanel extends EditorPanel
 			state.actionManager.perform(new ActionChangeLyrics(state, lyricsInput.text, state.lyrics));
 		});
 		tab.add(lyricsInput);
-
+		
 		addGroup(tab);
 	}
-
+	
 	function createExtraTab() {}
-
+	
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -1458,7 +1458,7 @@ class SongEditorEditPanel extends EditorPanel
 		vocalsVolumeStepper.alpha = instVolumeStepper.alpha = hideSteppers ? 0 : 1;
 		vocalsVolumeStepper.active = instVolumeStepper.active = (selected_tab_id == 'Editor' && !hideSteppers);
 	}
-
+	
 	function onEvent(type:String, params:Dynamic)
 	{
 		switch (type)
@@ -1496,7 +1496,7 @@ class SongEditorEditPanel extends EditorPanel
 				lyricsInput.text = params.lyrics;
 		}
 	}
-
+	
 	function onSelectedObject(obj:ITimingObject)
 	{
 		if (Std.isOfType(obj, NoteInfo))
@@ -1525,7 +1525,7 @@ class SongEditorEditPanel extends EditorPanel
 			updateSelectedEvents();
 		}
 	}
-
+	
 	function onDeselectedObject(obj:ITimingObject)
 	{
 		if (Std.isOfType(obj, NoteInfo))
@@ -1554,7 +1554,7 @@ class SongEditorEditPanel extends EditorPanel
 			updateSelectedEvents();
 		}
 	}
-
+	
 	function onMultipleObjectsSelected(objects:Array<ITimingObject>)
 	{
 		var foundNote = false;
@@ -1601,7 +1601,7 @@ class SongEditorEditPanel extends EditorPanel
 		if (foundEvent)
 			updateSelectedEvents();
 	}
-
+	
 	function onAllObjectsDeselected()
 	{
 		if (selectedNotes.length > 0)
@@ -1609,32 +1609,32 @@ class SongEditorEditPanel extends EditorPanel
 			selectedNotes.resize(0);
 			updateSelectedNotes();
 		}
-
+		
 		if (selectedTimingPoints.length > 0)
 		{
 			selectedTimingPoints.resize(0);
 			updateSelectedTimingPoints();
 		}
-
+		
 		if (selectedScrollVelocities.length > 0)
 		{
 			selectedScrollVelocities.resize(0);
 			updateSelectedScrollVelocities();
 		}
-
+		
 		if (selectedCameraFocuses.length > 0)
 		{
 			selectedCameraFocuses.resize(0);
 			updateSelectedCameraFocuses();
 		}
-
+		
 		if (selectedEvents.length > 0)
 		{
 			selectedEvents.resize(0);
 			updateSelectedEvents();
 		}
 	}
-
+	
 	function updateSelectedNotes()
 	{
 		if (selectedNotes.length > 0)
@@ -1645,24 +1645,24 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				if (selectedNotes[i].type != type)
 					type = '...';
-
+					
 				if (selectedNotes[i].params.join(',') != params)
 					params = '...';
-
+					
 				if (type == '...' && params == '...')
 					break;
 			}
-
+			
 			if (type == '...')
 				typeInput.displayText = type;
 			else
 				typeInput.text = type;
-
+				
 			if (params == '...')
 				noteParamsInput.displayText = params;
 			else
 				noteParamsInput.text = params;
-
+				
 			for (obj in notePropertiesGroup)
 			{
 				if (selected_tab_id == 'Notes')
@@ -1679,7 +1679,7 @@ class SongEditorEditPanel extends EditorPanel
 			}
 		}
 	}
-
+	
 	function updateSelectedTimingPoints()
 	{
 		if (selectedTimingPoints.length > 0)
@@ -1691,32 +1691,32 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				if (selectedTimingPoints[i].startTime != selectedTimingPoints[0].startTime)
 					multipleTime = true;
-
+					
 				if (selectedTimingPoints[i].bpm != selectedTimingPoints[0].bpm)
 					multipleBPM = true;
-
+					
 				if (selectedTimingPoints[i].meter != selectedTimingPoints[0].meter)
 					multipleMeter = true;
-
+					
 				if (multipleTime && multipleBPM && multipleMeter)
 					break;
 			}
-
+			
 			if (multipleTime)
 				timingPointTimeStepper.setDisplayText('...');
 			else
 				timingPointTimeStepper.value = selectedTimingPoints[0].startTime;
-
+				
 			if (multipleBPM)
 				bpmStepper.setDisplayText('...');
 			else
 				bpmStepper.value = selectedTimingPoints[0].bpm;
-
+				
 			if (multipleMeter)
 				meterStepper.setDisplayText('...');
 			else
 				meterStepper.value = selectedTimingPoints[0].meter;
-
+				
 			for (obj in timingPointPropertiesGroup)
 			{
 				if (selected_tab_id == 'Timing Points')
@@ -1733,7 +1733,7 @@ class SongEditorEditPanel extends EditorPanel
 			}
 		}
 	}
-
+	
 	function updateSelectedScrollVelocities()
 	{
 		if (selectedScrollVelocities.length > 0)
@@ -1745,29 +1745,29 @@ class SongEditorEditPanel extends EditorPanel
 			{
 				if (selectedScrollVelocities[i].multipliers[0] != selectedScrollVelocities[0].multipliers[0])
 					multipleMult1 = true;
-
+					
 				if (selectedScrollVelocities[i].multipliers[1] != selectedScrollVelocities[0].multipliers[1])
 					multipleMult2 = true;
-
+					
 				if (selectedScrollVelocities[i].linked != selectedScrollVelocities[0].linked)
 					multipleLinked = true;
 			}
-
+			
 			if (multipleMult1)
 				multiplierStepper1.setDisplayText('...');
 			else
 				multiplierStepper1.value = selectedScrollVelocities[0].multipliers[0];
-
+				
 			if (multipleMult2)
 				multiplierStepper2.setDisplayText('...');
 			else
 				multiplierStepper2.value = selectedScrollVelocities[0].multipliers[1];
-
+				
 			if (multipleLinked)
 				linkedCheckbox.checked = false;
 			else
 				linkedCheckbox.checked = selectedScrollVelocities[0].linked;
-
+				
 			for (obj in scrollVelocitiesPropertiesGroup)
 			{
 				if (selected_tab_id == 'Scroll Velocities')
@@ -1784,7 +1784,7 @@ class SongEditorEditPanel extends EditorPanel
 			}
 		}
 	}
-
+	
 	function updateSelectedCameraFocuses()
 	{
 		if (selectedCameraFocuses.length > 0)
@@ -1798,10 +1798,10 @@ class SongEditorEditPanel extends EditorPanel
 					break;
 				}
 			}
-
+			
 			if (!multipleChars)
 				charDropdown.selectedId = Std.string(selectedCameraFocuses[0].char);
-
+				
 			for (obj in cameraFocusesPropertiesGroup)
 			{
 				if (selected_tab_id == 'Camera Focuses')
@@ -1820,7 +1820,7 @@ class SongEditorEditPanel extends EditorPanel
 			}
 		}
 	}
-
+	
 	function updateSelectedEvents()
 	{
 		if (selectedEvents.length == 1)
@@ -1842,7 +1842,7 @@ class SongEditorEditPanel extends EditorPanel
 		}
 		updateEventDisplay();
 	}
-
+	
 	function updateEventDisplay()
 	{
 		if (selectedEvents.length == 1)
@@ -1852,13 +1852,13 @@ class SongEditorEditPanel extends EditorPanel
 				eventIndex = 0;
 			else if (eventIndex >= eventObject.events.length)
 				eventIndex = eventObject.events.length - 1;
-
+				
 			eventIndexLabel.text = 'Selected Event: ${eventIndex + 1} / ${eventObject.events.length}';
-
+			
 			var event = eventObject.events[eventIndex];
 			eventInput.text = event.event;
 			eventParamsInput.text = event.params.join(',');
-
+			
 			lastEvent = eventObject;
 		}
 		else
@@ -1867,7 +1867,7 @@ class SongEditorEditPanel extends EditorPanel
 			eventIndexLabel.text = 'Selected Event: 0 / 0';
 		}
 	}
-
+	
 	function onClickTab(name:String)
 	{
 		if (selectedNotes.length == 0)
@@ -1881,7 +1881,7 @@ class SongEditorEditPanel extends EditorPanel
 		if (selectedEvents.length == 0)
 			updateSelectedEvents();
 	}
-
+	
 	function getDifficulties()
 	{
 		return Song.getSongDifficulties(state.song.directory, state.song.difficultyName);

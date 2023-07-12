@@ -9,13 +9,13 @@ class NoteSplash extends AnimatedSprite
 {
 	public var defaultAlphaMult:Float = 0.6;
 	public var alphaMult:Float = 0.00001;
-
+	
 	var id:Int;
 	var skin:SplashSkin;
 	var receptor:Receptor;
 	var splashData:SplashData;
 	var offsetScale:Float;
-
+	
 	public function new(id:Int, skin:SplashSkin, ?receptor:Receptor, ?config:PlayerConfig)
 	{
 		offsetScale = config != null ? config.notesScale : 1;
@@ -23,16 +23,16 @@ class NoteSplash extends AnimatedSprite
 		this.id = id;
 		this.skin = skin;
 		this.receptor = receptor;
-
+		
 		scrollFactor.set();
-
+		
 		if (skin == null)
 			return;
 		if (Paths.isSpritesheet(skin.image, skin.mod))
 			frames = Paths.getSpritesheet(skin.image, skin.mod);
 		else
 			loadGraphic(Paths.getImage(skin.image, skin.mod), true, skin.tileWidth, skin.tileHeight);
-
+			
 		splashData = skin.splashes[id];
 		addAnim({
 			name: 'splash',
@@ -45,14 +45,14 @@ class NoteSplash extends AnimatedSprite
 		frameOffsetScale = skin.scale;
 		antialiasing = skin.antialiasing;
 	}
-
+	
 	public function startSplash()
 	{
 		stopAnimCallback();
 		playAnim('splash', true);
 		if (animation.curAnim != null)
 			animation.curAnim.frameRate = splashData.fps + FlxG.random.int(-2, 2);
-
+			
 		alphaMult = defaultAlphaMult;
 		updatePosition();
 		animation.finishCallback = function(name)
@@ -61,7 +61,7 @@ class NoteSplash extends AnimatedSprite
 			alphaMult = 0.00001;
 		}
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -71,7 +71,7 @@ class NoteSplash extends AnimatedSprite
 		else
 			alpha = alphaMult;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -79,7 +79,7 @@ class NoteSplash extends AnimatedSprite
 		receptor = null;
 		splashData = null;
 	}
-
+	
 	public function updatePosition()
 	{
 		if (receptor != null)

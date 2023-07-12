@@ -29,7 +29,7 @@ import lime.media.AudioSource;
 		(full amplitude).
 	**/
 	public var leftPeak(default, null):Float;
-
+	
 	/**
 		When the sound is playing, the `position` property indicates in
 		milliseconds the current point that is being played in the sound file.
@@ -44,28 +44,28 @@ import lime.media.AudioSource;
 		beginning of each loop.
 	**/
 	public var position(get, set):Float;
-
+	
 	/**
 		The current amplitude(volume) of the right channel, from 0(silent) to 1
 		(full amplitude).
 	**/
 	public var rightPeak(default, null):Float;
-
+	
 	/**
 		The SoundTransform object assigned to the sound channel. A SoundTransform
 		object includes properties for setting volume, panning, left speaker
 		assignment, and right speaker assignment.
 	**/
 	public var soundTransform(get, set):SoundTransform;
-
+	
 	public var pitch(get, set):Float;
-
+	
 	@:noCompletion private var __isValid:Bool;
 	@:noCompletion private var __soundTransform:SoundTransform;
 	#if lime
 	@:noCompletion private var __source:AudioSource;
 	#end
-
+	
 	#if openfljs
 	@:noCompletion private static function __init__()
 	{
@@ -81,14 +81,14 @@ import lime.media.AudioSource;
 		});
 	}
 	#end
-
+	
 	@:noCompletion private function new(source:#if lime AudioSource #else Dynamic #end = null, soundTransform:SoundTransform = null):Void
 	{
 		super(this);
-
+		
 		leftPeak = 1;
 		rightPeak = 1;
-
+		
 		if (soundTransform != null)
 		{
 			__soundTransform = soundTransform;
@@ -97,42 +97,42 @@ import lime.media.AudioSource;
 		{
 			__soundTransform = new SoundTransform();
 		}
-
+		
 		#if lime
 		if (source != null)
 		{
 			__source = source;
 			__source.onComplete.add(source_onComplete);
 			__isValid = true;
-
+			
 			__source.play();
 		}
 		#end
-
+		
 		SoundMixer.__registerSoundChannel(this);
 	}
-
+	
 	/**
 		Stops the sound playing in the channel.
 	**/
 	public function stop():Void
 	{
 		SoundMixer.__unregisterSoundChannel(this);
-
+		
 		if (!__isValid)
 			return;
-
+			
 		#if lime
 		__source.stop();
 		#end
 		__dispose();
 	}
-
+	
 	@:noCompletion private function __dispose():Void
 	{
 		if (!__isValid)
 			return;
-
+			
 		#if lime
 		__source.onComplete.remove(source_onComplete);
 		__source.dispose();
@@ -140,103 +140,103 @@ import lime.media.AudioSource;
 		#end
 		__isValid = false;
 	}
-
+	
 	@:noCompletion private function __updateTransform():Void
 	{
 		this.soundTransform = soundTransform;
 	}
-
+	
 	// Get & Set Methods
 	@:noCompletion private function get_position():Float
 	{
 		if (!__isValid)
 			return 0;
-
+			
 		#if lime
 		return __source.currentTime + __source.offset;
 		#else
 		return 0;
 		#end
 	}
-
+	
 	@:noCompletion private function set_position(value:Float):Float
 	{
 		if (!__isValid)
 			return 0;
-
+			
 		#if lime
 		__source.currentTime = Std.int(value) - __source.offset;
 		#end
 		return value;
 	}
-
+	
 	@:noCompletion private function get_pitch():Float
 	{
 		if (!__isValid)
 			return 1;
-
+			
 		#if lime
 		return __source.pitch;
 		#else
 		return 1;
 		#end
 	}
-
+	
 	@:noCompletion private function set_pitch(value:Float):Float
 	{
 		if (!__isValid)
 			return 1;
-
+			
 		#if lime
 		__source.pitch = value;
 		#end
 		return value;
 	}
-
+	
 	@:noCompletion private function get_soundTransform():SoundTransform
 	{
 		return __soundTransform.clone();
 	}
-
+	
 	@:noCompletion private function set_soundTransform(value:SoundTransform):SoundTransform
 	{
 		if (value != null)
 		{
 			__soundTransform.pan = value.pan;
 			__soundTransform.volume = value.volume;
-
+			
 			var pan = SoundMixer.__soundTransform.pan + __soundTransform.pan;
-
+			
 			if (pan < -1)
 				pan = -1;
 			else if (pan > 1)
 				pan = 1;
-
+				
 			var volume = SoundMixer.__soundTransform.volume * __soundTransform.volume;
-
+			
 			if (__isValid)
 			{
 				#if lime
 				__source.gain = volume;
-
+				
 				var position = __source.position;
 				position.x = pan;
 				position.z = -1 * Math.sqrt(1 - Math.pow(pan, 2));
 				__source.position = position;
-
+				
 				return value;
 				#end
 			}
 		}
-
+		
 		return value;
 	}
-
+	
 	// Event Handlers
 	@:noCompletion private function source_onComplete():Void
 	{
 		SoundMixer.__unregisterSoundChannel(this);
-
+		
 		__dispose();
 		dispatchEvent(new Event(Event.SOUND_COMPLETE));
 	}

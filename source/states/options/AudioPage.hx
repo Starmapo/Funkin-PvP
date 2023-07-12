@@ -9,7 +9,7 @@ class AudioPage extends BaseSettingsPage
 	{
 		super();
 		rpcDetails = 'Audio Options';
-
+		
 		addSetting({
 			name: 'musicVolume',
 			displayName: 'Music Volume',
@@ -46,14 +46,14 @@ class AudioPage extends BaseSettingsPage
 			holdMult: 2
 		});
 		/*
-		addSetting({
-			name: 'smoothAudioTiming',
-			displayName: 'Smooth Audio Timing',
-			description: "If enabled, attempts to make the audio/frame timing move smoothly, instead of being set to the audio's exact position.",
-			type: CHECKBOX
-		});
-		*/
-
+			addSetting({
+				name: 'smoothAudioTiming',
+				displayName: 'Smooth Audio Timing',
+				description: "If enabled, attempts to make the audio/frame timing move smoothly, instead of being set to the audio's exact position.",
+				type: CHECKBOX
+			});
+		 */
+		
 		addPageTitle('Audio');
 	}
 }

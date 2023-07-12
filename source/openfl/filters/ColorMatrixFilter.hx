@@ -59,7 +59,7 @@ import lime._internal.graphics.ImageCanvasUtil;
 @:final class ColorMatrixFilter extends BitmapFilter
 {
 	@:noCompletion private static var __colorMatrixShader:ColorMatrixShader = new ColorMatrixShader();
-
+	
 	/**
 		An array of 20 items for 4 x 5 color transform. The `matrix` property
 		cannot be changed by directly modifying its value (for example,
@@ -115,9 +115,9 @@ import lime._internal.graphics.ImageCanvasUtil;
 		@throws TypeError The Array is `null` when being set
 	**/
 	public var matrix(get, set):Array<Float>;
-
+	
 	@:noCompletion private var __matrix:Array<Float>;
-
+	
 	#if openfljs
 	@:noCompletion private static function __init__()
 	{
@@ -129,7 +129,7 @@ import lime._internal.graphics.ImageCanvasUtil;
 		});
 	}
 	#end
-
+	
 	/**
 		Initializes a new ColorMatrixFilter instance with the specified
 		parameters.
@@ -137,55 +137,55 @@ import lime._internal.graphics.ImageCanvasUtil;
 	public function new(matrix:Array<Float> = null)
 	{
 		super();
-
+		
 		this.matrix = matrix;
-
+		
 		__numShaderPasses = 1;
 		__needSecondBitmapData = false;
 	}
-
+	
 	public override function clone():BitmapFilter
 	{
 		return new ColorMatrixFilter(__matrix);
 	}
-
+	
 	@:noCompletion private override function __applyFilter(destBitmapData:BitmapData, sourceBitmapData:BitmapData, sourceRect:Rectangle,
 			destPoint:Point):BitmapData
 	{
 		#if lime
 		var sourceImage = sourceBitmapData.image;
 		var image = destBitmapData.image;
-
+		
 		#if (js && html5)
 		ImageCanvasUtil.convertToData(sourceImage);
 		ImageCanvasUtil.convertToData(image);
 		#end
-
+		
 		var sourceData = sourceImage.data;
 		var destData = image.data;
-
+		
 		var offsetX = Std.int(destPoint.x - sourceRect.x);
 		var offsetY = Std.int(destPoint.y - sourceRect.y);
 		var sourceStride = sourceBitmapData.width * 4;
 		var destStride = destBitmapData.width * 4;
-
+		
 		var sourceFormat = sourceImage.buffer.format;
 		var destFormat = image.buffer.format;
 		var sourcePremultiplied = sourceImage.buffer.premultiplied;
 		var destPremultiplied = image.buffer.premultiplied;
-
+		
 		var sourcePixel:RGBA, destPixel:RGBA = 0;
 		var sourceOffset:Int, destOffset:Int;
-
+		
 		for (row in Std.int(sourceRect.y)...Std.int(sourceRect.height))
 		{
 			for (column in Std.int(sourceRect.x)...Std.int(sourceRect.width))
 			{
 				sourceOffset = (row * sourceStride) + (column * 4);
 				destOffset = ((row + offsetX) * destStride) + ((column + offsetY) * 4);
-
+				
 				sourcePixel.readUInt8(sourceData, sourceOffset, sourceFormat, sourcePremultiplied);
-
+				
 				if (sourcePixel.a == 0)
 				{
 					destPixel = 0;
@@ -209,35 +209,35 @@ import lime._internal.graphics.ImageCanvasUtil;
 							+ (__matrix[18] * sourcePixel.a) + __matrix[19],
 							255)));
 				}
-
+				
 				destPixel.writeUInt8(destData, destOffset, destFormat, destPremultiplied);
 			}
 		}
-
+		
 		destBitmapData.image.dirty = true;
 		#end
 		return destBitmapData;
 	}
-
+	
 	@:noCompletion private override function __initShader(renderer:DisplayObjectRenderer, pass:Int, sourceBitmapData:BitmapData):Shader
 	{
 		__colorMatrixShader.init(matrix);
 		return __colorMatrixShader;
 	}
-
+	
 	// Get & Set Methods
 	@:noCompletion private function get_matrix():Array<Float>
 	{
 		return __matrix;
 	}
-
+	
 	@:noCompletion private function set_matrix(value:Array<Float>):Array<Float>
 	{
 		if (value == null)
 		{
 			value = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0];
 		}
-
+		
 		return __matrix = value;
 	}
 }
@@ -276,19 +276,19 @@ private class ColorMatrixShader extends BitmapFilterShader
 	public function new()
 	{
 		super();
-
+		
 		#if !macro
 		data.uMultipliers.value = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 		data.uOffsets.value = [0, 0, 0, 0];
 		#end
 	}
-
+	
 	public function init(matrix:Array<Float>):Void
 	{
 		#if !macro
 		var multipliers = data.uMultipliers.value;
 		var offsets = data.uOffsets.value;
-
+		
 		multipliers[0] = matrix[0];
 		multipliers[1] = matrix[1];
 		multipliers[2] = matrix[2];
@@ -305,7 +305,7 @@ private class ColorMatrixShader extends BitmapFilterShader
 		multipliers[13] = matrix[16];
 		multipliers[14] = matrix[17];
 		multipliers[15] = matrix[18];
-
+		
 		offsets[0] = matrix[4] / 255.0;
 		offsets[1] = matrix[9] / 255.0;
 		offsets[2] = matrix[14] / 255.0;

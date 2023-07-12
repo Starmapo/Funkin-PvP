@@ -1,11 +1,11 @@
 package subStates.editors.song;
 
-import flixel.util.FlxStringUtil;
 import data.song.Song;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 import haxe.io.Path;
 import states.editors.SongEditorState;
 import ui.editors.EditorCheckbox;
@@ -16,15 +16,15 @@ import ui.editors.EditorText;
 class SongEditorNewChartPrompt extends FNFSubState
 {
 	var state:SongEditorState;
-
+	
 	public function new(state:SongEditorState)
 	{
 		super();
 		this.state = state;
 		checkObjects = true;
-
+		
 		createCamera();
-
+		
 		var tabMenu = new EditorPanel([
 			{
 				name: 'tab',
@@ -32,23 +32,23 @@ class SongEditorNewChartPrompt extends FNFSubState
 			}
 		]);
 		tabMenu.resize(270, 100);
-
+		
 		var tab = tabMenu.createTab('tab');
 		var spacing = 4;
-
+		
 		var difficultyNameLabel = new EditorText(4, 5, 0, 'Difficulty Name:');
-
+		
 		var difficultyNameInput = new EditorInputText(difficultyNameLabel.x + difficultyNameLabel.width + spacing, difficultyNameLabel.y - 1, 0, null, 8,
 			true, camSubState);
-
+			
 		var copyMetadataCheckbox = new EditorCheckbox(difficultyNameLabel.x, difficultyNameLabel.y + difficultyNameLabel.height + spacing * 2,
 			"Copy current chart's metadata");
 		copyMetadataCheckbox.checked = true;
-
+		
 		var copyObjectsCheckbox = new EditorCheckbox(copyMetadataCheckbox.x + copyMetadataCheckbox.box.width + copyMetadataCheckbox.button.label.width,
 			copyMetadataCheckbox.y, "Copy current chart's objects");
 		copyObjectsCheckbox.checked = true;
-
+		
 		var createButton = new FlxUIButton(0, copyObjectsCheckbox.y + copyObjectsCheckbox.height + spacing * 2, 'Create', function()
 		{
 			var diff = difficultyNameInput.text;
@@ -58,9 +58,9 @@ class SongEditorNewChartPrompt extends FNFSubState
 				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-
+			
 			state.save(false);
-
+			
 			var data:Dynamic = {
 				timingPoints: [],
 				scrollVelocities: [],
@@ -112,9 +112,9 @@ class SongEditorNewChartPrompt extends FNFSubState
 			}
 			else
 				data.timingPoints.push({});
-
+				
 			var path = Path.join([state.song.directory, diff + '.json']);
-
+			
 			var song = new Song(data);
 			song.directory = Path.normalize(Path.directory(path));
 			var split = song.directory.split('/');
@@ -122,23 +122,23 @@ class SongEditorNewChartPrompt extends FNFSubState
 			song.difficultyName = diff;
 			song.mod = state.song.mod;
 			song.sort();
-
+			
 			song.save(path);
 			FlxG.switchState(new SongEditorState(song));
 		});
 		createButton.x = (tabMenu.width - createButton.width) / 2;
-
+		
 		tab.add(difficultyNameLabel);
 		tab.add(difficultyNameInput);
 		tab.add(copyMetadataCheckbox);
 		tab.add(copyObjectsCheckbox);
 		tab.add(createButton);
-
+		
 		tabMenu.addGroup(tab);
-
+		
 		tabMenu.screenCenter();
 		add(tabMenu);
-
+		
 		var closeButton = new FlxUIButton(tabMenu.x + tabMenu.width - 20 - spacing, tabMenu.y + spacing, "X", function()
 		{
 			close();
@@ -148,7 +148,7 @@ class SongEditorNewChartPrompt extends FNFSubState
 		closeButton.label.color = FlxColor.WHITE;
 		add(closeButton);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

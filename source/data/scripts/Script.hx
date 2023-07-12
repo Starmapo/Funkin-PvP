@@ -72,22 +72,22 @@ class Script implements IFlxDestroyable
 		Default return value.
 	**/
 	public static final FUNCTION_CONTINUE:String = "::FUNCTION_CONTINUE::";
-
+	
 	/**
 		Stops a function, if supported.
 	**/
 	public static final FUNCTION_STOP:String = "::FUNCTION_STOP::";
-
+	
 	/**
 		Breaks the script iterator, preventing any more return values.
 	**/
 	public static final FUNCTION_BREAK:String = "::FUNCTION_BREAK::";
-
+	
 	/**
 		Breaks the script iterator and returns `FUNCTION_STOP`.
 	**/
 	public static final FUNCTION_STOP_BREAK:String = "::FUNCTION_STOP_BREAK::";
-
+	
 	/**
 		Prevents these classes from being imported, for safety measures.
 	**/
@@ -131,47 +131,47 @@ class Script implements IFlxDestroyable
 		"sys.ssl.SocketInput",
 		"sys.ssl.SocketOutput"
 	];
-
+	
 	/**
 		The HScript interpretator for this object.
 	**/
 	public var interp:Interp;
-
+	
 	/**
 		The HScript expression for this object.
 	**/
 	public var expr:Expr;
-
+	
 	/**
 		The path of the script file.
 	**/
 	public var path:String;
-
+	
 	/**
 		The mod directory of this script file.
 	**/
 	public var mod:String;
-
+	
 	/**
 		Whether this script was closed or not. Closed scripts won't execute functions.
 	**/
 	public var closed:Bool = false;
-
+	
 	public function new(path:String, mod:String)
 	{
 		if (mod == null || mod.length == 0)
 			mod = Mods.currentMod;
 		this.path = path;
 		this.mod = mod;
-
+		
 		interp = new Interp();
 		interp.script = this;
 		setStartingVariables();
-
+		
 		var script = Paths.getContent(path);
 		if (script == null || script.length < 1)
 			return;
-
+			
 		var parser = new Parser();
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 		try
@@ -182,10 +182,10 @@ class Script implements IFlxDestroyable
 		{
 			CoolUtil.alert('Failed to parse the script located at "$path".\n${Std.string(e)} at line ${parser.line}', 'Script Error');
 		}
-
+		
 		if (expr == null)
 			return;
-
+			
 		try
 		{
 			interp.execute(expr);
@@ -195,7 +195,7 @@ class Script implements IFlxDestroyable
 			CoolUtil.alert(e.message, 'Script Error');
 		}
 	}
-
+	
 	/**
 		Executes `func` with the arguments `args`.
 	**/
@@ -203,17 +203,17 @@ class Script implements IFlxDestroyable
 	{
 		if (closed)
 			return FUNCTION_CONTINUE;
-
+			
 		var lastMod = Mods.currentMod;
 		Mods.currentMod = mod;
-
+		
 		var r:Dynamic = executeFunc(func, args);
-
+		
 		Mods.currentMod = lastMod;
-
+		
 		return r;
 	}
-
+	
 	/**
 		Sets a variable in the interpretator.
 	**/
@@ -221,10 +221,10 @@ class Script implements IFlxDestroyable
 	{
 		if (interp == null)
 			return;
-
+			
 		interp.variables.set(name, value);
 	}
-
+	
 	/**
 		Gets a variable from the interpretator.
 	**/
@@ -232,10 +232,10 @@ class Script implements IFlxDestroyable
 	{
 		if (interp == null)
 			return null;
-
+			
 		return interp.variables.get(name);
 	}
-
+	
 	/**
 		Frees up memory.
 	**/
@@ -244,7 +244,7 @@ class Script implements IFlxDestroyable
 		interp = null;
 		expr = null;
 	}
-
+	
 	/**
 		Called when there's an error in the HScript interpretator.
 	**/
@@ -252,12 +252,12 @@ class Script implements IFlxDestroyable
 	{
 		trace(message);
 	}
-
+	
 	function executeFunc(func:String, ?args:Array<Any>):Dynamic
 	{
 		if (interp == null)
 			return null;
-
+			
 		var f = interp.variables.get(func);
 		if (f != null && Reflect.isFunction(f))
 		{
@@ -274,21 +274,21 @@ class Script implements IFlxDestroyable
 				closed = true;
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	function setStartingVariables()
 	{
 		setVariable('this', this);
 		setVariable('mod', mod);
 		setVariable('window', Application.current.window);
-
+		
 		setVariable('FUNCTION_CONTINUE', FUNCTION_CONTINUE);
 		setVariable('FUNCTION_STOP', FUNCTION_STOP);
 		setVariable('FUNCTION_BREAK', FUNCTION_BREAK);
 		setVariable('FUNCTION_STOP_BREAK', FUNCTION_STOP_BREAK);
-
+		
 		setVariable('Date', Date);
 		setVariable('EnumValueMap', EnumValueMap);
 		setVariable('IMap', IMap);
@@ -299,14 +299,14 @@ class Script implements IFlxDestroyable
 		setVariable('Std', Std);
 		setVariable('StringMap', StringMap);
 		setVariable('StringTools', StringTools);
-
+		
 		setVariable('Application', Application);
 		setVariable('Assets', Assets);
 		setVariable('BitmapData', BitmapData);
 		setVariable('BlendMode', CoolUtil.getMacroAbstractClass("openfl.display.BlendMode"));
 		setVariable('Point', Point);
 		setVariable('Rectangle', Rectangle);
-
+		
 		setVariable('FlxAngle', FlxAngle);
 		setVariable('FlxAtlasFrames', FlxAtlasFrames);
 		setVariable('FlxAxes', CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"));
@@ -341,7 +341,7 @@ class Script implements IFlxDestroyable
 		setVariable('FlxTypedSpriteGroup', FlxTypedSpriteGroup);
 		setVariable('FlxVideo', FlxVideo);
 		setVariable('FlxVideoSprite', FlxVideoSprite);
-
+		
 		setVariable('AnimatedSprite', AnimatedSprite);
 		setVariable('BGSprite', BGSprite);
 		setVariable('CameraFocus', CameraFocus);
@@ -369,7 +369,7 @@ class Script implements IFlxDestroyable
 		setVariable('Settings', Settings);
 		setVariable('Song', Song);
 		setVariable('TimingPoint', TimingPoint);
-
+		
 		setVariable("close", function()
 		{
 			closed = true;
@@ -385,7 +385,7 @@ class Script implements IFlxDestroyable
 				onError("You can't import class / enum `" + className + "`.");
 				return;
 			}
-
+			
 			var cl = Type.resolveClass(className);
 			if (cl != null)
 				setVariable(splitClassName[splitClassName.length - 1], cl);
@@ -397,7 +397,7 @@ class Script implements IFlxDestroyable
 					var enumThingy = {};
 					for (c in en.getConstructors())
 						Reflect.setField(enumThingy, c, en.createByName(c));
-
+						
 					setVariable(splitClassName[splitClassName.length - 1], enumThingy);
 				}
 				else

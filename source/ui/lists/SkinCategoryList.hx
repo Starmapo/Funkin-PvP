@@ -18,14 +18,14 @@ class SkinCategoryList extends TypedMenuList<SkinCategoryItem>
 class SkinCategoryItem extends TextMenuItem
 {
 	public var skins:ModSkins;
-
+	
 	var maxWidth:Float = (FlxG.width / 2) - 10;
-
+	
 	public function new(x:Float = 0, y:Float = 0, skins:ModSkins)
 	{
 		this.skins = skins;
 		super(x, y, skins.name, null);
-
+		
 		if (label.width > maxWidth)
 		{
 			var ratio = maxWidth / label.width;

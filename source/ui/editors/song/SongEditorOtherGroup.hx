@@ -25,7 +25,7 @@ class SongEditorOtherGroup extends FlxBasic
 	public var cameraFocuses:Array<SongEditorCamFocus> = [];
 	public var events:Array<SongEditorEvent> = [];
 	public var lyricSteps:Array<SongEditorLyricStep> = [];
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
 	var camFocusPool:Array<SongEditorCamFocus>;
@@ -38,13 +38,13 @@ class SongEditorOtherGroup extends FlxBasic
 	var lastPooledEventIndex:Int = -1;
 	var lyricStepPool:Array<SongEditorLyricStep>;
 	var lastPooledLyricStepIndex:Int = -1;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
 		this.state = state;
 		this.playfield = playfield;
-
+		
 		for (info in state.song.timingPoints)
 			createTimingPoint(info);
 		for (info in state.song.scrollVelocities)
@@ -56,7 +56,7 @@ class SongEditorOtherGroup extends FlxBasic
 		for (info in state.song.lyricSteps)
 			createLyricStep(info);
 		initializePools();
-
+		
 		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);
 		state.actionManager.onEvent.add(onEvent);
@@ -67,7 +67,7 @@ class SongEditorOtherGroup extends FlxBasic
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		updateTimingPointPool();
@@ -76,7 +76,7 @@ class SongEditorOtherGroup extends FlxBasic
 		updateEventPool();
 		updateLyricStepPool();
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -95,7 +95,7 @@ class SongEditorOtherGroup extends FlxBasic
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
-
+	
 	function updateTimingPointPool()
 	{
 		var i = timingPointPool.length - 1;
@@ -106,7 +106,7 @@ class SongEditorOtherGroup extends FlxBasic
 				timingPointPool.remove(obj);
 			i--;
 		}
-
+		
 		var i = lastPooledTimingPointIndex + 1;
 		while (i < timingPoints.length)
 		{
@@ -119,7 +119,7 @@ class SongEditorOtherGroup extends FlxBasic
 			i++;
 		}
 	}
-
+	
 	function updateSVPool()
 	{
 		var i = svPool.length - 1;
@@ -130,7 +130,7 @@ class SongEditorOtherGroup extends FlxBasic
 				svPool.remove(obj);
 			i--;
 		}
-
+		
 		var i = lastPooledSVIndex + 1;
 		while (i < scrollVelocities.length)
 		{
@@ -143,7 +143,7 @@ class SongEditorOtherGroup extends FlxBasic
 			i++;
 		}
 	}
-
+	
 	function updateCamFocusPool()
 	{
 		var i = camFocusPool.length - 1;
@@ -154,7 +154,7 @@ class SongEditorOtherGroup extends FlxBasic
 				camFocusPool.remove(obj);
 			i--;
 		}
-
+		
 		var i = lastPooledCamFocusIndex + 1;
 		while (i < cameraFocuses.length)
 		{
@@ -167,7 +167,7 @@ class SongEditorOtherGroup extends FlxBasic
 			i++;
 		}
 	}
-
+	
 	function updateEventPool()
 	{
 		var i = eventPool.length - 1;
@@ -178,7 +178,7 @@ class SongEditorOtherGroup extends FlxBasic
 				eventPool.remove(obj);
 			i--;
 		}
-
+		
 		var i = lastPooledEventIndex + 1;
 		while (i < events.length)
 		{
@@ -191,7 +191,7 @@ class SongEditorOtherGroup extends FlxBasic
 			i++;
 		}
 	}
-
+	
 	function updateLyricStepPool()
 	{
 		var i = lyricStepPool.length - 1;
@@ -202,7 +202,7 @@ class SongEditorOtherGroup extends FlxBasic
 				lyricStepPool.remove(obj);
 			i--;
 		}
-
+		
 		var i = lastPooledLyricStepIndex + 1;
 		while (i < lyricSteps.length)
 		{
@@ -215,7 +215,7 @@ class SongEditorOtherGroup extends FlxBasic
 			i++;
 		}
 	}
-
+	
 	override function draw()
 	{
 		var pools:Array<Array<ISongEditorTimingObject>> = [
@@ -235,12 +235,12 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	public function getHoveredObject():ISongEditorTimingObject
 	{
 		if (FlxG.mouse.overlaps(state.playfieldTabs))
 			return null;
-
+			
 		var pools:Array<Array<ISongEditorTimingObject>> = [
 			cast timingPointPool,
 			cast svPool,
@@ -256,10 +256,10 @@ class SongEditorOtherGroup extends FlxBasic
 					return obj;
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	function createTimingPoint(info:TimingPoint, insertAtIndex:Bool = false)
 	{
 		var obj = new SongEditorTimingPoint(state, playfield, info);
@@ -267,7 +267,7 @@ class SongEditorOtherGroup extends FlxBasic
 		if (insertAtIndex)
 			timingPoints.sort(sortObjects);
 	}
-
+	
 	function createScrollVelocity(info:ScrollVelocity, insertAtIndex:Bool = false)
 	{
 		var obj = new SongEditorScrollVelocity(state, playfield, info);
@@ -275,7 +275,7 @@ class SongEditorOtherGroup extends FlxBasic
 		if (insertAtIndex)
 			scrollVelocities.sort(sortObjects);
 	}
-
+	
 	function createCamFocus(info:CameraFocus, insertAtIndex:Bool = false)
 	{
 		var obj = new SongEditorCamFocus(state, playfield, info);
@@ -283,7 +283,7 @@ class SongEditorOtherGroup extends FlxBasic
 		if (insertAtIndex)
 			cameraFocuses.sort(sortObjects);
 	}
-
+	
 	function createEvent(info:EventObject, insertAtIndex:Bool = false)
 	{
 		var obj = new SongEditorEvent(state, playfield, info);
@@ -291,7 +291,7 @@ class SongEditorOtherGroup extends FlxBasic
 		if (insertAtIndex)
 			events.sort(sortObjects);
 	}
-
+	
 	function createLyricStep(info:LyricStep, insertAtIndex:Bool = false)
 	{
 		var obj = new SongEditorLyricStep(state, playfield, info);
@@ -299,12 +299,12 @@ class SongEditorOtherGroup extends FlxBasic
 		if (insertAtIndex)
 			lyricSteps.sort(sortObjects);
 	}
-
+	
 	function sortObjects(a:ISongEditorTimingObject, b:ISongEditorTimingObject)
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, a.info.startTime, b.info.startTime);
 	}
-
+	
 	function initializePools()
 	{
 		initializeTimingPointPool();
@@ -313,12 +313,12 @@ class SongEditorOtherGroup extends FlxBasic
 		initializeEventPool();
 		initializeLyricStepPool();
 	}
-
+	
 	function initializeTimingPointPool()
 	{
 		timingPointPool = [];
 		lastPooledTimingPointIndex = -1;
-
+		
 		for (i in 0...timingPoints.length)
 		{
 			var obj = timingPoints[i];
@@ -327,7 +327,7 @@ class SongEditorOtherGroup extends FlxBasic
 			timingPointPool.push(obj);
 			lastPooledTimingPointIndex = i;
 		}
-
+		
 		if (lastPooledTimingPointIndex == -1)
 		{
 			lastPooledTimingPointIndex = timingPoints.length - 1;
@@ -340,12 +340,12 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function initializeSVPool()
 	{
 		svPool = [];
 		lastPooledSVIndex = -1;
-
+		
 		for (i in 0...scrollVelocities.length)
 		{
 			var obj = scrollVelocities[i];
@@ -354,7 +354,7 @@ class SongEditorOtherGroup extends FlxBasic
 			svPool.push(obj);
 			lastPooledSVIndex = i;
 		}
-
+		
 		if (lastPooledSVIndex == -1)
 		{
 			lastPooledSVIndex = scrollVelocities.length - 1;
@@ -367,12 +367,12 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function initializeCamFocusPool()
 	{
 		camFocusPool = [];
 		lastPooledCamFocusIndex = -1;
-
+		
 		for (i in 0...cameraFocuses.length)
 		{
 			var obj = cameraFocuses[i];
@@ -381,7 +381,7 @@ class SongEditorOtherGroup extends FlxBasic
 			camFocusPool.push(obj);
 			lastPooledCamFocusIndex = i;
 		}
-
+		
 		if (lastPooledCamFocusIndex == -1)
 		{
 			lastPooledCamFocusIndex = cameraFocuses.length - 1;
@@ -394,12 +394,12 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function initializeEventPool()
 	{
 		eventPool = [];
 		lastPooledEventIndex = -1;
-
+		
 		for (i in 0...events.length)
 		{
 			var obj = events[i];
@@ -408,7 +408,7 @@ class SongEditorOtherGroup extends FlxBasic
 			eventPool.push(obj);
 			lastPooledEventIndex = i;
 		}
-
+		
 		if (lastPooledEventIndex == -1)
 		{
 			lastPooledEventIndex = events.length - 1;
@@ -421,12 +421,12 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function initializeLyricStepPool()
 	{
 		lyricStepPool = [];
 		lastPooledLyricStepIndex = -1;
-
+		
 		for (i in 0...lyricSteps.length)
 		{
 			var obj = lyricSteps[i];
@@ -435,7 +435,7 @@ class SongEditorOtherGroup extends FlxBasic
 			lyricStepPool.push(obj);
 			lastPooledLyricStepIndex = i;
 		}
-
+		
 		if (lastPooledLyricStepIndex == -1)
 		{
 			lastPooledLyricStepIndex = lyricSteps.length - 1;
@@ -448,29 +448,29 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function onSongSeeked(_, _)
 	{
 		initializePools();
 	}
-
+	
 	function onRateChanged(_, _)
 	{
 		if (Settings.editorScaleSpeedWithRate.value)
 			refreshPositions();
 	}
-
+	
 	function onScrollSpeedChanged(_, _)
 	{
 		refreshPositions();
 	}
-
+	
 	function onScaleSpeedWithRateChanged(_, _)
 	{
 		if (state.inst.pitch != 1)
 			refreshPositions();
 	}
-
+	
 	function onEvent(type:String, params:Dynamic)
 	{
 		switch (type)
@@ -763,7 +763,7 @@ class SongEditorOtherGroup extends FlxBasic
 						hasLyricStep = true;
 					}
 				}
-
+				
 				if (hasTimingPoint)
 				{
 					timingPoints.sort(sortObjects);
@@ -805,7 +805,7 @@ class SongEditorOtherGroup extends FlxBasic
 				}
 		}
 	}
-
+	
 	function onSelectedObject(info:ITimingObject)
 	{
 		if (Std.isOfType(info, TimingPoint))
@@ -864,7 +864,7 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function onDeselectedObject(info:ITimingObject)
 	{
 		if (Std.isOfType(info, CameraFocus))
@@ -923,7 +923,7 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	public function getAllObjects():Array<Array<ISongEditorTimingObject>>
 	{
 		return [
@@ -934,7 +934,7 @@ class SongEditorOtherGroup extends FlxBasic
 			cast lyricSteps
 		];
 	}
-
+	
 	function onMultipleObjectsSelected(array:Array<ITimingObject>)
 	{
 		for (objects in getAllObjects())
@@ -946,7 +946,7 @@ class SongEditorOtherGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function onAllObjectsDeselected()
 	{
 		for (objects in getAllObjects())
@@ -955,7 +955,7 @@ class SongEditorOtherGroup extends FlxBasic
 				obj.selectionSprite.visible = false;
 		}
 	}
-
+	
 	function refreshPositions()
 	{
 		for (objects in getAllObjects())
@@ -973,10 +973,10 @@ class SongEditorTimingPoint extends FlxSpriteGroup implements ISongEditorTimingO
 	public var timingPointInfo:TimingPoint;
 	public var line:FlxSprite;
 	public var selectionSprite:FlxSprite;
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:TimingPoint)
 	{
 		super();
@@ -984,34 +984,34 @@ class SongEditorTimingPoint extends FlxSpriteGroup implements ISongEditorTimingO
 		this.playfield = playfield;
 		this.info = info;
 		timingPointInfo = info;
-
+		
 		line = new FlxSprite().makeGraphic(Std.int(playfield.columnSize - playfield.borderLeft.width), 10, 0xFFFE5656);
 		add(line);
-
+		
 		selectionSprite = new FlxSprite(0, -10).makeGraphic(Std.int(line.width), Std.int(line.height + 20));
 		selectionSprite.alpha = 0.5;
 		selectionSprite.visible = false;
 		add(selectionSprite);
-
+		
 		updatePosition();
 	}
-
+	
 	override function isOnScreen(?camera:FlxCamera)
 	{
 		return super.isOnScreen(camera);
 	}
-
+	
 	public function updatePosition()
 	{
 		x = playfield.bg.x + playfield.borderLeft.width;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - line.height;
 	}
-
+	
 	public function isHovered()
 	{
 		return FlxG.mouse.overlaps(line);
 	}
-
+	
 	public function objectOnScreen()
 	{
 		return info.startTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
@@ -1024,44 +1024,44 @@ class SongEditorScrollVelocity extends FlxSpriteGroup implements ISongEditorTimi
 	public var info:ITimingObject;
 	public var line:FlxSprite;
 	public var selectionSprite:FlxSprite;
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:ScrollVelocity)
 	{
 		super();
 		this.state = state;
 		this.playfield = playfield;
 		this.info = info;
-
+		
 		line = new FlxSprite().makeGraphic(Std.int(playfield.columnSize - playfield.borderLeft.width), 10, 0xFF56FE6E);
 		add(line);
-
+		
 		selectionSprite = new FlxSprite(0, -10).makeGraphic(Std.int(line.width), Std.int(line.height + 20));
 		selectionSprite.alpha = 0.5;
 		selectionSprite.visible = false;
 		add(selectionSprite);
-
+		
 		updatePosition();
 	}
-
+	
 	override function isOnScreen(?camera:FlxCamera)
 	{
 		return super.isOnScreen(camera);
 	}
-
+	
 	public function updatePosition()
 	{
 		x = playfield.bg.x + playfield.columnSize * 1 + playfield.borderLeft.width;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - line.height;
 	}
-
+	
 	public function isHovered()
 	{
 		return FlxG.mouse.overlaps(line);
 	}
-
+	
 	public function objectOnScreen()
 	{
 		return info.startTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
@@ -1075,10 +1075,10 @@ class SongEditorCamFocus extends FlxSpriteGroup implements ISongEditorTimingObje
 	public var camFocusInfo:CameraFocus;
 	public var line:FlxSprite;
 	public var selectionSprite:FlxSprite;
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:CameraFocus)
 	{
 		super();
@@ -1086,46 +1086,46 @@ class SongEditorCamFocus extends FlxSpriteGroup implements ISongEditorTimingObje
 		this.playfield = playfield;
 		this.info = info;
 		camFocusInfo = info;
-
+		
 		line = new FlxSprite().makeGraphic(Std.int(playfield.columnSize - playfield.borderLeft.width), 10);
 		add(line);
-
+		
 		selectionSprite = new FlxSprite(0, -10).makeGraphic(Std.int(line.width), Std.int(line.height + 20));
 		selectionSprite.alpha = 0.5;
 		selectionSprite.visible = false;
 		add(selectionSprite);
-
+		
 		updatePosition();
 		updateColor();
 	}
-
+	
 	override function isOnScreen(?camera:FlxCamera)
 	{
 		return super.isOnScreen(camera);
 	}
-
+	
 	public function updatePosition()
 	{
 		x = playfield.bg.x + playfield.columnSize * 2 + playfield.borderLeft.width;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - line.height;
 	}
-
+	
 	public function updateColor()
 	{
 		line.color = getColor();
 	}
-
+	
 	public function isHovered()
 	{
 		return FlxG.mouse.overlaps(line);
 	}
-
+	
 	public function objectOnScreen()
 	{
 		return info.startTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
 			&& info.startTime * state.trackSpeed <= state.trackPositionY + playfield.bg.height;
 	}
-
+	
 	function getColor()
 	{
 		return switch (camFocusInfo.char)
@@ -1145,44 +1145,44 @@ class SongEditorEvent extends FlxSpriteGroup implements ISongEditorTimingObject
 	public var info:ITimingObject;
 	public var line:FlxSprite;
 	public var selectionSprite:FlxSprite;
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:EventObject)
 	{
 		super();
 		this.state = state;
 		this.playfield = playfield;
 		this.info = info;
-
+		
 		line = new FlxSprite().makeGraphic(Std.int(playfield.columnSize - playfield.borderLeft.width), 10, 0xFFB4B4B4);
 		add(line);
-
+		
 		selectionSprite = new FlxSprite(0, -10).makeGraphic(Std.int(line.width), Std.int(line.height + 20));
 		selectionSprite.alpha = 0.5;
 		selectionSprite.visible = false;
 		add(selectionSprite);
-
+		
 		updatePosition();
 	}
-
+	
 	override function isOnScreen(?camera:FlxCamera)
 	{
 		return super.isOnScreen(camera);
 	}
-
+	
 	public function updatePosition()
 	{
 		x = playfield.bg.x + playfield.columnSize * 3 + playfield.borderLeft.width;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - line.height;
 	}
-
+	
 	public function isHovered()
 	{
 		return FlxG.mouse.overlaps(line);
 	}
-
+	
 	public function objectOnScreen()
 	{
 		return info.startTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
@@ -1195,44 +1195,44 @@ class SongEditorLyricStep extends FlxSpriteGroup implements ISongEditorTimingObj
 	public var info:ITimingObject;
 	public var line:FlxSprite;
 	public var selectionSprite:FlxSprite;
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:LyricStep)
 	{
 		super();
 		this.state = state;
 		this.playfield = playfield;
 		this.info = info;
-
+		
 		line = new FlxSprite().makeGraphic(Std.int(playfield.columnSize - playfield.borderLeft.width), 10, FlxColor.YELLOW);
 		add(line);
-
+		
 		selectionSprite = new FlxSprite(0, -10).makeGraphic(Std.int(line.width), Std.int(line.height + 20));
 		selectionSprite.alpha = 0.5;
 		selectionSprite.visible = false;
 		add(selectionSprite);
-
+		
 		updatePosition();
 	}
-
+	
 	override function isOnScreen(?camera:FlxCamera)
 	{
 		return super.isOnScreen(camera);
 	}
-
+	
 	public function updatePosition()
 	{
 		x = playfield.bg.x + playfield.columnSize * 4 + playfield.borderLeft.width;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - line.height;
 	}
-
+	
 	public function isHovered()
 	{
 		return FlxG.mouse.overlaps(line);
 	}
-
+	
 	public function objectOnScreen()
 	{
 		return info.startTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height

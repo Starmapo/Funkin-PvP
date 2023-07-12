@@ -17,7 +17,7 @@ using StringTools;
 class Song extends JsonObject
 {
 	public static var CURRENT_VERSION:String = '1.0.0';
-
+	
 	/**
 		Loads a song from a path.
 	**/
@@ -27,21 +27,21 @@ class Song extends JsonObject
 			path += '.json';
 		if (!Paths.exists(path))
 			path = Paths.getPath('songs/$path', mod);
-
+			
 		if (!Paths.exists(path))
 			return null;
-
+			
 		var json:Dynamic = Paths.getJson(path, mod);
 		if (json == null)
 			return null;
-
+			
 		var converted = false;
 		if (json.song != null)
 		{
 			var sliderVelocities:Array<Dynamic> = json.sliderVelocities;
-
+			
 			json = convertFNFSong(json.song);
-
+			
 			if (sliderVelocities != null)
 			{
 				for (sv in sliderVelocities)
@@ -52,10 +52,10 @@ class Song extends JsonObject
 					}));
 				}
 			}
-
+			
 			converted = true;
 		}
-
+		
 		var song = new Song(json);
 		song.directory = Path.normalize(Path.directory(path));
 		var split = song.directory.split('/');
@@ -63,7 +63,7 @@ class Song extends JsonObject
 		song.difficultyName = new Path(path).file;
 		song.mod = split[1];
 		song.sort();
-
+		
 		// remove any notes that appear after the instrumental has ended
 		// this happens with a VS Garcello chart?
 		if (converted)
@@ -82,65 +82,65 @@ class Song extends JsonObject
 					i--;
 				}
 			}
-
+			
 			song.save(path);
 		}
-
+		
 		return song;
 	}
-
+	
 	public static function createNewSong()
 	{
 		return new Song({});
 	}
-
+	
 	public static function getNearestSnapTimeFromTime(song:Song, forward:Bool, snap:Int, time:Float):Float
 	{
 		if (song == null)
 			return 0;
-
+			
 		var point = song.getTimingPointAt(time);
 		if (point == null)
 			return 0;
-
+			
 		var snapTimePerBeat = point.beatLength / snap;
 		var pointToSnap = time + (forward ? snapTimePerBeat : -snapTimePerBeat);
 		var nearestTick = Math.round((pointToSnap - point.startTime) / snapTimePerBeat) * snapTimePerBeat + point.startTime;
-
+		
 		if (Std.int(Math.abs(nearestTick - time)) <= Std.int(snapTimePerBeat))
 			return nearestTick;
-
+			
 		return (Math.round((pointToSnap - point.startTime) / snapTimePerBeat) + (forward ? -1 : 1)) * snapTimePerBeat + point.startTime;
 	}
-
+	
 	public static function closestTickToSnap(song:Song, time:Float, snap:Int)
 	{
 		var point = song.getTimingPointAt(time);
 		if (point == null)
 			return time;
-
+			
 		var timeFwd = getNearestSnapTimeFromTime(song, true, snap, time);
 		var timeBwd = getNearestSnapTimeFromTime(song, false, snap, time);
-
+		
 		var fwdDiff = Math.abs(time - timeFwd);
 		var bwdDiff = Math.abs(time - timeBwd);
-
+		
 		if (Math.abs(fwdDiff - bwdDiff) <= 2)
 		{
 			var snapTimePerBeat = point.beatLength / snap;
 			return getNearestSnapTimeFromTime(song, false, snap, time + snapTimePerBeat);
 		}
-
+		
 		var closestTime = time;
-
+		
 		if (bwdDiff < fwdDiff)
 			closestTime = timeBwd;
 		else if (fwdDiff < bwdDiff)
 			closestTime = timeFwd;
-
+			
 		return closestTime;
 	}
-
+	
 	public static function getSongDifficulties(directory:String, ?excludeDifficulty:String)
 	{
 		var difficulties:Array<String> = [];
@@ -155,7 +155,7 @@ class Song extends JsonObject
 		}
 		return difficulties;
 	}
-
+	
 	public static function getSongLyrics(song:Song)
 	{
 		var path = getSongLyricsPath(song);
@@ -164,7 +164,7 @@ class Song extends JsonObject
 		else
 			return '';
 	}
-
+	
 	public static function getSongLyricsPath(song:Song)
 	{
 		var diffPath = Path.join([song.directory, 'lyrics-' + song.difficultyName.toLowerCase() + '.txt']);
@@ -173,7 +173,7 @@ class Song extends JsonObject
 		else
 			return Path.join([song.directory, 'lyrics.txt']);
 	}
-
+	
 	static function convertFNFSong(json:Dynamic)
 	{
 		var song:Dynamic = {
@@ -193,7 +193,7 @@ class Song extends JsonObject
 			stage: json.stage,
 			scrollVelocities: []
 		};
-
+		
 		if (json.notes != null)
 		{
 			var curTime:Float = 0;
@@ -263,11 +263,11 @@ class Song extends JsonObject
 						else
 							noteInfo.lane += 4;
 					}
-
+					
 					var string = Std.string(noteInfo.startTime);
 					if (curNotes.exists(string) && curNotes.get(string).contains(noteInfo.lane))
 						continue;
-
+						
 					if (noteInfo.type == null)
 					{
 						if (section.altAnim == true && noteInfo.lane < 4)
@@ -283,7 +283,7 @@ class Song extends JsonObject
 						}
 					}
 					song.notes.push(noteInfo);
-
+					
 					if (curNotes.exists(string) && !curNotes.get(string).contains(noteInfo.lane))
 						curNotes.get(string).push(noteInfo.lane);
 					else
@@ -325,10 +325,10 @@ class Song extends JsonObject
 					});
 			}
 		}
-
+		
 		return song;
 	}
-
+	
 	static function resolveCameraFocus(section:Dynamic, startTime:Float = 0)
 	{
 		var cameraFocus = {
@@ -341,22 +341,22 @@ class Song extends JsonObject
 			cameraFocus.char = 1;
 		return cameraFocus;
 	}
-
+	
 	/**
 		The title of the song.
 	**/
 	public var title:String;
-
+	
 	/**
 		The artist of the song.
 	**/
 	public var artist:String;
-
+	
 	/**
 		The source of the song.
 	**/
 	public var source:String;
-
+	
 	/**
 		The name of the instrumental file. Unused for now.
 	**/
@@ -365,85 +365,85 @@ class Song extends JsonObject
 		The name of the vocals file. Unused for now.
 	**/
 	// public var vocalsFile:String;
-
+	
 	/**
 		The list of timing points for this map.
 	**/
 	public var timingPoints:Array<TimingPoint> = [];
-
+	
 	/**
 		The initial scroll velocity for this map.
 	**/
 	public var initialScrollVelocity:Float;
-
+	
 	/**
 		The list of scroll velocities for this map.
 	**/
 	public var scrollVelocities:Array<ScrollVelocity> = [];
-
+	
 	/**
 		The list of camera focuses for this map.
 	**/
 	public var cameraFocuses:Array<CameraFocus> = [];
-
+	
 	/**
 		The list of events for this map.
 	**/
 	public var events:Array<EventObject> = [];
-
+	
 	/**
 		The list of lyric steps for this map.
 	**/
 	public var lyricSteps:Array<LyricStep> = [];
-
+	
 	/**
 		The list of notes for this map.
 	**/
 	public var notes:Array<NoteInfo> = [];
-
+	
 	/**
 		The length in milliseconds of this map.
 	**/
 	public var length(get, never):Float;
-
+	
 	/**
 		Boyfriend (player 2) character for this map.
 	**/
 	public var bf:String;
-
+	
 	/**
 		Opponent (player 1) character for this map.
 	**/
 	public var opponent:String;
-
+	
 	/**
 		Girlfriend character for this map.
 	**/
 	public var gf:String;
-
+	
 	/**
 		Stage for this map.
 	**/
 	public var stage:String;
-
+	
 	/**
 		The directory of this map. Set automatically with `Song.loadSong()`.
 	**/
 	public var directory:String = '';
-
+	
 	/**
 		The difficulty name of this map. Set automatically with `Song.loadSong()`.
 	**/
 	public var difficultyName:String = '';
-
+	
 	public var name:String = '';
 	public var mod:String = '';
-
+	
 	/**
 		The chart version that this map was made with.
 	**/
 	public var version:String = '';
-
+	
 	public function new(?data:Dynamic)
 	{
 		title = readString(data.title, 'Untitled Song');
@@ -486,7 +486,7 @@ class Song extends JsonObject
 		}
 		version = readString(data.version, CURRENT_VERSION);
 	}
-
+	
 	/**
 		Checks if the song file is actually valid.
 	**/
@@ -494,19 +494,19 @@ class Song extends JsonObject
 	{
 		if (notes.length == 0)
 			return false;
-
+			
 		if (timingPoints.length == 0)
 			return false;
-
+			
 		for (note in notes)
 		{
 			if (note.isLongNote && note.endTime <= note.startTime)
 				return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	/**
 		Sorts the notes, timing points and scroll velocities.
 	**/
@@ -519,12 +519,12 @@ class Song extends JsonObject
 		events.sort(sortObjects);
 		lyricSteps.sort(sortObjects);
 	}
-
+	
 	function sortObjects(a:ITimingObject, b:ITimingObject)
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
 	}
-
+	
 	/**
 		Gets the average notes per second in the map.
 		@param rate The current playback rate.
@@ -533,13 +533,13 @@ class Song extends JsonObject
 	{
 		if (notes.length == 0)
 			return 0;
-
+			
 		if (length == 0)
 			return notes.length;
-
+			
 		return notes.length / (length / (1000 / rate));
 	}
-
+	
 	/**
 		Gets the average actions per second in the map. Actions per second is defined as the amount of presses and long note releases the player performs a second.
 
@@ -551,7 +551,7 @@ class Song extends JsonObject
 	{
 		if (notes.length == 0)
 			return 0;
-
+			
 		var actions:Array<Float> = [];
 		for (note in notes)
 		{
@@ -559,32 +559,32 @@ class Song extends JsonObject
 			if (note.isLongNote)
 				actions.push(note.endTime);
 		}
-
+		
 		actions.sort(function(a, b)
 		{
 			return FlxSort.byValues(FlxSort.ASCENDING, a, b);
 		});
-
+		
 		var length = actions[actions.length - 1] - actions[0];
-
+		
 		for (i in 0...actions.length)
 		{
 			if (i == 0)
 				continue;
-
+				
 			var action = actions[i];
 			var previousAction = actions[i - 1];
 			var difference = action - previousAction;
 			if (difference >= 1000)
 				length -= difference;
 		}
-
+		
 		if (length == 0)
 			return actions.length;
-
+			
 		return actions.length / (length / (1000 / rate));
 	}
-
+	
 	/**
 		Finds the most common BPM in the map.
 	**/
@@ -592,10 +592,10 @@ class Song extends JsonObject
 	{
 		if (timingPoints.length == 0)
 			return 0;
-
+			
 		if (notes.length == 0)
 			return timingPoints[0].bpm;
-
+			
 		var copiedNotes = notes.copy();
 		copiedNotes.sort(function(a, b)
 		{
@@ -603,7 +603,7 @@ class Song extends JsonObject
 		});
 		var lastObject = copiedNotes[0];
 		var lastTime = lastObject.maxTime;
-
+		
 		var durations:Map<String, Float> = [];
 		var i = timingPoints.length - 1;
 		while (i >= 0)
@@ -613,7 +613,7 @@ class Song extends JsonObject
 			{
 				var duration = lastTime - (i == 0 ? 0 : point.startTime);
 				lastTime = point.startTime;
-
+				
 				var bpm = Std.string(point.bpm);
 				if (durations.exists(bpm))
 					durations[bpm] += duration;
@@ -622,7 +622,7 @@ class Song extends JsonObject
 			}
 			i--;
 		}
-
+		
 		var commonBPM:Float = 0;
 		var maxDuration:Float = 0;
 		for (bpm => duration in durations)
@@ -633,10 +633,10 @@ class Song extends JsonObject
 				maxDuration = duration;
 			}
 		}
-
+		
 		return commonBPM;
 	}
-
+	
 	/**
 		Gets the timing point at a particular point in the map.
 		@param time The time to find a timing point at.
@@ -648,16 +648,16 @@ class Song extends JsonObject
 		{
 			if (timingPoints[index].startTime <= time)
 				break;
-
+				
 			index--;
 		}
-
+		
 		if (index == -1)
 			return timingPoints[0];
-
+			
 		return timingPoints[index];
 	}
-
+	
 	/**
 		Gets the scroll velocity at a particular point in the map.
 		@param time The time to find a scroll velocity at.
@@ -669,16 +669,16 @@ class Song extends JsonObject
 		{
 			if (scrollVelocities[index].startTime <= time)
 				break;
-
+				
 			index--;
 		}
-
+		
 		if (index == -1)
 			return null;
-
+			
 		return scrollVelocities[index];
 	}
-
+	
 	/**
 		Gets the camera focus at a particular point in the map.
 		@param time The time to find a camera focus at.
@@ -690,16 +690,16 @@ class Song extends JsonObject
 		{
 			if (cameraFocuses[index].startTime <= time)
 				break;
-
+				
 			index--;
 		}
-
+		
 		if (index == -1)
 			return cameraFocuses[0];
-
+			
 		return cameraFocuses[index];
 	}
-
+	
 	/**
 		Gets the most recent event object at a particular point in the map.
 		@param time The time to find an event object at.
@@ -711,16 +711,16 @@ class Song extends JsonObject
 		{
 			if (events[index].startTime <= time)
 				break;
-
+				
 			index--;
 		}
-
+		
 		if (index == -1)
 			return events[0];
-
+			
 		return events[index];
 	}
-
+	
 	/**
 		Gets the current lyric step at a particular point in the map.
 		@param time The time to find a lyric step at.
@@ -732,16 +732,16 @@ class Song extends JsonObject
 		{
 			if (lyricSteps[index].startTime <= time)
 				break;
-
+				
 			index--;
 		}
-
+		
 		if (index == -1)
 			return lyricSteps[0];
-
+			
 		return lyricSteps[index];
 	}
-
+	
 	/**
 		Finds the length of a timing point.
 		@param point 	The timing point.
@@ -752,16 +752,16 @@ class Song extends JsonObject
 		var index = timingPoints.indexOf(point);
 		if (index == -1)
 			return 0;
-
+			
 		if (index + 1 < timingPoints.length)
 			return timingPoints[index + 1].startTime - timingPoints[index].startTime;
-
+			
 		if (inst != null)
 			return inst.length - point.startTime;
-
+			
 		return length - point.startTime;
 	}
-
+	
 	/**
 		Solves the difficulty of the map and returns the data for it.
 	**/
@@ -769,7 +769,7 @@ class Song extends JsonObject
 	{
 		return new DifficultyProcessor(this, rightSide, rate);
 	}
-
+	
 	public function addObject(object:ITimingObject)
 	{
 		if (Std.isOfType(object, NoteInfo))
@@ -785,7 +785,7 @@ class Song extends JsonObject
 		else if (Std.isOfType(object, LyricStep))
 			lyricSteps.push(cast object);
 	}
-
+	
 	public function removeObject(object:ITimingObject)
 	{
 		if (Std.isOfType(object, NoteInfo))
@@ -801,7 +801,7 @@ class Song extends JsonObject
 		else if (Std.isOfType(object, LyricStep))
 			lyricSteps.remove(cast object);
 	}
-
+	
 	/** Clones this song into a new object.**/
 	public function deepClone()
 	{
@@ -814,7 +814,7 @@ class Song extends JsonObject
 				meter: obj.meter
 			}));
 		}
-
+		
 		var scrollVelocities:Array<ScrollVelocity> = [];
 		for (obj in this.scrollVelocities)
 		{
@@ -823,7 +823,7 @@ class Song extends JsonObject
 				multipliers: obj.multipliers
 			}));
 		}
-
+		
 		var cameraFocuses:Array<CameraFocus> = [];
 		for (obj in this.cameraFocuses)
 		{
@@ -832,7 +832,7 @@ class Song extends JsonObject
 				char: obj.char
 			}));
 		}
-
+		
 		var events:Array<EventObject> = [];
 		for (obj in this.events)
 		{
@@ -842,13 +842,13 @@ class Song extends JsonObject
 					event: sub.event,
 					params: sub.params.join(',')
 				}));
-
+				
 			events.push(new EventObject({
 				startTime: obj.startTime,
 				events: subEvents
 			}));
 		}
-
+		
 		var lyricSteps:Array<LyricStep> = [];
 		for (obj in this.lyricSteps)
 		{
@@ -856,7 +856,7 @@ class Song extends JsonObject
 				startTime: obj.startTime
 			}));
 		}
-
+		
 		var notes:Array<NoteInfo> = [];
 		for (note in this.notes)
 		{
@@ -868,7 +868,7 @@ class Song extends JsonObject
 				params: note.params.join(',')
 			}));
 		}
-
+		
 		var data = {
 			title: title,
 			artist: artist,
@@ -891,23 +891,23 @@ class Song extends JsonObject
 		song.difficultyName = difficultyName;
 		return song;
 	}
-
+	
 	public function replaceLongNotesWithRegularNotes()
 	{
 		for (note in notes)
 			note.endTime = 0;
 	}
-
+	
 	public function applyInverse()
 	{
 		final MINIMAL_LN_LENGTH = 36;
 		final MINIMAL_GAP_LENGTH = 36;
-
+		
 		var newNotes:Array<NoteInfo> = [];
 		var firstInLane:Array<Bool> = [];
 		for (i in 0...8)
 			firstInLane[i] = true;
-
+			
 		for (i in 0...notes.length)
 		{
 			var currentNote = notes[i];
@@ -926,16 +926,16 @@ class Song extends JsonObject
 					}
 				}
 			}
-
+			
 			var isFirstInLane = firstInLane[currentNote.lane];
 			firstInLane[currentNote.lane] = false;
-
+			
 			if (nextNoteInLane == null && isFirstInLane)
 			{
 				newNotes.push(currentNote);
 				continue;
 			}
-
+			
 			var timeGap:Float = MINIMAL_GAP_LENGTH;
 			if (nextNoteInLane != null)
 			{
@@ -957,20 +957,20 @@ class Song extends JsonObject
 				}
 				else
 					bpm = timingPoint.bpm;
-
+					
 				timeGap = Math.max(15000 / bpm, MINIMAL_GAP_LENGTH);
 			}
-
+			
 			if (currentNote.isLongNote)
 			{
 				if (nextNoteInLane != null)
 				{
 					currentNote.startTime = currentNote.endTime;
 					currentNote.endTime = nextNoteInLane.startTime - timeGap;
-
+					
 					if ((secondNextNoteInLane == null) != nextNoteInLane.isLongNote)
 						currentNote.endTime = nextNoteInLane.startTime;
-
+						
 					if (currentNote.endTime - currentNote.startTime < MINIMAL_LN_LENGTH)
 						continue;
 				}
@@ -979,23 +979,23 @@ class Song extends JsonObject
 			{
 				if (nextNoteInLane == null)
 					continue;
-
+					
 				currentNote.endTime = nextNoteInLane.startTime - timeGap;
-
+				
 				if ((secondNextNoteInLane == null) == (nextNoteInLane.endTime == 0))
 					currentNote.endTime = nextNoteInLane.startTime;
-
+					
 				if (currentNote.endTime - currentNote.startTime < MINIMAL_LN_LENGTH)
 					currentNote.endTime = 0;
 			}
-
+			
 			newNotes.push(currentNote);
 		}
-
+		
 		newNotes.sort(sortObjects);
 		notes = newNotes;
 	}
-
+	
 	public function mirrorNotes()
 	{
 		for (note in notes)
@@ -1006,7 +1006,7 @@ class Song extends JsonObject
 				note.lane = 3 - note.lane;
 		}
 	}
-
+	
 	/**
 		Writes this song object into a file.
 	**/
@@ -1024,7 +1024,7 @@ class Song extends JsonObject
 				data.meter = obj.meter;
 			timingPoints.push(data);
 		}
-
+		
 		var scrollVelocities = [];
 		for (obj in this.scrollVelocities)
 		{
@@ -1035,7 +1035,7 @@ class Song extends JsonObject
 				data.multipliers = obj.multipliers;
 			scrollVelocities.push(data);
 		}
-
+		
 		var cameraFocuses = [];
 		for (obj in this.cameraFocuses)
 		{
@@ -1046,7 +1046,7 @@ class Song extends JsonObject
 				data.char = obj.char;
 			cameraFocuses.push(data);
 		}
-
+		
 		var events = [];
 		for (obj in this.events)
 		{
@@ -1060,7 +1060,7 @@ class Song extends JsonObject
 				});
 			events.push(data);
 		}
-
+		
 		var lyricSteps = [];
 		for (obj in this.lyricSteps)
 		{
@@ -1069,7 +1069,7 @@ class Song extends JsonObject
 				data.startTime = obj.startTime;
 			lyricSteps.push(data);
 		}
-
+		
 		var notes = [];
 		for (note in this.notes)
 		{
@@ -1086,7 +1086,7 @@ class Song extends JsonObject
 				data.params = note.params.join(',');
 			notes.push(data);
 		}
-
+		
 		var data = {
 			title: title,
 			artist: artist,
@@ -1105,19 +1105,19 @@ class Song extends JsonObject
 		};
 		File.saveContent(path, Json.stringify(data, "\t"));
 	}
-
+	
 	public function randomizeLanes()
 	{
 		var values = [for (i in 0...4) i];
 		FlxG.random.shuffle(values);
-
+		
 		for (note in notes)
 		{
 			var add = note.player * 4;
 			note.lane = values[note.playerLane] + add;
 		}
 	}
-
+	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
@@ -1130,19 +1130,19 @@ class Song extends JsonObject
 			LabelValuePair.weak("notes", notes)
 		]);
 	}
-
+	
 	override function destroy()
 	{
 		scrollVelocities = FlxDestroyUtil.destroyArray(scrollVelocities);
 		events = FlxDestroyUtil.destroyArray(events);
 		notes = FlxDestroyUtil.destroyArray(notes);
 	}
-
+	
 	function get_length():Float
 	{
 		if (notes.length == 0)
 			return 0;
-
+			
 		var max:Float = 0;
 		for (note in notes)
 		{

@@ -3,7 +3,7 @@ package subStates.editors.song;
 class SongEditorSavePrompt extends PromptSubState
 {
 	var callback:String->Void;
-
+	
 	public function new(?callback:String->Void)
 	{
 		super('You have unsaved changes. Would you like to save your chart?', [
@@ -34,7 +34,7 @@ class SongEditorSavePrompt extends PromptSubState
 		]);
 		this.callback = callback;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

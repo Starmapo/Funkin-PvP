@@ -17,7 +17,7 @@ class HScriptUtil
 		Compiler.addGlobalMetadata('openfl.display.BlendMode', '@:build(hscript.HScriptUtil.build())');
 		#end
 	}
-
+	
 	#if macro
 	public static function build():Array<Field>
 	{
@@ -26,11 +26,11 @@ class HScriptUtil
 		if (clRef == null)
 			return fields;
 		var cl = clRef.get();
-
+		
 		if (cl.name.endsWith("_Impl_") && cl.params.length <= 0 && !cl.meta.has(":multiType"))
 		{
 			var metas = cl.meta.get();
-
+			
 			var shadowClass = macro class {};
 			shadowClass.params = switch (cl.params.length)
 			{
@@ -51,7 +51,7 @@ class HScriptUtil
 					];
 			};
 			shadowClass.name = '${cl.name.substr(0, cl.name.length - 6)}_HSC';
-
+			
 			for (f in fields)
 				switch (f.kind)
 				{
@@ -89,15 +89,15 @@ class HScriptUtil
 								doc: f.doc,
 								access: [APublic, AStatic]
 							}
-
+							
 							shadowClass.fields.push(field);
 						}
 					default:
 				}
-
+				
 			Context.defineModule(cl.module, [shadowClass], Context.getLocalImports());
 		}
-
+		
 		return fields;
 	}
 	#end

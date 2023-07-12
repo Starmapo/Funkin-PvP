@@ -19,34 +19,34 @@ import ui.lists.MenuList.TypedMenuList;
 class ModsState extends FNFState
 {
 	static var lastSelected:Int = 0;
-
+	
 	var items:ModList;
 	var camFollow:FlxObject;
 	var transitioning:Bool = true;
-
+	
 	override function create()
 	{
 		var bg = CoolUtil.createMenuBG('menuBG');
 		add(bg);
-
+		
 		camFollow = new FlxObject(FlxG.width / 2);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
-
+		
 		items = new ModList();
 		items.controlsEnabled = false;
 		items.onChange.add(onChange);
 		add(items);
-
+		
 		Mods.reloadMods();
 		for (mod in Mods.currentMods)
 			items.createItem(mod);
-
+			
 		if (lastSelected >= items.length)
 			lastSelected = items.length - 1;
 		items.selectItem(lastSelected);
 		FlxG.camera.snapToTarget();
-
+		
 		FlxG.camera.zoom = 3;
 		var duration = Main.getTransitionTime();
 		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
@@ -58,10 +58,10 @@ class ModsState extends FNFState
 			}
 		});
 		FlxG.camera.fade(FlxColor.BLACK, duration, true, null, true);
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
@@ -78,17 +78,17 @@ class ModsState extends FNFState
 			});
 			FlxG.camera.fade(FlxColor.BLACK, duration, false, null, true);
 		}
-
+		
 		super.update(elapsed);
 	}
-
+	
 	function updateCamFollow(item:ModItem)
 	{
 		var midpoint = item.getMidpoint();
 		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
-
+	
 	function onChange(item:ModItem)
 	{
 		updateCamFollow(item);
@@ -110,9 +110,9 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 	public function new(x:Float = 0, y:Float = 0, mod:Mod)
 	{
 		var label = new FlxSpriteGroup();
-
+		
 		super(x, y, label, mod.directory);
-
+		
 		var bgGraphic = FlxG.bitmap.get('mod_bg');
 		if (bgGraphic == null)
 		{
@@ -123,12 +123,12 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			spr.destroy();
 		}
 		var bg = new FlxSprite(0, 0, bgGraphic);
-
+		
 		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.directory, 'icon']), null, false);
 		if (iconImage == null)
 			iconImage = Paths.getImage('menus/mods/noIcon');
 		var icon = new FlxSprite(20, 20, iconImage);
-
+		
 		var maxNameWidth = bg.width - 109;
 		var name = new FlxText(icon.x + icon.width + 5, icon.y + (icon.height / 2), 0, mod.name);
 		name.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
@@ -138,13 +138,13 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			name.size *= Math.floor(ratio);
 		}
 		name.y -= name.height / 2;
-
+		
 		var warning = CoolUtil.getVersionWarning(mod.gameVersion);
 		if (warning.length > 0)
 			name.color = FlxColor.RED;
-
+			
 		var count = getCountText(mod);
-
+		
 		var desc = new FlxText(icon.x, icon.y
 			+ icon.height
 			+ 5, bg.width
@@ -156,15 +156,15 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			+ 'Version: '
 			+ mod.modVersion);
 		desc.setFormat('PhantomMuff 1.5', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-
+		
 		label.add(bg);
 		label.add(icon);
 		label.add(name);
 		label.add(desc);
-
+		
 		setEmptyBackground();
 	}
-
+	
 	function getCountText(mod:Mod)
 	{
 		var count = addCount('', mod.songCount, 'song');
@@ -174,16 +174,16 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		count = addCount(count, mod.splashSkinCount, 'splash skin');
 		return count;
 	}
-
+	
 	function addCount(text:String, count:Int, thing:String)
 	{
 		if (count <= 0)
 			return text;
-
+			
 		if (text.length > 0)
 			text += ', ';
 		text += count;
-
+		
 		return text + ' ' + thing + (count > 1 ? 's' : '');
 	}
 }

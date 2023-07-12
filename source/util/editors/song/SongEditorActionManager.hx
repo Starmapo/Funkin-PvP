@@ -49,15 +49,15 @@ class SongEditorActionManager extends ActionManager
 	public static inline var CHANGE_STAGE:String = 'change-stage';
 	public static inline var CHANGE_INITIAL_SV:String = 'change-initial-sv';
 	public static inline var CHANGE_LYRICS:String = 'change-lyrics';
-
+	
 	var state:SongEditorState;
-
+	
 	public function new(state:SongEditorState)
 	{
 		super();
 		this.state = state;
 	}
-
+	
 	public function addNote(lane:Int, startTime:Float, endTime:Float = 0, type:String = '', params:String = '')
 	{
 		var note = new NoteInfo({
@@ -70,7 +70,7 @@ class SongEditorActionManager extends ActionManager
 		perform(new ActionAddObject(state, note));
 		return note;
 	}
-
+	
 	public function addTimingPoint(startTime:Float, bpm:Float, meter:Int = 4)
 	{
 		var obj = new TimingPoint({
@@ -81,7 +81,7 @@ class SongEditorActionManager extends ActionManager
 		perform(new ActionAddObject(state, obj));
 		return obj;
 	}
-
+	
 	public function addScrollVelocity(startTime:Float, multipliers:Array<Float>, linked:Bool = true)
 	{
 		var obj = new ScrollVelocity({
@@ -92,7 +92,7 @@ class SongEditorActionManager extends ActionManager
 		perform(new ActionAddObject(state, obj));
 		return obj;
 	}
-
+	
 	public function addCamFocus(startTime:Float, char:CameraFocusChar = OPPONENT)
 	{
 		var obj = new CameraFocus({
@@ -102,7 +102,7 @@ class SongEditorActionManager extends ActionManager
 		perform(new ActionAddObject(state, obj));
 		return obj;
 	}
-
+	
 	public function addEvent(startTime:Float, event:String, params:String)
 	{
 		var obj = new EventObject({
@@ -117,7 +117,7 @@ class SongEditorActionManager extends ActionManager
 		perform(new ActionAddObject(state, obj));
 		return obj;
 	}
-
+	
 	public function addLyricStep(startTime:Float)
 	{
 		var obj = new LyricStep({
@@ -126,7 +126,7 @@ class SongEditorActionManager extends ActionManager
 		perform(new ActionAddObject(state, obj));
 		return obj;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -137,16 +137,16 @@ class SongEditorActionManager extends ActionManager
 class ActionAddObject implements IAction
 {
 	public var type:String = SongEditorActionManager.ADD_OBJECT;
-
+	
 	var state:SongEditorState;
 	var object:ITimingObject;
-
+	
 	public function new(state:SongEditorState, object:ITimingObject)
 	{
 		this.state = state;
 		this.object = object;
 	}
-
+	
 	public function perform()
 	{
 		state.song.addObject(object);
@@ -155,12 +155,12 @@ class ActionAddObject implements IAction
 			object: object
 		});
 	}
-
+	
 	public function undo()
 	{
 		new ActionRemoveObject(state, object).perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -171,16 +171,16 @@ class ActionAddObject implements IAction
 class ActionRemoveObject implements IAction
 {
 	public var type:String = SongEditorActionManager.REMOVE_OBJECT;
-
+	
 	var state:SongEditorState;
 	var object:ITimingObject;
-
+	
 	public function new(state:SongEditorState, object:ITimingObject)
 	{
 		this.state = state;
 		this.object = object;
 	}
-
+	
 	public function perform()
 	{
 		state.song.removeObject(object);
@@ -189,12 +189,12 @@ class ActionRemoveObject implements IAction
 			object: object
 		});
 	}
-
+	
 	public function undo()
 	{
 		new ActionAddObject(state, object).perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -205,16 +205,16 @@ class ActionRemoveObject implements IAction
 class ActionAddObjectBatch implements IAction
 {
 	public var type:String = SongEditorActionManager.ADD_OBJECT_BATCH;
-
+	
 	var state:SongEditorState;
 	var objects:Array<ITimingObject>;
-
+	
 	public function new(state:SongEditorState, objects:Array<ITimingObject>)
 	{
 		this.state = state;
 		this.objects = objects;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in objects)
@@ -222,12 +222,12 @@ class ActionAddObjectBatch implements IAction
 		state.song.sort();
 		state.actionManager.triggerEvent(type, {objects: objects});
 	}
-
+	
 	public function undo()
 	{
 		new ActionRemoveObjectBatch(state, objects).perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -238,16 +238,16 @@ class ActionAddObjectBatch implements IAction
 class ActionRemoveObjectBatch implements IAction
 {
 	public var type:String = SongEditorActionManager.REMOVE_OBJECT_BATCH;
-
+	
 	var state:SongEditorState;
 	var objects:Array<ITimingObject>;
-
+	
 	public function new(state:SongEditorState, objects:Array<ITimingObject>)
 	{
 		this.state = state;
 		this.objects = objects;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in objects)
@@ -258,12 +258,12 @@ class ActionRemoveObjectBatch implements IAction
 		state.song.sort();
 		state.actionManager.triggerEvent(type, {objects: objects});
 	}
-
+	
 	public function undo()
 	{
 		new ActionAddObjectBatch(state, objects).perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -274,12 +274,12 @@ class ActionRemoveObjectBatch implements IAction
 class ActionResizeLongNote implements IAction
 {
 	public var type:String = SongEditorActionManager.RESIZE_LONG_NOTE;
-
+	
 	var state:SongEditorState;
 	var note:NoteInfo;
 	var originalTime:Float;
 	var newTime:Float;
-
+	
 	public function new(state:SongEditorState, note:NoteInfo, originalTime:Float, newTime:Float)
 	{
 		this.state = state;
@@ -287,18 +287,18 @@ class ActionResizeLongNote implements IAction
 		this.originalTime = originalTime;
 		this.newTime = newTime;
 	}
-
+	
 	public function perform()
 	{
 		note.endTime = newTime;
 		state.actionManager.triggerEvent(type, {note: note, originalTime: originalTime, newTime: newTime});
 	}
-
+	
 	public function undo()
 	{
 		new ActionResizeLongNote(state, note, newTime, originalTime).perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -309,19 +309,19 @@ class ActionResizeLongNote implements IAction
 class ActionChangeNoteType implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_NOTE_TYPE;
-
+	
 	var state:SongEditorState;
 	var notes:Array<NoteInfo>;
 	var noteType:String;
 	var lastTypes:Map<NoteInfo, String> = new Map();
-
+	
 	public function new(state:SongEditorState, notes:Array<NoteInfo>, noteType:String)
 	{
 		this.state = state;
 		this.notes = notes;
 		this.noteType = noteType;
 	}
-
+	
 	public function perform()
 	{
 		for (note in notes)
@@ -329,19 +329,19 @@ class ActionChangeNoteType implements IAction
 			lastTypes.set(note, note.type);
 			note.type = noteType;
 		}
-
+		
 		state.actionManager.triggerEvent(type, {notes: notes, noteType: noteType});
 	}
-
+	
 	public function undo()
 	{
 		for (note in notes)
 			note.type = lastTypes.get(note);
 		lastTypes.clear();
-
+		
 		state.actionManager.triggerEvent(type, {notes: notes, noteType: noteType});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -353,19 +353,19 @@ class ActionChangeNoteType implements IAction
 class ActionChangeNoteParams implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_NOTE_PARAMS;
-
+	
 	var state:SongEditorState;
 	var notes:Array<NoteInfo>;
 	var params:Array<String>;
 	var lastParams:Map<NoteInfo, Array<String>> = new Map();
-
+	
 	public function new(state:SongEditorState, notes:Array<NoteInfo>, params:String)
 	{
 		this.state = state;
 		this.notes = notes;
 		this.params = params.trim().split(',');
 	}
-
+	
 	public function perform()
 	{
 		for (note in notes)
@@ -373,19 +373,19 @@ class ActionChangeNoteParams implements IAction
 			lastParams.set(note, note.params.copy());
 			note.params = params.copy();
 		}
-
+		
 		state.actionManager.triggerEvent(type, {notes: notes, params: params});
 	}
-
+	
 	public function undo()
 	{
 		for (note in notes)
 			note.params = lastParams.get(note);
 		lastParams.clear();
-
+		
 		state.actionManager.triggerEvent(type, {notes: notes, params: params});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -398,13 +398,13 @@ class ActionChangeNoteParams implements IAction
 class ActionMoveObjects implements IAction
 {
 	public var type:String = SongEditorActionManager.MOVE_OBJECTS;
-
+	
 	var state:SongEditorState;
 	var objects:Array<ITimingObject>;
 	var laneOffset:Int;
 	var dragOffset:Float;
 	var shouldPerform:Bool;
-
+	
 	public function new(state:SongEditorState, ?objects:Array<ITimingObject>, laneOffset:Int, dragOffset:Float, shouldPerform:Bool = true)
 	{
 		this.state = state;
@@ -413,7 +413,7 @@ class ActionMoveObjects implements IAction
 		this.dragOffset = dragOffset;
 		this.shouldPerform = shouldPerform;
 	}
-
+	
 	public function perform()
 	{
 		if (shouldPerform)
@@ -430,16 +430,16 @@ class ActionMoveObjects implements IAction
 				}
 			}
 		}
-
+		
 		state.actionManager.triggerEvent(type, {objects: objects});
 	}
-
+	
 	public function undo()
 	{
 		new ActionMoveObjects(state, objects, -laneOffset, -dragOffset).perform();
 		shouldPerform = true;
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -450,20 +450,20 @@ class ActionMoveObjects implements IAction
 class ActionResnapObjects implements IAction
 {
 	public var type:String = SongEditorActionManager.RESNAP_OBJECTS;
-
+	
 	var state:SongEditorState;
 	var snaps:Array<Int>;
 	var objects:Array<ITimingObject>;
 	var noteTimeAdjustments:Map<NoteInfo, NoteAdjustment> = new Map();
 	var timeAdjustments:Map<ITimingObject, TimingAdjustment> = new Map();
-
+	
 	public function new(state:SongEditorState, snaps:Array<Int>, ?objects:Array<ITimingObject>)
 	{
 		this.state = state;
 		this.snaps = snaps;
 		this.objects = objects;
 	}
-
+	
 	public function perform()
 	{
 		var resnapCount = 0;
@@ -479,7 +479,7 @@ class ActionResnapObjects implements IAction
 					obj.startTime = closestTickOverall(obj.startTime);
 					if (obj.isLongNote)
 						obj.endTime = closestTickOverall(obj.endTime);
-
+						
 					var adjustment = new NoteAdjustment(originalStartTime, originalEndTime, obj);
 					if (adjustment.wasMoved)
 					{
@@ -491,7 +491,7 @@ class ActionResnapObjects implements IAction
 				{
 					var originalStartTime = obj.startTime;
 					obj.startTime = closestTickOverall(obj.startTime);
-
+					
 					var adjustment = new TimingAdjustment(originalStartTime, obj);
 					if (adjustment.wasMoved)
 					{
@@ -501,7 +501,7 @@ class ActionResnapObjects implements IAction
 				}
 			}
 		}
-
+		
 		if (resnapCount > 0)
 		{
 			state.actionManager.triggerEvent(type, {
@@ -510,7 +510,7 @@ class ActionResnapObjects implements IAction
 			});
 		}
 	}
-
+	
 	public function undo()
 	{
 		for (obj => adjustment in noteTimeAdjustments)
@@ -520,16 +520,16 @@ class ActionResnapObjects implements IAction
 		}
 		for (obj => adjustment in timeAdjustments)
 			obj.startTime = adjustment.originalStartTime;
-
+			
 		state.actionManager.triggerEvent(type, {
 			snaps: snaps,
 			objects: objects
 		});
-
+		
 		noteTimeAdjustments.clear();
 		timeAdjustments.clear();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -538,7 +538,7 @@ class ActionResnapObjects implements IAction
 		noteTimeAdjustments = null;
 		timeAdjustments = null;
 	}
-
+	
 	function closestTickOverall(time:Float)
 	{
 		var closestTime:Float = FlxMath.MAX_VALUE_FLOAT;
@@ -555,18 +555,18 @@ class ActionResnapObjects implements IAction
 class ActionFlipNotes implements IAction
 {
 	public var type:String = SongEditorActionManager.FLIP_NOTES;
-
+	
 	var state:SongEditorState;
 	var notes:Array<NoteInfo>;
 	var fullFlip:Bool;
-
+	
 	public function new(state:SongEditorState, notes:Array<NoteInfo>, fullFlip:Bool)
 	{
 		this.state = state;
 		this.notes = notes;
 		this.fullFlip = fullFlip;
 	}
-
+	
 	public function perform()
 	{
 		for (note in notes)
@@ -581,17 +581,17 @@ class ActionFlipNotes implements IAction
 					note.lane = 3 - note.lane;
 			}
 		}
-
+		
 		state.actionManager.triggerEvent(type, {
 			notes: notes
 		});
 	}
-
+	
 	public function undo()
 	{
 		perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -602,17 +602,17 @@ class ActionFlipNotes implements IAction
 class ActionApplyModifier implements IAction
 {
 	public var type:String = SongEditorActionManager.APPLY_MODIFIER;
-
+	
 	var state:SongEditorState;
 	var modifier:Modifier;
 	var originalNotes:Array<NoteInfo> = [];
-
+	
 	public function new(state:SongEditorState, modifier:Modifier)
 	{
 		this.state = state;
 		this.modifier = modifier;
 	}
-
+	
 	public function perform()
 	{
 		for (note in state.song.notes)
@@ -623,7 +623,7 @@ class ActionApplyModifier implements IAction
 				type: note.type,
 				params: note.params.join(',')
 			}));
-
+			
 		switch (modifier)
 		{
 			case MIRROR:
@@ -636,18 +636,18 @@ class ActionApplyModifier implements IAction
 			case INVERSE:
 				state.song.applyInverse();
 		}
-
+		
 		state.actionManager.triggerEvent(type, {modifier: modifier});
 	}
-
+	
 	public function undo()
 	{
 		state.song.notes = originalNotes.copy();
 		originalNotes.resize(0);
-
+		
 		state.actionManager.triggerEvent(type, {modifier: modifier});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -658,19 +658,19 @@ class ActionApplyModifier implements IAction
 class ActionChangeTimingPointTime implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_TIMING_POINT_TIME;
-
+	
 	var state:SongEditorState;
 	var timingPoints:Array<TimingPoint>;
 	var time:Float;
 	var lastTimes:Map<TimingPoint, Float> = new Map();
-
+	
 	public function new(state:SongEditorState, timingPoints:Array<TimingPoint>, time:Float)
 	{
 		this.state = state;
 		this.timingPoints = timingPoints;
 		this.time = time;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in timingPoints)
@@ -678,19 +678,19 @@ class ActionChangeTimingPointTime implements IAction
 			lastTimes.set(obj, obj.startTime);
 			obj.startTime = time;
 		}
-
+		
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, time: time});
 	}
-
+	
 	public function undo()
 	{
 		for (obj in timingPoints)
 			obj.startTime = lastTimes.get(obj);
 		lastTimes.clear();
-
+		
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, time: time});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -702,19 +702,19 @@ class ActionChangeTimingPointTime implements IAction
 class ActionChangeTimingPointBPM implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_TIMING_POINT_BPM;
-
+	
 	var state:SongEditorState;
 	var timingPoints:Array<TimingPoint>;
 	var bpm:Float;
 	var lastBPMs:Map<TimingPoint, Float> = new Map();
-
+	
 	public function new(state:SongEditorState, timingPoints:Array<TimingPoint>, bpm:Float)
 	{
 		this.state = state;
 		this.timingPoints = timingPoints;
 		this.bpm = bpm;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in timingPoints)
@@ -722,19 +722,19 @@ class ActionChangeTimingPointBPM implements IAction
 			lastBPMs.set(obj, obj.bpm);
 			obj.bpm = bpm;
 		}
-
+		
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, bpm: bpm});
 	}
-
+	
 	public function undo()
 	{
 		for (obj in timingPoints)
 			obj.bpm = lastBPMs.get(obj);
 		lastBPMs.clear();
-
+		
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, bpm: bpm});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -746,19 +746,19 @@ class ActionChangeTimingPointBPM implements IAction
 class ActionChangeTimingPointMeter implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_TIMING_POINT_METER;
-
+	
 	var state:SongEditorState;
 	var timingPoints:Array<TimingPoint>;
 	var meter:Int;
 	var lastMeters:Map<TimingPoint, Int> = new Map();
-
+	
 	public function new(state:SongEditorState, timingPoints:Array<TimingPoint>, meter:Int)
 	{
 		this.state = state;
 		this.timingPoints = timingPoints;
 		this.meter = meter;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in timingPoints)
@@ -766,19 +766,19 @@ class ActionChangeTimingPointMeter implements IAction
 			lastMeters.set(obj, obj.meter);
 			obj.meter = meter;
 		}
-
+		
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, meter: meter});
 	}
-
+	
 	public function undo()
 	{
 		for (obj in timingPoints)
 			obj.meter = lastMeters.get(obj);
 		lastMeters.clear();
-
+		
 		state.actionManager.triggerEvent(type, {timingPoints: timingPoints, meter: meter});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -790,13 +790,13 @@ class ActionChangeTimingPointMeter implements IAction
 class ActionChangeSVMultiplier implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_SV_MULTIPLIER;
-
+	
 	var state:SongEditorState;
 	var scrollVelocities:Array<ScrollVelocity>;
 	var player:Int;
 	var multiplier:Float;
 	var lastMultipliers:Map<ScrollVelocity, Float> = new Map();
-
+	
 	public function new(state:SongEditorState, scrollVelocities:Array<ScrollVelocity>, player:Int, multiplier:Float)
 	{
 		this.state = state;
@@ -804,7 +804,7 @@ class ActionChangeSVMultiplier implements IAction
 		this.player = player;
 		this.multiplier = multiplier;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in scrollVelocities)
@@ -812,19 +812,19 @@ class ActionChangeSVMultiplier implements IAction
 			lastMultipliers.set(obj, obj.multipliers[player]);
 			obj.multipliers[player] = multiplier;
 		}
-
+		
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, player: player, multiplier: multiplier});
 	}
-
+	
 	public function undo()
 	{
 		for (obj in scrollVelocities)
 			obj.multipliers[player] = lastMultipliers.get(obj);
 		lastMultipliers.clear();
-
+		
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, player: player, multiplier: multiplier});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -836,19 +836,19 @@ class ActionChangeSVMultiplier implements IAction
 class ActionChangeSVMultipliers implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_SV_MULTIPLIERS;
-
+	
 	var state:SongEditorState;
 	var scrollVelocities:Array<ScrollVelocity>;
 	var multipliers:Array<Float>;
 	var lastMultipliers:Map<ScrollVelocity, Array<Float>> = new Map();
-
+	
 	public function new(state:SongEditorState, scrollVelocities:Array<ScrollVelocity>, multipliers:Array<Float>)
 	{
 		this.state = state;
 		this.scrollVelocities = scrollVelocities;
 		this.multipliers = multipliers;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in scrollVelocities)
@@ -856,19 +856,19 @@ class ActionChangeSVMultipliers implements IAction
 			lastMultipliers.set(obj, obj.multipliers.copy());
 			obj.multipliers = multipliers.copy();
 		}
-
+		
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, multipliers: multipliers});
 	}
-
+	
 	public function undo()
 	{
 		for (obj in scrollVelocities)
 			obj.multipliers = lastMultipliers.get(obj);
 		lastMultipliers.clear();
-
+		
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, multipliers: multipliers});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -881,19 +881,19 @@ class ActionChangeSVMultipliers implements IAction
 class ActionChangeSVLinked implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_SV_LINKED;
-
+	
 	var state:SongEditorState;
 	var scrollVelocities:Array<ScrollVelocity>;
 	var linked:Bool;
 	var lastLinked:Map<ScrollVelocity, Bool> = new Map();
-
+	
 	public function new(state:SongEditorState, scrollVelocities:Array<ScrollVelocity>, linked:Bool)
 	{
 		this.state = state;
 		this.scrollVelocities = scrollVelocities;
 		this.linked = linked;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in scrollVelocities)
@@ -901,19 +901,19 @@ class ActionChangeSVLinked implements IAction
 			lastLinked.set(obj, obj.linked);
 			obj.linked = linked;
 		}
-
+		
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, linked: linked});
 	}
-
+	
 	public function undo()
 	{
 		for (obj in scrollVelocities)
 			obj.linked = lastLinked.get(obj);
 		lastLinked.clear();
-
+		
 		state.actionManager.triggerEvent(type, {scrollVelocities: scrollVelocities, linked: linked});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -925,19 +925,19 @@ class ActionChangeSVLinked implements IAction
 class ActionChangeCameraFocusChar implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_CAMERA_FOCUS_CHAR;
-
+	
 	var state:SongEditorState;
 	var cameraFocuses:Array<CameraFocus>;
 	var char:CameraFocusChar;
 	var lastChars:Map<CameraFocus, CameraFocusChar> = new Map();
-
+	
 	public function new(state:SongEditorState, cameraFocuses:Array<CameraFocus>, char:CameraFocusChar)
 	{
 		this.state = state;
 		this.cameraFocuses = cameraFocuses;
 		this.char = char;
 	}
-
+	
 	public function perform()
 	{
 		for (obj in cameraFocuses)
@@ -945,19 +945,19 @@ class ActionChangeCameraFocusChar implements IAction
 			lastChars.set(obj, obj.char);
 			obj.char = char;
 		}
-
+		
 		state.actionManager.triggerEvent(type, {cameraFocuses: cameraFocuses, char: char});
 	}
-
+	
 	public function undo()
 	{
 		for (obj in cameraFocuses)
 			obj.char = lastChars.get(obj);
 		lastChars.clear();
-
+		
 		state.actionManager.triggerEvent(type, {cameraFocuses: cameraFocuses, char: char});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -969,34 +969,34 @@ class ActionChangeCameraFocusChar implements IAction
 class ActionChangeEvent implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_EVENT;
-
+	
 	var state:SongEditorState;
 	var eventInfo:Event;
 	var event:String;
 	var lastEvent:String;
-
+	
 	public function new(state:SongEditorState, eventInfo:Event, event:String)
 	{
 		this.state = state;
 		this.eventInfo = eventInfo;
 		this.event = event;
 	}
-
+	
 	public function perform()
 	{
 		lastEvent = eventInfo.event;
 		eventInfo.event = event;
-
+		
 		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, event: event});
 	}
-
+	
 	public function undo()
 	{
 		eventInfo.event = lastEvent;
-
+		
 		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, event: event});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -1007,34 +1007,34 @@ class ActionChangeEvent implements IAction
 class ActionChangeEventParams implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_EVENT_PARAMS;
-
+	
 	var state:SongEditorState;
 	var eventInfo:Event;
 	var params:String;
 	var lastParams:String;
-
+	
 	public function new(state:SongEditorState, eventInfo:Event, params:String)
 	{
 		this.state = state;
 		this.eventInfo = eventInfo;
 		this.params = params;
 	}
-
+	
 	public function perform()
 	{
 		lastParams = eventInfo.params.join(',');
 		eventInfo.params = params.split(',');
-
+		
 		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, params: params});
 	}
-
+	
 	public function undo()
 	{
 		eventInfo.params = lastParams.split(',');
-
+		
 		state.actionManager.triggerEvent(type, {eventInfo: eventInfo, params: params});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -1045,12 +1045,12 @@ class ActionChangeEventParams implements IAction
 class ActionAddEvent implements IAction
 {
 	public var type:String = SongEditorActionManager.ADD_EVENT;
-
+	
 	var state:SongEditorState;
 	var eventObject:EventObject;
 	var event:Event;
 	var index:Int;
-
+	
 	public function new(state:SongEditorState, eventObject:EventObject, event:Event, index:Int)
 	{
 		this.state = state;
@@ -1058,19 +1058,19 @@ class ActionAddEvent implements IAction
 		this.event = event;
 		this.index = index;
 	}
-
+	
 	public function perform()
 	{
 		eventObject.events.insert(index, event);
-
+		
 		state.actionManager.triggerEvent(type, {eventObject: eventObject, event: event, index: index});
 	}
-
+	
 	public function undo()
 	{
 		new ActionRemoveEvent(state, eventObject, event, index).perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -1082,12 +1082,12 @@ class ActionAddEvent implements IAction
 class ActionRemoveEvent implements IAction
 {
 	public var type:String = SongEditorActionManager.REMOVE_EVENT;
-
+	
 	var state:SongEditorState;
 	var eventObject:EventObject;
 	var event:Event;
 	var index:Int;
-
+	
 	public function new(state:SongEditorState, eventObject:EventObject, event:Event, index:Int)
 	{
 		this.state = state;
@@ -1095,19 +1095,19 @@ class ActionRemoveEvent implements IAction
 		this.event = event;
 		this.index = index;
 	}
-
+	
 	public function perform()
 	{
 		eventObject.events.remove(event);
-
+		
 		state.actionManager.triggerEvent(type, {eventObject: eventObject, event: event});
 	}
-
+	
 	public function undo()
 	{
 		new ActionAddEvent(state, eventObject, event, index).perform();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -1119,35 +1119,35 @@ class ActionRemoveEvent implements IAction
 class ActionChangeTitle implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_TITLE;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.title = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.title = lastValue;
 		triggerEvent();
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {title: state.song.title});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -1157,35 +1157,35 @@ class ActionChangeTitle implements IAction
 class ActionChangeArtist implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_ARTIST;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.artist = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.artist = lastValue;
 		triggerEvent();
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {artist: state.song.artist});
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
@@ -1195,35 +1195,35 @@ class ActionChangeArtist implements IAction
 class ActionChangeSource implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_SOURCE;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.source = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.source = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {source: state.song.source});
@@ -1233,35 +1233,35 @@ class ActionChangeSource implements IAction
 class ActionChangeDifficultyName implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_DIFFICULTY_NAME;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.difficultyName = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.difficultyName = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.updatePresence();
@@ -1272,35 +1272,35 @@ class ActionChangeDifficultyName implements IAction
 class ActionChangeOpponent implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_OPPONENT;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.opponent = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.opponent = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {opponent: state.song.opponent});
@@ -1310,35 +1310,35 @@ class ActionChangeOpponent implements IAction
 class ActionChangeBF implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_BF;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.bf = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.bf = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {bf: state.song.bf});
@@ -1348,35 +1348,35 @@ class ActionChangeBF implements IAction
 class ActionChangeGF implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_GF;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.gf = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.gf = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {gf: state.song.gf});
@@ -1386,35 +1386,35 @@ class ActionChangeGF implements IAction
 class ActionChangeStage implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_STAGE;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.stage = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.stage = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {stage: state.song.stage});
@@ -1424,35 +1424,35 @@ class ActionChangeStage implements IAction
 class ActionChangeInitialSV implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_INITIAL_SV;
-
+	
 	var state:SongEditorState;
 	var value:Float;
 	var lastValue:Float;
-
+	
 	public function new(state:SongEditorState, value:Float, lastValue:Float)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.song.initialScrollVelocity = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.song.initialScrollVelocity = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.actionManager.triggerEvent(type, {initialScrollVelocity: state.song.initialScrollVelocity});
@@ -1462,35 +1462,35 @@ class ActionChangeInitialSV implements IAction
 class ActionChangeLyrics implements IAction
 {
 	public var type:String = SongEditorActionManager.CHANGE_LYRICS;
-
+	
 	var state:SongEditorState;
 	var value:String;
 	var lastValue:String;
-
+	
 	public function new(state:SongEditorState, value:String, lastValue:String)
 	{
 		this.state = state;
 		this.value = value;
 		this.lastValue = lastValue;
 	}
-
+	
 	public function perform()
 	{
 		state.lyrics = value;
 		triggerEvent();
 	}
-
+	
 	public function undo()
 	{
 		state.lyrics = lastValue;
 		triggerEvent();
 	}
-
+	
 	public function destroy()
 	{
 		state = null;
 	}
-
+	
 	function triggerEvent()
 	{
 		state.lyricsDisplay.lyrics = state.lyrics;
@@ -1503,13 +1503,13 @@ class TimingAdjustment
 	public var originalStartTime:Float;
 	public var newStartTime:Float;
 	public var wasMoved(get, never):Bool;
-
+	
 	public function new(originalStartTime:Float, info:ITimingObject)
 	{
 		this.originalStartTime = originalStartTime;
 		newStartTime = info.startTime;
 	}
-
+	
 	function get_wasMoved()
 	{
 		return originalStartTime != newStartTime;
@@ -1522,24 +1522,24 @@ class NoteAdjustment extends TimingAdjustment
 	public var newEndTime:Float;
 	public var startTimeWasChanged(get, never):Bool;
 	public var endTimeWasChanged(get, never):Bool;
-
+	
 	public function new(originalStartTime:Float, originalEndTime:Float, info:NoteInfo)
 	{
 		super(originalStartTime, info);
 		this.originalEndTime = originalEndTime;
 		newEndTime = info.endTime;
 	}
-
+	
 	function get_startTimeWasChanged()
 	{
 		return originalStartTime != newStartTime;
 	}
-
+	
 	function get_endTimeWasChanged()
 	{
 		return originalEndTime != newEndTime;
 	}
-
+	
 	override function get_wasMoved()
 	{
 		return startTimeWasChanged || endTimeWasChanged;

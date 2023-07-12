@@ -12,33 +12,33 @@ class LyricsDisplay extends FlxText
 {
 	static var splitChars:Array<String> = [' ', '/', '-'];
 	static var keepChars:Array<String> = [' ', '-'];
-
+	
 	public static inline function getLyricText(text:String)
 	{
 		return text.replace('\\s', ' ').replace('\\h', '-');
 	}
-
+	
 	public var song:Song;
 	public var lyrics(default, set):String;
 	public var lines:Array<LyricsLine> = [];
-
+	
 	var time:Float = 0;
 	var lastIndex:Int = -1;
-
+	
 	public function new(song:Song, lyrics:String, fieldWidth:Float = 0)
 	{
 		if (fieldWidth <= 0)
 			fieldWidth = FlxG.width / 2;
 		super(0, 200, fieldWidth);
 		this.song = song;
-
+		
 		setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		screenCenter(X);
 		scrollFactor.set();
-
+		
 		this.lyrics = lyrics;
 	}
-
+	
 	public function updateLyrics(time:Float, force:Bool = false)
 	{
 		this.time = time;
@@ -58,7 +58,7 @@ class LyricsDisplay extends FlxText
 			clearFormats();
 		}
 	}
-
+	
 	public function initialize()
 	{
 		lines.resize(0);
@@ -114,16 +114,16 @@ class LyricsDisplay extends FlxText
 			});
 		updateLyrics(time, true);
 	}
-
+	
 	override function update(elapsed:Float) {}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		song = null;
 		lines = null;
 	}
-
+	
 	function updateWithLyric(lyric:LyricsLine, force:Bool = false)
 	{
 		var stepIndex = lyric.steps.length - 1;
@@ -131,17 +131,17 @@ class LyricsDisplay extends FlxText
 		{
 			if (lyric.steps[stepIndex].startTime <= time)
 				break;
-
+				
 			stepIndex--;
 		}
-
+		
 		var len = 0;
 		if (stepIndex >= 0)
 		{
 			for (i in 0...stepIndex + 1)
 				len += getLyricText(lyric.splitWords[i]).length;
 		}
-
+		
 		var lyricText = getLyricText(lyric.splitWords.join(''));
 		if (text != lyricText || stepIndex != lastIndex || force)
 		{
@@ -152,7 +152,7 @@ class LyricsDisplay extends FlxText
 		}
 		lastIndex = stepIndex;
 	}
-
+	
 	function set_lyrics(value:String)
 	{
 		if (lyrics != value)

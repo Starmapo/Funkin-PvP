@@ -46,7 +46,7 @@ class SongEditorPlayState extends FNFState
 	var npsDisplay:FlxTypedGroup<NPSDisplay>;
 	var msDisplay:FlxTypedGroup<MSDisplay>;
 	var editorTime:Float;
-
+	
 	public function new(map:Song, player:Int, startTime:Float = 0, editorTime:Float = 0)
 	{
 		super();
@@ -55,9 +55,9 @@ class SongEditorPlayState extends FNFState
 		this.player = player;
 		this.startTime = startTime;
 		this.editorTime = editorTime;
-
+		
 		persistentUpdate = true;
-
+		
 		var i = song.notes.length - 1;
 		while (i >= 0)
 		{
@@ -66,10 +66,10 @@ class SongEditorPlayState extends FNFState
 				song.notes.remove(note);
 			i--;
 		}
-
+		
 		GameplayGlobals.playbackRate = 1;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -88,11 +88,11 @@ class SongEditorPlayState extends FNFState
 		npsDisplay = null;
 		msDisplay = null;
 	}
-
+	
 	override function create()
 	{
 		DiscordClient.changePresence(song.title + ' [${song.difficultyName}]', "Song Editor Playtesting");
-
+		
 		inst = FlxG.sound.load(Paths.getSongInst(song), 1, false, FlxG.sound.defaultMusicGroup);
 		inst.onComplete = onSongComplete;
 		var vocalsSound = Paths.getSongVocals(song);
@@ -100,18 +100,18 @@ class SongEditorPlayState extends FNFState
 			vocals = FlxG.sound.load(vocalsSound, 1, false, FlxG.sound.defaultMusicGroup);
 		else
 			vocals = new FlxSound();
-
+			
 		timing = new MusicTiming(inst, song.timingPoints, false, startDelay, null, [vocals]);
 		final delay = 500;
 		if (startTime < startDelay)
 			timing.setTime(startTime <= 500 ? -1500 : -delay);
 		else
 			timing.setTime(FlxMath.bound(startTime - delay, 0, inst.length));
-
+			
 		bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
 		add(bg);
-
+		
 		ruleset = new GameplayRuleset(song, timing);
 		if (player == 0)
 		{
@@ -126,24 +126,24 @@ class SongEditorPlayState extends FNFState
 		}
 		for (playfield in ruleset.playfields)
 			add(playfield);
-
+			
 		ruleset.lanePressed.add(onLanePressed);
 		ruleset.laneReleased.add(onLaneReleased);
 		ruleset.noteHit.add(onNoteHit);
 		ruleset.judgementAdded.add(onJudgementAdded);
-
+		
 		if (!Settings.hideHUD)
 		{
 			judgementDisplay = new FlxTypedGroup();
 			for (i in 0...2)
 				judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(PlayerSettings.players[i].config.judgementSkin)));
 			add(judgementDisplay);
-
+			
 			statsDisplay = new FlxTypedGroup();
 			for (i in 0...2)
 				statsDisplay.add(new PlayerStatsDisplay(ruleset.playfields[i].scoreProcessor));
 		}
-
+		
 		msDisplay = new FlxTypedGroup();
 		for (i in 0...2)
 		{
@@ -152,7 +152,7 @@ class SongEditorPlayState extends FNFState
 			msDisplay.add(display);
 		}
 		add(msDisplay);
-
+		
 		judgementCounters = new FlxTypedGroup();
 		for (i in 0...2)
 		{
@@ -161,10 +161,10 @@ class SongEditorPlayState extends FNFState
 			judgementCounters.add(counter);
 		}
 		add(judgementCounters);
-
+		
 		if (statsDisplay != null)
 			add(statsDisplay);
-
+			
 		npsDisplay = new FlxTypedGroup();
 		for (i in 0...2)
 		{
@@ -173,48 +173,48 @@ class SongEditorPlayState extends FNFState
 			npsDisplay.add(display);
 		}
 		add(npsDisplay);
-
+		
 		if (!Settings.hideHUD || Settings.timeDisplay != DISABLED)
 		{
 			songInfoDisplay = new SongInfoDisplay(song, inst, timing);
 			add(songInfoDisplay);
 		}
-
+		
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
 		add(lyricsDisplay);
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
+		
 		timing.update(elapsed);
 		ruleset.update(elapsed);
 		handleInput(elapsed);
 		lyricsDisplay.updateLyrics(timing.audioPosition);
-
+		
 		if (FlxG.mouse.visible)
 			FlxG.mouse.visible = false;
 	}
-
+	
 	function handleInput(elapsed:Float)
 	{
 		if (isPaused)
 			return;
-
+			
 		if (!isPlayComplete)
 		{
 			if (FlxG.keys.justPressed.ESCAPE)
 				exit();
-
+				
 			handleAutoplayInput();
 		}
-
+		
 		ruleset.handleInput(elapsed);
 	}
-
+	
 	function handleAutoplayInput()
 	{
 		if (FlxG.keys.justPressed.TAB)
@@ -224,13 +224,13 @@ class SongEditorPlayState extends FNFState
 			inputManager.stopInput();
 		}
 	}
-
+	
 	function onSongComplete()
 	{
 		lyricsDisplay.visible = false;
 		exit();
 	}
-
+	
 	function exit()
 	{
 		inst.stop();
@@ -238,38 +238,38 @@ class SongEditorPlayState extends FNFState
 		persistentUpdate = false;
 		FlxG.switchState(new SongEditorState(originalSong, editorTime));
 	}
-
+	
 	function onLanePressed(lane:Int, player:Int)
 	{
 		ruleset.playfields[player].onLanePressed(lane);
 	}
-
+	
 	function onLaneReleased(lane:Int, player:Int)
 	{
 		ruleset.playfields[player].onLaneReleased(lane);
 	}
-
+	
 	function onNoteHit(note:Note, judgement:Judgement, ms:Float)
 	{
 		var player = note.info.player;
 		ruleset.playfields[player].onNoteHit(note, judgement);
-
+		
 		npsDisplay.members[player].addTime(Sys.time());
-
+		
 		msDisplay.members[player].showMS(ms, judgement);
 	}
-
+	
 	function onNoteReleased(note:Note, judgement:Judgement, ms:Float)
 	{
 		var player = note.info.player;
 		msDisplay.members[player].showMS(ms, judgement);
 	}
-
+	
 	function onJudgementAdded(judgement:Judgement, player:Int)
 	{
 		if (judgementDisplay != null)
 			judgementDisplay.members[player].showJudgement(judgement);
-
+			
 		judgementCounters.members[player].updateText();
 	}
 }

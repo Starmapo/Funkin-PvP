@@ -11,7 +11,7 @@ import discord_rpc.DiscordRpc;
 class DiscordClient
 {
 	static var changedPresence:Bool = false;
-
+	
 	public function new()
 	{
 		#if discord_rpc
@@ -23,24 +23,24 @@ class DiscordClient
 			onDisconnected: onDisconnected
 		});
 		trace("Discord Client started.");
-
+		
 		while (true)
 		{
 			DiscordRpc.process();
 			sleep(2);
 		}
-
+		
 		DiscordRpc.shutdown();
 		#end
 	}
-
+	
 	public static function shutdown()
 	{
 		#if discord_rpc
 		DiscordRpc.shutdown();
 		#end
 	}
-
+	
 	public static function initialize()
 	{
 		#if discord_rpc
@@ -51,15 +51,15 @@ class DiscordClient
 		trace("Discord Client initialized");
 		#end
 	}
-
+	
 	public static function changePresence(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float)
 	{
 		#if discord_rpc
 		var startTimestamp:Float = if (hasStartTimestamp) Date.now().getTime() else 0;
-
+		
 		if (endTimestamp > 0)
 			endTimestamp = startTimestamp + endTimestamp;
-
+			
 		DiscordRpc.presence({
 			details: details,
 			state: state,
@@ -70,23 +70,23 @@ class DiscordClient
 			startTimestamp: Std.int(startTimestamp / 1000),
 			endTimestamp: Std.int(endTimestamp / 1000)
 		});
-
+		
 		changedPresence = true;
 		#end
 	}
-
+	
 	#if discord_rpc
 	static function onReady()
 	{
 		if (!changedPresence)
 			changePresence(null, "Starting Up");
 	}
-
+	
 	static function onError(_code:Int, _message:String)
 	{
 		trace('Error! $_code : $_message');
 	}
-
+	
 	static function onDisconnected(_code:Int, _message:String)
 	{
 		trace('Disconnected! $_code : $_message');

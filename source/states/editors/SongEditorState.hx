@@ -46,9 +46,9 @@ import util.editors.song.SongEditorMetronome;
 class SongEditorState extends FNFState
 {
 	public static var toPlayState:Bool = false;
-
+	
 	static var globalSong:Song;
-
+	
 	public var hitPositionY:Int = 545;
 	public var playfieldNotes:SongEditorPlayfield;
 	public var playfieldOther:SongEditorPlayfield;
@@ -78,7 +78,7 @@ class SongEditorState extends FNFState
 	public var selector:SongEditorSelector;
 	public var lyrics:String;
 	public var lyricsDisplay:SongEditorLyricsDisplay;
-
+	
 	var timeSinceLastPlayfieldZoom:Float = 0;
 	var beatSnapIndex(get, never):Int;
 	var hitsoundNoteIndex:Int = 0;
@@ -88,13 +88,13 @@ class SongEditorState extends FNFState
 	var metronome:SongEditorMetronome;
 	var time:Float = 0;
 	var lastLyrics:String;
-
+	
 	public function new(?song:Song, time:Float = 0, ?toPlayState:Bool)
 	{
 		super();
 		if (globalSong == null)
 			globalSong = Song.loadSong('Tutorial/Hard', 'fnf');
-
+			
 		if (song == null)
 			song = globalSong;
 		else
@@ -104,7 +104,7 @@ class SongEditorState extends FNFState
 		if (toPlayState != null)
 			SongEditorState.toPlayState = toPlayState;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -139,54 +139,54 @@ class SongEditorState extends FNFState
 		Application.current.onExit.remove(onExit);
 		Mods.currentMod = '';
 	}
-
+	
 	override function create()
 	{
 		updatePresence();
-
+		
 		persistentUpdate = true;
 		destroySubStates = false;
 		checkObjects = true;
 		Mods.currentMod = 'fnf';
-
+		
 		actionManager = new SongEditorActionManager(this);
-
+		
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
-
+		
 		inst = FlxG.sound.load(Paths.getSongInst(song), Settings.editorInstVolume.value, false, FlxG.sound.defaultMusicGroup);
 		if (inst == null)
 			inst = new FlxSound();
 		inst.onComplete = onSongComplete;
-
+		
 		var vocalsSound = Paths.getSongVocals(song);
 		if (vocalsSound != null)
 			vocals = FlxG.sound.load(vocalsSound, Settings.editorVocalsVolume.value, false, FlxG.sound.defaultMusicGroup);
 		else
 			vocals = new FlxSound();
-
+			
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF222222;
-
+		
 		playfieldTabs = new SongEditorPlayfieldTabs(this);
 		playfieldTabs.screenCenter(X);
-
+		
 		playfieldNotes = new SongEditorPlayfield(this, NOTES, 8);
-
+		
 		playfieldOther = new SongEditorPlayfield(this, OTHER, 5);
 		playfieldOther.exists = false;
-
+		
 		seekBar = new SongEditorSeekBar(this);
-
+		
 		selector = new SongEditorSelector(this);
-
+		
 		camFocusDisplay = new SongEditorCamFocusDisplay(10, 0, this);
 		camFocusDisplay.screenCenter(Y);
-
+		
 		tooltip = new Tooltip();
 		tooltip.cameras = [camHUD];
-
+		
 		zoomInButton = new FlxUIButton(playfieldNotes.bg.x + playfieldNotes.bg.width + 10, 10, '+', function()
 		{
 			Settings.editorScrollSpeed.value += 0.05;
@@ -198,7 +198,7 @@ class SongEditorState extends FNFState
 			point.add(1, 1);
 		zoomInButton.autoCenterLabel();
 		tooltip.addTooltip(zoomInButton, 'Zoom In (Hotkey: Page Up)');
-
+		
 		zoomOutButton = new FlxUIButton(zoomInButton.x, zoomInButton.y + zoomInButton.height + 4, '-', function()
 		{
 			Settings.editorScrollSpeed.value -= 0.05;
@@ -210,23 +210,23 @@ class SongEditorState extends FNFState
 			point.add(1, 1);
 		zoomOutButton.autoCenterLabel();
 		tooltip.addTooltip(zoomOutButton, 'Zoom Out (Hotkey: Page Down)');
-
+		
 		lastLyrics = lyrics = Song.getSongLyrics(song);
-
+		
 		lyricsDisplay = new SongEditorLyricsDisplay(this);
-
+		
 		metronome = new SongEditorMetronome(this);
-
+		
 		detailsPanel = new SongEditorDetailsPanel(this);
-
+		
 		compositionPanel = new SongEditorCompositionPanel(this);
-
+		
 		editPanel = new SongEditorEditPanel(this);
-
+		
 		savePrompt = new SongEditorSavePrompt(onSavePrompt);
-
+		
 		notificationManager = new NotificationManager();
-
+		
 		add(bg);
 		add(playfieldNotes);
 		add(playfieldOther);
@@ -242,18 +242,18 @@ class SongEditorState extends FNFState
 		add(lyricsDisplay);
 		add(notificationManager);
 		add(tooltip);
-
+		
 		setSongTime(time);
-
+		
 		Application.current.onExit.add(onExit);
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		handleInput(elapsed);
-
+		
 		playfieldTabs.update(elapsed);
 		selector.update(elapsed);
 		seekBar.update(elapsed);
@@ -271,11 +271,11 @@ class SongEditorState extends FNFState
 		lyricsDisplay.updateLyrics(inst.time);
 		notificationManager.update(elapsed);
 		tooltip.update(elapsed);
-
+		
 		FlxG.camera.scroll.y = -trackPositionY;
-
+		
 		resyncVocals();
-
+		
 		if (inst.playing)
 		{
 			var playedNote = [false, false];
@@ -298,11 +298,11 @@ class SongEditorState extends FNFState
 					break;
 			}
 		}
-
+		
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
 	}
-
+	
 	override function openSubState(subState)
 	{
 		inst.pause();
@@ -310,7 +310,7 @@ class SongEditorState extends FNFState
 		persistentUpdate = false;
 		super.openSubState(subState);
 	}
-
+	
 	public function setSongTime(time:Float = 0)
 	{
 		var oldTime = inst.time;
@@ -318,51 +318,51 @@ class SongEditorState extends FNFState
 		setHitsoundNoteIndex();
 		songSeeked.dispatch(inst.time, oldTime);
 	}
-
+	
 	public function setCurrentTool(tool:CompositionTool)
 	{
 		currentTool.value = tool;
 		compositionPanel.tools.selectedId = tool;
 	}
-
+	
 	public function setPlaybackRate(targetRate:Float)
 	{
 		if (targetRate <= 0 || targetRate > 2)
 			return;
-
+			
 		var oldPitch = inst.pitch;
 		inst.pitch = vocals.pitch = targetRate;
 		rateChanged.dispatch(inst.pitch, oldPitch);
 	}
-
+	
 	public function save(notif:Bool = true, forceSave:Bool = false)
 	{
 		if (!actionManager.hasUnsavedChanges && !forceSave)
 			return;
-
+			
 		song.save(Path.join([song.directory, song.difficultyName + '.json']));
 		if (lyrics != lastLyrics)
 		{
 			File.saveContent(Song.getSongLyricsPath(song), lyrics);
 			lastLyrics = lyrics;
 		}
-
+		
 		actionManager.lastSaveAction = actionManager.undoStack[0];
-
+		
 		if (notif)
 			notificationManager.showNotification('Song successfully saved!', SUCCESS);
 	}
-
+	
 	public function getTimeFromY(y:Float)
 	{
 		return trackPositionY + (hitPositionY - y);
 	}
-
+	
 	public function clearSelection()
 	{
 		selectedObjects.clear();
 	}
-
+	
 	public function handleMouseSeek()
 	{
 		var seekTime:Float = 0;
@@ -375,36 +375,36 @@ class SongEditorState extends FNFState
 				seekTime = inst.time - 6;
 			else
 				seekTime = inst.time - 50;
-
+				
 			if (seekTime < 0 || seekTime > inst.length)
 				return;
-
+				
 			setSongTime(seekTime);
 		}
-
+		
 		if (FlxG.mouse.globalY > 30 || inst.playing)
 			return;
-
+			
 		if (30 - FlxG.mouse.globalY <= 10)
 			seekTime = inst.time + 2;
 		else if (30 - FlxG.mouse.globalY <= 20)
 			seekTime = inst.time + 6;
 		else
 			seekTime = inst.time + 50;
-
+			
 		if (seekTime < 0 || seekTime > inst.length)
 			return;
-
+			
 		setSongTime(seekTime);
 	}
-
+	
 	public function exitToTestPlay(player:Int, fromStart:Bool = false)
 	{
 		inst.pause();
 		vocals.pause();
-
+		
 		var time = fromStart ? 0 : inst.time;
-
+		
 		var hasNote = false;
 		for (note in song.notes)
 		{
@@ -419,28 +419,28 @@ class SongEditorState extends FNFState
 			notificationManager.showNotification("There aren't any notes to play past this point!", ERROR);
 			return;
 		}
-
+		
 		if (song.timingPoints.length == 0)
 		{
 			notificationManager.showNotification("A timing point must be added to your map before test playing!", ERROR);
 			return;
 		}
-
+		
 		save();
 		persistentUpdate = false;
 		FlxG.switchState(new SongEditorPlayState(song, player, time, inst.time));
 	}
-
+	
 	public function updatePresence()
 	{
 		DiscordClient.changePresence(song.name + " [" + song.difficultyName + "]", "Song Editor");
 	}
-
+	
 	function handleInput(elapsed:Float)
 	{
 		if (!checkAllowInput())
 			return;
-
+			
 		if (FlxG.keys.justPressed.SPACE)
 		{
 			if (inst.playing)
@@ -460,10 +460,10 @@ class SongEditorState extends FNFState
 					setHitsoundNoteIndex();
 			}
 		}
-
+		
 		timeSinceLastPlayfieldZoom += elapsed;
 		var canZoom = timeSinceLastPlayfieldZoom >= 0.1;
-
+		
 		if (FlxG.keys.justPressed.PAGEUP)
 			changeSpeed(0.05);
 		else if (FlxG.keys.justPressed.PAGEDOWN)
@@ -472,25 +472,25 @@ class SongEditorState extends FNFState
 			changeSpeed(0.05);
 		else if (FlxG.keys.pressed.PAGEDOWN && canZoom)
 			changeSpeed(-0.05);
-
+			
 		if (FlxG.keys.justPressed.HOME)
 			setSongTime((song.notes.length == 0 || FlxG.keys.pressed.SHIFT) ? 0 : song.notes[0].startTime);
 		if (FlxG.keys.justPressed.END)
 			setSongTime((song.notes.length == 0 || FlxG.keys.pressed.SHIFT) ? inst.length - 1 : song.notes[song.notes.length - 1].startTime);
-
+			
 		if (!FlxG.keys.pressed.CONTROL)
 		{
 			if (FlxG.keys.justPressed.LEFT || FlxG.mouse.wheel < 0)
 				handleSeeking(false);
 			if (FlxG.keys.justPressed.RIGHT || FlxG.mouse.wheel > 0)
 				handleSeeking(true);
-
+				
 			if (FlxG.keys.justPressed.UP)
 				changeTool(false);
 			if (FlxG.keys.justPressed.DOWN)
 				changeTool(true);
 		}
-
+		
 		if (FlxG.keys.pressed.CONTROL)
 		{
 			if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.DOWN)
@@ -498,7 +498,7 @@ class SongEditorState extends FNFState
 			if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.UP)
 				changeBeatSnap(false);
 		}
-
+		
 		if (!Settings.editorLiveMapping.value)
 		{
 			for (i in 0...3)
@@ -507,7 +507,7 @@ class SongEditorState extends FNFState
 					setCurrentTool(CompositionTool.fromIndex(i));
 			}
 		}
-
+		
 		if (FlxG.keys.pressed.CONTROL)
 		{
 			if (FlxG.keys.justPressed.MINUS)
@@ -521,7 +521,7 @@ class SongEditorState extends FNFState
 				editPanel.updateRateStepper();
 			}
 		}
-
+		
 		if (Settings.editorLiveMapping.value && playfieldNotes.exists)
 		{
 			var time = inst.time;
@@ -529,14 +529,14 @@ class SongEditorState extends FNFState
 			{
 				if (!FlxG.keys.checkStatus(ONE + i, JUST_PRESSED))
 					continue;
-
+					
 				var notesAtTime:Array<NoteInfo> = [];
 				for (note in song.notes)
 				{
 					if (note.lane == i && Std.int(note.startTime) == Std.int(time))
 						notesAtTime.push(note);
 				}
-
+				
 				if (notesAtTime.length > 0)
 				{
 					for (note in notesAtTime)
@@ -546,7 +546,7 @@ class SongEditorState extends FNFState
 					actionManager.addNote(i, time);
 			}
 		}
-
+		
 		if (FlxG.keys.pressed.CONTROL)
 		{
 			if (FlxG.keys.justPressed.Z)
@@ -568,12 +568,12 @@ class SongEditorState extends FNFState
 			if (FlxG.keys.justPressed.S)
 				save();
 		}
-
+		
 		if (FlxG.keys.justPressed.DELETE)
 			deleteSelectedObjects();
 		if (FlxG.keys.justPressed.TAB)
 			playfieldTabs.onTabEvent(playfieldNotes.exists ? 'Other' : 'Notes');
-
+			
 		if (FlxG.keys.justPressed.F1)
 			exitToTestPlay(0);
 		else if (FlxG.keys.justPressed.F2)
@@ -581,50 +581,50 @@ class SongEditorState extends FNFState
 		else if (FlxG.keys.justPressed.ESCAPE)
 			leaveEditor();
 	}
-
+	
 	function resyncVocals()
 	{
 		if (Math.abs(vocals.time - inst.time) >= MusicTiming.SYNC_THRESHOLD * inst.pitch)
 			vocals.time = inst.time;
 	}
-
+	
 	function handleSeeking(forward:Bool)
 	{
 		var time = Song.getNearestSnapTimeFromTime(song, forward, beatSnap.value, inst.time);
-
+		
 		if (inst.playing)
 		{
 			for (i in 0...3)
 				time = Song.getNearestSnapTimeFromTime(song, forward, beatSnap.value, time);
 		}
-
+		
 		if (time < 0)
 			time = 0;
 		if (time > inst.length)
 			time = inst.length - 100;
-
+			
 		setSongTime(time);
 	}
-
+	
 	function changeBeatSnap(forward:Bool)
 	{
 		var index = beatSnapIndex;
-
+		
 		if (forward)
 			beatSnap.value = index + 1 < availableBeatSnaps.length ? availableBeatSnaps[index + 1] : availableBeatSnaps[0];
 		else
 			beatSnap.value = index - 1 >= 0 ? availableBeatSnaps[index - 1] : availableBeatSnaps[availableBeatSnaps.length - 1];
-
+			
 		editPanel.updateBeatSnapDropdown();
 	}
-
+	
 	function onSongComplete()
 	{
 		inst.stop();
 		vocals.stop();
 		setSongTime();
 	}
-
+	
 	function setHitsoundNoteIndex()
 	{
 		hitsoundNoteIndex = song.notes.length - 1;
@@ -632,19 +632,19 @@ class SongEditorState extends FNFState
 		{
 			if (song.notes[hitsoundNoteIndex].startTime <= inst.time)
 				break;
-
+				
 			hitsoundNoteIndex--;
 		}
 		hitsoundNoteIndex++;
 	}
-
+	
 	function changeSpeed(amount:Float)
 	{
 		Settings.editorScrollSpeed.value += amount;
 		timeSinceLastPlayfieldZoom = 0;
 		editPanel.updateSpeedStepper();
 	}
-
+	
 	function changeTool(forward:Bool)
 	{
 		var index = currentTool.value.getIndex();
@@ -655,27 +655,27 @@ class SongEditorState extends FNFState
 		if (index >= 0 && index < 3)
 			setCurrentTool(CompositionTool.fromIndex(index));
 	}
-
+	
 	function copySelectedObjects()
 	{
 		if (selectedObjects.value.length == 0)
 			return;
-
+			
 		copiedObjects.resize(0);
-
+		
 		var orderedObjects = selectedObjects.value.copy();
 		orderedObjects.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
 		for (obj in orderedObjects)
 			copiedObjects.push(obj);
 	}
-
+	
 	function pasteCopiedObjects(resnapNotes:Bool, swapLanes:Bool)
 	{
 		if (copiedObjects.length == 0)
 			return;
-
+			
 		var clonedObjects:Array<ITimingObject> = [];
-
+		
 		var lowestTime = FlxMath.MAX_VALUE_FLOAT;
 		for (obj in copiedObjects)
 		{
@@ -685,7 +685,7 @@ class SongEditorState extends FNFState
 		if (lowestTime == FlxMath.MAX_VALUE_FLOAT)
 			lowestTime = inst.time;
 		var difference = inst.time - lowestTime;
-
+		
 		for (obj in copiedObjects)
 		{
 			if (Std.isOfType(obj, NoteInfo))
@@ -770,30 +770,30 @@ class SongEditorState extends FNFState
 				clonedObjects.push(info);
 			}
 		}
-
+		
 		if (resnapNotes)
 			new ActionResnapObjects(this, [16, 12], clonedObjects).perform();
-
+			
 		actionManager.perform(new ActionAddObjectBatch(this, clonedObjects));
-
+		
 		clearSelection();
 		selectedObjects.pushMultiple(clonedObjects);
 	}
-
+	
 	function cutSelectedObjects()
 	{
 		if (selectedObjects.value.length == 0)
 			return;
-
+			
 		copySelectedObjects();
 		deleteSelectedObjects();
 	}
-
+	
 	public function deleteSelectedObjects()
 	{
 		if (selectedObjects.value.length == 0)
 			return;
-
+			
 		var tpCount = 0;
 		for (i in 0...selectedObjects.value.length)
 		{
@@ -805,10 +805,10 @@ class SongEditorState extends FNFState
 			notificationManager.showNotification('You must have at least 1 timing point in your map!', ERROR);
 			return;
 		}
-
+		
 		actionManager.perform(new ActionRemoveObjectBatch(this, selectedObjects.value.copy()));
 	}
-
+	
 	function selectAllObjects()
 	{
 		clearSelection();
@@ -823,12 +823,12 @@ class SongEditorState extends FNFState
 			selectedObjects.pushMultiple(cast song.lyricSteps);
 		}
 	}
-
+	
 	function flipSelectedNotes(fullFlip:Bool)
 	{
 		if (selectedObjects.value.length == 0)
 			return;
-
+			
 		var notes:Array<NoteInfo> = [];
 		for (obj in selectedObjects.value)
 		{
@@ -837,10 +837,10 @@ class SongEditorState extends FNFState
 		}
 		if (notes.length == 0)
 			return;
-
+			
 		actionManager.perform(new ActionFlipNotes(this, notes, fullFlip));
 	}
-
+	
 	function placeTimingPointOrScrollVelocity()
 	{
 		if (FlxG.keys.released.SHIFT)
@@ -880,7 +880,7 @@ class SongEditorState extends FNFState
 			}
 		}
 	}
-
+	
 	function leaveEditor()
 	{
 		inst.pause();
@@ -890,13 +890,13 @@ class SongEditorState extends FNFState
 		else
 			onSavePrompt('No');
 	}
-
+	
 	function onExit(_)
 	{
 		if (Settings.editorSaveOnExit.value)
 			save(false);
 	}
-
+	
 	function onSavePrompt(option:String)
 	{
 		if (option != 'Cancel')
@@ -910,22 +910,22 @@ class SongEditorState extends FNFState
 				FlxG.switchState(new ToolboxState());
 		}
 	}
-
+	
 	function get_trackSpeed()
 	{
 		return Settings.editorScrollSpeed.value / (Settings.editorScaleSpeedWithRate.value ? inst.pitch : 1);
 	}
-
+	
 	function get_trackPositionY()
 	{
 		return inst.time * trackSpeed;
 	}
-
+	
 	function get_beatSnapIndex()
 	{
 		return availableBeatSnaps.indexOf(beatSnap.value);
 	}
-
+	
 	function get_playfield()
 	{
 		return playfieldOther.exists ? playfieldOther : playfieldNotes;
@@ -937,7 +937,7 @@ enum abstract CompositionTool(String) from String to String
 	var SELECT = 'Select';
 	var OBJECT = 'Add Object';
 	var LONG_NOTE = 'Add Long Note';
-
+	
 	public function getIndex()
 	{
 		return switch (this)
@@ -947,7 +947,7 @@ enum abstract CompositionTool(String) from String to String
 			default: 0;
 		}
 	}
-
+	
 	public static function fromIndex(index:Int)
 	{
 		return switch (index)

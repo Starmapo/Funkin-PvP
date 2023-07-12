@@ -1,9 +1,9 @@
 package data;
 
-import lime.app.Application;
 import data.game.Judgement;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
+import lime.app.Application;
 import util.bindable.Bindable;
 import util.bindable.BindableFloat;
 
@@ -84,16 +84,16 @@ class Settings
 	public static var editorVocalsVolume:BindableFloat = new BindableFloat(1, 0, 1);
 	public static var editorSaveOnExit:Bindable<Bool> = new Bindable(true);
 	public static var editorMetronome:Bindable<MetronomeType> = new Bindable(MetronomeType.NONE);
-
+	
 	public static var defaultValues:Map<String, Dynamic> = new Map();
-
+	
 	static var fields:Array<String>;
-
+	
 	public static function loadData()
 	{
 		if (fields == null)
 			initFields();
-
+			
 		for (f in fields)
 		{
 			var field = Reflect.getProperty(Settings, f);
@@ -102,27 +102,27 @@ class Settings
 			else
 				load(f);
 		}
-
+		
 		if (!FlxG.fullscreen)
 			FlxG.resizeWindow(Math.round(FlxG.width * resolution), Math.round(FlxG.height * resolution));
 		FlxG.setFramerate(fpsCap);
 		Application.current.window.vsync = vsync;
 		FlxG.forceNoAntialiasing = !antialiasing;
 		Main.updateFilters();
-
+		
 		FlxG.sound.defaultMusicGroup.volume = musicVolume;
 		FlxG.sound.defaultSoundGroup.volume = effectVolume;
-
+		
 		FlxG.autoPause = autoPause;
-
+		
 		FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
 	}
-
+	
 	public static function saveData()
 	{
 		if (fields == null)
 			initFields();
-
+			
 		for (f in fields)
 		{
 			var field = Reflect.getProperty(Settings, f);
@@ -131,37 +131,37 @@ class Settings
 			else
 				save(f);
 		}
-
+		
 		FlxG.save.flush();
 	}
-
+	
 	static function load(variable:String)
 	{
 		var data = Reflect.field(FlxG.save.data, variable);
 		if (data != null)
 			Reflect.setProperty(Settings, variable, data);
 	}
-
+	
 	static function loadBindable(variable:String)
 	{
 		var bindable:Bindable<Any> = Reflect.getProperty(Settings, variable);
-
+		
 		var data = Reflect.field(FlxG.save.data, variable);
 		if (data != null)
 			bindable.value = data;
 	}
-
+	
 	static function save(variable:String)
 	{
 		Reflect.setField(FlxG.save.data, variable, Reflect.getProperty(Settings, variable));
 	}
-
+	
 	static function saveBindable(variable:String)
 	{
 		var bindable:Bindable<Any> = Reflect.getProperty(Settings, variable);
 		Reflect.setField(FlxG.save.data, variable, bindable.value);
 	}
-
+	
 	static function initFields()
 	{
 		var daFields = Type.getClassFields(Settings);
@@ -184,7 +184,7 @@ class Settings
 				else
 					defaultValues.set(f, field);
 			}
-
+			
 			i--;
 		}
 		fields = daFields;

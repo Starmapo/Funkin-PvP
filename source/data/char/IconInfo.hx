@@ -16,18 +16,18 @@ class IconInfo extends JsonObject
 	{
 		if (!Paths.exists(path))
 			return null;
-
+			
 		var json:Dynamic = Paths.getJson(path, mod);
 		if (json == null)
 			return null;
-
+			
 		var iconInfo = new IconInfo(json);
 		iconInfo.directory = Path.normalize(Path.directory(path));
 		iconInfo.name = new Path(path).file;
 		iconInfo.mod = iconInfo.directory.split('/')[1];
 		return iconInfo;
 	}
-
+	
 	/**
 		Loads an icon file from a name.
 
@@ -45,62 +45,62 @@ class IconInfo extends JsonObject
 			if (Paths.exists(path))
 				return loadIcon(path);
 		}
-
+		
 		var path = Paths.getPath('data/icons/${nameInfo.name}.json');
 		if (Paths.exists(path))
 			return loadIcon(path);
-
+			
 		path = Paths.getPath('data/icons/${nameInfo.name}.json', 'fnf');
 		if (Paths.exists(path))
 			return loadIcon(path);
-
+			
 		var info = new IconInfo({});
 		info.name = nameInfo.name;
 		info.mod = nameInfo.mod;
 		return info;
 	}
-
+	
 	/**
 		Optional name of the image file for this icon. If unspecified, will try to find it in the `icons/` folder.
 	**/
 	public var image:String;
-
+	
 	/**
 		How many frames this icon has. `1` has just the normal expression, `2` adds the losing expression, and `3` adds the
 		winning expression. Defaults to `2`.
 	**/
 	public var frames:Int;
-
+	
 	/**
 		Whether or not the icon should have antialiasing. Defaults to `true`.
 	**/
 	public var antialiasing:Bool;
-
+	
 	/**
 		The position offset for this icon. Will be automatically flipped when playing on the right side.
 	**/
 	public var positionOffset:Array<Float>;
-
+	
 	/**
 		The name of the normal animation for the icon. Only used for spritesheets.
 	**/
 	public var normalAnim:String;
-
+	
 	/**
 		The frame rate, or frames per second, of the normal animation for the icon. Only used for spritesheets.
 	**/
 	public var normalFPS:Float;
-
+	
 	/**
 		The name of the losing animation for the icon. Only used for spritesheets.
 	**/
 	public var losingAnim:String;
-
+	
 	/**
 		The frame rate, or frames per second, of the losing animation for the icon. Only used for spritesheets.
 	**/
 	public var losingFPS:Float;
-
+	
 	/**
 		The visual offset for the losing animation.
 
@@ -109,41 +109,41 @@ class IconInfo extends JsonObject
 		Will be automatically flipped when playing on the right side.
 	**/
 	public var losingOffset:Array<Float>;
-
+	
 	/**
 		The name of the winning animation for the icon. Only used for spritesheets.
 	**/
 	public var winningAnim:String;
-
+	
 	/**
 		The frame rate, or frames per second, of the winning animation for the icon. Only used for spritesheets.
 	**/
 	public var winningFPS:Float;
-
+	
 	/**
 		The visual offset for the winning animation.
-		
+
 		Values are substracted, so a value of `[5, -10]` will move the graphic 5 pixels left and 10 pixels down.
-		
+
 		Will be automatically flipped when playing on the right side.
 	**/
 	public var winningOffset:Array<Float>;
-
+	
 	/**
 		The full directory path this icon was in.
 	**/
 	public var directory:String = '';
-
+	
 	/**
 		The name of the icon.
 	**/
 	public var name:String = '';
-
+	
 	/**
 		The mod directory this icon was in.
 	**/
 	public var mod:String = '';
-
+	
 	/**
 		@param	data	The JSON file to parse data from.
 	**/

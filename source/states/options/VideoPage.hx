@@ -1,8 +1,8 @@
 package states.options;
 
-import lime.app.Application;
 import data.Settings;
 import flixel.FlxG;
+import lime.app.Application;
 import openfl.Lib;
 
 class VideoPage extends BaseSettingsPage
@@ -11,7 +11,7 @@ class VideoPage extends BaseSettingsPage
 	{
 		super();
 		rpcDetails = 'Video Options';
-
+		
 		addSetting({
 			name: 'resolution',
 			displayName: 'Window Resolution',
@@ -130,7 +130,7 @@ class VideoPage extends BaseSettingsPage
 			description: "Whether flashing lights are enabled.",
 			type: CHECKBOX
 		});
-
+		
 		addPageTitle('Video');
 	}
 }

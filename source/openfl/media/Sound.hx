@@ -91,12 +91,12 @@ class Sound extends EventDispatcher
 		property is usually useful only for externally loaded files.
 	**/
 	public var bytesLoaded(default, null):Int;
-
+	
 	/**
 		Returns the total number of bytes in this sound object.
 	**/
 	public var bytesTotal(default, null):Int;
-
+	
 	/**
 		Provides access to the metadata that is part of an MP3 file.
 		MP3 sound files can contain ID3 tags, which provide metadata about the
@@ -185,21 +185,21 @@ class Sound extends EventDispatcher
 		scope="external">Security</a>.
 	**/
 	public var id3(get, never):ID3Info;
-
+	
 	/**
 		Returns the buffering state of external MP3 files. If the value is
 		`true`, any playback is currently suspended while the object
 		waits for more data.
 	**/
 	public var isBuffering(default, null):Bool;
-
+	
 	// @:noCompletion @:dox(hide) @:require(flash10_1) public var isURLInaccessible (default, null):Bool;
-
+	
 	/**
 		The length of the current sound in milliseconds.
 	**/
 	public var length(get, never):Float;
-
+	
 	/**
 		The URL from which this sound was loaded. This property is applicable only
 		to Sound objects that were loaded using the `Sound.load()`
@@ -228,11 +228,11 @@ class Sound extends EventDispatcher
 		see the `isURLInaccessible` property for details.
 	**/
 	public var url(default, null):String;
-
+	
 	#if lime
 	@:noCompletion private var __buffer:AudioBuffer;
 	#end
-
+	
 	#if openfljs
 	@:noCompletion private static function __init__()
 	{
@@ -242,7 +242,7 @@ class Sound extends EventDispatcher
 		});
 	}
 	#end
-
+	
 	/**
 		Creates a new Sound object. If you pass a valid URLRequest object to the
 		Sound constructor, the constructor automatically calls the
@@ -268,18 +268,18 @@ class Sound extends EventDispatcher
 	public function new(stream:URLRequest = null, context:SoundLoaderContext = null)
 	{
 		super(this);
-
+		
 		bytesLoaded = 0;
 		bytesTotal = 0;
 		isBuffering = false;
 		url = null;
-
+		
 		if (stream != null)
 		{
 			load(stream, context);
 		}
 	}
-
+	
 	/**
 		Closes the stream, causing any download of data to cease. No data may
 		be read from the stream after the `close()` method is called.
@@ -297,7 +297,7 @@ class Sound extends EventDispatcher
 		}
 		#end
 	}
-
+	
 	#if false
 	/**
 		Extracts raw sound data from a Sound object.
@@ -323,7 +323,7 @@ class Sound extends EventDispatcher
 	**/
 	// @:noCompletion @:dox(hide) @:require(flash10) public function extract (target:ByteArray, length:Float, startPosition:Float = -1):Float;
 	#end
-
+	
 	#if lime
 	/**
 		Creates a new Sound from an AudioBuffer immediately.
@@ -338,7 +338,7 @@ class Sound extends EventDispatcher
 		return sound;
 	}
 	#end
-
+	
 	/**
 		Creates a new Sound from a file path synchronously. This means that the
 		Sound will be returned immediately (if supported).
@@ -360,7 +360,7 @@ class Sound extends EventDispatcher
 		return null;
 		#end
 	}
-
+	
 	/**
 		Initiates loading of an external MP3 file from the specified URL. If you
 		provide a valid URLRequest object to the Sound constructor, the
@@ -437,11 +437,11 @@ class Sound extends EventDispatcher
 	public function load(stream:URLRequest, context:SoundLoaderContext = null):Void
 	{
 		url = stream.url;
-
+		
 		#if lime
 		#if (js && html5)
 		var defaultLibrary = lime.utils.Assets.getLibrary("default");
-
+		
 		if (defaultLibrary != null && defaultLibrary.cachedAudioBuffers.exists(url))
 		{
 			AudioBuffer_onURLLoad(defaultLibrary.cachedAudioBuffers.get(url));
@@ -461,7 +461,7 @@ class Sound extends EventDispatcher
 		#end
 		#end
 	}
-
+	
 	/**
 		Load MP3 sound data from a ByteArray object into a Sound object. The data will be read from the current
 		ByteArray position and will leave the ByteArray position at the end of the specified bytes length once
@@ -478,17 +478,17 @@ class Sound extends EventDispatcher
 			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 			return;
 		}
-
+		
 		if (bytes.position > 0 || bytes.length > bytesLength)
 		{
 			var copy = new ByteArray(bytesLength);
 			copy.writeBytes(bytes, bytes.position, bytesLength);
 			bytes = copy;
 		}
-
+		
 		#if lime
 		__buffer = AudioBuffer.fromBytes(bytes);
-
+		
 		if (__buffer == null)
 		{
 			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
@@ -501,7 +501,7 @@ class Sound extends EventDispatcher
 		dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 		#end
 	}
-
+	
 	/**
 		Creates a new Sound from a file path or web address asynchronously. The file
 		load will occur in the background.
@@ -523,7 +523,7 @@ class Sound extends EventDispatcher
 		return cast Future.withError("Cannot load audio file");
 		#end
 	}
-
+	
 	/**
 		Creates a new Sound from a set of file paths or web addresses asynchronously.
 		The audio backend will choose the first compatible file format, and will load the file
@@ -546,7 +546,7 @@ class Sound extends EventDispatcher
 		return cast Future.withError("Cannot load audio files");
 		#end
 	}
-
+	
 	/**
 		Load PCM 32-bit floating point sound data from a ByteArray object into a Sound object. The data will be read
 		from the current ByteArray position and will leave the ByteArray position at the end of the specified sample
@@ -573,35 +573,35 @@ class Sound extends EventDispatcher
 			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 			return;
 		}
-
+		
 		var bitsPerSample = (format == "float" ? 32 : 16); // "short"
 		var channels = (stereo ? 2 : 1);
 		var bytesLength = Std.int(samples * channels * (bitsPerSample / 8));
-
+		
 		if (bytes.position > 0 || bytes.length > bytesLength)
 		{
 			var copy = new ByteArray(bytesLength);
 			copy.writeBytes(bytes, bytes.position, bytesLength);
 			bytes = copy;
 		}
-
+		
 		#if lime
 		var audioBuffer = new AudioBuffer();
 		audioBuffer.bitsPerSample = bitsPerSample;
 		audioBuffer.channels = channels;
 		audioBuffer.data = new UInt8Array(bytes);
 		audioBuffer.sampleRate = Std.int(sampleRate);
-
+		
 		__buffer = audioBuffer;
-
+		
 		dispatchEvent(new Event(Event.COMPLETE));
 		#else
 		dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 		#end
 	}
-
+	
 	var changeID:Int = 0;
-
+	
 	public function regen()
 	{
 		var audioBuffer = new AudioBuffer();
@@ -609,10 +609,10 @@ class Sound extends EventDispatcher
 		audioBuffer.channels = __buffer.channels;
 		audioBuffer.data = __buffer.data;
 		audioBuffer.sampleRate = __buffer.sampleRate;
-
+		
 		__buffer = audioBuffer;
 	}
-
+	
 	/**
 		Generates a new SoundChannel object to play back the sound. This method
 		returns a SoundChannel object, which you access to stop the sound and to
@@ -638,13 +638,13 @@ class Sound extends EventDispatcher
 		{
 			return null;
 		}
-
+		
 		if (changeID < CompileFix.changeID)
 		{
 			changeID = CompileFix.changeID;
 			regen();
 		}
-
+		
 		if (sndTransform == null)
 		{
 			sndTransform = new SoundTransform();
@@ -653,40 +653,40 @@ class Sound extends EventDispatcher
 		{
 			sndTransform = sndTransform.clone();
 		}
-
+		
 		var pan = SoundMixer.__soundTransform.pan + sndTransform.pan;
-
+		
 		if (pan > 1)
 			pan = 1;
 		else if (pan < -1)
 			pan = -1;
-
+			
 		var volume = SoundMixer.__soundTransform.volume * sndTransform.volume;
-
+		
 		var source = new AudioSource(__buffer);
 		source.offset = Std.int(startTime);
 		if (loops > 1)
 			source.loops = loops - 1;
-
+			
 		source.gain = volume;
-
+		
 		var position = source.position;
 		position.x = pan;
 		position.z = -1 * Math.sqrt(1 - Math.pow(pan, 2));
 		source.position = position;
-
+		
 		return new SoundChannel(source, sndTransform);
 		#else
 		return null;
 		#end
 	}
-
+	
 	// Get & Set Methods
 	@:noCompletion private function get_id3():ID3Info
 	{
 		return new ID3Info();
 	}
-
+	
 	@:noCompletion private function get_length():Int
 	{
 		#if lime
@@ -712,10 +712,10 @@ class Sound extends EventDispatcher
 			#end
 		}
 		#end
-
+		
 		return 0;
 	}
-
+	
 	// Event Handlers
 	#if lime
 	@:noCompletion private function AudioBuffer_onURLLoad(buffer:AudioBuffer):Void

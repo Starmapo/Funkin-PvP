@@ -10,9 +10,9 @@ import util.editors.char.CharacterEditorActionManager;
 class CharacterEditorAnimPanel extends EditorPanel
 {
 	var state:CharacterEditorState;
-
+	
 	public var animDropdown:EditorDropdownMenu;
-
+	
 	public function new(state:CharacterEditorState)
 	{
 		super([
@@ -24,17 +24,17 @@ class CharacterEditorAnimPanel extends EditorPanel
 		resize(230, 50);
 		setPosition(10, 100);
 		this.state = state;
-
+		
 		var tab = createTab('Animation Select');
-
+		
 		var spacing = 4;
-
+		
 		animDropdown = new EditorDropdownMenu(4, 4, [], function(anim)
 		{
 			state.changeAnim(anim);
 		}, this);
 		reloadDropdown();
-
+		
 		var addButton = new FlxUIButton(animDropdown.x + animDropdown.width + spacing, animDropdown.y, 'Add', function()
 		{
 			var name = 'newAnim';
@@ -44,7 +44,7 @@ class CharacterEditorAnimPanel extends EditorPanel
 				name = 'newAnim$i';
 				i++;
 			}
-
+			
 			var anim:AnimInfo = null;
 			var curAnim = state.info.getAnim(animDropdown.selectedLabel);
 			if (curAnim != null && FlxG.keys.released.SHIFT)
@@ -70,7 +70,7 @@ class CharacterEditorAnimPanel extends EditorPanel
 		addButton.resize(30, addButton.height);
 		addButton.autoCenterLabel();
 		tab.add(addButton);
-
+		
 		var removeButton = new FlxUIButton(addButton.x + addButton.width + spacing, addButton.y, 'Remove', function()
 		{
 			var anim = state.info.getAnim(animDropdown.selectedLabel);
@@ -80,33 +80,33 @@ class CharacterEditorAnimPanel extends EditorPanel
 		removeButton.resize(60, removeButton.height);
 		removeButton.autoCenterLabel();
 		tab.add(removeButton);
-
+		
 		tab.add(animDropdown);
-
+		
 		addGroup(tab);
-
+		
 		state.actionManager.onEvent.add(onEvent);
 	}
-
+	
 	public function reloadDropdown()
 	{
 		state.info.sortAnims();
-
+		
 		var anims:Array<String> = [];
 		for (anim in state.info.anims)
 			anims.push(anim.name);
-
+			
 		animDropdown.setData(EditorDropdownMenu.makeStrIdLabelArray(anims));
 		animDropdown.selectedLabel = state.char.animation.name;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
 		animDropdown = null;
 	}
-
+	
 	function onEvent(event:String, params:Dynamic)
 	{
 		switch (event)

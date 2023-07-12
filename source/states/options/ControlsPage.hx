@@ -22,7 +22,7 @@ class ControlsPage extends Page
 	static final PREVENT_KEYS:Array<FlxKey> = [
 		ZERO, SEVEN, MINUS, PLUS, BACKSLASH, GRAVEACCENT, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, NUMPADZERO, NUMPADMINUS, NUMPADPLUS
 	];
-
+	
 	var player:Int = 0;
 	var items:FlxTypedGroup<ControlItem>;
 	var pressBG:FlxSprite;
@@ -40,22 +40,22 @@ class ControlsPage extends Page
 	var clearButton:FlxUIButton;
 	var defaultPrompt:YesNoPrompt;
 	var clearPrompt:YesNoPrompt;
-
+	
 	public function new(player:Int)
 	{
 		super();
 		this.player = player;
 		settings = PlayerSettings.players[player];
 		rpcDetails = 'Player ${player + 1} Controls';
-
+		
 		items = new FlxTypedGroup();
 		add(items);
-
+		
 		deviceText = new FlxText(5, 0, FlxG.width - 10, '', 16);
 		deviceText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		updateDeviceText();
 		add(deviceText);
-
+		
 		deviceButton = new FlxUIButton(0, deviceText.y + deviceText.height + 5, 'Change Device', changeDevicePrompt);
 		deviceButton.resize(deviceButton.width * 2, deviceButton.height * 2);
 		deviceButton.label.size *= 2;
@@ -63,7 +63,7 @@ class ControlsPage extends Page
 		deviceButton.autoCenterLabel();
 		deviceButton.screenCenter(X);
 		add(deviceButton);
-
+		
 		defaultPrompt = new YesNoPrompt("Are you sure you want to reset to the default controls? This can't be undone.", function()
 		{
 			settings.config.controls = switch (settings.config.device)
@@ -79,32 +79,32 @@ class ControlsPage extends Page
 			updateButtons();
 			CoolUtil.playConfirmSound();
 		});
-
+		
 		defaultButton = new FlxUIButton(5, deviceButton.y, 'Reset to Default Controls', openSubState.bind(defaultPrompt));
 		defaultButton.resize(defaultButton.width * 2, defaultButton.height * 2);
 		defaultButton.label.font = 'PhantomMuff 1.5';
 		defaultButton.label.size *= 2;
 		defaultButton.autoCenterLabel();
 		add(defaultButton);
-
+		
 		clearPrompt = new YesNoPrompt("Are you sure you want to clear your controls? This can't be undone.", function()
 		{
 			clearBinds();
 			CoolUtil.playConfirmSound();
 		});
-
+		
 		clearButton = new FlxUIButton(defaultButton.x, defaultButton.y + defaultButton.height + 5, 'Clear Controls', openSubState.bind(clearPrompt));
 		clearButton.resize(clearButton.width * 2, clearButton.height * 2);
 		clearButton.label.font = 'PhantomMuff 1.5';
 		clearButton.label.size *= 2;
 		clearButton.autoCenterLabel();
 		add(clearButton);
-
+		
 		var helpText = new FlxText(5, FlxG.height - 10, FlxG.width - 10, 'Use your mouse to change the controls.', 32);
 		helpText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		helpText.y -= helpText.height;
 		add(helpText);
-
+		
 		exitButton = new FlxUIButton(FlxG.width, 0, 'X', exit);
 		exitButton.resize(exitButton.height * 2, exitButton.height * 2);
 		exitButton.label.size *= 2;
@@ -113,19 +113,19 @@ class ControlsPage extends Page
 		exitButton.color = FlxColor.RED;
 		exitButton.label.color = FlxColor.WHITE;
 		add(exitButton);
-
+		
 		pressBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		pressBG.alpha = 0.8;
 		pressBG.scrollFactor.set();
 		pressBG.visible = false;
 		add(pressBG);
-
+		
 		pressText = new FlxText(0, 0, FlxG.width);
 		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.scrollFactor.set();
 		pressText.visible = false;
 		add(pressText);
-
+		
 		createItem('Left Note', NOTE_LEFT);
 		createItem('Down Note', NOTE_DOWN);
 		createItem('Up Note', NOTE_UP);
@@ -138,17 +138,17 @@ class ControlsPage extends Page
 		createItem('Back', BACK);
 		createItem('Pause', PAUSE);
 		createItem('Reset', RESET);
-
+		
 		toggleControls(false);
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
-
+			
 		updateDeviceText(); // in case of using a gamepad, update if it's connected or disconnected
-
+		
 		if (pressTime > 0)
 		{
 			pressTime -= elapsed;
@@ -186,11 +186,11 @@ class ControlsPage extends Page
 					if (id > -1 && allow)
 					{
 						var binds = settings.config.controls.get(curItem.control);
-
+						
 						binds[curID] = id;
 						if (binds[1 - curID] == id)
 							binds[1 - curID] = -1;
-
+							
 						curItem.updateLabels();
 						hidePressText();
 						reloadControls();
@@ -199,7 +199,7 @@ class ControlsPage extends Page
 				}
 			}
 		}
-
+		
 		for (i in 0...items.length)
 		{
 			var item = items.members[i];
@@ -218,13 +218,13 @@ class ControlsPage extends Page
 				}
 			}
 		}
-
+		
 		super.update(elapsed);
-
+		
 		if (inputBlock > 0)
 			inputBlock--;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -241,13 +241,13 @@ class ControlsPage extends Page
 		defaultPrompt = FlxDestroyUtil.destroy(defaultPrompt);
 		clearPrompt = FlxDestroyUtil.destroy(clearPrompt);
 	}
-
+	
 	override function onAppear()
 	{
 		camFollow.y = FlxG.height / 2;
 		toggleControls(true);
 	}
-
+	
 	override function exit()
 	{
 		var canExit = true;
@@ -268,7 +268,7 @@ class ControlsPage extends Page
 				}
 			}
 		}
-
+		
 		if (canExit)
 		{
 			toggleControls(false);
@@ -277,16 +277,16 @@ class ControlsPage extends Page
 			CoolUtil.playCancelSound();
 		}
 	}
-
+	
 	override function updateControls() {}
-
+	
 	function createItem(name:String, control:Control)
 	{
 		var item = new ControlItem(0, 120 + (items.length * 45), name, control, player, onClick);
 		item.screenCenter(X);
 		items.add(item);
 	}
-
+	
 	function onClick(id:Int, item:ControlItem)
 	{
 		if (settings.config.device != NONE)
@@ -306,7 +306,7 @@ class ControlsPage extends Page
 			});
 		}
 	}
-
+	
 	function showPressText(changingDevice:Bool)
 	{
 		this.changingDevice = changingDevice;
@@ -315,7 +315,7 @@ class ControlsPage extends Page
 		pressText.visible = pressBG.visible = true;
 		toggleControls(false);
 	}
-
+	
 	function hidePressText()
 	{
 		pressTime = 0;
@@ -323,7 +323,7 @@ class ControlsPage extends Page
 		curItem = null;
 		toggleControls(true);
 	}
-
+	
 	function updatePressText()
 	{
 		var timeLeft = Std.string(Math.ceil(pressTime));
@@ -331,7 +331,7 @@ class ControlsPage extends Page
 			timeLeft += ' second';
 		else
 			timeLeft += ' seconds';
-
+			
 		if (changingDevice)
 		{
 			pressText.text = 'Press a button on the device you wish to use\nOr wait $timeLeft to cancel';
@@ -340,13 +340,13 @@ class ControlsPage extends Page
 		{
 			pressText.text = 'Press any key/button\nOr wait $timeLeft to cancel';
 		}
-
+		
 		pressText.screenCenter();
 		pressBG.setGraphicSize(FlxG.width, pressText.height + 4);
 		pressBG.updateHitbox();
 		pressBG.y = pressText.y - 2;
 	}
-
+	
 	function updateDeviceText()
 	{
 		switch (settings.config.device)
@@ -367,12 +367,12 @@ class ControlsPage extends Page
 				deviceText.text = 'None';
 		}
 	}
-
+	
 	function changeDevicePrompt()
 	{
 		showPressText(true);
 	}
-
+	
 	function changeDevice(device:PlayerConfigDevice)
 	{
 		var lastDevice = settings.config.device;
@@ -387,7 +387,7 @@ class ControlsPage extends Page
 		inputBlock = 5;
 		CoolUtil.playConfirmSound();
 	}
-
+	
 	function clearBinds()
 	{
 		var controls = settings.config.controls;
@@ -398,7 +398,7 @@ class ControlsPage extends Page
 		reloadControls();
 		updateButtons();
 	}
-
+	
 	function updateButtons()
 	{
 		for (item in items)
@@ -406,12 +406,12 @@ class ControlsPage extends Page
 			item.updateLabels();
 		}
 	}
-
+	
 	function reloadControls()
 	{
 		settings.controls.loadFromConfig(settings.config);
 	}
-
+	
 	function toggleControls(enabled:Bool)
 	{
 		controlsEnabled = enabled;
@@ -432,10 +432,10 @@ class ControlItem extends FlxSpriteGroup
 	public var buttons:Array<FlxUIButton> = [];
 	public var button1:FlxUIButton;
 	public var button2:FlxUIButton;
-
+	
 	var callback:Int->ControlItem->Void;
 	var settings:PlayerSettings;
-
+	
 	public function new(x:Float = 0, y:Float = 0, name:String, control:Control, player:Int, callback:Int->ControlItem->Void)
 	{
 		super(x, y);
@@ -443,15 +443,15 @@ class ControlItem extends FlxSpriteGroup
 		this.control = control;
 		this.callback = callback;
 		settings = PlayerSettings.players[player];
-
+		
 		label = new FlxText(0, 0, 150, name);
 		label.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		add(label);
-
+		
 		button1 = createButton(0);
 		button2 = createButton(1);
 	}
-
+	
 	public function updateLabels()
 	{
 		for (i in 0...buttons.length)
@@ -459,7 +459,7 @@ class ControlItem extends FlxSpriteGroup
 			buttons[i].label.text = getBindText(i);
 		}
 	}
-
+	
 	function createButton(id:Int)
 	{
 		var button = new FlxUIButton(label.width, 0, getBindText(id), onClick.bind(id));
@@ -475,12 +475,12 @@ class ControlItem extends FlxSpriteGroup
 		add(button);
 		return button;
 	}
-
+	
 	function onClick(id:Int)
 	{
 		callback(id, this);
 	}
-
+	
 	function getBindText(id:Int)
 	{
 		var bind = settings.config.controls.get(control)[id];

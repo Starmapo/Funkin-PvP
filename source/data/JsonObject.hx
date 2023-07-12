@@ -10,7 +10,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 class JsonObject implements IFlxDestroyable
 {
 	public function destroy() {}
-
+	
 	/**
 	 * Returns a property from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -20,10 +20,10 @@ class JsonObject implements IFlxDestroyable
 	{
 		if (value == null)
 			return defaultValue;
-
+			
 		return value;
 	}
-
+	
 	/**
 	 * Returns an integer value from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -34,15 +34,15 @@ class JsonObject implements IFlxDestroyable
 	function readInt(value:Null<Int>, defaultValue:Int = 0, ?min:Int, ?max:Int):Int
 	{
 		var int:Int = readProperty(value, defaultValue);
-
+		
 		if (min != null && int < min)
 			int = min;
 		if (max != null && int > max)
 			int = max;
-
+			
 		return int;
 	}
-
+	
 	/**
 	 * Returns a float value from a JSON file.
 	 * @param value 		The value from the JSON file.
@@ -56,17 +56,17 @@ class JsonObject implements IFlxDestroyable
 		var float:Float = readProperty(value, defaultValue);
 		if (!Math.isFinite(float))
 			float = 0;
-
+			
 		if (min != null && float < min)
 			float = min;
 		if (max != null && float > max)
 			float = max;
 		if (decimals != null && FlxMath.getDecimals(float) > decimals)
 			float = FlxMath.roundDecimal(float, decimals);
-
+			
 		return float;
 	}
-
+	
 	/**
 	 * Returns a boolean value from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -76,7 +76,7 @@ class JsonObject implements IFlxDestroyable
 	{
 		return readProperty(value, defaultValue) == true;
 	}
-
+	
 	/**
 	 * Returns a string value from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -86,7 +86,7 @@ class JsonObject implements IFlxDestroyable
 	{
 		return readProperty(value, defaultValue);
 	}
-
+	
 	/**
 		Returns a color value from a JSON file, whether it be an integer, a string, or an array.
 		* @param value 			The property from the JSON file.
@@ -120,15 +120,15 @@ class JsonObject implements IFlxDestroyable
 				color = new FlxColor(colorInt);
 			}
 		}
-
+		
 		if (color == null)
 			color = defaultValue;
 		if (!allowAlpha)
 			color.alpha = 255;
-
+			
 		return color;
 	}
-
+	
 	/**
 	 * Returns a dynamic array from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -140,7 +140,7 @@ class JsonObject implements IFlxDestroyable
 	{
 		if (defaultValue == null)
 			defaultValue = [];
-
+			
 		var array:Array<Dynamic> = readProperty(value, defaultValue);
 		if (fixedLength != null && array.length != fixedLength)
 		{
@@ -155,7 +155,7 @@ class JsonObject implements IFlxDestroyable
 		}
 		return array;
 	}
-
+	
 	/**
 	 * Returns a typed array from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -168,7 +168,7 @@ class JsonObject implements IFlxDestroyable
 	{
 		if (defaultValue == null)
 			defaultValue = [];
-
+			
 		var array:Array<T> = readProperty(value, defaultValue);
 		if (fixedLength != null && array.length != fixedLength)
 		{
@@ -183,7 +183,7 @@ class JsonObject implements IFlxDestroyable
 		}
 		return array;
 	}
-
+	
 	/**
 	 * Returns an integer array from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -196,7 +196,7 @@ class JsonObject implements IFlxDestroyable
 	function readIntArray(value:Array<Int>, ?defaultValue:Array<Int>, ?maxLength:Int, ?fixedLength:Int, ?minValue:Int, ?maxValue:Int):Array<Int>
 	{
 		var array:Array<Int> = readTypedArray(value, defaultValue, maxLength, fixedLength);
-
+		
 		if (minValue != null || maxValue != null)
 		{
 			for (int in array)
@@ -207,10 +207,10 @@ class JsonObject implements IFlxDestroyable
 					int = maxValue;
 			}
 		}
-
+		
 		return array;
 	}
-
+	
 	/**
 	 * Returns a float array from a JSON file.
 	 * @param value 		The property from the JSON file.
@@ -225,7 +225,7 @@ class JsonObject implements IFlxDestroyable
 			?decimals:Int):Array<Float>
 	{
 		var array:Array<Float> = readTypedArray(value, defaultValue, maxLength, fixedLength);
-
+		
 		if (minValue != null || maxValue != null || decimals != null)
 		{
 			for (float in array)
@@ -238,10 +238,10 @@ class JsonObject implements IFlxDestroyable
 					float = FlxMath.roundDecimal(float, decimals);
 			}
 		}
-
+		
 		return array;
 	}
-
+	
 	/**
 		Returns if a property isn't `null`.
 	**/

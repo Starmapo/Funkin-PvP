@@ -8,9 +8,9 @@ import ui.editors.EditorRadioGroup;
 class SongEditorCompositionPanel extends EditorPanel
 {
 	public var tools:FlxUIRadioGroup;
-
+	
 	var state:SongEditorState;
-
+	
 	public function new(state:SongEditorState)
 	{
 		super([
@@ -24,9 +24,9 @@ class SongEditorCompositionPanel extends EditorPanel
 		screenCenter(Y);
 		y += 132;
 		this.state = state;
-
+		
 		var tab = createTab('Composition');
-
+		
 		var toolNames = [CompositionTool.SELECT, CompositionTool.OBJECT, CompositionTool.LONG_NOTE];
 		tools = new EditorRadioGroup(4, 4, toolNames, toolNames, function(id)
 		{
@@ -34,10 +34,10 @@ class SongEditorCompositionPanel extends EditorPanel
 		});
 		tools.selectedId = state.currentTool.value;
 		tab.add(tools);
-
+		
 		addGroup(tab);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

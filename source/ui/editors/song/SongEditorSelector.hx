@@ -15,11 +15,11 @@ import states.editors.SongEditorState;
 class SongEditorSelector extends FlxUI9SliceSprite
 {
 	public var isSelecting:Bool = false;
-
+	
 	var state:SongEditorState;
 	var startingPoint:FlxPoint;
 	var timeDragStart:Float;
-
+	
 	public function new(state:SongEditorState)
 	{
 		super(0, 0, Paths.getImage('editors/select'), new Rectangle(), [6, 6, 11, 11]);
@@ -27,7 +27,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		scrollFactor.set();
 		visible = false;
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (state.currentTool.value == SELECT)
@@ -35,14 +35,14 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			handleSelection();
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
 		startingPoint = FlxDestroyUtil.put(startingPoint);
 	}
-
+	
 	function handleSelection()
 	{
 		if (FlxG.mouse.justReleased)
@@ -50,23 +50,23 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			handleButtonReleased();
 			return;
 		}
-
+		
 		if (isSelecting)
 			handleDrag();
 		else
 			handleButtonInitiallyPressed();
 	}
-
+	
 	function handleButtonInitiallyPressed()
 	{
 		if (isSelecting || !FlxG.mouse.justPressed)
 			return;
-
+			
 		var playfield = state.playfield;
-
+		
 		if (playfield.isHoveringObject())
 			return;
-
+			
 		if (FlxG.mouse.overlaps(state.seekBar.bg)
 			|| FlxG.mouse.overlaps(state.zoomInButton)
 			|| FlxG.mouse.overlaps(state.zoomOutButton)
@@ -75,40 +75,40 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			|| FlxG.mouse.overlaps(state.editPanel)
 			|| FlxG.mouse.overlaps(state.playfieldTabs))
 			return;
-
+			
 		var mousePos = FlxG.mouse.getGlobalPosition();
 		var clickArea = new FlxRect(playfield.bg.x - 200, playfield.bg.y, playfield.bg.width + 400, playfield.bg.height);
 		if (!clickArea.containsPoint(mousePos))
 			return;
-
+			
 		if (FlxG.keys.released.CONTROL)
 		{
 			state.clearSelection();
 		}
-
+		
 		isSelecting = true;
 		visible = true;
 		startingPoint = mousePos;
 		timeDragStart = state.getTimeFromY(mousePos.y) / state.trackSpeed;
 		setPosition(mousePos.x, mousePos.y);
 	}
-
+	
 	function handleDrag()
 	{
 		if (!isSelecting || startingPoint == null)
 			return;
-
+			
 		resize(Math.abs(FlxG.mouse.globalX - startingPoint.x), Math.abs(FlxG.mouse.globalY - startingPoint.y));
 		setPosition(Math.min(startingPoint.x, FlxG.mouse.globalX), Math.min(startingPoint.y, FlxG.mouse.globalY));
-
+		
 		state.handleMouseSeek();
 	}
-
+	
 	function handleButtonReleased()
 	{
 		if (startingPoint == null)
 			return;
-
+			
 		var playfield = state.playfield;
 		var mousePos = FlxG.mouse.getGlobalPosition();
 		var difference = startingPoint - mousePos;
@@ -117,11 +117,11 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			var timeDragEnd = state.getTimeFromY(mousePos.y) / state.trackSpeed;
 			var startLane = playfield.getLaneFromX(startingPoint.x);
 			var endLane = playfield.getLaneFromX(mousePos.x);
-
+			
 			selectObjects(timeDragEnd, startLane, endLane);
 		}
 		difference.put();
-
+		
 		isSelecting = false;
 		visible = false;
 		setPosition();
@@ -129,16 +129,16 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		startingPoint = FlxDestroyUtil.put(startingPoint);
 		timeDragStart = 0;
 	}
-
+	
 	function selectObjects(timeDragEnd:Float, startLane:Int, endLane:Int)
 	{
 		var dragStart = Math.min(timeDragStart, timeDragEnd);
 		var dragEnd = Math.max(timeDragStart, timeDragEnd);
 		var realStartLane = FlxMath.minInt(startLane, endLane);
 		var realEndLane = FlxMath.maxInt(startLane, endLane);
-
+		
 		var foundObjects:Array<ITimingObject> = [];
-
+		
 		if (state.playfield.type == NOTES)
 		{
 			for (obj in state.song.notes)
@@ -175,14 +175,14 @@ class SongEditorSelector extends FlxUI9SliceSprite
 					foundObjects.push(obj);
 			}
 		}
-
+		
 		for (obj in foundObjects)
 		{
 			if (!state.selectedObjects.value.contains(obj))
 				state.selectedObjects.push(obj);
 		}
 	}
-
+	
 	function canSelectObject(startTime:Float, dragStart:Float, dragEnd:Float, lane:Int, startLane:Int, endLane:Int)
 	{
 		return CoolUtil.inBetween(startTime, dragStart, dragEnd) && CoolUtil.inBetween(lane, startLane, endLane);

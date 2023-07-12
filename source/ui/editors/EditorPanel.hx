@@ -11,9 +11,9 @@ import flixel.util.FlxColor;
 class EditorPanel extends FlxUITabMenu
 {
 	static var TAB_HEIGHT:Int = 18;
-
+	
 	var maxRows:Int;
-
+	
 	public function new(?tabs:Array<{name:String, label:String}>, maxRows:Int = 0)
 	{
 		super(null, null, tabs);
@@ -25,7 +25,7 @@ class EditorPanel extends FlxUITabMenu
 		}
 		scrollFactor.set();
 	}
-
+	
 	override function resize(W:Float, H:Float):Void
 	{
 		var ir:IResizable;
@@ -38,17 +38,17 @@ class EditorPanel extends FlxUITabMenu
 		else
 			distributeTabs();
 	}
-
+	
 	override function distributeTabs(W:Float = -1):Void
 	{
 		var xx:Float = 0;
 		var yy:Float = 0;
-
+		
 		var tab_width:Float = 0;
-
+		
 		if (W == -1)
 			W = _back.width;
-
+			
 		var rows = (maxRows > 0 && _tabs.length > maxRows) ? maxRows : _tabs.length;
 		var last_tab_width = tab_width;
 		if (maxRows > 0 && _tabs.length % rows != 0)
@@ -61,29 +61,29 @@ class EditorPanel extends FlxUITabMenu
 			if (tot_size < W)
 				diff_size = (W - tot_size);
 		}
-
+		
 		if (maxRows > 0)
 			yy = -TAB_HEIGHT * (rows % maxRows);
-
+			
 		_tabs.sort(sortTabs);
-
+		
 		var i:Int = 0;
 		var firstHeight:Float = 0;
-
+		
 		var tab:FlxUITypedButton<FlxSprite>;
 		for (t in _tabs)
 		{
 			tab = cast t;
-
+			
 			tab.x = x + xx;
 			tab.y = y + yy;
-
+			
 			if (_tab_offset != null)
 			{
 				tab.x += _tab_offset.x;
 				tab.y += _tab_offset.y;
 			}
-
+			
 			if (_stretch_tabs)
 			{
 				var theWidth = tab_width;
@@ -126,24 +126,24 @@ class EditorPanel extends FlxUITabMenu
 				yy += TAB_HEIGHT;
 			}
 		}
-
+		
 		if (_tabs != null && _tabs.length > 0 && _tabs[_tabs.length - 1] != null)
 		{
 			_back.y = _tabs[_tabs.length - 1].y + _tabs[_tabs.length - 1].height - 2;
 			if (_tab_offset != null)
 				_back.y -= _tab_offset.y;
 		}
-
+		
 		calcBounds();
 	}
-
+	
 	public function createTab(name:String)
 	{
 		var tab = new FlxUI(null, this);
 		tab.name = name;
 		return tab;
 	}
-
+	
 	function getTabsHeight():Float
 	{
 		if (numTabs == 0)

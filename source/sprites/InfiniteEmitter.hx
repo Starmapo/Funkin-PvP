@@ -19,18 +19,18 @@ class InfiniteEmitter extends FlxEmitter
 	var multipleParticles:Bool = false;
 	var autoBuffer:Bool = false;
 	var particleTotalFrames:Int = 0;
-
+	
 	public function new(X:Float = 0, Y:Float = 0)
 	{
 		super(X, Y);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		particleGraphic = null;
 	}
-
+	
 	override public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false,
 			AutoBuffer:Bool = false)
 	{
@@ -38,9 +38,9 @@ class InfiniteEmitter extends FlxEmitter
 		particleBakedRotationAngles = bakedRotationAngles;
 		multipleParticles = Multiple;
 		autoBuffer = AutoBuffer;
-
+		
 		var totalFrames:Int = 1;
-
+		
 		if (Multiple)
 		{
 			var sprite = new FlxSprite();
@@ -48,15 +48,15 @@ class InfiniteEmitter extends FlxEmitter
 			totalFrames = sprite.numFrames;
 			sprite.destroy();
 		}
-
+		
 		particleTotalFrames = totalFrames;
-
+		
 		for (i in 0...Quantity)
 			add(loadParticle(Graphics, Quantity, bakedRotationAngles, Multiple, AutoBuffer, totalFrames));
-
+			
 		return this;
 	}
-
+	
 	override public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE, Quantity:Int = 50)
 	{
 		var graph = FlxG.bitmap.create(Width, Height, Color);
@@ -65,52 +65,52 @@ class InfiniteEmitter extends FlxEmitter
 		multipleParticles = false;
 		autoBuffer = false;
 		particleTotalFrames = 1;
-
+		
 		for (i in 0...Quantity)
 		{
 			var particle = Type.createInstance(particleClass, []);
 			particle.loadGraphic(graph);
 			add(particle);
 		}
-
+		
 		return this;
 	}
-
+	
 	override public function emitParticle()
 	{
 		var particle = recycle(cast particleClass, makeParticle);
-
+		
 		particle.reset(0, 0); // Position is set later, after size has been calculated
-
+		
 		particle.blend = blend;
 		particle.immovable = immovable;
 		particle.solid = solid;
 		particle.allowCollisions = allowCollisions;
 		particle.autoUpdateHitbox = autoUpdateHitbox;
-
+		
 		// Particle lifespan settings
 		if (lifespan.active)
 		{
 			particle.lifespan = FlxG.random.float(lifespan.min, lifespan.max);
 		}
-
+		
 		if (velocity.active)
 		{
 			// Particle velocity/launch angle settings
 			particle.velocityRange.active = particle.lifespan > 0 && !particle.velocityRange.start.equals(particle.velocityRange.end);
-
+			
 			if (launchMode == FlxEmitterMode.CIRCLE)
 			{
 				var particleAngle:Float = 0;
 				if (launchAngle.active)
 					particleAngle = FlxG.random.float(launchAngle.min, launchAngle.max);
-
+					
 				// Calculate launch velocity
 				_point = FlxVelocity.velocityFromAngle(particleAngle, FlxG.random.float(speed.start.min, speed.start.max));
 				particle.velocity.x = _point.x;
 				particle.velocity.y = _point.y;
 				particle.velocityRange.start.set(_point.x, _point.y);
-
+				
 				// Calculate final velocity
 				_point = FlxVelocity.velocityFromAngle(particleAngle, FlxG.random.float(speed.end.min, speed.end.max));
 				particle.velocityRange.end.set(_point.x, _point.y);
@@ -127,22 +127,22 @@ class InfiniteEmitter extends FlxEmitter
 		}
 		else
 			particle.velocityRange.active = false;
-
+			
 		// Particle angular velocity settings
 		particle.angularVelocityRange.active = particle.lifespan > 0 && angularVelocity.start != angularVelocity.end;
-
+		
 		if (!ignoreAngularVelocity)
 		{
 			if (angularAcceleration.active)
 				particle.angularAcceleration = FlxG.random.float(angularAcceleration.start.min, angularAcceleration.start.max);
-
+				
 			if (angularVelocity.active)
 			{
 				particle.angularVelocityRange.start = FlxG.random.float(angularVelocity.start.min, angularVelocity.start.max);
 				particle.angularVelocityRange.end = FlxG.random.float(angularVelocity.end.min, angularVelocity.end.max);
 				particle.angularVelocity = particle.angularVelocityRange.start;
 			}
-
+			
 			if (angularDrag.active)
 				particle.angularDrag = FlxG.random.float(angularDrag.start.min, angularDrag.start.max);
 		}
@@ -152,11 +152,11 @@ class InfiniteEmitter extends FlxEmitter
 				angle.end.max) - FlxG.random.float(angle.start.min, angle.start.max)) / FlxG.random.float(lifespan.min, lifespan.max);
 			particle.angularVelocityRange.active = false;
 		}
-
+		
 		// Particle angle settings
 		if (angle.active)
 			particle.angle = FlxG.random.float(angle.start.min, angle.start.max);
-
+			
 		// Particle scale settings
 		if (scale.active)
 		{
@@ -171,7 +171,7 @@ class InfiniteEmitter extends FlxEmitter
 		}
 		else
 			particle.scaleRange.active = false;
-
+			
 		// Particle alpha settings
 		if (alpha.active)
 		{
@@ -182,7 +182,7 @@ class InfiniteEmitter extends FlxEmitter
 		}
 		else
 			particle.alphaRange.active = false;
-
+			
 		// Particle color settings
 		if (color.active)
 		{
@@ -193,7 +193,7 @@ class InfiniteEmitter extends FlxEmitter
 		}
 		else
 			particle.colorRange.active = false;
-
+			
 		// Particle drag settings
 		if (drag.active)
 		{
@@ -207,7 +207,7 @@ class InfiniteEmitter extends FlxEmitter
 		}
 		else
 			particle.dragRange.active = false;
-
+			
 		// Particle acceleration settings
 		if (acceleration.active)
 		{
@@ -222,7 +222,7 @@ class InfiniteEmitter extends FlxEmitter
 		}
 		else
 			particle.accelerationRange.active = false;
-
+			
 		// Particle elasticity settings
 		if (elasticity.active)
 		{
@@ -233,33 +233,33 @@ class InfiniteEmitter extends FlxEmitter
 		}
 		else
 			particle.elasticityRange.active = false;
-
+			
 		// Set position
 		particle.x = FlxG.random.float(x, x + width) - particle.width / 2;
 		particle.y = FlxG.random.float(y, y + height) - particle.height / 2;
-
+		
 		// Restart animation
 		if (particle.animation.curAnim != null)
 			particle.animation.curAnim.restart();
-
+			
 		particle.onEmit();
-
+		
 		return particle;
 	}
-
+	
 	function makeParticle()
 	{
 		var frame = multipleParticles ? FlxG.random.int(0, particleTotalFrames - 1) : -1;
-
+		
 		var particle = new FlxParticle();
 		if (FlxG.renderBlit && particleBakedRotationAngles > 0)
 			particle.loadRotatedGraphic(particleGraphic, particleBakedRotationAngles, frame, false, autoBuffer);
 		else
 			particle.loadGraphic(particleGraphic, multipleParticles);
-
+			
 		if (multipleParticles)
 			particle.animation.frameIndex = frame;
-
+			
 		return particle;
 	}
 }

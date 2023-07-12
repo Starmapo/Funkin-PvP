@@ -85,7 +85,7 @@ class Controls extends FlxActionSet
 			case device: throw 'unhandled device: $device';
 		}
 	}
-
+	
 	inline static function addKeys(action:FlxActionDigital, keys:Array<FlxKey>, state:FlxInputState)
 	{
 		for (key in keys)
@@ -94,7 +94,7 @@ class Controls extends FlxActionSet
 				action.addKey(key, state);
 		}
 	}
-
+	
 	inline static function addButtons(action:FlxActionDigital, buttons:Array<FlxGamepadInputID>, state:FlxInputState, id:Int)
 	{
 		for (button in buttons)
@@ -103,7 +103,7 @@ class Controls extends FlxActionSet
 				action.addGamepad(button, state, id);
 		}
 	}
-
+	
 	var _ui_up = new FlxActionDigital(Action.UI_UP);
 	var _ui_left = new FlxActionDigital(Action.UI_LEFT);
 	var _ui_right = new FlxActionDigital(Action.UI_RIGHT);
@@ -140,197 +140,197 @@ class Controls extends FlxActionSet
 	var _backR = new FlxActionDigital(Action.BACK_R);
 	var _pauseR = new FlxActionDigital(Action.PAUSE_R);
 	var _resetR = new FlxActionDigital(Action.RESET_R);
-
+	
 	public var UI_UP(get, never):Bool;
-
+	
 	inline function get_UI_UP()
 		return _ui_up.check();
-
+		
 	public var UI_LEFT(get, never):Bool;
-
+	
 	inline function get_UI_LEFT()
 		return _ui_left.check();
-
+		
 	public var UI_RIGHT(get, never):Bool;
-
+	
 	inline function get_UI_RIGHT()
 		return _ui_right.check();
-
+		
 	public var UI_DOWN(get, never):Bool;
-
+	
 	inline function get_UI_DOWN()
 		return _ui_down.check();
-
+		
 	public var UI_UP_P(get, never):Bool;
-
+	
 	inline function get_UI_UP_P()
 		return _ui_upP.check();
-
+		
 	public var UI_LEFT_P(get, never):Bool;
-
+	
 	inline function get_UI_LEFT_P()
 		return _ui_leftP.check();
-
+		
 	public var UI_RIGHT_P(get, never):Bool;
-
+	
 	inline function get_UI_RIGHT_P()
 		return _ui_rightP.check();
-
+		
 	public var UI_DOWN_P(get, never):Bool;
-
+	
 	inline function get_UI_DOWN_P()
 		return _ui_downP.check();
-
+		
 	public var UI_UP_R(get, never):Bool;
-
+	
 	inline function get_UI_UP_R()
 		return _ui_upR.check();
-
+		
 	public var UI_LEFT_R(get, never):Bool;
-
+	
 	inline function get_UI_LEFT_R()
 		return _ui_leftR.check();
-
+		
 	public var UI_RIGHT_R(get, never):Bool;
-
+	
 	inline function get_UI_RIGHT_R()
 		return _ui_rightR.check();
-
+		
 	public var UI_DOWN_R(get, never):Bool;
-
+	
 	inline function get_UI_DOWN_R()
 		return _ui_downR.check();
-
+		
 	public var NOTE_UP(get, never):Bool;
-
+	
 	inline function get_NOTE_UP()
 		return _note_up.check();
-
+		
 	public var NOTE_LEFT(get, never):Bool;
-
+	
 	inline function get_NOTE_LEFT()
 		return _note_left.check();
-
+		
 	public var NOTE_RIGHT(get, never):Bool;
-
+	
 	inline function get_NOTE_RIGHT()
 		return _note_right.check();
-
+		
 	public var NOTE_DOWN(get, never):Bool;
-
+	
 	inline function get_NOTE_DOWN()
 		return _note_down.check();
-
+		
 	public var NOTE_UP_P(get, never):Bool;
-
+	
 	inline function get_NOTE_UP_P()
 		return _note_upP.check();
-
+		
 	public var NOTE_LEFT_P(get, never):Bool;
-
+	
 	inline function get_NOTE_LEFT_P()
 		return _note_leftP.check();
-
+		
 	public var NOTE_RIGHT_P(get, never):Bool;
-
+	
 	inline function get_NOTE_RIGHT_P()
 		return _note_rightP.check();
-
+		
 	public var NOTE_DOWN_P(get, never):Bool;
-
+	
 	inline function get_NOTE_DOWN_P()
 		return _note_downP.check();
-
+		
 	public var NOTE_UP_R(get, never):Bool;
-
+	
 	inline function get_NOTE_UP_R()
 		return _note_upR.check();
-
+		
 	public var NOTE_LEFT_R(get, never):Bool;
-
+	
 	inline function get_NOTE_LEFT_R()
 		return _note_leftR.check();
-
+		
 	public var NOTE_RIGHT_R(get, never):Bool;
-
+	
 	inline function get_NOTE_RIGHT_R()
 		return _note_rightR.check();
-
+		
 	public var NOTE_DOWN_R(get, never):Bool;
-
+	
 	inline function get_NOTE_DOWN_R()
 		return _note_downR.check();
-
+		
 	public var ACCEPT(get, never):Bool;
-
+	
 	inline function get_ACCEPT()
 		return _accept.check();
-
+		
 	public var BACK(get, never):Bool;
-
+	
 	inline function get_BACK()
 		return _back.check();
-
+		
 	public var PAUSE(get, never):Bool;
-
+	
 	inline function get_PAUSE()
 		return _pause.check();
-
+		
 	public var RESET(get, never):Bool;
-
+	
 	inline function get_RESET()
 		return _reset.check();
-
+		
 	public var ACCEPT_P(get, never):Bool;
-
+	
 	inline function get_ACCEPT_P()
 		return _acceptP.check();
-
+		
 	public var BACK_P(get, never):Bool;
-
+	
 	inline function get_BACK_P()
 		return _backP.check();
-
+		
 	public var PAUSE_P(get, never):Bool;
-
+	
 	inline function get_PAUSE_P()
 		return _pauseP.check();
-
+		
 	public var RESET_P(get, never):Bool;
-
+	
 	inline function get_RESET_P()
 		return _resetP.check();
-
+		
 	public var ACCEPT_R(get, never):Bool;
-
+	
 	inline function get_ACCEPT_R()
 		return _acceptR.check();
-
+		
 	public var BACK_R(get, never):Bool;
-
+	
 	inline function get_BACK_R()
 		return _backR.check();
-
+		
 	public var PAUSE_R(get, never):Bool;
-
+	
 	inline function get_PAUSE_R()
 		return _pauseR.check();
-
+		
 	public var RESET_R(get, never):Bool;
-
+	
 	inline function get_RESET_R()
 		return _resetR.check();
-
+		
 	public var config(default, null):PlayerConfig;
 	public var controlsAdded(default, null):Bool = false;
 	public var gamepad(default, null):FlxGamepad;
-
+	
 	var byName:Map<String, FlxActionDigital> = new Map<String, FlxActionDigital>();
-
+	
 	public function new(name:String, config:PlayerConfig)
 	{
 		super(name);
-
+		
 		add(_ui_up);
 		add(_ui_left);
 		add(_ui_right);
@@ -367,26 +367,26 @@ class Controls extends FlxActionSet
 		add(_backR);
 		add(_pauseR);
 		add(_resetR);
-
+		
 		for (action in digitalActions)
 			byName[action.name] = action;
-
+			
 		loadFromConfig(config);
 	}
-
+	
 	public function checkByName(name:Action):Bool
 	{
 		if (!byName.exists(name))
 			throw 'Invalid name: $name';
-
+			
 		return byName[name].check();
 	}
-
+	
 	public function getDialogueNameFromControl(control:Control)
 	{
 		return getDialogueName(getActionFromControl(control));
 	}
-
+	
 	public function getActionFromControl(control:Control):FlxActionDigital
 	{
 		return switch (control)
@@ -405,17 +405,17 @@ class Controls extends FlxActionSet
 			case RESET: _reset;
 		}
 	}
-
+	
 	public function bindKeys(control:Control, keys:Array<FlxKey>)
 	{
 		forEachBound(control, function(action, state) addKeys(action, keys, state));
 	}
-
+	
 	public function bindButtons(control:Control, id:Int, buttons:Array<FlxGamepadInputID>)
 	{
 		forEachBound(control, function(action, state) addButtons(action, buttons, state, id));
 	}
-
+	
 	public function loadFromConfig(config:PlayerConfig)
 	{
 		if (config == null)
@@ -423,9 +423,9 @@ class Controls extends FlxActionSet
 			FlxG.log.error("Can't load \"null\" player configuration.");
 			return;
 		}
-
+		
 		reset();
-
+		
 		this.config = config;
 		switch (config.device)
 		{
@@ -449,18 +449,18 @@ class Controls extends FlxActionSet
 			case NONE:
 		}
 	}
-
+	
 	public function reset()
 	{
 		for (action in digitalActions)
 		{
 			action.removeAll();
 		}
-
+		
 		controlsAdded = false;
 		gamepad = null;
 	}
-
+	
 	public function anyPressed()
 	{
 		switch (config.device)
@@ -475,7 +475,7 @@ class Controls extends FlxActionSet
 				return false;
 		}
 	}
-
+	
 	public function anyJustPressed()
 	{
 		switch (config.device)
@@ -490,7 +490,7 @@ class Controls extends FlxActionSet
 				return false;
 		}
 	}
-
+	
 	public function anyJustReleased()
 	{
 		switch (config.device)
@@ -505,7 +505,7 @@ class Controls extends FlxActionSet
 				return false;
 		}
 	}
-
+	
 	public function firstPressed()
 	{
 		switch (config.device)
@@ -520,7 +520,7 @@ class Controls extends FlxActionSet
 				return -1;
 		}
 	}
-
+	
 	public function firstJustPressed()
 	{
 		switch (config.device)
@@ -535,7 +535,7 @@ class Controls extends FlxActionSet
 				return -1;
 		}
 	}
-
+	
 	public function firstJustReleased()
 	{
 		switch (config.device)
@@ -550,7 +550,7 @@ class Controls extends FlxActionSet
 				return -1;
 		}
 	}
-
+	
 	public function pressedID(id:Int)
 	{
 		switch (config.device)
@@ -565,7 +565,7 @@ class Controls extends FlxActionSet
 				return false;
 		}
 	}
-
+	
 	public function justPressedID(id:Int)
 	{
 		switch (config.device)
@@ -580,7 +580,7 @@ class Controls extends FlxActionSet
 				return false;
 		}
 	}
-
+	
 	public function justReleasedID(id:Int)
 	{
 		switch (config.device)
@@ -595,7 +595,7 @@ class Controls extends FlxActionSet
 				return false;
 		}
 	}
-
+	
 	function forEachBound(control:Control, func:FlxActionDigital->FlxInputState->Void)
 	{
 		switch (control)

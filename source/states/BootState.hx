@@ -31,37 +31,37 @@ class BootState extends FNFState
 		The state to switch to after the game finishes booting up.
 	**/
 	static var initialState:Class<FlxState> = states.menus.TitleState;
-
+	
 	var bg:FlxSprite;
 	var loadingText:FlxText;
 	var loadingBG:FlxSprite;
 	var loadingSteps:Array<LoadingStep> = [];
 	var aborted:Bool = false;
 	var wantedText:String = 'Loading...';
-
+	
 	override function create()
 	{
 		initGame();
-
+		
 		FlxG.camera.bgColor = 0xFFCAFF4D;
-
+		
 		bg = new FlxSprite(0, 0, Paths.getImage('menus/loading/funkay'));
 		bg.setGraphicSize(0, FlxG.height);
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = true;
 		add(bg);
-
+		
 		loadingBG = new FlxSprite().makeGraphic(FlxG.width, 1, FlxColor.BLACK);
 		loadingBG.alpha = 0.8;
 		add(loadingBG);
-
+		
 		loadingText = new FlxText(0, FlxG.height, FlxG.width);
 		loadingText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		loadingText.y -= loadingText.height;
 		loadingText.screenCenter(X);
 		add(loadingText);
-
+		
 		loadingSteps.push({
 			name: 'Loading Save Data',
 			func: loadSave
@@ -70,7 +70,7 @@ class BootState extends FNFState
 			name: 'Loading Mods',
 			func: loadMods
 		});
-
+		
 		var i = 0;
 		new FlxTimer().start(0.1, function(tmr)
 		{
@@ -79,13 +79,13 @@ class BootState extends FNFState
 				var step = loadingSteps.shift();
 				updateText(step.name + '... ' + Math.floor((i / loadingSteps.length) * 100) + '%');
 				step.func();
-
+				
 				if (aborted)
 				{
 					CoolUtil.playCancelSound();
 					return;
 				}
-
+				
 				i++;
 				tmr.reset();
 			}
@@ -96,21 +96,21 @@ class BootState extends FNFState
 				CoolUtil.playConfirmSound();
 			}
 		});
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
+		
 		loadingText.text = wantedText;
 		loadingText.y = FlxG.height - loadingText.height;
 		loadingBG.setPosition(loadingText.x, loadingText.y - 2);
 		loadingBG.setGraphicSize(FlxG.width, loadingText.height + 4);
 		loadingBG.updateHitbox();
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -119,18 +119,18 @@ class BootState extends FNFState
 		loadingBG = null;
 		loadingSteps = null;
 	}
-
+	
 	function initGame()
 	{
 		WindowsAPI.setWindowToDarkMode(); // change window to dark mode
 		AudioSwitchFix.init();
-
+		
 		Paths.init();
-
+		
 		#if !macro
 		DiscordClient.initialize();
 		#end
-
+		
 		FlxG.fixedTimestep = false; // allow elapsed time to be variable
 		FlxG.debugger.toggleKeys = [GRAVEACCENT, BACKSLASH]; // remove F2 from debugger toggle keys
 		FlxG.game.focusLostFramerate = 60; // 60 fps instead of 10 when focus is lost
@@ -140,7 +140,7 @@ class BootState extends FNFState
 		var time = Main.getTransitionTime();
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, time, FlxPoint.get(0, -1), null);
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, time, FlxPoint.get(0, 1), null);
-
+		
 		Interp.getRedirects["Int"] = function(obj:Dynamic, name:String):Dynamic
 		{
 			var c:FlxColor = obj;
@@ -440,12 +440,12 @@ class BootState extends FNFState
 			return null;
 		};
 	}
-
+	
 	function loadSave()
 	{
 		Settings.loadData(); // load settings
 		PlayerSettings.init(); // initialize players and controls
-
+		
 		Application.current.onExit.add(function(_)
 		{
 			Settings.saveData();
@@ -455,7 +455,7 @@ class BootState extends FNFState
 			Sys.exit(0);
 		});
 	}
-
+	
 	function loadMods()
 	{
 		if (!FileSystem.exists(Mods.modsPath))
@@ -464,9 +464,9 @@ class BootState extends FNFState
 			aborted = true;
 			return;
 		}
-
+		
 		Mods.reloadMods();
-
+		
 		var hasFNF = false;
 		for (mod in Mods.currentMods)
 		{
@@ -482,12 +482,12 @@ class BootState extends FNFState
 			aborted = true;
 		}
 	}
-
+	
 	function exit()
 	{
 		FlxG.switchState(Type.createInstance(initialState, []));
 	}
-
+	
 	function updateText(text:String)
 	{
 		wantedText = text;

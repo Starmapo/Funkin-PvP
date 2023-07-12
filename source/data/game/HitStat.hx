@@ -12,42 +12,42 @@ class HitStat implements IFlxDestroyable
 		The type of this stat (`HIT` or `MISS`).
 	**/
 	public var type:HitStatType;
-
+	
 	/**
 		The key press type of this stat (`NONE`, `PRESS`, or `RELEASE`).
 	**/
 	public var keyPressType:KeyPressType;
-
+	
 	/**
 		The related note of this stat.
 	**/
 	public var note:NoteInfo;
-
+	
 	/**
 		The song position of this stat.
 	**/
 	public var songPosition:Float;
-
+	
 	/**
 		The judgement of this stat.
 	**/
 	public var judgement:Judgement;
-
+	
 	/**
 		The hit difference of this stat.
 	**/
 	public var hitDifference:Float;
-
+	
 	/**
 		The last accuracy of the player before this stat.
 	**/
 	public var accuracy:Float;
-
+	
 	/**
 		The last health of the player before this stat.
 	**/
 	public var health:Float;
-
+	
 	public function new(type:HitStatType, keyPressType:KeyPressType, note:NoteInfo, songPosition:Float, judgement:Judgement, hitDifference:Float,
 			accuracy:Float, health:Float)
 	{
@@ -60,7 +60,7 @@ class HitStat implements IFlxDestroyable
 		this.accuracy = accuracy;
 		this.health = health;
 	}
-
+	
 	/**
 		Frees up memory.
 	**/

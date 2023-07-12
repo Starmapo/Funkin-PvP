@@ -17,36 +17,36 @@ class FNFState extends FlxTransitionableState
 {
 	public var dropdowns:Array<FlxUIDropDownMenu> = [];
 	public var inputTexts:Array<EditorInputText> = [];
-
+	
 	var checkObjects:Bool = false;
 	var cachedGraphics:Array<FlxGraphic> = [];
 	var cachedCharacters:Array<String> = [];
-
+	
 	public function new()
 	{
 		super();
 		memberAdded.add(onMemberAdded);
 	}
-
+	
 	public function checkAllowInput()
 	{
 		if (FlxG.stage.focus != null)
 			return false;
-
+			
 		for (dropdown in dropdowns)
 		{
 			if (dropdown.dropPanel.exists)
 				return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	public function precacheGraphic(graphic:FlxGraphic)
 	{
 		if (graphic == null || cachedGraphics.contains(graphic))
 			return null;
-
+			
 		graphic.destroyOnNoUse = false;
 		var spr = new FlxSprite(0, 0, graphic);
 		spr.alpha = 0.00001;
@@ -60,23 +60,23 @@ class FNFState extends FlxTransitionableState
 		cachedGraphics.push(graphic);
 		return spr;
 	}
-
+	
 	public function precacheImage(image:String, ?mod:String)
 	{
 		return precacheGraphic(Paths.getImage(image, mod));
 	}
-
+	
 	public function precacheCharacter(char:String)
 	{
 		if (char == null || char.length < 1 || cachedCharacters.contains(char))
 			return null;
-
+			
 		var spr = new Character(0, 0, CharacterInfo.loadCharacterFromName(char));
 		if (spr.graphic != null)
 			spr.graphic.destroyOnNoUse = false;
 		else
 			return null;
-
+			
 		spr.alpha = 0.00001;
 		spr.scrollFactor.set();
 		add(spr);
@@ -86,10 +86,10 @@ class FNFState extends FlxTransitionableState
 			spr.destroy();
 		});
 		cachedCharacters.push(char);
-
+		
 		return spr;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -98,13 +98,13 @@ class FNFState extends FlxTransitionableState
 		cachedGraphics = null;
 		cachedCharacters = null;
 	}
-
+	
 	function onMemberAdded(obj:FlxBasic)
 	{
 		if (checkObjects)
 			check(obj);
 	}
-
+	
 	function check(obj:FlxBasic)
 	{
 		if (Std.isOfType(obj, FlxUIDropDownMenu))

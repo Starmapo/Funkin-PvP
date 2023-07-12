@@ -13,20 +13,20 @@ class TextMenuItem extends TypedMenuItem<FlxText>
 		var label = new FlxText(0, 0, 0, name, size);
 		label.setFormat('PhantomMuff 1.5', size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		label.antialiasing = true;
-
+		
 		super(x, y, label, name, callback);
-
+		
 		setEmptyBackground();
 	}
-
+	
 	override function setData(name:String, ?callback:Void->Void)
 	{
 		super.setData(name, callback);
-
+		
 		if (label != null)
 			label.text = name;
 	}
-
+	
 	override function get_width()
 	{
 		if (label != null)
@@ -34,10 +34,10 @@ class TextMenuItem extends TypedMenuItem<FlxText>
 			label.updateHitbox();
 			return label.width;
 		}
-
+		
 		return width;
 	}
-
+	
 	override function get_height()
 	{
 		if (label != null)
@@ -45,7 +45,7 @@ class TextMenuItem extends TypedMenuItem<FlxText>
 			label.updateHitbox();
 			return label.height;
 		}
-
+		
 		return height;
 	}
 }

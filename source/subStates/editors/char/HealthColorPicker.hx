@@ -7,17 +7,17 @@ import states.editors.CharacterEditorState;
 class HealthColorPicker extends ColorPickerSubState
 {
 	var state:CharacterEditorState;
-
+	
 	public function new(state:CharacterEditorState, startingColor:FlxColor, ?callback:FlxColor->Void)
 	{
 		super(startingColor, callback);
 		this.state = state;
 	}
-
+	
 	override function create()
 	{
 		super.create();
-
+		
 		var getIconColorButton = new FlxUIButton(uiTabs.width - 10, 50, 'Get Icon Color', function()
 		{
 			var daColor = CoolUtil.getDominantColor(state.healthBar.icon);

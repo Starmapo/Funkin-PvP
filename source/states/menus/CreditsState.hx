@@ -21,7 +21,7 @@ class CreditsState extends FNFState
 {
 	static var DEFAULT_COLOR:FlxColor = 0xFF9271FD;
 	static var lastSelected:Int = 0;
-
+	
 	var creditsArray:Array<CreditGroup> = [];
 	var categoryMenuList:CreditsMenuList;
 	var creditMenuList:CreditsMenuList;
@@ -31,7 +31,7 @@ class CreditsState extends FNFState
 	var creditDesc:FlxText;
 	var creditLink:FlxText;
 	var colorTween:FlxTween;
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -44,57 +44,57 @@ class CreditsState extends FNFState
 		creditLink = null;
 		colorTween = null;
 	}
-
+	
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Credits Screen");
-
+		
 		transIn = transOut = null;
-
+		
 		bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = DEFAULT_COLOR;
 		add(bg);
-
+		
 		var circleBG = new FlxSprite(0, 0, Paths.getImage('menus/credits/circleBG'));
 		circleBG.antialiasing = true;
 		add(circleBG);
-
+		
 		categoryMenuList = new CreditsMenuList();
 		categoryMenuList.controlsEnabled = false;
 		categoryMenuList.onChange.add(onChangeCategory);
 		add(categoryMenuList);
-
+		
 		creditMenuList = new CreditsMenuList();
 		creditMenuList.controlsEnabled = false;
 		creditMenuList.visible = false;
 		creditMenuList.onChange.add(onChangeCredit);
 		add(creditMenuList);
-
+		
 		creditGroup = new FlxTypedGroup();
 		add(creditGroup);
-
+		
 		creditDesc = new FlxText(FlxG.width, 0, (FlxG.width / 2) - 10, '', 32);
 		creditDesc.screenCenter(Y);
 		creditGroup.add(creditDesc);
-
+		
 		creditLink = new FlxText(creditDesc.x, creditDesc.y + creditDesc.height, creditDesc.fieldWidth, '', 24);
 		creditGroup.add(creditLink);
-
+		
 		for (text in creditGroup)
 		{
 			text.scrollFactor.set();
 			text.setFormat('PhantomMuff 1.5', text.size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		}
-
+		
 		readCredits('assets/data/credits');
 		for (mod in Mods.currentMods)
 			readCredits(Path.join([Mods.modsPath, mod.directory, 'data/credits.json']));
-
+			
 		if (lastSelected >= categoryMenuList.length)
 			lastSelected = categoryMenuList.length - 1;
 		categoryMenuList.selectItem(lastSelected);
 		categoryMenuList.snapPositions();
-
+		
 		FlxG.camera.zoom = 3;
 		var duration = Main.getTransitionTime();
 		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
@@ -106,10 +106,10 @@ class CreditsState extends FNFState
 			}
 		});
 		FlxG.camera.fade(FlxColor.BLACK, duration, true, null, true);
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
@@ -155,10 +155,10 @@ class CreditsState extends FNFState
 			}
 			CoolUtil.playCancelSound();
 		}
-
+		
 		super.update(elapsed);
 	}
-
+	
 	function readCredits(path:String, ?mod:String)
 	{
 		var data = Paths.getJson(path, mod);
@@ -173,7 +173,7 @@ class CreditsState extends FNFState
 			}
 		}
 	}
-
+	
 	function onChangeCategory(selectedItem:CreditsMenuItem)
 	{
 		for (item in categoryMenuList)
@@ -182,7 +182,7 @@ class CreditsState extends FNFState
 		}
 		lastSelected = selectedItem.ID;
 	}
-
+	
 	function onAcceptCategory()
 	{
 		creditMenuList.resetCredits(creditsArray[categoryMenuList.selectedIndex].credits, onAcceptCredit);
@@ -211,7 +211,7 @@ class CreditsState extends FNFState
 		});
 		CoolUtil.playScrollSound();
 	}
-
+	
 	function resetCredit(credit:Credit)
 	{
 		creditDesc.y = 0;
@@ -228,12 +228,12 @@ class CreditsState extends FNFState
 		CoolUtil.screenCenterGroup(creditGroup, Y);
 		doColorTween(credit.color);
 	}
-
+	
 	function doColorTween(color:FlxColor)
 	{
 		if (colorTween != null)
 			colorTween.cancel();
-
+			
 		colorTween = FlxTween.color(bg, Main.getTransitionTime(), bg.color, color, {
 			onComplete: function(_)
 			{
@@ -241,12 +241,12 @@ class CreditsState extends FNFState
 			}
 		});
 	}
-
+	
 	function getCredit(id:Int)
 	{
 		return creditsArray[categoryMenuList.selectedIndex].credits[id];
 	}
-
+	
 	function onChangeCredit(selectedItem:CreditsMenuItem)
 	{
 		for (item in creditMenuList)
@@ -255,7 +255,7 @@ class CreditsState extends FNFState
 		}
 		resetCredit(getCredit(selectedItem.ID));
 	}
-
+	
 	function onAcceptCredit()
 	{
 		var credit = getCredit(creditMenuList.selectedItem.ID);
@@ -267,7 +267,7 @@ class CreditsState extends FNFState
 class CreditsMenuList extends TypedMenuList<CreditsMenuItem>
 {
 	var MAX_WIDTH:Float = (FlxG.width / 2) - 20;
-
+	
 	public function createItem(name:String, ?callback:Void->Void)
 	{
 		var item = new CreditsMenuItem(0, 0, name, callback, length);
@@ -278,7 +278,7 @@ class CreditsMenuList extends TypedMenuList<CreditsMenuItem>
 		}
 		return addItem(name, item);
 	}
-
+	
 	public function resetCredits(credits:Array<Credit>, callback:Void->Void)
 	{
 		if (credits != null)
@@ -298,7 +298,7 @@ class CreditsMenuList extends TypedMenuList<CreditsMenuItem>
 			}
 		}
 	}
-
+	
 	public function snapPositions()
 	{
 		for (item in members)
@@ -311,35 +311,35 @@ class CreditsMenuList extends TypedMenuList<CreditsMenuItem>
 class CreditsMenuItem extends TextMenuItem
 {
 	static var LERP:Float = 9.6;
-
+	
 	public var targetY:Int = 0;
-
+	
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, targetY:Int = 0)
 	{
 		super(x, y, name, callback);
 		this.targetY = targetY;
 		snapPosition();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		x = FlxMath.lerp(x, getX(), elapsed * LERP);
 		y = FlxMath.lerp(y, getY(), elapsed * LERP);
-
+		
 		super.update(elapsed);
 	}
-
+	
 	public function snapPosition()
 	{
 		x = getX();
 		y = getY();
 	}
-
+	
 	function getX()
 	{
 		return (Math.abs(targetY) * -40) + 20;
 	}
-
+	
 	function getY()
 	{
 		return (targetY * 156) + FlxG.height * 0.48;

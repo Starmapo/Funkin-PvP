@@ -9,7 +9,7 @@ typedef SVDirectionChange =
 		The start time of this direction change.
 	**/
 	var startTime:Float;
-
+	
 	/**
 		The track position of this direction change.
 	**/

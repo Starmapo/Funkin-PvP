@@ -43,11 +43,11 @@ class PlayerSettings
 		NOTE_LEFT => [-1, -1], NOTE_DOWN => [-1, -1], NOTE_UP => [-1, -1], NOTE_RIGHT => [-1, -1], UI_UP => [-1, -1], UI_LEFT => [-1, -1],
 		 UI_RIGHT => [-1, -1],   UI_DOWN => [-1, -1],  ACCEPT => [-1, -1],       BACK => [-1, -1], PAUSE => [-1, -1],   RESET => [-1, -1],
 	];
-
+	
 	public static function init()
 	{
 		initSaveData();
-
+		
 		for (config in Settings.playerConfigs)
 		{
 			if (config.scrollSpeed == null)
@@ -77,17 +77,17 @@ class PlayerSettings
 			if (config.splashSkin == null)
 				config.splashSkin = 'fnf:default';
 		}
-
+		
 		for (i in 0...2)
 		{
 			var player = new PlayerSettings(i);
 			players.push(player);
 		}
-
+		
 		FlxG.gamepads.deviceConnected.add(onGamepadConnected);
 		FlxG.gamepads.deviceDisconnected.add(onGamepadDisconnected);
 	}
-
+	
 	public static function checkAction(action:Action)
 	{
 		for (player in players)
@@ -95,19 +95,19 @@ class PlayerSettings
 			if (player.controls.checkByName(action))
 				return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	public static function checkPlayerAction(player:Int, action:Action)
 	{
 		var player = players[player];
 		if (player != null && player.controls.checkByName(action))
 			return true;
-
+			
 		return false;
 	}
-
+	
 	public static function checkActions(actions:Array<Action>)
 	{
 		for (action in actions)
@@ -119,7 +119,7 @@ class PlayerSettings
 		}
 		return false;
 	}
-
+	
 	public static function checkPlayerActions(player:Int, actions:Array<Action>)
 	{
 		for (action in actions)
@@ -131,7 +131,7 @@ class PlayerSettings
 		}
 		return false;
 	}
-
+	
 	public static function anyPressed()
 	{
 		for (player in players)
@@ -139,10 +139,10 @@ class PlayerSettings
 			if (player.controls.anyPressed())
 				return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	public static function anyJustPressed()
 	{
 		for (player in players)
@@ -150,10 +150,10 @@ class PlayerSettings
 			if (player.controls.anyJustPressed())
 				return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	public static function anyJustReleased()
 	{
 		for (player in players)
@@ -161,14 +161,14 @@ class PlayerSettings
 			if (player.controls.anyJustReleased())
 				return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	static function onGamepadConnected(gamepad:FlxGamepad)
 	{
 		var id = gamepad.id;
-
+		
 		for (i in 0...players.length)
 		{
 			var player = players[i];
@@ -176,11 +176,11 @@ class PlayerSettings
 				player.controls.loadFromConfig(player.config);
 		}
 	}
-
+	
 	static function onGamepadDisconnected(gamepad:FlxGamepad)
 	{
 		var id = gamepad.id;
-
+		
 		for (i in 0...players.length)
 		{
 			var player = players[i];
@@ -188,13 +188,13 @@ class PlayerSettings
 				player.controls.reset();
 		}
 	}
-
+	
 	static function initSaveData()
 	{
 		if (Settings.playerConfigs == null)
 		{
 			var playerConfigs:Array<PlayerConfig> = [createDefaultConfig(KEYBOARD, defaultKeyboardControls.copy())];
-
+			
 			var foundGamepad:Bool = false;
 			for (i in 0...FlxG.gamepads.numActiveGamepads)
 			{
@@ -208,12 +208,12 @@ class PlayerSettings
 			}
 			if (!foundGamepad)
 				playerConfigs.push(createDefaultConfig(NONE, defaultNoControls.copy()));
-
+				
 			Settings.playerConfigs = playerConfigs;
 			Settings.saveData();
 		}
 	}
-
+	
 	static function createDefaultConfig(device:PlayerConfigDevice, controls:Map<Control, Array<Int>>):PlayerConfig
 	{
 		return {
@@ -222,11 +222,11 @@ class PlayerSettings
 			downScroll: false
 		};
 	}
-
+	
 	public var id(default, null):Int;
 	public var config(default, null):PlayerConfig;
 	public var controls(default, null):Controls;
-
+	
 	public function new(id:Int)
 	{
 		this.id = id;

@@ -38,30 +38,30 @@ class Interp
 {
 	public static var getRedirects:Map<String, Dynamic->String->Dynamic> = [];
 	public static var setRedirects:Map<String, Dynamic->String->Dynamic->Dynamic> = [];
-
+	
 	#if haxe3
 	public var variables:Map<String, Dynamic>;
-
+	
 	var locals:Map<String, {r:Dynamic}>;
 	var binops:Map<String, Expr->Expr->Dynamic>;
 	#else
 	public var variables:Hash<Dynamic>;
-
+	
 	var locals:Hash<{r:Dynamic}>;
 	var binops:Hash<Expr->Expr->Dynamic>;
 	#end
-
+	
 	var depth:Int;
 	var inTry:Bool;
 	var declared:Array<{n:String, old:{r:Dynamic}}>;
 	var returnValue:Dynamic;
-
+	
 	#if hscriptPos
 	var curExpr:Expr;
 	#end
-
+	
 	public var script:Script;
-
+	
 	public function new()
 	{
 		#if haxe3
@@ -73,7 +73,7 @@ class Interp
 		resetVariables();
 		initOps();
 	}
-
+	
 	private function resetVariables()
 	{
 		#if haxe3
@@ -81,7 +81,7 @@ class Interp
 		#else
 		variables = new Hash();
 		#end
-
+		
 		variables.set("null", null);
 		variables.set("true", true);
 		variables.set("false", false);
@@ -94,7 +94,7 @@ class Interp
 			haxe.Log.trace(Std.string(v), inf);
 		}));
 	}
-
+	
 	public function posInfos():PosInfos
 	{
 		#if hscriptPos
@@ -103,7 +103,7 @@ class Interp
 		#end
 		return cast {fileName: "hscript", lineNumber: 0};
 	}
-
+	
 	function initOps()
 	{
 		var me = this;
@@ -145,12 +145,12 @@ class Interp
 		assignOp(">>=", function(v1, v2) return v1 >> v2);
 		assignOp(">>>=", function(v1, v2) return v1 >>> v2);
 	}
-
+	
 	function setVar(name:String, v:Dynamic)
 	{
 		variables.set(name, v);
 	}
-
+	
 	function assign(e1:Expr, e2:Expr):Dynamic
 	{
 		var v = expr(e2);
@@ -175,19 +175,19 @@ class Interp
 				{
 					arr[index] = v;
 				}
-
+				
 			default:
 				error(EInvalidOp("="));
 		}
 		return v;
 	}
-
+	
 	function assignOp(op, fop:Dynamic->Dynamic->Dynamic)
 	{
 		var me = this;
 		binops.set(op, function(e1, e2) return me.evalAssignOp(op, fop, e1, e2));
 	}
-
+	
 	function evalAssignOp(op, fop, e1, e2):Dynamic
 	{
 		var v;
@@ -222,7 +222,7 @@ class Interp
 		}
 		return v;
 	}
-
+	
 	function increment(e:Expr, prefix:Bool, delta:Int):Dynamic
 	{
 		#if hscriptPos
@@ -291,7 +291,7 @@ class Interp
 				return error(EInvalidOp((delta > 0) ? "++" : "--"));
 		}
 	}
-
+	
 	public function execute(expr:Expr):Dynamic
 	{
 		depth = 0;
@@ -303,7 +303,7 @@ class Interp
 		declared = new Array();
 		return exprReturn(expr);
 	}
-
+	
 	function exprReturn(e):Dynamic
 	{
 		try
@@ -326,7 +326,7 @@ class Interp
 		}
 		return null;
 	}
-
+	
 	function duplicate<T>(h:#if haxe3 Map<String, T> #else Hash<T> #end)
 	{
 		#if haxe3
@@ -338,7 +338,7 @@ class Interp
 			h2.set(k, h.get(k));
 		return h2;
 	}
-
+	
 	function restore(old:Int)
 	{
 		while (declared.length > old)
@@ -347,7 +347,7 @@ class Interp
 			locals.set(d.n, d.old);
 		}
 	}
-
+	
 	inline function error(e:#if hscriptPos ErrorDef #else Error #end, rethrow = false):Dynamic
 	{
 		#if hscriptPos var e = new Error(e, curExpr.pmin, curExpr.pmax, curExpr.origin, curExpr.line); #end
@@ -365,7 +365,7 @@ class Interp
 		}
 		return null;
 	}
-
+	
 	inline function rethrow(e:Dynamic)
 	{
 		#if hl
@@ -374,7 +374,7 @@ class Interp
 		throw e;
 		#end
 	}
-
+	
 	function resolve(id:String):Dynamic
 	{
 		var l = locals.get(id);
@@ -385,7 +385,7 @@ class Interp
 			error(EUnknownVariable(id));
 		return v;
 	}
-
+	
 	public function expr(e:Expr):Dynamic
 	{
 		#if hscriptPos
@@ -450,7 +450,7 @@ class Interp
 				var args = new Array();
 				for (p in params)
 					args.push(expr(p));
-
+					
 				switch (Tools.expr(e))
 				{
 					case EField(e, f):
@@ -699,7 +699,7 @@ class Interp
 		}
 		return null;
 	}
-
+	
 	function doWhileLoop(econd, e)
 	{
 		var old = declared.length;
@@ -724,7 +724,7 @@ class Interp
 		while (expr(econd) == true);
 		restore(old);
 	}
-
+	
 	function whileLoop(econd, e)
 	{
 		var old = declared.length;
@@ -748,7 +748,7 @@ class Interp
 		}
 		restore(old);
 	}
-
+	
 	function makeIterator(v:Dynamic):Iterator<Dynamic>
 	{
 		#if ((flash && !flash9) || (php && !php7 && haxe_ver < '4.0.0'))
@@ -766,7 +766,7 @@ class Interp
 			error(EInvalidIterator(v));
 		return v;
 	}
-
+	
 	function forLoop(n, it, e)
 	{
 		var old = declared.length;
@@ -793,27 +793,27 @@ class Interp
 		}
 		restore(old);
 	}
-
+	
 	inline function isMap(o:Dynamic):Bool
 	{
 		return (o is IMap);
 	}
-
+	
 	inline function getMapValue(map:Dynamic, key:Dynamic):Dynamic
 	{
 		return cast(map, haxe.Constraints.IMap<Dynamic, Dynamic>).get(key);
 	}
-
+	
 	inline function setMapValue(map:Dynamic, key:Dynamic, value:Dynamic):Void
 	{
 		cast(map, haxe.Constraints.IMap<Dynamic, Dynamic>).set(key, value);
 	}
-
+	
 	function get(o:Dynamic, f:String):Dynamic
 	{
 		if (o == null)
 			error(EInvalidAccess(f));
-
+			
 		var cl = switch (Type.typeof(o))
 		{
 			case TNull:
@@ -834,7 +834,7 @@ class Interp
 			if (ret != null)
 				return ret;
 		}
-
+		
 		return
 		{
 			#if php
@@ -852,12 +852,12 @@ class Interp
 			#end
 		}
 	}
-
+	
 	function set(o:Dynamic, f:String, v:Dynamic):Dynamic
 	{
 		if (o == null)
 			error(EInvalidAccess(f));
-
+			
 		var cl = switch (Type.typeof(o))
 		{
 			case TNull:
@@ -878,11 +878,11 @@ class Interp
 			if (ret != null)
 				return v;
 		}
-
+		
 		Reflect.setProperty(o, f, v);
 		return v;
 	}
-
+	
 	function fcall(o:Dynamic, f:String, args:Array<Dynamic>):Dynamic
 	{
 		var func = get(o, f);
@@ -890,12 +890,12 @@ class Interp
 			error(EInvalidAccess(f));
 		return call(o, func, args);
 	}
-
+	
 	function call(o:Dynamic, f:Dynamic, args:Array<Dynamic>):Dynamic
 	{
 		return Reflect.callMethod(o, f, args);
 	}
-
+	
 	function cnew(cl:String, args:Array<Dynamic>):Dynamic
 	{
 		var c = Type.resolveClass(cl);

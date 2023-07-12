@@ -15,7 +15,7 @@ import states.editors.SongEditorState;
 class SongEditorWaveform extends FlxBasic
 {
 	public var type:WaveformType = NONE;
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
 	var slices:Array<SongEditorWaveformSlice> = [];
@@ -25,7 +25,7 @@ class SongEditorWaveform extends FlxBasic
 	var sound:FlxSound;
 	var buffer:AudioBuffer;
 	var bytes:Bytes;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
@@ -33,19 +33,19 @@ class SongEditorWaveform extends FlxBasic
 		this.playfield = playfield;
 		sliceSize = Std.int(playfield.bg.height);
 		cachedSlices.set(NONE, []);
-
+		
 		reloadWaveform();
-
+		
 		state.rateChanged.add(onRateChanged);
 		Settings.editorScrollSpeed.valueChanged.add(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 	}
-
+	
 	override function draw()
 	{
 		if (slices.length == 0)
 			return;
-
+			
 		var drewSlice = false;
 		for (i in 0...slices.length)
 		{
@@ -59,7 +59,7 @@ class SongEditorWaveform extends FlxBasic
 				return;
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -81,7 +81,7 @@ class SongEditorWaveform extends FlxBasic
 		Settings.editorScrollSpeed.valueChanged.remove(onScrollSpeedChanged);
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 	}
-
+	
 	public function reloadWaveform()
 	{
 		if (cachedSlices.exists(type))
@@ -90,20 +90,20 @@ class SongEditorWaveform extends FlxBasic
 			refreshSlices();
 			return;
 		}
-
+		
 		slices = [];
 		if (type == NONE)
 		{
 			cachedSlices.set(type, slices);
 			return;
 		}
-
+		
 		sound = type == INST ? state.inst : state.vocals;
 		@:privateAccess {
 			buffer = sound._sound.__buffer;
 			bytes = buffer.data.toBytes();
 		}
-
+		
 		var t = 0;
 		while (t < sound.length)
 		{
@@ -113,10 +113,10 @@ class SongEditorWaveform extends FlxBasic
 			slices.push(slice);
 			t += sliceSize;
 		}
-
+		
 		cachedSlices.set(type, slices);
 	}
-
+	
 	/*
 		FROM PSYCH ENGINE
 		Quaver uses some audio library that isn't available in Haxe so I took this from Psych Engine
@@ -124,7 +124,7 @@ class SongEditorWaveform extends FlxBasic
 	function getWaveformData(buffer:AudioBuffer, bytes:Bytes, time:Float, endTime:Float, ?steps:Float):Array<Array<Array<Float>>>
 	{
 		var array:Array<Array<Array<Float>>> = [[[0], [0]], [[0], [0]]];
-
+		
 		var khz = (buffer.sampleRate / 1000);
 		var channels = buffer.channels;
 		var index = Std.int(time * khz);
@@ -139,18 +139,18 @@ class SongEditorWaveform extends FlxBasic
 		var rows:Float = 0;
 		var simpleSample:Bool = true;
 		var v1:Bool = false;
-
+		
 		while (index < (bytes.length - 1))
 		{
 			if (index >= 0)
 			{
 				var byte:Int = bytes.getUInt16(index * channels * 2);
-
+				
 				if (byte > 65535 / 2)
 					byte -= 65535;
-
+					
 				var sample:Float = (byte / 65535);
-
+				
 				if (sample > 0)
 				{
 					if (sample > lmax)
@@ -161,16 +161,16 @@ class SongEditorWaveform extends FlxBasic
 					if (sample < lmin)
 						lmin = sample;
 				}
-
+				
 				if (channels >= 2)
 				{
 					byte = bytes.getUInt16((index * channels * 2) + 2);
-
+					
 					if (byte > 65535 / 2)
 						byte -= 65535;
-
+						
 					sample = (byte / 65535);
-
+					
 					if (sample > 0)
 					{
 						if (sample > rmax)
@@ -183,38 +183,38 @@ class SongEditorWaveform extends FlxBasic
 					}
 				}
 			}
-
+			
 			v1 = samplesPerRowI > 0 ? (index % samplesPerRowI == 0) : false;
 			while (simpleSample ? v1 : rows >= samplesPerRow)
 			{
 				v1 = false;
 				rows -= samplesPerRow;
-
+				
 				gotIndex++;
-
+				
 				var lRMin:Float = Math.abs(lmin);
 				var lRMax:Float = lmax;
-
+				
 				var rRMin:Float = Math.abs(rmin);
 				var rRMax:Float = rmax;
-
+				
 				if (gotIndex > array[0][0].length)
 					array[0][0].push(lRMin);
 				else
 					array[0][0][gotIndex - 1] = array[0][0][gotIndex - 1] + lRMin;
-
+					
 				if (gotIndex > array[0][1].length)
 					array[0][1].push(lRMax);
 				else
 					array[0][1][gotIndex - 1] = array[0][1][gotIndex - 1] + lRMax;
-
+					
 				if (channels >= 2)
 				{
 					if (gotIndex > array[1][0].length)
 						array[1][0].push(rRMin);
 					else
 						array[1][0][gotIndex - 1] = array[1][0][gotIndex - 1] + rRMin;
-
+						
 					if (gotIndex > array[1][1].length)
 						array[1][1].push(rRMax);
 					else
@@ -226,46 +226,46 @@ class SongEditorWaveform extends FlxBasic
 						array[1][0].push(lRMin);
 					else
 						array[1][0][gotIndex - 1] = array[1][0][gotIndex - 1] + lRMin;
-
+						
 					if (gotIndex > array[1][1].length)
 						array[1][1].push(lRMax);
 					else
 						array[1][1][gotIndex - 1] = array[1][1][gotIndex - 1] + lRMax;
 				}
-
+				
 				lmin = 0;
 				lmax = 0;
-
+				
 				rmin = 0;
 				rmax = 0;
 			}
-
+			
 			index++;
 			rows++;
 			if (gotIndex > steps)
 				break;
 		}
-
+		
 		return array;
 	}
-
+	
 	function onRateChanged(_, _)
 	{
 		if (Settings.editorScaleSpeedWithRate.value)
 			refreshSlices();
 	}
-
+	
 	function onScrollSpeedChanged(_, _)
 	{
 		refreshSlices();
 	}
-
+	
 	function onScaleSpeedWithRateChanged(_, _)
 	{
 		if (state.inst.pitch != 1)
 			refreshSlices();
 	}
-
+	
 	function refreshSlices()
 	{
 		for (slice in slices)
@@ -281,7 +281,7 @@ class SongEditorWaveformSlice extends FlxSprite
 	var playfield:SongEditorPlayfield;
 	var sliceSize:Int;
 	var sliceTime:Float;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield, waveformData:Array<Array<Array<Float>>>, sliceSize:Int, sliceTime:Float)
 	{
 		super();
@@ -289,18 +289,18 @@ class SongEditorWaveformSlice extends FlxSprite
 		this.playfield = playfield;
 		this.sliceSize = sliceSize;
 		this.sliceTime = sliceTime;
-
+		
 		createSlice(waveformData);
 		updateSlice();
 	}
-
+	
 	override function destroy()
 	{
 		FlxG.bitmap.remove(graphic);
 		graphic = null;
 		super.destroy();
 	}
-
+	
 	public function updateSlice()
 	{
 		scale.y = state.trackSpeed;
@@ -308,17 +308,17 @@ class SongEditorWaveformSlice extends FlxSprite
 		x = playfield.bg.x;
 		y = state.hitPositionY - sliceTime * state.trackSpeed - height;
 	}
-
+	
 	public function sliceOnScreen()
 	{
 		return sliceTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
 			&& sliceTime * state.trackSpeed <= state.trackPositionY + playfield.bg.height;
 	}
-
+	
 	function createSlice(data:Array<Array<Array<Float>>>)
 	{
 		makeGraphic(Std.int(playfield.bg.width), sliceSize, FlxColor.TRANSPARENT, true, 'waveform');
-
+		
 		var gSize:Int = Std.int(width);
 		var hSize:Int = Std.int(gSize / 2);
 		var lmin:Float = 0;
@@ -330,22 +330,22 @@ class SongEditorWaveformSlice extends FlxSprite
 		var rightLength:Int = (data[1][0].length > data[1][1].length ? data[1][0].length : data[1][1].length);
 		var length:Int = leftLength > rightLength ? leftLength : rightLength;
 		var index:Int;
-
+		
 		pixels.lock();
 		for (i in 0...length)
 		{
 			index = i;
-
+			
 			lmin = FlxMath.bound(((index < data[0][0].length && index >= 0) ? data[0][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
 			lmax = FlxMath.bound(((index < data[0][1].length && index >= 0) ? data[0][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-
+			
 			rmin = FlxMath.bound(((index < data[1][0].length && index >= 0) ? data[1][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
 			rmax = FlxMath.bound(((index < data[1][1].length && index >= 0) ? data[1][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-
+			
 			pixels.fillRect(new Rectangle(hSize - (lmin + rmin), i * size, (lmin + rmin) + (lmax + rmax), size), FlxColor.BLUE);
 		}
 		pixels.unlock();
-
+		
 		flipY = true; // im too lazy to figure out how to flip it in the actual bitmap
 	}
 }

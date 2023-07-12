@@ -18,14 +18,14 @@ class SkinList extends TypedMenuList<SkinItem>
 class SkinItem extends TextMenuItem
 {
 	public var skin:ModSkin;
-
+	
 	var maxWidth:Float = (FlxG.width / 2) - 10;
-
+	
 	public function new(x:Float = 0, y:Float = 0, skin:ModSkin)
 	{
 		this.skin = skin;
 		super(x, y, skin.mod + ':' + skin.name, null);
-
+		
 		label.text = skin.displayName;
 		if (label.width > maxWidth)
 		{

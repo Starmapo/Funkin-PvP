@@ -24,7 +24,7 @@ class EditorInputText extends FlxSpriteGroup
 	public var multiline(get, set):Bool;
 	public var size(get, set):Int;
 	public var textField(default, null):EditorInputTextField;
-
+	
 	var textBorder:FlxSprite;
 	var textBG:FlxSprite;
 	var hasFocus:Bool = false;
@@ -34,11 +34,11 @@ class EditorInputText extends FlxSpriteGroup
 	var lastVolumeDownKeys:Array<FlxKey>;
 	var lastMuteKeys:Array<FlxKey>;
 	var lastDebugToggleKeys:Array<FlxKey>;
-
+	
 	#if FLX_RECORD
 	var lastVCRCancelKeys:Array<FlxKey>;
 	#end
-
+	
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, ?textFieldCamera:FlxCamera)
 	{
 		super(x, y);
@@ -49,28 +49,28 @@ class EditorInputText extends FlxSpriteGroup
 		if (textFieldCamera == null)
 			textFieldCamera = FlxG.camera;
 		lastText = text;
-
+		
 		textField = new EditorInputTextField(1, 1, fieldWidth, text, size, embeddedFont, textFieldCamera);
 		textField.color = FlxColor.BLACK;
-
+		
 		textBorder = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-
+		
 		textBG = new FlxSprite(1, 1).makeGraphic(1, 1, FlxColor.WHITE);
-
+		
 		updateBGSize();
-
+		
 		add(textBorder);
 		add(textBG);
 		add(textField);
-
+		
 		scrollFactor.set();
-
+		
 		textField.textField.addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		textField.textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 	}
-
+	
 	override function update(elapsed:Float) {}
-
+	
 	override function destroy()
 	{
 		FlxDestroyUtil.destroy(focusLost);
@@ -86,7 +86,7 @@ class EditorInputText extends FlxSpriteGroup
 		lastDebugToggleKeys = null;
 		super.destroy();
 	}
-
+	
 	public function updateBGSize()
 	{
 		textBorder.setGraphicSize(textField.width + 2, textField.height + 2);
@@ -94,19 +94,19 @@ class EditorInputText extends FlxSpriteGroup
 		textBG.setGraphicSize(textField.width, textField.height);
 		textBG.updateHitbox();
 	}
-
+	
 	public function resize(width:Float, height:Float)
 	{
 		if (width <= 0)
 			width = textField.width;
 		if (height <= 0)
 			height = textField.height;
-
+			
 		textField.width = textField.textField.width = width;
 		textField.height = textField.textField.height = height;
 		updateBGSize();
 	}
-
+	
 	function onFocusIn(event:FocusEvent)
 	{
 		lastVolumeUpKeys = FlxG.sound.volumeUpKeys;
@@ -116,7 +116,7 @@ class EditorInputText extends FlxSpriteGroup
 		#if FLX_RECORD
 		lastVCRCancelKeys = FlxG.vcr.cancelKeys;
 		#end
-
+		
 		FlxG.sound.volumeUpKeys = null;
 		FlxG.sound.volumeDownKeys = null;
 		FlxG.sound.muteKeys = null;
@@ -124,25 +124,25 @@ class EditorInputText extends FlxSpriteGroup
 		#if FLX_RECORD
 		FlxG.vcr.cancelKeys = null;
 		#end
-
+		
 		if (_displayText != null)
 		{
 			text = '';
 			_displayText = null;
 		}
 	}
-
+	
 	function onFocusOut(event:FocusEvent)
 	{
 		textField.text = filter(text);
 		focusLost.dispatch(text);
-
+		
 		if (lastText != text)
 		{
 			textChanged.dispatch(text, lastText);
 			lastText = text;
 		}
-
+		
 		FlxG.sound.volumeUpKeys = lastVolumeUpKeys;
 		FlxG.sound.volumeDownKeys = lastVolumeDownKeys;
 		FlxG.sound.muteKeys = lastMuteKeys;
@@ -151,14 +151,14 @@ class EditorInputText extends FlxSpriteGroup
 		FlxG.vcr.cancelKeys = lastVCRCancelKeys;
 		#end
 	}
-
+	
 	function filter(text:String)
 	{
 		if (forceCase == UPPER_CASE)
 			text = text.toUpperCase();
 		else if (forceCase == LOWER_CASE)
 			text = text.toLowerCase();
-
+			
 		var pattern:EReg = switch (filterMode)
 		{
 			case ONLY_ALPHA:
@@ -174,23 +174,23 @@ class EditorInputText extends FlxSpriteGroup
 		};
 		if (pattern != null)
 			text = pattern.replace(text, "");
-
+			
 		if (maxLength > 0)
 			text = text.substr(0, maxLength);
-
+			
 		return text;
 	}
-
+	
 	function get_text()
 	{
 		return textField.textField.text;
 	}
-
+	
 	function set_text(value:String)
 	{
 		return lastText = textField.text = filter(value);
 	}
-
+	
 	function set_forceCase(value:LetterCase)
 	{
 		if (forceCase != value)
@@ -200,7 +200,7 @@ class EditorInputText extends FlxSpriteGroup
 		}
 		return value;
 	}
-
+	
 	function set_filterMode(value:FilterMode)
 	{
 		if (filterMode != value)
@@ -210,7 +210,7 @@ class EditorInputText extends FlxSpriteGroup
 		}
 		return value;
 	}
-
+	
 	function set_maxLength(value:Int)
 	{
 		if (maxLength != value && value >= 0)
@@ -222,43 +222,43 @@ class EditorInputText extends FlxSpriteGroup
 		}
 		return value;
 	}
-
+	
 	function get_displayText()
 	{
 		return _displayText;
 	}
-
+	
 	function set_displayText(value:String)
 	{
 		_displayText = value;
 		textField.text = _displayText;
 		return value;
 	}
-
+	
 	function get_multiline()
 	{
 		return textField.textField.multiline;
 	}
-
+	
 	function set_multiline(value:Bool)
 	{
 		textField.textField.multiline = value;
 		textField.textField.wordWrap = value;
 		return value;
 	}
-
+	
 	function get_size()
 	{
 		return textField.size;
 	}
-
+	
 	function set_size(value:Int)
 	{
 		textField.size = value;
 		updateBGSize();
 		return textField.size;
 	}
-
+	
 	override function set_color(value:FlxColor)
 	{
 		textBorder.color = value;
@@ -270,12 +270,12 @@ class EditorInputText extends FlxSpriteGroup
 class EditorInputTextField extends FlxText
 {
 	var textFieldCamera:FlxCamera;
-
+	
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true, textFieldCamera:FlxCamera)
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
 		this.textFieldCamera = textFieldCamera;
-
+		
 		scrollFactor.set();
 		textField.text = text;
 		textField.selectable = true;
@@ -287,62 +287,62 @@ class EditorInputTextField extends FlxText
 		FlxG.signals.gameResized.add(onGameResized);
 		this.text = textField.text;
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		text = textField.text;
 	}
-
+	
 	override function draw()
 	{
 		updateTextField();
 	}
-
+	
 	override function destroy()
 	{
 		FlxG.game.removeChild(textField);
 		FlxG.signals.gameResized.remove(onGameResized);
 		super.destroy();
 	}
-
+	
 	public function updateTextField()
 	{
 		if (textField == null)
 			return;
-
+			
 		textField.x = (x - offset.x) * camera.totalScaleX;
 		textField.y = (y - offset.y) * camera.totalScaleY;
-
+		
 		textField.scaleX = camera.totalScaleX * scale.x;
 		textField.scaleY = camera.totalScaleY * scale.y;
-
+		
 		#if !web
 		textField.x -= 1;
 		textField.y -= 1;
 		#end
-
+		
 		textField.visible = visible && textFieldCamera.visible;
 	}
-
+	
 	function onGameResized(_, _)
 	{
 		updateTextField();
 	}
-
+	
 	override function set_active(value:Bool)
 	{
 		if (textField != null)
 			textField.type = value ? INPUT : DYNAMIC;
 		return super.set_active(value);
 	}
-
+	
 	override function set_visible(value:Bool)
 	{
 		if (textField != null)
 			textField.visible = value && textFieldCamera.visible;
 		return super.set_visible(value);
 	}
-
+	
 	override function set_alpha(value:Float)
 	{
 		value = FlxMath.bound(value, 0, 1);
@@ -350,7 +350,7 @@ class EditorInputTextField extends FlxText
 			textField.alpha = value;
 		return super.set_alpha(value);
 	}
-
+	
 	override function set_text(value:String)
 	{
 		text = value;

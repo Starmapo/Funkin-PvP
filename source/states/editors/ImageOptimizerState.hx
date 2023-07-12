@@ -36,35 +36,35 @@ class ImageOptimizerState extends FNFState
 	var oxipng:Bool = false;
 	var folders:Array<String> = [];
 	var optimizing:Bool = false;
-
+	
 	public function new()
 	{
 		super();
 		checkObjects = true;
 		persistentUpdate = true;
 	}
-
+	
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Image Optimizer");
-
+		
 		mutex = new Mutex();
-
+		
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF353535;
 		add(bg);
-
+		
 		progressText = new FlxText(0, FlxG.height * 0.65);
 		progressText.setFormat(null, 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		progressText.exists = false;
 		add(progressText);
-
+		
 		bar = new FlxBar(0, FlxG.height * 0.75, LEFT_TO_RIGHT, Std.int(FlxG.width / 2));
 		bar.exists = false;
 		bar.screenCenter(X);
 		bar.createFilledBar(FlxColor.BLACK, FlxColor.WHITE);
 		add(bar);
-
+		
 		var tabMenu = new EditorPanel([
 			{
 				name: 'tab',
@@ -72,10 +72,10 @@ class ImageOptimizerState extends FNFState
 			}
 		]);
 		tabMenu.resize(270, 75);
-
+		
 		var tab = tabMenu.createTab('tab');
 		var spacing = 4;
-
+		
 		folders.push("assets/");
 		for (mod in Mods.currentMods)
 		{
@@ -84,10 +84,10 @@ class ImageOptimizerState extends FNFState
 				folder += "/";
 			folders.push(folder);
 		}
-
+		
 		folderDropdown = new EditorDropdownMenu(0, 4, EditorDropdownMenu.makeStrIdLabelArray(folders), null, tabMenu, 160);
 		folderDropdown.x += (tabMenu.width - folderDropdown.width) / 2;
-
+		
 		var optimizeButton = new FlxUIButton(0, folderDropdown.y + folderDropdown.height + spacing, "Optimize Images", function()
 		{
 			if (!optimizing)
@@ -96,17 +96,17 @@ class ImageOptimizerState extends FNFState
 		optimizeButton.resize(120, optimizeButton.height);
 		optimizeButton.x += (tabMenu.width - optimizeButton.width) / 2;
 		tab.add(optimizeButton);
-
+		
 		tab.add(folderDropdown);
 		tabMenu.addGroup(tab);
 		tabMenu.screenCenter();
 		add(tabMenu);
-
+		
 		Application.current.window.onDropFile.add(onDropFile);
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (progress != null)
@@ -144,13 +144,13 @@ class ImageOptimizerState extends FNFState
 			persistentUpdate = false;
 			FlxG.switchState(new ToolboxState());
 		}
-
+		
 		super.update(elapsed);
-
+		
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -161,17 +161,17 @@ class ImageOptimizerState extends FNFState
 		mutex = null;
 		progress = null;
 	}
-
+	
 	function onDropFile(path:String)
 	{
 		if (!FileSystem.isDirectory(path))
 			return;
-
+			
 		path = Path.normalize(path);
 		var cwd = Path.normalize(Sys.getCwd());
 		if (!path.startsWith(cwd))
 			return;
-
+			
 		path = path.substr(cwd.length);
 		if (path.startsWith('/'))
 			path = path.substr(1);
@@ -179,7 +179,7 @@ class ImageOptimizerState extends FNFState
 			path += '/';
 		folderDropdown.selectedLabel = path;
 	}
-
+	
 	function startOptimize()
 	{
 		var folder = folderDropdown.selectedLabel;
@@ -204,10 +204,10 @@ class ImageOptimizerState extends FNFState
 		readFolder(folder);
 		if (images.length < 1)
 			return;
-
+			
 		optimizing = true;
 		doneSpritesheets = canExit = false;
-
+		
 		progress = {current: 0, total: spritesheets.length};
 		progressText.exists = true;
 		progressText.text = "0/" + progress.total + " (0%)";
@@ -215,20 +215,20 @@ class ImageOptimizerState extends FNFState
 		bar.exists = true;
 		bar.setRange(0, Math.max(spritesheets.length, 1));
 		bar.value = 0;
-
+		
 		var i = 0;
 		Thread.create(function()
 		{
 			while (i < spritesheets.length)
 			{
 				optimize(spritesheets[i]);
-
+				
 				i++;
 				mutex.acquire();
 				progress.current = i;
 				mutex.release();
 			}
-
+			
 			if (FileSystem.exists('./oxipng.exe'))
 			{
 				mutex.acquire();
@@ -239,7 +239,7 @@ class ImageOptimizerState extends FNFState
 				for (image in images)
 					Sys.command("oxipng", [image]);
 			}
-
+			
 			mutex.acquire();
 			doneSpritesheets = true;
 			optimizing = oxipng = false;
@@ -247,7 +247,7 @@ class ImageOptimizerState extends FNFState
 			return;
 		});
 	}
-
+	
 	function optimize(path:String)
 	{
 		mutex.acquire();
@@ -256,7 +256,7 @@ class ImageOptimizerState extends FNFState
 		if (frames == null)
 			return;
 		var image = frames.parent;
-
+		
 		function dispose()
 		{
 			mutex.acquire();
@@ -264,7 +264,7 @@ class ImageOptimizerState extends FNFState
 			frames.destroy();
 			mutex.release();
 		}
-
+		
 		var maxX = 0;
 		var maxY = 0;
 		for (frame in frames.frames)
@@ -281,9 +281,9 @@ class ImageOptimizerState extends FNFState
 			dispose();
 			return;
 		}
-
+		
 		File.saveBytes(path + ".png", image.bitmap.encode(new Rectangle(0, 0, maxX, maxY), new PNGEncoderOptions()));
-
+		
 		dispose();
 	}
 }

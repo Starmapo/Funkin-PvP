@@ -13,12 +13,12 @@ using StringTools;
 class AnimatedSprite extends FlxSprite
 {
 	public var offsets:Map<String, Array<Float>> = new Map();
-
+	
 	/**
 		Gets dispatched when this sprite plays an animation.
 	**/
 	public var onAnimPlayed:FlxTypedSignal<String->Void> = new FlxTypedSignal();
-
+	
 	public function new(x:Float = 0, y:Float = 0, ?frames:FlxAtlasFrames, scale:Float = 1)
 	{
 		super(x, y);
@@ -26,14 +26,14 @@ class AnimatedSprite extends FlxSprite
 			this.frames = frames;
 		this.scale.set(scale, scale);
 	}
-
+	
 	/**
 		Adds a new animation using `AnimData`.
 	**/
 	public function addAnim(data:AnimData, baseAnim:Bool = false)
 	{
 		data = resolveAnimData(data);
-
+		
 		if (data.indices != null && data.indices.length > 0)
 		{
 			if (data.atlasName != null && data.atlasName.length > 0)
@@ -53,14 +53,14 @@ class AnimatedSprite extends FlxSprite
 			else
 				animation.addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
 		}
-
+		
 		if (data.offset != null && data.offset.length >= 2)
 			addOffset(data.name, data.offset[0], data.offset[1]);
-
+			
 		if (baseAnim)
 			playAnim(data.name, true);
 	}
-
+	
 	/**
 		Plays an animation in this sprite.
 		@param name 	The name of the animation.
@@ -74,18 +74,18 @@ class AnimatedSprite extends FlxSprite
 			return;
 		if (animation.name == name && !force && !animation.curAnim.finished)
 			return;
-
+			
 		animation.play(name, force, reversed, frame);
 		updateOffset();
 		animPlayed(name);
 		onAnimPlayed.dispatch(name);
 	}
-
+	
 	/**
 		This function is called after an animation is played. You can override this with whatever you wish.
 	**/
 	public function animPlayed(name:String) {}
-
+	
 	public function updateOffset()
 	{
 		updateHitbox();
@@ -95,38 +95,38 @@ class AnimatedSprite extends FlxSprite
 		else
 			frameOffset.set();
 	}
-
+	
 	public function stopAnimCallback()
 	{
 		animation.finishCallback = null;
 	}
-
+	
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 	{
 		offsets.set(name, [x, y]);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		offsets = null;
 		FlxDestroyUtil.destroy(onAnimPlayed);
 	}
-
+	
 	function resolveAnimData(data:AnimData)
 	{
 		if (data.fps == null)
 			data.fps = 24;
-
+			
 		if (data.loop == null)
 			data.loop = true;
-
+			
 		if (data.flipX == null)
 			data.flipX = false;
-
+			
 		if (data.flipY == null)
 			data.flipY = false;
-
+			
 		return data;
 	}
 }
@@ -137,7 +137,7 @@ typedef AnimData =
 		What this animation should be called.
 	**/
 	name:String,
-
+	
 	/**
 		The animation's name in the atlas. Optional if you input `indices`.
 	**/

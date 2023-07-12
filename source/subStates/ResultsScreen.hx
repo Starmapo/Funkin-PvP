@@ -19,20 +19,20 @@ class ResultsScreen extends FNFSubState
 	static final PLAYER_1_WIN:String = 'Player 1 wins!';
 	static final PLAYER_2_WIN:String = 'Player 2 wins!';
 	static final TIE:String = 'Tie!';
-
+	
 	public var winner:Int;
-
+	
 	var state:PlayState;
 	var canExit:Bool = false;
-
+	
 	public function new(state:PlayState)
 	{
 		super();
 		this.state = state;
-
+		
 		createCamera();
 		camSubState.alpha = 0;
-
+		
 		var scores = [for (i in 0...2) state.ruleset.playfields[i].scoreProcessor];
 		var winText = '';
 		if (state.died)
@@ -72,18 +72,18 @@ class ResultsScreen extends FNFSubState
 			case PLAYER_2_WIN: 1;
 			default: -1;
 		}
-
+		
 		var titleText = new FlxText(0, 10, 0, winText);
 		titleText.setFormat('PhantomMuff 1.5', 64, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		titleText.screenCenter(X);
 		titleText.active = false;
 		add(titleText);
-
+		
 		for (i in 0...2)
 		{
 			var display = new PlayerStatsDisplay(scores[i], 32, 180);
 			add(display);
-
+			
 			if (!state.died)
 			{
 				var color = (winner < 0 || i == winner) ? FlxColor.LIME : FlxColor.RED;
@@ -97,32 +97,33 @@ class ResultsScreen extends FNFSubState
 						display.missText.color = color;
 				}
 			}
-
+			
 			var addX = (i > 0 ? (FlxG.width / 2) : 0);
-
+			
 			var judgementText = new FlxText(5 + addX, display.missText.y + display.missText.height + 50, (FlxG.width / 2) - 10, 'Judgements:');
 			judgementText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 			judgementText.active = false;
 			add(judgementText);
-
+			
 			var curY = judgementText.y + judgementText.height + 2;
 			for (judgement in 0...5)
 			{
-				var ratingText = new FlxText(5 + addX, curY, (FlxG.width / 2) - 10, (judgement : Judgement).getName() + ': ' + scores[i].currentJudgements[judgement]);
+				var ratingText = new FlxText(5 + addX, curY, (FlxG.width / 2) - 10,
+					(judgement : Judgement).getName() + ': ' + scores[i].currentJudgements[judgement]);
 				ratingText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 				ratingText.active = false;
 				add(ratingText);
 				curY += ratingText.height + 2;
 			}
 		}
-
+		
 		var pressText = new FlxText(0, FlxG.height - 10, 0, 'Press ACCEPT to continue\nPress RESET to restart the song');
 		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.screenCenter(X);
 		pressText.y -= pressText.height;
 		pressText.active = false;
 		add(pressText);
-
+		
 		FlxTween.tween(camSubState, {alpha: 1}, Main.getTransitionTime(), {
 			ease: FlxEase.expoInOut,
 			onComplete: function(_)
@@ -131,7 +132,7 @@ class ResultsScreen extends FNFSubState
 			}
 		});
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (canExit)
@@ -149,13 +150,13 @@ class ResultsScreen extends FNFSubState
 			}
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
 	}
-
+	
 	function compare(a:Float, b:Float)
 	{
 		if (a > b)
@@ -165,7 +166,7 @@ class ResultsScreen extends FNFSubState
 		else
 			return TIE;
 	}
-
+	
 	function compareReverse(a:Float, b:Float)
 	{
 		if (a < b)

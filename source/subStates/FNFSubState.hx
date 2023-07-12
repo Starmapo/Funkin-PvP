@@ -14,10 +14,10 @@ class FNFSubState extends FlxSubState
 {
 	public var dropdowns:Array<FlxUIDropDownMenu> = [];
 	public var inputTexts:Array<EditorInputText> = [];
-
+	
 	var checkObjects:Bool = false;
 	var camSubState:FlxCamera;
-
+	
 	public function new()
 	{
 		super();
@@ -25,21 +25,21 @@ class FNFSubState extends FlxSubState
 		openCallback = onOpen;
 		closeCallback = onClose;
 	}
-
+	
 	public function checkAllowInput()
 	{
 		if (FlxG.stage.focus != null)
 			return false;
-
+			
 		for (dropdown in dropdowns)
 		{
 			if (dropdown.dropPanel.exists)
 				return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -49,7 +49,7 @@ class FNFSubState extends FlxSubState
 			FlxG.cameras.remove(camSubState);
 		camSubState = null;
 	}
-
+	
 	function onOpen()
 	{
 		if (camSubState != null)
@@ -57,7 +57,7 @@ class FNFSubState extends FlxSubState
 		for (text in inputTexts)
 			text.visible = true;
 	}
-
+	
 	function onClose()
 	{
 		if (camSubState != null)
@@ -65,13 +65,13 @@ class FNFSubState extends FlxSubState
 		for (text in inputTexts)
 			text.visible = false;
 	}
-
+	
 	function onMemberAdded(obj:FlxBasic)
 	{
 		if (checkObjects)
 			check(obj);
 	}
-
+	
 	function check(obj:FlxBasic)
 	{
 		if (Std.isOfType(obj, FlxUIDropDownMenu))
@@ -97,14 +97,14 @@ class FNFSubState extends FlxSubState
 				check(obj);
 		}
 	}
-
+	
 	function createCamera(?bgColor:FlxColor)
 	{
 		if (camSubState != null)
 			return;
 		if (bgColor == null)
 			bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.6);
-
+			
 		camSubState = new FlxCamera();
 		camSubState.bgColor = bgColor;
 		camSubState.visible = false;

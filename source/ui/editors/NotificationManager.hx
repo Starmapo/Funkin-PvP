@@ -14,7 +14,7 @@ import openfl.geom.Rectangle;
 class NotificationManager extends FlxTypedGroup<Notification>
 {
 	static final startY:Int = 50;
-
+	
 	override function update(elapsed:Float)
 	{
 		var targetY:Float = startY;
@@ -27,7 +27,7 @@ class NotificationManager extends FlxTypedGroup<Notification>
 			targetY += text.height + 10;
 		}
 	}
-
+	
 	public function showNotification(info:String, level:NotificationLevel = INFO)
 	{
 		var notification = new Notification(info, level);
@@ -67,32 +67,32 @@ class Notification extends FlxSpriteGroup
 				0xFF0FBAE5;
 		}
 	}
-
+	
 	var bg:FlxUI9SliceSprite;
 	var text:FlxUIText;
-
+	
 	public function new(info:String, level:NotificationLevel)
 	{
 		super();
-
+		
 		bg = new FlxUI9SliceSprite(0, 0, Paths.getImage('editors/notification'), new Rectangle(), [6, 6, 11, 11]);
-
+		
 		text = new FlxUIText(0, 0, info);
 		text.setFormat('VCR OSD Mono', 14, getLevelColor(level));
 		var maxWidth = FlxG.width - 20;
 		if (text.width > maxWidth)
 			text.fieldWidth = maxWidth;
-
+			
 		bg.resize(text.width + 10, text.height + 10);
 		text.setPosition((bg.width / 2) - (text.width / 2), (bg.height / 2) - (text.height / 2));
-
+		
 		add(bg);
 		add(text);
-
+		
 		alpha = 0;
 		scrollFactor.set();
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

@@ -10,20 +10,20 @@ class JudgementCounter extends FlxText
 {
 	var scoreProcessor:ScoreProcessor;
 	var right:Bool;
-
+	
 	public function new(scoreProcessor:ScoreProcessor)
 	{
 		super();
 		this.scoreProcessor = scoreProcessor;
-
+		
 		right = scoreProcessor.player > 0;
 		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, right ? RIGHT : LEFT, OUTLINE, FlxColor.BLACK);
-
+		
 		updateText();
 	}
-
+	
 	override function update(elapsed:Float) {}
-
+	
 	public function updateText()
 	{
 		var t = '';
@@ -33,7 +33,7 @@ class JudgementCounter extends FlxText
 			if (i < 4)
 				t += '\n';
 		}
-
+		
 		if (text != t)
 		{
 			text = t;
@@ -41,7 +41,7 @@ class JudgementCounter extends FlxText
 			screenCenter(Y);
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

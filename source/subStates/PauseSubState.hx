@@ -24,16 +24,16 @@ class PauseSubState extends FNFSubState
 	var camFollow:FlxObject;
 	var playerText:FlxText;
 	var music:FlxSound;
-
+	
 	public function new(state:PlayState)
 	{
 		super();
 		this.state = state;
-
+		
 		music = FlxG.sound.load(Paths.getMusic('Breakfast'), 0, true, FlxG.sound.defaultMusicGroup);
-
+		
 		createCamera();
-
+		
 		menuList = new PauseMenuList();
 		menuList.onChange.add(onChange);
 		menuList.createItem('Resume', function()
@@ -78,31 +78,31 @@ class PauseSubState extends FNFSubState
 			CoolUtil.playPvPMusic();
 		});
 		add(menuList);
-
+		
 		playerText = new FlxText(0, 10);
 		playerText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		playerText.scrollFactor.set();
 		playerText.active = false;
 		add(playerText);
-
+		
 		camFollow = new FlxObject(FlxG.width / 2);
 		camFollow.exists = false;
 		add(camFollow);
-
+		
 		camSubState.follow(camFollow, LOCKON, 0.1);
-
+		
 		menuList.selectItem(0);
 		camSubState.snapToTarget();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (music.volume < 0.5)
 			music.volume = Math.min(music.volume + (elapsed * 0.01), 0.5);
-
+			
 		super.update(elapsed);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -113,32 +113,32 @@ class PauseSubState extends FNFSubState
 		playerText = FlxDestroyUtil.destroy(playerText);
 		music = FlxDestroyUtil.destroy(music);
 	}
-
+	
 	override function onOpen()
 	{
 		music.volume = 0;
 		music.play(false, FlxG.random.float(0, music.length / 2));
 		super.onOpen();
 	}
-
+	
 	override function onClose()
 	{
 		music.stop();
 		super.onClose();
 	}
-
+	
 	public function setPlayer(player:Int)
 	{
 		menuList.controlsMode = PLAYER(player);
 		playerText.text = 'P' + (player + 1) + ' PAUSE';
 		playerText.x = FlxG.width - 10 - playerText.width;
 	}
-
+	
 	function onChange(item:TextMenuItem)
 	{
 		updateCamFollow(item);
 	}
-
+	
 	function updateCamFollow(item:TextMenuItem)
 	{
 		var midpoint = item.getMidpoint();

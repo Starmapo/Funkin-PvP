@@ -8,7 +8,7 @@ class GameplayPage extends BaseSettingsPage
 	{
 		super();
 		rpcDetails = 'Gameplay Options';
-
+		
 		addSetting({
 			name: 'lowQuality',
 			displayName: 'Low Quality',
@@ -119,7 +119,7 @@ class GameplayPage extends BaseSettingsPage
 				type: CHECKBOX
 			});
 		 */
-
+		
 		addPageTitle('Gameplay');
 	}
 }

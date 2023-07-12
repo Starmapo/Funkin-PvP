@@ -16,21 +16,21 @@ import util.editors.song.SongEditorActionManager;
 class SongEditorNoteGroup extends FlxBasic
 {
 	public var notes:Array<SongEditorNote> = [];
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
 	var notePool:Array<SongEditorNote>;
 	var lastPooledNoteIndex:Int = -1;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield)
 	{
 		super();
 		this.state = state;
 		this.playfield = playfield;
-
+		
 		for (note in state.song.notes)
 			createNote(note);
-
+			
 		initializeNotePool();
 		state.songSeeked.add(onSongSeeked);
 		state.rateChanged.add(onRateChanged);
@@ -43,7 +43,7 @@ class SongEditorNoteGroup extends FlxBasic
 		Settings.editorScaleSpeedWithRate.valueChanged.add(onScaleSpeedWithRateChanged);
 		Settings.editorLongNoteAlpha.valueChanged.add(onLongNoteAlphaChanged);
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		var i = notePool.length - 1;
@@ -54,7 +54,7 @@ class SongEditorNoteGroup extends FlxBasic
 				notePool.remove(note);
 			i--;
 		}
-
+		
 		var i = lastPooledNoteIndex + 1;
 		while (i < notes.length)
 		{
@@ -67,7 +67,7 @@ class SongEditorNoteGroup extends FlxBasic
 			i++;
 		}
 	}
-
+	
 	override function draw()
 	{
 		for (i in 0...notePool.length)
@@ -77,7 +77,7 @@ class SongEditorNoteGroup extends FlxBasic
 				note.draw();
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -89,21 +89,21 @@ class SongEditorNoteGroup extends FlxBasic
 		Settings.editorScaleSpeedWithRate.valueChanged.remove(onScaleSpeedWithRateChanged);
 		Settings.editorLongNoteAlpha.valueChanged.remove(onLongNoteAlphaChanged);
 	}
-
+	
 	public function getHoveredNote()
 	{
 		if (FlxG.mouse.overlaps(state.playfieldTabs))
 			return null;
-
+			
 		for (note in notePool)
 		{
 			if (note.isHovered())
 				return note;
 		}
-
+		
 		return null;
 	}
-
+	
 	function createNote(info:NoteInfo, insertAtIndex:Bool = false)
 	{
 		var note = new SongEditorNote(state, playfield, info);
@@ -111,36 +111,36 @@ class SongEditorNoteGroup extends FlxBasic
 		if (insertAtIndex)
 			notes.sort(sortNotes);
 	}
-
+	
 	function sortNotes(a:SongEditorNote, b:SongEditorNote)
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, a.info.startTime, b.info.startTime);
 	}
-
+	
 	function sortInfos(a:NoteInfo, b:NoteInfo)
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
 	}
-
+	
 	function refreshPositions()
 	{
 		for (note in notes)
 			note.updatePosition();
 		initializeNotePool();
 	}
-
+	
 	function refreshPositionsAndSizes()
 	{
 		for (note in notes)
 			note.refreshPositionAndSize();
 		initializeNotePool();
 	}
-
+	
 	function initializeNotePool()
 	{
 		notePool = [];
 		lastPooledNoteIndex = -1;
-
+		
 		for (i in 0...notes.length)
 		{
 			var note = notes[i];
@@ -149,7 +149,7 @@ class SongEditorNoteGroup extends FlxBasic
 			notePool.push(note);
 			lastPooledNoteIndex = i;
 		}
-
+		
 		if (lastPooledNoteIndex == -1)
 		{
 			lastPooledNoteIndex = notes.length - 1;
@@ -162,35 +162,35 @@ class SongEditorNoteGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function onSongSeeked(_, _)
 	{
 		initializeNotePool();
 	}
-
+	
 	function onRateChanged(_, _)
 	{
 		if (Settings.editorScaleSpeedWithRate.value)
 			refreshPositionsAndSizes();
 	}
-
+	
 	function onScrollSpeedChanged(_, _)
 	{
 		refreshPositionsAndSizes();
 	}
-
+	
 	function onScaleSpeedWithRateChanged(_, _)
 	{
 		if (state.inst.pitch != 1)
 			refreshPositionsAndSizes();
 	}
-
+	
 	function onLongNoteAlphaChanged(_, _)
 	{
 		for (note in notes)
 			note.updateLongNoteAlpha();
 	}
-
+	
 	function onEvent(type:String, params:Dynamic)
 	{
 		switch (type)
@@ -310,7 +310,7 @@ class SongEditorNoteGroup extends FlxBasic
 				initializeNotePool();
 		}
 	}
-
+	
 	function onSelectedNote(info:ITimingObject)
 	{
 		if (Std.isOfType(info, NoteInfo))
@@ -325,7 +325,7 @@ class SongEditorNoteGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function onDeselectedNote(info:ITimingObject)
 	{
 		if (Std.isOfType(info, NoteInfo))
@@ -340,7 +340,7 @@ class SongEditorNoteGroup extends FlxBasic
 			}
 		}
 	}
-
+	
 	function onMultipleNotesSelected(array:Array<ITimingObject>)
 	{
 		for (note in notes)
@@ -349,7 +349,7 @@ class SongEditorNoteGroup extends FlxBasic
 				note.selectionSprite.visible = true;
 		}
 	}
-
+	
 	function onAllNotesDeselected()
 	{
 		for (note in notes)
@@ -365,10 +365,10 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 	public var body:AnimatedSprite;
 	public var tail:AnimatedSprite;
 	public var selectionSprite:FlxSprite;
-
+	
 	var state:SongEditorState;
 	var playfield:SongEditorPlayfield;
-
+	
 	public function new(state:SongEditorState, playfield:SongEditorPlayfield, info:NoteInfo)
 	{
 		super();
@@ -376,9 +376,9 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		this.playfield = playfield;
 		this.info = info;
 		noteInfo = info;
-
+		
 		var noteGraphic = Paths.getSpritesheet('notes/default');
-
+		
 		body = new AnimatedSprite(0, 0, noteGraphic);
 		body.addAnim({
 			name: '0',
@@ -402,7 +402,7 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		});
 		body.flipY = true;
 		add(body);
-
+		
 		tail = new AnimatedSprite(0, 0, noteGraphic);
 		tail.addAnim({
 			name: '0',
@@ -427,7 +427,7 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		tail.flipY = true;
 		tail.antialiasing = true;
 		add(tail);
-
+		
 		head = new AnimatedSprite(0, 0, noteGraphic);
 		head.addAnim({
 			name: '0',
@@ -451,15 +451,15 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		});
 		head.antialiasing = true;
 		add(head);
-
+		
 		selectionSprite = new FlxSprite().makeGraphic(1, 1);
 		selectionSprite.alpha = 0.5;
 		selectionSprite.visible = false;
 		add(selectionSprite);
-
+		
 		refresh();
 	}
-
+	
 	override function draw()
 	{
 		if (noteInfo.isLongNote)
@@ -471,7 +471,7 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		if (selectionSprite.visible)
 			selectionSprite.draw();
 	}
-
+	
 	public function updateAnims()
 	{
 		var anim = Std.string(noteInfo.playerLane);
@@ -479,24 +479,24 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		body.playAnim(anim);
 		tail.playAnim(anim);
 	}
-
+	
 	public function updatePosition()
 	{
 		x = playfield.bg.x + playfield.columnSize * noteInfo.lane + 2;
 		y = state.hitPositionY - info.startTime * state.trackSpeed - head.height;
 	}
-
+	
 	public function updateSize()
 	{
 		head.setGraphicSize(playfield.columnSize - 2);
 		head.updateHitbox();
 	}
-
+	
 	public function updateLongNote()
 	{
 		if (!noteInfo.isLongNote)
 			return;
-
+			
 		tail.scale.copyFrom(head.scale);
 		tail.updateHitbox();
 		body.setGraphicSize(body.frameWidth, getLongNoteHeight());
@@ -507,15 +507,15 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		tail.x = head.x + (head.width / 2) - (tail.width / 2);
 		tail.y = body.y - tail.height;
 	}
-
+	
 	public function updateLongNoteAlpha()
 	{
 		if (!noteInfo.isLongNote)
 			return;
-
+			
 		body.alpha = tail.alpha = Settings.editorLongNoteAlpha.value;
 	}
-
+	
 	public function updateSelectionSprite()
 	{
 		if (noteInfo.isLongNote)
@@ -530,17 +530,17 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 			selectionSprite.setGraphicSize(head.width, head.height + 20);
 			selectionSprite.updateHitbox();
 		}
-
+		
 		selectionSprite.setPosition(head.x, head.y + head.height - selectionSprite.height + 10);
 	}
-
+	
 	public function refresh()
 	{
 		updateAnims();
 		refreshPositionAndSize();
 		updateLongNoteAlpha();
 	}
-
+	
 	public function refreshPositionAndSize()
 	{
 		updateSize();
@@ -548,44 +548,44 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		updateLongNote();
 		updateSelectionSprite();
 	}
-
+	
 	public function isHovered()
 	{
 		var headHovered = FlxG.mouse.overlaps(head);
 		if (!noteInfo.isLongNote)
 			return headHovered;
-
+			
 		return headHovered || FlxG.mouse.overlaps(body) || FlxG.mouse.overlaps(tail);
 	}
-
+	
 	public function objectOnScreen()
 	{
 		if (info.startTime * state.trackSpeed >= state.trackPositionY - playfield.bg.height
 			&& info.startTime * state.trackSpeed <= state.trackPositionY + playfield.bg.height)
 			return true;
-
+			
 		if (state.inst.time >= info.startTime && state.inst.time <= noteInfo.endTime + 1000)
 			return true;
-
+			
 		return false;
 	}
-
+	
 	function getLongNoteHeight():Float
 	{
 		if (!noteInfo.isLongNote)
 			return 0;
-
+			
 		return Math.abs(state.hitPositionY - noteInfo.endTime * state.trackSpeed - head.height / 2 - y);
 	}
-
+	
 	function onDeselectedNote(note:NoteInfo)
 	{
 		if (info != note)
 			return;
-
+			
 		selectionSprite.visible = false;
 	}
-
+	
 	function onAllNotesDeselected()
 	{
 		selectionSprite.visible = false;

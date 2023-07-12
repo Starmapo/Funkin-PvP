@@ -23,9 +23,9 @@ import util.DiscordClient;
 class RulesetState extends FNFState
 {
 	static var lastSelected:Int = 0;
-
+	
 	public var items:SettingsMenuList;
-
+	
 	var camScroll:FlxCamera;
 	var camOver:FlxCamera;
 	var iconScroll:FlxBackdrop;
@@ -36,33 +36,33 @@ class RulesetState extends FNFState
 	var camFollow:FlxObject;
 	var stateText:FlxText;
 	var judgementPresetsSubState:JudgementPresetsSubState;
-
+	
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Ruleset Options");
-
+		
 		transIn = transOut = null;
 		destroySubStates = false;
-
+		
 		camScroll = new FlxCamera();
 		camScroll.bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.5);
 		FlxG.cameras.add(camScroll, false);
 		camOver = new FlxCamera();
 		camOver.bgColor = 0;
 		FlxG.cameras.add(camOver, false);
-
+		
 		judgementPresetsSubState = new JudgementPresetsSubState(this);
-
+		
 		camFollow = new FlxObject(FlxG.width / 2);
 		FlxG.camera.follow(camFollow, LOCKON, 0.1);
 		add(camFollow);
-
+		
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF21007F;
 		add(bg);
-
+		
 		add(new VoidBG());
-
+		
 		stateText = new FlxText(0, 0, 0, 'Ruleset');
 		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		stateText.screenCenter(X);
@@ -70,34 +70,34 @@ class RulesetState extends FNFState
 		stateText.cameras = [camOver];
 		camScroll.height = Math.ceil(stateText.height);
 		stateText.y = camScroll.y -= camScroll.height;
-
+		
 		iconScroll = new FlxBackdrop(Paths.getImage('menus/pvp/iconScroll'));
 		iconScroll.alpha = 0.5;
 		iconScroll.cameras = [camScroll];
 		iconScroll.velocity.set(25, 25);
 		iconScroll.scale.set(0.5, 0.5);
 		iconScroll.antialiasing = true;
-
+		
 		add(iconScroll);
 		add(stateText);
-
+		
 		descBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		descBG.scrollFactor.set();
 		descBG.alpha = 0.8;
 		descBG.cameras = [camOver];
-
+		
 		descText = new FlxText(0, 0, FlxG.width - 10);
 		descText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		descText.scrollFactor.set();
 		descText.cameras = [camOver];
-
+		
 		items = new SettingsMenuList();
 		items.onChange.add(onChange);
 		items.controlsEnabled = false;
 		add(items);
-
+		
 		var duration = Main.getTransitionTime();
-
+		
 		addSetting({
 			name: 'singleSongSelection',
 			displayName: 'Single Song Selection',
@@ -346,13 +346,13 @@ class RulesetState extends FNFState
 			FlxFlicker.flicker(items.selectedItem, duration, 0.06, true, false);
 			CoolUtil.playConfirmSound();
 		});
-
+		
 		items.selectItem(lastSelected);
 		FlxG.camera.snapToTarget();
-
+		
 		add(descBG);
 		add(descText);
-
+		
 		FlxG.camera.zoom = 3;
 		FlxTween.tween(camScroll, {y: 0}, duration, {ease: FlxEase.expoOut});
 		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
@@ -364,16 +364,16 @@ class RulesetState extends FNFState
 			}
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
-
+		
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playPvPMusic(0);
 			FlxG.sound.music.fadeIn(duration);
 		}
-
+		
 		super.create();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (!transitioning && PlayerSettings.checkAction(BACK_P))
@@ -384,9 +384,9 @@ class RulesetState extends FNFState
 			});
 			CoolUtil.playCancelSound();
 		}
-
+		
 		super.update(elapsed);
-
+		
 		// prevent overflow (it would probably take an eternity for that to happen but you can never be too safe)
 		if (iconScroll.x >= 300)
 		{
@@ -396,11 +396,11 @@ class RulesetState extends FNFState
 		{
 			iconScroll.y %= 300;
 		}
-
+		
 		stateText.y = camScroll.y;
 		descBG.y = descText.y - 2;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -415,21 +415,21 @@ class RulesetState extends FNFState
 		stateText = null;
 		judgementPresetsSubState = FlxDestroyUtil.destroy(judgementPresetsSubState);
 	}
-
+	
 	function onChange(item:SettingsMenuItem)
 	{
 		updateCamFollow(item);
 		updateDesc(item, true);
 		lastSelected = item.ID;
 	}
-
+	
 	function updateCamFollow(item:SettingsMenuItem)
 	{
 		var midpoint = item.getMidpoint();
 		camFollow.y = midpoint.y;
 		midpoint.put();
 	}
-
+	
 	function updateDesc(item:SettingsMenuItem, tween:Bool = false)
 	{
 		descText.text = item.data.description;
@@ -439,16 +439,16 @@ class RulesetState extends FNFState
 		descBG.updateHitbox();
 		descBG.setPosition(descText.x - 2, descText.y - 2);
 		descBG.visible = descText.visible = descText.text.length > 0;
-
+		
 		if (tween)
 			tweenDesc();
 	}
-
+	
 	function tweenDesc()
 	{
 		if (descTween != null)
 			descTween.cancel();
-
+			
 		descText.y -= 10;
 		descBG.y = descText.y - 2;
 		descTween = FlxTween.tween(descText, {y: descText.y + 10}, 0.2, {
@@ -458,13 +458,13 @@ class RulesetState extends FNFState
 			}
 		});
 	}
-
+	
 	function addSetting(data:SettingData, ?callback:Void->Void)
 	{
 		var item = new SettingsMenuItem(0, items.length * 140, data.displayName, callback, data);
 		return items.addItem(item.name, item);
 	}
-
+	
 	function exitTransition(fadeMusic:Bool, onComplete:FlxTween->Void)
 	{
 		Settings.saveData();
@@ -483,13 +483,13 @@ class RulesetState extends FNFState
 			{
 				if (fadeMusic)
 					FlxG.sound.music.stop();
-
+					
 				onComplete(twn);
 			}
 		});
 		camOver.fade(FlxColor.BLACK, duration, false, null, true);
 	}
-
+	
 	function forceSettingOff(name:String)
 	{
 		var item = items.getItemByName(name);

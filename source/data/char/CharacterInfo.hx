@@ -22,18 +22,18 @@ class CharacterInfo extends JsonObject
 	{
 		if (!Paths.exists(path))
 			return null;
-
+			
 		var json:Dynamic = Paths.getJson(path);
 		if (json == null)
 			return null;
-
+			
 		var converted = false;
 		if (json.sing_duration != null)
 		{
 			json = convertPsychCharacter(json);
 			converted = true;
 		}
-
+		
 		var charInfo = new CharacterInfo(json);
 		charInfo.directory = Path.normalize(Path.directory(path));
 		charInfo.name = new Path(path).file;
@@ -43,7 +43,7 @@ class CharacterInfo extends JsonObject
 			charInfo.save(path);
 		return charInfo;
 	}
-
+	
 	/**
 		Loads a character file from a name.
 
@@ -61,14 +61,14 @@ class CharacterInfo extends JsonObject
 			if (Paths.exists(path))
 				return loadCharacter(path);
 		}
-
+		
 		var path = Paths.getPath('data/characters/$name.json');
 		if (Paths.exists(path))
 			return loadCharacter(path);
-
+			
 		return loadCharacter(Paths.getPath('data/characters/$name.json', 'fnf'));
 	}
-
+	
 	static function convertPsychCharacter(json:Dynamic):Dynamic
 	{
 		var charInfo:Dynamic = {
@@ -82,7 +82,7 @@ class CharacterInfo extends JsonObject
 			healthColors: json.healthbar_colors,
 			danceAnims: ['idle']
 		};
-
+		
 		var jsonAnims:Array<Dynamic> = json.animations;
 		var animMap = new Map<String, Bool>();
 		for (anim in jsonAnims)
@@ -100,7 +100,7 @@ class CharacterInfo extends JsonObject
 		}
 		if (animMap.exists('danceLeft') && animMap.exists('danceRight'))
 			charInfo.danceAnims = ['danceLeft', 'danceRight'];
-
+			
 		var anims:Array<Dynamic> = charInfo.anims;
 		for (anim in anims)
 		{
@@ -108,99 +108,99 @@ class CharacterInfo extends JsonObject
 			if (animMap.exists(loopName))
 				anim.nextAnim = loopName;
 		}
-
+		
 		return charInfo;
 	}
-
+	
 	/**
 		The name of the image file for this character. If it contains a colon `:`, it will use the name before it as the
 		mod directory. Defaults to Daddy Dearest's spritesheet.
 	**/
 	public var image:String;
-
+	
 	/**
 		An array of animations for this character.
 	**/
 	public var anims:Array<AnimInfo> = [];
-
+	
 	/**
 		An array of animation names to use for this character's dance. Defaults to `["idle"]`.
 	**/
 	public var danceAnims:Array<String>;
-
+	
 	/**
 		Whether or not the character should be flipped horizontally on the left side. Defaults to `false`.
 	**/
 	public var flipX:Bool;
-
+	
 	/**
 		The scaling factor for this character. Defaults to `1`, or no scaling.
 	**/
 	public var scale:Float;
-
+	
 	/**
 		Whether or not the character should have antialiasing. Defaults to `true`.
 	**/
 	public var antialiasing:Bool;
-
+	
 	/**
 		The position offset for this character. Will be automatically flipped when playing on the right side.
 	**/
 	public var positionOffset:Array<Float>;
-
+	
 	/**
 		The camera offset for this character. Will be automatically flipped when playing on the right side.
 	**/
 	public var cameraOffset:Array<Float>;
-
+	
 	/**
 		The name for this character's health bar icon. If it contains a colon `:`, it will use the name before it as the
 		mod directory. Defaults to `"face"`.
 	**/
 	public var healthIcon:String;
-
+	
 	/**
 		The health bar color for this character. Defaults to `0xFFA1A1A1`.
 	**/
 	public var healthColors:FlxColor;
-
+	
 	/**
 		Whether or not long notes should repeat the character's sing animation. Defaults to `true`.
 	**/
 	public var loopAnimsOnHold:Bool;
-
+	
 	/**
 		The frame index to start the sing animation at for long notes. Defaults to `0`, or from the beginning.
 	**/
 	public var holdLoopPoint:Int;
-
+	
 	/**
 		If enabled, the down and up sing animations will also be flipped when this character is on the right side.
 		Defaults to `false`.
 	**/
 	public var flipAll:Bool;
-
+	
 	/**
 		If enabled, playing an animation will force it to start from the previous animation's frame index + `1`, if there
 		was a previous animation. Only useful for running/moving characters. Defaults to `false`.
 	**/
 	public var constantLooping:Bool;
-
+	
 	/**
 		The full directory path this character was in.
 	**/
 	public var directory:String = '';
-
+	
 	/**
 		The name of the character.
 	**/
 	public var name:String = '';
-
+	
 	/**
 		The mod directory this character was in.
 	**/
 	public var mod:String = '';
-
+	
 	/**
 		@param	data	The JSON file to parse data from.
 	**/
@@ -225,7 +225,7 @@ class CharacterInfo extends JsonObject
 		flipAll = readBool(data.flipAll);
 		constantLooping = readBool(data.constantLooping);
 	}
-
+	
 	override function destroy():Void
 	{
 		anims = FlxDestroyUtil.destroyArray(anims);
@@ -233,7 +233,7 @@ class CharacterInfo extends JsonObject
 		positionOffset = null;
 		cameraOffset = null;
 	}
-
+	
 	/**
 		Gets an animation info by name.
 
@@ -243,16 +243,16 @@ class CharacterInfo extends JsonObject
 	{
 		if (name == null)
 			return null;
-
+			
 		for (anim in anims)
 		{
 			if (anim.name == name)
 				return anim;
 		}
-
+		
 		return null;
 	}
-
+	
 	/**
 		Saves this character info to a JSON file.
 	**/
@@ -282,7 +282,7 @@ class CharacterInfo extends JsonObject
 			data.flipAll = flipAll;
 		if (constantLooping)
 			data.constantLooping = constantLooping;
-
+			
 		for (anim in anims)
 		{
 			var animData:Dynamic = {
@@ -298,12 +298,12 @@ class CharacterInfo extends JsonObject
 				animData.loop = anim.loop;
 			if (anim.nextAnim.length > 0)
 				animData.nextAnim = anim.nextAnim;
-
+				
 			data.anims.push(animData);
 		}
 		File.saveContent(path, Json.stringify(data, "\t"));
 	}
-
+	
 	/**
 		Sorts the animations by name.
 	**/
@@ -325,7 +325,7 @@ class AnimInfo extends JsonObject
 		The name of this animation.
 	**/
 	public var name:String;
-
+	
 	/**
 		The name of this animation in the character's spritesheet.
 
@@ -334,33 +334,33 @@ class AnimInfo extends JsonObject
 		add `prefix:` to the start of the name.
 	**/
 	public var atlasName:String;
-
+	
 	/**
 		Optional frame indices for this animation. If `atlasName` is empty, this will be used as indices in the overall
 		spritesheet.
 	**/
 	public var indices:Array<Int>;
-
+	
 	/**
 		The frame rate, or frames per second, of this animation. Defaults to `24`.
 	**/
 	public var fps:Float;
-
+	
 	/**
 		Whether or not this animation should loop. Defaults to `false`.
 	**/
 	public var loop:Bool;
-
+	
 	/**
 		Whether or not this animation should be flipped horizontally. Defaults to `false`.
 	**/
 	public var flipX:Bool;
-
+	
 	/**
 		Whether or not this animation should be flipped vertically. Defaults to `false`.
 	**/
 	public var flipY:Bool;
-
+	
 	/**
 		The visual offset for this animation.
 
@@ -369,12 +369,12 @@ class AnimInfo extends JsonObject
 		Will be automatically flipped when playing on the right side.
 	**/
 	public var offset:Array<Float>;
-
+	
 	/**
 		Optional name of the animation to change to after this one is finished.
 	**/
 	public var nextAnim:String;
-
+	
 	/**
 		Creates a new `AnimInfo` object.
 
@@ -392,7 +392,7 @@ class AnimInfo extends JsonObject
 		offset = readFloatArray(data.offset, [0, 0], null, 2, null, null, 2);
 		nextAnim = readString(data.nextAnim);
 	}
-
+	
 	override function destroy()
 	{
 		indices = null;

@@ -29,15 +29,15 @@ class SongEditorNewSongPrompt extends FNFSubState
 	var instFile:String = '';
 	var vocalsFile:String = '';
 	var onNextUpdate:Void->Void;
-
+	
 	public function new(state:SongEditorState)
 	{
 		super();
 		this.state = state;
 		checkObjects = true;
-
+		
 		createCamera();
-
+		
 		var tabMenu = new EditorPanel([
 			{
 				name: 'tab',
@@ -45,11 +45,11 @@ class SongEditorNewSongPrompt extends FNFSubState
 			}
 		]);
 		tabMenu.resize(244, 155);
-
+		
 		var tab = tabMenu.createTab('tab');
 		var spacing = 4;
 		var inputSpacing = 84;
-
+		
 		instButton = new FlxUIButton(0, 4, 'Instrumental File', function()
 		{
 			var result = Dialogs.openFile("Select the instrumental file", '', {
@@ -67,13 +67,13 @@ class SongEditorNewSongPrompt extends FNFSubState
 				}
 				return;
 			}
-
+			
 			instFile = Path.normalize(result[0]);
 			instTween();
 		});
 		instButton.resize(120, instButton.height);
 		instButton.x += (tabMenu.width - instButton.width) / 2;
-
+		
 		vocalsButton = new FlxUIButton(0, instButton.y + instButton.height + spacing, 'Vocals File', function()
 		{
 			var result = Dialogs.openFile("Select the vocals file", '', {
@@ -91,26 +91,26 @@ class SongEditorNewSongPrompt extends FNFSubState
 				vocalsFile = '';
 				return;
 			}
-
+			
 			vocalsFile = Path.normalize(result[0]);
 			vocalsTween();
 		});
 		vocalsButton.resize(120, vocalsButton.height);
 		vocalsButton.x += (tabMenu.width - vocalsButton.width) / 2;
-
+		
 		var songNameLabel = new EditorText(4, vocalsButton.y + vocalsButton.height + spacing + 1, 0, 'Song Name:');
-
+		
 		var songNameInput = new EditorInputText(songNameLabel.x + inputSpacing, songNameLabel.y - 1, 0, null, 8, true, camSubState);
-
+		
 		var difficultyNameLabel = new EditorText(songNameLabel.x, songNameLabel.y + songNameLabel.height + spacing, 0, 'Difficulty Name:');
-
+		
 		var difficultyNameInput = new EditorInputText(difficultyNameLabel.x + inputSpacing, difficultyNameLabel.y - 1, 0, null, 8, true, camSubState);
-
+		
 		var modLabel = new EditorText(difficultyNameLabel.x, difficultyNameLabel.y + difficultyNameLabel.height + spacing, 0, 'Mod:');
-
+		
 		var modDropdown = new EditorDropdownMenu(modLabel.x + inputSpacing, modLabel.y, EditorDropdownMenu.makeStrIdLabelArray(Mods.getMods()), null, tabMenu);
 		modDropdown.selectedLabel = Mods.currentMod;
-
+		
 		var createButton = new FlxUIButton(0, modDropdown.y + modDropdown.height + spacing, 'Create', function()
 		{
 			if (instFile.length < 1 || !FileSystem.exists(instFile))
@@ -133,7 +133,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-
+			
 			var mod = modDropdown.selectedLabel;
 			var path = Path.join([Mods.modsPath, mod, 'songs', songName]);
 			if (FileSystem.exists(path))
@@ -142,25 +142,25 @@ class SongEditorNewSongPrompt extends FNFSubState
 				FlxTween.color(songNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
-
+			
 			state.save(false);
-
+			
 			FileSystem.createDirectory(path);
 			File.copy(instFile, Path.join([path, 'Inst.' + Path.extension(instFile)]));
 			if (vocalsFile.length > 0 && FileSystem.exists(vocalsFile))
 				File.copy(vocalsFile, Path.join([path, 'Voices.' + Path.extension(vocalsFile)]));
-
+				
 			var song = new Song({title: songName, timingPoints: [{}]});
 			song.directory = path;
 			song.name = songName;
 			song.difficultyName = difficultyNameInput.text;
 			song.mod = mod;
-
+			
 			song.save(Path.join([path, song.difficultyName + '.json']));
 			FlxG.switchState(new SongEditorState(song));
 		});
 		createButton.x += (tabMenu.width - createButton.width) / 2;
-
+		
 		tab.add(instButton);
 		tab.add(vocalsButton);
 		tab.add(songNameLabel);
@@ -170,11 +170,11 @@ class SongEditorNewSongPrompt extends FNFSubState
 		tab.add(modLabel);
 		tab.add(createButton);
 		tab.add(modDropdown);
-
+		
 		tabMenu.addGroup(tab);
 		tabMenu.screenCenter();
 		add(tabMenu);
-
+		
 		var closeButton = new FlxUIButton(tabMenu.x + tabMenu.width - 20 - spacing, tabMenu.y + spacing, "X", function()
 		{
 			close();
@@ -184,7 +184,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 		closeButton.label.color = FlxColor.WHITE;
 		add(closeButton);
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (onNextUpdate != null)
@@ -192,10 +192,10 @@ class SongEditorNewSongPrompt extends FNFSubState
 			onNextUpdate();
 			onNextUpdate = null;
 		}
-
+		
 		super.update(elapsed);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -203,24 +203,24 @@ class SongEditorNewSongPrompt extends FNFSubState
 		instButton = null;
 		vocalsButton = null;
 	}
-
+	
 	override function onOpen()
 	{
 		Application.current.window.onDropFile.add(onDropFile);
 		super.onOpen();
 	}
-
+	
 	override function onClose()
 	{
 		Application.current.window.onDropFile.remove(onDropFile);
 		super.onClose();
 	}
-
+	
 	function onDropFile(path:String)
 	{
 		if (!CoolUtil.endsWithAny(path, Paths.SOUND_EXTENSIONS))
 			return;
-
+			
 		// mouse position hasn't been updated yet so i have to wait until the next update
 		onNextUpdate = function()
 		{
@@ -236,13 +236,13 @@ class SongEditorNewSongPrompt extends FNFSubState
 			}
 		}
 	}
-
+	
 	function instTween()
 	{
 		FlxTween.cancelTweensOf(instButton);
 		FlxTween.color(instButton, 0.2, instButton.color, FlxColor.LIME);
 	}
-
+	
 	function vocalsTween()
 	{
 		FlxTween.cancelTweensOf(vocalsButton);

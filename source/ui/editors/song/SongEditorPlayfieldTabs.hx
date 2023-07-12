@@ -14,29 +14,29 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 {
 	var state:SongEditorState;
 	var tabs:Array<FlxUIButton> = [];
-
+	
 	public function new(state:SongEditorState)
 	{
 		super();
 		this.state = state;
-
+		
 		var names = ['Notes', 'Other'];
 		for (name in names)
 		{
 			var fb = new FlxUIButton(0, 0, name);
-
+			
 			fb.up_color = 0xffffff;
 			fb.down_color = 0xffffff;
 			fb.over_color = 0xffffff;
 			fb.up_toggle_color = 0xffffff;
 			fb.down_toggle_color = 0xffffff;
 			fb.over_toggle_color = 0xffffff;
-
+			
 			fb.label.color = 0xFFFFFF;
 			fb.label.setBorderStyle(OUTLINE);
-
+			
 			fb.name = name;
-
+			
 			var graphic_names:Array<FlxGraphicAsset> = [
 				Paths.getImage('editors/tab_back'),
 				Paths.getImage('editors/tab_back'),
@@ -53,11 +53,11 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 			tabs.push(fb);
 		}
 		scrollFactor.set();
-
+		
 		distributeTabs();
 		onTabEvent('Notes');
 	}
-
+	
 	public function stackTabs():Void
 	{
 		var tab:FlxUIButton = null;
@@ -67,7 +67,7 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 			if (tab.toggled)
 				group.remove(tab, true);
 		}
-
+		
 		for (t in tabs)
 		{
 			tab = cast t;
@@ -75,38 +75,38 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 				group.add(tab);
 		}
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
 		tabs = null;
 	}
-
+	
 	function distributeTabs(W:Float = -1):Void
 	{
 		if (W == -1)
 			W = 320;
-
+			
 		var xx:Float = 0;
 		var tab_width:Float = W / length;
-
+		
 		var diff_size:Float = 0;
 		var tot_size:Float = (Std.int(tab_width) * length);
 		if (tot_size < W)
 			diff_size = (W - tot_size);
-
+			
 		var i:Int = 0;
 		var firstHeight:Float = 0;
-
+		
 		var tab:FlxUIButton;
 		for (t in members)
 		{
 			tab = cast t;
-
+			
 			tab.x = x + xx;
 			tab.y = y;
-
+			
 			var theHeight:Float = tab.get_height();
 			if (i != 0)
 			{
@@ -132,7 +132,7 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 			i++;
 		}
 	}
-
+	
 	public function onTabEvent(name:String):Void
 	{
 		if (state.playfieldNotes != null)
@@ -140,7 +140,7 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 			state.playfieldNotes.exists = (name == 'Notes');
 			state.playfieldOther.exists = (name == 'Other');
 		}
-
+		
 		for (tab in members)
 		{
 			tab.toggled = false;
@@ -148,7 +148,7 @@ class SongEditorPlayfieldTabs extends FlxTypedSpriteGroup<FlxUIButton>
 			if (tab.name == name)
 				tab.toggled = true;
 		}
-
+		
 		stackTabs();
 	}
 }

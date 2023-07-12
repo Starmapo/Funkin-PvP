@@ -9,21 +9,21 @@ import util.editors.song.SongEditorActionManager;
 class SongEditorLyricsDisplay extends LyricsDisplay
 {
 	var state:SongEditorState;
-
+	
 	public function new(state:SongEditorState)
 	{
 		super(state.song, state.lyrics, 480);
 		this.state = state;
-
+		
 		state.actionManager.onEvent.add(onEvent);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
 		state = null;
 	}
-
+	
 	function onEvent(type:String, params:Dynamic)
 	{
 		switch (type)

@@ -3,7 +3,7 @@ package subStates.editors.char;
 class CharacterEditorSavePrompt extends PromptSubState
 {
 	var callback:String->Void;
-
+	
 	public function new(?callback:String->Void)
 	{
 		super('You have unsaved changes. Would you like to save your character?', [
@@ -34,7 +34,7 @@ class CharacterEditorSavePrompt extends PromptSubState
 		]);
 		this.callback = callback;
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();

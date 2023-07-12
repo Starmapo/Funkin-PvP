@@ -28,7 +28,7 @@ class TitleState extends FNFState
 {
 	static var logoY:Float = -50;
 	static var initialized:Bool = false;
-
+	
 	var camHUD:FlxCamera;
 	var timing:MusicTiming;
 	var startTimer:FlxTimer;
@@ -46,7 +46,7 @@ class TitleState extends FNFState
 	var skippedIntro:Bool = false;
 	var introText:Array<String>;
 	var transitioning:Bool = false;
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -63,36 +63,36 @@ class TitleState extends FNFState
 		emitter = null;
 		introText = null;
 	}
-
+	
 	override public function create()
 	{
 		DiscordClient.changePresence(null, "Title Screen");
-
+		
 		transIn = transOut = null;
-
+		
 		FlxG.camera.bgColor = 0;
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
-
+		
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playMenuMusic(initialized ? 1 : 0);
 			FlxG.sound.music.stop();
 		}
-
+		
 		getIntroText();
-
+		
 		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized, 0, onBeatHit);
-
+		
 		colorSwap = new ColorSwap();
-
+		
 		icon = new FlxSprite(FlxG.width, 0, Paths.getImage('menus/title/iconTitle'));
 		icon.screenCenter(Y);
 		icon.shader = colorSwap.shader;
 		icon.antialiasing = true;
 		add(icon);
-
+		
 		logo = new DancingSprite(-100, logoY, Paths.getSpritesheet('menus/title/logoBumpin'));
 		logo.addAnim({
 			name: 'idle',
@@ -106,7 +106,7 @@ class TitleState extends FNFState
 		logo.antialiasing = true;
 		timing.addDancingSprite(logo);
 		add(logo);
-
+		
 		emitter = new InfiniteEmitter(0, FlxG.height + 30);
 		emitter.width = FlxG.width;
 		emitter.loadParticles(Paths.getImage('menus/title/particle'), 10, 0);
@@ -116,12 +116,12 @@ class TitleState extends FNFState
 		emitter.lifespan.set(5, 10);
 		emitter.start(false, 0.1);
 		add(emitter);
-
+		
 		gradient = FlxGradient.createGradientFlxSprite(FlxG.width, Std.int(FlxG.height / 2) + 20, [0, FlxColor.WHITE]);
 		gradient.y = FlxG.height / 2;
 		gradient.alpha = 0;
 		add(gradient);
-
+		
 		pressEnter = new AnimatedSprite(100, FlxG.height, Paths.getSpritesheet('menus/title/titleEnter'));
 		pressEnter.addAnim({
 			name: 'idle',
@@ -133,10 +133,10 @@ class TitleState extends FNFState
 		});
 		pressEnter.antialiasing = true;
 		add(pressEnter);
-
+		
 		textGroup = new FlxTypedGroup();
 		add(textGroup);
-
+		
 		if (!initialized)
 		{
 			startTimer = FlxTimer.startTimer(1, function(tmr:FlxTimer)
@@ -149,17 +149,17 @@ class TitleState extends FNFState
 			FlxG.sound.music.play();
 			startIntro();
 		}
-
+		
 		CoolUtil.playConfirmSound(0);
-
+		
 		super.create();
 	}
-
+	
 	override public function update(elapsed:Float)
 	{
 		if (timing != null)
 			timing.update(elapsed);
-
+			
 		if (!startedIntro)
 		{
 			if (CoolUtil.anyJustInputted())
@@ -185,7 +185,7 @@ class TitleState extends FNFState
 						pressedEnter = true;
 				}
 			}
-
+			
 			if (pressedEnter)
 				onPressEnter();
 			#if sys
@@ -193,39 +193,39 @@ class TitleState extends FNFState
 				onExit();
 			#end
 		}
-
+		
 		if (PlayerSettings.checkAction(UI_LEFT))
 			colorSwap.update(-elapsed * 0.1);
 		else if (PlayerSettings.checkAction(UI_RIGHT))
 			colorSwap.update(elapsed * 0.1);
-
+			
 		for (particle in emitter)
 		{
 			if (particle.alive && (particle.x + particle.width < 0 || particle.x >= FlxG.width || particle.y + particle.height < 0))
 				particle.kill();
 		}
-
+		
 		gradient.alpha = gradientAlpha + gradientBop;
-
+		
 		super.update(elapsed);
-
+		
 		if (PlayerSettings.checkAction(RESET_P))
 			CoolUtil.restart();
 	}
-
+	
 	function getIntroText()
 	{
 		var fullText:String = Paths.getText('introText');
-
+		
 		var firstArray:Array<String> = fullText.split('\n');
 		var swagGoodArray:Array<Array<String>> = [];
-
+		
 		for (i in firstArray)
 			swagGoodArray.push(i.trim().split('--'));
-
+			
 		introText = swagGoodArray[FlxG.random.int(0, swagGoodArray.length - 1)];
 	}
-
+	
 	function startIntro()
 	{
 		FlxTween.num(0, 0.5, timing.timingPoints[0].beatLength * 0.002, null, function(num)
@@ -243,7 +243,7 @@ class TitleState extends FNFState
 		startedIntro = true;
 		initialized = true;
 	}
-
+	
 	function onBeatHit(beat:Int, decBeat:Float)
 	{
 		var tweenDuration = timing.curTimingPoint.stepLength * 0.002;
@@ -254,7 +254,7 @@ class TitleState extends FNFState
 		});
 		gradient.y = (FlxG.height / 2) - 20;
 		FlxTween.tween(gradient, {y: FlxG.height / 2}, tweenDuration);
-
+		
 		if (!skippedIntro)
 		{
 			switch (beat)
@@ -291,7 +291,7 @@ class TitleState extends FNFState
 			FlxTween.tween(icon.scale, {x: 1, y: 1}, 0.55, {ease: FlxEase.cubeOut});
 		}
 	}
-
+	
 	function addText(text:String, yOffset:Float = 0, bottom:Bool = false)
 	{
 		var coolText = new FlxText(0, 0, 0, text);
@@ -306,12 +306,12 @@ class TitleState extends FNFState
 			coolText.y = FlxG.height + (textGroup.length * 80);
 		else
 			coolText.y -= coolText.height;
-
+			
 		FlxTween.tween(coolText, {y: 200 + yOffset + (textGroup.length * 80)}, timing.curTimingPoint.stepLength * 0.002, {ease: FlxEase.quadOut});
-
+		
 		textGroup.add(coolText);
 	}
-
+	
 	function addTexts(texts:Array<String>, yOffset:Float = 0, bottom:Bool = false)
 	{
 		for (text in texts)
@@ -319,24 +319,24 @@ class TitleState extends FNFState
 			addText(text, yOffset, bottom);
 		}
 	}
-
+	
 	function clearText()
 	{
 		textGroup.destroyMembers();
 	}
-
+	
 	function resetText(text:String, yOffset:Float = 0, bottom:Bool = false)
 	{
 		clearText();
 		addText(text, yOffset, bottom);
 	}
-
+	
 	function resetTexts(texts:Array<String>, yOffset:Float = 0, bottom:Bool = false)
 	{
 		clearText();
 		addTexts(texts, yOffset, bottom);
 	}
-
+	
 	function skipIntro()
 	{
 		if (!skippedIntro)
@@ -350,7 +350,7 @@ class TitleState extends FNFState
 			skippedIntro = true;
 		}
 	}
-
+	
 	function onPressEnter()
 	{
 		if (!transitioning)
@@ -373,7 +373,7 @@ class TitleState extends FNFState
 			transitioning = true;
 		}
 	}
-
+	
 	#if sys
 	function onExit()
 	{

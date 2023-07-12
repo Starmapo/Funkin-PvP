@@ -10,7 +10,7 @@ class MiscellaneousPage extends BaseSettingsPage
 	{
 		super();
 		rpcDetails = 'Miscellaneous Options';
-
+		
 		addSetting({
 			name: 'autoPause',
 			displayName: 'Auto Pause',
@@ -41,7 +41,7 @@ class MiscellaneousPage extends BaseSettingsPage
 			description: "If enabled, the cache will always be reset after a state switch, reloading everything.",
 			type: CHECKBOX
 		});
-
+		
 		addPageTitle('Miscellaneous');
 	}
 }

@@ -22,19 +22,19 @@ class SongEditorPlayfield extends FlxGroup
 	public var noteGroup:SongEditorNoteGroup;
 	public var otherGroup:SongEditorOtherGroup;
 	public var playfieldButton:SongEditorPlayfieldButton;
-
+	
 	var bgColor:FlxColor = FlxColor.fromRGB(24, 24, 24);
 	var borderColor:FlxColor = 0xFF808080;
 	var hitPositionLineColor:FlxColor = FlxColor.fromRGB(9, 165, 200);
 	var state:SongEditorState;
-
+	
 	public function new(state:SongEditorState, type:PlayfieldType, columns:Int)
 	{
 		super();
 		this.state = state;
 		this.type = type;
 		this.columns = columns;
-
+		
 		createBG();
 		createBorders();
 		createDividerLines();
@@ -49,7 +49,7 @@ class SongEditorPlayfield extends FlxGroup
 			createOtherGroup();
 		createPlayfieldButton();
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		playfieldButton.update(elapsed);
@@ -59,7 +59,7 @@ class SongEditorPlayfield extends FlxGroup
 		else
 			otherGroup.update(elapsed);
 	}
-
+	
 	override function destroy()
 	{
 		super.destroy();
@@ -75,18 +75,18 @@ class SongEditorPlayfield extends FlxGroup
 		playfieldButton = null;
 		state = null;
 	}
-
+	
 	public function getLaneFromX(x:Float)
 	{
 		var percentage = (x - bg.x) / bg.width;
 		return FlxMath.boundInt(Std.int(columns * percentage), 0, columns);
 	}
-
+	
 	public function getHoveredObject():ISongEditorTimingObject
 	{
 		if (!exists || FlxG.mouse.overlaps(state.playfieldTabs))
 			return null;
-
+			
 		if (type == NOTES)
 		{
 			var obj = noteGroup.getHoveredNote();
@@ -99,15 +99,15 @@ class SongEditorPlayfield extends FlxGroup
 			if (obj != null)
 				return obj;
 		}
-
+		
 		return null;
 	}
-
+	
 	public function isHoveringObject()
 	{
 		return getHoveredObject() != null;
 	}
-
+	
 	function createBG()
 	{
 		bg = new FlxSprite().makeGraphic(columnSize * columns, FlxG.height, bgColor);
@@ -115,19 +115,19 @@ class SongEditorPlayfield extends FlxGroup
 		bg.scrollFactor.set();
 		add(bg);
 	}
-
+	
 	function createBorders()
 	{
 		borderLeft = new FlxSprite(bg.x).makeGraphic(2, Std.int(bg.height), borderColor);
 		borderLeft.scrollFactor.set();
 		add(borderLeft);
-
+		
 		borderRight = new FlxSprite(bg.x + bg.width).makeGraphic(2, Std.int(bg.height), borderColor);
 		borderRight.x -= borderRight.width;
 		borderRight.scrollFactor.set();
 		add(borderRight);
 	}
-
+	
 	function createDividerLines()
 	{
 		dividerLines = new FlxTypedGroup();
@@ -142,7 +142,7 @@ class SongEditorPlayfield extends FlxGroup
 		}
 		add(dividerLines);
 	}
-
+	
 	function createHitPositionLine()
 	{
 		hitPositionLine = new FlxSprite(0, state.hitPositionY).makeGraphic(Std.int(bg.width - borderLeft.width * 2), 6, hitPositionLineColor);
@@ -150,31 +150,31 @@ class SongEditorPlayfield extends FlxGroup
 		hitPositionLine.scrollFactor.set();
 		add(hitPositionLine);
 	}
-
+	
 	function createTimeline()
 	{
 		timeline = new SongEditorTimeline(state, this);
 		add(timeline);
 	}
-
+	
 	function createWaveform()
 	{
 		waveform = new SongEditorWaveform(state, this);
 		add(waveform);
 	}
-
+	
 	function createNoteGroup()
 	{
 		noteGroup = new SongEditorNoteGroup(state, this);
 		add(noteGroup);
 	}
-
+	
 	function createOtherGroup()
 	{
 		otherGroup = new SongEditorOtherGroup(state, this);
 		add(otherGroup);
 	}
-
+	
 	function createPlayfieldButton()
 	{
 		playfieldButton = new SongEditorPlayfieldButton(0, state.playfieldTabs.height, state, this);

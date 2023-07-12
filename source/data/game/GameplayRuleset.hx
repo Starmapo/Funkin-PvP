@@ -17,7 +17,7 @@ class GameplayRuleset implements IFlxDestroyable
 		The song for this ruleset.
 	**/
 	public var song:Song;
-
+	
 	/**
 		The timing object for this ruleset.
 	**/
@@ -27,52 +27,52 @@ class GameplayRuleset implements IFlxDestroyable
 		The playfields of this ruleset.
 	**/
 	public var playfields:Array<Playfield> = [];
-
+	
 	/**
 		Called when a player presses one of the note keys. (player -> lane)
 	**/
 	public var lanePressed:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a player releases one of the note keys. (player -> lane)
 	**/
 	public var laneReleased:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a player presses one of the note keys without hitting a note. (player -> lane)
 	**/
 	public var ghostTap:FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a new note is spawned.
 	**/
 	public var noteSpawned:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a player hits a note. (note -> judgement -> millisecond difference)
 	**/
 	public var noteHit:FlxTypedSignal<Note->Judgement->Float->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a player misses a note.
 	**/
 	public var noteMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a player successfully releases a long note. (note -> judgement -> millisecond difference)
 	**/
 	public var noteReleased:FlxTypedSignal<Note->Judgement->Float->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a player misses a long note release.
 	**/
 	public var noteReleaseMissed:FlxTypedSignal<Note->Void> = new FlxTypedSignal();
-
+	
 	/**
 		Called when a new judgement is added. (judgement -> player)
 	**/
 	public var judgementAdded:FlxTypedSignal<Judgement->Int->Void> = new FlxTypedSignal();
-
+	
 	/**
 		@param	song	The song for this ruleset.
 		@param	timing	The timing object for this ruleset.
@@ -84,13 +84,13 @@ class GameplayRuleset implements IFlxDestroyable
 		for (i in 0...2)
 			playfields.push(new Playfield(this, i));
 	}
-
+	
 	public function update(elapsed:Float)
 	{
 		for (playfield in playfields)
 			playfield.update(elapsed);
 	}
-
+	
 	/**
 		Handles the note input.
 	**/
@@ -99,7 +99,7 @@ class GameplayRuleset implements IFlxDestroyable
 		for (playfield in playfields)
 			playfield.inputManager.handleInput(elapsed);
 	}
-
+	
 	/**
 		Stops all note input.
 	**/
@@ -108,7 +108,7 @@ class GameplayRuleset implements IFlxDestroyable
 		for (playfield in playfields)
 			playfield.inputManager.stopInput();
 	}
-
+	
 	/**
 		Removes all current and queued notes.
 	**/
@@ -123,7 +123,7 @@ class GameplayRuleset implements IFlxDestroyable
 			killNoteLanes(manager.deadNoteLanes);
 		}
 	}
-
+	
 	/**
 		Called once the song is skipped forward in time.
 	**/
@@ -132,7 +132,7 @@ class GameplayRuleset implements IFlxDestroyable
 		for (playfield in playfields)
 			playfield.noteManager.handleSkip();
 	}
-
+	
 	/**
 		Frees up memory.
 	**/
@@ -151,13 +151,13 @@ class GameplayRuleset implements IFlxDestroyable
 		timing = null;
 		song = null;
 	}
-
+	
 	function killInfoLanes(lanes:Array<Array<NoteInfo>>)
 	{
 		for (lane in lanes)
 			lane.resize(0);
 	}
-
+	
 	function killNoteLanes(lanes:Array<Array<Note>>)
 	{
 		for (lane in lanes)
