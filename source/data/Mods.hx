@@ -6,6 +6,7 @@ import haxe.io.Path;
 import sys.FileSystem;
 import thx.semver.Version;
 import thx.semver.VersionRule;
+import util.VersionUtil;
 
 using StringTools;
 
@@ -24,29 +25,38 @@ class Mods
 		currentMods.resize(0);
 		currentMod = '';
 		
-		var directories:Array<String> = [];
+		final curVersion:Version = CoolUtil.getVersion();
+		final apiVersionRule:VersionRule = '${curVersion.major}.*.*';
+		
+		final modsToLoad:Array<Mod> = [];
 		for (file in FileSystem.readDirectory(modsPath))
 		{
-			if (directories.contains(file))
-				continue;
-			var fullPath = Path.join([modsPath, file]);
-			var jsonPath = Path.join([fullPath, 'mod.json']);
+			final fullPath = Path.join([modsPath, file]);
 			if (FileSystem.isDirectory(fullPath))
 			{
+				final jsonPath = Path.join([fullPath, 'mod.json']);
 				if (FileSystem.exists(jsonPath))
 				{
-					var mod = Mod.getMod(Paths.getJson(jsonPath));
+					final mod = Mod.getMod(jsonPath);
 					if (mod == null)
 						continue;
+					if (!VersionUtil.match(mod.apiVersion, apiVersionRule))
+						FlxG.log.error('Mod $file was built for incompatible API version ${mod.apiVersion}, expected "$apiVersionRule"');
 					mod.id = file;
-					currentMods.push(mod);
-					directories.push(file);
+					modsToLoad.push(mod);
 				}
 				else
 					FlxG.log.error('Could not find mod metadata file: $jsonPath');
 			}
 		}
-		
+		final filteredMods = filterDependencies(modsToLoad);
+		filteredMods.sort(function(a, b)
+		{
+			return CoolUtil.sortAlphabetically(a.title, b.title);
+		});
+		for (mod in filteredMods)
+			currentMods.push(mod);
+			
 		reloadPvPMusic();
 		reloadSongs();
 		reloadCharacters();
@@ -293,6 +303,44 @@ class Mods
 		
 		return false;
 	}
+	
+	static function filterDependencies(mods:Array<Mod>):Array<Mod>
+	{
+		var result:Array<Mod> = [];
+		
+		var modMap = new Map<String, Mod>();
+		for (mod in mods)
+			modMap.set(mod.id, mod);
+			
+		for (mod in mods)
+		{
+			var depError = false;
+			if (mod.dependencies != null)
+			{
+				for (dep => depRule in mod.dependencies)
+				{
+					var depMod = modMap.get(dep);
+					if (depMod == null)
+					{
+						FlxG.log.error('Dependency "$dep" not found, which is required for mod "${mod.id}".');
+						depError = true;
+						break;
+					}
+					if (!VersionUtil.match(depMod.modVersion, depRule))
+					{
+						FlxG.log.error('Dependency "$dep" has version "${depMod.modVersion}", but requires "${depRule}" for mod "${mod.id}".');
+						depError = true;
+						break;
+					}
+				}
+			}
+			
+			if (!depError)
+				result.push(mod);
+		}
+		
+		return result;
+	}
 }
 
 /**
@@ -306,7 +354,6 @@ class Mod extends JsonObject
 	public var apiVersion:Version;
 	public var modVersion:Version;
 	public var dependencies:ModDependencies;
-	public var optionalDependencies:ModDependencies;
 	
 	// internal stuff
 	public var id:String;
@@ -318,8 +365,15 @@ class Mod extends JsonObject
 	
 	public function new() {}
 	
-	public static function getMod(data:Dynamic)
+	public static function getMod(path:String)
 	{
+		var data:Dynamic = Paths.getJson(path);
+		if (data == null || data.length < 1)
+		{
+			FlxG.log.error('Error parsing mod metadata file ($path), was null or empty.');
+			return null;
+		}
+		
 		var mod = new Mod();
 		try
 		{
@@ -344,7 +398,6 @@ class Mod extends JsonObject
 		mod.description = mod.readString(data.description, 'No Description');
 		mod.homepage = mod.readString(data.homepage);
 		mod.dependencies = readModDependencies(data.dependencies);
-		mod.optionalDependencies = readModDependencies(data.optionalDependencies);
 		
 		return mod;
 	}
