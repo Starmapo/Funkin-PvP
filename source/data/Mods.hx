@@ -275,12 +275,23 @@ class Mods
 		}
 	}
 	
-	public static function getMods()
+	public static function getMods():Array<String>
 	{
 		var mods:Array<String> = [];
 		for (mod in currentMods)
 			mods.push(mod.id);
 		return mods;
+	}
+	
+	public static function hasMod(id:String):Bool
+	{
+		for (mod in currentMods)
+		{
+			if (mod.id == id)
+				return true;
+		}
+		
+		return false;
 	}
 }
 
