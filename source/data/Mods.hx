@@ -4,6 +4,8 @@ import CoolUtil.NameInfo;
 import flixel.FlxG;
 import haxe.io.Path;
 import sys.FileSystem;
+import thx.semver.Version;
+import thx.semver.VersionRule;
 
 using StringTools;
 
@@ -23,21 +25,28 @@ class Mods
 		currentMod = '';
 		
 		var directories:Array<String> = [];
-		
 		for (file in FileSystem.readDirectory(modsPath))
 		{
 			if (directories.contains(file))
 				continue;
 			var fullPath = Path.join([modsPath, file]);
 			var jsonPath = Path.join([fullPath, 'mod.json']);
-			if (FileSystem.isDirectory(fullPath) && FileSystem.exists(jsonPath))
+			if (FileSystem.isDirectory(fullPath))
 			{
-				var mod = new Mod(Paths.getJson(jsonPath));
-				mod.directory = file;
-				currentMods.push(mod);
-				directories.push(file);
+				if (FileSystem.exists(jsonPath))
+				{
+					var mod = Mod.getMod(Paths.getJson(jsonPath));
+					if (mod == null)
+						continue;
+					mod.id = file;
+					currentMods.push(mod);
+					directories.push(file);
+				}
+				else
+					FlxG.log.error('Could not find mod metadata file: $jsonPath');
 			}
 		}
+		
 		reloadPvPMusic();
 		reloadSongs();
 		reloadCharacters();
@@ -50,7 +59,7 @@ class Mods
 		
 		for (mod in currentMods)
 		{
-			var fullPath = Path.join([modsPath, mod.directory]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			var pvpMusicPath = Path.join([fullPath, 'data/pvpMusic.txt']);
 			if (FileSystem.exists(pvpMusicPath))
 			{
@@ -58,7 +67,7 @@ class Mods
 				for (i in 0...pvpMusicList.length)
 					pvpMusic.push({
 						name: pvpMusicList[i].trim(),
-						mod: mod.directory
+						mod: mod.id
 					});
 			}
 		}
@@ -71,7 +80,7 @@ class Mods
 		{
 			mod.songCount = 0;
 			
-			var fullPath = Path.join([modsPath, mod.directory]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			
 			var difficulties:Array<String> = [];
 			var difficultiesPath = Path.join([fullPath, 'data/difficulties.txt']);
@@ -105,9 +114,9 @@ class Mods
 						if (icon == null)
 							icon = '';
 						if (icon.length > 0 && !icon.contains(':'))
-							icon = mod.directory + ':' + icon;
+							icon = mod.id + ':' + icon;
 							
-						var songPath = Paths.getPath('songs/$name', mod.directory);
+						var songPath = Paths.getPath('songs/$name', mod.id);
 						var songDifficulties:Array<String> = [];
 						for (diff in difficulties)
 						{
@@ -124,7 +133,7 @@ class Mods
 								forceCharacters: forceCharacters,
 								forceCharacterDifficulties: songData.forceCharacterDifficulties != null ? songData.forceCharacterDifficulties : [],
 								difficulties: songDifficulties,
-								directory: mod.directory
+								id: mod.id
 							});
 							mod.songCount++;
 						}
@@ -138,7 +147,7 @@ class Mods
 							songGroup = {
 								name: group.name,
 								songs: [],
-								directory: mod.directory
+								id: mod.id
 							};
 							songGroups.set(group.name, songGroup);
 						}
@@ -157,7 +166,7 @@ class Mods
 		{
 			mod.characterCount = 0;
 			
-			var fullPath = Path.join([modsPath, mod.directory]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			var characterSelectPath = Path.join([fullPath, 'data/charSelect.json']);
 			if (FileSystem.exists(characterSelectPath))
 			{
@@ -174,7 +183,7 @@ class Mods
 							chars.push({
 								name: char.name,
 								displayName: char.displayName,
-								directory: mod.directory
+								id: mod.id
 							});
 							mod.characterCount++;
 						}
@@ -188,7 +197,7 @@ class Mods
 							charGroup = {
 								name: group.name,
 								chars: [],
-								directory: mod.directory
+								id: mod.id
 							};
 							characterGroups.set(group.name, charGroup);
 						}
@@ -207,14 +216,14 @@ class Mods
 		{
 			mod.splashSkinCount = mod.judgementSkinCount = mod.noteskinCount = 0;
 			
-			var fullPath = Path.join([modsPath, mod.directory]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			var skinGroup:ModSkins = {
-				name: mod.name,
+				name: mod.title,
 				noteskins: [],
 				judgementSkins: [],
 				splashSkins: []
 			};
-			skins.set(mod.directory, skinGroup);
+			skins.set(mod.id, skinGroup);
 			
 			var noteskinList = Path.join([fullPath, 'data/noteskins/skins.txt']);
 			if (FileSystem.exists(noteskinList))
@@ -226,7 +235,7 @@ class Mods
 					skinGroup.noteskins.push({
 						name: split[0],
 						displayName: split[1],
-						mod: mod.directory
+						mod: mod.id
 					});
 					mod.noteskinCount++;
 				}
@@ -242,7 +251,7 @@ class Mods
 					skinGroup.judgementSkins.push({
 						name: split[0],
 						displayName: split[1],
-						mod: mod.directory
+						mod: mod.id
 					});
 					mod.judgementSkinCount++;
 				}
@@ -258,7 +267,7 @@ class Mods
 					skinGroup.splashSkins.push({
 						name: split[0],
 						displayName: split[1],
-						mod: mod.directory
+						mod: mod.id
 					});
 					mod.splashSkinCount++;
 				}
@@ -270,40 +279,92 @@ class Mods
 	{
 		var mods:Array<String> = [];
 		for (mod in currentMods)
-			mods.push(mod.directory);
+			mods.push(mod.id);
 		return mods;
 	}
 }
 
+/**
+	An object containing info about a mod, including its metadata.
+**/
 class Mod extends JsonObject
 {
-	public var name:String;
+	public var title:String;
 	public var description:String;
-	public var modVersion:String;
-	public var gameVersion:String;
+	public var homepage:String;
+	public var apiVersion:Version;
+	public var modVersion:Version;
+	public var dependencies:ModDependencies;
+	public var optionalDependencies:ModDependencies;
 	
 	// internal stuff
-	public var directory:String;
+	public var id:String;
 	public var characterCount:Int = 0;
 	public var songCount:Int = 0;
 	public var noteskinCount:Int = 0;
 	public var judgementSkinCount:Int = 0;
 	public var splashSkinCount:Int = 0;
 	
-	public function new(data:Dynamic)
+	public function new() {}
+	
+	public static function getMod(data:Dynamic)
 	{
-		name = readString(data.name, 'Unknown Mod');
-		description = readString(data.description, 'No Description');
-		modVersion = readString(data.modVersion, '1.0.0');
-		gameVersion = readString(data.gameVersion, FlxG.stage.application.meta["version"]);
+		var mod = new Mod();
+		try
+		{
+			mod.apiVersion = mod.readString(data.api_version);
+		}
+		catch (e)
+		{
+			FlxG.log.error('Error parsing API version: ($e) metadata was $data');
+			return null;
+		}
+		try
+		{
+			mod.modVersion = mod.readString(data.mod_version);
+		}
+		catch (e)
+		{
+			FlxG.log.error('Error parsing mod version: ($e) metadata was $data');
+			return null;
+		}
+		
+		mod.title = mod.readString(data.title, 'No Title');
+		mod.description = mod.readString(data.description, 'No Description');
+		mod.homepage = mod.readString(data.homepage);
+		mod.dependencies = readModDependencies(data.dependencies);
+		mod.optionalDependencies = readModDependencies(data.optionalDependencies);
+		
+		return mod;
+	}
+	
+	public static function readModDependencies(data:Dynamic)
+	{
+		var map = new ModDependencies();
+		if (data == null)
+			return map;
+		for (field in Reflect.fields(data))
+		{
+			var fieldVal = Reflect.field(data, field);
+			map.set(field, VersionRule.stringToVersionRule(fieldVal));
+		}
+		return map;
 	}
 }
+
+/**
+ * A type representing a mod's dependencies.
+ * 
+ * The map takes the mod's ID as the key and the required version as the value.
+ * The version follows the Semantic Versioning format, with `*.*.*` meaning any version.
+ */
+typedef ModDependencies = Map<String, VersionRule>;
 
 typedef ModSongGroup =
 {
 	var name:String;
 	var songs:Array<ModSong>;
-	var directory:String;
+	var id:String;
 }
 
 typedef ModSong =
@@ -313,21 +374,21 @@ typedef ModSong =
 	var forceCharacters:Bool;
 	var forceCharacterDifficulties:Array<String>;
 	var difficulties:Array<String>;
-	var directory:String;
+	var id:String;
 }
 
 typedef ModCharacterGroup =
 {
 	var name:String;
 	var chars:Array<ModCharacter>;
-	var directory:String;
+	var id:String;
 }
 
 typedef ModCharacter =
 {
 	var name:String;
 	var displayName:String;
-	var directory:String;
+	var id:String;
 }
 
 typedef ModSkins =

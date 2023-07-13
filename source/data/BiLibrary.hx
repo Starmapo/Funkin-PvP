@@ -1,7 +1,6 @@
 package data;
 
 import haxe.io.Path;
-import haxe.zip.Entry;
 import lime.graphics.Image;
 import lime.media.AudioBuffer;
 import lime.text.Font;
@@ -10,7 +9,6 @@ import lime.utils.AssetType;
 import lime.utils.Assets;
 import lime.utils.Bytes;
 import sys.FileSystem;
-import util.Zip;
 
 using StringTools;
 
@@ -20,8 +18,6 @@ class BiLibrary extends AssetLibrary
 	
 	var defaultLibrary:AssetLibrary;
 	
-	// var zipAssets:Map<String, Entry> = [];
-	
 	public function new(?defaultLibrary:AssetLibrary)
 	{
 		super();
@@ -30,28 +26,6 @@ class BiLibrary extends AssetLibrary
 		this.defaultLibrary = defaultLibrary;
 	}
 	
-	/*
-		public function addZipMod(list:List<Entry>, modPath:String)
-		{
-			if (list == null)
-				return;
-			if (!modPath.endsWith('/'))
-				modPath += '/';
-			for (entry in list)
-			{
-				var name = entry.fileName;
-				if (Path.extension(name).length < 1)
-					continue;
-				zipAssets.set(modPath + name, entry);
-				trace(modPath + name);
-			}
-		}
-
-		public function clearZipMods()
-		{
-			zipAssets.clear();
-		}
-	 */
 	/**
 		`type` isn't supported for FileSystem checks!
 	**/
@@ -140,10 +114,4 @@ class BiLibrary extends AssetLibrary
 	{
 		return rootPath + id;
 	}
-	/*
-		function getZipData(id:String)
-		{
-			return Zip.unzip(zipAssets.get(id)).data;
-		}
-	 */
 }

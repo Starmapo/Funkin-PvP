@@ -1,6 +1,6 @@
 {
-  "name": "Andromeda Engine",
-  "description": "Adds stuff from Andromeda Engine.",
-  "modVersion": "1.0.0",
-  "gameVersion": "1.0.0"
+    "title": "Andromeda Engine",
+    "description": "Adds stuff from Andromeda Engine.",
+    "api_version": "1.0.0",
+    "mod_version": "1.0.0"
 }

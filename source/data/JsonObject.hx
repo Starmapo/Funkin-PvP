@@ -16,7 +16,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param value 		The property from the JSON file.
 	 * @param defaultValue 	A value to return if the property doesn't exist on the JSON file.
 	 */
-	function readProperty(value:Dynamic, defaultValue:Dynamic):Dynamic
+	public function readProperty(value:Dynamic, defaultValue:Dynamic):Dynamic
 	{
 		if (value == null)
 			return defaultValue;
@@ -31,7 +31,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param min 			If set, the value will not go below this parameter.
 	 * @param max 			If set, the value will not go above this parameter.
 	 */
-	function readInt(value:Null<Int>, defaultValue:Int = 0, ?min:Int, ?max:Int):Int
+	public function readInt(value:Null<Int>, defaultValue:Int = 0, ?min:Int, ?max:Int):Int
 	{
 		var int:Int = readProperty(value, defaultValue);
 		
@@ -51,7 +51,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param max 			If set, the value will not go above this parameter.
 	 * @param decimals 		If set, the value will be rounded in case there's more decimals than stated in this parameter.
 	 */
-	function readFloat(value:Null<Float>, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int):Float
+	public function readFloat(value:Null<Float>, defaultValue:Float = 0, ?min:Float, ?max:Float, ?decimals:Int):Float
 	{
 		var float:Float = readProperty(value, defaultValue);
 		if (!Math.isFinite(float))
@@ -72,7 +72,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param value 		The property from the JSON file.
 	 * @param defaultValue 	A value to return if the property doesn't exist on the JSON file. The default is `false`.
 	 */
-	function readBool(value:Null<Bool>, defaultValue:Bool = false):Bool
+	public function readBool(value:Null<Bool>, defaultValue:Bool = false):Bool
 	{
 		return readProperty(value, defaultValue) == true;
 	}
@@ -82,7 +82,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param value 		The property from the JSON file.
 	 * @param defaultValue 	A value to return if the property doesn't exist on the JSON file. The default is an empty string.
 	 */
-	function readString(value:String, defaultValue:String = ''):String
+	public function readString(value:String, defaultValue:String = ''):String
 	{
 		return readProperty(value, defaultValue);
 	}
@@ -93,7 +93,7 @@ class JsonObject implements IFlxDestroyable
 		* @param defaultValue 	A value to return if the property doesn't exist on the JSON file. The default is the color white.
 		* @param allowAlpha		Whether to allow alpha values. If disabled, colors are forced to be opaque.
 	**/
-	function readColor(value:Dynamic, defaultValue:FlxColor = FlxColor.WHITE, allowAlpha:Bool = true):FlxColor
+	public function readColor(value:Dynamic, defaultValue:FlxColor = FlxColor.WHITE, allowAlpha:Bool = true):FlxColor
 	{
 		var color:Null<FlxColor> = null;
 		if (value != null)
@@ -136,7 +136,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param maxLength 	Optional parameter to set the maximum length of the returned array. The array will have the last elements removed until its the maximum length. Has no effect if `fixedLength` is set.
 	 * @param fixedLength	Optional parameter to set the fixed length of the returned array. If the array has less or more elements than this, the default value is returned. This overrides `maxLength`.
 	 */
-	function readArray(value:Array<Dynamic>, ?defaultValue:Array<Dynamic>, ?maxLength:Int, ?fixedLength:Int):Array<Dynamic>
+	public function readArray(value:Array<Dynamic>, ?defaultValue:Array<Dynamic>, ?maxLength:Int, ?fixedLength:Int):Array<Dynamic>
 	{
 		if (defaultValue == null)
 			defaultValue = [];
@@ -164,7 +164,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param fixedLength	Optional parameter to set the fixed length of the returned array. If the array has less or more elements than this, the default value is returned. This overrides `maxLength`.
 	 */
 	@:generic
-	function readTypedArray<T>(value:Array<T>, ?defaultValue:Array<T>, ?maxLength:Int, ?fixedLength:Int):Array<T>
+	public function readTypedArray<T>(value:Array<T>, ?defaultValue:Array<T>, ?maxLength:Int, ?fixedLength:Int):Array<T>
 	{
 		if (defaultValue == null)
 			defaultValue = [];
@@ -193,7 +193,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param minValue 		If set, values in the array will not go below this parameter.
 	 * @param maxValue 		If set, values in the array will not go above this parameter.
 	 */
-	function readIntArray(value:Array<Int>, ?defaultValue:Array<Int>, ?maxLength:Int, ?fixedLength:Int, ?minValue:Int, ?maxValue:Int):Array<Int>
+	public function readIntArray(value:Array<Int>, ?defaultValue:Array<Int>, ?maxLength:Int, ?fixedLength:Int, ?minValue:Int, ?maxValue:Int):Array<Int>
 	{
 		var array:Array<Int> = readTypedArray(value, defaultValue, maxLength, fixedLength);
 		
@@ -221,7 +221,7 @@ class JsonObject implements IFlxDestroyable
 	 * @param maxValue 		If set, values in the array will not go above this parameter.
 	 * @param decimals 		If set, values in the array will be rounded in case there's more decimals than stated in this parameter.
 	 */
-	function readFloatArray(value:Array<Float>, ?defaultValue:Array<Float>, ?maxLength:Int, ?fixedLength:Int, ?minValue:Float, ?maxValue:Float,
+	public function readFloatArray(value:Array<Float>, ?defaultValue:Array<Float>, ?maxLength:Int, ?fixedLength:Int, ?minValue:Float, ?maxValue:Float,
 			?decimals:Int):Array<Float>
 	{
 		var array:Array<Float> = readTypedArray(value, defaultValue, maxLength, fixedLength);
@@ -245,7 +245,7 @@ class JsonObject implements IFlxDestroyable
 	/**
 		Returns if a property isn't `null`.
 	**/
-	function propertyExists(value:Dynamic)
+	public function propertyExists(value:Dynamic)
 	{
 		return value != null;
 	}

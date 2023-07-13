@@ -88,7 +88,7 @@ class CreditsState extends FNFState
 		
 		readCredits('assets/data/credits');
 		for (mod in Mods.currentMods)
-			readCredits(Path.join([Mods.modsPath, mod.directory, 'data/credits.json']));
+			readCredits(Path.join([Mods.modsPath, mod.id, 'data/credits.json']));
 			
 		if (lastSelected >= categoryMenuList.length)
 			lastSelected = categoryMenuList.length - 1;

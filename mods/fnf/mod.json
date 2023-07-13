@@ -1,6 +1,6 @@
 {
-  "name": "Friday Night Funkin'",
-  "description": "You can't spell Friday Night Funkin' PvP without Friday Night Funkin'.",
-  "modVersion": "1.0.0",
-  "gameVersion": "1.0.0"
+    "title": "Friday Night Funkin'",
+    "description": "You can't spell Friday Night Funkin' PvP without Friday Night Funkin'.",
+    "api_version": "1.0.0",
+    "mod_version": "1.0.0"
 }

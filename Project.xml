@@ -52,6 +52,7 @@
 	<ndll name="systools" haxelib="systools" if="systools" />
 	<haxelib name="discord_rpc" if="cpp"/>
 	<haxelib name="hxCodec" if="windows || linux || android" />
+	<haxelib name="thx.semver" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

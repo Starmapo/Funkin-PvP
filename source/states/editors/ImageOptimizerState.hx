@@ -79,7 +79,7 @@ class ImageOptimizerState extends FNFState
 		folders.push("assets/");
 		for (mod in Mods.currentMods)
 		{
-			var folder = Path.join([Mods.modsPath, mod.directory]);
+			var folder = Path.join([Mods.modsPath, mod.id]);
 			if (!folder.endsWith("/"))
 				folder += "/";
 			folders.push(folder);

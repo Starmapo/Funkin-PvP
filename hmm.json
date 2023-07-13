@@ -68,6 +68,11 @@
       "dir": null,
       "ref": "master",
       "url": "https://github.com/haya3218/retools"
+    },
+    {
+      "name": "thx.semver",
+      "type": "haxelib",
+      "version": null
     }
   ]
 }

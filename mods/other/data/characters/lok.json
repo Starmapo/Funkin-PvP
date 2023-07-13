@@ -1,0 +1,59 @@
+{
+	"positionOffset": [
+		15,
+		146
+	],
+	"image": "characters/LOK",
+	"healthIcon": "lok",
+	"anims": [
+		{
+			"atlasName": "Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"atlasName": "Down",
+			"name": "singDOWN",
+			"offset": [
+				-18,
+				-209
+			]
+		},
+		{
+			"atlasName": "Left",
+			"name": "singLEFT",
+			"offset": [
+				165,
+				7
+			]
+		},
+		{
+			"atlasName": "Right",
+			"name": "singRIGHT",
+			"offset": [
+				-126,
+				-52
+			]
+		},
+		{
+			"atlasName": "Up",
+			"name": "singUP",
+			"offset": [
+				77,
+				133
+			]
+		}
+	],
+	"cameraOffset": [
+		17,
+		-8
+	],
+	"healthColors": [
+		197,
+		65,
+		37
+	]
+}

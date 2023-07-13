@@ -152,7 +152,7 @@ class CharacterSelectState extends FNFState
 					for (group in playerGroups)
 					{
 						var data = group.charMenuList.selectedItem.charData;
-						chars.push(data.directory + ':' + data.name);
+						chars.push(data.id + ':' + data.name);
 					}
 					FlxG.switchState(new PlayState(SongSelectState.song, chars));
 				});
@@ -401,7 +401,7 @@ class PlayerCharacterSelect extends FlxGroup
 	function onCharChange(item:CharacterMenuItem)
 	{
 		updateCamFollow(item);
-		var portrait = Paths.getImage('characterSelect/portraits/' + item.charData.name, item.charData.directory);
+		var portrait = Paths.getImage('characterSelect/portraits/' + item.charData.name, item.charData.id);
 		if (portrait != null)
 		{
 			charPortrait.loadGraphic(portrait);
@@ -511,7 +511,7 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		
 		super(x, y, label, name);
 		
-		bg = new FlxSprite(0, 0, CoolUtil.getGroupGraphic(groupData.name, groupData.directory));
+		bg = new FlxSprite(0, 0, CoolUtil.getGroupGraphic(groupData.name, groupData.id));
 		bg.antialiasing = true;
 		label.add(bg);
 		
@@ -619,7 +619,7 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 	public function setCharData(charData:ModCharacter)
 	{
 		this.charData = charData;
-		name = charData.directory + charData.name;
+		name = charData.id + charData.name;
 		
 		bg.loadGraphic(getBGGraphic());
 	}
@@ -632,7 +632,7 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			
 		final thickness = 4;
 		
-		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.directory, true, false, graphicKey);
+		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.id, true, false, graphicKey);
 		if (graphic == null)
 		{
 			final unknownKey = '::charUnknown::_edit';

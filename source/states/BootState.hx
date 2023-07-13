@@ -470,7 +470,7 @@ class BootState extends FNFState
 		var hasFNF = false;
 		for (mod in Mods.currentMods)
 		{
-			if (mod.directory == "fnf")
+			if (mod.id == "fnf")
 			{
 				hasFNF = true;
 				return;

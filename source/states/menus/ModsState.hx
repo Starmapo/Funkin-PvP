@@ -111,7 +111,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 	{
 		var label = new FlxSpriteGroup();
 		
-		super(x, y, label, mod.directory);
+		super(x, y, label, mod.id);
 		
 		var bgGraphic = FlxG.bitmap.get('mod_bg');
 		if (bgGraphic == null)
@@ -124,13 +124,13 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 		var bg = new FlxSprite(0, 0, bgGraphic);
 		
-		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.directory, 'icon']), null, false);
+		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.id, 'icon']), null, false);
 		if (iconImage == null)
 			iconImage = Paths.getImage('menus/mods/noIcon');
 		var icon = new FlxSprite(20, 20, iconImage);
 		
 		var maxNameWidth = bg.width - 109;
-		var name = new FlxText(icon.x + icon.width + 5, icon.y + (icon.height / 2), 0, mod.name);
+		var name = new FlxText(icon.x + icon.width + 5, icon.y + (icon.height / 2), 0, mod.title);
 		name.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		if (name.width > maxNameWidth)
 		{
@@ -138,10 +138,6 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			name.size *= Math.floor(ratio);
 		}
 		name.y -= name.height / 2;
-		
-		var warning = CoolUtil.getVersionWarning(mod.gameVersion);
-		if (warning.length > 0)
-			name.color = FlxColor.RED;
 			
 		var count = getCountText(mod);
 		
@@ -149,8 +145,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			+ icon.height
 			+ 5, bg.width
 			- 40,
-			warning
-			+ mod.description
+			mod.description
 			+ '\n\n'
 			+ (count.length > 0 ? '($count)\n' : '')
 			+ 'Version: '

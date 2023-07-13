@@ -451,27 +451,6 @@ class CoolUtil
 	}
 	
 	/**
-		Returns a warning if `version` is outdated from the current version.
-	**/
-	public static function getVersionWarning(version:String):String
-	{
-		var splitCurVersion = getVersion().split('.');
-		var curMajor = Std.parseInt(splitCurVersion[0]);
-		
-		var splitVersion = version.split('.');
-		var major = (splitVersion[0] != null && splitVersion[0].length > 0) ? Std.parseInt(splitVersion[0]) : null;
-		if (major == null)
-			major = curMajor;
-			
-		if (major < curMajor)
-			return '[WARNING: This mod was made for a previous major release (v$major) and might not function properly!]\n';
-		else if (major > curMajor)
-			return '[WARNING: This mod was made for a future major release (v$major) and might not function properly!]\n';
-		else
-			return '';
-	}
-	
-	/**
 		Returns if `num` is in between `start` and `end`.
 	**/
 	public static function inBetween(num:Float, start:Float, end:Float):Bool

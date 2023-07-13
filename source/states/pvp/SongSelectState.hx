@@ -202,7 +202,7 @@ class SongSelectState extends FNFState
 		canSelectChars = group.canSelectChars;
 		
 		var difficulty = group.difficultyMenuList.selectedItem.difficulty;
-		song = Song.loadSong(songData.name + '/' + difficulty, songData.directory);
+		song = Song.loadSong(songData.name + '/' + difficulty, songData.id);
 		
 		if (Settings.noLongNotes)
 			song.replaceLongNotesWithRegularNotes();
@@ -601,7 +601,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		
 		super(x, y, label, name);
 		
-		bg = new FlxSprite(0, 0, CoolUtil.getGroupGraphic(groupData.name, groupData.directory));
+		bg = new FlxSprite(0, 0, CoolUtil.getGroupGraphic(groupData.name, groupData.id));
 		bg.antialiasing = true;
 		label.add(bg);
 		
@@ -700,7 +700,7 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		this.songData = songData;
 		maxWidth = defaultMaxWidth;
 		
-		name = songData.directory + songData.name;
+		name = songData.id + songData.name;
 		
 		text.text = songData.name;
 		

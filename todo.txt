@@ -1,4 +1,5 @@
 polymod meta
+global notifications
 editors drag & drop
 workflows
 wiki
