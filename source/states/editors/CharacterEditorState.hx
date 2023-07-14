@@ -19,7 +19,6 @@ import sprites.game.Character;
 import subStates.editors.char.CharacterEditorSavePrompt;
 import sys.FileSystem;
 import sys.io.File;
-import ui.editors.NotificationManager;
 import ui.editors.char.CharacterEditorAnimPanel;
 import ui.editors.char.CharacterEditorEditPanel;
 import ui.editors.char.CharacterEditorToolPanel;
@@ -42,7 +41,6 @@ class CharacterEditorState extends FNFState
 	public var char:Character;
 	public var ghostChar:Character;
 	public var actionManager:CharacterEditorActionManager;
-	public var notificationManager:NotificationManager;
 	public var guideChar:Character;
 	public var healthBar:HealthBar;
 	public var curAnim:String;
@@ -89,7 +87,6 @@ class CharacterEditorState extends FNFState
 		ghostChar = null;
 		dragMousePos = FlxDestroyUtil.put(dragMousePos);
 		guideChar = null;
-		notificationManager = null;
 		uiGroup = null;
 		camIndicator = null;
 		toolPanel = null;
@@ -161,9 +158,6 @@ class CharacterEditorState extends FNFState
 		
 		savePrompt = new CharacterEditorSavePrompt(onSavePrompt);
 		
-		notificationManager = new NotificationManager();
-		add(notificationManager);
-		
 		camPos = new FlxObject();
 		add(camPos);
 		FlxG.camera.follow(camPos);
@@ -183,7 +177,6 @@ class CharacterEditorState extends FNFState
 		ghostChar.update(elapsed);
 		char.update(elapsed);
 		healthBar.icon.update(elapsed);
-		notificationManager.update(elapsed);
 		
 		updateAnimText();
 		
@@ -506,7 +499,7 @@ class CharacterEditorState extends FNFState
 		changed = false;
 		
 		if (notif)
-			notificationManager.showNotification('Character successfully saved!', SUCCESS);
+			Main.showNotification('Character successfully saved!', SUCCESS);
 	}
 	
 	public function updateCamIndicator()
@@ -525,7 +518,7 @@ class CharacterEditorState extends FNFState
 		FileSystem.createDirectory('frames/');
 		File.saveBytes(path, bytes);
 		System.openFile(path);
-		notificationManager.showNotification('Image successfully saved!', SUCCESS);
+		Main.showNotification('Image successfully saved!', SUCCESS);
 	}
 	
 	public function reloadinfo()

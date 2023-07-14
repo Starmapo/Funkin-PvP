@@ -212,7 +212,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 					longNoteInDrag = longNote;
 				}
 				else
-					state.notificationManager.showNotification("You can't place a long note there! Switch to the 'Notes' section.", ERROR);
+					Main.showNotification("You can't place a long note there! Switch to the 'Notes' section.", ERROR);
 			default:
 		}
 		if (object != null)

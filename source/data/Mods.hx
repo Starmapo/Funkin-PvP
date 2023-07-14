@@ -1,7 +1,6 @@
 package data;
 
 import CoolUtil.NameInfo;
-import flixel.FlxG;
 import haxe.io.Path;
 import sys.FileSystem;
 import thx.semver.Version;
@@ -41,12 +40,12 @@ class Mods
 					if (mod == null)
 						continue;
 					if (!VersionUtil.match(mod.apiVersion, apiVersionRule))
-						FlxG.log.error('Mod $file was built for incompatible API version ${mod.apiVersion}, expected "$apiVersionRule"');
+						Main.showNotification('Mod $file was built for incompatible API version ${mod.apiVersion}, expected "$apiVersionRule"', ERROR);
 					mod.id = file;
 					modsToLoad.push(mod);
 				}
 				else
-					FlxG.log.error('Could not find mod metadata file: $jsonPath');
+					Main.showNotification('Could not find mod metadata file: $jsonPath', ERROR);
 			}
 		}
 		final filteredMods = filterDependencies(modsToLoad);
@@ -322,13 +321,14 @@ class Mods
 					var depMod = modMap.get(dep);
 					if (depMod == null)
 					{
-						FlxG.log.error('Dependency "$dep" not found, which is required for mod "${mod.id}".');
+						Main.showNotification('Dependency "$dep" not found, which is required for mod "${mod.id}".', ERROR);
 						depError = true;
 						break;
 					}
 					if (!VersionUtil.match(depMod.modVersion, depRule))
 					{
-						FlxG.log.error('Dependency "$dep" has version "${depMod.modVersion}", but requires "${depRule}" for mod "${mod.id}".');
+						Main.showNotification('Dependency "$dep" has version "${depMod.modVersion}", but requires "${VersionUtil.ruleToString(depRule)}" for mod "${mod.id}".',
+							ERROR);
 						depError = true;
 						break;
 					}
@@ -370,7 +370,7 @@ class Mod extends JsonObject
 		var data:Dynamic = Paths.getJson(path);
 		if (data == null || data.length < 1)
 		{
-			FlxG.log.error('Error parsing mod metadata file ($path), was null or empty.');
+			Main.showNotification('Error parsing mod metadata file ($path), was null or empty.', ERROR);
 			return null;
 		}
 		
@@ -381,7 +381,7 @@ class Mod extends JsonObject
 		}
 		catch (e)
 		{
-			FlxG.log.error('Error parsing API version: ($e) metadata was $data');
+			Main.showNotification('Error parsing API version: ($e) metadata was $data', ERROR);
 			return null;
 		}
 		try
@@ -390,7 +390,7 @@ class Mod extends JsonObject
 		}
 		catch (e)
 		{
-			FlxG.log.error('Error parsing mod version: ($e) metadata was $data');
+			Main.showNotification('Error parsing mod version: ($e) metadata was $data', ERROR);
 			return null;
 		}
 		

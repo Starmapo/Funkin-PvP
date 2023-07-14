@@ -13,6 +13,7 @@ import openfl.filters.ColorMatrixFilter;
 import openfl.ui.Keyboard;
 import states.BootState;
 import ui.StatsDisplay;
+import ui.display.NotificationManager;
 
 using StringTools;
 
@@ -35,6 +36,7 @@ class Main extends Sprite
 	static var colorFilter:ColorMatrixFilter;
 	static var hueFilter:ColorMatrixFilter;
 	static var statsDisplay:StatsDisplay;
+	static var notificationManager:NotificationManager;
 	
 	public static function main():Void
 	{
@@ -44,15 +46,26 @@ class Main extends Sprite
 	/**
 		Gets the proper transition time, taking `Settings.fastTransitions` into account.
 	**/
-	public static function getTransitionTime()
+	public static function getTransitionTime():Float
 	{
 		return TRANSITION_TIME * (Settings.fastTransitions ? 0.4 : 1);
 	}
 	
 	/**
+		Displays a new notification.
+		@param	info	The text to display in the notification.
+		@param	level	The level of the notification (`INFO` (default), `ERROR`, `WARNING`, or `SUCCESS`).
+		@return	The new notification.
+	**/
+	public static function showNotification(info:String, level:NotificationLevel = INFO):Notification
+	{
+		return notificationManager.showNotification(info, level);
+	}
+	
+	/**
 		Updates the color filter based on `Settings.filter`, `Settings.gamma`, and `Settings.brightness`.
 	**/
-	public static function updateColorFilter()
+	public static function updateColorFilter():Void
 	{
 		if (colorFilter == null)
 			colorFilter = new ColorMatrixFilter();
@@ -128,7 +141,7 @@ class Main extends Sprite
 	/**
 		Updates the game's filters.
 	**/
-	public static function updateFilters()
+	public static function updateFilters():Void
 	{
 		updateColorFilter();
 		updateHueFilter();
@@ -141,7 +154,7 @@ class Main extends Sprite
 	/**
 		Updates the hue filter based on `Settings.hue`.
 	**/
-	public static function updateHueFilter()
+	public static function updateHueFilter():Void
 	{
 		if (hueFilter == null)
 			hueFilter = new ColorMatrixFilter();
@@ -188,6 +201,8 @@ class Main extends Sprite
 			
 		addChild(new FlxGame(0, 0, BootState, 60, 60, true, false));
 		
+		addChild(notificationManager = new NotificationManager());
+		
 		addChild(statsDisplay = new StatsDisplay());
 		statsDisplay.visible = false;
 		
@@ -195,12 +210,12 @@ class Main extends Sprite
 		FlxG.signals.gameResized.add(onGameResized);
 	}
 	
-	function onGameResized(width:Int, height:Int)
+	function onGameResized(width:Int, height:Int):Void
 	{
 		statsDisplay.onResize(width, height);
 	}
 	
-	function onKeyDown(e:KeyboardEvent)
+	function onKeyDown(e:KeyboardEvent):Void
 	{
 		switch (e.keyCode)
 		{

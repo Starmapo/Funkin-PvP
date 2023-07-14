@@ -40,7 +40,6 @@ import subStates.PauseSubState;
 import subStates.ResultsScreen;
 import sys.FileSystem;
 import ui.VoidTransition;
-import ui.editors.NotificationManager;
 import ui.game.HealthBar;
 import ui.game.JudgementCounter;
 import ui.game.JudgementDisplay;
@@ -87,7 +86,6 @@ class PlayState extends FNFState
 	public var defaultCamZoom:Float = 1.05;
 	public var canPause:Bool = false;
 	public var scripts:Map<String, PlayStateScript> = [];
-	public var notificationManager:NotificationManager;
 	public var events:Array<PlayStateEvent> = [];
 	public var camZooming:Bool = false;
 	public var camZoomingDecay:Float = 1;
@@ -239,7 +237,6 @@ class PlayState extends FNFState
 				FlxDestroyUtil.destroy(s);
 			scripts = null;
 		}
-		notificationManager = FlxDestroyUtil.destroy(notificationManager);
 		events = null;
 		healthBars = FlxDestroyUtil.destroy(healthBars);
 		deathBG = FlxDestroyUtil.destroy(deathBG);
@@ -857,9 +854,6 @@ class PlayState extends FNFState
 		
 		lyricsDisplay = new LyricsDisplay(song, Song.getSongLyrics(song));
 		lyricsDisplay.cameras = [camHUD];
-		
-		notificationManager = new NotificationManager();
-		notificationManager.cameras = [camHUD];
 	}
 	
 	function initPauseSubState()
@@ -925,7 +919,6 @@ class PlayState extends FNFState
 		if (songInfoDisplay != null)
 			add(songInfoDisplay);
 		add(lyricsDisplay);
-		add(notificationManager);
 	}
 	
 	function initStage()

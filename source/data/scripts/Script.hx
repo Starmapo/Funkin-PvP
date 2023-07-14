@@ -250,6 +250,7 @@ class Script implements IFlxDestroyable
 	**/
 	public function onError(message:String)
 	{
+		Main.showNotification(message, ERROR);
 		trace(message);
 	}
 	

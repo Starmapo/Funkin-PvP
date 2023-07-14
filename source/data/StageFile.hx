@@ -440,7 +440,7 @@ class StageFile implements IFlxDestroyable
 			}
 			catch (e)
 			{
-				state.notificationManager.showNotification("Failed to apply XML property: " + e, ERROR);
+				Main.showNotification("Failed to apply XML property: " + e, ERROR);
 			}
 		}
 	}

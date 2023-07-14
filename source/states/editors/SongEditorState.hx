@@ -23,7 +23,6 @@ import haxe.io.Path;
 import lime.app.Application;
 import subStates.editors.song.SongEditorSavePrompt;
 import sys.io.File;
-import ui.editors.NotificationManager;
 import ui.editors.Tooltip;
 import ui.editors.song.SongEditorCamFocusDisplay;
 import ui.editors.song.SongEditorCompositionPanel;
@@ -62,7 +61,6 @@ class SongEditorState extends FNFState
 	public var songSeeked:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 	public var rateChanged:FlxTypedSignal<Float->Float->Void> = new FlxTypedSignal();
 	public var currentTool:Bindable<CompositionTool> = new Bindable(SELECT);
-	public var notificationManager:NotificationManager;
 	public var tooltip:Tooltip;
 	public var selectedObjects:BindableArray<ITimingObject> = new BindableArray([]);
 	public var seekBar:SongEditorSeekBar;
@@ -118,7 +116,6 @@ class SongEditorState extends FNFState
 		FlxDestroyUtil.destroy(songSeeked);
 		FlxDestroyUtil.destroy(rateChanged);
 		FlxDestroyUtil.destroy(currentTool);
-		notificationManager = null;
 		tooltip = null;
 		selectedObjects = FlxDestroyUtil.destroy(selectedObjects);
 		seekBar = null;
@@ -225,8 +222,6 @@ class SongEditorState extends FNFState
 		
 		savePrompt = new SongEditorSavePrompt(onSavePrompt);
 		
-		notificationManager = new NotificationManager();
-		
 		add(bg);
 		add(playfieldNotes);
 		add(playfieldOther);
@@ -240,7 +235,6 @@ class SongEditorState extends FNFState
 		add(compositionPanel);
 		add(editPanel);
 		add(lyricsDisplay);
-		add(notificationManager);
 		add(tooltip);
 		
 		setSongTime(time);
@@ -269,7 +263,6 @@ class SongEditorState extends FNFState
 		metronome.update();
 		detailsPanel.update(elapsed);
 		lyricsDisplay.updateLyrics(inst.time);
-		notificationManager.update(elapsed);
 		tooltip.update(elapsed);
 		
 		FlxG.camera.scroll.y = -trackPositionY;
@@ -350,7 +343,7 @@ class SongEditorState extends FNFState
 		actionManager.lastSaveAction = actionManager.undoStack[0];
 		
 		if (notif)
-			notificationManager.showNotification('Song successfully saved!', SUCCESS);
+			Main.showNotification('Song successfully saved!', SUCCESS);
 	}
 	
 	public function getTimeFromY(y:Float)
@@ -416,13 +409,13 @@ class SongEditorState extends FNFState
 		}
 		if (!hasNote)
 		{
-			notificationManager.showNotification("There aren't any notes to play past this point!", ERROR);
+			Main.showNotification("There aren't any notes to play past this point!", ERROR);
 			return;
 		}
 		
 		if (song.timingPoints.length == 0)
 		{
-			notificationManager.showNotification("A timing point must be added to your map before test playing!", ERROR);
+			Main.showNotification("A timing point must be added to your map before test playing!", ERROR);
 			return;
 		}
 		
@@ -802,7 +795,7 @@ class SongEditorState extends FNFState
 		}
 		if (tpCount >= song.timingPoints.length)
 		{
-			notificationManager.showNotification('You must have at least 1 timing point in your map!', ERROR);
+			Main.showNotification('You must have at least 1 timing point in your map!', ERROR);
 			return;
 		}
 		

@@ -1,4 +1,4 @@
-package ui.editors;
+package ui.display;
 
 import flixel.FlxG;
 import flixel.addons.ui.FlxUI9SliceSprite;
@@ -11,7 +11,31 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxTimer;
 import openfl.geom.Rectangle;
 
-class NotificationManager extends FlxTypedGroup<Notification>
+class NotificationManager extends FlxDisplayState
+{
+	var display:NotificationDisplay;
+	
+	public function new()
+	{
+		super();
+		
+		display = new NotificationDisplay();
+		add(display);
+	}
+	
+	override function destroy()
+	{
+		super.destroy();
+		display = null;
+	}
+	
+	public function showNotification(info:String, level:NotificationLevel = INFO)
+	{
+		return display.showNotification(info, level);
+	}
+}
+
+class NotificationDisplay extends FlxTypedGroup<Notification>
 {
 	static final startY:Int = 50;
 	
@@ -35,7 +59,7 @@ class NotificationManager extends FlxTypedGroup<Notification>
 		FlxTween.tween(notification, {alpha: 1}, 0.5, {
 			onComplete: function(_)
 			{
-				FlxTimer.startTimer(5, function(_)
+				var tmr = FlxTimer.startTimer(5, function(_)
 				{
 					FlxTween.tween(notification, {alpha: 0}, 0.5, {
 						onComplete: function(_)
@@ -43,10 +67,10 @@ class NotificationManager extends FlxTypedGroup<Notification>
 							remove(notification, true);
 							notification.destroy();
 						}
-					});
-				});
+					}).persist = true;
+				}).persist = true;
 			}
-		});
+		}).persist = true;
 		return insert(0, notification);
 	}
 }
@@ -69,7 +93,7 @@ class Notification extends FlxSpriteGroup
 	}
 	
 	var bg:FlxUI9SliceSprite;
-	var text:FlxUIText;
+	var text:FlxUITextPersistent;
 	
 	public function new(info:String, level:NotificationLevel)
 	{
@@ -77,13 +101,15 @@ class Notification extends FlxSpriteGroup
 		
 		bg = new FlxUI9SliceSprite(0, 0, Paths.getImage('editors/notification'), new Rectangle(), [6, 6, 11, 11]);
 		
-		text = new FlxUIText(0, 0, info);
-		text.setFormat('VCR OSD Mono', 14, getLevelColor(level));
-		var maxWidth = FlxG.width - 20;
+		text = new FlxUITextPersistent(0, 0, info);
+		text.setFormat('VCR OSD Mono', 14, getLevelColor(level), CENTER);
+		
+		final maxWidth = FlxG.width - 40;
 		if (text.width > maxWidth)
 			text.fieldWidth = maxWidth;
 			
-		bg.resize(text.width + 10, text.height + 10);
+		bg.resize(Math.ceil(text.width + 10), Math.ceil(text.height + 10));
+		bg.graphic.destroyOnNoUse = false;
 		text.setPosition((bg.width / 2) - (text.width / 2), (bg.height / 2) - (text.height / 2));
 		
 		add(bg);
@@ -107,4 +133,14 @@ enum NotificationLevel
 	ERROR;
 	WARNING;
 	SUCCESS;
+}
+
+class FlxUITextPersistent extends FlxUIText
+{
+	override function regenGraphic()
+	{
+		super.regenGraphic();
+		if (graphic != null)
+			graphic.destroyOnNoUse = false;
+	}
 }

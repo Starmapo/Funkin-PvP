@@ -288,7 +288,6 @@ class MusicTiming implements IFlxDestroyable
 		if (!timeOutOfThreshold && previousTime != 0)
 			return;
 			
-		// FlxG.log.add('Resynced: $time, ${music.time}');
 		previousTime = time = music.time;
 	}
 	

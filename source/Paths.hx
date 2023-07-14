@@ -366,7 +366,7 @@ class Paths
 				return frames;
 		}
 		
-		FlxG.log.warn('Spritesheet \"$originalPath\" not found.');
+		Main.showNotification('Spritesheet \"$originalPath\" not found.', ERROR);
 		return null;
 	}
 	

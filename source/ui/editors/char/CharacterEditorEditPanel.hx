@@ -134,7 +134,7 @@ class CharacterEditorEditPanel extends EditorPanel
 			if (text.length < 1)
 			{
 				nameInput.text = lastText;
-				state.notificationManager.showNotification("You can't have an empty animation name!", ERROR);
+				Main.showNotification("You can't have an empty animation name!", ERROR);
 				return;
 			}
 			for (anim in state.info.anims)
@@ -142,7 +142,7 @@ class CharacterEditorEditPanel extends EditorPanel
 				if (anim.name == text)
 				{
 					nameInput.text = lastText;
-					state.notificationManager.showNotification("There's already an animation named \"" + text + "\"!", ERROR);
+					Main.showNotification("There's already an animation named \"" + text + "\"!", ERROR);
 					return;
 				}
 			}
@@ -300,7 +300,7 @@ class CharacterEditorEditPanel extends EditorPanel
 			if (anims.length < 1 || anims[0].length < 1)
 			{
 				danceAnimsInput.text = lastText;
-				state.notificationManager.showNotification('You must have atleast 1 dance animation!', ERROR);
+				Main.showNotification('You must have atleast 1 dance animation!', ERROR);
 				return;
 			}
 			
@@ -445,13 +445,13 @@ class CharacterEditorEditPanel extends EditorPanel
 			var cwd = Path.normalize(Sys.getCwd());
 			if (!path.startsWith(cwd))
 			{
-				state.notificationManager.showNotification("You must select a character inside of the game's directory!", ERROR);
+				Main.showNotification("You must select a character inside of the game's directory!", ERROR);
 				return;
 			}
 			var info = CharacterInfo.loadCharacter(path.substr(cwd.length + 1));
 			if (info == null)
 			{
-				state.notificationManager.showNotification("You must select a valid character file!", ERROR);
+				Main.showNotification("You must select a valid character file!", ERROR);
 				return;
 			}
 			

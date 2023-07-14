@@ -445,7 +445,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			if (text.length == 0)
 			{
-				state.notificationManager.showNotification("You can't have an empty difficulty name!", ERROR);
+				Main.showNotification("You can't have an empty difficulty name!", ERROR);
 				difficultyInput.text = lastText;
 				return;
 			}
@@ -492,7 +492,7 @@ class SongEditorEditPanel extends EditorPanel
 		{
 			if (text.length == 0)
 			{
-				state.notificationManager.showNotification("You can't have an empty stage name!", ERROR);
+				Main.showNotification("You can't have an empty stage name!", ERROR);
 				stageInput.text = lastText;
 				return;
 			}
@@ -532,13 +532,13 @@ class SongEditorEditPanel extends EditorPanel
 			var cwd = Path.normalize(Sys.getCwd());
 			if (!path.startsWith(cwd))
 			{
-				state.notificationManager.showNotification("You must select a map inside of the game's directory!", ERROR);
+				Main.showNotification("You must select a map inside of the game's directory!", ERROR);
 				return;
 			}
 			var song = Song.loadSong(path.substr(cwd.length + 1));
 			if (song == null)
 			{
-				state.notificationManager.showNotification("You must select a valid song file!", ERROR);
+				Main.showNotification("You must select a valid song file!", ERROR);
 				return;
 			}
 			
@@ -1085,9 +1085,9 @@ class SongEditorEditPanel extends EditorPanel
 					types.push(note.type);
 			}
 			if (types.length > 0)
-				state.notificationManager.showNotification(types.join(', '));
+				Main.showNotification(types.join(', '));
 			else
-				state.notificationManager.showNotification('No special note types found.');
+				Main.showNotification('No special note types found.');
 		});
 		getTypeListButton.resize(110, getTypeListButton.height);
 		getTypeListButton.x = (width - getTypeListButton.width) / 2;
@@ -1422,9 +1422,9 @@ class SongEditorEditPanel extends EditorPanel
 				}
 			}
 			if (types.length > 0)
-				state.notificationManager.showNotification(types.join(', '));
+				Main.showNotification(types.join(', '));
 			else
-				state.notificationManager.showNotification('No events found.');
+				Main.showNotification('No events found.');
 		});
 		getEventListButton.resize(110, getEventListButton.height);
 		getEventListButton.x = (width - getEventListButton.width) / 2;

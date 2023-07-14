@@ -87,7 +87,7 @@ class PlayStateScript extends Script
 				if (i < max)
 					posInfo += ', ';
 			}
-			state.notificationManager.showNotification(posInfo);
+			Main.showNotification(posInfo);
 		}));
 		
 		setVariable("getOrder", function(obj:FlxBasic)
@@ -325,12 +325,6 @@ class PlayStateScript extends Script
 				return null;
 			});
 		 */
-	}
-	
-	override function onError(message:String)
-	{
-		state.notificationManager.showNotification(message, ERROR);
-		super.onError(message);
 	}
 	
 	function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)
