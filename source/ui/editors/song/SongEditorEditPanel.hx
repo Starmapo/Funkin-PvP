@@ -1,5 +1,6 @@
 package ui.editors.song;
 
+import util.StringUtil;
 import data.Settings;
 import data.song.CameraFocus;
 import data.song.EventObject;
@@ -751,7 +752,7 @@ class SongEditorEditPanel extends EditorPanel
 		
 		var beatSnaps = [
 			for (snap in state.availableBeatSnaps)
-				new StrNameLabel(Std.string(snap), '1/${CoolUtil.formatOrdinal(snap)}')
+				new StrNameLabel(Std.string(snap), '1/${StringUtil.formatOrdinal(snap)}')
 		];
 		beatSnapDropdown = new EditorDropdownMenu(beatSnapLabel.x + inputSpacing, beatSnapLabel.y - 4, beatSnaps, function(id)
 		{

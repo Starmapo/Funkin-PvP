@@ -18,6 +18,7 @@ import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
+import util.StringUtil;
 
 using StringTools;
 
@@ -218,7 +219,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 	
 	function onDropFile(path:String)
 	{
-		if (!CoolUtil.endsWithAny(path, Paths.SOUND_EXTENSIONS))
+		if (!StringUtil.endsWithAny(path, Paths.SOUND_EXTENSIONS))
 			return;
 			
 		// mouse position hasn't been updated yet so i have to wait until the next update

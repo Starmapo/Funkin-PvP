@@ -1,4 +1,3 @@
-global notifications
 zip mods agane
 editors drag & drop
 workflows

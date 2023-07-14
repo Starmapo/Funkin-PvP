@@ -5,6 +5,7 @@ import data.song.Song;
 import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import util.StringUtil;
 
 using StringTools;
 
@@ -72,7 +73,7 @@ class LyricsDisplay extends FlxText
 				splitWords: [],
 				steps: []
 			}
-			if (!CoolUtil.containsAny(lyric, splitChars))
+			if (!StringUtil.containsAny(lyric, splitChars))
 				line.splitWords.push(lyric);
 			else
 			{

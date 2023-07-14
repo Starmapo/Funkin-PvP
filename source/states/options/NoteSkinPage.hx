@@ -18,6 +18,7 @@ import ui.game.Receptor;
 import ui.lists.SkinCategoryList;
 import ui.lists.SkinList;
 import ui.lists.TextMenuList;
+import util.StringUtil;
 
 class NoteSkinPage extends Page
 {
@@ -65,7 +66,7 @@ class NoteSkinPage extends Page
 		}
 		groups.sort(function(a, b)
 		{
-			return CoolUtil.sortAlphabetically(a.name, b.name);
+			return StringUtil.sortAlphabetically(a.name, b.name);
 		});
 		
 		for (group in groups)

@@ -17,6 +17,7 @@ import ui.game.NoteSplash;
 import ui.lists.SkinCategoryList;
 import ui.lists.SkinList;
 import ui.lists.TextMenuList.TextMenuItem;
+import util.StringUtil;
 
 class SplashSkinPage extends Page
 {
@@ -65,7 +66,7 @@ class SplashSkinPage extends Page
 		}
 		groups.sort(function(a, b)
 		{
-			return CoolUtil.sortAlphabetically(a.name, b.name);
+			return StringUtil.sortAlphabetically(a.name, b.name);
 		});
 		
 		for (group in groups)

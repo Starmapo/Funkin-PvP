@@ -1,7 +1,7 @@
 package;
 
-import data.BiLibrary;
 import data.Mods;
+import data.PanLibrary;
 import data.Settings;
 import data.song.Song;
 import flixel.FlxG;
@@ -17,6 +17,7 @@ import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
 import util.MemoryUtil;
+import util.StringUtil;
 
 using StringTools;
 
@@ -48,7 +49,7 @@ class Paths
 	/**
 		The main library, which supports the `mods` folder.
 	**/
-	public static var library:BiLibrary;
+	public static var library:PanLibrary;
 	
 	/**
 		List of sounds currently in use.
@@ -79,7 +80,7 @@ class Paths
 	**/
 	public static function excludeSound(path:String, ?mod:String)
 	{
-		if (!CoolUtil.endsWithAny(path, SOUND_EXTENSIONS))
+		if (!StringUtil.endsWithAny(path, SOUND_EXTENSIONS))
 			path += SOUND_EXTENSIONS[0];
 			
 		if (!exists(path))
@@ -286,7 +287,7 @@ class Paths
 	**/
 	public static function getSound(path:String, ?mod:String):Sound
 	{
-		if (!CoolUtil.endsWithAny(path, SOUND_EXTENSIONS))
+		if (!StringUtil.endsWithAny(path, SOUND_EXTENSIONS))
 			path += SOUND_EXTENSIONS[0];
 			
 		var ogPath = path;
@@ -497,7 +498,7 @@ class Paths
 	public static function init():Void
 	{
 		// use a modified library so we can get files in the mods folder
-		library = new BiLibrary();
+		library = new PanLibrary();
 		lime.utils.Assets.registerLibrary("", library);
 		
 		excludeSound('menus/scrollMenu');

@@ -5,6 +5,7 @@ import haxe.io.Path;
 import sys.FileSystem;
 import thx.semver.Version;
 import thx.semver.VersionRule;
+import util.StringUtil;
 import util.VersionUtil;
 
 using StringTools;
@@ -51,7 +52,7 @@ class Mods
 		final filteredMods = filterDependencies(modsToLoad);
 		filteredMods.sort(function(a, b)
 		{
-			return CoolUtil.sortAlphabetically(a.title, b.title);
+			return StringUtil.sortAlphabetically(a.title, b.title);
 		});
 		for (mod in filteredMods)
 			currentMods.push(mod);

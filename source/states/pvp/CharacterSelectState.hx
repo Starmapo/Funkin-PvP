@@ -24,6 +24,7 @@ import ui.lists.MenuList.MenuItem;
 import ui.lists.MenuList.TypedMenuItem;
 import ui.lists.MenuList.TypedMenuList;
 import util.DiscordClient;
+import util.StringUtil;
 
 class CharacterSelectState extends FNFState
 {
@@ -79,7 +80,7 @@ class CharacterSelectState extends FNFState
 			groups.push(group);
 		groups.sort(function(a, b)
 		{
-			return CoolUtil.sortAlphabetically(a.name, b.name);
+			return StringUtil.sortAlphabetically(a.name, b.name);
 		});
 		for (i in 0...2)
 			playerGroups.add(new PlayerCharacterSelect(i, camPlayers[i], this, groups));

@@ -5,6 +5,7 @@ import flixel.util.FlxDestroyUtil;
 import haxe.Json;
 import haxe.io.Path;
 import sys.io.File;
+import util.StringUtil;
 
 using StringTools;
 
@@ -311,7 +312,7 @@ class CharacterInfo extends JsonObject
 	{
 		anims.sort(function(a, b)
 		{
-			return CoolUtil.sortAlphabetically(a.name, b.name);
+			return StringUtil.sortAlphabetically(a.name, b.name);
 		});
 	}
 }

@@ -23,6 +23,7 @@ import ui.VoidBG;
 import ui.lists.MenuList;
 import ui.lists.TextMenuList;
 import util.DiscordClient;
+import util.StringUtil;
 
 class SongSelectState extends FNFState
 {
@@ -89,7 +90,7 @@ class SongSelectState extends FNFState
 			groups.push(group);
 		groups.sort(function(a, b)
 		{
-			return CoolUtil.sortAlphabetically(a.name, b.name);
+			return StringUtil.sortAlphabetically(a.name, b.name);
 		});
 		for (i in 0...players)
 			playerGroups.add(new PlayerSongSelect(i, camPlayers[i], this, groups));
@@ -513,7 +514,7 @@ class PlayerSongSelect extends FlxGroup
 		{
 			canSelectChars = false;
 			if (songMenuList.controlsEnabled)
-				warning = CoolUtil.addMultilineText(warning, "You can't pick characters for this song.");
+				warning = StringUtil.addMultilineText(warning, "You can't pick characters for this song.");
 		}
 		
 		if (difficultyMenuList.controlsEnabled)
@@ -522,7 +523,7 @@ class PlayerSongSelect extends FlxGroup
 			if (item.songData.forceCharacterDifficulties.contains(item.difficulty) && canSelectChars)
 			{
 				canSelectChars = false;
-				warning = CoolUtil.addMultilineText(warning, "You can't pick characters for this difficulty.");
+				warning = StringUtil.addMultilineText(warning, "You can't pick characters for this difficulty.");
 			}
 		}
 		
