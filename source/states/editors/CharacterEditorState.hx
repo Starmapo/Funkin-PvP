@@ -515,7 +515,7 @@ class CharacterEditorState extends FNFState
 			
 		var bytes = frame.parent.bitmap.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
 		var path = 'frames/$filename';
-		FileSystem.createDirectory('frames/');
+		CoolUtil.createDirectory('frames/');
 		File.saveBytes(path, bytes);
 		System.openFile(path);
 		Main.showNotification('Image successfully saved!', SUCCESS);

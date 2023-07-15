@@ -20,6 +20,7 @@ import lime.app.Application;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.system.System;
+import sys.FileSystem;
 import systools.win.Tools;
 
 using StringTools;
@@ -50,6 +51,17 @@ class CoolUtil
 			|| FlxG.mouse.justPressedRight);
 	}
 	
+	public static function createDirectory(directory:String)
+	{
+		if (directory == null)
+			return;
+		if (!directory.startsWith("./"))
+			directory = "./" + directory;
+		if (FileSystem.exists(directory))
+			return;
+		FileSystem.createDirectory(directory);
+	}
+	
 	/**
 		Creates a menu background sprite.
 
@@ -70,6 +82,30 @@ class CoolUtil
 		bg.screenCenter();
 		bg.antialiasing = true;
 		return bg;
+	}
+	
+	/**
+		Deletes a directory, handling the deletion of files inside of it.
+	**/
+	public static function deleteDirectory(directory:String)
+	{
+		if (directory == null)
+			return;
+		if (!directory.startsWith("./"))
+			directory = "./" + directory;
+		if (!FileSystem.exists(directory) || !FileSystem.isDirectory(directory))
+			return;
+			
+		var files = FileSystem.readDirectory(directory);
+		for (file in files)
+		{
+			var path = Path.join([directory, file]);
+			if (FileSystem.isDirectory(path))
+				deleteDirectory(path);
+			else
+				FileSystem.deleteFile(path);
+		}
+		FileSystem.deleteDirectory(directory);
 	}
 	
 	/**

@@ -1,8 +1,11 @@
 zip videos
+better cache
 show notifications option
 update detector
 editors drag & drop
 video resyncing
+disable/enable mods
+oxipng notice
 workflows
 wiki
 

@@ -9,22 +9,21 @@ import flixel.FlxG;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
 import haxe.io.Path;
-import hxcodec.flixel.FlxVideo;
 import hxcodec.flixel.FlxVideoSprite;
 import sprites.game.Character;
 import states.PlayState;
+import sys.FileSystem;
+import sys.io.File;
 import ui.game.Note;
 
 using StringTools;
 
 /**
-	A script for the gameplay  screen (`PlayState`).
+	A script for the gameplay screen (`PlayState`).
 **/
 class PlayStateScript extends Script
 {
 	var state:PlayState;
-	
-	// var modules:Map<String, ClassDecl> = new Map();
 	
 	public function new(state:PlayState, path:String, mod:String)
 	{
@@ -205,35 +204,45 @@ class PlayStateScript extends Script
 		setVariable("addGameShader", function(shader:FlxRuntimeShader)
 		{
 			if (shader == null)
+			{
+				onError("addGameShader: Shader is `null`.");
 				return;
-				
+			}
+			
 			var cameras = [FlxG.camera, state.camHUD, state.camOther];
 			for (camera in cameras)
 				camera.addShader(shader);
 		});
 		setVariable("loadDifficulty", function(difficulty:String)
 		{
-			return Song.loadSong('${state.song.name}/$difficulty.json', Mods.currentMod);
-		});
-		setVariable("startVideo", function(name:String, ?mod:String, loop:Bool = false, destroy:Bool = true)
-		{
-			var path = Paths.getVideo(name, mod);
-			if (!Paths.exists(path))
-				return null;
-				
-			var video = new FlxVideo();
-			if (destroy)
-				video.onEndReached.add(video.dispose);
-			video.play(path, loop);
-			video.rate = GameplayGlobals.playbackRate;
-			return video;
+			var song = Song.loadSong('${state.song.name}/$difficulty.json', Mods.currentMod);
+			if (song == null)
+				onError('loadDifficulty: Error loading difficulty "$difficulty".');
+			return song;
 		});
 		setVariable("createVideoSprite", function(x:Float = 0, y:Float = 0, name:String, ?mod:String, loop:Bool = false, destroy:Bool = true)
 		{
 			var path = Paths.getVideo(name, mod);
 			if (!Paths.exists(path))
+			{
+				onError('createVideoSprite: Could not find video "$name".');
 				return null;
-				
+			}
+			
+			// The video is in a ZIP.
+			if (!FileSystem.exists(path))
+			{
+				var tempPath = ".temp/" + path;
+				if (!FileSystem.exists(tempPath))
+				{
+					// hxCodec currently only supports loading from files, so we must load it in a temporary folder.
+					CoolUtil.createDirectory(Path.directory(tempPath));
+					var bytes = Paths.getBytes(path);
+					File.saveBytes(tempPath, bytes);
+				}
+				path = tempPath;
+			}
+			
 			var video = new FlxVideoSprite();
 			if (destroy)
 				video.bitmap.onEndReached.add(video.destroy);
@@ -243,9 +252,19 @@ class PlayStateScript extends Script
 		});
 		setVariable("setupStrumline", function(char:Character, chartName:String)
 		{
+			if (char == null)
+			{
+				onError('setupStrumline: Character is `null`.');
+				return null;
+			}
+			
 			var song = Song.loadSong(Path.join([state.song.directory, chartName + '.json']), state.song.mod);
 			if (song == null)
+			{
+				onError('setupStrumline: Error loading chart "$chartName".');
 				return null;
+			}
+			
 			var strumline = new FakeStrumline(state, char, song.notes);
 			state.afterRulesetUpdate.add(function(elapsed)
 			{
@@ -253,78 +272,6 @@ class PlayStateScript extends Script
 			});
 			return strumline;
 		});
-		
-		/*
-			// i tried to do some module shit, gave up
-			// it MIGHT be possible, but i dont think its worth the time
-
-			setVariable("addModule", function(name:String)
-			{
-				var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
-				var modulePath = Paths.getScriptPath('data/modules/${nameInfo.name}', nameInfo.mod);
-				if (Paths.exists(modulePath))
-				{
-					var module = Paths.getContent(modulePath);
-					var parser = new Parser();
-					var decls = parser.parseModule(module);
-					for (decl in decls)
-					{
-						switch (decl)
-						{
-							case DClass(c):
-								modules.set(c.name, c);
-							default:
-						}
-					}
-					return true;
-				}
-				return false;
-			});
-			setVariable("createModuleInstance", function(name:String, ?params:Array<String>):Dynamic
-			{
-				var module = modules.get(name);
-				if (module == null)
-				{
-					onError("Module " + name + " not found.");
-					return null;
-				}
-				if (module.extend == null)
-				{
-					var instance:Dynamic = {};
-					for (field in module.fields)
-					{
-						var stat = false;
-						for (access in field.access)
-						{
-							if (access == AStatic)
-							{
-								stat = true;
-								break;
-							}
-						}
-						if (!stat)
-						{
-							switch (field.kind)
-							{
-								case KFunction(f):
-									var func = switch (f.args.length)
-									{
-										default:
-											function()
-											{
-												var interp = new Interp();
-												interp.execute(f.expr);
-											}
-									}
-								case KVar(v):
-							}
-						}
-					}
-					return instance;
-				}
-				return null;
-			});
-		 */
 	}
 	
 	function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)

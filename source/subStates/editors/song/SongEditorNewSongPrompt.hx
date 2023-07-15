@@ -136,7 +136,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 			}
 			
 			var mod = modDropdown.selectedLabel;
-			var path = Path.join([Mods.modRoot, mod, 'songs', songName]);
+			var path = Path.join([Mods.modsPath, mod, 'songs', songName]);
 			if (Paths.exists(path))
 			{
 				FlxTween.cancelTweensOf(songNameInput);
@@ -146,7 +146,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 			
 			state.save(false);
 			
-			FileSystem.createDirectory(path);
+			CoolUtil.createDirectory(path);
 			File.copy(instFile, Path.join([path, 'Inst.' + Path.extension(instFile)]));
 			if (vocalsFile.length > 0 && FileSystem.exists(vocalsFile))
 				File.copy(vocalsFile, Path.join([path, 'Voices.' + Path.extension(vocalsFile)]));

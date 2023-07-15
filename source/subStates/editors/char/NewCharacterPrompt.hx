@@ -62,7 +62,7 @@ class NewCharacterPrompt extends FNFSubState
 			}
 			
 			var mod = modDropdown.selectedLabel;
-			var fullPath = Path.join([Mods.modRoot, mod, 'data/characters', char + '.json']);
+			var fullPath = Path.join([Mods.modsPath, mod, 'data/characters', char + '.json']);
 			if (Paths.exists(fullPath))
 			{
 				FlxTween.cancelTweensOf(charNameInput);
@@ -73,7 +73,7 @@ class NewCharacterPrompt extends FNFSubState
 			state.save(false);
 			
 			var path = Path.directory(fullPath);
-			FileSystem.createDirectory(path);
+			CoolUtil.createDirectory(path);
 			
 			var charInfo = new CharacterInfo({
 				image: 'characters/dad',

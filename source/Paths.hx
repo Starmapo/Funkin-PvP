@@ -222,7 +222,7 @@ class Paths
 		if (mod == null || mod.length == 0)
 			mod = Mods.currentMod;
 			
-		var modPath = Path.join(['./', Mods.modsPath, mod, key]);
+		var modPath = Path.join([Mods.modsPath, mod, key]);
 		if (exists(modPath))
 			return modPath;
 			

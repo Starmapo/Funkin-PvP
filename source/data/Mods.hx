@@ -13,7 +13,6 @@ using StringTools;
 class Mods
 {
 	public static final modsPath:String = 'mods';
-	public static final modRoot:String = './' + modsPath;
 	public static var currentMods:Array<Mod> = [];
 	public static var currentMod:String = '';
 	public static var pvpMusic:Array<NameInfo> = [];
@@ -29,13 +28,12 @@ class Mods
 		
 		final curVersion:Version = CoolUtil.getVersion();
 		final apiVersionRule:VersionRule = '${curVersion.major}.${curVersion.minor}.${curVersion.patch}';
-		trace(VersionUtil.ruleToString(apiVersionRule));
 		
 		final modsToLoad:Array<Mod> = [];
-		for (file in FileSystem.readDirectory(modRoot))
+		for (file in FileSystem.readDirectory(modsPath))
 		{
 			final modID = Path.withoutExtension(file);
-			final jsonPath = Path.join([modRoot, modID, 'mod.json']);
+			final jsonPath = Path.join([modsPath, modID, 'mod.json']);
 			if (Paths.exists(jsonPath))
 			{
 				final mod = Mod.getMod(jsonPath);
@@ -72,7 +70,7 @@ class Mods
 		
 		for (mod in currentMods)
 		{
-			var fullPath = Path.join([modRoot, mod.id]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			var pvpMusicPath = Path.join([fullPath, 'data/pvpMusic.txt']);
 			if (Paths.exists(pvpMusicPath))
 			{
@@ -93,13 +91,13 @@ class Mods
 		{
 			mod.songCount = 0;
 			
-			var fullPath = Path.join([modRoot, mod.id]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			
 			var difficulties:Array<String> = [];
 			var difficultiesPath = Path.join([fullPath, 'data/difficulties.txt']);
 			if (Paths.exists(difficultiesPath))
 			{
-				var diffs = Paths.getContent(difficultiesPath).trim().split('\n');
+				var diffs = Paths.getContent(difficultiesPath).split('\n');
 				for (diff in diffs)
 				{
 					diff = diff.trim();
@@ -179,7 +177,7 @@ class Mods
 		{
 			mod.characterCount = 0;
 			
-			var fullPath = Path.join([modRoot, mod.id]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			var characterSelectPath = Path.join([fullPath, 'data/charSelect.json']);
 			if (Paths.exists(characterSelectPath))
 			{
@@ -229,7 +227,7 @@ class Mods
 		{
 			mod.splashSkinCount = mod.judgementSkinCount = mod.noteskinCount = 0;
 			
-			var fullPath = Path.join([modRoot, mod.id]);
+			var fullPath = Path.join([modsPath, mod.id]);
 			var skinGroup:ModSkins = {
 				name: mod.title,
 				noteskins: [],
@@ -241,7 +239,7 @@ class Mods
 			var noteskinList = Path.join([fullPath, 'data/noteskins/skins.txt']);
 			if (Paths.exists(noteskinList))
 			{
-				var list = Paths.getContent(noteskinList).trim().split('\n');
+				var list = Paths.getContent(noteskinList).split('\n');
 				for (n in list)
 				{
 					var split = n.trim().split(':');
@@ -257,7 +255,7 @@ class Mods
 			var judgementSkinList = Path.join([fullPath, 'data/judgementSkins/skins.txt']);
 			if (Paths.exists(judgementSkinList))
 			{
-				var list = Paths.getContent(judgementSkinList).trim().split('\n');
+				var list = Paths.getContent(judgementSkinList).split('\n');
 				for (n in list)
 				{
 					var split = n.trim().split(':');
@@ -273,7 +271,7 @@ class Mods
 			var splashSkinList = Path.join([fullPath, 'data/splashSkins/skins.txt']);
 			if (Paths.exists(splashSkinList))
 			{
-				var list = Paths.getContent(splashSkinList).trim().split('\n');
+				var list = Paths.getContent(splashSkinList).split('\n');
 				for (n in list)
 				{
 					var split = n.trim().split(':');

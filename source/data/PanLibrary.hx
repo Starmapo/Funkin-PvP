@@ -195,7 +195,6 @@ class SysLibrary extends AssetLibrary
 class ZipLibrary extends AssetLibrary
 {
 	final modsPath = Mods.modsPath;
-	final modRoot = Mods.modRoot;
 	final filesLocations:Map<String, String> = new Map();
 	final fileDirectories:Array<String> = [];
 	final zipParsers:Map<String, ZipParser> = new Map();
@@ -253,8 +252,6 @@ class ZipLibrary extends AssetLibrary
 	
 	override function getBytes(id:String)
 	{
-		id = StringUtil.filterASCII(id);
-		
 		if (!filesLocations.exists(id))
 			return null;
 			
@@ -322,11 +319,11 @@ class ZipLibrary extends AssetLibrary
 	
 	public function addAllZips()
 	{
-		final modRootContents = FileSystem.readDirectory(modRoot);
+		final modRootContents = FileSystem.readDirectory(modsPath);
 		
 		for (file in modRootContents)
 		{
-			final filePath = Path.join([modRoot, file]);
+			final filePath = Path.join([modsPath, file]);
 			
 			if (FileSystem.isDirectory(filePath))
 				continue;

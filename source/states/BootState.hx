@@ -439,6 +439,8 @@ class BootState extends FNFState
 			}
 			return null;
 		};
+
+		CoolUtil.deleteDirectory(".temp");
 	}
 	
 	function loadSave()
@@ -458,7 +460,7 @@ class BootState extends FNFState
 	
 	function loadMods()
 	{
-		if (!FileSystem.exists(Mods.modRoot))
+		if (!FileSystem.exists(Mods.modsPath))
 		{
 			updateText("Mods folder not detected. If you deleted it, please restore it or download the game again.");
 			aborted = true;
