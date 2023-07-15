@@ -155,6 +155,9 @@ class MainMenuState extends FNFState
 			magenta.y = bg.y;
 			magenta.angle = bg.angle;
 		}
+
+		if (FlxG.mouse.visible)
+			FlxG.mouse.visible = false;
 	}
 	
 	function updateCamFollow()

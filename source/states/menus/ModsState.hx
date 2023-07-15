@@ -13,6 +13,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import haxe.io.Path;
+import ui.editors.Tooltip;
 import ui.lists.MenuList.TypedMenuItem;
 import ui.lists.MenuList.TypedMenuList;
 
@@ -23,6 +24,7 @@ class ModsState extends FNFState
 	var items:ModList;
 	var camFollow:FlxObject;
 	var transitioning:Bool = true;
+	var tooltip:Tooltip;
 	
 	override function create()
 	{
@@ -38,10 +40,18 @@ class ModsState extends FNFState
 		items.onChange.add(onChange);
 		add(items);
 		
+		tooltip = new Tooltip();
+		tooltip.scrollFactor.set();
+		add(tooltip);
+		
 		Mods.reloadMods();
 		for (mod in Mods.currentMods)
-			items.createItem(mod);
-			
+		{
+			var item = items.createItem(mod);
+			if (item.warningIcon != null)
+				tooltip.addTooltip(item.warningIcon, mod.warnings.join('\n'));
+		}
+		
 		if (lastSelected >= items.length)
 			lastSelected = items.length - 1;
 		items.selectItem(lastSelected);
@@ -80,6 +90,17 @@ class ModsState extends FNFState
 		}
 		
 		super.update(elapsed);
+		
+		if (!FlxG.mouse.visible)
+			FlxG.mouse.visible = true;
+	}
+	
+	override function destroy()
+	{
+		super.destroy();
+		items = null;
+		camFollow = null;
+		tooltip = null;
 	}
 	
 	function updateCamFollow(item:ModItem)
@@ -107,17 +128,21 @@ class ModList extends TypedMenuList<ModItem>
 
 class ModItem extends TypedMenuItem<FlxSpriteGroup>
 {
+	public var warningIcon:FlxSprite;
+	
 	public function new(x:Float = 0, y:Float = 0, mod:Mod)
 	{
 		var label = new FlxSpriteGroup();
 		
 		super(x, y, label, mod.id);
 		
+		final bgEllipse = 20;
+		
 		var bgGraphic = FlxG.bitmap.get('mod_bg');
 		if (bgGraphic == null)
 		{
 			var spr = new FlxSprite().makeGraphic(FlxG.width - 50, Std.int(FlxG.height / 2), FlxColor.TRANSPARENT, false, 'mod_bg');
-			FlxSpriteUtil.drawRoundRect(spr, 0, 0, spr.width, spr.height, 20, 20, FlxColor.GRAY, {thickness: 4});
+			FlxSpriteUtil.drawRoundRect(spr, 0, 0, spr.width, spr.height, bgEllipse, bgEllipse, FlxColor.GRAY, {thickness: 4});
 			bgGraphic = spr.graphic;
 			bgGraphic.destroyOnNoUse = false;
 			spr.destroy();
@@ -127,7 +152,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		var iconImage = Paths.getImage(Path.join([Mods.modRoot, mod.id, 'icon']), null, false);
 		if (iconImage == null)
 			iconImage = Paths.getImage('menus/mods/noIcon');
-		var icon = new FlxSprite(20, 20, iconImage);
+		var icon = new FlxSprite(bgEllipse, bgEllipse, iconImage);
 		
 		var maxNameWidth = bg.width - 109;
 		var name = new FlxText(icon.x + icon.width + 5, icon.y + (icon.height / 2), 0, mod.title);
@@ -138,13 +163,13 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			name.size *= Math.floor(ratio);
 		}
 		name.y -= name.height / 2;
-			
+		
 		var count = getCountText(mod);
 		
 		var desc = new FlxText(icon.x, icon.y
 			+ icon.height
 			+ 5, bg.width
-			- 40,
+			- (bgEllipse * 2),
 			mod.description
 			+ '\n\n'
 			+ (count.length > 0 ? '($count)\n' : '')
@@ -152,11 +177,19 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			+ mod.modVersion);
 		desc.setFormat('PhantomMuff 1.5', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		
+		if (mod.warnings.length > 0)
+		{
+			warningIcon = new FlxSprite(name.x + name.width + 5, name.y + (name.height / 2), Paths.getImage("menus/icons/warning"));
+			warningIcon.y -= warningIcon.height / 2;
+		}
+		
 		label.add(bg);
 		label.add(icon);
 		label.add(name);
 		label.add(desc);
-		
+		if (warningIcon != null)
+			label.add(warningIcon);
+			
 		setEmptyBackground();
 	}
 	

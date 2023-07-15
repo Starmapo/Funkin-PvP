@@ -47,7 +47,7 @@ class PanLibrary extends AssetLibrary
 	
 	public function readDirectory(path:String):Array<String>
 	{
-		var result = zipLibrary.readDirectory(path);
+		final result = zipLibrary.readDirectory(path);
 		if (result.length > 0)
 			return result;
 			
@@ -130,7 +130,7 @@ class PanLibrary extends AssetLibrary
 	
 	override function list(type:String):Array<String>
 	{
-		var items:Array<String> = [];
+		final items:Array<String> = [];
 		
 		for (library in libraries)
 			items.concat(library.list(type));
@@ -170,7 +170,7 @@ class SysLibrary extends AssetLibrary
 	
 	override function getText(id:String):String
 	{
-		var bytes = getBytes(id);
+		final bytes = getBytes(id);
 		
 		if (bytes == null)
 			return null;
@@ -202,18 +202,20 @@ class ZipLibrary extends AssetLibrary
 	
 	public function isDirectory(path:String)
 	{
-		if (fileDirectories.contains(path))
-			return true;
+		if (path == null)
+			return false;
 			
-		return false;
+		return fileDirectories.contains(Path.removeTrailingSlashes(path));
 	}
 	
 	public function readDirectory(path:String)
 	{
-		if (path.endsWith("/"))
-			path = path.substring(0, path.length - 1);
+		if (path == null)
+			return [];
 			
-		var result:Array<String> = [];
+		path = Path.removeTrailingSlashes(path);
+		
+		final result:Array<String> = [];
 		
 		if (fileDirectories.contains(path))
 		{
@@ -234,9 +236,11 @@ class ZipLibrary extends AssetLibrary
 	
 	override function exists(id:String, type:String)
 	{
+		if (id == null)
+			return false;
 		if (filesLocations.exists(id))
 			return true;
-		if (fileDirectories.contains(id))
+		if (fileDirectories.contains(Path.removeTrailingSlashes(id)))
 			return true;
 			
 		return false;
@@ -254,23 +258,23 @@ class ZipLibrary extends AssetLibrary
 		if (!filesLocations.exists(id))
 			return null;
 			
-		var zipPath = filesLocations.get(id);
-		var zipParser = zipParsers.get(zipPath);
-		var modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
+		final zipPath = filesLocations.get(id);
+		final zipParser = zipParsers.get(zipPath);
+		final modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
 		
 		var innerPath = id;
 		if (innerPath.startsWith(modsPath))
-			innerPath = innerPath.substring(modsPath.endsWith("/") ? modsPath.length : modsPath.length + 1);
+			innerPath = innerPath.substr(Path.addTrailingSlash(modsPath).length);
 		if (innerPath.startsWith(modId))
-			innerPath = innerPath.substring(modId.length + 1);
+			innerPath = innerPath.substr(modId.length + 1);
 			
-		var fileHeader = zipParser.getLocalFileHeaderOf(innerPath);
+		final fileHeader = zipParser.getLocalFileHeaderOf(innerPath);
 		if (fileHeader == null)
 		{
 			trace('WARNING: Could not access file $innerPath from ZIP ${zipParser.fileName}.');
 			return null;
 		}
-		var fileBytes = fileHeader.readData();
+		final fileBytes = fileHeader.readData();
 		return fileBytes;
 	}
 	
@@ -286,7 +290,7 @@ class ZipLibrary extends AssetLibrary
 	
 	override function getText(id:String):String
 	{
-		var bytes = getBytes(id);
+		final bytes = getBytes(id);
 		
 		if (bytes == null)
 			return null;
@@ -296,7 +300,7 @@ class ZipLibrary extends AssetLibrary
 	
 	override function list(type:String):Array<String>
 	{
-		var result = [];
+		final result = [];
 		
 		for (fileName => _ in filesLocations)
 		{
@@ -312,7 +316,7 @@ class ZipLibrary extends AssetLibrary
 		filesLocations.clear();
 		fileDirectories.resize(0);
 		zipParsers.clear();
-
+		
 		addAllZips();
 	}
 	
@@ -322,7 +326,7 @@ class ZipLibrary extends AssetLibrary
 		
 		for (file in modRootContents)
 		{
-			var filePath = Path.join([modRoot, file]);
+			final filePath = Path.join([modRoot, file]);
 			
 			if (FileSystem.isDirectory(filePath))
 				continue;

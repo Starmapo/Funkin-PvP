@@ -28,7 +28,8 @@ class Mods
 		Paths.library.reset();
 		
 		final curVersion:Version = CoolUtil.getVersion();
-		final apiVersionRule:VersionRule = '${curVersion.major}.*.*';
+		final apiVersionRule:VersionRule = '${curVersion.major}.${curVersion.minor}.${curVersion.patch}';
+		trace(VersionUtil.ruleToString(apiVersionRule));
 		
 		final modsToLoad:Array<Mod> = [];
 		for (file in FileSystem.readDirectory(modRoot))
@@ -41,7 +42,10 @@ class Mods
 				if (mod == null)
 					continue;
 				if (!VersionUtil.match(mod.apiVersion, apiVersionRule))
-					Main.showNotification('Mod "$modID" was built for incompatible API version ${mod.apiVersion}, expected "$apiVersionRule"', ERROR);
+				{
+					mod.warnings.push('Mod "$modID" was built for incompatible API version ${mod.apiVersion}, expected "$apiVersionRule"');
+					trace(mod.id);
+				}
 				mod.id = modID;
 				modsToLoad.push(mod);
 			}
@@ -362,6 +366,7 @@ class Mod extends JsonObject
 	public var noteskinCount:Int = 0;
 	public var judgementSkinCount:Int = 0;
 	public var splashSkinCount:Int = 0;
+	public var warnings:Array<String> = [];
 	
 	public function new() {}
 	

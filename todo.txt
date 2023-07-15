@@ -1,5 +1,8 @@
+zip videos
 show notifications option
+update detector
 editors drag & drop
+video resyncing
 workflows
 wiki
 
