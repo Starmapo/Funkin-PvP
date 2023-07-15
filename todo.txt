@@ -1,4 +1,3 @@
-zip videos
 better cache
 show notifications option
 update detector
