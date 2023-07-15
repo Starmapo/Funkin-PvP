@@ -222,7 +222,7 @@ class Paths
 		if (mod == null || mod.length == 0)
 			mod = Mods.currentMod;
 			
-		var modPath = Path.join([Mods.modsPath, mod, key]);
+		var modPath = Path.join(['./', Mods.modsPath, mod, key]);
 		if (exists(modPath))
 			return modPath;
 			
@@ -437,6 +437,11 @@ class Paths
 		return null;
 	}
 	
+	public static function isDirectory(path:String):Bool
+	{
+		return library.isDirectory(path);
+	}
+	
 	/**
 		Returns if the image is a spritesheet or not.
 
@@ -542,6 +547,11 @@ class Paths
 		});
 		
 		return promise.future;
+	}
+	
+	public static function readDirectory(path:String):Array<String>
+	{
+		return library.readDirectory(path);
 	}
 	
 	static function excludeAsset(path:String)

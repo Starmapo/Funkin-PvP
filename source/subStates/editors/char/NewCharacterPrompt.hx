@@ -62,8 +62,8 @@ class NewCharacterPrompt extends FNFSubState
 			}
 			
 			var mod = modDropdown.selectedLabel;
-			var fullPath = Path.join([Mods.modsPath, mod, 'data/characters', char + '.json']);
-			if (FileSystem.exists(fullPath))
+			var fullPath = Path.join([Mods.modRoot, mod, 'data/characters', char + '.json']);
+			if (Paths.exists(fullPath))
 			{
 				FlxTween.cancelTweensOf(charNameInput);
 				FlxTween.color(charNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});

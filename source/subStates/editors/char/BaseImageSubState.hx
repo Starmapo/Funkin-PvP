@@ -317,7 +317,7 @@ class BaseImageSubState extends FNFSubState
 		// now draw the frame with our matrix
 		bitmap.draw(frameBitmap, matrix, null, null, null, char.antialiasing);
 		
-		var imagePath = Path.join([Mods.modsPath, state.info.mod, path]);
+		var imagePath = Path.join([Mods.modRoot, state.info.mod, path]);
 		FileSystem.createDirectory(Path.directory(imagePath));
 		// finally, save the image
 		File.saveBytes(imagePath, bitmap.encode(new Rectangle(0, 0, bitmap.width, bitmap.height), new PNGEncoderOptions()));

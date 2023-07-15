@@ -5,11 +5,11 @@ import lime.graphics.Image;
 import lime.media.AudioBuffer;
 import lime.text.Font;
 import lime.utils.AssetLibrary;
-import lime.utils.AssetType;
 import lime.utils.Assets;
 import lime.utils.Bytes;
 import sys.FileSystem;
 import util.StringUtil;
+import util.ZipParser;
 
 using StringTools;
 
@@ -18,6 +18,7 @@ class PanLibrary extends AssetLibrary
 	var libraries:Array<AssetLibrary>;
 	var defaultLibrary:AssetLibrary;
 	var sysLibrary:SysLibrary;
+	var zipLibrary:ZipLibrary;
 	
 	public function new(?defaultLibrary:AssetLibrary)
 	{
@@ -28,7 +29,37 @@ class PanLibrary extends AssetLibrary
 		
 		sysLibrary = new SysLibrary();
 		
-		libraries = [defaultLibrary, sysLibrary];
+		zipLibrary = new ZipLibrary();
+		
+		libraries = [defaultLibrary, sysLibrary, zipLibrary];
+	}
+	
+	public function isDirectory(path:String):Bool
+	{
+		if (zipLibrary.isDirectory(path))
+			return true;
+			
+		if (FileSystem.exists(path))
+			return FileSystem.isDirectory(path);
+			
+		return false;
+	}
+	
+	public function readDirectory(path:String):Array<String>
+	{
+		var result = zipLibrary.readDirectory(path);
+		if (result.length > 0)
+			return result;
+			
+		if (FileSystem.exists(path) && FileSystem.isDirectory(path))
+			return FileSystem.readDirectory(path);
+			
+		return [];
+	}
+	
+	public function reset()
+	{
+		zipLibrary.reset();
 	}
 	
 	override function exists(id:String, type:String):Bool
@@ -97,9 +128,6 @@ class PanLibrary extends AssetLibrary
 		return null;
 	}
 	
-	/**
-		`type` isn't supported for FileSystem checks!
-	**/
 	override function list(type:String):Array<String>
 	{
 		var items:Array<String> = [];
@@ -114,23 +142,10 @@ class PanLibrary extends AssetLibrary
 class SysLibrary extends AssetLibrary
 {
 	final rootPath:String = './';
-	final typeExtensions:Map<AssetType, Array<String>> = [
-		FONT => ["ttf, otf"],
-		IMAGE => ["png"],
-		MUSIC => ["ogg", "wav"],
-		SOUND => ["ogg", "wav"]
-	];
 	
 	override function exists(id:String, type:String):Bool
 	{
-		var path = getSysPath(id);
-		if (FileSystem.exists(path))
-		{
-			var requestedType = type != null ? cast(type, AssetType) : null;
-			return isType(path, requestedType);
-		}
-		
-		return false;
+		return FileSystem.exists(getSysPath(id));
 	}
 	
 	override function getAudioBuffer(id:String):AudioBuffer
@@ -175,17 +190,173 @@ class SysLibrary extends AssetLibrary
 	{
 		return rootPath + id;
 	}
+}
+
+class ZipLibrary extends AssetLibrary
+{
+	final modsPath = Mods.modsPath;
+	final modRoot = Mods.modRoot;
+	final filesLocations:Map<String, String> = new Map();
+	final fileDirectories:Array<String> = [];
+	final zipParsers:Map<String, ZipParser> = new Map();
 	
-	function isType(path:String, ?type:AssetType)
+	public function isDirectory(path:String)
 	{
-		var extension = Path.extension(path);
-		if (extension.length < 1)
-			return false;
-			
-		if (type == null || type == BINARY || type == TEXT)
+		if (fileDirectories.contains(path))
 			return true;
 			
-		var extensions = typeExtensions.get(type);
-		return extensions != null && StringUtil.endsWithAny(extension, extensions);
+		return false;
+	}
+	
+	public function readDirectory(path:String)
+	{
+		if (path.endsWith("/"))
+			path = path.substring(0, path.length - 1);
+			
+		var result:Array<String> = [];
+		
+		if (fileDirectories.contains(path))
+		{
+			for (file in filesLocations.keys())
+			{
+				if (Path.directory(file) == path)
+					result.push(Path.withoutDirectory(file));
+			}
+			for (dir in fileDirectories)
+			{
+				if (Path.directory(dir) == path)
+					result.push(Path.withoutDirectory(dir));
+			}
+		}
+		
+		return result;
+	}
+	
+	override function exists(id:String, type:String)
+	{
+		if (filesLocations.exists(id))
+			return true;
+		if (fileDirectories.contains(id))
+			return true;
+			
+		return false;
+	}
+	
+	override function getAudioBuffer(id:String):AudioBuffer
+	{
+		return AudioBuffer.fromBytes(getBytes(id));
+	}
+	
+	override function getBytes(id:String)
+	{
+		id = StringUtil.filterASCII(id);
+		
+		if (!filesLocations.exists(id))
+			return null;
+			
+		var zipPath = filesLocations.get(id);
+		var zipParser = zipParsers.get(zipPath);
+		var modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
+		
+		var innerPath = id;
+		if (innerPath.startsWith(modsPath))
+			innerPath = innerPath.substring(modsPath.endsWith("/") ? modsPath.length : modsPath.length + 1);
+		if (innerPath.startsWith(modId))
+			innerPath = innerPath.substring(modId.length + 1);
+			
+		var fileHeader = zipParser.getLocalFileHeaderOf(innerPath);
+		if (fileHeader == null)
+		{
+			trace('WARNING: Could not access file $innerPath from ZIP ${zipParser.fileName}.');
+			return null;
+		}
+		var fileBytes = fileHeader.readData();
+		return fileBytes;
+	}
+	
+	override function getFont(id:String):Font
+	{
+		return Font.fromBytes(getBytes(id));
+	}
+	
+	override function getImage(id:String):Image
+	{
+		return Image.fromBytes(getBytes(id));
+	}
+	
+	override function getText(id:String):String
+	{
+		var bytes = getBytes(id);
+		
+		if (bytes == null)
+			return null;
+		else
+			return bytes.getString(0, bytes.length);
+	}
+	
+	override function list(type:String):Array<String>
+	{
+		var result = [];
+		
+		for (fileName => _ in filesLocations)
+		{
+			if (!result.contains(fileName))
+				result.push(fileName);
+		}
+		
+		return result;
+	}
+	
+	public function reset()
+	{
+		filesLocations.clear();
+		fileDirectories.resize(0);
+		zipParsers.clear();
+
+		addAllZips();
+	}
+	
+	public function addAllZips()
+	{
+		final modRootContents = FileSystem.readDirectory(modRoot);
+		
+		for (file in modRootContents)
+		{
+			var filePath = Path.join([modRoot, file]);
+			
+			if (FileSystem.isDirectory(filePath))
+				continue;
+				
+			if (filePath.endsWith(".zip"))
+				addZipFile(filePath);
+		}
+	}
+	
+	public function addZipFile(zipPath:String)
+	{
+		var modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
+		
+		var zipParser = new ZipParser(zipPath);
+		
+		for (fileName => fileHeader in zipParser.centralDirectoryRecords)
+		{
+			if (fileHeader.compressedSize == 0 || fileHeader.uncompressedSize == 0)
+				continue;
+				
+			if (fileName.endsWith('/'))
+				continue;
+				
+			var fullFilePath = Path.join([modsPath, modId, fileHeader.fileName]);
+			filesLocations.set(fullFilePath, zipPath);
+			
+			var fileDirectory = Path.directory(fullFilePath);
+			while (fileDirectory != "" && !fileDirectories.contains(fileDirectory))
+			{
+				fileDirectories.push(fileDirectory);
+				fileDirectory = Path.directory(fileDirectory);
+			}
+		}
+		
+		zipParsers.set(zipPath, zipParser);
 	}
 }

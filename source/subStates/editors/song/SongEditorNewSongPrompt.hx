@@ -136,8 +136,8 @@ class SongEditorNewSongPrompt extends FNFSubState
 			}
 			
 			var mod = modDropdown.selectedLabel;
-			var path = Path.join([Mods.modsPath, mod, 'songs', songName]);
-			if (FileSystem.exists(path))
+			var path = Path.join([Mods.modRoot, mod, 'songs', songName]);
+			if (Paths.exists(path))
 			{
 				FlxTween.cancelTweensOf(songNameInput);
 				FlxTween.color(songNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});

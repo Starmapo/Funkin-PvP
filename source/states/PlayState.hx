@@ -384,12 +384,12 @@ class PlayState extends FNFState
 	
 	public function addScriptsInFolder(folder:String)
 	{
-		if (FileSystem.exists(folder) && FileSystem.isDirectory(folder))
+		if (Paths.exists(folder) && Paths.isDirectory(folder))
 		{
-			for (file in FileSystem.readDirectory(folder))
+			for (file in Paths.readDirectory(folder))
 			{
 				var full = Path.join([folder, file]);
-				if (FileSystem.isDirectory(full))
+				if (Paths.isDirectory(full))
 					addScriptsInFolder(full);
 				else
 				{
@@ -995,7 +995,7 @@ class PlayState extends FNFState
 			addScript('data/events/${eventInfo.name}', eventInfo.mod);
 		}
 		
-		addScriptsInFolder(Path.join([Mods.modsPath, Mods.currentMod, 'data/globalScripts']));
+		addScriptsInFolder(Path.join([Mods.modRoot, Mods.currentMod, 'data/globalScripts']));
 		
 		for (event in events)
 			event.startTime -= getEventEarlyTrigger(event);

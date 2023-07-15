@@ -124,7 +124,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 		var bg = new FlxSprite(0, 0, bgGraphic);
 		
-		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.id, 'icon']), null, false);
+		var iconImage = Paths.getImage(Path.join([Mods.modRoot, mod.id, 'icon']), null, false);
 		if (iconImage == null)
 			iconImage = Paths.getImage('menus/mods/noIcon');
 		var icon = new FlxSprite(20, 20, iconImage);

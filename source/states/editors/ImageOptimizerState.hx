@@ -82,7 +82,8 @@ class ImageOptimizerState extends FNFState
 			var folder = Path.join([Mods.modsPath, mod.id]);
 			if (!folder.endsWith("/"))
 				folder += "/";
-			folders.push(folder);
+			if (FileSystem.exists(folder) && FileSystem.isDirectory(folder))
+				folders.push(folder);
 		}
 		
 		folderDropdown = new EditorDropdownMenu(0, 4, EditorDropdownMenu.makeStrIdLabelArray(folders), null, tabMenu, 160);

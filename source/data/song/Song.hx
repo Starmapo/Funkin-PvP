@@ -144,9 +144,9 @@ class Song extends JsonObject
 	public static function getSongDifficulties(directory:String, ?excludeDifficulty:String)
 	{
 		var difficulties:Array<String> = [];
-		if (FileSystem.exists(directory) && FileSystem.isDirectory(directory))
+		if (Paths.exists(directory) && Paths.isDirectory(directory))
 		{
-			for (file in FileSystem.readDirectory(directory))
+			for (file in Paths.readDirectory(directory))
 			{
 				var fileName = Path.withoutExtension(file);
 				if (file.endsWith('.json') && !file.startsWith('!') && fileName != excludeDifficulty)

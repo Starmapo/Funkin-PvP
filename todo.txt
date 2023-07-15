@@ -1,4 +1,4 @@
-zip mods agane
+show notifications option
 editors drag & drop
 workflows
 wiki

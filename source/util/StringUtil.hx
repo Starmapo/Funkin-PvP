@@ -52,6 +52,23 @@ class StringUtil
 	}
 	
 	/**
+	 * Filters a unicode string to only contain characters that are valid in a filename.
+	 */
+	public static function filterASCII(str:String):String
+	{
+		var filtered:String = "";
+		for (i in 0...str.length)
+		{
+			var c = str.charCodeAt(i);
+			if (c >= 32 && c <= 126)
+			{
+				filtered += str.charAt(i);
+			}
+		}
+		return filtered;
+	}
+	
+	/**
 		Formats a number to an ordinal number.
 
 		If the number is 0 or less, it won't be formatted.
