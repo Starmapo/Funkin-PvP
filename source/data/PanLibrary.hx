@@ -36,13 +36,7 @@ class PanLibrary extends AssetLibrary
 	
 	public function isDirectory(path:String):Bool
 	{
-		if (zipLibrary.isDirectory(path))
-			return true;
-			
-		if (FileSystem.exists(path))
-			return FileSystem.isDirectory(path);
-			
-		return false;
+		return zipLibrary.isDirectory(path) || sysLibrary.isDirectory(path);
 	}
 	
 	public function readDirectory(path:String):Array<String>
@@ -51,10 +45,7 @@ class PanLibrary extends AssetLibrary
 		if (result.length > 0)
 			return result;
 			
-		if (FileSystem.exists(path) && FileSystem.isDirectory(path))
-			return FileSystem.readDirectory(path);
-			
-		return [];
+		return sysLibrary.readDirectory(path);
 	}
 	
 	public function reset()
@@ -143,6 +134,23 @@ class SysLibrary extends AssetLibrary
 {
 	final rootPath:String = './';
 	
+	public function isDirectory(path:String)
+	{
+		if (path == null)
+			return false;
+			
+		path = getSysPath(path);
+		return FileSystem.exists(path) && FileSystem.isDirectory(path);
+	}
+	
+	public function readDirectory(path:String):Array<String>
+	{
+		if (isDirectory(path))
+			return FileSystem.readDirectory(getSysPath(path));
+			
+		return [];
+	}
+	
 	override function exists(id:String, type:String):Bool
 	{
 		return FileSystem.exists(getSysPath(id));
@@ -188,7 +196,9 @@ class SysLibrary extends AssetLibrary
 	
 	function getSysPath(id:String):String
 	{
-		return rootPath + id;
+		if (!id.startsWith(rootPath))
+			return rootPath + id;
+		return id;
 	}
 }
 
@@ -198,6 +208,50 @@ class ZipLibrary extends AssetLibrary
 	final filesLocations:Map<String, String> = new Map();
 	final fileDirectories:Array<String> = [];
 	final zipParsers:Map<String, ZipParser> = new Map();
+	
+	public function addAllZips()
+	{
+		final modRootContents = FileSystem.readDirectory(modsPath);
+		
+		for (file in modRootContents)
+		{
+			final filePath = Path.join([modsPath, file]);
+			
+			if (FileSystem.isDirectory(filePath))
+				continue;
+				
+			if (filePath.endsWith(".zip"))
+				addZipFile(filePath);
+		}
+	}
+	
+	public function addZipFile(zipPath:String)
+	{
+		var modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
+		
+		var zipParser = new ZipParser(zipPath);
+		
+		for (fileName => fileHeader in zipParser.centralDirectoryRecords)
+		{
+			if (fileHeader.compressedSize == 0 || fileHeader.uncompressedSize == 0)
+				continue;
+				
+			if (fileName.endsWith('/'))
+				continue;
+				
+			var fullFilePath = Path.join([modsPath, modId, fileHeader.fileName]);
+			filesLocations.set(fullFilePath, zipPath);
+			
+			var fileDirectory = Path.directory(fullFilePath);
+			while (fileDirectory != "" && !fileDirectories.contains(fileDirectory))
+			{
+				fileDirectories.push(fileDirectory);
+				fileDirectory = Path.directory(fileDirectory);
+			}
+		}
+		
+		zipParsers.set(zipPath, zipParser);
+	}
 	
 	public function isDirectory(path:String)
 	{
@@ -231,6 +285,15 @@ class ZipLibrary extends AssetLibrary
 		}
 		
 		return result;
+	}
+	
+	public function reset()
+	{
+		filesLocations.clear();
+		fileDirectories.resize(0);
+		zipParsers.clear();
+		
+		addAllZips();
 	}
 	
 	override function exists(id:String, type:String)
@@ -306,58 +369,5 @@ class ZipLibrary extends AssetLibrary
 		}
 		
 		return result;
-	}
-	
-	public function reset()
-	{
-		filesLocations.clear();
-		fileDirectories.resize(0);
-		zipParsers.clear();
-		
-		addAllZips();
-	}
-	
-	public function addAllZips()
-	{
-		final modRootContents = FileSystem.readDirectory(modsPath);
-		
-		for (file in modRootContents)
-		{
-			final filePath = Path.join([modsPath, file]);
-			
-			if (FileSystem.isDirectory(filePath))
-				continue;
-				
-			if (filePath.endsWith(".zip"))
-				addZipFile(filePath);
-		}
-	}
-	
-	public function addZipFile(zipPath:String)
-	{
-		var modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
-		
-		var zipParser = new ZipParser(zipPath);
-		
-		for (fileName => fileHeader in zipParser.centralDirectoryRecords)
-		{
-			if (fileHeader.compressedSize == 0 || fileHeader.uncompressedSize == 0)
-				continue;
-				
-			if (fileName.endsWith('/'))
-				continue;
-				
-			var fullFilePath = Path.join([modsPath, modId, fileHeader.fileName]);
-			filesLocations.set(fullFilePath, zipPath);
-			
-			var fileDirectory = Path.directory(fullFilePath);
-			while (fileDirectory != "" && !fileDirectories.contains(fileDirectory))
-			{
-				fileDirectories.push(fileDirectory);
-				fileDirectory = Path.directory(fileDirectory);
-			}
-		}
-		
-		zipParsers.set(zipPath, zipParser);
 	}
 }

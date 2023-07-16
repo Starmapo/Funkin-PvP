@@ -439,7 +439,7 @@ class BootState extends FNFState
 			}
 			return null;
 		};
-
+		
 		CoolUtil.deleteDirectory(".temp");
 	}
 	
