@@ -442,6 +442,9 @@ class Paths
 		return null;
 	}
 	
+	/**
+		Returns if the specified path is a directory.
+	**/
 	public static function isDirectory(path:String):Bool
 	{
 		return library.isDirectory(path);
@@ -534,6 +537,10 @@ class Paths
 			path += '.png';
 		if (!exists(path))
 			path = getPath('images/$path', mod);
+			
+		if (FlxG.bitmap.checkCache(path))
+			return Future.withValue(FlxG.bitmap.get(path));
+			
 		if (!exists(path))
 			return Future.withValue(null);
 			
@@ -545,7 +552,10 @@ class Paths
 		future.onComplete(function(bitmap)
 		{
 			if (bitmap == null)
+			{
+				promise.error('Error loading image: "$path"');
 				return;
+			}
 			var graphic = FlxG.bitmap.add(bitmap, false, path);
 			graphic.destroyOnNoUse = false;
 			promise.complete(graphic);
@@ -553,7 +563,68 @@ class Paths
 		
 		return promise.future;
 	}
+
+	/**
+		Loads music from a key.
+
+		@param	key		The music's name. Will add the extension if it's missing.
+		@param	mod		Optional mod directory to use. If unspecified, the current mod will be used.
+		@return	A `Future` object containing the music, or `null` if it couldn't be found.
+	**/
+	public static function loadMusic(key:String, ?mod:String):Future<Sound>
+	{
+		return loadSound('music/$key/audio', mod);
+	}
 	
+	/**
+		Loads a sound from a path.
+
+		@param	path	The sound path. Can be a full path or just the key inside `sounds/`. Will add the extension if it's
+						missing.
+		@param	mod		Optional mod directory to use. If unspecified, the current mod will be used.
+		@return	A `Future` object containing the sound, or `null` if it couldn't be found.
+	**/
+	public static function loadSound(path:String, ?mod:String):Future<Sound>
+	{
+		if (!StringUtil.endsWithAny(path, SOUND_EXTENSIONS))
+			path += SOUND_EXTENSIONS[0];
+			
+		var ogPath = path;
+		if (!exists(path))
+			path = getPath(ogPath, mod);
+		if (!exists(path))
+			path = getPath('sounds/$ogPath', mod);
+			
+		if (cachedSounds.exists(path))
+			return Future.withValue(cachedSounds.get(path));
+			
+		if (!exists(path))
+			return Future.withValue(null);
+			
+		var promise = new Promise<Sound>();
+		var future = Sound.loadFromFile(path);
+		
+		future.onProgress(promise.progress);
+		future.onError(promise.error);
+		future.onComplete(function(sound)
+		{
+			if (sound == null)
+			{
+				promise.error('Error loading sound: "$path"');
+				return;
+			}
+			cachedSounds.set(path, sound);
+			if (!trackedSounds.contains(path))
+				trackedSounds.push(path);
+			promise.complete(sound);
+		});
+		
+		return promise.future;
+	}
+	
+	/**
+		Returns the files and folders inside of a directory.
+	**/
 	public static function readDirectory(path:String):Array<String>
 	{
 		return library.readDirectory(path);

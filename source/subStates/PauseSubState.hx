@@ -51,7 +51,6 @@ class PauseSubState extends FNFSubState
 			music.stop();
 			menuList.controlsEnabled = false;
 			state.exit(new OptionsState(new PlayState(state.song)));
-			CoolUtil.playMenuMusic();
 		});
 		if (PlayState.chars.length > 0)
 		{
@@ -60,7 +59,6 @@ class PauseSubState extends FNFSubState
 				music.stop();
 				menuList.controlsEnabled = false;
 				state.exit(new CharacterSelectState(), true);
-				CoolUtil.playPvPMusic();
 			});
 		}
 		menuList.createItem('Exit to song select', function()
@@ -68,14 +66,12 @@ class PauseSubState extends FNFSubState
 			music.stop();
 			menuList.controlsEnabled = false;
 			state.exit(new SongSelectState(), true);
-			CoolUtil.playPvPMusic();
 		});
 		menuList.createItem('Exit to ruleset settings', function()
 		{
 			music.stop();
 			menuList.controlsEnabled = false;
 			state.exit(new RulesetState(), true);
-			CoolUtil.playPvPMusic();
 		});
 		add(menuList);
 		

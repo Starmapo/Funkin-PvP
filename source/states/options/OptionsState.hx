@@ -67,6 +67,9 @@ class OptionsState extends FNFState
 			}
 		});
 		camPages.fade(FlxColor.BLACK, duration, true, null, true);
+
+		if (!FlxG.sound.musicPlaying)
+			CoolUtil.playMenuMusic();
 		
 		super.create();
 	}

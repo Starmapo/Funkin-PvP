@@ -77,8 +77,9 @@ class TitleState extends FNFState
 		
 		if (!FlxG.sound.musicPlaying)
 		{
-			CoolUtil.playMenuMusic(initialized ? 1 : 0);
-			FlxG.sound.music.stop();
+			CoolUtil.playMenuMusic();
+			if (!initialized)
+				FlxG.sound.music.stop();
 		}
 		
 		getIntroText();
@@ -145,11 +146,8 @@ class TitleState extends FNFState
 			});
 		}
 		else
-		{
-			FlxG.sound.music.play();
 			startIntro();
-		}
-		
+			
 		CoolUtil.playConfirmSound(0);
 		
 		super.create();

@@ -366,11 +366,8 @@ class RulesetState extends FNFState
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 		
 		if (!FlxG.sound.musicPlaying)
-		{
-			CoolUtil.playPvPMusic(0);
-			FlxG.sound.music.fadeIn(duration);
-		}
-		
+			CoolUtil.playPvPMusic(duration);
+			
 		super.create();
 	}
 	

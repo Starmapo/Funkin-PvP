@@ -25,9 +25,6 @@ class ToolboxState extends FNFState
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Toolbox Menu");
-		
-		if (!FlxG.sound.musicPlaying)
-			CoolUtil.playMenuMusic();
 			
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF353535;
@@ -61,6 +58,9 @@ class ToolboxState extends FNFState
 		
 		items.selectItem(lastSelected);
 		FlxG.camera.snapToTarget();
+
+		if (!FlxG.sound.musicPlaying)
+			CoolUtil.playMenuMusic();
 		
 		super.create();
 	}

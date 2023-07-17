@@ -658,10 +658,7 @@ class PlayState extends FNFState
 				DiscordClient.changePresence(winText + ' - ' + detailsText, 'Results Screen');
 			}
 			else
-			{
 				exit(new SongSelectState(), true);
-				CoolUtil.playPvPMusic();
-			}
 		}
 	}
 	

@@ -482,15 +482,24 @@ class CoolUtil
 	/**
 		Plays the PvP menu music.
 
-		@param	volume	The volume that the music should start at. Defaults to `1`, or full volume.
+		@param	fadeInDuration	The amount in seconds that it should take for the music to fade in.
+								If it's `0` or below, it will start at max volume instead of fading in.
 	**/
-	public static function playPvPMusic(volume:Float = 1):Void
+	public static function playPvPMusic(fadeInDuration:Float = 0):Void
 	{
-		if (Mods.pvpMusic.length == 0)
+		if (Mods.pvpMusic.length < 1)
 			return;
 			
+		if (FlxG.sound.music != null)
+		{
+			FlxG.sound.music.stop();
+			FlxG.sound.music = null;
+		}
+		
 		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
-		FlxG.sound.playMusic(Paths.getMusic(music.name, music.mod), volume);
+		FlxG.sound.playMusic(Paths.getMusic(music.name, music.mod), fadeInDuration > 0 ? 0 : 1);
+		if (fadeInDuration > 0)
+			FlxG.sound.music.fadeIn(fadeInDuration);
 	}
 	
 	/**

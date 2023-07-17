@@ -111,6 +111,7 @@ class MainMenuState extends FNFState
 		FlxG.camera.fade(FlxColor.BLACK, duration, true, null, true);
 		
 		CoolUtil.playConfirmSound(0);
+		
 		if (!FlxG.sound.musicPlaying)
 		{
 			CoolUtil.playMenuMusic(0);

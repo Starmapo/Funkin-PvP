@@ -1,4 +1,4 @@
-async load pvp music
+library load functions
 show notifications option
 update detector
 editors drag & drop

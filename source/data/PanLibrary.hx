@@ -8,7 +8,6 @@ import lime.utils.AssetLibrary;
 import lime.utils.Assets;
 import lime.utils.Bytes;
 import sys.FileSystem;
-import util.StringUtil;
 import util.ZipParser;
 
 using StringTools;
@@ -209,6 +208,81 @@ class ZipLibrary extends AssetLibrary
 	final fileDirectories:Array<String> = [];
 	final zipParsers:Map<String, ZipParser> = new Map();
 	
+	override function exists(id:String, type:String)
+	{
+		if (id == null)
+			return false;
+		if (filesLocations.exists(id))
+			return true;
+		if (fileDirectories.contains(Path.removeTrailingSlashes(id)))
+			return true;
+			
+		return false;
+	}
+	
+	override function getAudioBuffer(id:String):AudioBuffer
+	{
+		return AudioBuffer.fromBytes(getBytes(id));
+	}
+	
+	override function getBytes(id:String)
+	{
+		if (!filesLocations.exists(id))
+			return null;
+			
+		final zipPath = filesLocations.get(id);
+		final zipParser = zipParsers.get(zipPath);
+		final modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
+		
+		var innerPath = id;
+		if (innerPath.startsWith(modsPath))
+			innerPath = innerPath.substr(Path.addTrailingSlash(modsPath).length);
+		if (innerPath.startsWith(modId))
+			innerPath = innerPath.substr(modId.length + 1);
+			
+		final fileHeader = zipParser.getLocalFileHeaderOf(innerPath);
+		if (fileHeader == null)
+		{
+			trace('WARNING: Could not access file $innerPath from ZIP ${zipParser.fileName}.');
+			return null;
+		}
+		final fileBytes = fileHeader.readData();
+		return fileBytes;
+	}
+	
+	override function getFont(id:String):Font
+	{
+		return Font.fromBytes(getBytes(id));
+	}
+	
+	override function getImage(id:String):Image
+	{
+		return Image.fromBytes(getBytes(id));
+	}
+	
+	override function getText(id:String):String
+	{
+		final bytes = getBytes(id);
+		
+		if (bytes == null)
+			return null;
+		else
+			return bytes.getString(0, bytes.length);
+	}
+	
+	override function list(type:String):Array<String>
+	{
+		final result = [];
+		
+		for (fileName => _ in filesLocations)
+		{
+			if (!result.contains(fileName))
+				result.push(fileName);
+		}
+		
+		return result;
+	}
+
 	public function addAllZips()
 	{
 		final modRootContents = FileSystem.readDirectory(modsPath);
@@ -294,80 +368,5 @@ class ZipLibrary extends AssetLibrary
 		zipParsers.clear();
 		
 		addAllZips();
-	}
-	
-	override function exists(id:String, type:String)
-	{
-		if (id == null)
-			return false;
-		if (filesLocations.exists(id))
-			return true;
-		if (fileDirectories.contains(Path.removeTrailingSlashes(id)))
-			return true;
-			
-		return false;
-	}
-	
-	override function getAudioBuffer(id:String):AudioBuffer
-	{
-		return AudioBuffer.fromBytes(getBytes(id));
-	}
-	
-	override function getBytes(id:String)
-	{
-		if (!filesLocations.exists(id))
-			return null;
-			
-		final zipPath = filesLocations.get(id);
-		final zipParser = zipParsers.get(zipPath);
-		final modId = Path.withoutExtension(Path.withoutDirectory(zipPath));
-		
-		var innerPath = id;
-		if (innerPath.startsWith(modsPath))
-			innerPath = innerPath.substr(Path.addTrailingSlash(modsPath).length);
-		if (innerPath.startsWith(modId))
-			innerPath = innerPath.substr(modId.length + 1);
-			
-		final fileHeader = zipParser.getLocalFileHeaderOf(innerPath);
-		if (fileHeader == null)
-		{
-			trace('WARNING: Could not access file $innerPath from ZIP ${zipParser.fileName}.');
-			return null;
-		}
-		final fileBytes = fileHeader.readData();
-		return fileBytes;
-	}
-	
-	override function getFont(id:String):Font
-	{
-		return Font.fromBytes(getBytes(id));
-	}
-	
-	override function getImage(id:String):Image
-	{
-		return Image.fromBytes(getBytes(id));
-	}
-	
-	override function getText(id:String):String
-	{
-		final bytes = getBytes(id);
-		
-		if (bytes == null)
-			return null;
-		else
-			return bytes.getString(0, bytes.length);
-	}
-	
-	override function list(type:String):Array<String>
-	{
-		final result = [];
-		
-		for (fileName => _ in filesLocations)
-		{
-			if (!result.contains(fileName))
-				result.push(fileName);
-		}
-		
-		return result;
 	}
 }
