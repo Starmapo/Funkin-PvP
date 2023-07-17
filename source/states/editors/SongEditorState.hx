@@ -897,6 +897,7 @@ class SongEditorState extends FNFState
 			if (option == 'Yes')
 				save();
 			persistentUpdate = false;
+			Paths.clearCache = true;
 			if (toPlayState)
 				FlxG.switchState(new PlayState(song));
 			else

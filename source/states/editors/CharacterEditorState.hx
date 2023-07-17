@@ -627,6 +627,7 @@ class CharacterEditorState extends FNFState
 			if (option == 'Yes')
 				save();
 			persistentUpdate = false;
+			Paths.clearCache = true;
 			FlxG.switchState(new ToolboxState());
 		}
 	}

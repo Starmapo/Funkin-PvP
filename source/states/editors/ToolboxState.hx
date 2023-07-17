@@ -40,11 +40,13 @@ class ToolboxState extends FNFState
 		createItem('Character Editor', function()
 		{
 			FlxG.sound.music.stop();
+			Paths.clearCache = true;
 			FlxG.switchState(new CharacterEditorState());
 		});
 		createItem('Song Editor', function()
 		{
 			FlxG.sound.music.stop();
+			Paths.clearCache = true;
 			FlxG.switchState(new SongEditorState(null, 0, false));
 		});
 		createItem('Image Optimizer', function()

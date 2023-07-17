@@ -334,11 +334,13 @@ class PlayState extends FNFState
 		executeScripts("onStartSong");
 	}
 	
-	public function exit(state:FlxState)
+	public function exit(state:FlxState, clearCache:Bool = false)
 	{
 		timing.stopMusic();
 		persistentUpdate = false;
 		reset();
+		if (clearCache)
+			Paths.clearCache = true;
 		FlxG.switchState(state);
 	}
 	
@@ -657,7 +659,7 @@ class PlayState extends FNFState
 			}
 			else
 			{
-				exit(new SongSelectState());
+				exit(new SongSelectState(), true);
 				CoolUtil.playPvPMusic();
 			}
 		}
@@ -1095,7 +1097,7 @@ class PlayState extends FNFState
 			
 			if (FlxG.keys.justPressed.SEVEN)
 			{
-				exit(new SongEditorState(Song.loadSong(Path.join([song.directory, song.difficultyName + '.json'])), 0, true));
+				exit(new SongEditorState(Song.loadSong(Path.join([song.directory, song.difficultyName + '.json'])), 0, true), true);
 				return;
 			}
 		}

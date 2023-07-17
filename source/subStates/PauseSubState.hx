@@ -59,7 +59,7 @@ class PauseSubState extends FNFSubState
 			{
 				music.stop();
 				menuList.controlsEnabled = false;
-				state.exit(new CharacterSelectState());
+				state.exit(new CharacterSelectState(), true);
 				CoolUtil.playPvPMusic();
 			});
 		}
@@ -67,14 +67,14 @@ class PauseSubState extends FNFSubState
 		{
 			music.stop();
 			menuList.controlsEnabled = false;
-			state.exit(new SongSelectState());
+			state.exit(new SongSelectState(), true);
 			CoolUtil.playPvPMusic();
 		});
 		menuList.createItem('Exit to ruleset settings', function()
 		{
 			music.stop();
 			menuList.controlsEnabled = false;
-			state.exit(new RulesetState());
+			state.exit(new RulesetState(), true);
 			CoolUtil.playPvPMusic();
 		});
 		add(menuList);

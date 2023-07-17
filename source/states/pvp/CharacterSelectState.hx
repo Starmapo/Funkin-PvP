@@ -151,6 +151,7 @@ class CharacterSelectState extends FNFState
 						var data = group.charMenuList.selectedItem.charData;
 						chars.push(data.id + ':' + data.name);
 					}
+					Paths.clearCache = true;
 					FlxG.switchState(new PlayState(SongSelectState.song, chars));
 				});
 			}

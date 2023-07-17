@@ -158,7 +158,10 @@ class SongSelectState extends FNFState
 				exitTransition(function(_)
 				{
 					if (!canSelectChars)
+					{
+						Paths.clearCache = true;
 						FlxG.switchState(new PlayState(song, []));
+					}
 					else
 						FlxG.switchState(new CharacterSelectState());
 				});

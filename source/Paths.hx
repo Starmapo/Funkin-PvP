@@ -42,6 +42,11 @@ class Paths
 	public static var cachedSounds:Map<String, Sound> = [];
 	
 	/**
+		If `true`, the cache will be cleared after the next state switch.
+	**/
+	public static var clearCache:Bool = false;
+	
+	/**
 		List of sounds to exclude from dumping (removing from the cache).
 	**/
 	public static var dumpExclusions:Array<String> = [];
@@ -562,43 +567,45 @@ class Paths
 	
 	static function onPostStateSwitch()
 	{
-		// Remove all unused sounds from the cache.
-		// Makes sure sounds that are currently playing don't get removed, like music or persistent sounds
-		var playingSounds:Array<Sound> = [];
-		@:privateAccess {
-			if (FlxG.sound.music != null && FlxG.sound.music._sound != null && !playingSounds.contains(FlxG.sound.music._sound))
-				playingSounds.push(FlxG.sound.music._sound);
-			for (sound in FlxG.sound.list)
-			{
-				if (sound != null && sound._sound != null && !playingSounds.contains(sound._sound))
-					playingSounds.push(sound._sound);
-			}
-		}
-		for (k => s in cachedSounds)
+		if (clearCache)
 		{
-			if (s != null && !trackedSounds.contains(k) && !dumpExclusions.contains(k) && !playingSounds.contains(s))
+			// Remove all unused sounds from the cache.
+			// Makes sure sounds that are currently playing don't get removed, like music or persistent sounds
+			var playingSounds:Array<Sound> = [];
+			@:privateAccess {
+				if (FlxG.sound.music != null && FlxG.sound.music._sound != null && !playingSounds.contains(FlxG.sound.music._sound))
+					playingSounds.push(FlxG.sound.music._sound);
+				for (sound in FlxG.sound.list)
+				{
+					if (sound != null && sound._sound != null && !playingSounds.contains(sound._sound))
+						playingSounds.push(sound._sound);
+				}
+			}
+			for (k => s in cachedSounds)
 			{
-				cachedSounds.remove(k);
-				s.close();
+				if (!trackedSounds.contains(k) && !dumpExclusions.contains(k) && !playingSounds.contains(s))
+				{
+					cachedSounds.remove(k);
+					s.close();
+				}
 			}
 		}
 		
 		// run garbage collector
 		MemoryUtil.clearMajor();
+		
+		if (clearCache)
+		{
+			FlxG.bitmap.cacheType = Settings.forceCacheReset ? UNUSED : DISABLED;
+			clearCache = false;
+		}
 	}
 	
 	static function onPreStateSwitch()
 	{
 		trackedSounds.resize(0);
-		if (Settings.forceCacheReset || FlxG.keys.pressed.F5)
-		{
-			FlxG.bitmap.reset();
-			for (k => s in cachedSounds)
-			{
-				cachedSounds.remove(k);
-				if (s != null)
-					s.close();
-			}
-		}
+		
+		if (clearCache)
+			FlxG.bitmap.cacheType = UNUSED;
 	}
 }

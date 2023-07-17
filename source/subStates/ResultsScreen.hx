@@ -140,7 +140,7 @@ class ResultsScreen extends FNFSubState
 			if (PlayerSettings.checkAction(ACCEPT_P))
 			{
 				canExit = false;
-				state.exit(new SongSelectState());
+				state.exit(new SongSelectState(), true);
 				CoolUtil.playPvPMusic();
 			}
 			else if (PlayerSettings.checkAction(RESET_P))

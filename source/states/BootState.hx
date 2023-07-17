@@ -213,13 +213,13 @@ class BootState extends FNFState
 				case "yellow":
 					return c.yellow;
 			}
-			var c:FlxAxes = obj;
+			var a:FlxAxes = obj;
 			switch (name)
 			{
 				case "x":
-					return c.x;
+					return a.x;
 				case "y":
-					return c.y;
+					return a.y;
 			}
 			return null;
 		}
@@ -267,175 +267,175 @@ class BootState extends FNFState
 		}
 		Interp.getRedirects["flixel.math.FlxBasePoint"] = function(obj:Dynamic, name:String):Dynamic
 		{
-			var c:FlxPoint = obj;
+			var p:FlxPoint = obj;
 			switch (name)
 			{
 				case "add":
-					return c.add;
+					return p.add;
 				case "addNew":
-					return c.addNew;
+					return p.addNew;
 				case "addPoint":
-					return c.addPoint;
+					return p.addPoint;
 				case "addToFlash":
-					return c.addToFlash;
+					return p.addToFlash;
 				case "bounce":
-					return c.bounce;
+					return p.bounce;
 				case "bounceWithFriction":
-					return c.bounceWithFriction;
+					return p.bounceWithFriction;
 				case "ceil":
-					return c.ceil;
+					return p.ceil;
 				case "clone":
-					return c.clone;
+					return p.clone;
 				case "copyFrom":
-					return c.copyFrom;
+					return p.copyFrom;
 				case "copyFromFlash":
-					return c.copyFromFlash;
+					return p.copyFromFlash;
 				case "copyTo":
-					return c.copyTo;
+					return p.copyTo;
 				case "copyToFlash":
-					return c.copyToFlash;
+					return p.copyToFlash;
 				case "crossProductLength":
-					return c.crossProductLength;
+					return p.crossProductLength;
 				case "degrees":
-					return c.degrees;
+					return p.degrees;
 				case "degreesBetween":
-					return c.degreesBetween;
+					return p.degreesBetween;
 				case "degreesFrom":
-					return c.degreesFrom;
+					return p.degreesFrom;
 				case "degreesTo":
-					return c.degreesTo;
+					return p.degreesTo;
 				case "dist":
-					return c.dist;
+					return p.dist;
 				case "distSquared":
-					return c.distSquared;
+					return p.distSquared;
 				case "distanceTo":
-					return c.distanceTo;
+					return p.distanceTo;
 				case "divide":
-					return c.divide;
+					return p.divide;
 				case "divideNew":
-					return c.divideNew;
+					return p.divideNew;
 				case "dividePoint":
-					return c.dividePoint;
+					return p.dividePoint;
 				case "dot":
-					return c.dot;
+					return p.dot;
 				case "dotProduct":
-					return c.dotProduct;
+					return p.dotProduct;
 				case "dotProdWithNormalizing":
-					return c.dotProdWithNormalizing;
+					return p.dotProdWithNormalizing;
 				case "dx":
-					return c.dx;
+					return p.dx;
 				case "dy":
-					return c.dy;
+					return p.dy;
 				case "findIntersection":
-					return c.findIntersection;
+					return p.findIntersection;
 				case "findIntersectionInBounds":
-					return c.findIntersectionInBounds;
+					return p.findIntersectionInBounds;
 				case "floor":
-					return c.floor;
+					return p.floor;
 				case "inCoords":
-					return c.inCoords;
+					return p.inCoords;
 				case "inRect":
-					return c.inRect;
+					return p.inRect;
 				case "isNormalized":
-					return c.isNormalized;
+					return p.isNormalized;
 				case "isParallel":
-					return c.isParallel;
+					return p.isParallel;
 				case "isPerpendicular":
-					return c.isPerpendicular;
+					return p.isPerpendicular;
 				case "isValid":
-					return c.isValid;
+					return p.isValid;
 				case "isZero":
-					return c.isZero;
+					return p.isZero;
 				case "leftNormal":
-					return c.leftNormal;
+					return p.leftNormal;
 				case "length":
-					return c.length;
+					return p.length;
 				case "lengthSquared":
-					return c.lengthSquared;
+					return p.lengthSquared;
 				case "lx":
-					return c.lx;
+					return p.lx;
 				case "ly":
-					return c.ly;
+					return p.ly;
 				case "negate":
-					return c.negate;
+					return p.negate;
 				case "negateNew":
-					return c.negateNew;
+					return p.negateNew;
 				case "normalize":
-					return c.normalize;
+					return p.normalize;
 				case "perpProduct":
-					return c.perpProduct;
+					return p.perpProduct;
 				case "pivotDegrees":
-					return c.pivotDegrees;
+					return p.pivotDegrees;
 				case "pivotRadians":
-					return c.pivotRadians;
+					return p.pivotRadians;
 				case "projectTo":
-					return c.projectTo;
+					return p.projectTo;
 				case "projectToNormalized":
-					return c.projectToNormalized;
+					return p.projectToNormalized;
 				case "radians":
-					return c.radians;
+					return p.radians;
 				case "radiansBetween":
-					return c.radiansBetween;
+					return p.radiansBetween;
 				case "radiansFrom":
-					return c.radiansFrom;
+					return p.radiansFrom;
 				case "radiansTo":
-					return c.radiansTo;
+					return p.radiansTo;
 				case "ratio":
-					return c.ratio;
+					return p.ratio;
 				case "rightNormal":
-					return c.rightNormal;
+					return p.rightNormal;
 				case "rotateByDegrees":
-					return c.rotateByDegrees;
+					return p.rotateByDegrees;
 				case "rotateByRadians":
-					return c.rotateByRadians;
+					return p.rotateByRadians;
 				case "rotateWithTrig":
-					return c.rotateWithTrig;
+					return p.rotateWithTrig;
 				case "round":
-					return c.round;
+					return p.round;
 				case "rx":
-					return c.rx;
+					return p.rx;
 				case "ry":
-					return c.ry;
+					return p.ry;
 				case "setPolarDegrees":
-					return c.setPolarDegrees;
+					return p.setPolarDegrees;
 				case "setPolarRadians":
-					return c.setPolarRadians;
+					return p.setPolarRadians;
 				case "sign":
-					return c.sign;
+					return p.sign;
 				case "scale":
-					return c.scale;
+					return p.scale;
 				case "scaleNew":
-					return c.scaleNew;
+					return p.scaleNew;
 				case "scalePoint":
-					return c.scalePoint;
+					return p.scalePoint;
 				case "subtract":
-					return c.subtract;
+					return p.subtract;
 				case "subtractFromFlash":
-					return c.subtractFromFlash;
+					return p.subtractFromFlash;
 				case "subtractNew":
-					return c.subtractNew;
+					return p.subtractNew;
 				case "subtractPoint":
-					return c.subtractPoint;
+					return p.subtractPoint;
 				case "transform":
-					return c.transform;
+					return p.transform;
 				case "truncate":
-					return c.truncate;
+					return p.truncate;
 				case "zero":
-					return c.zero;
+					return p.zero;
 			}
 			return null;
 		}
 		Interp.setRedirects["flixel.math.FlxBasePoint"] = function(obj:Dynamic, name:String, val:Dynamic):Dynamic
 		{
-			var c:FlxPoint = obj;
+			var p:FlxPoint = obj;
 			switch (name)
 			{
 				case "degrees":
-					return c.degrees = val;
+					return p.degrees = val;
 				case "length":
-					return c.length = val;
+					return p.length = val;
 				case "radians":
-					return c.radians = val;
+					return p.radians = val;
 			}
 			return null;
 		};
@@ -454,6 +454,7 @@ class BootState extends FNFState
 			#if !macro
 			DiscordClient.shutdown();
 			#end
+			CoolUtil.deleteDirectory(".temp");
 			Sys.exit(0);
 		});
 	}

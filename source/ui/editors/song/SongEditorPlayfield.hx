@@ -1,5 +1,6 @@
 package ui.editors.song;
 
+import flixel.util.FlxDestroyUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -72,7 +73,7 @@ class SongEditorPlayfield extends FlxGroup
 		waveform = null;
 		noteGroup = null;
 		otherGroup = null;
-		playfieldButton = null;
+		playfieldButton = FlxDestroyUtil.destroy(playfieldButton);
 		state = null;
 	}
 	

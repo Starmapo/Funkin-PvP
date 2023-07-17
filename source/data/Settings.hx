@@ -114,8 +114,8 @@ class Settings
 		FlxG.sound.defaultSoundGroup.volume = effectVolume;
 		
 		FlxG.autoPause = autoPause;
-		
 		FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
+		FlxG.bitmap.cacheType = forceCacheReset ? UNUSED : DISABLED;
 	}
 	
 	public static function saveData()
