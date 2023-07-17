@@ -1,4 +1,4 @@
-faster options menu
+async load pvp music
 show notifications option
 update detector
 editors drag & drop

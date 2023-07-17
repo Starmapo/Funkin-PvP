@@ -51,46 +51,12 @@ class OptionsState extends FNFState
 		
 		if (Settings.reloadMods)
 			Mods.reloadSkins();
-			
-		var optionsPage = addPage(Options, new OptionsPage());
-		optionsPage.onExit.add(exitToMainMenu);
-		optionsPage.controlsEnabled = false;
 		
-		var playersPage = addPage(Players, new PlayersPage());
-		playersPage.onExit.add(switchPage.bind(Options));
-		
-		var videoPage = addPage(Video, new VideoPage());
-		videoPage.onExit.add(switchPage.bind(Options));
-		
-		var audioPage = addPage(Audio, new AudioPage());
-		audioPage.onExit.add(switchPage.bind(Options));
-		
-		var gameplayPage = addPage(Gameplay, new GameplayPage());
-		gameplayPage.onExit.add(switchPage.bind(Options));
-		
-		var miscPage = addPage(Miscellaneous, new MiscellaneousPage());
-		miscPage.onExit.add(switchPage.bind(Options));
-		
-		for (i in 0...2)
-		{
-			var playerPage = addPage(Player(i), new PlayerPage(i));
-			playerPage.onExit.add(switchPage.bind(Players));
-			
-			var controlsPage = addPage(Controls(i), new ControlsPage(i));
-			controlsPage.onExit.add(switchPage.bind(Player(i)));
-			
-			var noteSkinPage = addPage(NoteSkin(i), new NoteSkinPage(i));
-			noteSkinPage.onExit.add(switchPage.bind(Player(i)));
-			
-			var judgementSkinPage = addPage(JudgementSkin(i), new JudgementSkinPage(i));
-			judgementSkinPage.onExit.add(switchPage.bind(Player(i)));
-			
-			var splashSkinPage = addPage(SplashSkin(i), new SplashSkinPage(i));
-			splashSkinPage.onExit.add(switchPage.bind(Player(i)));
-		}
-		
-		currentPage.onAppear();
+		setPage(currentName);
+
+		currentPage.controlsEnabled = false;
 		camPages.snapToTarget();
+
 		FlxG.camera.zoom = 3;
 		var duration = Main.getTransitionTime();
 		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
@@ -169,6 +135,9 @@ class OptionsState extends FNFState
 			
 		currentName = name;
 		
+		if (currentPage == null)
+			createPage(name);
+			
 		if (currentPage != null)
 		{
 			currentPage.exists = true;
@@ -180,6 +149,33 @@ class OptionsState extends FNFState
 			DiscordClient.changePresence(currentPage.rpcDetails, 'Options Menu');
 		else
 			DiscordClient.changePresence(null, 'Options Menu');
+	}
+	
+	function createPage(name:PageName)
+	{
+		var page = addPage(name, switch (name)
+		{
+			case Options: new OptionsPage();
+			case Players: new PlayersPage();
+			case Video: new VideoPage();
+			case Audio: new AudioPage();
+			case Gameplay: new GameplayPage();
+			case Miscellaneous: new MiscellaneousPage();
+			case Player(i): new PlayerPage(i);
+			case Controls(i): new ControlsPage(i);
+			case NoteSkin(i): new NoteSkinPage(i);
+			case JudgementSkin(i): new JudgementSkinPage(i);
+			case SplashSkin(i): new SplashSkinPage(i);
+		});
+		if (name == Options)
+			page.onExit.add(exitToMainMenu);
+		else
+			page.onExit.add(switchPage.bind(switch (name)
+			{
+				case Player(i): Players;
+				case Controls(i), NoteSkin(i), JudgementSkin(i), SplashSkin(i): Player(i);
+				default: Options;
+			}));
 	}
 	
 	function exitToMainMenu()
