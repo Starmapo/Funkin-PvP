@@ -1,8 +1,10 @@
 package data;
 
 import haxe.io.Path;
+import lime.app.Future;
 import lime.graphics.Image;
 import lime.media.AudioBuffer;
+import lime.net.HTTPRequest;
 import lime.text.Font;
 import lime.utils.AssetLibrary;
 import lime.utils.Assets;
@@ -127,6 +129,61 @@ class PanLibrary extends AssetLibrary
 			
 		return items;
 	}
+	
+	override function loadAudioBuffer(id:String):Future<AudioBuffer>
+	{
+		for (library in libraries)
+		{
+			if (library.exists(id, "SOUND"))
+				return library.loadAudioBuffer(id);
+		}
+		
+		return Future.withValue(null);
+	}
+	
+	override function loadBytes(id:String):Future<Bytes>
+	{
+		for (library in libraries)
+		{
+			if (library.exists(id, "BINARY"))
+				return library.loadBytes(id);
+		}
+		
+		return Future.withValue(null);
+	}
+	
+	override function loadFont(id:String):Future<Font>
+	{
+		for (library in libraries)
+		{
+			if (library.exists(id, "FONT"))
+				return library.loadFont(id);
+		}
+		
+		return Future.withValue(null);
+	}
+	
+	override function loadImage(id:String):Future<Image>
+	{
+		for (library in libraries)
+		{
+			if (library.exists(id, "IMAGE"))
+				return library.loadImage(id);
+		}
+		
+		return Future.withValue(null);
+	}
+	
+	override function loadText(id:String):Future<String>
+	{
+		for (library in libraries)
+		{
+			if (library.exists(id, "TEXT"))
+				return library.loadText(id);
+		}
+		
+		return Future.withValue(null);
+	}
 }
 
 class SysLibrary extends AssetLibrary
@@ -191,6 +248,32 @@ class SysLibrary extends AssetLibrary
 	override function list(type:String):Array<String>
 	{
 		return [];
+	}
+	
+	override function loadAudioBuffer(id:String):Future<AudioBuffer>
+	{
+		return AudioBuffer.loadFromFile(getSysPath(id));
+	}
+	
+	override function loadBytes(id:String):Future<Bytes>
+	{
+		return Bytes.loadFromFile(getSysPath(id));
+	}
+	
+	override function loadFont(id:String):Future<Font>
+	{
+		return Font.loadFromFile(getSysPath(id));
+	}
+	
+	override function loadImage(id:String):Future<Image>
+	{
+		return Image.loadFromFile(getSysPath(id));
+	}
+	
+	override function loadText(id:String):Future<String>
+	{
+		var request = new HTTPRequest<String>();
+		return request.load(getSysPath(id));
 	}
 	
 	function getSysPath(id:String):String
@@ -282,7 +365,46 @@ class ZipLibrary extends AssetLibrary
 		
 		return result;
 	}
-
+	
+	/**
+		Not supported!
+	**/
+	override function loadAudioBuffer(id:String):Future<AudioBuffer>
+	{
+		return Future.withValue(getAudioBuffer(id));
+	}
+	
+	/**
+		Not supported!
+	**/
+	override function loadBytes(id:String):Future<Bytes>
+	{
+		return Future.withValue(getBytes(id));
+	}
+	
+	override function loadFont(id:String):Future<Font>
+	{
+		return Font.loadFromBytes(getBytes(id));
+	}
+	
+	override function loadImage(id:String):Future<Image>
+	{
+		return Image.loadFromBytes(getBytes(id));
+	}
+	
+	/**
+		Not supported!
+	**/
+	override function loadText(id:String):Future<String>
+	{
+		var bytes = getBytes(id);
+		
+		if (bytes == null)
+			return cast Future.withValue(null);
+		else
+			return Future.withValue(bytes.getString(0, bytes.length));
+	}
+	
 	public function addAllZips()
 	{
 		final modRootContents = FileSystem.readDirectory(modsPath);

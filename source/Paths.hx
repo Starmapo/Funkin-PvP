@@ -545,17 +545,18 @@ class Paths
 			return Future.withValue(null);
 			
 		var promise = new Promise<FlxGraphic>();
-		var future = BitmapData.loadFromFile(path);
+		var future = library.loadImage(path);
 		
 		future.onProgress(promise.progress);
 		future.onError(promise.error);
-		future.onComplete(function(bitmap)
+		future.onComplete(function(image)
 		{
-			if (bitmap == null)
+			if (image == null)
 			{
 				promise.error('Error loading image: "$path"');
 				return;
 			}
+			var bitmap = BitmapData.fromImage(image);
 			var graphic = FlxG.bitmap.add(bitmap, false, path);
 			graphic.destroyOnNoUse = false;
 			promise.complete(graphic);
@@ -602,17 +603,18 @@ class Paths
 			return Future.withValue(null);
 			
 		var promise = new Promise<Sound>();
-		var future = Sound.loadFromFile(path);
+		var future = library.loadAudioBuffer(path);
 		
 		future.onProgress(promise.progress);
 		future.onError(promise.error);
-		future.onComplete(function(sound)
+		future.onComplete(function(buffer)
 		{
-			if (sound == null)
+			if (buffer == null)
 			{
 				promise.error('Error loading sound: "$path"');
 				return;
 			}
+			var sound = Sound.fromAudioBuffer(buffer);
 			cachedSounds.set(path, sound);
 			if (!trackedSounds.contains(path))
 				trackedSounds.push(path);
