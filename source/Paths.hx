@@ -372,7 +372,6 @@ class Paths
 				return frames;
 		}
 		
-		Main.showNotification('Spritesheet \"$originalPath\" not found.', ERROR);
 		return null;
 	}
 	

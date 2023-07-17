@@ -48,7 +48,7 @@ class Mods
 				modsToLoad.push(mod);
 			}
 			else
-				Main.showNotification('Could not find mod metadata file: $jsonPath', ERROR);
+				Main.showInternalNotification('Could not find mod metadata file: $jsonPath', ERROR);
 		}
 		final filteredMods = filterDependencies(modsToLoad);
 		filteredMods.sort(function(a, b)
@@ -323,13 +323,13 @@ class Mods
 					var depMod = modMap.get(dep);
 					if (depMod == null)
 					{
-						Main.showNotification('Dependency "$dep" not found, which is required for mod "${mod.id}".', ERROR);
+						Main.showInternalNotification('Dependency "$dep" not found, which is required for mod "${mod.id}".', ERROR);
 						depError = true;
 						break;
 					}
 					if (!VersionUtil.match(depMod.modVersion, depRule))
 					{
-						Main.showNotification('Dependency "$dep" has version "${depMod.modVersion}", but requires "${VersionUtil.ruleToString(depRule)}" for mod "${mod.id}".',
+						Main.showInternalNotification('Dependency "$dep" has version "${depMod.modVersion}", but requires "${VersionUtil.ruleToString(depRule)}" for mod "${mod.id}".',
 							ERROR);
 						depError = true;
 						break;
@@ -373,7 +373,7 @@ class Mod extends JsonObject
 		var data:Dynamic = Paths.getJson(path);
 		if (data == null || data.length < 1)
 		{
-			Main.showNotification('Error parsing mod metadata file ($path), was null or empty.', ERROR);
+			Main.showInternalNotification('Error parsing mod metadata file ($path), was null or empty.', ERROR);
 			return null;
 		}
 		
@@ -384,7 +384,7 @@ class Mod extends JsonObject
 		}
 		catch (e)
 		{
-			Main.showNotification('Error parsing API version: ($e) metadata was $data', ERROR);
+			Main.showInternalNotification('Error parsing API version: ($e) metadata was $data', ERROR);
 			return null;
 		}
 		try
@@ -393,7 +393,7 @@ class Mod extends JsonObject
 		}
 		catch (e)
 		{
-			Main.showNotification('Error parsing mod version: ($e) metadata was $data', ERROR);
+			Main.showInternalNotification('Error parsing mod version: ($e) metadata was $data', ERROR);
 			return null;
 		}
 		

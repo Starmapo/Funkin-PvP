@@ -52,7 +52,23 @@ class Main extends Sprite
 	}
 	
 	/**
+		Displays a new notification, unless `Settings.showInternalNotifications` is disabled.
+
+		@param	info	The text to display in the notification.
+		@param	level	The level of the notification (`INFO` (default), `ERROR`, `WARNING`, or `SUCCESS`).
+		@return	The new notification, or `null` if internal notifications are disabled.
+	**/
+	public static function showInternalNotification(info:String, level:NotificationLevel = INFO):Notification
+	{
+		if (Settings.showInternalNotifications)
+			return notificationManager.showNotification(info, level);
+			
+		return null;
+	}
+	
+	/**
 		Displays a new notification.
+
 		@param	info	The text to display in the notification.
 		@param	level	The level of the notification (`INFO` (default), `ERROR`, `WARNING`, or `SUCCESS`).
 		@return	The new notification.

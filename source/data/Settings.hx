@@ -30,7 +30,6 @@ class Settings
 	// Gameplay
 	public static var lowQuality:Bool = false;
 	public static var shaders:Bool = true;
-	// public static var forceDefaultStage:Bool = false;
 	public static var staticBG:Bool = true;
 	public static var backgroundBrightness:Float = 1;
 	public static var hideHUD:Bool = false;
@@ -46,6 +45,7 @@ class Settings
 	// Miscellaneous
 	public static var autoPause:Bool = false;
 	public static var fastTransitions:Bool = false;
+	public static var showInternalNotifications:Bool = true;
 	public static var reloadMods:Bool = false;
 	public static var forceCacheReset:Bool = false;
 	// Ruleset

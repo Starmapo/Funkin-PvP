@@ -30,6 +30,12 @@ class MiscellaneousPage extends BaseSettingsPage
 			FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
 		});
 		addSetting({
+			name: 'showInternalNotifications',
+			displayName: 'Show Internal Notifications',
+			description: "Whether or not to show notifications that are only useful for debugging or fixing errors.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'reloadMods',
 			displayName: 'Reload Mod Content',
 			description: "If enabled, mod content will be refreshed when needed (for example, entering the song select screen will refresh what the current songs are). Useful if you're making a mod.",

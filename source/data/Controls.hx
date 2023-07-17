@@ -420,7 +420,7 @@ class Controls extends FlxActionSet
 	{
 		if (config == null)
 		{
-			Main.showNotification("Can't load \"null\" player configuration.", ERROR);
+			Main.showInternalNotification("Can't load \"null\" player configuration.", ERROR);
 			return;
 		}
 		

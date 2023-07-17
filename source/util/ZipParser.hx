@@ -88,7 +88,7 @@ class ZipParser
 		var cdfh = centralDirectoryRecords.get(localFileName);
 		if (cdfh == null)
 		{
-			Main.showNotification('The file $localFileName was not found in the zip: $fileName', ERROR);
+			Main.showInternalNotification('The file $localFileName was not found in the zip: $fileName', ERROR);
 			return null;
 		}
 		fileHandle.seek(cdfh.localFileHeaderOffset, SeekBegin);

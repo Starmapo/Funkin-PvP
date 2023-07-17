@@ -86,7 +86,8 @@ class PlayStateScript extends Script
 				if (i < max)
 					posInfo += ', ';
 			}
-			Main.showNotification(posInfo);
+			Main.showInternalNotification(posInfo);
+			trace(posInfo);
 		}));
 		
 		setVariable("getOrder", function(obj:FlxBasic)

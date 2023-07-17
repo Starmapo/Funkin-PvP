@@ -29,14 +29,6 @@ class GameplayPage extends BaseSettingsPage
 			description: "Whether gameplay shaders are enabled.",
 			type: CHECKBOX
 		});
-		/*
-			addSetting({
-				name: 'forceDefaultStage',
-				displayName: 'Force Default Stage',
-				description: "If enabled, the FNF Week 1 stage is forced on every song. Some songs may not function properly with this.",
-				type: CHECKBOX
-			});
-		 */
 		addSetting({
 			name: 'staticBG',
 			displayName: 'Background Static',

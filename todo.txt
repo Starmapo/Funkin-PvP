@@ -1,5 +1,3 @@
-library load functions
-show notifications option
 update detector
 editors drag & drop
 video resyncing
