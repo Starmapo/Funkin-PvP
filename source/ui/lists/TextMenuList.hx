@@ -11,7 +11,7 @@ class TextMenuItem extends TypedMenuItem<FlxText>
 	public function new(x:Float = 0, y:Float = 0, name:String, ?callback:Void->Void, size:Int = 65)
 	{
 		var label = new FlxText(0, 0, 0, name, size);
-		label.setFormat('PhantomMuff 1.5', size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		label.setFormat(Paths.FONT_PHANTOMMUFF, size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		label.antialiasing = true;
 		
 		super(x, y, label, name, callback);

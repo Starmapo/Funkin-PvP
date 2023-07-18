@@ -102,7 +102,7 @@ class Notification extends FlxSpriteGroup
 		bg = new FlxUI9SliceSprite(0, 0, Paths.getImage('editors/notification'), new Rectangle(), [6, 6, 11, 11]);
 		
 		text = new FlxUITextPersistent(0, 0, info);
-		text.setFormat('VCR OSD Mono', 14, getLevelColor(level), CENTER);
+		text.setFormat(Paths.FONT_VCR, 14, getLevelColor(level), CENTER);
 		
 		final maxWidth = FlxG.width - 40;
 		if (text.width > maxWidth)

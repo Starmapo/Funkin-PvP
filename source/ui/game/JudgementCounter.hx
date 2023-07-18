@@ -17,7 +17,7 @@ class JudgementCounter extends FlxText
 		this.scoreProcessor = scoreProcessor;
 		
 		right = scoreProcessor.player > 0;
-		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, right ? RIGHT : LEFT, OUTLINE, FlxColor.BLACK);
+		setFormat(Paths.FONT_VCR, 16, FlxColor.WHITE, right ? RIGHT : LEFT, OUTLINE, FlxColor.BLACK);
 		
 		updateText();
 	}

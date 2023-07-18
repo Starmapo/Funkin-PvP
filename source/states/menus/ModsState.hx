@@ -156,7 +156,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		
 		var maxNameWidth = bg.width - 109;
 		var name = new FlxText(icon.x + icon.width + 5, icon.y + (icon.height / 2), 0, mod.title);
-		name.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		name.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		if (name.width > maxNameWidth)
 		{
 			var ratio = maxNameWidth / name.width;
@@ -175,7 +175,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			+ (count.length > 0 ? '($count)\n' : '')
 			+ 'Version: '
 			+ mod.modVersion);
-		desc.setFormat('PhantomMuff 1.5', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		desc.setFormat(Paths.FONT_PHANTOMMUFF, 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		
 		if (mod.warnings.length > 0)
 		{

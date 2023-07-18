@@ -96,7 +96,7 @@ class SongSelectState extends FNFState
 			playerGroups.add(new PlayerSongSelect(i, camPlayers[i], this, groups));
 			
 		stateText = new FlxText(0, 0, 0, 'Song Selection');
-		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		stateText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		stateText.screenCenter(X);
 		stateText.scrollFactor.set();
 		stateText.cameras = [camOver];
@@ -293,12 +293,12 @@ class PlayerSongSelect extends FlxGroup
 		add(warningBG);
 		
 		warningText = new FlxText(5, 0, camera.width - 10);
-		warningText.setFormat('PhantomMuff 1.5', 32, 0xffff5252, CENTER, OUTLINE, FlxColor.BLACK);
+		warningText.setFormat(Paths.FONT_PHANTOMMUFF, 32, 0xffff5252, CENTER, OUTLINE, FlxColor.BLACK);
 		warningText.scrollFactor.set();
 		add(warningText);
 		
 		screenText = new FlxText(5, 50, camera.width - 10);
-		screenText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		screenText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		screenText.scrollFactor.set();
 		screenText.alpha = 0.6;
 		add(screenText);
@@ -694,7 +694,7 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		setEmptyBackground();
 		
 		text = new FlxText();
-		text.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		text.setFormat(Paths.FONT_PHANTOMMUFF, 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		text.antialiasing = true;
 		text.active = false;
 		label.add(text);

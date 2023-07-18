@@ -33,7 +33,7 @@ class LyricsDisplay extends FlxText
 		super(0, 200, fieldWidth);
 		this.song = song;
 		
-		setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		setFormat(Paths.FONT_PHANTOMMUFF, 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		screenCenter(X);
 		scrollFactor.set();
 		

@@ -28,7 +28,7 @@ class PlayerPage extends Page
 		descBG.alpha = 0.8;
 		
 		descText = new FlxText(0, 0, FlxG.width - 10);
-		descText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		descText.setFormat(Paths.FONT_VCR, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		descText.scrollFactor.set();
 		
 		items = new PlayerSettingsMenuList();

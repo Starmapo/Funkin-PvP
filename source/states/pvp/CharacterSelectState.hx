@@ -85,7 +85,7 @@ class CharacterSelectState extends FNFState
 			playerGroups.add(new PlayerCharacterSelect(i, camPlayers[i], this, groups));
 			
 		stateText = new FlxText(0, 0, 0, 'Character Selection');
-		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		stateText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		stateText.screenCenter(X);
 		stateText.scrollFactor.set();
 		stateText.cameras = [camOver];
@@ -265,13 +265,13 @@ class PlayerCharacterSelect extends FlxGroup
 		add(charPortraitOutline);
 		
 		charText = new FlxText(charPortraitOutline.x, charPortraitOutline.y + charPortraitOutline.height + 10, charPortraitOutline.width, '');
-		charText.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		charText.setFormat(Paths.FONT_PHANTOMMUFF, 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		charText.scrollFactor.copyFrom(charPortraitOutline.scrollFactor);
 		charText.active = false;
 		add(charText);
 		
 		screenText = new FlxText(5, 50, camera.width - 10);
-		screenText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		screenText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		screenText.scrollFactor.set();
 		screenText.alpha = 0.6;
 		screenText.active = false;

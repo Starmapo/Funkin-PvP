@@ -242,7 +242,7 @@ class CoolUtil
 		final thickness = 4;
 		
 		final text = new FlxText(0, graphic.height - thickness, graphic.width, groupName);
-		text.setFormat('VCR OSD Mono', 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		text.setFormat(Paths.FONT_VCR, 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		text.updateHitbox();
 		text.y -= text.height;
 		

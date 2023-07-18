@@ -26,7 +26,7 @@ class Tooltip extends FlxSpriteGroup
 		add(bg);
 		
 		text = new FlxUIText();
-		text.setFormat('VCR OSD Mono', 14);
+		text.setFormat(Paths.FONT_VCR, 14);
 		add(text);
 		
 		changeText();

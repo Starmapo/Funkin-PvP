@@ -168,7 +168,7 @@ class JudgementPresetsSubState extends FNFSubState
 		createCamera();
 		
 		nameText = new FlxText(5, 5, FlxG.width - 10);
-		nameText.setFormat('PhantomMuff 1.5', 64, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		nameText.setFormat(Paths.FONT_PHANTOMMUFF, 64, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		nameText.scrollFactor.set();
 		add(nameText);
 		
@@ -177,7 +177,7 @@ class JudgementPresetsSubState extends FNFSubState
 		for (i in 0...6)
 		{
 			var judgementText = new FlxText(0, curY);
-			judgementText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+			judgementText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 			judgementText.scrollFactor.set();
 			judgementGroup.add(judgementText);
 			
@@ -186,7 +186,7 @@ class JudgementPresetsSubState extends FNFSubState
 		add(judgementGroup);
 		
 		var tipText = new FlxText(0, FlxG.height - 5, 0, 'Press ACCEPT to apply this preset and exit\nPress BACK to exit');
-		tipText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		tipText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		tipText.y -= tipText.height;
 		tipText.screenCenter(X);
 		tipText.scrollFactor.set();

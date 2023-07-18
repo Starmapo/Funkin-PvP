@@ -265,7 +265,7 @@ class SongEditorTimelineTick extends FlxSpriteGroup
 		if (extendedHeight)
 		{
 			measureText = new FlxText(0, 0, 0, Std.string(measureCount));
-			measureText.setFormat('VCR OSD Mono', 24);
+			measureText.setFormat(Paths.FONT_VCR, 24);
 			measureText.x = -measureText.width - 16;
 			measureText.y -= measureText.height / 2;
 			add(measureText);

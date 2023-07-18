@@ -15,7 +15,7 @@ class NPSDisplay extends FlxText
 	public function new(player:Int)
 	{
 		super(5 + (FlxG.width / 2) * player, 0, (FlxG.width / 2) - 10);
-		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		setFormat(Paths.FONT_VCR, 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		
 		var config = Settings.playerConfigs[player];
 		y = (config.downScroll ? 50 : FlxG.height - 60);

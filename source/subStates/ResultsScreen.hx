@@ -74,7 +74,7 @@ class ResultsScreen extends FNFSubState
 		}
 		
 		var titleText = new FlxText(0, 10, 0, winText);
-		titleText.setFormat('PhantomMuff 1.5', 64, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		titleText.setFormat(Paths.FONT_PHANTOMMUFF, 64, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		titleText.screenCenter(X);
 		titleText.active = false;
 		add(titleText);
@@ -101,7 +101,7 @@ class ResultsScreen extends FNFSubState
 			var addX = (i > 0 ? (FlxG.width / 2) : 0);
 			
 			var judgementText = new FlxText(5 + addX, display.missText.y + display.missText.height + 50, (FlxG.width / 2) - 10, 'Judgements:');
-			judgementText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+			judgementText.setFormat(Paths.FONT_VCR, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 			judgementText.active = false;
 			add(judgementText);
 			
@@ -110,7 +110,7 @@ class ResultsScreen extends FNFSubState
 			{
 				var ratingText = new FlxText(5 + addX, curY, (FlxG.width / 2) - 10,
 					(judgement : Judgement).getName() + ': ' + scores[i].currentJudgements[judgement]);
-				ratingText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+				ratingText.setFormat(Paths.FONT_VCR, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 				ratingText.active = false;
 				add(ratingText);
 				curY += ratingText.height + 2;
@@ -118,7 +118,7 @@ class ResultsScreen extends FNFSubState
 		}
 		
 		var pressText = new FlxText(0, FlxG.height - 10, 0, 'Press ACCEPT to continue\nPress RESET to restart the song');
-		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		pressText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.screenCenter(X);
 		pressText.y -= pressText.height;
 		pressText.active = false;

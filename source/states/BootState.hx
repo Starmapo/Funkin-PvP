@@ -57,7 +57,7 @@ class BootState extends FNFState
 		add(loadingBG);
 		
 		loadingText = new FlxText(0, FlxG.height, FlxG.width);
-		loadingText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		loadingText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		loadingText.y -= loadingText.height;
 		loadingText.screenCenter(X);
 		add(loadingText);

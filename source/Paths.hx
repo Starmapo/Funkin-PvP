@@ -27,6 +27,21 @@ using StringTools;
 class Paths
 {
 	/**
+		The "PhantomMuff" font name.
+	**/
+	public static final FONT_PHANTOMMUFF:String = "PhantomMuff 1.5";
+	
+	/**
+		The "Pixel" font name.
+	**/
+	public static final FONT_PIXEL:String = "Pixel Arial 11 Bold";
+	
+	/**
+		The "VCR" font name.
+	**/
+	public static final FONT_VCR:String = "VCR OSD Mono";
+	
+	/**
 		Array of possible extensions for sound files.
 	**/
 	public static final SOUND_EXTENSIONS:Array<String> = [".ogg", ".wav"];
@@ -563,7 +578,7 @@ class Paths
 		
 		return promise.future;
 	}
-
+	
 	/**
 		Loads music from a key.
 

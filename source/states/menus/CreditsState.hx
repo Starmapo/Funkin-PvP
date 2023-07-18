@@ -83,7 +83,7 @@ class CreditsState extends FNFState
 		for (text in creditGroup)
 		{
 			text.scrollFactor.set();
-			text.setFormat('PhantomMuff 1.5', text.size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+			text.setFormat(Paths.FONT_PHANTOMMUFF, text.size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		}
 		
 		readCredits('assets/data/credits');

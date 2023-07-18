@@ -134,7 +134,7 @@ class CharacterEditorState extends FNFState
 		add(camIndicator);
 		
 		animText = new FlxText(5, 0, FlxG.width - 10);
-		animText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		animText.setFormat(Paths.FONT_VCR, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		animText.scrollFactor.set();
 		add(animText);
 		

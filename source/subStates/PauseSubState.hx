@@ -76,7 +76,7 @@ class PauseSubState extends FNFSubState
 		add(menuList);
 		
 		playerText = new FlxText(0, 10);
-		playerText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		playerText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		playerText.scrollFactor.set();
 		playerText.active = false;
 		add(playerText);

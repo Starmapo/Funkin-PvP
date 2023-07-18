@@ -52,14 +52,14 @@ class ControlsPage extends Page
 		add(items);
 		
 		deviceText = new FlxText(5, 0, FlxG.width - 10, '', 16);
-		deviceText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		deviceText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		updateDeviceText();
 		add(deviceText);
 		
 		deviceButton = new FlxUIButton(0, deviceText.y + deviceText.height + 5, 'Change Device', changeDevicePrompt);
 		deviceButton.resize(deviceButton.width * 2, deviceButton.height * 2);
 		deviceButton.label.size *= 2;
-		deviceButton.label.font = 'PhantomMuff 1.5';
+		deviceButton.label.font = Paths.FONT_PHANTOMMUFF;
 		deviceButton.autoCenterLabel();
 		deviceButton.screenCenter(X);
 		add(deviceButton);
@@ -82,7 +82,7 @@ class ControlsPage extends Page
 		
 		defaultButton = new FlxUIButton(5, deviceButton.y, 'Reset to Default Controls', openSubState.bind(defaultPrompt));
 		defaultButton.resize(defaultButton.width * 2, defaultButton.height * 2);
-		defaultButton.label.font = 'PhantomMuff 1.5';
+		defaultButton.label.font = Paths.FONT_PHANTOMMUFF;
 		defaultButton.label.size *= 2;
 		defaultButton.autoCenterLabel();
 		add(defaultButton);
@@ -95,13 +95,13 @@ class ControlsPage extends Page
 		
 		clearButton = new FlxUIButton(defaultButton.x, defaultButton.y + defaultButton.height + 5, 'Clear Controls', openSubState.bind(clearPrompt));
 		clearButton.resize(clearButton.width * 2, clearButton.height * 2);
-		clearButton.label.font = 'PhantomMuff 1.5';
+		clearButton.label.font = Paths.FONT_PHANTOMMUFF;
 		clearButton.label.size *= 2;
 		clearButton.autoCenterLabel();
 		add(clearButton);
 		
 		var helpText = new FlxText(5, FlxG.height - 10, FlxG.width - 10, 'Use your mouse to change the controls.', 32);
-		helpText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		helpText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		helpText.y -= helpText.height;
 		add(helpText);
 		
@@ -121,7 +121,7 @@ class ControlsPage extends Page
 		add(pressBG);
 		
 		pressText = new FlxText(0, 0, FlxG.width);
-		pressText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		pressText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		pressText.scrollFactor.set();
 		pressText.visible = false;
 		add(pressText);
@@ -445,7 +445,7 @@ class ControlItem extends FlxSpriteGroup
 		settings = PlayerSettings.players[player];
 		
 		label = new FlxText(0, 0, 150, name);
-		label.setFormat('PhantomMuff 1.5', 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		label.setFormat(Paths.FONT_PHANTOMMUFF, 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		add(label);
 		
 		button1 = createButton(0);
@@ -469,7 +469,7 @@ class ControlItem extends FlxSpriteGroup
 		}
 		button.resize(button.width * 2, label.height);
 		button.label.size = 24;
-		button.label.font = 'PhantomMuff 1.5';
+		button.label.font = Paths.FONT_PHANTOMMUFF;
 		button.autoCenterLabel();
 		buttons.push(button);
 		add(button);

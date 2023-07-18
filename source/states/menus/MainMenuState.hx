@@ -92,7 +92,7 @@ class MainMenuState extends FNFState
 			
 		var version = FlxG.stage.application.meta["version"];
 		var versionText = new FlxText(5, FlxG.height - 5, FlxG.width - 10, 'Version: $version');
-		versionText.setFormat('VCR OSD Mono', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		versionText.setFormat(Paths.FONT_VCR, 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		versionText.y -= versionText.height;
 		versionText.scrollFactor.set();
 		add(versionText);

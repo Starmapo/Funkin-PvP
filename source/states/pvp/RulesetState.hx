@@ -64,7 +64,7 @@ class RulesetState extends FNFState
 		add(new VoidBG());
 		
 		stateText = new FlxText(0, 0, 0, 'Ruleset');
-		stateText.setFormat('PhantomMuff 1.5', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		stateText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		stateText.screenCenter(X);
 		stateText.scrollFactor.set();
 		stateText.cameras = [camOver];
@@ -87,7 +87,7 @@ class RulesetState extends FNFState
 		descBG.cameras = [camOver];
 		
 		descText = new FlxText(0, 0, FlxG.width - 10);
-		descText.setFormat('VCR OSD Mono', 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		descText.setFormat(Paths.FONT_VCR, 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		descText.scrollFactor.set();
 		descText.cameras = [camOver];
 		

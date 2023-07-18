@@ -20,7 +20,7 @@ class MSDisplay extends FlxText
 		super();
 		this.player = player;
 		
-		setFormat('VCR OSD Mono', 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		setFormat(Paths.FONT_VCR, 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		active = false;
 	}
 	

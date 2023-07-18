@@ -21,6 +21,7 @@ import sprites.DancingSprite;
 import sprites.InfiniteEmitter;
 import util.DiscordClient;
 import util.MusicTiming;
+import util.UpdateUtil;
 
 using StringTools;
 
@@ -28,6 +29,7 @@ class TitleState extends FNFState
 {
 	static var logoY:Float = -50;
 	static var initialized:Bool = false;
+	static var hasCheckedUpdates:Bool = false;
 	
 	var camHUD:FlxCamera;
 	var timing:MusicTiming;
@@ -293,7 +295,7 @@ class TitleState extends FNFState
 	function addText(text:String, yOffset:Float = 0, bottom:Bool = false)
 	{
 		var coolText = new FlxText(0, 0, 0, text);
-		coolText.setFormat('PhantomMuff 1.5', 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		coolText.setFormat(Paths.FONT_PHANTOMMUFF, 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		if (coolText.width > FlxG.width)
 		{
 			var ratio = FlxG.width / coolText.width;
@@ -363,13 +365,33 @@ class TitleState extends FNFState
 				ease: FlxEase.expoIn,
 				onComplete: function(_)
 				{
-					FlxG.switchState(new MainMenuState());
+					exitMenu();
 				},
 				startDelay: 0.2
 			});
 			CoolUtil.playConfirmSound();
 			transitioning = true;
 		}
+	}
+	
+	function exitMenu()
+	{
+		var updateCheck:UpdateCheckCallback = hasCheckedUpdates ? null : {
+			success: true,
+			newUpdate: true,
+			currentVersionTag: "v0.1.0",
+			release: {
+				html_url: "https://github.com/",
+				tag_name: "v0.2.0",
+				body: "## [0.2.7.1] - 2021-02-14\r\n### Added\r\n- Easter eggs\r\n- readme's in desktop versions of the game\r\n### Changed\r\n- New icons, old one was placeholder since October woops!\r\n- Made the transitions between the story mode levels more seamless.\r\n- Offset of the Newgrounds logo on boot screen.\r\n- Made the changelog txt so it can be opened easier by normal people who don't have a markdown reader (most normal people);\r\n### Fixed\r\n- Fixed crashes on Week 6 story mode dialogue if spam too fast ([Thanks to Lotusotho for the Pull Request!](https://github.com/ninjamuffin99/Funkin/pull/357))\r\n- Should show intro credits on desktop versions of the game more consistently\r\n- Layering on Week 4 songs with GF and the LIMO LOL HOW TF I MISS THIS\r\n- Chart's and chart editor now support changeBPM, GOD BLESS MTH FOR THIS ONE I BEEN STRUGGLIN WIT THAT SINCE OCTOBER LMAO ([GOD BLESS MTH](https://github.com/ninjamuffin99/Funkin/pull/382))\r\n- Fixed sustain note trails ALSO THANKS TO MTH U A REAL ONE ([MTH VERY POWERFUL](https://github.com/ninjamuffin99/Funkin/pull/415))\r\n- Antialiasing on the skyscraper lights"
+			}
+		};
+		hasCheckedUpdates = true;
+		
+		if (updateCheck != null && updateCheck.newUpdate)
+			FlxG.switchState(new UpdateState(updateCheck));
+		else
+			FlxG.switchState(new MainMenuState());
 	}
 	
 	#if sys
