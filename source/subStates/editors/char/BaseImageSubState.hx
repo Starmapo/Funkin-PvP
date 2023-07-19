@@ -25,6 +25,7 @@ import openfl.ui.Mouse;
 import states.editors.CharacterEditorState;
 import sys.FileSystem;
 import sys.io.File;
+import util.UnsafeUtil;
 
 class BaseImageSubState extends FNFSubState
 {
@@ -318,7 +319,7 @@ class BaseImageSubState extends FNFSubState
 		bitmap.draw(frameBitmap, matrix, null, null, null, char.antialiasing);
 		
 		var imagePath = Path.join([Mods.modsPath, state.info.mod, path]);
-		CoolUtil.createDirectory(Path.directory(imagePath));
+		UnsafeUtil.createDirectory(Path.directory(imagePath));
 		// finally, save the image
 		File.saveBytes(imagePath, bitmap.encode(new Rectangle(0, 0, bitmap.width, bitmap.height), new PNGEncoderOptions()));
 		

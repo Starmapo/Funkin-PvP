@@ -12,10 +12,8 @@ import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
-import flixel.util.FlxSort;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import haxe.io.Path;
 import lime.app.Application;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
@@ -50,17 +48,7 @@ class CoolUtil
 		return (PlayerSettings.anyJustPressed() || FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed || FlxG.mouse.justPressedMiddle
 			|| FlxG.mouse.justPressedRight);
 	}
-	
-	public static function createDirectory(directory:String)
-	{
-		if (directory == null)
-			return;
-		if (!directory.startsWith("./"))
-			directory = "./" + directory;
-		if (FileSystem.exists(directory))
-			return;
-		FileSystem.createDirectory(directory);
-	}
+
 	
 	/**
 		Creates a menu background sprite.
@@ -82,30 +70,6 @@ class CoolUtil
 		bg.screenCenter();
 		bg.antialiasing = true;
 		return bg;
-	}
-	
-	/**
-		Deletes a directory, handling the deletion of files inside of it.
-	**/
-	public static function deleteDirectory(directory:String)
-	{
-		if (directory == null)
-			return;
-		if (!directory.startsWith("./"))
-			directory = "./" + directory;
-		if (!FileSystem.exists(directory) || !FileSystem.isDirectory(directory))
-			return;
-			
-		var files = FileSystem.readDirectory(directory);
-		for (file in files)
-		{
-			var path = Path.join([directory, file]);
-			if (FileSystem.isDirectory(path))
-				deleteDirectory(path);
-			else
-				FileSystem.deleteFile(path);
-		}
-		FileSystem.deleteDirectory(directory);
 	}
 	
 	/**
@@ -526,7 +490,7 @@ class CoolUtil
 		
 		var result = Tools.createProcess(app, 'Test.hx', workingDir, false, false);
 		if (result == 0)
-			System.exit(1337);
+			System.exit(result);
 		else
 			throw "Failed to restart. Error code: " + result;
 		#end

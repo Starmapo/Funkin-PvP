@@ -17,6 +17,7 @@ import hscript.Interp;
 import lime.app.Application;
 import sys.FileSystem;
 import util.AudioSwitchFix;
+import util.UnsafeUtil;
 import util.WindowsAPI;
 
 using StringTools;
@@ -440,7 +441,7 @@ class BootState extends FNFState
 			return null;
 		};
 		
-		CoolUtil.deleteDirectory(".temp");
+		UnsafeUtil.deleteDirectory(".temp");
 	}
 	
 	function loadSave()
@@ -454,7 +455,7 @@ class BootState extends FNFState
 			#if !macro
 			DiscordClient.shutdown();
 			#end
-			CoolUtil.deleteDirectory(".temp");
+			UnsafeUtil.deleteDirectory(".temp");
 			Sys.exit(0);
 		});
 	}

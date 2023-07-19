@@ -13,6 +13,7 @@ import ui.editors.EditorDropdownMenu;
 import ui.editors.EditorInputText;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
+import util.UnsafeUtil;
 
 class NewCharacterPrompt extends FNFSubState
 {
@@ -73,7 +74,7 @@ class NewCharacterPrompt extends FNFSubState
 			state.save(false);
 			
 			var path = Path.directory(fullPath);
-			CoolUtil.createDirectory(path);
+			UnsafeUtil.createDirectory(path);
 			
 			var charInfo = new CharacterInfo({
 				image: 'characters/dad',

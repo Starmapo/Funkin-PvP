@@ -25,6 +25,7 @@ import ui.editors.char.CharacterEditorToolPanel;
 import ui.game.HealthBar;
 import util.DiscordClient;
 import util.MemoryUtil;
+import util.UnsafeUtil;
 import util.bindable.Bindable;
 import util.editors.char.CharacterEditorActionManager;
 
@@ -515,7 +516,7 @@ class CharacterEditorState extends FNFState
 			
 		var bytes = frame.parent.bitmap.encode(frame.frame.copyToFlash(), new PNGEncoderOptions());
 		var path = 'frames/$filename';
-		CoolUtil.createDirectory('frames/');
+		UnsafeUtil.createDirectory('frames/');
 		File.saveBytes(path, bytes);
 		System.openFile(path);
 		Main.showNotification('Image successfully saved!', SUCCESS);

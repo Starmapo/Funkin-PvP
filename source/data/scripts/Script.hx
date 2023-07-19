@@ -114,6 +114,8 @@ class Script implements IFlxDestroyable
 		"openfl.filesystem.FileStream",
 		"openfl.net.FileReference",
 		"openfl.net.SharedObject",
+		"states.menus.CreditsState",
+		"states.menus.UpdateState",
 		"sys.FileSystem",
 		"sys.Http",
 		"sys.db.Mysql",
@@ -129,7 +131,9 @@ class Script implements IFlxDestroyable
 		"sys.net.UdpSocket",
 		"sys.ssl.Socket",
 		"sys.ssl.SocketInput",
-		"sys.ssl.SocketOutput"
+		"sys.ssl.SocketOutput",
+		"util.DiscordClient",
+		"util.UnsafeUtil"
 	];
 	
 	/**

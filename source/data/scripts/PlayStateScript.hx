@@ -15,6 +15,7 @@ import states.PlayState;
 import sys.FileSystem;
 import sys.io.File;
 import ui.game.Note;
+import util.UnsafeUtil;
 
 using StringTools;
 
@@ -237,7 +238,7 @@ class PlayStateScript extends Script
 				if (!FileSystem.exists(tempPath))
 				{
 					// hxCodec currently only supports loading from files, so we must load it in a temporary folder.
-					CoolUtil.createDirectory(Path.directory(tempPath));
+					UnsafeUtil.createDirectory(Path.directory(tempPath));
 					var bytes = Paths.getBytes(path);
 					File.saveBytes(tempPath, bytes);
 				}

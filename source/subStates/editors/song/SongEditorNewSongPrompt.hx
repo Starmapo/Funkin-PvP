@@ -19,6 +19,7 @@ import ui.editors.EditorInputText;
 import ui.editors.EditorPanel;
 import ui.editors.EditorText;
 import util.StringUtil;
+import util.UnsafeUtil;
 
 using StringTools;
 
@@ -146,7 +147,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 			
 			state.save(false);
 			
-			CoolUtil.createDirectory(path);
+			UnsafeUtil.createDirectory(path);
 			File.copy(instFile, Path.join([path, 'Inst.' + Path.extension(instFile)]));
 			if (vocalsFile.length > 0 && FileSystem.exists(vocalsFile))
 				File.copy(vocalsFile, Path.join([path, 'Voices.' + Path.extension(vocalsFile)]));
