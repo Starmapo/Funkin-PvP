@@ -47,6 +47,7 @@ class Settings
 	public static var fastTransitions:Bool = false;
 	public static var showInternalNotifications:Bool = true;
 	public static var reloadMods:Bool = false;
+	public static var checkForUpdates:Bool = true;
 	public static var forceCacheReset:Bool = false;
 	// Ruleset
 	public static var singleSongSelection:Bool = false;

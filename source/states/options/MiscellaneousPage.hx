@@ -42,6 +42,12 @@ class MiscellaneousPage extends BaseSettingsPage
 			type: CHECKBOX
 		});
 		addSetting({
+			name: 'checkForUpdates',
+			displayName: 'Check for Updates',
+			description: "If enabled, the game will check for updates whenever you start.",
+			type: CHECKBOX
+		});
+		addSetting({
 			name: 'forceCacheReset',
 			displayName: 'Force Cache Reset',
 			description: "If enabled, unused graphics and sounds will always be cleared after a state switch.",

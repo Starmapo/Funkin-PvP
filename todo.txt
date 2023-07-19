@@ -1,3 +1,4 @@
+add "other" characters
 editors drag & drop
 video resyncing
 disable/enable mods

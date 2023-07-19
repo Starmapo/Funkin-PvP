@@ -132,7 +132,7 @@ class NoteManager extends FlxBasic
 			{
 				for (note in lane)
 				{
-					if (note != null && note.exists && note.canDraw())
+					if (note != null && note.exists && note.visible)
 					{
 						var lastAlpha = note.alpha;
 						note.alpha *= alpha;

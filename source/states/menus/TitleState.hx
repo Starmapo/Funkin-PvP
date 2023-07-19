@@ -76,15 +76,15 @@ class TitleState extends FNFState
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
-
+		
 		if (!FlxG.sound.musicPlaying)
 			CoolUtil.playMenuMusic();
-		
+			
 		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized, 0, onBeatHit);
-
+		
 		if (!initialized)
 			FlxG.sound.music.stop();
-
+			
 		getIntroText();
 		
 		colorSwap = new ColorSwap();
@@ -369,16 +369,7 @@ class TitleState extends FNFState
 	
 	function exitMenu()
 	{
-		var updateCheck:UpdateCheckCallback = hasCheckedUpdates ? null : {
-			success: true,
-			newUpdate: true,
-			currentVersionTag: "0.1.0",
-			release: {
-				html_url: "https://github.com/",
-				tag_name: "0.2.0",
-				body: "# Heading 1\n## Heading 2\n### Heading 3\n- List 1\n    - List 2\n        - List 3\n            - List 4\n> Quote\n**Bold**\n*Italic*\n***Bold and italic***"
-			}
-		};
+		var updateCheck:UpdateCheckCallback = !hasCheckedUpdates && Settings.checkForUpdates ? UpdateUtil.checkForUpdates() : null;
 		hasCheckedUpdates = true;
 		
 		if (updateCheck != null && updateCheck.newUpdate)

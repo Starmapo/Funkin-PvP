@@ -308,17 +308,17 @@ class Character extends DancingSprite
 		frameOffsetScale = info.scale;
 		reloadImage();
 		
-		if (state != Idle)
-		{
-			state = Idle;
-			cancelDanceTimer();
-			canDance = true;
-		}
 		resetColor();
 		danceBeats = danceAnims.length > 1 ? 1 : 2;
 		
 		if (lastAnim != null && animation.exists(lastAnim))
 			playAnim(lastAnim, true, false, lastFrame);
+		else if (state != Idle)
+		{
+			state = Idle;
+			cancelDanceTimer();
+			canDance = true;
+		}
 	}
 	
 	public function reloadImage()

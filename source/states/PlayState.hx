@@ -1175,6 +1175,7 @@ class PlayState extends FNFState
 						force = param != 'false' && param != '0';
 					}
 					char.playAnim(anim, force);
+					char.startDanceTimer(getBeatLength() / 1000);
 				}
 				else
 					playNoteAnim(char, note);
