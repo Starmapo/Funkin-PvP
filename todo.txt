@@ -1,4 +1,5 @@
 add "other" characters
+new song structure
 editors drag & drop
 video resyncing
 disable/enable mods

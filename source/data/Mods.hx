@@ -13,6 +13,7 @@ using StringTools;
 class Mods
 {
 	public static final modsPath:String = 'mods';
+	
 	public static var currentMods:Array<Mod> = [];
 	public static var currentMod:String = '';
 	public static var pvpMusic:Array<NameInfo> = [];
