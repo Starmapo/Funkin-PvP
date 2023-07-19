@@ -35,8 +35,12 @@
 	<set name="BUILD_DIR" value="export/32bit" if="32bits" />
 	
 	<source path="source" />
+	
 	<assets path="assets" />
 	<assets path="mods" embed="false"/>
+
+	<assets path="LICENSE.txt"/>
+	<assets path="LICENSE_FUNKIN.txt"/>
 
 	<assets path='external/readme.txt' rename='readme.txt' />
 

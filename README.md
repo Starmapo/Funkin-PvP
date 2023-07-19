@@ -10,3 +10,9 @@ You should already have [Haxe](https://haxe.org/download/) installed.
 2. If this is your first time using Lime, run `haxelib run lime setup` to be able to use the `lime` command, then run the setup for your platform (e.g. `lime setup windows`).
 3. Rebuild the Lime and systools binaries for your platform (e.g. `lime rebuild windows` and `lime rebuild systools windows`). This may take a while.
 4. Use `lime test` to test the game (e.g. `lime test windows -debug`), or if you're using Visual Studio Code, select your Lime Target Configuration and use the "Run and Debug" options. This also may take a while.
+
+## License
+
+This game is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. More information can be found in the LICENSE.txt file.
+
+Licenses for Friday Night Funkin' and OpenFL are contained in separate files.
