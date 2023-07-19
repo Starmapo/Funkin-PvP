@@ -76,17 +76,16 @@ class TitleState extends FNFState
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
-		
+
 		if (!FlxG.sound.musicPlaying)
-		{
 			CoolUtil.playMenuMusic();
-			if (!initialized)
-				FlxG.sound.music.stop();
-		}
-		
-		getIntroText();
 		
 		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized, 0, onBeatHit);
+
+		if (!initialized)
+			FlxG.sound.music.stop();
+
+		getIntroText();
 		
 		colorSwap = new ColorSwap();
 		
@@ -233,13 +232,9 @@ class TitleState extends FNFState
 			gradientAlpha = num;
 		});
 		if (!initialized)
-		{
 			FlxG.sound.music.fadeIn(4);
-		}
 		else
-		{
 			skipIntro();
-		}
 		startedIntro = true;
 		initialized = true;
 	}
@@ -315,9 +310,7 @@ class TitleState extends FNFState
 	function addTexts(texts:Array<String>, yOffset:Float = 0, bottom:Bool = false)
 	{
 		for (text in texts)
-		{
 			addText(text, yOffset, bottom);
-		}
 	}
 	
 	function clearText()

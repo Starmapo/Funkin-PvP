@@ -768,9 +768,8 @@ class PlayState extends FNFState
 		vocals.pitch = GameplayGlobals.playbackRate;
 		vocals.resetPositionOnFinish = false;
 		
-		timing = new MusicTiming(inst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, [vocals], startSong);
+		timing = new MusicTiming(inst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, onBeatHit, [vocals], startSong);
 		timing.onStepHit.add(onStepHit);
-		timing.onBeatHit.add(onBeatHit);
 		timing.onBarHit.add(onBarHit);
 		
 		detailsText = song.title + ' [${song.difficultyName}]';

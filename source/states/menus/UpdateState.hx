@@ -1,5 +1,6 @@
 package states.menus;
 
+import data.PlayerSettings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.text.FlxText;
@@ -8,18 +9,24 @@ import ui.ScrollBar;
 import util.DiscordClient;
 import util.MarkdownUtil;
 import util.UpdateUtil.UpdateCheckCallback;
+import util.github.GitHubRelease;
 
 using StringTools;
 
 class UpdateState extends FNFState
 {
 	var updateCheck:UpdateCheckCallback;
+	var release:GitHubRelease;
 	var changelogCamera:FlxCamera;
+	var downloadText:FlxText;
+	var skipText:FlxText;
+	var onSkip:Bool = false;
 	
 	public function new(updateCheck:UpdateCheckCallback)
 	{
 		super();
 		this.updateCheck = updateCheck;
+		release = updateCheck.release;
 	}
 	
 	override function create()
@@ -39,8 +46,6 @@ class UpdateState extends FNFState
 		updateText.screenCenter(X);
 		add(updateText);
 		
-		var release = updateCheck.release;
-		
 		var versionText = new FlxText(0, updateText.y + updateText.height + 10, 0, updateCheck.currentVersionTag + " < " + release.tag_name);
 		versionText.setFormat(Paths.FONT_PHANTOMMUFF, 28, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		versionText.screenCenter(X);
@@ -56,11 +61,44 @@ class UpdateState extends FNFState
 		var scrollBar = new ScrollBar(changelogCamera.x + changelogCamera.width, changelogCamera.y, changelogText.height, changelogCamera);
 		add(scrollBar);
 		
+		downloadText = new FlxText(0, changelogCamera.y + changelogCamera.height + 30, 0, "Download");
+		downloadText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		downloadText.x += (FlxG.width / 2 - downloadText.width) / 2;
+		add(downloadText);
+		
+		skipText = new FlxText(FlxG.width / 2, downloadText.y, 0, "Skip");
+		skipText.setFormat(Paths.FONT_PHANTOMMUFF, 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		skipText.x += (FlxG.width / 2 - skipText.width) / 2;
+		add(skipText);
+		
+		updateSelected();
+		
 		super.create();
 	}
 	
 	override function update(elapsed)
 	{
+		if (PlayerSettings.checkAction(UI_LEFT_P) || PlayerSettings.checkAction(UI_RIGHT_P))
+		{
+			onSkip = !onSkip;
+			updateSelected();
+			CoolUtil.playScrollSound();
+		}
+		
+		if (PlayerSettings.checkAction(ACCEPT_P))
+		{
+			if (onSkip)
+			{
+				FlxG.switchState(new MainMenuState());
+				CoolUtil.playCancelSound();
+			}
+			else
+			{
+				FlxG.openURL(release.html_url);
+				CoolUtil.playConfirmSound();
+			}
+		}
+		
 		super.update(elapsed);
 		
 		if (!FlxG.mouse.visible)
@@ -71,6 +109,15 @@ class UpdateState extends FNFState
 	{
 		super.destroy();
 		updateCheck = null;
+		release = null;
 		changelogCamera = null;
+		downloadText = null;
+		skipText = null;
+	}
+	
+	function updateSelected()
+	{
+		downloadText.alpha = !onSkip ? 1 : 0.6;
+		skipText.alpha = onSkip ? 1 : 0.6;
 	}
 }

@@ -154,6 +154,7 @@ class MusicTiming implements IFlxDestroyable
 		time = -startDelay * music.pitch;
 		updateTimeStuff();
 		initialized = true;
+		hasStarted = music.playing;
 	}
 	
 	public function update(elapsed:Float)
