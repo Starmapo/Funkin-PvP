@@ -58,6 +58,11 @@
       "url": "https://github.com/Starmapo/lime"
     },
     {
+      "name": "markdown",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "openfl",
       "type": "haxelib",
       "version": null

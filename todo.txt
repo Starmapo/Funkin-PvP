@@ -4,6 +4,8 @@ video resyncing
 disable/enable mods
 oxipng notice
 animate atlas spritesheets
+credit codename engine cause i use way too much of their code
+credit the rest of psych engine
 workflows
 wiki
 

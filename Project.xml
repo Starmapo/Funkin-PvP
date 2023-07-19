@@ -53,6 +53,7 @@
 	<haxelib name="discord_rpc" if="cpp"/>
 	<haxelib name="hxCodec" if="windows || linux || android" />
 	<haxelib name="thx.semver" />
+	<haxelib name="markdown" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

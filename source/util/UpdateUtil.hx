@@ -1,5 +1,6 @@
 package util;
 
+import thx.semver.Version;
 import util.github.GitHub;
 import util.github.GitHubRelease;
 
@@ -10,7 +11,7 @@ class UpdateUtil
 	
 	public static function checkForUpdates():UpdateCheckCallback
 	{
-		var curTag = 'v' + CoolUtil.getVersion();
+		var curTag:Version = CoolUtil.getVersion();
 		
 		var error = false;
 		
@@ -23,7 +24,7 @@ class UpdateUtil
 			return {success: false, newUpdate: false};
 			
 		var lastRelease = releases[0];
-		if (lastRelease == null || lastRelease.tag_name == curTag)
+		if (lastRelease == null || curTag >= (lastRelease.tag_name : Version))
 			return {success: true, newUpdate: false};
 			
 		return {

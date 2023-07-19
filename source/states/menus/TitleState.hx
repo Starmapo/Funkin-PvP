@@ -379,11 +379,11 @@ class TitleState extends FNFState
 		var updateCheck:UpdateCheckCallback = hasCheckedUpdates ? null : {
 			success: true,
 			newUpdate: true,
-			currentVersionTag: "v0.1.0",
+			currentVersionTag: "0.1.0",
 			release: {
 				html_url: "https://github.com/",
-				tag_name: "v0.2.0",
-				body: "## [0.2.7.1] - 2021-02-14\r\n### Added\r\n- Easter eggs\r\n- readme's in desktop versions of the game\r\n### Changed\r\n- New icons, old one was placeholder since October woops!\r\n- Made the transitions between the story mode levels more seamless.\r\n- Offset of the Newgrounds logo on boot screen.\r\n- Made the changelog txt so it can be opened easier by normal people who don't have a markdown reader (most normal people);\r\n### Fixed\r\n- Fixed crashes on Week 6 story mode dialogue if spam too fast ([Thanks to Lotusotho for the Pull Request!](https://github.com/ninjamuffin99/Funkin/pull/357))\r\n- Should show intro credits on desktop versions of the game more consistently\r\n- Layering on Week 4 songs with GF and the LIMO LOL HOW TF I MISS THIS\r\n- Chart's and chart editor now support changeBPM, GOD BLESS MTH FOR THIS ONE I BEEN STRUGGLIN WIT THAT SINCE OCTOBER LMAO ([GOD BLESS MTH](https://github.com/ninjamuffin99/Funkin/pull/382))\r\n- Fixed sustain note trails ALSO THANKS TO MTH U A REAL ONE ([MTH VERY POWERFUL](https://github.com/ninjamuffin99/Funkin/pull/415))\r\n- Antialiasing on the skyscraper lights"
+				tag_name: "0.2.0",
+				body: "# Heading 1\n## Heading 2\n### Heading 3\n- List 1\n    - List 2\n        - List 3\n            - List 4\n> Quote\n**Bold**\n*Italic*\n***Bold and italic***"
 			}
 		};
 		hasCheckedUpdates = true;
