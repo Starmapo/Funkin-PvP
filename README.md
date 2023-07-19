@@ -1,3 +1,12 @@
 # Friday Night Funkin' PvP
 
-This is a Friday Night Funkin' mod that adds a new local PvP mode, where 2 players can compete to see who's the best at Funkin'! Simply pick the song, pick your character, and fight!
+The open source code of Friday Night Funkin' PvP.
+
+## Compiling
+
+You should already have [Haxe](https://haxe.org/download/) installed.
+
+1. Use the [Haxe module manager](https://lib.haxe.org/p/hmm/) to install all the required dependencies. Some dependencies are from GitHub and some others are modified versions by me, so it's important that you do this.
+2. If this is your first time using Lime, run `haxelib run lime setup` to be able to use the `lime` command, then run the setup for your platform (e.g. `lime setup windows`).
+3. Rebuild the Lime and systools binaries for your platform (e.g. `lime rebuild windows` and `lime rebuild systools windows`).
+4. Use `lime test` to test the game (e.g. `lime test windows -debug`), or if you're using Visual Studio Code, select your Lime Target Configuration and use the "Run and Debug" options.
