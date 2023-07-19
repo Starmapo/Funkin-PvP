@@ -98,6 +98,7 @@ class Script implements IFlxDestroyable
 		"cpp.NativeSocket",
 		"cpp.NativeSsl",
 		"cpp.NativeSys",
+		"discord_rpc.DiscordRpc",
 		"flixel.FlxG",
 		"flixel.addons.ui.U",
 		"flixel.util.FlxSharedObject",
@@ -132,6 +133,11 @@ class Script implements IFlxDestroyable
 		"sys.ssl.Socket",
 		"sys.ssl.SocketInput",
 		"sys.ssl.SocketOutput",
+		"systools.Browser",
+		"systools.Loader",
+		"systools.Registry",
+		"systools.win.Tools",
+		"systools.win.Tray",
 		"util.DiscordClient",
 		"util.UnsafeUtil"
 	];
