@@ -233,15 +233,27 @@ class MusicTiming implements IFlxDestroyable
 	}
 	
 	/**
+		Plays all music.
+	**/
+	public function playMusic()
+	{
+		music.play();
+		for (extra in extraMusic)
+			extra.play();
+		doStepHits = true;
+		paused = false;
+		time = music.time;
+		updateTimeStuff();
+	}
+
+	/**
 		Pauses all music.
 	**/
 	public function pauseMusic()
 	{
 		music.pause();
 		for (extra in extraMusic)
-		{
 			extra.pause();
-		}
 		paused = true;
 	}
 	
@@ -252,9 +264,7 @@ class MusicTiming implements IFlxDestroyable
 	{
 		music.resume();
 		for (extra in extraMusic)
-		{
 			extra.resume();
-		}
 		paused = false;
 	}
 	
@@ -265,9 +275,7 @@ class MusicTiming implements IFlxDestroyable
 	{
 		music.stop();
 		for (extra in extraMusic)
-		{
 			extra.stop();
-		}
 		doStepHits = false;
 		reset();
 		paused = false;

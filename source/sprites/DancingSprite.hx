@@ -85,7 +85,7 @@ class DancingSprite extends AnimatedSprite
 	function playDanceAnim(force:Bool = false)
 	{
 		var anim = danceAnims[danceStep];
-		if (anim != null)
+		if (anim != null && (animation.name != anim || animation.finished))
 		{
 			playAnim(anim, force || forceRestartDance);
 			danced(anim);

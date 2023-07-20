@@ -83,7 +83,7 @@ class TitleState extends FNFState
 		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized, 0, onBeatHit);
 		
 		if (!initialized)
-			FlxG.sound.music.stop();
+			timing.stopMusic();
 			
 		getIntroText();
 		
@@ -232,7 +232,10 @@ class TitleState extends FNFState
 			gradientAlpha = num;
 		});
 		if (!initialized)
+		{
+			timing.playMusic();
 			FlxG.sound.music.fadeIn(4);
+		}
 		else
 			skipIntro();
 		startedIntro = true;
@@ -241,6 +244,9 @@ class TitleState extends FNFState
 	
 	function onBeatHit(beat:Int, decBeat:Float)
 	{
+		if (!startedIntro)
+			return;
+			
 		var tweenDuration = timing.curTimingPoint.stepLength * 0.002;
 		gradientBop = 0.5;
 		FlxTween.num(0.5, 0, tweenDuration, null, function(num)
