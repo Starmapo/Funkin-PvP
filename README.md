@@ -16,3 +16,5 @@ You should already have [Haxe](https://haxe.org/download/) installed.
 This game is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. More information can be found in the LICENSE.txt file.
 
 Licenses for Friday Night Funkin' and OpenFL are contained in separate files.
+
+Licenses for content in mods can be found in their folder.

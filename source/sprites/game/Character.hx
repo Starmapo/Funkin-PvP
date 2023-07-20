@@ -201,7 +201,8 @@ class Character extends DancingSprite
 		{
 			canDance = false;
 			state = Sing(lane);
-			playAnim(anim, !hold || info == null || info.loopAnimsOnHold, false, (hold && info != null) ? info.holdLoopPoint : 0);
+			if (!hold || animation.name != anim || info == null || info.loopAnimsOnHold)
+				playAnim(anim, true, false, (hold && info != null) ? info.holdLoopPoint : 0);
 			resetColor();
 			setCamOffsetFromLane(lane);
 			
