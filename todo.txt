@@ -9,7 +9,9 @@ credit codename engine cause i use way too much of their code
 credit the rest of psych engine
 loading screen for characters and stages
 crash handler for release
-ask erb for permission!!! noob!!!
+ask everyone for permission!!! noob!!!
+add missing mod icons
+add other engines
 workflows
 wiki
 
