@@ -1,4 +1,5 @@
 add "other" characters
+playstate script object
 new song structure
 editors drag & drop
 video resyncing
