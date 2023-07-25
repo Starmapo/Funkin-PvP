@@ -4,7 +4,7 @@
       "name": "discord_rpc",
       "type": "git",
       "dir": null,
-      "ref": "master",
+      "ref": "2d83fa863ef0c1eace5f1cf67c3ac315d1a3a8a5",
       "url": "https://github.com/Aidan63/linc_discord-rpc"
     },
     {
@@ -35,7 +35,7 @@
       "name": "hxcpp",
       "type": "git",
       "dir": null,
-      "ref": "master",
+      "ref": "298ad2d6589f9eca4a46e1c2ea7892e124285b74",
       "url": "https://github.com/HaxeFoundation/hxcpp"
     },
     {
@@ -69,7 +69,7 @@
       "name": "systools",
       "type": "git",
       "dir": null,
-      "ref": "master",
+      "ref": "2055163b700afeaf8f566c32442148cdbc429e44",
       "url": "https://github.com/haya3218/retools"
     },
     {
