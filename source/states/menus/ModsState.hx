@@ -152,6 +152,9 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.id, 'icon']), null, false);
 		if (iconImage == null)
 			iconImage = Paths.getImage('menus/mods/noIcon');
+		else
+			iconImage.destroyOnNoUse = true;
+		
 		var icon = new FlxSprite(bgEllipse, bgEllipse, iconImage);
 		
 		var maxNameWidth = bg.width - 109;
