@@ -18,7 +18,6 @@ import lime.app.Application;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.system.System;
-import sys.FileSystem;
 import systools.win.Tools;
 
 using StringTools;
