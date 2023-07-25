@@ -307,6 +307,7 @@ class Script implements IFlxDestroyable
 		setVariable('Json', Json);
 		setVariable('Math', Math);
 		setVariable('ObjectMap', ObjectMap);
+		setVariable('Reflect', Reflect);
 		setVariable('Std', Std);
 		setVariable('StringMap', StringMap);
 		setVariable('StringTools', StringTools);
