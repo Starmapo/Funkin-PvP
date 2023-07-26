@@ -292,7 +292,8 @@ class Script implements IFlxDestroyable
 	function setStartingVariables()
 	{
 		setVariable('this', this);
-		setVariable('mod', mod);
+		setVariable('mod', Mods.getMod(mod));
+		setVariable('modID', mod);
 		setVariable('window', Application.current.window);
 		
 		setVariable('FUNCTION_CONTINUE', FUNCTION_CONTINUE);

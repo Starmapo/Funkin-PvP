@@ -294,16 +294,21 @@ class Mods
 			mods.push(mod.id);
 		return mods;
 	}
-	
-	public static function hasMod(id:String):Bool
+
+	public static function getMod(id:String):Mod
 	{
 		for (mod in currentMods)
 		{
 			if (mod.id == id)
-				return true;
+				return mod;
 		}
 		
-		return false;
+		return null;
+	}
+	
+	public static function hasMod(id:String):Bool
+	{
+		return getMod(id) != null;
 	}
 	
 	static function filterDependencies(mods:Array<Mod>):Array<Mod>
