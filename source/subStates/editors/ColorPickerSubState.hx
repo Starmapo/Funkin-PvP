@@ -7,9 +7,9 @@ import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIText;
 import flixel.util.FlxColor;
-import ui.editors.EditorInputText;
-import ui.editors.EditorNumericStepper;
-import ui.editors.EditorPanel;
+import objects.editors.EditorInputText;
+import objects.editors.EditorNumericStepper;
+import objects.editors.EditorPanel;
 
 using StringTools;
 

@@ -1,21 +1,18 @@
 package states.options;
 
-import data.Mods;
-import data.PlayerConfig;
-import data.PlayerSettings;
-import data.Settings;
-import data.skin.JudgementSkin;
+import backend.settings.PlayerConfig;
+import backend.structures.skin.JudgementSkin;
+import backend.util.StringUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import ui.game.JudgementDisplay;
-import ui.lists.SkinCategoryList;
-import ui.lists.SkinList;
-import ui.lists.TextMenuList.TextMenuItem;
-import util.StringUtil;
+import objects.game.JudgementDisplay;
+import objects.menus.lists.SkinCategoryList;
+import objects.menus.lists.SkinList;
+import objects.menus.lists.TextMenuList;
 
 class JudgementSkinPage extends Page
 {

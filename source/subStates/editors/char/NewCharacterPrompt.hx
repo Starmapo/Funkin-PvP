@@ -1,19 +1,18 @@
 package subStates.editors.char;
 
-import data.Mods;
-import data.char.CharacterInfo;
+import backend.structures.char.CharacterInfo;
+import backend.util.UnsafeUtil;
 import flixel.addons.ui.FlxUIButton;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 import haxe.io.Path;
+import objects.editors.EditorDropdownMenu;
+import objects.editors.EditorInputText;
+import objects.editors.EditorPanel;
+import objects.editors.EditorText;
 import states.editors.CharacterEditorState;
 import sys.FileSystem;
-import ui.editors.EditorDropdownMenu;
-import ui.editors.EditorInputText;
-import ui.editors.EditorPanel;
-import ui.editors.EditorText;
-import util.UnsafeUtil;
 
 class NewCharacterPrompt extends FNFSubState
 {

@@ -1,8 +1,8 @@
 package states.menus;
 
-import data.PlayerSettings;
-import data.Settings;
-import data.song.TimingPoint;
+import backend.MusicTiming;
+import backend.structures.song.TimingPoint;
+import backend.util.UpdateUtil;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -14,14 +14,10 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxTimer;
+import objects.DancingSprite;
+import objects.menus.InfiniteEmitter;
 import openfl.system.System;
 import shaders.ColorSwap;
-import sprites.AnimatedSprite;
-import sprites.DancingSprite;
-import sprites.InfiniteEmitter;
-import util.DiscordClient;
-import util.MusicTiming;
-import util.UpdateUtil;
 
 using StringTools;
 

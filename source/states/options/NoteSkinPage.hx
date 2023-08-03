@@ -1,11 +1,9 @@
 package states.options;
 
-import data.Mods;
-import data.PlayerConfig;
-import data.PlayerSettings;
-import data.Settings;
-import data.skin.NoteSkin;
-import data.song.NoteInfo;
+import backend.settings.PlayerConfig;
+import backend.structures.skin.NoteSkin;
+import backend.structures.song.NoteInfo;
+import backend.util.StringUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -13,12 +11,11 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
-import ui.game.Note;
-import ui.game.Receptor;
-import ui.lists.SkinCategoryList;
-import ui.lists.SkinList;
-import ui.lists.TextMenuList;
-import util.StringUtil;
+import objects.game.Note;
+import objects.game.Receptor;
+import objects.menus.lists.SkinCategoryList;
+import objects.menus.lists.SkinList;
+import objects.menus.lists.TextMenuList;
 
 class NoteSkinPage extends Page
 {

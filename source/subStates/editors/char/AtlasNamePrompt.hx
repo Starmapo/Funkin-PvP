@@ -1,6 +1,7 @@
 package subStates.editors.char;
 
-import data.char.CharacterInfo.AnimInfo;
+import backend.editors.char.CharacterEditorActionManager;
+import backend.structures.char.CharacterInfo;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUI9SliceSprite;
@@ -11,11 +12,10 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import objects.editors.EditorPanel;
+import objects.menus.ScrollBar;
 import openfl.geom.Rectangle;
 import states.editors.CharacterEditorState;
-import ui.ScrollBar;
-import ui.editors.EditorPanel;
-import util.editors.char.CharacterEditorActionManager;
 
 class AtlasNamePrompt extends FNFSubState
 {

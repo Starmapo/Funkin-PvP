@@ -1,5 +1,7 @@
 package subStates.editors.char;
 
+import backend.subStates.PromptSubState;
+
 class CharacterEditorSavePrompt extends PromptSubState
 {
 	var callback:String->Void;

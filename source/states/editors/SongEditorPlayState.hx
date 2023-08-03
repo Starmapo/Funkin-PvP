@@ -1,28 +1,25 @@
 package states.editors;
 
-import data.PlayerSettings;
-import data.Settings;
-import data.game.GameplayGlobals;
-import data.game.GameplayRuleset;
-import data.game.Judgement;
-import data.skin.JudgementSkin;
-import data.song.Song;
+import backend.MusicTiming;
+import backend.game.GameplayGlobals;
+import backend.game.GameplayRuleset;
+import backend.game.Judgement;
+import backend.structures.skin.JudgementSkin;
+import backend.structures.song.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.util.FlxDestroyUtil;
-import ui.game.JudgementCounter;
-import ui.game.JudgementDisplay;
-import ui.game.LyricsDisplay;
-import ui.game.MSDisplay;
-import ui.game.NPSDisplay;
-import ui.game.Note;
-import ui.game.PlayerStatsDisplay;
-import ui.game.SongInfoDisplay;
-import util.DiscordClient;
-import util.MusicTiming;
+import objects.game.JudgementCounter;
+import objects.game.JudgementDisplay;
+import objects.game.LyricsDisplay;
+import objects.game.MSDisplay;
+import objects.game.NPSDisplay;
+import objects.game.Note;
+import objects.game.PlayerStatsDisplay;
+import objects.game.SongInfoDisplay;
 
 class SongEditorPlayState extends FNFState
 {

@@ -1,7 +1,5 @@
 package states.menus;
 
-import data.PlayerSettings;
-import data.Settings;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -11,12 +9,11 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import objects.menus.lists.MenuList;
+import objects.menus.lists.TextMenuList;
 import states.editors.ToolboxState;
 import states.options.OptionsState;
 import states.pvp.RulesetState;
-import ui.lists.MenuList;
-import ui.lists.TextMenuList;
-import util.DiscordClient;
 
 class MainMenuState extends FNFState
 {
@@ -156,7 +153,7 @@ class MainMenuState extends FNFState
 			magenta.y = bg.y;
 			magenta.angle = bg.angle;
 		}
-
+		
 		if (FlxG.mouse.visible)
 			FlxG.mouse.visible = false;
 	}

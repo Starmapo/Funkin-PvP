@@ -1,6 +1,5 @@
 package states.options;
 
-import data.PlayerSettings;
 import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup;

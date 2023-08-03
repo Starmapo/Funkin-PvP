@@ -1,9 +1,9 @@
 package states.options;
 
-import data.Controls.Control;
-import data.PlayerConfig;
-import data.PlayerSettings;
-import data.Settings;
+import backend.Controls;
+import backend.InputFormatter;
+import backend.settings.PlayerConfig;
+import backend.subStates.PromptSubState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIButton;
@@ -14,8 +14,6 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import subStates.PromptSubState;
-import util.InputFormatter;
 
 class ControlsPage extends Page
 {

@@ -1,12 +1,10 @@
 package states.editors;
 
-import data.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxObject;
+import objects.menus.lists.TextMenuList;
 import states.editors.SongEditorState;
 import states.menus.MainMenuState;
-import ui.lists.TextMenuList;
-import util.DiscordClient;
 
 class ToolboxState extends FNFState
 {
@@ -25,7 +23,7 @@ class ToolboxState extends FNFState
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Toolbox Menu");
-			
+		
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
 		bg.color = 0xFF353535;
 		add(bg);
@@ -58,10 +56,10 @@ class ToolboxState extends FNFState
 		
 		items.selectItem(lastSelected);
 		FlxG.camera.snapToTarget();
-
+		
 		if (!FlxG.sound.musicPlaying)
 			CoolUtil.playMenuMusic();
-		
+			
 		super.create();
 	}
 	

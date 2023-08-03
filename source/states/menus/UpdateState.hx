@@ -1,15 +1,13 @@
 package states.menus;
 
-import data.PlayerSettings;
+import backend.github.GitHubRelease;
+import backend.util.MarkdownUtil;
+import backend.util.UpdateUtil;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import ui.ScrollBar;
-import util.DiscordClient;
-import util.MarkdownUtil;
-import util.UpdateUtil.UpdateCheckCallback;
-import util.github.GitHubRelease;
+import objects.menus.ScrollBar;
 
 using StringTools;
 

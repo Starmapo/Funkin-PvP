@@ -1,6 +1,5 @@
 package states.options;
 
-import data.Settings;
 import flixel.FlxG;
 import lime.app.Application;
 import openfl.Lib;

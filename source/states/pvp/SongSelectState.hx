@@ -1,9 +1,7 @@
 package states.pvp;
 
-import data.Mods;
-import data.PlayerSettings;
-import data.Settings;
-import data.song.Song;
+import backend.structures.song.Song;
+import backend.util.StringUtil;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -16,14 +14,12 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Future;
+import objects.HealthIcon;
+import objects.menus.VoidBG;
+import objects.menus.lists.MenuList;
+import objects.menus.lists.TextMenuList;
 import openfl.display.BitmapData;
 import sys.thread.Mutex;
-import ui.HealthIcon;
-import ui.VoidBG;
-import ui.lists.MenuList;
-import ui.lists.TextMenuList;
-import util.DiscordClient;
-import util.StringUtil;
 
 class SongSelectState extends FNFState
 {
@@ -127,10 +123,10 @@ class SongSelectState extends FNFState
 			}
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
-
+		
 		if (!FlxG.sound.musicPlaying)
 			CoolUtil.playPvPMusic(duration);
-		
+			
 		super.create();
 	}
 	

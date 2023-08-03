@@ -1,5 +1,7 @@
 package subStates.editors.song;
 
+import backend.subStates.PromptInputSubState;
+
 class SongEditorApplyOffsetPrompt extends PromptInputSubState
 {
 	public function new(?okCallback:String->Void)

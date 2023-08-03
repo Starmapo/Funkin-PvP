@@ -1,7 +1,10 @@
 add "other" characters
-add demo gameplay
+reorganize packages
+use SScript
 playstate script object
 new song structure
+new controls system
+remove stage xmls
 editors drag & drop
 video resyncing
 disable/enable mods
@@ -9,13 +12,16 @@ oxipng notice
 animate atlas spritesheets
 credit codename engine cause i use way too much of their code
 credit the rest of psych engine
-loading screen for characters and stages
 crash handler for release
 ask everyone for permission!!! noob!!!
 add missing mod icons
 add other engines
+create spritesheets for engine stuff
 workflows
 wiki
+
+add demo gameplay
+loading screen for characters and stages
 
 plantoids plus
 ourple guy

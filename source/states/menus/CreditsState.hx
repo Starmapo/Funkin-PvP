@@ -1,8 +1,6 @@
 package states.menus;
 
-import data.CreditsData;
-import data.Mods;
-import data.PlayerSettings;
+import backend.structures.CreditsData;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -13,9 +11,8 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
-import ui.lists.MenuList;
-import ui.lists.TextMenuList;
-import util.DiscordClient;
+import objects.menus.lists.MenuList;
+import objects.menus.lists.TextMenuList;
 
 class CreditsState extends FNFState
 {

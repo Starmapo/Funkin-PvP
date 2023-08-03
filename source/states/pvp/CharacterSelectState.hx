@@ -1,8 +1,6 @@
 package states.pvp;
 
-import data.Mods;
-import data.PlayerSettings;
-import data.Settings;
+import backend.util.StringUtil;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -16,14 +14,10 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+import objects.menus.VoidBG;
+import objects.menus.lists.MenuList;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import ui.VoidBG;
-import ui.lists.MenuList.MenuItem;
-import ui.lists.MenuList.TypedMenuItem;
-import ui.lists.MenuList.TypedMenuList;
-import util.DiscordClient;
-import util.StringUtil;
 
 class CharacterSelectState extends FNFState
 {
@@ -115,10 +109,10 @@ class CharacterSelectState extends FNFState
 			}
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
-
+		
 		if (!FlxG.sound.musicPlaying)
 			CoolUtil.playPvPMusic(duration);
-		
+			
 		super.create();
 	}
 	

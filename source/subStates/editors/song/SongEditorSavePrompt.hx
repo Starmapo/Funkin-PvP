@@ -1,5 +1,7 @@
 package subStates.editors.song;
 
+import backend.subStates.PromptSubState;
+
 class SongEditorSavePrompt extends PromptSubState
 {
 	var callback:String->Void;

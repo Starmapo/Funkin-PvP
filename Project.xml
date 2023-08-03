@@ -49,7 +49,7 @@
 	<haxelib name="lime" />
 	<haxelib name="flixel" />
 	<haxelib name="hscript" />
-	<haxeflag name="--macro" value="hscript.HScriptUtil.init()" if="hscript" />
+	<haxeflag name="--macro" value="backend.macro.HScriptMacro.init()" if="hscript" />
 	
 	<haxelib name="hxcpp-debug-server" if="desktop" />
 	<haxelib name="systools" if="desktop" />
@@ -60,6 +60,10 @@
 	<haxelib name="markdown" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
+
+	<haxedef name="no-deprecation-warnings" />
+
+	<haxedef name="hscriptPos" />
 
 	<!--Enable the Flixel core recording system-->
 	<!--<haxedef name="FLX_RECORD" />-->
@@ -91,20 +95,14 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
-	<!--Allows working memory greater than 1 Gig-->
-	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="desktop" />
-
 	<!-- Comment this off to prevent unused classes from being compiled.
 		 Reduces compilation time at the cost of limited HScript flexibility. -->
-	<define name="COMPILE_ALL_CLASSES" />
+	<haxedef name="COMPILE_ALL_CLASSES" />
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
-		<haxeflag name="--macro" value="util.ScriptsMacro.addAdditionalClasses()" />
+		<haxeflag name="--macro" value="backend.macro.ScriptsMacro.addAdditionalClasses()" />
 	</section>
-
-	<define name="hscriptPos" />
-	<define name="no-deprecation-warnings" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 

@@ -1,7 +1,8 @@
 package subStates.editors.song;
 
-import data.Mods;
-import data.song.Song;
+import backend.structures.song.Song;
+import backend.util.StringUtil;
+import backend.util.UnsafeUtil;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.math.FlxPoint;
@@ -10,16 +11,14 @@ import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 import haxe.io.Path;
 import lime.app.Application;
+import objects.editors.EditorDropdownMenu;
+import objects.editors.EditorInputText;
+import objects.editors.EditorPanel;
+import objects.editors.EditorText;
 import states.editors.SongEditorState;
 import sys.FileSystem;
 import sys.io.File;
 import systools.Dialogs;
-import ui.editors.EditorDropdownMenu;
-import ui.editors.EditorInputText;
-import ui.editors.EditorPanel;
-import ui.editors.EditorText;
-import util.StringUtil;
-import util.UnsafeUtil;
 
 using StringTools;
 

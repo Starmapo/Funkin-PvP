@@ -1,11 +1,8 @@
 package states.options;
 
-import data.Mods.ModSkins;
-import data.Mods;
-import data.PlayerConfig;
-import data.PlayerSettings;
-import data.Settings;
-import data.skin.SplashSkin;
+import backend.settings.PlayerConfig;
+import backend.structures.skin.SplashSkin;
+import backend.util.StringUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -13,11 +10,10 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
-import ui.game.NoteSplash;
-import ui.lists.SkinCategoryList;
-import ui.lists.SkinList;
-import ui.lists.TextMenuList.TextMenuItem;
-import util.StringUtil;
+import objects.game.NoteSplash;
+import objects.menus.lists.SkinCategoryList;
+import objects.menus.lists.SkinList;
+import objects.menus.lists.TextMenuList;
 
 class SplashSkinPage extends Page
 {

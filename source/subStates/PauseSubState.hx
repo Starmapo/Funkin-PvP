@@ -1,7 +1,5 @@
 package subStates;
 
-import data.Mods;
-import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -9,13 +7,13 @@ import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import objects.menus.lists.MenuList.TypedMenuList;
+import objects.menus.lists.TextMenuList;
 import states.PlayState;
 import states.options.OptionsState;
 import states.pvp.CharacterSelectState;
 import states.pvp.RulesetState;
 import states.pvp.SongSelectState;
-import ui.lists.MenuList.TypedMenuList;
-import ui.lists.TextMenuList;
 
 class PauseSubState extends FNFSubState
 {

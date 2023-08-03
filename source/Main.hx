@@ -1,9 +1,10 @@
 package;
 
-import data.Settings;
 import flixel.FlxG;
 import flixel.FlxGame;
 import lime.utils.Log;
+import objects.openfl.NotificationManager;
+import objects.openfl.StatsDisplay;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -12,8 +13,6 @@ import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
 import openfl.ui.Keyboard;
 import states.BootState;
-import ui.StatsDisplay;
-import ui.display.NotificationManager;
 
 using StringTools;
 

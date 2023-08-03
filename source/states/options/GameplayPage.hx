@@ -1,7 +1,5 @@
 package states.options;
 
-import data.Settings.TimeDisplay;
-
 class GameplayPage extends BaseSettingsPage
 {
 	public function new()

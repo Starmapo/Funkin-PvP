@@ -1,7 +1,5 @@
 package states.options;
 
-import data.Mods;
-import data.Settings;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -10,7 +8,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import states.menus.MainMenuState;
-import util.DiscordClient;
 
 class OptionsState extends FNFState
 {

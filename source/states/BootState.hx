@@ -1,8 +1,8 @@
 package states;
 
-import data.Mods;
-import data.PlayerSettings;
-import data.Settings;
+import backend.AudioSwitchFix;
+import backend.WindowsAPI;
+import backend.util.UnsafeUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -16,15 +16,8 @@ import flixel.util.FlxTimer;
 import hscript.Interp;
 import lime.app.Application;
 import sys.FileSystem;
-import util.AudioSwitchFix;
-import util.UnsafeUtil;
-import util.WindowsAPI;
 
 using StringTools;
-
-#if !macro
-import util.DiscordClient;
-#end
 
 class BootState extends FNFState
 {

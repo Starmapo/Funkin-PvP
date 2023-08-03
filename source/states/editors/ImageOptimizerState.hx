@@ -1,6 +1,5 @@
 package states.editors;
 
-import data.Mods;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIButton;
 import flixel.text.FlxText;
@@ -9,6 +8,8 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import haxe.io.Path;
 import lime.app.Application;
+import objects.editors.EditorDropdownMenu;
+import objects.editors.EditorPanel;
 import openfl.display.BitmapData;
 import openfl.display.PNGEncoderOptions;
 import openfl.geom.Rectangle;
@@ -18,9 +19,6 @@ import sys.io.Process;
 import sys.thread.Mutex;
 import sys.thread.Thread;
 import systools.Dialogs;
-import ui.editors.EditorDropdownMenu;
-import ui.editors.EditorPanel;
-import util.DiscordClient;
 
 using StringTools;
 

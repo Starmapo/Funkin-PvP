@@ -1,8 +1,6 @@
 package subStates;
 
-import data.PlayerSettings;
-import data.Settings;
-import data.game.Judgement;
+import backend.game.Judgement;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.math.FlxMath;
@@ -10,9 +8,9 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import objects.game.PlayerStatsDisplay;
 import states.PlayState;
 import states.pvp.SongSelectState;
-import ui.game.PlayerStatsDisplay;
 
 class ResultsScreen extends FNFSubState
 {

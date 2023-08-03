@@ -1,8 +1,6 @@
 package states.pvp;
 
-import data.PlayerSettings;
-import data.Settings;
-import data.game.Judgement;
+import backend.game.Judgement;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -14,11 +12,10 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import objects.menus.VoidBG;
+import objects.menus.lists.SettingsMenuList;
 import states.menus.MainMenuState;
 import subStates.pvp.JudgementPresetsSubState;
-import ui.VoidBG;
-import ui.lists.SettingsMenuList;
-import util.DiscordClient;
 
 class RulesetState extends FNFState
 {

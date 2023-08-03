@@ -22,7 +22,7 @@
 
 package hscript;
 
-import data.scripts.Script;
+import backend.scripts.Script;
 import haxe.Constraints.IMap;
 import haxe.PosInfos;
 import hscript.Expr;

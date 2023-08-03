@@ -1,6 +1,10 @@
 package states.editors;
 
-import data.char.CharacterInfo;
+import backend.bindable.Bindable;
+import backend.editors.char.CharacterEditorActionManager;
+import backend.structures.char.CharacterInfo;
+import backend.util.MemoryUtil;
+import backend.util.UnsafeUtil;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -12,22 +16,16 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.io.Path;
 import lime.system.System;
+import objects.editors.char.CharacterEditorAnimPanel;
+import objects.editors.char.CharacterEditorEditPanel;
+import objects.editors.char.CharacterEditorToolPanel;
+import objects.game.BGSprite;
+import objects.game.Character;
+import objects.game.HealthBar;
 import openfl.display.PNGEncoderOptions;
-import sprites.AnimatedSprite.AnimData;
-import sprites.game.BGSprite;
-import sprites.game.Character;
 import subStates.editors.char.CharacterEditorSavePrompt;
 import sys.FileSystem;
 import sys.io.File;
-import ui.editors.char.CharacterEditorAnimPanel;
-import ui.editors.char.CharacterEditorEditPanel;
-import ui.editors.char.CharacterEditorToolPanel;
-import ui.game.HealthBar;
-import util.DiscordClient;
-import util.MemoryUtil;
-import util.UnsafeUtil;
-import util.bindable.Bindable;
-import util.editors.char.CharacterEditorActionManager;
 
 using StringTools;
 

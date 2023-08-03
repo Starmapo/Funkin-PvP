@@ -2,7 +2,7 @@ package states;
 
 import flixel.FlxG;
 import flixel.util.FlxColor;
-import ui.editors.EditorInputText;
+import objects.editors.EditorInputText;
 
 class TestState extends FNFState
 {

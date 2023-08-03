@@ -1,6 +1,5 @@
 package openfl.media;
 
-import util.CompileFix;
 #if !flash
 import haxe.Int64;
 import openfl.events.Event;
@@ -86,6 +85,8 @@ import openfl.utils._internal.UInt8Array;
 @:autoBuild(openfl.utils._internal.AssetsMacro.embedSound())
 class Sound extends EventDispatcher
 {
+	public static var curChangeID:Int = 0;
+
 	/**
 		Returns the currently available number of bytes in this sound object. This
 		property is usually useful only for externally loaded files.
@@ -639,9 +640,9 @@ class Sound extends EventDispatcher
 			return null;
 		}
 		
-		if (changeID < CompileFix.changeID)
+		if (changeID < curChangeID)
 		{
-			changeID = CompileFix.changeID;
+			changeID = curChangeID;
 			regen();
 		}
 		

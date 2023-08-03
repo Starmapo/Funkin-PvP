@@ -1,8 +1,6 @@
 package states.menus;
 
-import data.Mods.Mod;
-import data.Mods;
-import data.PlayerSettings;
+import backend.structures.Mod;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -13,9 +11,9 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import haxe.io.Path;
-import ui.editors.Tooltip;
-import ui.lists.MenuList.TypedMenuItem;
-import ui.lists.MenuList.TypedMenuList;
+import objects.editors.Tooltip;
+import objects.menus.lists.MenuList.TypedMenuItem;
+import objects.menus.lists.MenuList.TypedMenuList;
 
 class ModsState extends FNFState
 {
@@ -154,7 +152,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 			iconImage = Paths.getImage('menus/mods/noIcon');
 		else
 			iconImage.destroyOnNoUse = true;
-		
+			
 		var icon = new FlxSprite(bgEllipse, bgEllipse, iconImage);
 		
 		var maxNameWidth = bg.width - 109;

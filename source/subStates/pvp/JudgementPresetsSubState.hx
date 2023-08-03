@@ -1,8 +1,6 @@
 package subStates.pvp;
 
-import data.PlayerSettings;
-import data.Settings;
-import data.game.Judgement;
+import backend.game.Judgement;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
