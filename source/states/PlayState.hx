@@ -10,7 +10,6 @@ import backend.structures.StageFile;
 import backend.structures.char.CharacterInfo;
 import backend.structures.skin.JudgementSkin;
 import backend.structures.song.Song;
-import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -21,7 +20,6 @@ import flixel.animation.FlxAnimationController;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
-import flixel.system.FlxBGSprite;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -45,7 +43,6 @@ import states.editors.SongEditorState;
 import states.pvp.SongSelectState;
 import subStates.PauseSubState;
 import subStates.ResultsScreen;
-import sys.FileSystem;
 
 using StringTools;
 
@@ -252,6 +249,7 @@ class PlayState extends FNFState
 		if (isPaused)
 		{
 			FlxG.sound.pause();
+
 			FlxTween.globalManager.forEach(function(twn)
 			{
 				if (!twn.finished)
@@ -262,6 +260,8 @@ class PlayState extends FNFState
 				if (!tmr.finished)
 					tmr.active = false;
 			});
+
+			FlxG.camera.active = false;
 			
 			DiscordClient.changePresence(pausedDetailsText, 'In a match');
 		}
@@ -277,6 +277,7 @@ class PlayState extends FNFState
 		{
 			isPaused = false;
 			persistentUpdate = true;
+
 			FlxTween.globalManager.forEach(function(twn)
 			{
 				if (!twn.finished)
@@ -287,12 +288,15 @@ class PlayState extends FNFState
 				if (!tmr.finished)
 					tmr.active = true;
 			});
-			FlxG.sound.resume();
+
+			FlxG.camera.active = true;
 			
 			if (hasStarted)
 				DiscordClient.changePresence(detailsText, 'In a match', null, true, getTimeRemaining());
 			else
 				DiscordClient.changePresence(detailsText, 'In a match');
+
+			FlxG.sound.resume();
 				
 			executeScripts("onResume");
 		}
@@ -1091,7 +1095,6 @@ class PlayState extends FNFState
 			}
 		}
 		
-		// i forgot to use this variable whoops!
 		if (canPause)
 		{
 			for (i in 0...2)

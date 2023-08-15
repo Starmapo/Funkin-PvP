@@ -9,14 +9,14 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import haxe.Json;
 import haxe.io.Path;
-import sys.FileSystem;
 import sys.io.File;
+import thx.semver.Version;
 
 using StringTools;
 
 class Song extends JsonObject
 {
-	public static var CURRENT_VERSION:String = '1.0.0';
+	public static var CURRENT_VERSION:Version = '1.0.0';
 	
 	/**
 		Loads a song from a path.
@@ -427,6 +427,11 @@ class Song extends JsonObject
 	public var stage:String;
 	
 	/**
+		The chart version that this map was made with.
+	**/
+	public var version:Version;
+	
+	/**
 		The directory of this map. Set automatically with `Song.loadSong()`.
 	**/
 	public var directory:String = '';
@@ -438,11 +443,6 @@ class Song extends JsonObject
 	
 	public var name:String = '';
 	public var mod:String = '';
-	
-	/**
-		The chart version that this map was made with.
-	**/
-	public var version:String = '';
 	
 	public function new(?data:Dynamic)
 	{
@@ -484,7 +484,7 @@ class Song extends JsonObject
 			if (n != null)
 				notes.push(new NoteInfo(n));
 		}
-		version = readString(data.version, CURRENT_VERSION);
+		version = readString(data.version, "1.0.0");
 	}
 	
 	/**
@@ -1101,7 +1101,8 @@ class Song extends JsonObject
 			bf: bf,
 			opponent: opponent,
 			gf: gf,
-			stage: stage
+			stage: stage,
+			version: version
 		};
 		File.saveContent(path, Json.stringify(data, "\t"));
 	}

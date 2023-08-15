@@ -10,7 +10,9 @@ import objects.DancingSprite;
 /**
 	Handles time on a music object, plus step/beat hits, resyncing vocals, all that good stuff.
 
-	Note that `curStep`, `curBeat` and `curBar` are all relative to the current timing section, not the whole song. This is due to the fact that timing points can be placed anywhere, unlike the original FNF where changing BPMs is limited to every 4 beats.
+	Note that `curStep`, `curBeat` and `curBar` are all relative to the current timing section, not the whole song.
+	This is due to the fact that timing points can be placed anywhere, unlike the original FNF where changing BPMs is
+	limited to every 4 beats.
 **/
 class MusicTiming implements IFlxDestroyable
 {

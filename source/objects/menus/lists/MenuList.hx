@@ -1,5 +1,6 @@
 package objects.menus.lists;
 
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import backend.Controls;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -430,6 +431,8 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 		{
 			value.x = x;
 			value.y = y;
+			if (Std.isOfType(value, FlxTypedSpriteGroup))
+				cast (value, FlxTypedSpriteGroup<Dynamic>).directAlpha = true;
 			value.alpha = alpha;
 		}
 		return label = value;

@@ -710,11 +710,13 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		if (songData.icon.length > 0)
 		{
 			if (icon == null)
+			{
 				icon = new HealthIcon(0, 0, songData.icon);
+				label.add(icon);
+			}
 			else
 				icon.icon = songData.icon;
 			maxWidth -= icon.width + 5;
-			label.add(icon);
 			icon.y = text.y + (text.height / 2) - (icon.height / 2);
 		}
 		else if (icon != null)

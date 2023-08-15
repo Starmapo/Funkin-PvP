@@ -15,9 +15,13 @@ ask everyone for permission!!! noob!!!
 add missing mod icons
 add other engines
 create spritesheets for engine stuff
+flainn character
+does restart work in release mode??
 workflows
 wiki
 
+better ruleset modification
+ruleset full automization
 add demo gameplay
 loading screen for characters and stages
 
@@ -31,21 +35,3 @@ yung lixo
 tails gets trolled
 mario fnf port
 vs uzi
-
-erb
-
-anthem of the lonely
-i kissed a girl rock version
-like the wind
-miss you
-
-jerk (2:15)
-bloodpop (2:25)
-like you would know (3:30)
-guy.exe (3:44)
-happier than ever (4:59)
-biggering (5:01)
-flainn character
-stara character
-
-does restart work in release mode??

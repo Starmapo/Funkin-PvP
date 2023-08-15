@@ -7,6 +7,4 @@ playstate script object
 less default classes
 use CustomShader
 better controls, remove playersettings
-music timing modify?
-better ruleset modification
-ruleset full automization
+music timing events
