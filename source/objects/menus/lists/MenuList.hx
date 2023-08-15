@@ -132,7 +132,7 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 	
 	public function selectItem(index:Int)
 	{
-		index = FlxMath.wrapInt(index, 0, FlxMath.maxInt(length - 1, 0));
+		index = FlxMath.wrap(index, 0, FlxMath.maxInt(length - 1, 0));
 		
 		var prevItem = members[selectedIndex];
 		if (prevItem != null)
@@ -323,14 +323,14 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		if (prev)
 		{
 			if (wrapEnabled)
-				index = FlxMath.wrapInt(index - amount, 0, length - 1);
+				index = FlxMath.wrap(index - amount, 0, length - 1);
 			else
 				index = FlxMath.maxInt(index - amount, 0);
 		}
 		else
 		{
 			if (wrapEnabled)
-				index = FlxMath.wrapInt(index + amount, 0, length - 1);
+				index = FlxMath.wrap(index + amount, 0, length - 1);
 			else
 				index = FlxMath.minInt(index + amount, length - 1);
 		}

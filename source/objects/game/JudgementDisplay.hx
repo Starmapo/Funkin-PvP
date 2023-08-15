@@ -49,7 +49,7 @@ class JudgementDisplay extends FlxSprite
 		}
 		
 		scale.set(skin.scale, skin.scale);
-		antialiasing = skin.antialiasing;
+		antialiasing = skin.antialiasing && Settings.antialiasing;
 		active = exists = false;
 	}
 	

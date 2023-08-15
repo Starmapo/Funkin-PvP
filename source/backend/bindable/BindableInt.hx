@@ -19,7 +19,7 @@ class BindableInt extends Bindable<Int>
 	{
 		var oldValue = _value;
 		
-		_value = FlxMath.boundInt(newValue, minValue, maxValue);
+		_value = Std.int(FlxMath.bound(newValue, minValue, maxValue));
 		if (_value != oldValue)
 			valueChanged.dispatch(_value, oldValue);
 			

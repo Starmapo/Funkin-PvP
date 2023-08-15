@@ -156,7 +156,7 @@ class Note extends FlxSpriteGroup
 		if (!info.isLongNote)
 			return;
 			
-		body.setGraphicSize(body.width, currentBodySize);
+		body.setGraphicSize(Std.int(body.width), currentBodySize);
 		body.updateHitbox();
 		
 		var earliestSpritePosition = hitPosition + getSpritePosition(offset, earliestTrackPosition);
@@ -221,7 +221,7 @@ class Note extends FlxSpriteGroup
 		var notesScale = config != null ? config.notesScale : 1;
 		var scale = skin.notesScale * notesScale;
 		head.scale.set(scale, scale);
-		head.frameOffsetScale = skin.notesScale;
+		head.setOffsetScale(skin.notesScale, skin.notesScale);
 		head.addAnim({
 			name: 'head',
 			atlasName: data.headAnim,
@@ -233,7 +233,7 @@ class Note extends FlxSpriteGroup
 		longNoteSizeDifference = head.height / 2;
 		
 		body.scale.copyFrom(head.scale);
-		body.frameOffsetScale = head.frameOffsetScale;
+		body.setOffsetScale(head.offsetScale.x, head.offsetScale.y);
 		body.addAnim({
 			name: 'body',
 			atlasName: data.bodyAnim,
@@ -244,7 +244,7 @@ class Note extends FlxSpriteGroup
 		body.x = x + (head.width / 2) - (body.width / 2);
 		
 		tail.scale.copyFrom(head.scale);
-		tail.frameOffsetScale = head.frameOffsetScale;
+		tail.setOffsetScale(head.offsetScale.x, head.offsetScale.y);
 		tail.addAnim({
 			name: 'tail',
 			atlasName: data.tailAnim,
@@ -289,13 +289,13 @@ class Note extends FlxSpriteGroup
 	function initializeSprites()
 	{
 		head = new AnimatedSprite();
-		head.antialiasing = skin.antialiasing;
+		head.antialiasing = skin.antialiasing && Settings.antialiasing;
 		
 		body = new AnimatedSprite();
 		body.alpha = config != null && config.transparentHolds ? 0.6 : 1;
 		
 		tail = new AnimatedSprite();
-		tail.antialiasing = skin.antialiasing;
+		tail.antialiasing = skin.antialiasing && Settings.antialiasing;
 		tail.alpha = body.alpha;
 		
 		add(body);

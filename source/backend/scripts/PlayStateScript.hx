@@ -13,6 +13,7 @@ import haxe.io.Path;
 import hxcodec.flixel.FlxVideoSprite;
 import objects.game.Character;
 import objects.game.Note;
+import openfl.filters.ShaderFilter;
 import states.PlayState;
 import sys.FileSystem;
 import sys.io.File;
@@ -199,9 +200,9 @@ class PlayStateScript extends Script
 				pushLaneNotes(notes, playfield.noteManager.noteQueueLanes);
 			return notes;
 		});
-		setVariable("getShader", function(name:String, glslVersion:Int = 120)
+		setVariable("getShader", function(name:String)
 		{
-			return getShader(name, glslVersion);
+			return getShader(name);
 		});
 		setVariable("addGameShader", function(shader:FlxRuntimeShader)
 		{
@@ -213,7 +214,12 @@ class PlayStateScript extends Script
 			
 			var cameras = [FlxG.camera, state.camHUD, state.camOther];
 			for (camera in cameras)
-				camera.addShader(shader);
+			{
+				@:privateAccess
+				var filters = camera._filters != null ? camera._filters : [];
+				filters.push(new ShaderFilter(shader));
+				camera.setFilters(filters);
+			}
 		});
 		setVariable("loadDifficulty", function(difficulty:String)
 		{
@@ -285,7 +291,7 @@ class PlayStateScript extends Script
 		}
 	}
 	
-	function getShader(name:String, glslVersion:Int = 120):FlxRuntimeShader
+	function getShader(name:String):FlxRuntimeShader
 	{
 		var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
 		var ogPath = 'data/shaders/' + nameInfo.name;
@@ -297,7 +303,7 @@ class PlayStateScript extends Script
 			return null;
 		}
 		
-		var shader = new FlxRuntimeShader(frag, vert, glslVersion);
+		var shader = new FlxRuntimeShader(frag, vert);
 		return shader;
 	}
 }

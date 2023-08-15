@@ -29,7 +29,7 @@ class Receptor extends AnimatedSprite
 			var configScale = config != null ? config.notesScale : 1;
 			var noteScale = skin.receptorsScale * configScale;
 			scale.scale(noteScale);
-			frameOffsetScale = skin.receptorsScale;
+			setOffsetScale(skin.receptorsScale, skin.receptorsScale);
 			
 			addAnim({
 				name: 'static',
@@ -59,7 +59,7 @@ class Receptor extends AnimatedSprite
 				offset: data.confirmOffset
 			});
 			
-			antialiasing = skin.antialiasing;
+			antialiasing = skin.antialiasing && Settings.antialiasing;
 		}
 		scrollFactor.set();
 		

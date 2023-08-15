@@ -203,7 +203,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		fpsStepper.valueChanged.add(function(value, lastValue)
 		{
 			if (curAnim != null)
-				state.actionManager.perform(new ActionChangeAnimFPS(state, curAnim, value));
+				state.actionManager.perform(new ActionChangeAnimFPS(state, curAnim, Std.int(value)));
 		});
 		tab.add(fpsStepper);
 		

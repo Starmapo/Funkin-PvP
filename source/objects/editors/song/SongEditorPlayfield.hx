@@ -80,7 +80,7 @@ class SongEditorPlayfield extends FlxGroup
 	public function getLaneFromX(x:Float)
 	{
 		var percentage = (x - bg.x) / bg.width;
-		return FlxMath.boundInt(Std.int(columns * percentage), 0, columns);
+		return Std.int(FlxMath.bound(columns * percentage, 0, columns));
 	}
 	
 	public function getHoveredObject():ISongEditorTimingObject

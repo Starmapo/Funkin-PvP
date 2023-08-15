@@ -35,7 +35,7 @@ class JudgementSkinPage extends Page
 		add(skinGroup);
 		
 		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.fromRGBFloat(0, 0, 0, 0.6));
-		bg.setGraphicSize(FlxG.width / 2, FlxG.height);
+		bg.setGraphicSize(Std.int(FlxG.width / 2), FlxG.height);
 		bg.updateHitbox();
 		bg.scrollFactor.set();
 		add(bg);
@@ -134,18 +134,22 @@ class JudgementSkinPage extends Page
 		if (lastSkin != null)
 		{
 			FlxTween.cancelTweensOf(lastSkin);
-			FlxTween.color(lastSkin, 0.5, lastSkin.color, FlxColor.WHITE);
+			CoolUtil.tweenColor(lastSkin, 0.5, lastSkin.color, FlxColor.WHITE);
 		}
 		config.judgementSkin = item.name;
 		FlxTween.cancelTweensOf(item);
-		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
+		CoolUtil.tweenColor(item, 0.5, item.color, FlxColor.LIME);
 		lastSkin = item;
 		CoolUtil.playConfirmSound();
 	}
 	
 	function reloadSkin(item:SkinItem)
 	{
-		skinGroup.destroyMembers();
+		skinGroup.forEach(function(spr)
+		{
+			spr.destroy();
+		});
+		skinGroup.clear();
 		
 		var skin = JudgementSkin.loadSkinFromName(item.skin.mod + ':' + item.skin.name);
 		var graphics:Array<FlxGraphic> = [];
@@ -162,7 +166,7 @@ class JudgementSkinPage extends Page
 			var judgement = new FlxSprite(FlxG.width / 2, curY, graphics[i]);
 			judgement.scale.scale(skin.scale * 2);
 			judgement.updateHitbox();
-			judgement.antialiasing = skin.antialiasing;
+			judgement.antialiasing = skin.antialiasing && Settings.antialiasing;
 			judgement.x += (FlxG.width / 2 - judgement.width) / 2;
 			judgement.active = false;
 			judgement.scrollFactor.set();
@@ -178,7 +182,11 @@ class JudgementSkinPage extends Page
 	
 	function reloadSkins(skins:ModSkins)
 	{
-		skinList.destroyMembers();
+		skinList.forEach(function(spr)
+		{
+			spr.destroy();
+		});
+		skinList.clear();
 		lastSkin = null;
 		for (skin in skins.judgementSkins)
 		{

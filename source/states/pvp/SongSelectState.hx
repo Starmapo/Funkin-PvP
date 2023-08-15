@@ -29,7 +29,7 @@ class SongSelectState extends FNFState
 	
 	public var transitioning:Bool = true;
 	
-	var camPlayers:Array<FlxCamera> = [];
+	var camPlayers:Array<FNFCamera> = [];
 	var camDivision:FlxCamera;
 	
 	public var camScroll:FlxCamera;
@@ -50,7 +50,7 @@ class SongSelectState extends FNFState
 		var players = Settings.singleSongSelection ? 1 : 2;
 		for (i in 0...players)
 		{
-			var camPlayer = new FlxCamera(Std.int((FlxG.width / 2) * i), 0, Std.int(FlxG.width / players));
+			var camPlayer = new FNFCamera(Std.int((FlxG.width / 2) * i), 0, Std.int(FlxG.width / players));
 			camPlayer.bgColor = 0;
 			camPlayers.push(camPlayer);
 			FlxG.cameras.add(camPlayer, false);
@@ -104,7 +104,7 @@ class SongSelectState extends FNFState
 		iconScroll.cameras = [camScroll];
 		iconScroll.velocity.set(25, 25);
 		iconScroll.scale.set(0.5, 0.5);
-		iconScroll.antialiasing = true;
+		iconScroll.antialiasing = Settings.antialiasing;
 		
 		add(iconScroll);
 		add(stateText);
@@ -124,7 +124,7 @@ class SongSelectState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 		
-		if (!FlxG.sound.musicPlaying)
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 			CoolUtil.playPvPMusic(duration);
 			
 		super.create();
@@ -248,7 +248,7 @@ class PlayerSongSelect extends FlxGroup
 	var warningText:FlxText;
 	var warningBG:FlxSprite;
 	
-	public function new(player:Int, camera:FlxCamera, state:SongSelectState, groups:Array<ModSongGroup>)
+	public function new(player:Int, camera:FNFCamera, state:SongSelectState, groups:Array<ModSongGroup>)
 	{
 		super();
 		this.player = player;
@@ -350,7 +350,7 @@ class PlayerSongSelect extends FlxGroup
 			{
 				var item = difficultyMenuList.selectedItem;
 				FlxTween.cancelTweensOf(item);
-				FlxTween.color(item, 0.5, item.color, FlxColor.WHITE);
+				CoolUtil.tweenColor(item, 0.5, item.color, FlxColor.WHITE);
 				ready = false;
 				difficultyMenuList.controlsEnabled = true;
 			}
@@ -491,7 +491,7 @@ class PlayerSongSelect extends FlxGroup
 		ready = true;
 		difficultyMenuList.controlsEnabled = false;
 		FlxTween.cancelTweensOf(item);
-		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
+		CoolUtil.tweenColor(item, 0.5, item.color, FlxColor.LIME);
 		CoolUtil.playConfirmSound();
 	}
 	
@@ -536,7 +536,7 @@ class PlayerSongSelect extends FlxGroup
 		if (warning.length > 0)
 		{
 			warningBG.visible = true;
-			warningBG.setGraphicSize(warningText.width + 2, warningText.height + 2);
+			warningBG.setGraphicSize(Std.int(warningText.width + 2), Std.int(warningText.height + 2));
 			warningBG.updateHitbox();
 			warningBG.setPosition(warningText.x - 1, warningText.y - 1);
 		}
@@ -605,7 +605,7 @@ class SongGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		super(x, y, label, name);
 		
 		bg = new FlxSprite(0, 0, CoolUtil.getGroupGraphic(groupData.name, groupData.id));
-		bg.antialiasing = true;
+		bg.antialiasing = Settings.antialiasing;
 		label.add(bg);
 		
 		setEmptyBackground();
@@ -691,7 +691,7 @@ class SongMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		
 		text = new FlxText();
 		text.setFormat(Paths.FONT_PHANTOMMUFF, 65, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		text.antialiasing = true;
+		text.antialiasing = Settings.antialiasing;
 		text.active = false;
 		label.add(text);
 		

@@ -30,6 +30,7 @@ import flixel.util.FlxSignal;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import haxe.io.Path;
+import objects.CameraBackground;
 import objects.game.Character;
 import objects.game.HealthBar;
 import objects.game.JudgementCounter;
@@ -87,7 +88,7 @@ class PlayState extends FNFState
 	public var camBopMult:Float = 1;
 	public var healthBars:FlxTypedGroup<HealthBar>;
 	public var died:Bool = false;
-	public var deathBG:FlxBGSprite;
+	public var deathBG:CameraBackground;
 	public var deathTimer:FlxTimer;
 	public var isComplete(get, never):Bool;
 	public var backgroundCover:FlxSprite;
@@ -134,7 +135,7 @@ class PlayState extends FNFState
 	
 	override public function create()
 	{
-		if (FlxG.sound.musicPlaying)
+		if (FlxG.sound.music != null)
 		{
 			FlxG.sound.music.stop();
 			FlxG.sound.music = null;
@@ -244,6 +245,8 @@ class PlayState extends FNFState
 	
 	override function openSubState(subState:FlxSubState)
 	{
+		super.openSubState(subState);
+		
 		setScripts('subState', subState);
 		
 		if (isPaused)
@@ -251,20 +254,17 @@ class PlayState extends FNFState
 			FlxG.sound.pause();
 			FlxTween.globalManager.forEach(function(twn)
 			{
-				if (!twn.finished && !twn.persist)
+				if (!twn.finished)
 					twn.active = false;
 			});
 			FlxTimer.globalManager.forEach(function(tmr)
 			{
-				if (!tmr.finished && !tmr.persist)
+				if (!tmr.finished)
 					tmr.active = false;
 			});
-			FlxG.camera.fxActive = FlxG.camera.followActive = false;
 			
 			DiscordClient.changePresence(pausedDetailsText, 'In a match');
 		}
-		
-		super.openSubState(subState);
 	}
 	
 	override function closeSubState()
@@ -279,15 +279,14 @@ class PlayState extends FNFState
 			persistentUpdate = true;
 			FlxTween.globalManager.forEach(function(twn)
 			{
-				if (!twn.finished && !twn.persist)
+				if (!twn.finished)
 					twn.active = true;
 			});
 			FlxTimer.globalManager.forEach(function(tmr)
 			{
-				if (!tmr.finished && !tmr.persist)
+				if (!tmr.finished)
 					tmr.active = true;
 			});
-			FlxG.camera.fxActive = FlxG.camera.followActive = true;
 			FlxG.sound.resume();
 			
 			if (hasStarted)
@@ -336,6 +335,7 @@ class PlayState extends FNFState
 		reset();
 		if (clearCache)
 			Paths.clearCache = true;
+		destroySubStates = true;
 		FlxG.switchState(state);
 	}
 	
@@ -626,8 +626,6 @@ class PlayState extends FNFState
 				songInfoDisplay.visible = false;
 			ruleset.stopInput();
 			
-			FlxG.bitmap.clearUnused();
-			
 			if (Settings.resultsScreen)
 			{
 				var chars = [opponent, bf];
@@ -731,6 +729,8 @@ class PlayState extends FNFState
 	
 	function initCameras()
 	{
+		FlxG.cameras.reset(new FNFCamera());
+		
 		camHUD = new FlxCamera();
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
@@ -750,7 +750,6 @@ class PlayState extends FNFState
 			inst.time = inst.length;
 		});
 		inst.pitch = GameplayGlobals.playbackRate;
-		inst.resetPositionOnFinish = false;
 		
 		var vocalsSound = Paths.getSongVocals(song);
 		if (vocalsSound != null)
@@ -761,7 +760,6 @@ class PlayState extends FNFState
 		else
 			vocals = FlxG.sound.list.add(new FlxSound());
 		vocals.pitch = GameplayGlobals.playbackRate;
-		vocals.resetPositionOnFinish = false;
 		
 		timing = new MusicTiming(inst, song.timingPoints, false, song.timingPoints[0].beatLength * 5, onBeatHit, [vocals], startSong);
 		timing.onStepHit.add(onStepHit);
@@ -920,7 +918,7 @@ class PlayState extends FNFState
 	
 	function initStage()
 	{
-		deathBG = new FlxBGSprite();
+		deathBG = new CameraBackground();
 		deathBG.color = FlxColor.BLACK;
 		updateBG();
 		
@@ -1288,7 +1286,7 @@ class PlayState extends FNFState
 		spr.scrollFactor.set();
 		spr.screenCenter();
 		spr.cameras = [camHUD];
-		spr.antialiasing = true;
+		spr.antialiasing = Settings.antialiasing;
 		add(spr);
 		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, song.timingPoints[0].beatLength / 1000, {
 			ease: FlxEase.cubeInOut,
@@ -1369,8 +1367,8 @@ class PlayState extends FNFState
 		if (staticBG == null)
 			return;
 			
-		final camWidth = FlxG.camera.viewWidth;
-		final camHeight = FlxG.camera.viewHeight;
+		final camWidth = Math.ceil(FlxG.camera.viewWidth);
+		final camHeight = Math.ceil(FlxG.camera.viewHeight);
 		
 		staticBG.setPosition(FlxG.camera.viewMarginX, FlxG.camera.viewMarginY);
 		if (staticBG.width != camWidth || staticBG.height != camHeight)

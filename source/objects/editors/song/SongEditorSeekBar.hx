@@ -71,7 +71,7 @@ class SongEditorSeekBar extends FlxSpriteGroup
 			
 		if (isHeld && FlxG.mouse.pressed)
 		{
-			var percentage = (FlxG.mouse.globalY - bg.y) / bg.height;
+			var percentage = (FlxG.mouse.screenY - bg.y) / bg.height;
 			seekToPos((1 - percentage) * state.inst.length);
 		}
 		

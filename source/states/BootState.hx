@@ -43,7 +43,7 @@ class BootState extends FNFState
 		bg.setGraphicSize(0, FlxG.height);
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = true;
+		bg.antialiasing = Settings.antialiasing;
 		add(bg);
 		
 		loadingBG = new FlxSprite().makeGraphic(FlxG.width, 1, FlxColor.BLACK);
@@ -101,7 +101,7 @@ class BootState extends FNFState
 		loadingText.text = wantedText;
 		loadingText.y = FlxG.height - loadingText.height;
 		loadingBG.setPosition(loadingText.x, loadingText.y - 2);
-		loadingBG.setGraphicSize(FlxG.width, loadingText.height + 4);
+		loadingBG.setGraphicSize(FlxG.width, Std.int(loadingText.height + 4));
 		loadingBG.updateHitbox();
 	}
 	
@@ -131,9 +131,8 @@ class BootState extends FNFState
 		FlxG.mouse.useSystemCursor = true; // use system cursor instead of HaxeFlixel one
 		FlxG.mouse.visible = false; // hide mouse by default
 		// create custom transitions
-		var time = Main.getTransitionTime();
-		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, time, FlxPoint.get(0, -1), null);
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, time, FlxPoint.get(0, 1), null);
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 1, FlxPoint.get(0, 1));
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 1, FlxPoint.get(0, 1));
 		
 		Interp.getRedirects["Int"] = function(obj:Dynamic, name:String):Dynamic
 		{
@@ -304,12 +303,6 @@ class BootState extends FNFState
 					return p.distSquared;
 				case "distanceTo":
 					return p.distanceTo;
-				case "divide":
-					return p.divide;
-				case "divideNew":
-					return p.divideNew;
-				case "dividePoint":
-					return p.dividePoint;
 				case "dot":
 					return p.dot;
 				case "dotProduct":

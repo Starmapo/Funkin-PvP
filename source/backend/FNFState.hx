@@ -5,6 +5,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.TransitionData;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup;
@@ -88,6 +89,19 @@ class FNFState extends FlxTransitionableState
 		cachedCharacters.push(char);
 		
 		return spr;
+	}
+	
+	override function createTransition(data:TransitionData)
+	{
+		var trans = super.createTransition(data);
+		
+		var cam = new FNFCamera();
+		cam.bgColor = 0;
+		FlxG.cameras.add(cam, false);
+		
+		trans.cameras = [cam];
+		
+		return trans;
 	}
 	
 	override function destroy()

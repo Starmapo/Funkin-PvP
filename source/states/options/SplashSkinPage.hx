@@ -37,7 +37,7 @@ class SplashSkinPage extends Page
 		add(skinGroup);
 		
 		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.fromRGBFloat(0, 0, 0, 0.6));
-		bg.setGraphicSize(FlxG.width / 2, FlxG.height);
+		bg.setGraphicSize(Std.int(FlxG.width / 2), FlxG.height);
 		bg.updateHitbox();
 		bg.scrollFactor.set();
 		add(bg);
@@ -136,18 +136,22 @@ class SplashSkinPage extends Page
 		if (lastSkin != null)
 		{
 			FlxTween.cancelTweensOf(lastSkin);
-			FlxTween.color(lastSkin, 0.5, lastSkin.color, FlxColor.WHITE);
+			CoolUtil.tweenColor(lastSkin, 0.5, lastSkin.color, FlxColor.WHITE);
 		}
 		config.splashSkin = item.name;
 		FlxTween.cancelTweensOf(item);
-		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
+		CoolUtil.tweenColor(item, 0.5, item.color, FlxColor.LIME);
 		lastSkin = item;
 		CoolUtil.playConfirmSound();
 	}
 	
 	function reloadSkin(item:SkinItem)
 	{
-		skinGroup.destroyMembers();
+		skinGroup.forEach(function(spr)
+		{
+			spr.destroy();
+		});
+		skinGroup.clear();
 		
 		var skin = SplashSkin.loadSkinFromName(item.skin.mod + ':' + item.skin.name);
 		var splashes:Array<NoteSplash> = [];
@@ -184,7 +188,11 @@ class SplashSkinPage extends Page
 	
 	function reloadSkins(skins:ModSkins)
 	{
-		skinList.destroyMembers();
+		skinList.forEach(function(spr)
+		{
+			spr.destroy();
+		});
+		skinList.clear();
 		lastSkin = null;
 		for (skin in skins.splashSkins)
 		{

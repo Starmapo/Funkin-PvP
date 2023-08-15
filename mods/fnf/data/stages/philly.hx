@@ -28,7 +28,7 @@ function onCreate()
 		light.visible = false;
 		light.setGraphicSize(Std.int(light.width * 0.85));
 		light.updateHitbox();
-		light.antialiasing = true;
+		light.antialiasing = Settings.antialiasing;
 		if (lightFadeShader != null)
 			light.shader = lightFadeShader;
 		phillyCityLights.add(light);

@@ -32,7 +32,7 @@ class AudioSwitchFix
 					e.stop();
 				}
 			}
-			if (FlxG.sound.musicPlaying)
+			if (FlxG.sound.music != null && FlxG.sound.music.playing)
 			{
 				playingList.push({
 					sound: FlxG.sound.music,

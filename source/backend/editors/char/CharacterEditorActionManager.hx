@@ -173,8 +173,8 @@ class ActionChangeScale implements IAction
 		
 		state.char.scale.set(scale, scale);
 		state.ghostChar.scale.copyFrom(state.char.scale);
-		state.char.frameOffsetScale = scale;
-		state.ghostChar.frameOffsetScale = scale;
+		state.char.offsetScale.set(scale, scale);
+		state.ghostChar.offsetScale.copyFrom(state.char.offsetScale);
 		state.updateCharSize();
 		
 		state.actionManager.triggerEvent(type, {
@@ -212,7 +212,7 @@ class ActionChangeAntialiasing implements IAction
 		lastAntialiasing = state.info.antialiasing;
 		state.info.antialiasing = antialiasing;
 		
-		state.char.antialiasing = state.ghostChar.antialiasing = antialiasing;
+		state.char.antialiasing = state.ghostChar.antialiasing = antialiasing && Settings.antialiasing;
 		
 		state.actionManager.triggerEvent(type, {
 			antialiasing: antialiasing
@@ -757,10 +757,10 @@ class ActionChangeAnimFPS implements IAction
 	
 	var state:CharacterEditorState;
 	var anim:AnimInfo;
-	var fps:Float;
-	var lastFPS:Float;
+	var fps:Int;
+	var lastFPS:Int;
 	
-	public function new(state:CharacterEditorState, anim:AnimInfo, fps:Float)
+	public function new(state:CharacterEditorState, anim:AnimInfo, fps:Int)
 	{
 		this.state = state;
 		this.anim = anim;
@@ -812,6 +812,7 @@ class ActionChangeAnimLoop implements IAction
 		this.loop = loop;
 	}
 	
+	@:access(flixel.animation.FlxAnimation)
 	public function perform()
 	{
 		lastLoop = anim.loop;

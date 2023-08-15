@@ -1,5 +1,6 @@
 package objects.game;
 
+import backend.game.GameplayGlobals;
 import backend.structures.char.CharacterInfo;
 import flixel.animation.FlxAnimationController;
 import flixel.math.FlxPoint;
@@ -38,7 +39,7 @@ class Character extends DancingSprite
 		super(x, y);
 		if (info == null)
 			makeGraphic(1, 1, FlxColor.TRANSPARENT);
-		frameOffsetAngle = 0;
+		offsetAngle = 0;
 		this.isGF = isGF;
 		this.info = info;
 		this.charFlipX = charFlipX;
@@ -60,57 +61,6 @@ class Character extends DancingSprite
 		}
 	}
 	
-	override function draw()
-	{
-		final lastColor = color;
-		if (missColor)
-			color *= MISS_COLOR;
-			
-		super.draw();
-		
-		if (missColor)
-			color = lastColor;
-	}
-	
-	override function playAnim(name, force = false, reversed = false, frame = 0)
-	{
-		if (name == null || !animation.exists(name))
-			return;
-		if (animation.name == name && !force && !animation.curAnim.finished)
-			return;
-			
-		if (info != null && info.constantLooping && animation.curAnim != null && !debugMode)
-			animation.play(name, force, reversed, animation.curAnim.curFrame + 1);
-		else
-			animation.play(name, force, reversed, frame);
-		updateOffset();
-		animPlayed(name);
-		onAnimPlayed.dispatch(name);
-	}
-	
-	override function animPlayed(name:String) {}
-	
-	override function updateOffset()
-	{
-		super.updateOffset();
-		
-		if (charFlipX)
-			frameOffset.x -= (startWidth - width);
-	}
-	
-	override function dance(force:Bool = false)
-	{
-		if (!danceDisabled)
-			super.dance(force);
-	}
-	
-	override function danced(_)
-	{
-		state = Idle;
-		resetColor();
-		setCamOffsetFromLane();
-	}
-	
 	public function setCharacterPosition(x:Float = 0, y:Float = 0)
 	{
 		charPosX = x;
@@ -122,13 +72,13 @@ class Character extends DancingSprite
 		setPosition(charPosX, charPosY);
 		if (info != null)
 		{
-			final scaleX = (frameOffsetScale != null ? scale.x / frameOffsetScale : 1);
+			final scaleX = (offsetScale != null ? offsetScale.x / scale.x : 1);
 			if (charFlipX && !isGF)
 				x += (-info.positionOffset[0] + xDifference) * scaleX;
 			else
 				x += info.positionOffset[0] * scaleX;
 				
-			final scaleY = (frameOffsetScale != null ? scale.y / frameOffsetScale : 1);
+			final scaleY = (offsetScale != null ? offsetScale.y / scale.y : 1);
 			y = charPosY + info.positionOffset[1] * scaleY;
 		}
 	}
@@ -173,7 +123,7 @@ class Character extends DancingSprite
 			if (holdTimers[lane] != null)
 				holdTimers[lane].cancel();
 				
-			holdTimers[lane] = new FlxTimer().start(animation.curAnim.frameDuration * 4 / FlxAnimationController.globalSpeed, function(tmr)
+			holdTimers[lane] = new FlxTimer().start(animation.curAnim.frameDuration * 4 / GameplayGlobals.playbackRate, function(tmr)
 			{
 				if (note.exists && note.currentlyBeingHeld && note.tail.visible)
 					playSingAnim(lane, beatLength, true, note.animSuffix, false);
@@ -262,7 +212,7 @@ class Character extends DancingSprite
 	
 	public function doColorTween(duration:Float, fromColor:FlxColor, toColor:FlxColor, ?options:TweenOptions)
 	{
-		FlxTween.color(this, duration, fromColor, toColor, options);
+		CoolUtil.tweenColor(this, duration, fromColor, toColor, options);
 	}
 	
 	public function setMissColor()
@@ -275,25 +225,6 @@ class Character extends DancingSprite
 		missColor = false;
 	}
 	
-	override function destroy()
-	{
-		info = null;
-		super.destroy();
-		singAnimations = null;
-		if (holdTimers != null)
-		{
-			for (timer in holdTimers)
-			{
-				if (timer != null)
-					timer.cancel();
-			}
-			holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
-		}
-		allowDanceTimer = FlxDestroyUtil.destroy(allowDanceTimer);
-		camOffset = FlxDestroyUtil.put(camOffset);
-		FlxDestroyUtil.destroy(onSing);
-	}
-	
 	public function initializeCharacter()
 	{
 		if (info == null)
@@ -303,9 +234,9 @@ class Character extends DancingSprite
 		final lastFrame = animation.curAnim != null ? animation.curAnim.curFrame : 0;
 		
 		danceAnims = info.danceAnims.copy();
-		antialiasing = info.antialiasing;
+		antialiasing = info.antialiasing && Settings.antialiasing;
 		scale.set(info.scale, info.scale);
-		frameOffsetScale = info.scale;
+		setOffsetScale(info.scale, info.scale);
 		reloadImage();
 		
 		resetColor();
@@ -374,7 +305,7 @@ class Character extends DancingSprite
 		playAnim(danceAnims[danceAnims.length - 1], true);
 		startWidth = width;
 		startHeight = height;
-		updateOffset();
+		updateOffset(false);
 		xDifference = (429 - startWidth);
 		updatePosition();
 		
@@ -382,7 +313,7 @@ class Character extends DancingSprite
 			playAnim(lastAnim, true, false, lastFrame);
 	}
 	
-	public function updateFlipped()
+	public function updateFlipped(hitbox:Bool = true)
 	{
 		if (info == null)
 			return;
@@ -408,7 +339,7 @@ class Character extends DancingSprite
 			}
 		}
 		
-		updateOffset();
+		updateOffset(hitbox);
 		updatePosition();
 	}
 	
@@ -451,6 +382,66 @@ class Character extends DancingSprite
 			allowDanceTimer.cancel();
 	}
 	
+	override function draw()
+	{
+		final lastColor = color;
+		if (missColor)
+			color *= MISS_COLOR;
+			
+		super.draw();
+		
+		if (missColor)
+			color = lastColor;
+	}
+	
+	override function updateOffset(hitbox:Bool = true)
+	{
+		super.updateOffset(hitbox);
+		
+		if (charFlipX)
+			offset.subtractPoint(calculateOffset(FlxPoint.weak(startWidth - width)));
+	}
+	
+	override function dance(force:Bool = false)
+	{
+		if (!danceDisabled)
+			super.dance(force);
+	}
+	
+	override function destroy()
+	{
+		info = null;
+		super.destroy();
+		singAnimations = null;
+		if (holdTimers != null)
+		{
+			for (timer in holdTimers)
+			{
+				if (timer != null)
+					timer.cancel();
+			}
+			holdTimers = FlxDestroyUtil.destroyArray(holdTimers);
+		}
+		allowDanceTimer = FlxDestroyUtil.destroy(allowDanceTimer);
+		camOffset = FlxDestroyUtil.put(camOffset);
+		FlxDestroyUtil.destroy(onSing);
+	}
+	
+	override function danced(_)
+	{
+		state = Idle;
+		resetColor();
+		setCamOffsetFromLane();
+	}
+	
+	override function _playAnim(name:String, force:Bool, reversed:Bool, frame:Int)
+	{
+		if (info != null && info.constantLooping && animation.curAnim != null && !debugMode)
+			animation.play(name, force, reversed, animation.curAnim.curFrame + 1);
+		else
+			super._playAnim(name, force, reversed, frame);
+	}
+	
 	function set_info(value:CharacterInfo)
 	{
 		if (value != null && info != value)
@@ -486,7 +477,7 @@ class Character extends DancingSprite
 		if (charFlipX != value)
 		{
 			charFlipX = value;
-			updateFlipped();
+			updateFlipped(false);
 		}
 		return value;
 	}

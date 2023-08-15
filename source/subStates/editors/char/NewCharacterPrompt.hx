@@ -12,7 +12,6 @@ import objects.editors.EditorInputText;
 import objects.editors.EditorPanel;
 import objects.editors.EditorText;
 import states.editors.CharacterEditorState;
-import sys.FileSystem;
 
 class NewCharacterPrompt extends FNFSubState
 {
@@ -54,7 +53,7 @@ class NewCharacterPrompt extends FNFSubState
 		var createButton = new FlxUIButton(0, modDropdown.y + modDropdown.height + spacing, 'Create', function()
 		{
 			var char = charNameInput.text;
-			if (char.length < 1 || FlxStringUtil.hasInvalidChars(char))
+			if (char.length < 1)
 			{
 				FlxTween.cancelTweensOf(charNameInput);
 				FlxTween.color(charNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});

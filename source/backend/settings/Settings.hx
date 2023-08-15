@@ -106,9 +106,8 @@ class Settings
 		
 		if (!FlxG.fullscreen)
 			FlxG.resizeWindow(Math.round(FlxG.width * resolution), Math.round(FlxG.height * resolution));
-		FlxG.setFramerate(fpsCap);
+		CoolUtil.setFramerate(fpsCap);
 		Application.current.window.vsync = vsync;
-		FlxG.forceNoAntialiasing = !antialiasing;
 		Main.updateFilters();
 		
 		FlxG.sound.defaultMusicGroup.volume = musicVolume;
@@ -116,7 +115,6 @@ class Settings
 		
 		FlxG.autoPause = autoPause;
 		FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
-		FlxG.bitmap.cacheType = forceCacheReset ? UNUSED : DISABLED;
 	}
 	
 	public static function saveData()

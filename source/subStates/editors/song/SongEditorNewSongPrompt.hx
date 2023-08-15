@@ -63,7 +63,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 				if (instFile.length > 0)
 				{
 					FlxTween.cancelTweensOf(instButton);
-					FlxTween.color(instButton, 0.2, instButton.color, FlxColor.RED);
+					CoolUtil.tweenColor(instButton, 0.2, instButton.color, FlxColor.RED);
 					instFile = '';
 				}
 				return;
@@ -87,7 +87,7 @@ class SongEditorNewSongPrompt extends FNFSubState
 				if (vocalsFile.length > 0)
 				{
 					FlxTween.cancelTweensOf(vocalsButton);
-					FlxTween.color(vocalsButton, 0.2, vocalsButton.color, FlxColor.WHITE);
+					CoolUtil.tweenColor(vocalsButton, 0.2, vocalsButton.color, FlxColor.WHITE);
 				}
 				vocalsFile = '';
 				return;
@@ -121,14 +121,14 @@ class SongEditorNewSongPrompt extends FNFSubState
 				return;
 			}
 			var songName = songNameInput.text;
-			if (songName.length < 1 || FlxStringUtil.hasInvalidChars(songName))
+			if (songName.length < 1)
 			{
 				FlxTween.cancelTweensOf(songNameInput);
 				FlxTween.color(songNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
 				return;
 			}
 			var diff = difficultyNameInput.text;
-			if (diff.length < 1 || FlxStringUtil.hasInvalidChars(diff))
+			if (diff.length < 1)
 			{
 				FlxTween.cancelTweensOf(difficultyNameInput);
 				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});
@@ -241,12 +241,12 @@ class SongEditorNewSongPrompt extends FNFSubState
 	function instTween()
 	{
 		FlxTween.cancelTweensOf(instButton);
-		FlxTween.color(instButton, 0.2, instButton.color, FlxColor.LIME);
+		CoolUtil.tweenColor(instButton, 0.2, instButton.color, FlxColor.LIME);
 	}
 	
 	function vocalsTween()
 	{
 		FlxTween.cancelTweensOf(vocalsButton);
-		FlxTween.color(vocalsButton, 0.2, vocalsButton.color, FlxColor.LIME);
+		CoolUtil.tweenColor(vocalsButton, 0.2, vocalsButton.color, FlxColor.LIME);
 	}
 }

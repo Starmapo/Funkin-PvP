@@ -147,7 +147,7 @@ class SplashData extends JsonObject
 	/**
 		The frame rate, or frames per second, for the animation.
 	**/
-	public var fps:Float;
+	public var fps:Int;
 	
 	/**
 		The visual offset for the animation.
@@ -160,7 +160,7 @@ class SplashData extends JsonObject
 	{
 		anim = readString(data.anim);
 		indices = readIntArray(data.indices, [], null, null, 0);
-		fps = readFloat(data.fps, 24, 0, 1000, 2);
+		fps = readInt(data.fps, 24, 0, 1000);
 		offset = readFloatArray(data.offset, [], null, 2, null, null, 2);
 	}
 	

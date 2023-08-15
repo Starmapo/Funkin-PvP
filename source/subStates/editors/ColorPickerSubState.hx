@@ -38,8 +38,6 @@ class ColorPickerSubState extends FNFSubState
 	
 	override function create()
 	{
-		super.create();
-		
 		createCamera();
 		
 		uiTabs = new EditorPanel([{name: "colorPicker", label: 'Select a color...'}]);
@@ -145,6 +143,8 @@ class ColorPickerSubState extends FNFSubState
 		closeButton.color = FlxColor.RED;
 		closeButton.label.color = FlxColor.WHITE;
 		add(closeButton);
+
+		super.create();
 	}
 	
 	override function destroy()

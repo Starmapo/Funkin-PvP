@@ -52,7 +52,7 @@ class SongEditorNewChartPrompt extends FNFSubState
 		var createButton = new FlxUIButton(0, copyObjectsCheckbox.y + copyObjectsCheckbox.height + spacing * 2, 'Create', function()
 		{
 			var diff = difficultyNameInput.text;
-			if (diff.length < 1 || FlxStringUtil.hasInvalidChars(diff))
+			if (diff.length < 1)
 			{
 				FlxTween.cancelTweensOf(difficultyNameInput);
 				FlxTween.color(difficultyNameInput, 0.2, FlxColor.RED, FlxColor.WHITE, {startDelay: 0.2});

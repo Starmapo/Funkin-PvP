@@ -83,7 +83,7 @@ class PauseSubState extends FNFSubState
 		camFollow.exists = false;
 		add(camFollow);
 		
-		camSubState.follow(camFollow, LOCKON, 0.1);
+		camSubState.follow(camFollow, LOCKON, CoolUtil.getLerp(0.1));
 		
 		menuList.selectItem(0);
 		camSubState.snapToTarget();

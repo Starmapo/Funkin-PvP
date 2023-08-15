@@ -60,8 +60,8 @@ class Tooltip extends FlxSpriteGroup
 		
 		if (showing)
 		{
-			setPosition(FlxMath.bound(FlxG.mouse.globalX - width, 5, FlxG.width - width - 5),
-				FlxMath.bound(FlxG.mouse.globalY - height - 2, 5, FlxG.height - height - 5));
+			setPosition(FlxMath.bound(FlxG.mouse.screenX - width, 5, FlxG.width - width - 5),
+				FlxMath.bound(FlxG.mouse.screenY - height - 2, 5, FlxG.height - height - 5));
 		}
 	}
 	

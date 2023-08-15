@@ -195,7 +195,7 @@ class CharacterEditorState extends FNFState
 		
 		if (allowInput && FlxG.keys.anyPressed([I, J, K, L]))
 		{
-			var angle = FlxG.keys.angleFromKeys([I, J, K, L]);
+			var angle = CoolUtil.angleFromKeys([I, J, K, L]);
 			camPos.velocity.setPolarDegrees(900, angle);
 		}
 		else
@@ -411,7 +411,7 @@ class CharacterEditorState extends FNFState
 	
 	function changeFrameIndex(change:Int)
 	{
-		char.animation.curAnim.curFrame = FlxMath.wrapInt(char.animation.curAnim.curFrame + change, 0, char.animation.curAnim.numFrames - 1);
+		char.animation.curAnim.curFrame = FlxMath.wrap(char.animation.curAnim.curFrame + change, 0, char.animation.curAnim.numFrames - 1);
 	}
 	
 	function changeAnimOffset(xChange:Int, yChange:Int = 0)
@@ -429,11 +429,8 @@ class CharacterEditorState extends FNFState
 		anim.offset[1] = y;
 		
 		var offset = char.offsets.get(anim.name);
-		offset[0] = x;
-		offset[1] = y;
-		var ghostOffset = ghostChar.offsets.get(anim.name);
-		ghostOffset[0] = offset[0];
-		ghostOffset[1] = offset[1];
+		offset.set(x, y);
+		ghostChar.offsets.get(anim.name).copyFrom(offset);
 		
 		if (char.animation.name == anim.name)
 			char.updateOffset();

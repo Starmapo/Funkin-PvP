@@ -1,5 +1,6 @@
 package subStates.editors.char;
 
+import backend.FNFAtlasFrames;
 import backend.editors.char.CharacterEditorActionManager;
 import backend.structures.char.CharacterInfo;
 import flixel.FlxCamera;
@@ -7,7 +8,6 @@ import flixel.FlxG;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.FlxUIButton;
-import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
@@ -97,14 +97,18 @@ class AtlasNamePrompt extends FNFSubState
 	
 	public function refreshAtlasNames()
 	{
-		buttonGroup.destroyMembers();
+		buttonGroup.forEach(function(button)
+		{
+			button.destroy();
+		});
+		buttonGroup.clear();
 		
 		var atlasNames:Array<String> = [];
 		if (state.char.frames != null)
 		{
 			for (frame in state.char.frames.frames)
 			{
-				var atlasName = FlxFramesCollection.getAtlasName(frame.name, state.char.frames.atlasType);
+				var atlasName = cast(state.char.frames, FNFAtlasFrames).getAtlasName(frame.name);
 				if (!atlasNames.contains(atlasName))
 					atlasNames.push(atlasName);
 			}

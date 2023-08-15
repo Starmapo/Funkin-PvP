@@ -201,17 +201,17 @@ class ReceptorData extends JsonObject
 	/**
 		The frame rate, or frames per second, for the static animation.
 	**/
-	public var staticFPS:Float;
+	public var staticFPS:Int;
 	
 	/**
 		The frame rate, or frames per second, for the pressed animation.
 	**/
-	public var pressedFPS:Float;
+	public var pressedFPS:Int;
 	
 	/**
 		The frame rate, or frames per second, for the confirm animation.
 	**/
-	public var confirmFPS:Float;
+	public var confirmFPS:Int;
 	
 	/**
 		The visual offset for the static animation. Overrides `receptorsCenterAnimation`.
@@ -242,9 +242,9 @@ class ReceptorData extends JsonObject
 		staticIndices = readIntArray(data.staticIndices, [], null, null, 0);
 		pressedIndices = readIntArray(data.pressedIndices, [], null, null, 0);
 		confirmIndices = readIntArray(data.confirmIndices, [], null, null, 0);
-		staticFPS = readFloat(data.staticFPS, 0, 0, 1000, 2);
-		pressedFPS = readFloat(data.pressedFPS, 24, 0, 1000, 2);
-		confirmFPS = readFloat(data.confirmFPS, 24, 0, 1000, 2);
+		staticFPS = readInt(data.staticFPS, 0, 0, 1000);
+		pressedFPS = readInt(data.pressedFPS, 24, 0, 1000);
+		confirmFPS = readInt(data.confirmFPS, 24, 0, 1000);
 		staticOffset = readFloatArray(data.staticOffset, [], null, 2, null, null, 2);
 		pressedOffset = readFloatArray(data.pressedOffset, [], null, 2, null, null, 2);
 		confirmOffset = readFloatArray(data.confirmOffset, [], null, 2, null, null, 2);

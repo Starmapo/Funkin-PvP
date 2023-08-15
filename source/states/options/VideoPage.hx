@@ -1,11 +1,14 @@
 package states.options;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import lime.app.Application;
 import openfl.Lib;
 
 class VideoPage extends BaseSettingsPage
 {
+	var ogAntialiasing:Map<FlxSprite, Bool> = new Map();
+	
 	public function new()
 	{
 		super();
@@ -44,7 +47,9 @@ class VideoPage extends BaseSettingsPage
 			holdDelay: 0.05
 		}, function()
 		{
-			FlxG.setFramerate(Settings.fpsCap);
+			CoolUtil.setFramerate(Settings.fpsCap);
+			var state:OptionsState = cast FlxG.state;
+			state.camPages.followLerp = CoolUtil.getLerp(0.1);
 		});
 		addSetting({
 			name: 'vsync',
@@ -58,11 +63,8 @@ class VideoPage extends BaseSettingsPage
 		addSetting({
 			name: 'antialiasing',
 			displayName: 'Antialiasing',
-			description: "Whether antialiasing is enabled.",
+			description: "Whether antialiasing is enabled. Changes will take place after exiting the options menu.",
 			type: CHECKBOX
-		}, function()
-		{
-			FlxG.forceNoAntialiasing = !Settings.antialiasing;
 		});
 		addSetting({
 			name: 'hue',
@@ -131,5 +133,11 @@ class VideoPage extends BaseSettingsPage
 		});
 		
 		addPageTitle('Video');
+	}
+	
+	override function destroy()
+	{
+		super.destroy();
+		ogAntialiasing = null;
 	}
 }

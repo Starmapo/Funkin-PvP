@@ -39,6 +39,8 @@ class MainMenuState extends FNFState
 		DiscordClient.changePresence(null, "Main Menu");
 		
 		transIn = transOut = null;
+
+		FlxG.cameras.reset(new FNFCamera());
 		
 		bg = CoolUtil.createMenuBG('menuBG', 1.2);
 		bg.angle = 180;
@@ -109,7 +111,7 @@ class MainMenuState extends FNFState
 		
 		CoolUtil.playConfirmSound(0);
 		
-		if (!FlxG.sound.musicPlaying)
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 		{
 			CoolUtil.playMenuMusic(0);
 			FlxG.sound.music.fadeIn(duration);

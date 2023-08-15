@@ -23,7 +23,7 @@ class CharacterSelectState extends FNFState
 {
 	public var transitioning:Bool = true;
 	
-	var camPlayers:Array<FlxCamera> = [];
+	var camPlayers:Array<FNFCamera> = [];
 	var camDivision:FlxCamera;
 	var camScroll:FlxCamera;
 	var camOver:FlxCamera;
@@ -40,7 +40,7 @@ class CharacterSelectState extends FNFState
 		
 		for (i in 0...2)
 		{
-			var camPlayer = new FlxCamera(Std.int((FlxG.width / 2) * i), 0, Std.int(FlxG.width / 2));
+			var camPlayer = new FNFCamera(Std.int((FlxG.width / 2) * i), 0, Std.int(FlxG.width / 2));
 			camPlayer.bgColor = 0;
 			camPlayers.push(camPlayer);
 			FlxG.cameras.add(camPlayer, false);
@@ -91,7 +91,7 @@ class CharacterSelectState extends FNFState
 		iconScroll.cameras = [camScroll];
 		iconScroll.velocity.set(25, 25);
 		iconScroll.scale.set(0.5, 0.5);
-		iconScroll.antialiasing = true;
+		iconScroll.antialiasing = Settings.antialiasing;
 		
 		add(iconScroll);
 		add(stateText);
@@ -110,7 +110,7 @@ class CharacterSelectState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 		
-		if (!FlxG.sound.musicPlaying)
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 			CoolUtil.playPvPMusic(duration);
 			
 		super.create();
@@ -206,7 +206,7 @@ class PlayerCharacterSelect extends FlxGroup
 	var charText:FlxText;
 	var screenText:FlxText;
 	
-	public function new(player:Int, camera:FlxCamera, state:CharacterSelectState, groups:Array<ModCharacterGroup>)
+	public function new(player:Int, camera:FNFCamera, state:CharacterSelectState, groups:Array<ModCharacterGroup>)
 	{
 		super();
 		this.player = player;
@@ -242,7 +242,7 @@ class PlayerCharacterSelect extends FlxGroup
 			charPortrait.x += 15 + FlxG.width / 4;
 			charPortrait.flipX = true;
 		}
-		charPortrait.antialiasing = true;
+		charPortrait.antialiasing = Settings.antialiasing;
 		charPortrait.scrollFactor.y = 0;
 		charPortrait.active = false;
 		add(charPortrait);
@@ -307,7 +307,7 @@ class PlayerCharacterSelect extends FlxGroup
 			{
 				var item = charMenuList.selectedItem;
 				FlxTween.cancelTweensOf(item);
-				FlxTween.color(item, 0.5, item.color, FlxColor.WHITE);
+				CoolUtil.tweenColor(item, 0.5, item.color, FlxColor.WHITE);
 				ready = false;
 				charMenuList.controlsEnabled = true;
 			}
@@ -399,7 +399,7 @@ class PlayerCharacterSelect extends FlxGroup
 		{
 			charPortrait.loadGraphic(portrait);
 			
-			charPortraitWhite.setGraphicSize(charPortrait.width, charPortrait.height);
+			charPortraitWhite.setGraphicSize(Std.int(charPortrait.width), Std.int(charPortrait.height));
 			charPortraitWhite.updateHitbox();
 			charPortraitWhite.alpha = 0.25;
 			FlxTween.cancelTweensOf(charPortraitWhite);
@@ -415,7 +415,7 @@ class PlayerCharacterSelect extends FlxGroup
 		ready = true;
 		charMenuList.controlsEnabled = false;
 		FlxTween.cancelTweensOf(item);
-		FlxTween.color(item, 0.5, item.color, FlxColor.LIME);
+		CoolUtil.tweenColor(item, 0.5, item.color, FlxColor.LIME);
 		CoolUtil.playConfirmSound();
 	}
 	
@@ -505,7 +505,7 @@ class CharacterGroupMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		super(x, y, label, name);
 		
 		bg = new FlxSprite(0, 0, CoolUtil.getGroupGraphic(groupData.name, groupData.id));
-		bg.antialiasing = true;
+		bg.antialiasing = Settings.antialiasing;
 		label.add(bg);
 		
 		setEmptyBackground();
@@ -593,7 +593,7 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		super(x, y, label, null);
 		
 		bg = new FlxSprite();
-		bg.antialiasing = true;
+		bg.antialiasing = Settings.antialiasing;
 		label.add(bg);
 		
 		setEmptyBackground();
@@ -625,7 +625,7 @@ class CharacterMenuItem extends TypedMenuItem<FlxSpriteGroup>
 			
 		final thickness = 4;
 		
-		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.id, true, false, graphicKey);
+		var graphic = Paths.getImage('characterSelect/icons/' + charData.name, charData.id, graphicKey);
 		if (graphic == null)
 		{
 			final unknownKey = '::charUnknown::_edit';

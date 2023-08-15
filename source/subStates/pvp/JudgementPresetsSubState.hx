@@ -255,7 +255,7 @@ class JudgementPresetsSubState extends FNFSubState
 	
 	function changeSelection(change:Int = 0)
 	{
-		curSelected = FlxMath.wrapInt(curSelected + change, 0, presets.length - 1);
+		curSelected = FlxMath.wrap(curSelected + change, 0, presets.length - 1);
 		
 		var preset = presets[curSelected];
 		nameText.text = preset.name;

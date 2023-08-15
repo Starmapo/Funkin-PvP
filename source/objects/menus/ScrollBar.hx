@@ -44,7 +44,7 @@ class ScrollBar extends FlxSpriteGroup
 		
 		if (isScrolling)
 		{
-			var offset = FlxG.mouse.globalY - mousePos;
+			var offset = FlxG.mouse.screenY - mousePos;
 			bar.y = barPos + offset;
 			
 			if (FlxG.mouse.released)
@@ -65,13 +65,13 @@ class ScrollBar extends FlxSpriteGroup
 				isScrolling = true;
 			else if (FlxG.mouse.overlaps(bg))
 			{
-				bar.y = FlxG.mouse.globalY - (bar.height / 2);
+				bar.y = FlxG.mouse.screenY - (bar.height / 2);
 				scrolled = true;
 				isScrolling = true;
 			}
 			if (isScrolling)
 			{
-				mousePos = FlxG.mouse.globalY;
+				mousePos = FlxG.mouse.screenY;
 				barPos = bar.y;
 			}
 		}

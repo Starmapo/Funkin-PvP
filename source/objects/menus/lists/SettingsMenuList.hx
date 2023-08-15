@@ -112,7 +112,7 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 				value = FlxMath.roundDecimal(value, item.data.decimals);
 				if (item.data.wrap && item.data.minValue != null && item.data.maxValue != null)
 				{
-					value = FlxMath.wrap(value, item.data.minValue, item.data.maxValue);
+					value = CoolUtil.wrap(value, item.data.minValue, item.data.maxValue);
 				}
 				else
 				{
@@ -131,11 +131,11 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 					index += 1;
 				if (item.data.wrap)
 				{
-					index = FlxMath.wrapInt(index, 0, item.data.options.length - 1);
+					index = FlxMath.wrap(index, 0, item.data.options.length - 1);
 				}
 				else
 				{
-					index = FlxMath.boundInt(index, 0, item.data.options.length - 1);
+					index = Std.int(FlxMath.bound(index, 0, item.data.options.length - 1));
 				}
 				value = item.data.options[index];
 			default:
@@ -168,7 +168,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 		
 		nameText = new FlxText(5, 0, 0, '', 65);
 		nameText.setFormat(Paths.FONT_PHANTOMMUFF, nameText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		nameText.antialiasing = true;
+		nameText.antialiasing = Settings.antialiasing;
 		label.add(nameText);
 		
 		super(x, y, label, name, callback);
@@ -218,7 +218,7 @@ class SettingsMenuItem extends TypedMenuItem<FlxSpriteGroup>
 				default:
 					valueText = new FlxText((FlxG.width / 2) + 5, 0, 0, '', 65);
 					valueText.setFormat(Paths.FONT_PHANTOMMUFF, valueText.size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-					valueText.antialiasing = true;
+					valueText.antialiasing = Settings.antialiasing;
 					updateValueText();
 					label.add(valueText);
 			}
@@ -343,7 +343,7 @@ class Checkbox extends AnimatedSprite
 		
 		this.value = value;
 		animation.finish();
-		antialiasing = true;
+		antialiasing = Settings.antialiasing;
 	}
 	
 	function set_value(newValue:Bool)

@@ -53,7 +53,7 @@ class CreditsState extends FNFState
 		add(bg);
 		
 		var circleBG = new FlxSprite(0, 0, Paths.getImage('menus/credits/circleBG'));
-		circleBG.antialiasing = true;
+		circleBG.antialiasing = Settings.antialiasing;
 		add(circleBG);
 		
 		categoryMenuList = new CreditsMenuList();
@@ -231,7 +231,7 @@ class CreditsState extends FNFState
 		if (colorTween != null)
 			colorTween.cancel();
 			
-		colorTween = FlxTween.color(bg, Main.getTransitionTime(), bg.color, color, {
+		colorTween = CoolUtil.tweenColor(bg, Main.getTransitionTime(), bg.color, color, {
 			onComplete: function(_)
 			{
 				colorTween = null;

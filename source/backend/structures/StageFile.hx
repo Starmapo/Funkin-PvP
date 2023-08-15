@@ -84,7 +84,7 @@ class StageFile implements IFlxDestroyable
 	function createSprite(node:Access, folder:String, mod:String)
 	{
 		var spr = new DancingSprite();
-		spr.antialiasing = true;
+		spr.antialiasing = Settings.antialiasing;
 		if (node.has.image)
 		{
 			var image = folder + node.att.image;
@@ -133,8 +133,8 @@ class StageFile implements IFlxDestroyable
 					}
 					if (anim.has.fps)
 					{
-						var fps = Std.parseFloat(anim.att.fps);
-						if (!Math.isNaN(fps))
+						var fps = Std.parseInt(anim.att.fps);
+						if (fps != null)
 							animData.fps = fps;
 					}
 					if (anim.has.loop)
@@ -185,21 +185,18 @@ class StageFile implements IFlxDestroyable
 					spr.scale.y = scaleY;
 			}
 		}
-		var graphicWidth = node.has.graphicWidth ? Std.parseFloat(node.att.graphicWidth) : Math.NaN;
-		var graphicHeight = node.has.graphicHeight ? Std.parseFloat(node.att.graphicHeight) : Math.NaN;
-		if (!Math.isNaN(graphicWidth) || !Math.isNaN(graphicHeight))
+		var graphicWidth = node.has.graphicWidth ? Std.parseInt(node.att.graphicWidth) : null;
+		var graphicHeight = node.has.graphicHeight ? Std.parseInt(node.att.graphicHeight) : null;
+		if (graphicWidth != null || graphicHeight != null)
 		{
-			if (Math.isNaN(graphicHeight))
+			if (graphicHeight == null)
 				spr.setGraphicSize(graphicWidth);
-			else if (Math.isNaN(graphicWidth))
+			else if (graphicWidth == null)
 				spr.setGraphicSize(0, graphicHeight);
 			else
 				spr.setGraphicSize(graphicWidth, graphicHeight);
 		}
-		var updateHitbox = true;
-		if (node.has.updateHitbox)
-			updateHitbox = node.att.updateHitbox == "true";
-		if (updateHitbox)
+		if (node.has.updateHitbox ? node.att.updateHitbox == "true" : true)
 			spr.updateHitbox();
 			
 		if (node.has.x)
@@ -246,7 +243,7 @@ class StageFile implements IFlxDestroyable
 			}
 		}
 		if (node.has.antialiasing)
-			spr.antialiasing = node.att.antialiasing == "true";
+			spr.antialiasing = node.att.antialiasing == "true" && Settings.antialiasing;
 		if (node.has.danceAnims)
 		{
 			spr.danceAnims = node.att.danceAnims.split(',');

@@ -158,7 +158,6 @@ class SongEditorEditPanel extends EditorPanel
 		updateSelectedNotes();
 		updateSelectedScrollVelocities();
 		updateSelectedTimingPoints();
-		onClick = onClickTab;
 		
 		state.actionManager.onEvent.add(onEvent);
 		state.selectedObjects.itemAdded.add(onSelectedObject);
@@ -1868,8 +1867,10 @@ class SongEditorEditPanel extends EditorPanel
 		}
 	}
 	
-	function onClickTab(name:String)
+	override function _onTabEvent(name:String):Void
 	{
+		super._onTabEvent(name);
+		
 		if (selectedNotes.length == 0)
 			updateSelectedNotes();
 		if (selectedTimingPoints.length == 0)

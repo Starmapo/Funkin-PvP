@@ -89,9 +89,9 @@ class EditorInputText extends FlxSpriteGroup
 	
 	public function updateBGSize()
 	{
-		textBorder.setGraphicSize(textField.width + 2, textField.height + 2);
+		textBorder.setGraphicSize(Std.int(textField.width + 2), Std.int(textField.height + 2));
 		textBorder.updateHitbox();
-		textBG.setGraphicSize(textField.width, textField.height);
+		textBG.setGraphicSize(Std.int(textField.width), Std.int(textField.height));
 		textBG.updateHitbox();
 	}
 	

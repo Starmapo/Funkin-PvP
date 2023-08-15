@@ -142,11 +142,9 @@ class BaseImageSubState extends FNFSubState
 				// but if it aint broke dont fix it
 				var diff:FlxPoint = mousePos - startPos;
 				var width = resizingWidth + diff.x * (resizingType == 1 || resizingType == 3 ? 1 : -1);
-				FlxG.watch.addQuick('diff', diff);
-				FlxG.watch.addQuick('width', width);
 				if (char.width != width && width >= minSize)
 				{
-					char.setGraphicSize(width);
+					char.setGraphicSize(Std.int(width));
 					char.updateHitbox();
 					switch (resizingType)
 					{
@@ -265,7 +263,7 @@ class BaseImageSubState extends FNFSubState
 	function reloadFrame()
 	{
 		char.flipX = state.info.flipX;
-		char.antialiasing = state.info.antialiasing;
+		char.antialiasing = state.info.antialiasing && Settings.antialiasing;
 		
 		var frame = state.char.frame;
 		if (char.frame == frame)
@@ -299,7 +297,7 @@ class BaseImageSubState extends FNFSubState
 		var frameBitmap = new BitmapData(Std.int(frame.frame.width), Std.int(frame.frame.height), true, FlxColor.TRANSPARENT);
 		frameBitmap.copyPixels(char.pixels, frame.frame.copyToFlash(), new Point(), null, null, true);
 		
-		// now we'll make the actual icon
+		// now we'll make the actual image
 		var bitmap = new BitmapData(Std.int(border.width), Std.int(border.height), true, FlxColor.TRANSPARENT);
 		// create a matrix for our transformations
 		var matrix = new FlxMatrix();

@@ -51,9 +51,6 @@ class MiscellaneousPage extends BaseSettingsPage
 			displayName: 'Force Cache Reset',
 			description: "If enabled, unused graphics and sounds will always be cleared after a state switch.",
 			type: CHECKBOX
-		}, function()
-		{
-			FlxG.bitmap.cacheType = Settings.forceCacheReset ? UNUSED : DISABLED;
 		});
 		
 		addPageTitle('Miscellaneous');

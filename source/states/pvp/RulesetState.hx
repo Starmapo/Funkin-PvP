@@ -41,6 +41,7 @@ class RulesetState extends FNFState
 		transIn = transOut = null;
 		destroySubStates = false;
 		
+		FlxG.cameras.reset(new FNFCamera());
 		camScroll = new FlxCamera();
 		camScroll.bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.5);
 		FlxG.cameras.add(camScroll, false);
@@ -73,7 +74,7 @@ class RulesetState extends FNFState
 		iconScroll.cameras = [camScroll];
 		iconScroll.velocity.set(25, 25);
 		iconScroll.scale.set(0.5, 0.5);
-		iconScroll.antialiasing = true;
+		iconScroll.antialiasing = Settings.antialiasing;
 		
 		add(iconScroll);
 		add(stateText);
@@ -362,7 +363,7 @@ class RulesetState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 		
-		if (!FlxG.sound.musicPlaying)
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 			CoolUtil.playPvPMusic(duration);
 			
 		super.create();
@@ -429,7 +430,7 @@ class RulesetState extends FNFState
 		descText.text = item.data.description;
 		descText.screenCenter(X);
 		descText.y = FlxG.height - descText.height - 10;
-		descBG.setGraphicSize(descText.width + 4, descText.height + 4);
+		descBG.setGraphicSize(Std.int(descText.width + 4), Std.int(descText.height + 4));
 		descBG.updateHitbox();
 		descBG.setPosition(descText.x - 2, descText.y - 2);
 		descBG.visible = descText.visible = descText.text.length > 0;

@@ -102,10 +102,11 @@ class FNFSubState extends FlxSubState
 	{
 		if (camSubState != null)
 			return;
+		
 		if (bgColor == null)
 			bgColor = FlxColor.fromRGBFloat(0, 0, 0, 0.6);
 			
-		camSubState = new FlxCamera();
+		camSubState = new FNFCamera();
 		camSubState.bgColor = bgColor;
 		camSubState.visible = false;
 		FlxG.cameras.add(camSubState, false);

@@ -54,14 +54,6 @@ import flixel.system.frontEnds.SoundFrontEnd;
 **/
 class FlxGHelper
 {
-	public static var forceNoAntialiasing(get, set):Bool;
-	
-	static inline function get_forceNoAntialiasing()
-		return FlxG.forceNoAntialiasing;
-		
-	static inline function set_forceNoAntialiasing(value)
-		return FlxG.forceNoAntialiasing = value;
-		
 	public static var autoPause(get, set):Bool;
 	
 	static inline function get_autoPause()
@@ -333,9 +325,6 @@ class FlxGHelper
 	public static inline function resizeGame(width, height)
 		FlxG.resizeGame(width, height);
 		
-	public static inline function setGameSize(width, height)
-		FlxG.setGameSize(width, height);
-		
 	public static inline function resizeWindow(width, height)
 		FlxG.resizeWindow(width, height);
 		
@@ -368,7 +357,4 @@ class FlxGHelper
 		
 	public static inline function removePostProcess(postProcess)
 		return FlxG.removePostProcess(postProcess);
-		
-	public static inline function setFramerate(framerate)
-		FlxG.setFramerate(framerate);
 }

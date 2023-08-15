@@ -76,11 +76,17 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			|| FlxG.mouse.overlaps(state.playfieldTabs))
 			return;
 			
-		var mousePos = FlxG.mouse.getGlobalPosition();
-		var clickArea = new FlxRect(playfield.bg.x - 200, playfield.bg.y, playfield.bg.width + 400, playfield.bg.height);
-		if (!clickArea.containsPoint(mousePos))
+		var mousePos = FlxG.mouse.getScreenPosition();
+		var clickArea = FlxRect.get(playfield.bg.x - 200, playfield.bg.y, playfield.bg.width + 400, playfield.bg.height);
+		var overlap = !clickArea.containsPoint(mousePos);
+		clickArea.put();
+		
+		if (overlap)
+		{
+			mousePos.put();
 			return;
-			
+		}
+		
 		if (FlxG.keys.released.CONTROL)
 		{
 			state.clearSelection();
@@ -98,8 +104,8 @@ class SongEditorSelector extends FlxUI9SliceSprite
 		if (!isSelecting || startingPoint == null)
 			return;
 			
-		resize(Math.abs(FlxG.mouse.globalX - startingPoint.x), Math.abs(FlxG.mouse.globalY - startingPoint.y));
-		setPosition(Math.min(startingPoint.x, FlxG.mouse.globalX), Math.min(startingPoint.y, FlxG.mouse.globalY));
+		resize(Math.abs(FlxG.mouse.screenX - startingPoint.x), Math.abs(FlxG.mouse.screenY - startingPoint.y));
+		setPosition(Math.min(startingPoint.x, FlxG.mouse.screenX), Math.min(startingPoint.y, FlxG.mouse.screenY));
 		
 		state.handleMouseSeek();
 	}
@@ -110,7 +116,7 @@ class SongEditorSelector extends FlxUI9SliceSprite
 			return;
 			
 		var playfield = state.playfield;
-		var mousePos = FlxG.mouse.getGlobalPosition();
+		var mousePos = FlxG.mouse.getScreenPosition();
 		var difference = startingPoint - mousePos;
 		if (isSelecting && !difference.isZero())
 		{

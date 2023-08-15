@@ -16,7 +16,9 @@ class OptionsState extends FNFState
 	var pages:Map<PageName, Page> = new Map();
 	var currentName:PageName = Options;
 	var currentPage(get, never):Page;
-	var camPages:FlxCamera;
+	
+	public var camPages:FlxCamera;
+	
 	var nextState:FlxState;
 	
 	public function new(?nextState:FlxState)
@@ -34,7 +36,7 @@ class OptionsState extends FNFState
 		transIn = transOut = null;
 		destroySubStates = false;
 		
-		camPages = new FlxCamera();
+		camPages = new FNFCamera();
 		camPages.bgColor = 0;
 		FlxG.cameras.add(camPages, false);
 		
@@ -48,12 +50,12 @@ class OptionsState extends FNFState
 		
 		if (Settings.reloadMods)
 			Mods.reloadSkins();
-		
+			
 		setPage(currentName);
-
+		
 		currentPage.controlsEnabled = false;
 		camPages.snapToTarget();
-
+		
 		FlxG.camera.zoom = 3;
 		var duration = Main.getTransitionTime();
 		FlxTween.tween(FlxG.camera, {zoom: 1}, duration, {
@@ -64,10 +66,10 @@ class OptionsState extends FNFState
 			}
 		});
 		camPages.fade(FlxColor.BLACK, duration, true, null, true);
-
-		if (!FlxG.sound.musicPlaying)
-			CoolUtil.playMenuMusic();
 		
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
+			CoolUtil.playMenuMusic();
+			
 		super.create();
 	}
 	

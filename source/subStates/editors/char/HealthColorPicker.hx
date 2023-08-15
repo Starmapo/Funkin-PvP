@@ -16,8 +16,6 @@ class HealthColorPicker extends ColorPickerSubState
 	
 	override function create()
 	{
-		super.create();
-		
 		var getIconColorButton = new FlxUIButton(uiTabs.width - 10, 50, 'Get Icon Color', function()
 		{
 			var daColor = CoolUtil.getDominantColor(state.healthBar.icon);
@@ -28,5 +26,7 @@ class HealthColorPicker extends ColorPickerSubState
 		getIconColorButton.resize(120, getIconColorButton.height);
 		getIconColorButton.x -= getIconColorButton.width;
 		tab.add(getIconColorButton);
+		
+		super.create();
 	}
 }

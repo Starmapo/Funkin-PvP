@@ -89,7 +89,7 @@ class IconInfo extends JsonObject
 	/**
 		The frame rate, or frames per second, of the normal animation for the icon. Only used for spritesheets.
 	**/
-	public var normalFPS:Float;
+	public var normalFPS:Int;
 	
 	/**
 		The name of the losing animation for the icon. Only used for spritesheets.
@@ -99,7 +99,7 @@ class IconInfo extends JsonObject
 	/**
 		The frame rate, or frames per second, of the losing animation for the icon. Only used for spritesheets.
 	**/
-	public var losingFPS:Float;
+	public var losingFPS:Int;
 	
 	/**
 		The visual offset for the losing animation.
@@ -118,7 +118,7 @@ class IconInfo extends JsonObject
 	/**
 		The frame rate, or frames per second, of the winning animation for the icon. Only used for spritesheets.
 	**/
-	public var winningFPS:Float;
+	public var winningFPS:Int;
 	
 	/**
 		The visual offset for the winning animation.
@@ -154,12 +154,12 @@ class IconInfo extends JsonObject
 		antialiasing = readBool(data.antialiasing, true);
 		positionOffset = readFloatArray(data.positionOffset, [0, 0], null, 2, null, null, 2);
 		normalAnim = readString(data.normalAnim);
-		normalFPS = readFloat(data.normalFPS, 0, 0, 1000, 2);
+		normalFPS = readInt(data.normalFPS, 0, 0, 1000);
 		losingAnim = readString(data.losingAnim);
-		losingFPS = readFloat(data.losingFPS, 0, 0, 1000, 2);
+		losingFPS = readInt(data.losingFPS, 0, 0, 1000);
 		losingOffset = readFloatArray(data.losingOffset, [], null, 2, null, null, 2);
 		winningAnim = readString(data.winningAnim);
-		winningFPS = readFloat(data.winningFPS, 0, 0, 1000, 2);
+		winningFPS = readInt(data.winningFPS, 0, 0, 1000);
 		winningOffset = readFloatArray(data.winningOffset, [], null, 2, null, null, 2);
 	}
 }

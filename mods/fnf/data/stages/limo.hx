@@ -18,7 +18,7 @@ function onCreate()
 				false);
 			dancer.animation.play('danceLeft');
 			dancer.animation.finish();
-			dancer.antialiasing = true;
+			dancer.antialiasing = Settings.antialiasing;
 			dancer.scrollFactor.set(0.4, 0.4);
 			grpLimoDancers.add(dancer);
 		}

@@ -197,6 +197,14 @@ class Main extends Sprite
 		];
 	}
 	
+	static function resetSpriteCache(sprite:Sprite):Void
+	{
+		@:privateAccess {
+			sprite.__cacheBitmap = null;
+			sprite.__cacheBitmapData = null;
+		}
+	}
+	
 	public function new()
 	{
 		Log.level = NONE; // no lime logs
@@ -227,6 +235,19 @@ class Main extends Sprite
 	
 	function onGameResized(width:Int, height:Int):Void
 	{
+		if (FlxG.cameras != null)
+		{
+			for (cam in FlxG.cameras.list)
+			{
+				@:privateAccess
+				if (cam != null && cam._filters != null)
+					resetSpriteCache(cam.flashSprite);
+			}
+		}
+		
+		if (FlxG.game != null)
+			resetSpriteCache(FlxG.game);
+			
 		statsDisplay.onResize(width, height);
 	}
 	

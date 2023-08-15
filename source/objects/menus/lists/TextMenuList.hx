@@ -12,7 +12,7 @@ class TextMenuItem extends TypedMenuItem<FlxText>
 	{
 		var label = new FlxText(0, 0, 0, name, size);
 		label.setFormat(Paths.FONT_PHANTOMMUFF, size, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		label.antialiasing = true;
+		label.antialiasing = Settings.antialiasing;
 		
 		super(x, y, label, name, callback);
 		

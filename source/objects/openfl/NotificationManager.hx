@@ -40,6 +40,9 @@ class NotificationDisplay extends FlxTypedGroup<Notification>
 {
 	static final startY:Int = 50;
 	
+	var tweenManager:FlxTweenManager = new FlxTweenManager();
+	var timerManager:FlxTimerManager = new FlxTimerManager();
+	
 	override function update(elapsed:Float)
 	{
 		var targetY:Float = startY;
@@ -53,25 +56,32 @@ class NotificationDisplay extends FlxTypedGroup<Notification>
 		}
 	}
 	
+	override function destroy()
+	{
+		super.destroy();
+		timerManager = FlxDestroyUtil.destroy(timerManager);
+		tweenManager = FlxDestroyUtil.destroy(tweenManager);
+	}
+	
 	public function showNotification(info:String, level:NotificationLevel = INFO)
 	{
 		var notification = new Notification(info, level);
 		notification.screenCenter(X);
-		FlxTween.tween(notification, {alpha: 1}, 0.5, {
+		tweenManager.tween(notification, {alpha: 1}, 0.5, {
 			onComplete: function(_)
 			{
-				var tmr = FlxTimer.startTimer(5, function(_)
+				new FlxTimer(timerManager).start(5, function(_)
 				{
-					FlxTween.tween(notification, {alpha: 0}, 0.5, {
+					tweenManager.tween(notification, {alpha: 0}, 0.5, {
 						onComplete: function(_)
 						{
 							remove(notification, true);
 							notification.destroy();
 						}
-					}).persist = true;
-				}).persist = true;
+					});
+				});
 			}
-		}).persist = true;
+		});
 		return insert(0, notification);
 	}
 }

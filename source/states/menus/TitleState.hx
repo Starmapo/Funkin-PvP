@@ -73,7 +73,7 @@ class TitleState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 		
-		if (!FlxG.sound.musicPlaying)
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 			CoolUtil.playMenuMusic();
 			
 		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized, 0, onBeatHit);
@@ -88,7 +88,7 @@ class TitleState extends FNFState
 		icon = new FlxSprite(FlxG.width, 0, Paths.getImage('menus/title/iconTitle'));
 		icon.screenCenter(Y);
 		icon.shader = colorSwap.shader;
-		icon.antialiasing = true;
+		icon.antialiasing = Settings.antialiasing;
 		add(icon);
 		
 		logo = new DancingSprite(-100, logoY, Paths.getSpritesheet('menus/title/logoBumpin'));
@@ -101,7 +101,7 @@ class TitleState extends FNFState
 		logo.dance();
 		logo.y -= logo.height;
 		logo.shader = colorSwap.shader;
-		logo.antialiasing = true;
+		logo.antialiasing = Settings.antialiasing;
 		timing.addDancingSprite(logo);
 		add(logo);
 		
@@ -129,7 +129,7 @@ class TitleState extends FNFState
 			name: 'press',
 			atlasName: 'ENTER PRESSED'
 		});
-		pressEnter.antialiasing = true;
+		pressEnter.antialiasing = Settings.antialiasing;
 		add(pressEnter);
 		
 		textGroup = new FlxTypedGroup();
@@ -137,7 +137,7 @@ class TitleState extends FNFState
 		
 		if (!initialized)
 		{
-			startTimer = FlxTimer.startTimer(1, function(tmr:FlxTimer)
+			startTimer = new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
 				startIntro();
 			});
@@ -317,7 +317,11 @@ class TitleState extends FNFState
 	
 	function clearText()
 	{
-		textGroup.destroyMembers();
+		textGroup.forEach(function(text)
+		{
+			text.destroy();
+		});
+		textGroup.clear();
 	}
 	
 	function resetText(text:String, yOffset:Float = 0, bottom:Bool = false)

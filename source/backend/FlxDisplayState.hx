@@ -1,7 +1,6 @@
 package backend;
 
 import flixel.FlxBasic;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.util.FlxDestroyUtil;
@@ -16,14 +15,14 @@ class FlxDisplayState extends DisplayObjectContainer
 	public var members(get, never):Array<FlxBasic>;
 	public var length(get, never):Int;
 	
-	var camera:FlxCamera;
+	var camera:FNFCamera;
 	var group:FlxGroup;
 	
 	public function new()
 	{
 		super();
 		
-		camera = new FlxCamera();
+		camera = new FNFCamera();
 		camera.bgColor = 0;
 		updateLayer();
 		
@@ -53,12 +52,6 @@ class FlxDisplayState extends DisplayObjectContainer
 		
 	public function clear()
 		group.clear();
-		
-	public function destroyMembers()
-		group.destroyMembers();
-		
-	public function killMembers()
-		group.killMembers();
 		
 	public function destroy()
 	{

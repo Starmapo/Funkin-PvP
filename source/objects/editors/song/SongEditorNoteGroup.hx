@@ -423,7 +423,7 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 			fps: 0
 		});
 		tail.flipY = true;
-		tail.antialiasing = true;
+		tail.antialiasing = Settings.antialiasing;
 		add(tail);
 		
 		head = new AnimatedSprite(0, 0, noteGraphic);
@@ -447,7 +447,7 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 			atlasName: 'red instance 1',
 			fps: 0
 		});
-		head.antialiasing = true;
+		head.antialiasing = Settings.antialiasing;
 		add(head);
 		
 		selectionSprite = new FlxSprite().makeGraphic(1, 1);
@@ -519,15 +519,13 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		if (noteInfo.isLongNote)
 		{
 			remove(selectionSprite, true); // get the group height excluding the selection sprite
-			selectionSprite.setGraphicSize(head.width, height + 20);
-			selectionSprite.updateHitbox();
+			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(height + 20));
 			add(selectionSprite);
 		}
 		else
-		{
-			selectionSprite.setGraphicSize(head.width, head.height + 20);
-			selectionSprite.updateHitbox();
-		}
+			selectionSprite.setGraphicSize(Std.int(head.width), Std.int(head.height + 20));
+			
+		selectionSprite.updateHitbox();
 		
 		selectionSprite.setPosition(head.x, head.y + head.height - selectionSprite.height + 10);
 	}
@@ -568,12 +566,12 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		return false;
 	}
 	
-	function getLongNoteHeight():Float
+	function getLongNoteHeight():Int
 	{
 		if (!noteInfo.isLongNote)
 			return 0;
 			
-		return Math.abs(state.hitPositionY - noteInfo.endTime * state.trackSpeed - head.height / 2 - y);
+		return Std.int(Math.abs(state.hitPositionY - noteInfo.endTime * state.trackSpeed - head.height / 2 - y));
 	}
 	
 	function onDeselectedNote(note:NoteInfo)

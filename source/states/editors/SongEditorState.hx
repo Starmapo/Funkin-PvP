@@ -357,11 +357,11 @@ class SongEditorState extends FNFState
 	{
 		var seekTime:Float = 0;
 		var startScrollY = (FlxG.height - 30);
-		if (FlxG.mouse.globalY >= startScrollY && !inst.playing)
+		if (FlxG.mouse.screenY >= startScrollY && !inst.playing)
 		{
-			if (FlxG.mouse.globalY - startScrollY <= 10)
+			if (FlxG.mouse.screenY - startScrollY <= 10)
 				seekTime = inst.time - 2;
-			else if (FlxG.mouse.globalY - startScrollY <= 20)
+			else if (FlxG.mouse.screenY - startScrollY <= 20)
 				seekTime = inst.time - 6;
 			else
 				seekTime = inst.time - 50;
@@ -372,12 +372,12 @@ class SongEditorState extends FNFState
 			setSongTime(seekTime);
 		}
 		
-		if (FlxG.mouse.globalY > 30 || inst.playing)
+		if (FlxG.mouse.screenY > 30 || inst.playing)
 			return;
 			
-		if (30 - FlxG.mouse.globalY <= 10)
+		if (30 - FlxG.mouse.screenY <= 10)
 			seekTime = inst.time + 2;
-		else if (30 - FlxG.mouse.globalY <= 20)
+		else if (30 - FlxG.mouse.screenY <= 20)
 			seekTime = inst.time + 6;
 		else
 			seekTime = inst.time + 50;

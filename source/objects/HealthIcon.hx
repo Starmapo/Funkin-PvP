@@ -1,6 +1,7 @@
 package objects;
 
 import backend.structures.char.IconInfo;
+import flixel.math.FlxPoint;
 import haxe.io.Path;
 
 class HealthIcon extends AnimatedSprite
@@ -40,7 +41,7 @@ class HealthIcon extends AnimatedSprite
 	public function new(x:Float = 0, y:Float = 0, icon:String = 'face')
 	{
 		super(x, y);
-		frameOffsetScale = 1;
+		setOffsetScale(1, 1);
 		this.icon = icon;
 	}
 	
@@ -103,17 +104,18 @@ class HealthIcon extends AnimatedSprite
 					offset: info.winningOffset
 				});
 		}
-		antialiasing = info.antialiasing;
+		antialiasing = info.antialiasing && Settings.antialiasing;
 	}
 	
-	override function updateOffset()
+	override function calculateOffset(offset:FlxPoint)
 	{
-		updateHitbox();
-		final animOffset = offsets.get(animation.name);
-		if (animOffset != null)
-			frameOffset.set(animOffset[0] * (flipX ? -1 : 1), animOffset[1]);
-		else
-			frameOffset.set();
+		var daOffset = super.calculateOffset(offset);
+		if (!flipX)
+			return daOffset;
+			
+		var newOffset = FlxPoint.weak().copyFrom(daOffset);
+		newOffset.x *= -1;
+		return newOffset;
 	}
 	
 	override function destroy()

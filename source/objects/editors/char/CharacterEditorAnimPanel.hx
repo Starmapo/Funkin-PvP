@@ -1,5 +1,6 @@
 package objects.editors.char;
 
+import backend.FNFAtlasFrames;
 import backend.editors.char.CharacterEditorActionManager;
 import backend.structures.char.CharacterInfo;
 import flixel.FlxG;
@@ -62,7 +63,7 @@ class CharacterEditorAnimPanel extends EditorPanel
 			else
 				anim = new AnimInfo({
 					name: name,
-					atlasName: FlxFramesCollection.getAtlasName(state.char.frames.frames[0].name, state.char.frames.atlasType)
+					atlasName: cast(state.char.frames, FNFAtlasFrames).getAtlasName(state.char.frames.frames[0].name)
 				});
 			state.actionManager.perform(new ActionAddAnim(state, anim));
 			state.changeAnim(name);

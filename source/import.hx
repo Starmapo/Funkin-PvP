@@ -1,5 +1,6 @@
 #if !macro
 import backend.DiscordClient;
+import backend.FNFCamera;
 import backend.FNFState;
 import backend.FNFSubState;
 import backend.Mods;

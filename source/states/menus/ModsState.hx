@@ -26,6 +26,10 @@ class ModsState extends FNFState
 	
 	override function create()
 	{
+		DiscordClient.changePresence(null, "Mods Menu");
+
+		FlxG.cameras.reset(new FNFCamera());
+
 		var bg = CoolUtil.createMenuBG('menuBG');
 		add(bg);
 		
@@ -147,7 +151,7 @@ class ModItem extends TypedMenuItem<FlxSpriteGroup>
 		}
 		var bg = new FlxSprite(0, 0, bgGraphic);
 		
-		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.id, 'icon']), null, false);
+		var iconImage = Paths.getImage(Path.join([Mods.modsPath, mod.id, 'icon']));
 		if (iconImage == null)
 			iconImage = Paths.getImage('menus/mods/noIcon');
 		else

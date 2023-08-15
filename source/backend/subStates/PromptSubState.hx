@@ -1,6 +1,5 @@
 package backend.subStates;
 
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUI9SliceSprite;

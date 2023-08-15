@@ -30,7 +30,7 @@ class BGSprite extends AnimatedSprite
 		}
 		
 		scrollFactor.set(parX, parY);
-		antialiasing = true;
+		antialiasing = Settings.antialiasing;
 	}
 	
 	public function dance():Void

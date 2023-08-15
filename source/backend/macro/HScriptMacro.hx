@@ -8,6 +8,7 @@ import haxe.macro.Expr;
 
 using StringTools;
 
+// https://github.com/FNF-CNE-Devs/CodenameEngine
 class HScriptMacro
 {
 	public static function init()
@@ -56,14 +57,13 @@ class HScriptMacro
 				switch (f.kind)
 				{
 					case FFun(fun):
-						if (f.access.contains(AStatic))
-						{
-							if (fun.expr != null)
-								shadowClass.fields.push(f);
-						}
-					case FProp(get, set, t, e):
+						if (f.access.contains(AStatic) && fun.expr != null)
+							shadowClass.fields.push(f);
+							
+					case FProp(get, set, _, _):
 						if (get == "default" && (set == "never" || set == "null"))
 							shadowClass.fields.push(f);
+							
 					case FVar(t, e):
 						if (f.access.contains(AStatic) || cl.meta.has(":enum") || f.name.toUpperCase() == f.name)
 						{
@@ -92,6 +92,7 @@ class HScriptMacro
 							
 							shadowClass.fields.push(field);
 						}
+						
 					default:
 				}
 				

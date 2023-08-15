@@ -1,7 +1,5 @@
 add "other" characters
-reorganize packages
-use SScript
-playstate script object
+custom splash screen
 new song structure
 new controls system
 remove stage xmls

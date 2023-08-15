@@ -1,0 +1,12 @@
+remove menu music
+remove zip support
+use sscript
+sscript extend interp
+rework script returns
+playstate script object
+less default classes
+use CustomShader
+better controls, remove playersettings
+music timing modify?
+better ruleset modification
+ruleset full automization

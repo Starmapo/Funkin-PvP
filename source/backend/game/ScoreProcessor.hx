@@ -209,7 +209,7 @@ class ScoreProcessor implements IFlxDestroyable
 				forceFail = true;
 		}
 		
-		multiplierCount = FlxMath.boundInt(multiplierCount, 0, maxMultiplierCount);
+		multiplierCount = Std.int(FlxMath.bound(multiplierCount, 0, maxMultiplierCount));
 		
 		multiplierIndex = Math.floor(multiplierCount / multiplierCountToIncreaseIndex);
 		scoreCount += judgementScoreWeighting[judgement] + multiplierIndex * multiplierCountToIncreaseIndex;

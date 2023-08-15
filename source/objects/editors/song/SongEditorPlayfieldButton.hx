@@ -149,10 +149,10 @@ class SongEditorPlayfieldButton extends FlxSprite
 	
 	function handleObjectPlacement()
 	{
-		var time = state.getTimeFromY(FlxG.mouse.globalY) / state.trackSpeed;
+		var time = state.getTimeFromY(FlxG.mouse.screenY) / state.trackSpeed;
 		time = getNearestTickFromTime(time, state.beatSnap.value);
 		
-		var lane = playfield.getLaneFromX(FlxG.mouse.globalX);
+		var lane = playfield.getLaneFromX(FlxG.mouse.screenX);
 		if (existsObjectAtTimeAndLane(time, lane))
 			return;
 			
@@ -370,7 +370,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if (longNoteInDrag == null || !isHeld)
 			return;
 			
-		var time = state.getTimeFromY(FlxG.mouse.globalY) / state.trackSpeed;
+		var time = state.getTimeFromY(FlxG.mouse.screenY) / state.trackSpeed;
 		time = getNearestTickFromTime(time, state.beatSnap.value);
 		
 		if (time <= longNoteInDrag.info.startTime)
@@ -417,14 +417,14 @@ class SongEditorPlayfieldButton extends FlxSprite
 				return;
 				
 			objectInDrag = hoveredObject;
-			objectMoveInitialMousePosition = FlxG.mouse.getGlobalPosition();
+			objectMoveInitialMousePosition = FlxG.mouse.getScreenPosition();
 			
 			if (Std.isOfType(objectInDrag, SongEditorNote))
 			{
 				var noteInDrag:SongEditorNote = cast objectInDrag;
 				if (noteInDrag.noteInfo.isLongNote && !FlxG.mouse.overlaps(noteInDrag.head))
 				{
-					var relativeMouseY = state.hitPositionY - state.getTimeFromY(FlxG.mouse.globalY);
+					var relativeMouseY = state.hitPositionY - state.getTimeFromY(FlxG.mouse.screenY);
 					objectMoveGrabOffset = relativeMouseY - objectInDrag.y;
 				}
 				else
@@ -439,7 +439,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 			columnOffset = 0;
 		}
 		
-		var mousePos = FlxG.mouse.getGlobalPosition();
+		var mousePos = FlxG.mouse.getScreenPosition();
 		var delta = (objectMoveInitialMousePosition - mousePos);
 		var isZero = delta.isZero();
 		mousePos.put();
@@ -450,7 +450,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if (longNoteInDrag != null)
 			return;
 			
-		var time = FlxMath.bound(getNearestTickFromTime(state.getTimeFromY(FlxG.mouse.globalY - objectMoveGrabOffset) / state.trackSpeed,
+		var time = FlxMath.bound(getNearestTickFromTime(state.getTimeFromY(FlxG.mouse.screenY - objectMoveGrabOffset) / state.trackSpeed,
 			state.beatSnap.value), 0,
 			state.inst.length);
 		var offset = time - timeDragStart;
@@ -462,8 +462,8 @@ class SongEditorPlayfieldButton extends FlxSprite
 				offset = previousDragOffset;
 		}
 		
-		var laneOffset = FlxMath.boundInt(playfield.getLaneFromX(FlxG.mouse.globalX), 0, 7)
-			- FlxMath.boundInt(playfield.getLaneFromX(objectMoveInitialMousePosition.x), 0, 7);
+		var laneOffset = Std.int(FlxMath.bound(playfield.getLaneFromX(FlxG.mouse.screenX), 0, 7))
+			- Std.int(FlxMath.bound(playfield.getLaneFromX(objectMoveInitialMousePosition.x), 0, 7));
 		var dragXAllowed = true;
 		
 		if (state.selectedObjects.value.length > 1 && previousLaneDragOffset != laneOffset)
@@ -514,7 +514,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 				
 			var obj:NoteInfo = cast obj;
 			var column = obj.lane;
-			obj.lane = FlxMath.boundInt(obj.lane + (laneOffset - previousLaneDragOffset), 0, 7);
+			obj.lane = Std.int(FlxMath.bound(obj.lane + (laneOffset - previousLaneDragOffset), 0, 7));
 			
 			if (i == 0)
 				columnOffset += obj.lane - column;

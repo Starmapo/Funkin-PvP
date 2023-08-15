@@ -345,7 +345,7 @@ class AnimInfo extends JsonObject
 	/**
 		The frame rate, or frames per second, of this animation. Defaults to `24`.
 	**/
-	public var fps:Float;
+	public var fps:Int;
 	
 	/**
 		Whether or not this animation should loop. Defaults to `false`.
@@ -386,7 +386,7 @@ class AnimInfo extends JsonObject
 		name = readString(data.name);
 		atlasName = readString(data.atlasName);
 		indices = readIntArray(data.indices, [], null, null, 0);
-		fps = readFloat(data.fps, 24, 0, 1000, 2);
+		fps = readInt(data.fps, 24, 0, 1000);
 		loop = readBool(data.loop);
 		flipX = readBool(data.flipX);
 		flipY = readBool(data.flipY);

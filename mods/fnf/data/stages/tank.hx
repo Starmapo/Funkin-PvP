@@ -134,7 +134,7 @@ function createTankmanBG(x:Float, y:Float, strumTime:Float, isGoingRight:Bool)
 {
 	var spr = new FlxSprite(x, y);
 	spr.frames = Paths.getSpritesheet('stages/tank/tankmanKilled1');
-	spr.antialiasing = true;
+	spr.antialiasing = Settings.antialiasing;
 	spr.animation.addByPrefix('run', 'tankman running', 24, true);
 	spr.animation.addByPrefix('shot', 'John Shot ' + FlxG.random.int(1, 2), 24, false);
 	spr.animation.play('run');

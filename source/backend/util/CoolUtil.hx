@@ -5,13 +5,14 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxStringUtil;
 import lime.app.Application;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
@@ -35,6 +36,41 @@ class CoolUtil
 		var traceText = (title.length > 0 ? title + ': ' : '') + message;
 		if (traceText.length > 0)
 			trace(traceText);
+	}
+	
+	public static function angleFromKeys(keys:Array<FlxKey>):Float
+	{
+		if (keys == null)
+			keys = [UP, LEFT, DOWN, RIGHT];
+		if (keys.length < 4)
+			return 0;
+			
+		final up = FlxG.keys.checkStatus(keys[0], PRESSED);
+		final left = FlxG.keys.checkStatus(keys[1], PRESSED);
+		final down = FlxG.keys.checkStatus(keys[2], PRESSED);
+		final right = FlxG.keys.checkStatus(keys[3], PRESSED);
+		
+		var angle:Float = 0;
+		if (up)
+		{
+			angle = 270;
+			if (left)
+				angle -= 45;
+			else if (right)
+				angle += 45;
+		}
+		else if (down)
+		{
+			angle = 90;
+			if (left)
+				angle += 45;
+			else if (right)
+				angle -= 45;
+		}
+		else if (left)
+			angle = 180;
+			
+		return angle;
 	}
 	
 	/**
@@ -64,7 +100,7 @@ class CoolUtil
 			bg.updateHitbox();
 		}
 		bg.screenCenter();
-		bg.antialiasing = true;
+		bg.antialiasing = Settings.antialiasing;
 		return bg;
 	}
 	
@@ -182,26 +218,25 @@ class CoolUtil
 	/**
 		Returns a group graphic for character/song select screens.
 	**/
+	@:access(flixel.util.FlxSave)
 	public static function getGroupGraphic(name:String, groupDirectory:String):FlxGraphic
 	{
-		final groupName = name;
-		name = FlxStringUtil.validate(name);
 		final graphicKey = name + '_edit';
 		if (FlxG.bitmap.checkCache(graphicKey))
 			return FlxG.bitmap.get(graphicKey);
 			
-		var graphic = Paths.getImage('bg/$name', groupDirectory, true, false, graphicKey);
+		var graphic = Paths.getImage('bg/$name', groupDirectory, graphicKey);
 		if (graphic == null)
 		{
 			final unknownKey = '::groupUnknown::_edit';
 			if (FlxG.bitmap.checkCache(unknownKey))
 				return FlxG.bitmap.get(unknownKey);
-			graphic = Paths.getImage('bg/unknown', '', true, false, unknownKey);
+			graphic = Paths.getImage('bg/unknown', '', unknownKey);
 		}
 		
 		final thickness = 4;
 		
-		final text = new FlxText(0, graphic.height - thickness, graphic.width, groupName);
+		final text = new FlxText(0, graphic.height - thickness, graphic.width, name);
 		text.setFormat(Paths.FONT_VCR, 12, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		text.updateHitbox();
 		text.y -= text.height;
@@ -527,6 +562,20 @@ class CoolUtil
 		}
 	}
 	
+	public static function setFramerate(framerate:Int)
+	{
+		if (framerate > FlxG.drawFramerate)
+		{
+			FlxG.updateFramerate = framerate;
+			FlxG.drawFramerate = framerate;
+		}
+		else
+		{
+			FlxG.drawFramerate = framerate;
+			FlxG.updateFramerate = framerate;
+		}
+	}
+	
 	/**
 		Sets a variable of an instance. Supports array access.
 	**/
@@ -549,6 +598,24 @@ class CoolUtil
 		
 		Reflect.setProperty(instance, variable, value);
 		return value;
+	}
+	
+	public static function tweenColor(sprite:FlxSprite, duration:Float = 1, fromColor:FlxColor, toColor:FlxColor, ?options:TweenOptions)
+	{
+		return FlxTween.num(0, 1, duration, options, function(n)
+		{
+			sprite.color = FlxColor.interpolate(fromColor, toColor, n);
+		});
+	}
+	
+	public static function wrap(value:Float, min:Float, max:Float):Float
+	{
+		var range = max - min + 1;
+		
+		if (value < min)
+			value += range * Std.int((min - value) / range + 1);
+			
+		return min + (value - min) % range;
 	}
 	
 	@:generic
