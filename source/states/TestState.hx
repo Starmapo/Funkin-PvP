@@ -1,23 +1,25 @@
 package states;
 
 import flixel.FlxG;
-import flixel.util.FlxColor;
-import objects.editors.EditorInputText;
+import flixel.addons.ui.FlxUIButton;
+import openfl.utils.Assets;
 
 class TestState extends FNFState
 {
 	override function create()
 	{
-		transIn = transOut = null;
+		FlxG.camera.bgColor = 0;
 		
-		FlxG.camera.bgColor = FlxColor.GRAY;
-		
-		var inputText = new EditorInputText();
-		inputText.textField.textField.autoSize = NONE;
-		inputText.textField.textField.multiline = true;
-		inputText.textField.textField.wordWrap = true;
-		inputText.resize(200, 200);
-		add(inputText);
+		var button = new FlxUIButton(0, 0, "Play", function()
+		{
+			var audio = Assets.loadSound("mods/indiecross/music/Menu Theme/audio.ogg");
+			audio.onComplete(function(sound)
+			{
+				FlxG.log.add("Sound loaded");
+			});
+		});
+		button.screenCenter();
+		add(button);
 		
 		super.create();
 	}

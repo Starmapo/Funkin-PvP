@@ -1,5 +1,6 @@
 package states.editors;
 
+import backend.Music;
 import flixel.FlxG;
 import flixel.FlxObject;
 import objects.menus.lists.TextMenuList;
@@ -23,7 +24,7 @@ class ToolboxState extends FNFState
 	override function create()
 	{
 		DiscordClient.changePresence(null, "Toolbox Menu");
-
+		
 		FlxG.cameras.reset(new FNFCamera());
 		
 		var bg = CoolUtil.createMenuBG('menuBGDesat');
@@ -36,19 +37,19 @@ class ToolboxState extends FNFState
 		
 		createItem('Character Editor', function()
 		{
-			FlxG.sound.music.stop();
+			Music.stopMusic();
 			Paths.clearCache = true;
 			FlxG.switchState(new CharacterEditorState());
 		});
 		createItem('Song Editor', function()
 		{
-			FlxG.sound.music.stop();
+			Music.stopMusic();
 			Paths.clearCache = true;
 			FlxG.switchState(new SongEditorState(null, 0, false));
 		});
 		createItem('Image Optimizer', function()
 		{
-			FlxG.sound.music.stop();
+			Music.stopMusic();
 			FlxG.switchState(new ImageOptimizerState());
 		});
 		
@@ -59,8 +60,8 @@ class ToolboxState extends FNFState
 		items.selectItem(lastSelected);
 		FlxG.camera.snapToTarget();
 		
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
-			CoolUtil.playMenuMusic();
+		if (!Music.playing)
+			Music.playMenuMusic();
 			
 		super.create();
 	}

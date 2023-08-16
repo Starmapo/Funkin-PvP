@@ -1,5 +1,6 @@
-remove menu music
+remove pvp music
 remove zip support
+remove atlas names
 use sscript
 sscript extend interp
 rework script returns

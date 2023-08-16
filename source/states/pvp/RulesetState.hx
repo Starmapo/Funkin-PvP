@@ -1,5 +1,6 @@
 package states.pvp;
 
+import backend.Music;
 import backend.game.Judgement;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -363,8 +364,8 @@ class RulesetState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 		
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
-			CoolUtil.playPvPMusic(duration);
+		if (!Music.playing)
+			Music.playPvPMusic(duration);
 			
 		super.create();
 	}
@@ -468,7 +469,7 @@ class RulesetState extends FNFState
 		transitioning = true;
 		items.controlsEnabled = false;
 		var duration = Main.getTransitionTime();
-		if (fadeMusic)
+		if (fadeMusic && FlxG.sound.music != null)
 			FlxG.sound.music.fadeOut(duration);
 		FlxTween.tween(camScroll, {y: -camScroll.height}, duration / 2, {ease: FlxEase.expoIn});
 		FlxTween.tween(descText, {y: FlxG.height}, duration / 2, {ease: FlxEase.expoIn});
@@ -477,7 +478,7 @@ class RulesetState extends FNFState
 			onComplete: function(twn)
 			{
 				if (fadeMusic)
-					FlxG.sound.music.stop();
+					Music.stopMusic();
 					
 				onComplete(twn);
 			}

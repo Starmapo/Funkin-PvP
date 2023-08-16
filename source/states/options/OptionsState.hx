@@ -1,5 +1,6 @@
 package states.options;
 
+import backend.Music;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -67,8 +68,8 @@ class OptionsState extends FNFState
 		});
 		camPages.fade(FlxColor.BLACK, duration, true, null, true);
 		
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
-			CoolUtil.playMenuMusic();
+		if (!Music.playing)
+			Music.playMenuMusic();
 			
 		super.create();
 	}

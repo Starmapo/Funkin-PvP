@@ -1,5 +1,6 @@
 package states.menus;
 
+import backend.Music;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -39,7 +40,7 @@ class MainMenuState extends FNFState
 		DiscordClient.changePresence(null, "Main Menu");
 		
 		transIn = transOut = null;
-
+		
 		FlxG.cameras.reset(new FNFCamera());
 		
 		bg = CoolUtil.createMenuBG('menuBG', 1.2);
@@ -111,12 +112,9 @@ class MainMenuState extends FNFState
 		
 		CoolUtil.playConfirmSound(0);
 		
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
-		{
-			CoolUtil.playMenuMusic(0);
-			FlxG.sound.music.fadeIn(duration);
-		}
-		
+		if (!Music.playing)
+			Music.playMenuMusic(duration);
+			
 		super.create();
 	}
 	
@@ -185,7 +183,7 @@ class MainMenuState extends FNFState
 			exit(selectedItem, function()
 			{
 				if (selectedItem.fadeMusic)
-					FlxG.sound.music.stop();
+					Music.stopMusic();
 					
 				selectedItem.callback();
 			});

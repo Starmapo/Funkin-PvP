@@ -1,5 +1,6 @@
 package states.pvp;
 
+import backend.Music;
 import backend.util.StringUtil;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -110,8 +111,8 @@ class CharacterSelectState extends FNFState
 		});
 		camOver.fade(FlxColor.BLACK, duration, true, null, true);
 		
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
-			CoolUtil.playPvPMusic(duration);
+		if (!Music.playing)
+			Music.playPvPMusic(duration);
 			
 		super.create();
 	}

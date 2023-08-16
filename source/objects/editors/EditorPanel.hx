@@ -16,7 +16,7 @@ class EditorPanel extends FlxUITabMenu
 	
 	public function new(?tabs:Array<{name:String, label:String}>, maxRows:Int = 0)
 	{
-		super(null, null, tabs);
+		super(null, null, tabs, null, true);
 		this.maxRows = maxRows;
 		for (tab in _tabs)
 		{

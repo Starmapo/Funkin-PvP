@@ -1,5 +1,6 @@
 package states;
 
+import backend.Music;
 import backend.MusicTiming;
 import backend.game.GameplayGlobals;
 import backend.game.GameplayRuleset;
@@ -132,11 +133,7 @@ class PlayState extends FNFState
 	
 	override public function create()
 	{
-		if (FlxG.sound.music != null)
-		{
-			FlxG.sound.music.stop();
-			FlxG.sound.music = null;
-		}
+		Music.stopMusic();
 		
 		// no thinking outside the box!
 		if (!SongSelectState.canSelectChars)
@@ -249,7 +246,7 @@ class PlayState extends FNFState
 		if (isPaused)
 		{
 			FlxG.sound.pause();
-
+			
 			FlxTween.globalManager.forEach(function(twn)
 			{
 				if (!twn.finished)
@@ -260,7 +257,7 @@ class PlayState extends FNFState
 				if (!tmr.finished)
 					tmr.active = false;
 			});
-
+			
 			FlxG.camera.active = false;
 			
 			DiscordClient.changePresence(pausedDetailsText, 'In a match');
@@ -277,7 +274,7 @@ class PlayState extends FNFState
 		{
 			isPaused = false;
 			persistentUpdate = true;
-
+			
 			FlxTween.globalManager.forEach(function(twn)
 			{
 				if (!twn.finished)
@@ -288,16 +285,16 @@ class PlayState extends FNFState
 				if (!tmr.finished)
 					tmr.active = true;
 			});
-
+			
 			FlxG.camera.active = true;
 			
 			if (hasStarted)
 				DiscordClient.changePresence(detailsText, 'In a match', null, true, getTimeRemaining());
 			else
 				DiscordClient.changePresence(detailsText, 'In a match');
-
-			FlxG.sound.resume();
 				
+			FlxG.sound.resume();
+			
 			executeScripts("onResume");
 		}
 	}

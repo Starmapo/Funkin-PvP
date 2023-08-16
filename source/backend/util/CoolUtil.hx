@@ -16,7 +16,10 @@ import flixel.util.FlxSpriteUtil;
 import lime.app.Application;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
+import openfl.media.Sound;
 import openfl.system.System;
+import sys.thread.Mutex;
+import sys.thread.Thread;
 import systools.win.Tools;
 
 using StringTools;
@@ -462,39 +465,6 @@ class CoolUtil
 		var sound = FlxG.sound.play(Paths.getSound('menus/confirmMenu'), volume);
 		sound.persist = true;
 		return sound;
-	}
-	
-	/**
-		Plays the menu music.
-
-		@param	volume	The volume that the music should start at. Defaults to `1`, or full volume.
-	**/
-	public static function playMenuMusic(volume:Float = 1):Void
-	{
-		FlxG.sound.playMusic(Paths.getMusic("Gettin' Freaky"), volume);
-	}
-	
-	/**
-		Plays the PvP menu music.
-
-		@param	fadeInDuration	The amount in seconds that it should take for the music to fade in.
-								If it's `0` or below, it will start at max volume instead of fading in.
-	**/
-	public static function playPvPMusic(fadeInDuration:Float = 0):Void
-	{
-		if (Mods.pvpMusic.length < 1)
-			return;
-			
-		if (FlxG.sound.music != null)
-		{
-			FlxG.sound.music.stop();
-			FlxG.sound.music = null;
-		}
-		
-		var music = Mods.pvpMusic[FlxG.random.int(0, Mods.pvpMusic.length - 1)];
-		FlxG.sound.playMusic(Paths.getMusic(music.name, music.mod), fadeInDuration > 0 ? 0 : 1);
-		if (fadeInDuration > 0)
-			FlxG.sound.music.fadeIn(fadeInDuration);
 	}
 	
 	/**

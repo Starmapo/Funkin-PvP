@@ -1,5 +1,6 @@
 package states.menus;
 
+import backend.Music;
 import backend.MusicTiming;
 import backend.structures.song.TimingPoint;
 import backend.util.UpdateUtil;
@@ -73,8 +74,8 @@ class TitleState extends FNFState
 		camHUD.bgColor = 0;
 		FlxG.cameras.add(camHUD, false);
 		
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
-			CoolUtil.playMenuMusic();
+		if (!Music.playing)
+			Music.playMenuMusic();
 			
 		timing = new MusicTiming(FlxG.sound.music, TimingPoint.getMusicTimingPoints("Gettin' Freaky"), !initialized, 0, onBeatHit);
 		
