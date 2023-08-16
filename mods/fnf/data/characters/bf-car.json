@@ -9,7 +9,7 @@
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
-			"atlasName": "BF idle dance",
+			"prefix": "BF idle dance",
 			"name": "idle",
 			"offset": [
 				0,
@@ -24,7 +24,7 @@
 				12,
 				13
 			],
-			"atlasName": "BF idle dance",
+			"prefix": "BF idle dance",
 			"name": "idle-loop",
 			"offset": [
 				0,
@@ -33,7 +33,7 @@
 		},
 		{
 			"nextAnim": "singDOWN-loop",
-			"atlasName": "BF NOTE DOWN",
+			"prefix": "BF NOTE DOWN0",
 			"name": "singDOWN",
 			"offset": [
 				-21,
@@ -48,7 +48,7 @@
 				28,
 				29
 			],
-			"atlasName": "BF NOTE DOWN",
+			"prefix": "BF NOTE DOWN0",
 			"name": "singDOWN-loop",
 			"offset": [
 				-21,
@@ -56,7 +56,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE DOWN MISS",
+			"prefix": "BF NOTE DOWN MISS",
 			"name": "singDOWNmiss",
 			"offset": [
 				-21,
@@ -65,7 +65,7 @@
 		},
 		{
 			"nextAnim": "singLEFT-loop",
-			"atlasName": "BF NOTE RIGHT",
+			"prefix": "BF NOTE RIGHT0",
 			"name": "singLEFT",
 			"offset": [
 				45,
@@ -80,7 +80,7 @@
 				60,
 				61
 			],
-			"atlasName": "BF NOTE RIGHT",
+			"prefix": "BF NOTE RIGHT0",
 			"name": "singLEFT-loop",
 			"offset": [
 				45,
@@ -88,7 +88,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE RIGHT MISS",
+			"prefix": "BF NOTE RIGHT MISS",
 			"name": "singLEFTmiss",
 			"offset": [
 				39,
@@ -97,7 +97,7 @@
 		},
 		{
 			"nextAnim": "singRIGHT-loop",
-			"atlasName": "BF NOTE LEFT",
+			"prefix": "BF NOTE LEFT0",
 			"name": "singRIGHT",
 			"offset": [
 				-31,
@@ -112,7 +112,7 @@
 				14,
 				15
 			],
-			"atlasName": "BF NOTE LEFT",
+			"prefix": "BF NOTE LEFT0",
 			"name": "singRIGHT-loop",
 			"offset": [
 				-31,
@@ -120,7 +120,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE LEFT MISS",
+			"prefix": "BF NOTE LEFT MISS",
 			"name": "singRIGHTmiss",
 			"offset": [
 				-32,
@@ -129,7 +129,7 @@
 		},
 		{
 			"nextAnim": "singUP-loop",
-			"atlasName": "BF NOTE UP",
+			"prefix": "BF NOTE UP0",
 			"name": "singUP",
 			"offset": [
 				6,
@@ -144,7 +144,7 @@
 				13,
 				14
 			],
-			"atlasName": "BF NOTE UP",
+			"prefix": "BF NOTE UP0",
 			"name": "singUP-loop",
 			"offset": [
 				6,
@@ -152,7 +152,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE UP MISS",
+			"prefix": "BF NOTE UP MISS",
 			"name": "singUPmiss",
 			"offset": [
 				2,

@@ -22,7 +22,7 @@
 				26,
 				27
 			],
-			"atlasName": "GF Dancing Beat Hair blowing CAR",
+			"prefix": "GF Dancing Beat Hair blowing CAR",
 			"name": "dance-loop",
 			"offset": [
 				0,
@@ -49,7 +49,7 @@
 				13,
 				14
 			],
-			"atlasName": "GF Dancing Beat Hair blowing CAR",
+			"prefix": "GF Dancing Beat Hair blowing CAR",
 			"name": "danceLeft",
 			"offset": [
 				0,
@@ -75,7 +75,7 @@
 				28,
 				29
 			],
-			"atlasName": "GF Dancing Beat Hair blowing CAR",
+			"prefix": "GF Dancing Beat Hair blowing CAR",
 			"name": "danceRight",
 			"offset": [
 				0,

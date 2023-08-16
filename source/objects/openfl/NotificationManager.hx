@@ -45,6 +45,9 @@ class NotificationDisplay extends FlxTypedGroup<Notification>
 	
 	override function update(elapsed:Float)
 	{
+		tweenManager.update(elapsed);
+		timerManager.update(elapsed);
+
 		var targetY:Float = startY;
 		for (i in 0...length)
 		{

@@ -8,7 +8,7 @@
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
-			"atlasName": "Parent Christmas Idle",
+			"prefix": "Parent Christmas Idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -23,7 +23,7 @@
 				12,
 				13
 			],
-			"atlasName": "Parent Christmas Idle",
+			"prefix": "Parent Christmas Idle",
 			"name": "idle-loop",
 			"offset": [
 				0,
@@ -32,7 +32,7 @@
 		},
 		{
 			"nextAnim": "singDOWN-alt-loop",
-			"atlasName": "Parent Down Note Dad",
+			"prefix": "Parent Down Note Dad",
 			"name": "singDOWN-alt",
 			"offset": [
 				-34,
@@ -41,7 +41,7 @@
 		},
 		{
 			"nextAnim": "singDOWN-loop",
-			"atlasName": "Parent Down Note Mom",
+			"prefix": "Parent Down Note Mom",
 			"name": "singDOWN",
 			"offset": [
 				-34,
@@ -56,7 +56,7 @@
 				13,
 				14
 			],
-			"atlasName": "Parent Down Note Mom",
+			"prefix": "Parent Down Note Mom",
 			"name": "singDOWN-loop",
 			"offset": [
 				-34,
@@ -71,7 +71,7 @@
 				13,
 				14
 			],
-			"atlasName": "Parent Down Note Dad",
+			"prefix": "Parent Down Note Dad",
 			"name": "singDOWN-alt-loop",
 			"offset": [
 				-34,
@@ -80,7 +80,7 @@
 		},
 		{
 			"nextAnim": "singLEFT-alt-loop",
-			"atlasName": "Parent Left Note Dad",
+			"prefix": "Parent Left Note Dad",
 			"name": "singLEFT-alt",
 			"offset": [
 				-29,
@@ -89,7 +89,7 @@
 		},
 		{
 			"nextAnim": "singLEFT-loop",
-			"atlasName": "Parent Left Note Mom",
+			"prefix": "Parent Left Note Mom",
 			"name": "singLEFT",
 			"offset": [
 				-29,
@@ -104,7 +104,7 @@
 				13,
 				14
 			],
-			"atlasName": "Parent Left Note Mom",
+			"prefix": "Parent Left Note Mom",
 			"name": "singLEFT-loop",
 			"offset": [
 				-29,
@@ -119,7 +119,7 @@
 				14,
 				15
 			],
-			"atlasName": "Parent Left Note Dad",
+			"prefix": "Parent Left Note Dad",
 			"name": "singLEFT-alt-loop",
 			"offset": [
 				-29,
@@ -128,7 +128,7 @@
 		},
 		{
 			"nextAnim": "singRIGHT-alt-loop",
-			"atlasName": "Parent Right Note Dad",
+			"prefix": "Parent Right Note Dad",
 			"name": "singRIGHT-alt",
 			"offset": [
 				-4,
@@ -137,7 +137,7 @@
 		},
 		{
 			"nextAnim": "singRIGHT-loop",
-			"atlasName": "Parent Right Note Mom",
+			"prefix": "Parent Right Note Mom",
 			"name": "singRIGHT",
 			"offset": [
 				-4,
@@ -152,7 +152,7 @@
 				13,
 				14
 			],
-			"atlasName": "Parent Right Note Mom",
+			"prefix": "Parent Right Note Mom",
 			"name": "singRIGHT-loop",
 			"offset": [
 				-4,
@@ -167,7 +167,7 @@
 				14,
 				15
 			],
-			"atlasName": "Parent Right Note Dad",
+			"prefix": "Parent Right Note Dad",
 			"name": "singRIGHT-alt-loop",
 			"offset": [
 				-4,
@@ -176,7 +176,7 @@
 		},
 		{
 			"nextAnim": "singUP-alt-loop",
-			"atlasName": "Parent Up Note Dad",
+			"prefix": "Parent Up Note Dad",
 			"name": "singUP-alt",
 			"offset": [
 				-45,
@@ -185,7 +185,7 @@
 		},
 		{
 			"nextAnim": "singUP-loop",
-			"atlasName": "Parent Up Note Mom",
+			"prefix": "Parent Up Note Mom",
 			"name": "singUP",
 			"offset": [
 				-45,
@@ -200,7 +200,7 @@
 				12,
 				13
 			],
-			"atlasName": "Parent Up Note Mom",
+			"prefix": "Parent Up Note Mom",
 			"name": "singUP-loop",
 			"offset": [
 				-45,
@@ -215,7 +215,7 @@
 				12,
 				13
 			],
-			"atlasName": "Parent Up Note Dad",
+			"prefix": "Parent Up Note Dad",
 			"name": "singUP-alt-loop",
 			"offset": [
 				-45,

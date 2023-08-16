@@ -1,18 +1,14 @@
 {
+	"flipX": true,
 	"positionOffset": [
 		-185,
 		338.4
 	],
 	"image": "characters/bf-holding-gf",
-	"danceAnims": [
-		"idle"
-	],
-	"holdLoopPoint": 0,
 	"healthIcon": "bf",
-	"flipX": true,
 	"anims": [
 		{
-			"atlasName": "BF idle dance w gf",
+			"prefix": "BF idle dance w gf",
 			"name": "idle",
 			"offset": [
 				0,
@@ -20,7 +16,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE DOWN",
+			"prefix": "BF NOTE DOWN0",
 			"name": "singDOWN",
 			"offset": [
 				-26,
@@ -28,15 +24,15 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE DOWN MISS",
+			"prefix": "BF NOTE DOWN MISS",
 			"name": "singDOWNmiss",
 			"offset": [
-				-26,
-				-10
+				-17,
+				-5
 			]
 		},
 		{
-			"atlasName": "BF NOTE RIGHT",
+			"prefix": "BF NOTE RIGHT0",
 			"name": "singLEFT",
 			"offset": [
 				-5,
@@ -44,15 +40,15 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE RIGHT MISS",
+			"prefix": "BF NOTE RIGHT MISS",
 			"name": "singLEFTmiss",
 			"offset": [
-				-11,
-				37
+				6,
+				39
 			]
 		},
 		{
-			"atlasName": "BF NOTE LEFT",
+			"prefix": "BF NOTE LEFT0",
 			"name": "singRIGHT",
 			"offset": [
 				-47,
@@ -60,7 +56,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE LEFT MISS",
+			"prefix": "BF NOTE LEFT MISS",
 			"name": "singRIGHTmiss",
 			"offset": [
 				-47,
@@ -68,7 +64,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE UP",
+			"prefix": "BF NOTE UP0",
 			"name": "singUP",
 			"offset": [
 				16,
@@ -76,7 +72,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE UP MISS",
+			"prefix": "BF NOTE UP MISS",
 			"name": "singUPmiss",
 			"offset": [
 				12,
@@ -92,8 +88,5 @@
 		49,
 		176,
 		209
-	],
-	"loopAnimsOnHold": true,
-	"antialiasing": true,
-	"scale": 1
+	]
 }

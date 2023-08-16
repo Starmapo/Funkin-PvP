@@ -12,7 +12,7 @@
 	"flipX": false,
 	"anims": [
 		{
-			"atlasName": "Angry Senpai Idle instance 1",
+			"prefix": "Angry Senpai Idle instance 1",
 			"name": "idle",
 			"offset": [
 				0,
@@ -20,7 +20,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai DOWN NOTE instance 1",
+			"prefix": "Angry Senpai DOWN NOTE instance 1",
 			"name": "singDOWN",
 			"offset": [
 				6,
@@ -28,7 +28,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai LEFT NOTE instance 1",
+			"prefix": "Angry Senpai LEFT NOTE instance 1",
 			"name": "singLEFT",
 			"offset": [
 				24,
@@ -36,7 +36,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai RIGHT NOTE instance 1",
+			"prefix": "Angry Senpai RIGHT NOTE instance 1",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -44,7 +44,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai UP NOTE instance 1",
+			"prefix": "Angry Senpai UP NOTE instance 1",
 			"name": "singUP",
 			"offset": [
 				5,

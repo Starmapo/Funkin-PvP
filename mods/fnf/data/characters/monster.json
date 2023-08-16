@@ -13,7 +13,7 @@
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
-			"atlasName": "monster idle",
+			"prefix": "monster idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -27,7 +27,7 @@
 				13,
 				14
 			],
-			"atlasName": "monster idle",
+			"prefix": "monster idle",
 			"name": "idle-loop",
 			"offset": [
 				0,
@@ -36,7 +36,7 @@
 		},
 		{
 			"nextAnim": "singDOWN-loop",
-			"atlasName": "monster down",
+			"prefix": "monster down",
 			"name": "singDOWN",
 			"offset": [
 				-50,
@@ -50,7 +50,7 @@
 				28,
 				29
 			],
-			"atlasName": "monster down",
+			"prefix": "monster down",
 			"name": "singDOWN-loop",
 			"offset": [
 				-50,
@@ -59,7 +59,7 @@
 		},
 		{
 			"nextAnim": "singLEFT-loop",
-			"atlasName": "Monster left note",
+			"prefix": "Monster left note",
 			"name": "singLEFT",
 			"offset": [
 				-34,
@@ -73,7 +73,7 @@
 				18,
 				19
 			],
-			"atlasName": "Monster left note",
+			"prefix": "Monster left note",
 			"name": "singLEFT-loop",
 			"offset": [
 				-34,
@@ -82,7 +82,7 @@
 		},
 		{
 			"nextAnim": "singRIGHT-loop",
-			"atlasName": "Monster Right note",
+			"prefix": "Monster Right note",
 			"name": "singRIGHT",
 			"offset": [
 				-54,
@@ -96,7 +96,7 @@
 				13,
 				14
 			],
-			"atlasName": "Monster Right note",
+			"prefix": "Monster Right note",
 			"name": "singRIGHT-loop",
 			"offset": [
 				-54,
@@ -105,7 +105,7 @@
 		},
 		{
 			"nextAnim": "singUP-loop",
-			"atlasName": "monster up note",
+			"prefix": "monster up note",
 			"name": "singUP",
 			"offset": [
 				-29,
@@ -119,7 +119,7 @@
 				22,
 				23
 			],
-			"atlasName": "monster up note",
+			"prefix": "monster up note",
 			"name": "singUP-loop",
 			"offset": [
 				-29,

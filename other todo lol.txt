@@ -1,11 +1,7 @@
-remove pvp music
-remove zip support
-remove atlas names
 use sscript
 sscript extend interp
 rework script returns
 playstate script object
-less default classes
-use CustomShader
+less default script classes
 better controls, remove playersettings
 music timing events

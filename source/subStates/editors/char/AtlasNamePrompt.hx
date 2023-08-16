@@ -1,6 +1,5 @@
 package subStates.editors.char;
 
-import backend.FNFAtlasFrames;
 import backend.editors.char.CharacterEditorActionManager;
 import backend.structures.char.CharacterInfo;
 import flixel.FlxCamera;
@@ -36,7 +35,7 @@ class AtlasNamePrompt extends FNFSubState
 		var tabMenu = new EditorPanel([
 			{
 				name: 'tab',
-				label: 'Select atlas name...'
+				label: 'Select atlas animation...'
 			}
 		]);
 		tabMenu.resize(FlxG.width / 2, FlxG.height - 50);
@@ -108,7 +107,7 @@ class AtlasNamePrompt extends FNFSubState
 		{
 			for (frame in state.char.frames.frames)
 			{
-				var atlasName = cast(state.char.frames, FNFAtlasFrames).getAtlasName(frame.name);
+				var atlasName = CoolUtil.getAtlasName(frame.name);
 				if (!atlasNames.contains(atlasName))
 					atlasNames.push(atlasName);
 			}
@@ -152,16 +151,13 @@ class AtlasNamePrompt extends FNFSubState
 		var usedNames:Array<String> = [];
 		for (anim in state.info.anims)
 		{
-			var name = anim.atlasName;
+			var name = anim.prefix;
 			if (name.length > 0 && !usedNames.contains(anim.name))
 				usedNames.push(name);
 		}
 		
 		for (button in buttonGroup)
-		{
-			button.up_color = (usedNames.contains(button.name)) ? 0xFF00B200 : FlxColor.BLACK;
-			button.label.color = button.up_color;
-		}
+			button.label.color = button.up_color = (usedNames.contains(button.name)) ? 0xFF00B200 : FlxColor.BLACK;
 	}
 	
 	function onEvent(event:String, params:Dynamic)
@@ -170,7 +166,7 @@ class AtlasNamePrompt extends FNFSubState
 		{
 			case CharacterEditorActionManager.CHANGE_IMAGE:
 				refreshAtlasNames();
-			case CharacterEditorActionManager.ADD_ANIM, CharacterEditorActionManager.REMOVE_ANIM, CharacterEditorActionManager.CHANGE_ANIM_ATLAS_NAME:
+			case CharacterEditorActionManager.ADD_ANIM, CharacterEditorActionManager.REMOVE_ANIM, CharacterEditorActionManager.CHANGE_ANIM_PREFIX:
 				updateAtlasNames();
 		}
 	}
@@ -178,11 +174,8 @@ class AtlasNamePrompt extends FNFSubState
 	function onClickItem(i:Int)
 	{
 		if (anim != null)
-		{
-			var atlasName = buttonGroup.members[i].name;
-			state.actionManager.perform(new ActionChangeAnimAtlasName(state, anim, atlasName));
-		}
-		
+			state.actionManager.perform(new ActionChangeAnimPrefix(state, anim, buttonGroup.members[i].name));
+			
 		close();
 	}
 }

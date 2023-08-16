@@ -7,7 +7,7 @@
 	"healthIcon": "senpai-hd-angry",
 	"anims": [
 		{
-			"atlasName": "Angry Senpai Idle",
+			"prefix": "Angry Senpai Idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -15,7 +15,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai DOWN NOTE",
+			"prefix": "Angry Senpai DOWN NOTE",
 			"name": "singDOWN",
 			"offset": [
 				15,
@@ -23,7 +23,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai LEFT NOTE",
+			"prefix": "Angry Senpai LEFT NOTE",
 			"name": "singLEFT",
 			"offset": [
 				11,
@@ -31,7 +31,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai RIGHT NOTE",
+			"prefix": "Angry Senpai RIGHT NOTE",
 			"name": "singRIGHT",
 			"offset": [
 				-37,
@@ -39,7 +39,7 @@
 			]
 		},
 		{
-			"atlasName": "Angry Senpai UP NOTE",
+			"prefix": "Angry Senpai UP NOTE",
 			"name": "singUP",
 			"offset": [
 				11,

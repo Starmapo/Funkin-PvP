@@ -13,7 +13,7 @@
 	"anims": [
 		{
 			"nextAnim": "singDOWN-loop",
-			"atlasName": "Pico shoot 2",
+			"prefix": "Pico shoot 2",
 			"name": "singDOWN",
 			"offset": [
 				98,
@@ -27,7 +27,7 @@
 				58,
 				59
 			],
-			"atlasName": "Pico shoot 2",
+			"prefix": "Pico shoot 2",
 			"name": "singDOWN-loop",
 			"offset": [
 				98,
@@ -36,7 +36,7 @@
 		},
 		{
 			"nextAnim": "singLEFT-loop",
-			"atlasName": "Pico shoot 1",
+			"prefix": "Pico shoot 1",
 			"name": "singLEFT",
 			"offset": [
 				0,
@@ -50,7 +50,7 @@
 				24,
 				25
 			],
-			"atlasName": "Pico shoot 1",
+			"prefix": "Pico shoot 1",
 			"name": "singLEFT-loop",
 			"offset": [
 				0,
@@ -59,7 +59,7 @@
 		},
 		{
 			"nextAnim": "singRIGHT-loop",
-			"atlasName": "Pico shoot 4",
+			"prefix": "Pico shoot 4",
 			"name": "singRIGHT",
 			"offset": [
 				-474,
@@ -73,7 +73,7 @@
 				51,
 				52
 			],
-			"atlasName": "Pico shoot 4",
+			"prefix": "Pico shoot 4",
 			"name": "singRIGHT-loop",
 			"offset": [
 				-474,
@@ -82,7 +82,7 @@
 		},
 		{
 			"nextAnim": "singUP-loop",
-			"atlasName": "Pico shoot 3",
+			"prefix": "Pico shoot 3",
 			"name": "singUP",
 			"offset": [
 				-474,
@@ -96,7 +96,7 @@
 				51,
 				52
 			],
-			"atlasName": "Pico shoot 3",
+			"prefix": "Pico shoot 3",
 			"name": "singUP-loop",
 			"offset": [
 				-474,

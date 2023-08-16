@@ -115,8 +115,8 @@ class StageFile implements IFlxDestroyable
 						continue;
 						
 					var animData:AnimData = {name: anim.att.name, indices: [], offset: []};
-					if (anim.has.atlasName)
-						animData.atlasName = anim.att.atlasName;
+					if (anim.has.prefix)
+						animData.prefix = anim.att.prefix;
 					if (anim.has.indices)
 					{
 						animData.indices = [];

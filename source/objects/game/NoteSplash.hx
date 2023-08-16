@@ -35,7 +35,7 @@ class NoteSplash extends AnimatedSprite
 		splashData = skin.splashes[id];
 		addAnim({
 			name: 'splash',
-			atlasName: splashData.anim,
+			prefix: splashData.anim,
 			indices: splashData.indices,
 			fps: splashData.fps,
 			loop: false,

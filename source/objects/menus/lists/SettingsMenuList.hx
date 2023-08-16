@@ -331,12 +331,12 @@ class Checkbox extends AnimatedSprite
 		
 		addAnim({
 			name: 'static',
-			atlasName: 'Check Box unselected',
+			prefix: 'Check Box unselected',
 			loop: false
 		}, true);
 		addAnim({
 			name: 'checked',
-			atlasName: 'Check Box selecting animation',
+			prefix: 'Check Box selecting animation',
 			loop: false,
 			offset: [17, 70]
 		});

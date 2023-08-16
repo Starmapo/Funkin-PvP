@@ -31,7 +31,7 @@
 				13,
 				14
 			],
-			"atlasName": "GF Dancing at Gunpoint",
+			"prefix": "GF Dancing at Gunpoint",
 			"name": "danceLeft",
 			"offset": [
 				0,
@@ -56,7 +56,7 @@
 				28,
 				29
 			],
-			"atlasName": "GF Dancing at Gunpoint",
+			"prefix": "GF Dancing at Gunpoint",
 			"name": "danceRight",
 			"offset": [
 				0,
@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"atlasName": "GF Crying at Gunpoint",
+			"prefix": "GF Crying at Gunpoint",
 			"name": "sad",
 			"offset": [
 				0,

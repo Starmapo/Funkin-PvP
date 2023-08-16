@@ -2,12 +2,12 @@
 	<spr name="skyBG" image="limoSunset" x="-120" y="-50" scroll="0.1" />
 	<high-quality>
 		<spr name="bgLimo" image="bgLimo" x="-200" y="480" scroll="0.4" >
-			<anim name="drive" atlasName="background limo pink" baseAnim="true" />
+			<anim name="drive" prefix="background limo pink" baseAnim="true" />
 		</spr>
 	</high-quality>
 	<gf />
 	<spr name="limo" image="limoDrive" x="-120" y="550" >
-		<anim name="drive" atlasName="Limo stage" baseAnim="true" />
+		<anim name="drive" prefix="Limo stage" baseAnim="true" />
 	</spr>
 	<dad />
 	<bf x="1030" y="-160"/>

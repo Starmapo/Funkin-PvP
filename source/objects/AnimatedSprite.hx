@@ -1,6 +1,5 @@
 package objects;
 
-import backend.FNFAtlasFrames;
 import flixel.FlxSprite;
 import flixel.animation.FlxAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -54,24 +53,16 @@ class AnimatedSprite extends FlxSprite
 		
 		if (data.indices != null && data.indices.length > 0)
 		{
-			if (data.atlasName != null && data.atlasName.length > 0)
+			if (data.prefix != null && data.prefix.length > 0)
 			{
-				if (data.atlasName.startsWith('prefix:'))
-					animation.addByIndices(data.name, data.atlasName.substr(7), data.indices, '', data.fps, data.loop, data.flipX, data.flipY);
-				else
-					addByAtlasNameIndices(data.name, data.atlasName, data.indices, '', data.fps, data.loop, data.flipX, data.flipY);
+				animation.addByIndices(data.name, data.prefix, data.indices, '', data.fps, data.loop, data.flipX, data.flipY);
 			}
 			else
 				animation.add(data.name, data.indices, data.fps, data.loop, data.flipX, data.flipY);
 		}
 		else
-		{
-			if (data.atlasName.startsWith('prefix:'))
-				animation.addByPrefix(data.name, data.atlasName.substr(7), data.fps, data.loop, data.flipX, data.flipY);
-			else
-				addByAtlasName(data.name, data.atlasName, data.fps, data.loop, data.flipX, data.flipY);
-		}
-		
+			animation.addByPrefix(data.name, data.prefix, data.fps, data.loop, data.flipX, data.flipY);
+			
 		if (data.offset != null && data.offset.length >= 2)
 			addOffset(data.name, data.offset[0], data.offset[1]);
 			
@@ -117,43 +108,6 @@ class AnimatedSprite extends FlxSprite
 		offsets.set(name, FlxPoint.get(x, y));
 	}
 	
-	@:access(flixel.animation.FlxAnimationController)
-	public function addByAtlasName(name:String, atlasName:String, frameRate:Float = 30, looped:Bool = true, flipX:Bool = false, flipY:Bool = false):Void
-	{
-		if (frames != null && Std.isOfType(frames, FNFAtlasFrames))
-		{
-			final animFrames:Array<FlxFrame> = new Array<FlxFrame>();
-			findByAtlasName(animFrames, atlasName); // adds valid frames to animFrames
-			
-			if (animFrames.length > 0)
-			{
-				final frameIndices:Array<Int> = new Array<Int>();
-				animation.byPrefixHelper(frameIndices, animFrames, atlasName); // finds frames and appends them to the blank array
-				
-				final anim = new FlxAnimation(animation, name, frameIndices, frameRate, looped, flipX, flipY);
-				animation._animations.set(name, anim);
-			}
-		}
-	}
-	
-	@:access(flixel.animation.FlxAnimationController)
-	public function addByAtlasNameIndices(name:String, atlasName:String, indices:Array<Int>, postfix:String, frameRate:Float = 30, looped:Bool = true,
-			flipX:Bool = false, flipY:Bool = false):Void
-	{
-		if (frames != null && Std.isOfType(frames, FNFAtlasFrames))
-		{
-			final frameIndices:Array<Int> = new Array<Int>();
-			// finds frames and appends them to the blank array
-			byAtlasNameIndicesHelper(frameIndices, atlasName, indices, postfix);
-			
-			if (frameIndices.length > 0)
-			{
-				final anim:FlxAnimation = new FlxAnimation(animation, name, frameIndices, frameRate, looped, flipX, flipY);
-				animation._animations.set(name, anim);
-			}
-		}
-	}
-	
 	public function setOffsetScale(x:Float, y:Float)
 	{
 		if (offsetScale == null)
@@ -172,47 +126,6 @@ class AnimatedSprite extends FlxSprite
 			offsets = null;
 		}
 		FlxDestroyUtil.destroy(onAnimPlayed);
-	}
-	
-	function findByAtlasName(animIndices:Array<FlxFrame>, atlasName:String):Void
-	{
-		final frames:FNFAtlasFrames = cast frames;
-		for (frame in frames.frames)
-		{
-			if (frame.name != null && frames.checkAtlasName(frame.name, atlasName))
-			{
-				animIndices.push(frame);
-			}
-		}
-	}
-	
-	function byAtlasNameIndicesHelper(addTo:Array<Int>, atlasName:String, indices:Array<Int>, postfix:String):Void
-	{
-		for (index in indices)
-		{
-			final indexToAdd:Int = findAtlasNameSpriteFrame(atlasName, index, postfix);
-			if (indexToAdd != -1)
-			{
-				addTo.push(indexToAdd);
-			}
-		}
-	}
-	
-	function findAtlasNameSpriteFrame(atlasName:String, index:Int, postfix:String):Int
-	{
-		final frames:FNFAtlasFrames = cast frames;
-		for (i in 0...frames.frames.length)
-		{
-			final name = frames.frames[i].name;
-			if (frames.checkAtlasName(name, atlasName) && StringTools.endsWith(name, postfix))
-			{
-				final frameIndex:Null<Int> = Std.parseInt(name.substring(atlasName.length, name.length - postfix.length));
-				if (frameIndex == index)
-					return i;
-			}
-		}
-		
-		return -1;
 	}
 	
 	function calculateOffset(offset:FlxPoint)
@@ -280,7 +193,7 @@ class AnimatedSprite extends FlxSprite
 typedef AnimData =
 {
 	name:String,
-	?atlasName:String,
+	?prefix:String,
 	?indices:Array<Int>,
 	?fps:Int,
 	?loop:Bool,

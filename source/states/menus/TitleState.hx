@@ -95,7 +95,7 @@ class TitleState extends FNFState
 		logo = new DancingSprite(-100, logoY, Paths.getSpritesheet('menus/title/logoBumpin'));
 		logo.addAnim({
 			name: 'idle',
-			atlasName: 'logo bumpin',
+			prefix: 'logo bumpin',
 			loop: false
 		});
 		logo.forceRestartDance = true;
@@ -124,11 +124,11 @@ class TitleState extends FNFState
 		pressEnter = new AnimatedSprite(100, FlxG.height, Paths.getSpritesheet('menus/title/titleEnter'));
 		pressEnter.addAnim({
 			name: 'idle',
-			atlasName: 'Press Enter to Begin'
+			prefix: 'Press Enter to Begin'
 		}, true);
 		pressEnter.addAnim({
 			name: 'press',
-			atlasName: 'ENTER PRESSED'
+			prefix: 'ENTER PRESSED'
 		});
 		pressEnter.antialiasing = Settings.antialiasing;
 		add(pressEnter);

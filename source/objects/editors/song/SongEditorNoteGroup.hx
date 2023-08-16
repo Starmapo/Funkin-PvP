@@ -380,22 +380,22 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		body = new AnimatedSprite(0, 0, noteGraphic);
 		body.addAnim({
 			name: '0',
-			atlasName: 'purple hold piece instance 1',
+			prefix: 'purple hold piece instance 1',
 			fps: 0
 		});
 		body.addAnim({
 			name: '1',
-			atlasName: 'blue hold piece instance 1',
+			prefix: 'blue hold piece instance 1',
 			fps: 0
 		});
 		body.addAnim({
 			name: '2',
-			atlasName: 'green hold piece instance 1',
+			prefix: 'green hold piece instance 1',
 			fps: 0
 		});
 		body.addAnim({
 			name: '3',
-			atlasName: 'red hold piece instance 1',
+			prefix: 'red hold piece instance 1',
 			fps: 0
 		});
 		body.flipY = true;
@@ -404,22 +404,22 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		tail = new AnimatedSprite(0, 0, noteGraphic);
 		tail.addAnim({
 			name: '0',
-			atlasName: 'pruple end hold instance 1',
+			prefix: 'pruple end hold instance 1',
 			fps: 0
 		});
 		tail.addAnim({
 			name: '1',
-			atlasName: 'blue hold end instance 1',
+			prefix: 'blue hold end instance 1',
 			fps: 0
 		});
 		tail.addAnim({
 			name: '2',
-			atlasName: 'green hold end instance 1',
+			prefix: 'green hold end instance 1',
 			fps: 0
 		});
 		tail.addAnim({
 			name: '3',
-			atlasName: 'red hold end instance 1',
+			prefix: 'red hold end instance 1',
 			fps: 0
 		});
 		tail.flipY = true;
@@ -429,22 +429,22 @@ class SongEditorNote extends FlxSpriteGroup implements ISongEditorTimingObject
 		head = new AnimatedSprite(0, 0, noteGraphic);
 		head.addAnim({
 			name: '0',
-			atlasName: 'purple instance 1',
+			prefix: 'purple instance 1',
 			fps: 0
 		});
 		head.addAnim({
 			name: '1',
-			atlasName: 'blue instance 1',
+			prefix: 'blue instance 1',
 			fps: 0
 		});
 		head.addAnim({
 			name: '2',
-			atlasName: 'green instance 1',
+			prefix: 'green instance 1',
 			fps: 0
 		});
 		head.addAnim({
 			name: '3',
-			atlasName: 'red instance 1',
+			prefix: 'red instance 1',
 			fps: 0
 		});
 		head.antialiasing = Settings.antialiasing;

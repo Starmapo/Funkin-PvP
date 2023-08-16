@@ -241,7 +241,7 @@ class Paths
 		var description:String = getContent('$path.xml');
 		if (description != null)
 		{
-			frames = FNFAtlasFrames.fromSparrow(image, description);
+			frames = FlxAtlasFrames.fromSparrow(image, description);
 			if (frames != null)
 				return frames;
 		}
@@ -249,7 +249,7 @@ class Paths
 		description = getContent('$path.txt');
 		if (description != null)
 		{
-			frames = FNFAtlasFrames.fromSpriteSheetPacker(image, description);
+			frames = FlxAtlasFrames.fromSpriteSheetPacker(image, description);
 			if (frames != null)
 				return frames;
 		}
@@ -257,7 +257,7 @@ class Paths
 		description = getContent('$path.json');
 		if (description != null)
 		{
-			frames = FNFAtlasFrames.fromTexturePackerJson(image, description);
+			frames = FlxAtlasFrames.fromTexturePackerJson(image, description);
 			if (frames != null)
 				return frames;
 		}

@@ -79,7 +79,7 @@ class NewCharacterPrompt extends FNFSubState
 				anims: [
 					{
 						name: 'idle',
-						atlasName: 'Dad idle dance'
+						prefix: 'Dad idle dance'
 					}
 				]
 			});

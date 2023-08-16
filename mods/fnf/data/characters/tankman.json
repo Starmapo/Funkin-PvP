@@ -8,7 +8,7 @@
 	"healthIcon": "tankman",
 	"anims": [
 		{
-			"atlasName": "Tankman Idle Dance instance 1",
+			"prefix": "Tankman Idle Dance instance 1",
 			"name": "idle",
 			"offset": [
 				0,
@@ -16,7 +16,7 @@
 			]
 		},
 		{
-			"atlasName": "PRETTY GOOD tankman instance 1",
+			"prefix": "PRETTY GOOD tankman instance 1",
 			"name": "prettyGood",
 			"offset": [
 				1,
@@ -24,7 +24,7 @@
 			]
 		},
 		{
-			"atlasName": "Tankman DOWN note instance 1",
+			"prefix": "Tankman DOWN note instance 1",
 			"name": "singDOWN",
 			"offset": [
 				80,
@@ -32,7 +32,7 @@
 			]
 		},
 		{
-			"atlasName": "Tankman Right Note instance 1",
+			"prefix": "Tankman Right Note instance 1",
 			"name": "singLEFT",
 			"offset": [
 				86,
@@ -40,7 +40,7 @@
 			]
 		},
 		{
-			"atlasName": "Tankman Note Left instance 1",
+			"prefix": "Tankman Note Left instance 1",
 			"name": "singRIGHT",
 			"offset": [
 				-25,
@@ -48,7 +48,7 @@
 			]
 		},
 		{
-			"atlasName": "Tankman UP note instance 1",
+			"prefix": "Tankman UP note instance 1",
 			"name": "singUP",
 			"offset": [
 				49,
@@ -56,7 +56,7 @@
 			]
 		},
 		{
-			"atlasName": "TANKMAN UGH instance 1",
+			"prefix": "TANKMAN UGH instance 1",
 			"name": "ugh",
 			"offset": [
 				-17,

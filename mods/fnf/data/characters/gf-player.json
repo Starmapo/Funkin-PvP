@@ -29,7 +29,7 @@
 				28,
 				29
 			],
-			"atlasName": "GF Dancing Beat",
+			"prefix": "GF Dancing Beat",
 			"name": "danceLeft",
 			"offset": [
 				0,
@@ -55,7 +55,7 @@
 				13,
 				14
 			],
-			"atlasName": "GF Dancing Beat",
+			"prefix": "GF Dancing Beat",
 			"name": "danceRight",
 			"offset": [
 				0,
@@ -70,7 +70,7 @@
 				2,
 				3
 			],
-			"atlasName": "GF Dancing Beat Hair blowing",
+			"prefix": "GF Dancing Beat Hair blowing",
 			"name": "hairBlow",
 			"offset": [
 				0,
@@ -92,7 +92,7 @@
 				10,
 				11
 			],
-			"atlasName": "GF Dancing Beat Hair Landing",
+			"prefix": "GF Dancing Beat Hair Landing",
 			"name": "hairFall",
 			"offset": [
 				0,
@@ -100,7 +100,7 @@
 			]
 		},
 		{
-			"atlasName": "GF Cheer",
+			"prefix": "GF Cheer",
 			"name": "hey",
 			"offset": [
 				0,
@@ -109,7 +109,7 @@
 		},
 		{
 			"loop": true,
-			"atlasName": "GF FEAR",
+			"prefix": "GF FEAR",
 			"name": "scared",
 			"offset": [
 				-2,
@@ -117,7 +117,7 @@
 			]
 		},
 		{
-			"atlasName": "GF Down Note",
+			"prefix": "GF Down Note",
 			"name": "singDOWN",
 			"offset": [
 				0,
@@ -125,7 +125,7 @@
 			]
 		},
 		{
-			"atlasName": "GF Right Note",
+			"prefix": "GF Right Note",
 			"name": "singLEFT",
 			"offset": [
 				0,
@@ -133,7 +133,7 @@
 			]
 		},
 		{
-			"atlasName": "GF left note",
+			"prefix": "GF left note",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -141,7 +141,7 @@
 			]
 		},
 		{
-			"atlasName": "GF Up Note",
+			"prefix": "GF Up Note",
 			"name": "singUP",
 			"offset": [
 				0,

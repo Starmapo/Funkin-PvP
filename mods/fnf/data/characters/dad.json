@@ -13,7 +13,7 @@
 	"anims": [
 		{
 			"nextAnim": "idle-loop",
-			"atlasName": "Dad idle dance",
+			"prefix": "Dad idle dance",
 			"name": "idle",
 			"offset": [
 				0,
@@ -28,7 +28,7 @@
 				12,
 				12
 			],
-			"atlasName": "Dad idle dance",
+			"prefix": "Dad idle dance",
 			"name": "idle-loop",
 			"offset": [
 				0,
@@ -36,7 +36,7 @@
 			]
 		},
 		{
-			"atlasName": "Dad Sing Note DOWN",
+			"prefix": "Dad Sing Note DOWN",
 			"name": "singDOWN",
 			"offset": [
 				0,
@@ -45,7 +45,7 @@
 		},
 		{
 			"nextAnim": "singLEFT-loop",
-			"atlasName": "Dad Sing Note LEFT",
+			"prefix": "Dad Sing Note LEFT",
 			"name": "singLEFT",
 			"offset": [
 				-9,
@@ -60,7 +60,7 @@
 				14,
 				15
 			],
-			"atlasName": "Dad Sing Note LEFT",
+			"prefix": "Dad Sing Note LEFT",
 			"name": "singLEFT-loop",
 			"offset": [
 				-9,
@@ -69,7 +69,7 @@
 		},
 		{
 			"nextAnim": "singRIGHT-loop",
-			"atlasName": "Dad Sing Note RIGHT",
+			"prefix": "Dad Sing Note RIGHT",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -84,7 +84,7 @@
 				17,
 				18
 			],
-			"atlasName": "Dad Sing Note RIGHT",
+			"prefix": "Dad Sing Note RIGHT",
 			"name": "singRIGHT-loop",
 			"offset": [
 				0,
@@ -93,7 +93,7 @@
 		},
 		{
 			"nextAnim": "singUP-loop",
-			"atlasName": "Dad Sing Note UP",
+			"prefix": "Dad Sing Note UP",
 			"name": "singUP",
 			"offset": [
 				-6,
@@ -108,7 +108,7 @@
 				58,
 				59
 			],
-			"atlasName": "Dad Sing Note UP",
+			"prefix": "Dad Sing Note UP",
 			"name": "singUP-loop",
 			"offset": [
 				-6,

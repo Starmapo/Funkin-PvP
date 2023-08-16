@@ -31,7 +31,7 @@
 				13,
 				14
 			],
-			"atlasName": "GF Dancing Beat",
+			"prefix": "GF Dancing Beat",
 			"name": "danceLeft",
 			"offset": [
 				0,
@@ -56,7 +56,7 @@
 				28,
 				29
 			],
-			"atlasName": "GF Dancing Beat",
+			"prefix": "GF Dancing Beat",
 			"name": "danceRight",
 			"offset": [
 				0,
@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"atlasName": "GF Cheer",
+			"prefix": "GF Cheer",
 			"name": "hey",
 			"offset": [
 				0,

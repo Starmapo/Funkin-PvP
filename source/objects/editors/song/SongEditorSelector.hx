@@ -191,6 +191,6 @@ class SongEditorSelector extends FlxUI9SliceSprite
 	
 	function canSelectObject(startTime:Float, dragStart:Float, dragEnd:Float, lane:Int, startLane:Int, endLane:Int)
 	{
-		return CoolUtil.inBetween(startTime, dragStart, dragEnd) && CoolUtil.inBetween(lane, startLane, endLane);
+		return FlxMath.inBounds(startTime, dragStart, dragEnd) && FlxMath.inBounds(lane, startLane, endLane);
 	}
 }

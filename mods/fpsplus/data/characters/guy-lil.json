@@ -11,7 +11,7 @@
 		{
 			"loop": true,
 			"fps": 12,
-			"atlasName": "idle",
+			"prefix": "idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -20,7 +20,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singDOWN",
+			"prefix": "singDOWN",
 			"name": "singDOWN",
 			"offset": [
 				0,
@@ -29,7 +29,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singLEFT",
+			"prefix": "singLEFT",
 			"name": "singLEFT",
 			"offset": [
 				0,
@@ -38,7 +38,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singRIGHT",
+			"prefix": "singRIGHT",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -47,7 +47,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singUP",
+			"prefix": "singUP",
 			"name": "singUP",
 			"offset": [
 				0,

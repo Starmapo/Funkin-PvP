@@ -12,7 +12,7 @@
 	"flipX": false,
 	"anims": [
 		{
-			"atlasName": "Senpai Idle instance 1",
+			"prefix": "Senpai Idle instance 1",
 			"name": "idle",
 			"offset": [
 				0,
@@ -20,7 +20,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI DOWN NOTE instance 1",
+			"prefix": "SENPAI DOWN NOTE instance 1",
 			"name": "singDOWN",
 			"offset": [
 				12,
@@ -28,7 +28,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI LEFT NOTE instance 1",
+			"prefix": "SENPAI LEFT NOTE instance 1",
 			"name": "singLEFT",
 			"offset": [
 				30,
@@ -36,7 +36,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI RIGHT NOTE instance 1",
+			"prefix": "SENPAI RIGHT NOTE instance 1",
 			"name": "singRIGHT",
 			"offset": [
 				5,
@@ -44,7 +44,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI UP NOTE instance 1",
+			"prefix": "SENPAI UP NOTE instance 1",
 			"name": "singUP",
 			"offset": [
 				13,

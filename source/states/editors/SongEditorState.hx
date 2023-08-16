@@ -252,7 +252,7 @@ class SongEditorState extends FNFState
 		zoomInButton.update(elapsed);
 		zoomOutButton.update(elapsed);
 		compositionPanel.update(elapsed);
-		editPanel.updawte(elapsed);
+		editPanel.update(elapsed);
 		if (playfieldNotes.exists)
 			playfieldNotes.update(elapsed);
 		if (playfieldOther.exists)

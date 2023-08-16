@@ -58,20 +58,20 @@ class HealthIcon extends AnimatedSprite
 			
 			addAnim({
 				name: 'normal',
-				atlasName: info.normalAnim,
+				prefix: info.normalAnim,
 				fps: info.normalFPS
 			}, true);
 			if (info.frames > 1)
 				addAnim({
 					name: 'losing',
-					atlasName: info.losingAnim,
+					prefix: info.losingAnim,
 					fps: info.losingFPS,
 					offset: info.losingOffset
 				});
 			if (info.frames > 2)
 				addAnim({
 					name: 'winning',
-					atlasName: info.winningAnim,
+					prefix: info.winningAnim,
 					fps: info.winningFPS,
 					offset: info.winningOffset
 				});

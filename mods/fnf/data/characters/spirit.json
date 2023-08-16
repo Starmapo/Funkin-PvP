@@ -9,7 +9,7 @@
 	"healthIcon": "spirit",
 	"anims": [
 		{
-			"atlasName": "idle spirit",
+			"prefix": "idle spirit",
 			"name": "idle",
 			"offset": [
 				0,
@@ -17,7 +17,7 @@
 			]
 		},
 		{
-			"atlasName": "spirit down",
+			"prefix": "spirit down",
 			"name": "singDOWN",
 			"offset": [
 				396,
@@ -25,7 +25,7 @@
 			]
 		},
 		{
-			"atlasName": "left",
+			"prefix": "left",
 			"name": "singLEFT",
 			"offset": [
 				24,
@@ -33,7 +33,7 @@
 			]
 		},
 		{
-			"atlasName": "right",
+			"prefix": "right",
 			"name": "singRIGHT",
 			"offset": [
 				-10,
@@ -41,7 +41,7 @@
 			]
 		},
 		{
-			"atlasName": "up",
+			"prefix": "up",
 			"name": "singUP",
 			"offset": [
 				7,

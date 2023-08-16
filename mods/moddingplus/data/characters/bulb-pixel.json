@@ -10,7 +10,7 @@
 	"healthIcon": "bulb-pixel",
 	"anims": [
 		{
-			"atlasName": "BF IDLE instance 1",
+			"prefix": "BF IDLE instance 1",
 			"name": "idle",
 			"offset": [
 				0,
@@ -18,7 +18,7 @@
 			]
 		},
 		{
-			"atlasName": "BF DOWN NOTE instance 1",
+			"prefix": "BF DOWN NOTE instance 1",
 			"name": "singDOWN",
 			"offset": [
 				0,
@@ -26,7 +26,7 @@
 			]
 		},
 		{
-			"atlasName": "BF DOWN MISS instance 1",
+			"prefix": "BF DOWN MISS instance 1",
 			"name": "singDOWNmiss",
 			"offset": [
 				0,
@@ -34,7 +34,7 @@
 			]
 		},
 		{
-			"atlasName": "BF RIGHT NOTE instance 1",
+			"prefix": "BF RIGHT NOTE instance 1",
 			"name": "singLEFT",
 			"offset": [
 				0,
@@ -42,7 +42,7 @@
 			]
 		},
 		{
-			"atlasName": "BF RIGHT MISS instance 1",
+			"prefix": "BF RIGHT MISS instance 1",
 			"name": "singLEFTmiss",
 			"offset": [
 				0,
@@ -50,7 +50,7 @@
 			]
 		},
 		{
-			"atlasName": "BF LEFT NOTE instance 1",
+			"prefix": "BF LEFT NOTE instance 1",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -58,7 +58,7 @@
 			]
 		},
 		{
-			"atlasName": "BF LEFT MISS instance 1",
+			"prefix": "BF LEFT MISS instance 1",
 			"name": "singRIGHTmiss",
 			"offset": [
 				0,
@@ -66,7 +66,7 @@
 			]
 		},
 		{
-			"atlasName": "BF UP NOTE instance 1",
+			"prefix": "BF UP NOTE instance 1",
 			"name": "singUP",
 			"offset": [
 				0,
@@ -74,7 +74,7 @@
 			]
 		},
 		{
-			"atlasName": "BF UP MISS instance 1",
+			"prefix": "BF UP MISS instance 1",
 			"name": "singUPmiss",
 			"offset": [
 				0,

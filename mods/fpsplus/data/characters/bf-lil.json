@@ -11,7 +11,7 @@
 	"anims": [
 		{
 			"fps": 12,
-			"atlasName": "hey",
+			"prefix": "hey",
 			"name": "hey",
 			"offset": [
 				0,
@@ -21,7 +21,7 @@
 		{
 			"loop": true,
 			"fps": 12,
-			"atlasName": "idle",
+			"prefix": "idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -30,7 +30,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singDOWN",
+			"prefix": "singDOWN0",
 			"name": "singDOWN",
 			"offset": [
 				0,
@@ -38,7 +38,7 @@
 			]
 		},
 		{
-			"atlasName": "singDOWNmiss",
+			"prefix": "singDOWNmiss",
 			"name": "singDOWNmiss",
 			"offset": [
 				0,
@@ -47,7 +47,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singRIGHT",
+			"prefix": "singRIGHT0",
 			"name": "singLEFT",
 			"offset": [
 				0,
@@ -55,7 +55,7 @@
 			]
 		},
 		{
-			"atlasName": "singRIGHTmiss",
+			"prefix": "singRIGHTmiss",
 			"name": "singLEFTmiss",
 			"offset": [
 				0,
@@ -64,7 +64,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singLEFT",
+			"prefix": "singLEFT0",
 			"name": "singRIGHT",
 			"offset": [
 				0,
@@ -72,7 +72,7 @@
 			]
 		},
 		{
-			"atlasName": "singLEFTmiss",
+			"prefix": "singLEFTmiss",
 			"name": "singRIGHTmiss",
 			"offset": [
 				0,
@@ -81,7 +81,7 @@
 		},
 		{
 			"fps": 12,
-			"atlasName": "singUP",
+			"prefix": "singUP0",
 			"name": "singUP",
 			"offset": [
 				0,
@@ -89,7 +89,7 @@
 			]
 		},
 		{
-			"atlasName": "singUPmiss",
+			"prefix": "singUPmiss",
 			"name": "singUPmiss",
 			"offset": [
 				0,

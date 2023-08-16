@@ -7,7 +7,7 @@
 	"healthIcon": "senpai-hd",
 	"anims": [
 		{
-			"atlasName": "Senpai Idle",
+			"prefix": "Senpai Idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -15,7 +15,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI DOWN NOTE",
+			"prefix": "SENPAI DOWN NOTE",
 			"name": "singDOWN",
 			"offset": [
 				-135,
@@ -23,7 +23,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI LEFT NOTE",
+			"prefix": "SENPAI LEFT NOTE",
 			"name": "singLEFT",
 			"offset": [
 				-145,
@@ -31,7 +31,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI RIGHT NOTE",
+			"prefix": "SENPAI RIGHT NOTE",
 			"name": "singRIGHT",
 			"offset": [
 				-181,
@@ -39,7 +39,7 @@
 			]
 		},
 		{
-			"atlasName": "SENPAI UP NOTE",
+			"prefix": "SENPAI UP NOTE",
 			"name": "singUP",
 			"offset": [
 				-134,

@@ -10,7 +10,7 @@
 	</spr>
 	<high-quality>
 		<spr name="treeLeaves" image="petals" x="-200" y="-40" scroll="0.85" graphicWidth="1866" antialiasing="false" >
-			<anim name="leaves" atlasName="PETALS ALL" baseAnim="true" />
+			<anim name="leaves" prefix="PETALS ALL" baseAnim="true" />
 		</spr>
 	</high-quality>
 	<gf />

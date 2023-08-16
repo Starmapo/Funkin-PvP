@@ -19,7 +19,7 @@ class CharacterEditorEditPanel extends EditorPanel
 {
 	var state:CharacterEditorState;
 	var nameInput:EditorInputText;
-	var atlasNameInput:EditorInputText;
+	var prefixInput:EditorInputText;
 	var indicesInput:EditorInputText;
 	var fpsStepper:EditorNumericStepper;
 	var loopCheckbox:EditorCheckbox;
@@ -87,7 +87,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		super.destroy();
 		state = null;
 		nameInput = null;
-		atlasNameInput = null;
+		prefixInput = null;
 		indicesInput = null;
 		fpsStepper = null;
 		loopCheckbox = null;
@@ -150,18 +150,18 @@ class CharacterEditorEditPanel extends EditorPanel
 		});
 		tab.add(nameInput);
 		
-		var atlasNameLabel = new EditorText(nameLabel.x, nameLabel.y + nameLabel.height + spacing, 0, 'Atlas Name:');
-		tab.add(atlasNameLabel);
+		var prefixLabel = new EditorText(nameLabel.x, nameLabel.y + nameLabel.height + spacing, 0, 'Prefix:');
+		tab.add(prefixLabel);
 		
-		atlasNameInput = new EditorInputText(atlasNameLabel.x + inputSpacing, atlasNameLabel.y - 1, inputWidth);
-		atlasNameInput.textChanged.add(function(text, lastText)
+		prefixInput = new EditorInputText(prefixLabel.x + inputSpacing, prefixLabel.y - 1, inputWidth);
+		prefixInput.textChanged.add(function(text, lastText)
 		{
 			if (curAnim != null)
-				state.actionManager.perform(new ActionChangeAnimAtlasName(state, curAnim, text));
+				state.actionManager.perform(new ActionChangeAnimPrefix(state, curAnim, text));
 		});
-		tab.add(atlasNameInput);
+		tab.add(prefixInput);
 		
-		var selectAtlasNameButton = new FlxUIButton(0, atlasNameInput.y + atlasNameInput.height + spacing, 'Select Atlas Name', function()
+		var selectAtlasNameButton = new FlxUIButton(0, prefixInput.y + prefixInput.height + spacing, 'Select Atlas Animation', function()
 		{
 			if (curAnim == null)
 				return;
@@ -173,7 +173,7 @@ class CharacterEditorEditPanel extends EditorPanel
 		selectAtlasNameButton.x += (width - selectAtlasNameButton.width) / 2;
 		tab.add(selectAtlasNameButton);
 		
-		var indicesLabel = new EditorText(atlasNameLabel.x, selectAtlasNameButton.y + selectAtlasNameButton.height + spacing + 1, 0, 'Indices (Optional):');
+		var indicesLabel = new EditorText(prefixLabel.x, selectAtlasNameButton.y + selectAtlasNameButton.height + spacing + 1, 0, 'Indices (Optional):');
 		tab.add(indicesLabel);
 		
 		indicesInput = new EditorInputText(indicesLabel.x + inputSpacing, indicesLabel.y - 1, inputWidth);
@@ -527,7 +527,7 @@ class CharacterEditorEditPanel extends EditorPanel
 	{
 		curAnim = state.info.getAnim(state.curAnim);
 		updateName();
-		updateAtlasName();
+		updatePrefix();
 		updateIndices();
 		updateFPS();
 		updateLoop();
@@ -542,9 +542,9 @@ class CharacterEditorEditPanel extends EditorPanel
 		nameInput.text = curAnim != null ? curAnim.name : '';
 	}
 	
-	function updateAtlasName()
+	function updatePrefix()
 	{
-		atlasNameInput.text = curAnim != null ? curAnim.atlasName : '';
+		prefixInput.text = curAnim != null ? curAnim.prefix : '';
 	}
 	
 	function updateIndices()
@@ -709,9 +709,9 @@ class CharacterEditorEditPanel extends EditorPanel
 			case CharacterEditorActionManager.CHANGE_ANIM_NAME:
 				if (curAnim == params.anim)
 					updateName();
-			case CharacterEditorActionManager.CHANGE_ANIM_ATLAS_NAME:
+			case CharacterEditorActionManager.CHANGE_ANIM_PREFIX:
 				if (curAnim == params.anim)
-					updateAtlasName();
+					updatePrefix();
 			case CharacterEditorActionManager.CHANGE_ANIM_INDICES:
 				if (curAnim == params.anim)
 					updateIndices();

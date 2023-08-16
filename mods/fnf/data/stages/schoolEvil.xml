@@ -1,6 +1,6 @@
 <stage zoom="1.05" folder="stages/weeb/">
 	<spr name="bg" image="animatedEvilSchool" x="400" y="200" scrollX="0.8" scrollY="0.9" scale="6" updateHitbox="false" antialiasing="false" >
-		<anim name="idle" atlasName="background 2 instance 1" baseAnim="true" />
+		<anim name="idle" prefix="background 2 instance 1" baseAnim="true" />
 	</spr>
 	<gf />
 	<opponent />

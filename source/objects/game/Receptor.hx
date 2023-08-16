@@ -33,7 +33,7 @@ class Receptor extends AnimatedSprite
 			
 			addAnim({
 				name: 'static',
-				atlasName: data.staticAnim,
+				prefix: data.staticAnim,
 				indices: data.staticIndices,
 				fps: data.staticFPS,
 				offset: data.staticOffset
@@ -43,7 +43,7 @@ class Receptor extends AnimatedSprite
 			
 			addAnim({
 				name: 'pressed',
-				atlasName: data.pressedAnim,
+				prefix: data.pressedAnim,
 				indices: data.pressedIndices,
 				fps: data.pressedFPS,
 				loop: false,
@@ -52,7 +52,7 @@ class Receptor extends AnimatedSprite
 			
 			addAnim({
 				name: 'confirm',
-				atlasName: data.confirmAnim,
+				prefix: data.confirmAnim,
 				indices: data.confirmIndices,
 				fps: data.confirmFPS,
 				loop: false,

@@ -8,7 +8,7 @@
 	"healthIcon": "bf",
 	"anims": [
 		{
-			"atlasName": "BF HEY!!",
+			"prefix": "BF HEY!!",
 			"name": "hey",
 			"offset": [
 				2,
@@ -16,7 +16,7 @@
 			]
 		},
 		{
-			"atlasName": "BF idle dance",
+			"prefix": "BF idle dance",
 			"name": "idle",
 			"offset": [
 				0,
@@ -24,7 +24,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE DOWN",
+			"prefix": "BF NOTE DOWN0",
 			"name": "singDOWN",
 			"offset": [
 				-19,
@@ -32,7 +32,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE DOWN MISS",
+			"prefix": "BF NOTE DOWN MISS",
 			"name": "singDOWNmiss",
 			"offset": [
 				-16,
@@ -40,7 +40,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE RIGHT",
+			"prefix": "BF NOTE RIGHT0",
 			"name": "singLEFT",
 			"offset": [
 				43,
@@ -48,7 +48,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE RIGHT MISS",
+			"prefix": "BF NOTE RIGHT MISS",
 			"name": "singLEFTmiss",
 			"offset": [
 				43,
@@ -56,7 +56,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE LEFT",
+			"prefix": "BF NOTE LEFT0",
 			"name": "singRIGHT",
 			"offset": [
 				-36,
@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE LEFT MISS",
+			"prefix": "BF NOTE LEFT MISS",
 			"name": "singRIGHTmiss",
 			"offset": [
 				-34,
@@ -72,7 +72,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE UP",
+			"prefix": "BF NOTE UP0",
 			"name": "singUP",
 			"offset": [
 				6,
@@ -80,7 +80,7 @@
 			]
 		},
 		{
-			"atlasName": "BF NOTE UP MISS",
+			"prefix": "BF NOTE UP MISS",
 			"name": "singUPmiss",
 			"offset": [
 				4,

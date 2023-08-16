@@ -2,17 +2,17 @@
 	<spr name="bg" image="bgWalls" x="-1000" y="-500" scroll="0.2" scale="0.8" />
 	<high-quality>
 		<spr name="upperBoppers" image="upperBop" x="-240" y="-90" scroll="0.33" scale="0.85" danceAnims="bop" >
-			<anim name="bop" atlasName="Upper Crowd Bob" loop="false" />
+			<anim name="bop" prefix="Upper Crowd Bob" loop="false" />
 		</spr>
 		<spr name="bgEscalator" image="bgEscalator" x="-1100" y="-600" scroll="0.3" scale="0.9" />
 	</high-quality>
 	<spr name="tree" image="christmasTree" x="370" y="-250" scroll="0.4" />
 	<spr name="bottomBoppers" image="bottomBop" x="-300" y="140" scroll="0.9" danceAnims="bop" >
-		<anim name="bop" atlasName="Bottom Level Boppers" loop="false" />
+		<anim name="bop" prefix="Bottom Level Boppers" loop="false" />
 	</spr>
 	<spr name="fgSnow" image="fgSnow" x="-600" y="700" />
 	<spr name="santa" image="santa" x="-840" y="150" danceAnims="idle" >
-		<anim name="idle" atlasName="santa idle in fear" loop="false" />
+		<anim name="idle" prefix="santa idle in fear" loop="false" />
 	</spr>
 	<gf />
 	<dad />

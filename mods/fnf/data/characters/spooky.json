@@ -17,7 +17,7 @@
 				2,
 				6
 			],
-			"atlasName": "spooky dance idle",
+			"prefix": "spooky dance idle",
 			"name": "danceLeft",
 			"offset": [
 				0,
@@ -32,7 +32,7 @@
 				12,
 				14
 			],
-			"atlasName": "spooky dance idle",
+			"prefix": "spooky dance idle",
 			"name": "danceRight",
 			"offset": [
 				0,
@@ -40,7 +40,7 @@
 			]
 		},
 		{
-			"atlasName": "spooky DOWN note",
+			"prefix": "spooky DOWN note",
 			"name": "singDOWN",
 			"offset": [
 				-20,
@@ -48,7 +48,7 @@
 			]
 		},
 		{
-			"atlasName": "note sing left",
+			"prefix": "note sing left",
 			"name": "singLEFT",
 			"offset": [
 				119,
@@ -56,7 +56,7 @@
 			]
 		},
 		{
-			"atlasName": "spooky sing right",
+			"prefix": "spooky sing right",
 			"name": "singRIGHT",
 			"offset": [
 				-132,
@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"atlasName": "spooky UP NOTE",
+			"prefix": "spooky UP NOTE",
 			"name": "singUP",
 			"offset": [
 				-20,

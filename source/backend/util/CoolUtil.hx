@@ -16,10 +16,7 @@ import flixel.util.FlxSpriteUtil;
 import lime.app.Application;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import openfl.media.Sound;
 import openfl.system.System;
-import sys.thread.Mutex;
-import sys.thread.Thread;
 import systools.win.Tools;
 
 using StringTools;
@@ -129,6 +126,16 @@ class CoolUtil
 			return 0;
 			
 		return getArrayMaxX(array) - getArrayMinX(array);
+	}
+	
+	public static function getAtlasName(name:String):String
+	{
+		var atlasName = name;
+		
+		while (FlxMath.inBounds(atlasName.charCodeAt(atlasName.length - 1), '0'.code, '9'.code))
+			atlasName = atlasName.substr(0, atlasName.length - 1);
+			
+		return atlasName;
 	}
 	
 	/**
@@ -408,14 +415,6 @@ class CoolUtil
 	public static function getVersion():String
 	{
 		return FlxG.stage.application.meta["version"];
-	}
-	
-	/**
-		Returns if `num` is in between `start` and `end`.
-	**/
-	public static function inBetween(num:Float, start:Float, end:Float):Bool
-	{
-		return num >= start && num <= end;
 	}
 	
 	/**

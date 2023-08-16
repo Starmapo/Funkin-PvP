@@ -280,7 +280,7 @@ class Character extends DancingSprite
 				
 			addAnim({
 				name: anim.name,
-				atlasName: anim.atlasName,
+				prefix: anim.prefix,
 				indices: anim.indices.copy(),
 				fps: anim.fps,
 				loop: anim.loop,

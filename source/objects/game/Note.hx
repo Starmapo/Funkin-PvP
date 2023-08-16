@@ -224,7 +224,7 @@ class Note extends FlxSpriteGroup
 		head.setOffsetScale(skin.notesScale, skin.notesScale);
 		head.addAnim({
 			name: 'head',
-			atlasName: data.headAnim,
+			prefix: data.headAnim,
 			indices: data.headIndices,
 			fps: 0,
 			loop: false
@@ -236,7 +236,7 @@ class Note extends FlxSpriteGroup
 		body.setOffsetScale(head.offsetScale.x, head.offsetScale.y);
 		body.addAnim({
 			name: 'body',
-			atlasName: data.bodyAnim,
+			prefix: data.bodyAnim,
 			indices: data.bodyIndices,
 			fps: 0,
 			loop: false
@@ -247,7 +247,7 @@ class Note extends FlxSpriteGroup
 		tail.setOffsetScale(head.offsetScale.x, head.offsetScale.y);
 		tail.addAnim({
 			name: 'tail',
-			atlasName: data.tailAnim,
+			prefix: data.tailAnim,
 			indices: data.tailIndices,
 			fps: 0,
 			loop: false

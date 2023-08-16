@@ -546,7 +546,7 @@ class CharacterEditorState extends FNFState
 	{
 		var data:AnimData = {
 			name: anim.name,
-			atlasName: anim.atlasName,
+			prefix: anim.prefix,
 			indices: anim.indices.copy(),
 			fps: anim.fps,
 			loop: anim.loop,
@@ -566,7 +566,7 @@ class CharacterEditorState extends FNFState
 	{
 		var data:AnimData = {
 			name: anim.name,
-			atlasName: anim.atlasName,
+			prefix: anim.prefix,
 			indices: anim.indices.copy(),
 			fps: anim.fps,
 			loop: anim.loop,

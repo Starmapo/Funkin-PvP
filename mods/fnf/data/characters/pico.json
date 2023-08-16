@@ -8,7 +8,7 @@
 	"healthIcon": "pico",
 	"anims": [
 		{
-			"atlasName": "Pico Idle Dance",
+			"prefix": "Pico Idle Dance",
 			"name": "idle",
 			"offset": [
 				0,
@@ -16,7 +16,7 @@
 			]
 		},
 		{
-			"atlasName": "Pico Down Note",
+			"prefix": "Pico Down Note0",
 			"name": "singDOWN",
 			"offset": [
 				190,
@@ -24,7 +24,7 @@
 			]
 		},
 		{
-			"atlasName": "Pico Down Note MISS",
+			"prefix": "Pico Down Note MISS",
 			"name": "singDOWNmiss",
 			"offset": [
 				193,
@@ -32,7 +32,7 @@
 			]
 		},
 		{
-			"atlasName": "Pico Note Right",
+			"prefix": "Pico Note Right0",
 			"name": "singLEFT",
 			"offset": [
 				51,
@@ -40,7 +40,7 @@
 			]
 		},
 		{
-			"atlasName": "Pico Note Right Miss",
+			"prefix": "Pico Note Right Miss",
 			"name": "singLEFTmiss",
 			"offset": [
 				51,
@@ -48,7 +48,7 @@
 			]
 		},
 		{
-			"atlasName": "Pico NOTE LEFT",
+			"prefix": "Pico NOTE LEFT0",
 			"name": "singRIGHT",
 			"offset": [
 				-81,
@@ -56,7 +56,7 @@
 			]
 		},
 		{
-			"atlasName": "Pico NOTE LEFT miss",
+			"prefix": "Pico NOTE LEFT miss",
 			"name": "singRIGHTmiss",
 			"offset": [
 				-75,
@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"atlasName": "pico Up note",
+			"prefix": "pico Up note0",
 			"name": "singUP",
 			"offset": [
 				-43,
@@ -72,7 +72,7 @@
 			]
 		},
 		{
-			"atlasName": "pico Up note miss",
+			"prefix": "pico Up note miss",
 			"name": "singUPmiss",
 			"offset": [
 				-33,

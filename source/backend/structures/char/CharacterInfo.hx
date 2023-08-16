@@ -90,7 +90,7 @@ class CharacterInfo extends JsonObject
 		{
 			charInfo.anims.push({
 				name: anim.anim,
-				atlasName: anim.name,
+				prefix: anim.name,
 				fps: anim.fps,
 				loop: anim.loop,
 				indices: anim.indices,
@@ -288,7 +288,7 @@ class CharacterInfo extends JsonObject
 		{
 			var animData:Dynamic = {
 				name: anim.name,
-				atlasName: anim.atlasName,
+				prefix: anim.prefix,
 				offset: anim.offset
 			}
 			if (anim.indices.length > 0)
@@ -328,16 +328,12 @@ class AnimInfo extends JsonObject
 	public var name:String;
 	
 	/**
-		The name of this animation in the character's spritesheet.
-
-		NOTE: This uses the new `addByAtlasName` function instead of `addByPrefix`, which will use frames that have the
-		exact animation name (minus the frame numbers) instead of starting with it. If you want to use `addByPrefix`,
-		add `prefix:` to the start of the name.
+		The prefix of this animation in the character's spritesheet.
 	**/
-	public var atlasName:String;
+	public var prefix:String;
 	
 	/**
-		Optional frame indices for this animation. If `atlasName` is empty, this will be used as indices in the overall
+		Optional frame indices for this animation. If `prefix` is empty, this will be used as indices in the overall
 		spritesheet.
 	**/
 	public var indices:Array<Int>;
@@ -384,7 +380,7 @@ class AnimInfo extends JsonObject
 	public function new(data:Dynamic)
 	{
 		name = readString(data.name);
-		atlasName = readString(data.atlasName);
+		prefix = readString(data.prefix);
 		indices = readIntArray(data.indices, [], null, null, 0);
 		fps = readInt(data.fps, 24, 0, 1000);
 		loop = readBool(data.loop);

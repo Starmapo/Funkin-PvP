@@ -458,7 +458,7 @@ class SongEditorPlayfieldButton extends FlxSprite
 		if (difference != 0)
 		{
 			state.selectedObjects.value.sort(function(a, b) return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime));
-			if (!CoolUtil.inBetween(state.selectedObjects.value[0].startTime + difference, 0, state.inst.length))
+			if (!FlxMath.inBounds(state.selectedObjects.value[0].startTime + difference, 0, state.inst.length))
 				offset = previousDragOffset;
 		}
 		

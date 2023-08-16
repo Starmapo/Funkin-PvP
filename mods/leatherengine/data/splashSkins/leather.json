@@ -1,16 +1,16 @@
 {
 	"splashes": [
 		{
-			"anim": "note splash left"
+			"anim": "note splash left0"
 		},
 		{
-			"anim": "note splash down"
+			"anim": "note splash down0"
 		},
 		{
-			"anim": "note splash up"
+			"anim": "note splash up0"
 		},
 		{
-			"anim": "note splash right"
+			"anim": "note splash right0"
 		}
 	],
 	"image": "splashes/leather",

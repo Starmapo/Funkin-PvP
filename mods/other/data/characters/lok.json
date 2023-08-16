@@ -7,7 +7,7 @@
 	"healthIcon": "lok",
 	"anims": [
 		{
-			"atlasName": "Idle",
+			"prefix": "Idle",
 			"name": "idle",
 			"offset": [
 				0,
@@ -15,7 +15,7 @@
 			]
 		},
 		{
-			"atlasName": "Down",
+			"prefix": "Down",
 			"name": "singDOWN",
 			"offset": [
 				-18,
@@ -23,7 +23,7 @@
 			]
 		},
 		{
-			"atlasName": "Left",
+			"prefix": "Left",
 			"name": "singLEFT",
 			"offset": [
 				165,
@@ -31,7 +31,7 @@
 			]
 		},
 		{
-			"atlasName": "Right",
+			"prefix": "Right",
 			"name": "singRIGHT",
 			"offset": [
 				-126,
@@ -39,7 +39,7 @@
 			]
 		},
 		{
-			"atlasName": "Up",
+			"prefix": "Up",
 			"name": "singUP",
 			"offset": [
 				77,

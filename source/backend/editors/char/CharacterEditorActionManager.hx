@@ -24,7 +24,7 @@ class CharacterEditorActionManager extends ActionManager
 	public static inline var ADD_ANIM:String = 'add-anim';
 	public static inline var REMOVE_ANIM:String = 'remove-anim';
 	public static inline var CHANGE_ANIM_NAME:String = 'change-anim-name';
-	public static inline var CHANGE_ANIM_ATLAS_NAME:String = 'change-anim-atlas-name';
+	public static inline var CHANGE_ANIM_PREFIX:String = 'change-anim-prefix';
 	public static inline var CHANGE_ANIM_INDICES:String = 'change-anim-indices';
 	public static inline var CHANGE_ANIM_FPS:String = 'change-anim-fps';
 	public static inline var CHANGE_ANIM_LOOP:String = 'change-anim-loop';
@@ -657,26 +657,26 @@ class ActionChangeAnimName implements IAction
 	}
 }
 
-class ActionChangeAnimAtlasName implements IAction
+class ActionChangeAnimPrefix implements IAction
 {
-	public var type = CharacterEditorActionManager.CHANGE_ANIM_ATLAS_NAME;
+	public var type = CharacterEditorActionManager.CHANGE_ANIM_PREFIX;
 	
 	var state:CharacterEditorState;
 	var anim:AnimInfo;
-	var name:String;
-	var lastName:String;
+	var prefix:String;
+	var lastPrefix:String;
 	
-	public function new(state:CharacterEditorState, anim:AnimInfo, name:String)
+	public function new(state:CharacterEditorState, anim:AnimInfo, prefix:String)
 	{
 		this.state = state;
 		this.anim = anim;
-		this.name = name;
+		this.prefix = prefix;
 	}
 	
 	public function perform()
 	{
-		lastName = anim.atlasName;
-		anim.atlasName = name;
+		lastPrefix = anim.prefix;
+		anim.prefix = prefix;
 		
 		var lastAnim = state.curAnim;
 		var lastGhostAnim = state.ghostChar.animation.name;
@@ -688,13 +688,13 @@ class ActionChangeAnimAtlasName implements IAction
 			
 		state.actionManager.triggerEvent(type, {
 			anim: anim,
-			lastName: lastName
+			lastPrefix: lastPrefix
 		});
 	}
 	
 	public function undo()
 	{
-		new ActionChangeAnimAtlasName(state, anim, lastName).perform();
+		new ActionChangeAnimPrefix(state, anim, lastPrefix).perform();
 	}
 	
 	public function destroy()
