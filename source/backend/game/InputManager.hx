@@ -1,6 +1,5 @@
 package backend.game;
 
-import backend.Controls.Action;
 import backend.settings.PlayerConfig;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import objects.game.Note;
@@ -16,7 +15,7 @@ class InputManager implements IFlxDestroyable
 	**/
 	public var autoplay:Bool;
 	
-	var bindingStore:Array<InputBinding>;
+	var bindingStore:Array<InputBinding> = [];
 	var playfield:Playfield;
 	var player:Int;
 	var realPlayer:Int;
@@ -33,7 +32,7 @@ class InputManager implements IFlxDestroyable
 		realPlayer = player;
 		config = Settings.playerConfigs[player];
 		autoplay = config.autoplay;
-		controls = PlayerSettings.players[player].controls;
+		controls = Controls.players[player];
 		
 		setInputBinds();
 	}
@@ -68,12 +67,12 @@ class InputManager implements IFlxDestroyable
 			var needsUpdating = false;
 			var bind = bindingStore[lane];
 			
-			if (!bind.pressed && controls.checkByName(bind.justPressedAction))
+			if (!bind.pressed && controls.justPressed(bind.action))
 			{
 				bind.pressed = true;
 				needsUpdating = true;
 			}
-			else if (bind.pressed && controls.checkByName(bind.justReleasedAction))
+			else if (bind.pressed && controls.justReleased(bind.action))
 			{
 				bind.pressed = false;
 				needsUpdating = true;
@@ -105,7 +104,7 @@ class InputManager implements IFlxDestroyable
 	public function changePlayer(player:Int)
 	{
 		realPlayer = player;
-		controls = PlayerSettings.players[player].controls;
+		controls = Controls.players[player];
 	}
 	
 	/**
@@ -136,12 +135,10 @@ class InputManager implements IFlxDestroyable
 	
 	function setInputBinds()
 	{
-		bindingStore = [
-			new InputBinding(NOTE_LEFT_P, NOTE_LEFT, NOTE_LEFT_R),
-			new InputBinding(NOTE_DOWN_P, NOTE_DOWN, NOTE_DOWN_R),
-			new InputBinding(NOTE_UP_P, NOTE_UP, NOTE_UP_R),
-			new InputBinding(NOTE_RIGHT_P, NOTE_RIGHT, NOTE_RIGHT_R)
-		];
+		final keyAmount = 4;
+		
+		for (i in 0...keyAmount)
+			bindingStore.push(new InputBinding(NOTE(keyAmount, i)));
 	}
 	
 	function handleKeyPress(note:Note)
@@ -242,15 +239,11 @@ class InputManager implements IFlxDestroyable
 
 class InputBinding
 {
-	public var justPressedAction:Action;
-	public var pressedAction:Action;
-	public var justReleasedAction:Action;
+	public var action:Action;
 	public var pressed:Bool;
 	
-	public function new(justPressedAction:Action, pressedAction:Action, justReleasedAction:Action)
+	public function new(action:Action)
 	{
-		this.justPressedAction = justPressedAction;
-		this.pressedAction = pressedAction;
-		this.justReleasedAction = justReleasedAction;
+		this.action = action;
 	}
 }

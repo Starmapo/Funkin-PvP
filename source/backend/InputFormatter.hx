@@ -1,5 +1,6 @@
 package backend;
 
+import backend.settings.PlayerConfig;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 
@@ -7,9 +8,9 @@ class InputFormatter
 {
 	static var dirReg = ~/^((l|r).?)-(left|right|down|up|click)$/;
 	
-	public static function format(id:Int, settings:PlayerSettings):String
+	public static function format(id:Int, config:PlayerConfig):String
 	{
-		return switch (settings.config.device)
+		return switch (config.device)
 		{
 			case KEYBOARD: getKeyName(id);
 			case GAMEPAD(_): getButtonName(id);

@@ -344,7 +344,7 @@ class PlayerSongSelect extends FlxGroup
 	
 	override function update(elapsed:Float)
 	{
-		var back = (Settings.singleSongSelection ? PlayerSettings.checkAction(BACK_P) : PlayerSettings.checkPlayerAction(player, BACK_P));
+		var back = (Settings.singleSongSelection ? Controls.anyJustPressed(BACK) : Controls.playerJustPressed(player, BACK));
 		if (!state.transitioning && back)
 		{
 			if (ready)

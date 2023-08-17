@@ -257,6 +257,9 @@ class Main extends Sprite
 		{
 			case Keyboard.F3:
 				statsDisplay.visible = !statsDisplay.visible;
+			case Keyboard.F11:
+				FlxG.save.data.fullscreen = FlxG.fullscreen = !FlxG.fullscreen;
+				FlxG.save.flush();
 		}
 	}
 }

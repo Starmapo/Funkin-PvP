@@ -43,7 +43,7 @@ class Page extends FlxGroup
 	
 	function updateControls()
 	{
-		if (PlayerSettings.checkAction(BACK_P))
+		if (Controls.anyJustPressed(BACK))
 		{
 			CoolUtil.playCancelSound();
 			exit();

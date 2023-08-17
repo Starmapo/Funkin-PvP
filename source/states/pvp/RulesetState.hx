@@ -372,7 +372,7 @@ class RulesetState extends FNFState
 	
 	override function update(elapsed:Float)
 	{
-		if (!transitioning && PlayerSettings.checkAction(BACK_P))
+		if (!transitioning && Controls.anyJustPressed(BACK))
 		{
 			exitTransition(true, function(_)
 			{

@@ -135,12 +135,12 @@ class ResultsScreen extends FNFSubState
 	{
 		if (canExit)
 		{
-			if (PlayerSettings.checkAction(ACCEPT_P))
+			if (Controls.anyJustPressed(ACCEPT))
 			{
 				canExit = false;
 				state.exit(new SongSelectState(), true);
 			}
-			else if (PlayerSettings.checkAction(RESET_P))
+			else if (Controls.anyJustPressed(RESET))
 			{
 				canExit = false;
 				state.exit(new PlayState(state.song));

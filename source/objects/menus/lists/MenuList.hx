@@ -1,9 +1,9 @@
 package objects.menus.lists;
 
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
-import backend.Controls;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.input.FlxInput.FlxInputState;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -170,11 +170,11 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 		{
 			var index = switch (navMode)
 			{
-				case HORIZONTAL: navigate(elapsed, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT));
-				case VERTICAL: navigate(elapsed, checkAction(UI_UP_P), checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
+				case HORIZONTAL: navigate(elapsed, justPressed(UI_LEFT), justPressed(UI_RIGHT), pressed(UI_LEFT), pressed(UI_RIGHT));
+				case VERTICAL: navigate(elapsed, justPressed(UI_UP), justPressed(UI_DOWN), pressed(UI_UP), pressed(UI_DOWN));
 				case COLUMNS(n): navigateColumns(elapsed);
-				case BOTH: navigate(elapsed, checkAction(UI_LEFT_P) || checkAction(UI_UP_P), checkAction(UI_RIGHT_P) || checkAction(UI_DOWN_P), checkAction(UI_LEFT)
-						|| checkAction(UI_UP), checkAction(UI_RIGHT) || checkAction(UI_DOWN));
+				case BOTH: navigate(elapsed, justPressed(UI_LEFT) || justPressed(UI_UP), justPressed(UI_RIGHT) || justPressed(UI_DOWN), pressed(UI_LEFT) || pressed(UI_UP), pressed(UI_RIGHT)
+						|| pressed(UI_DOWN));
 			}
 			
 			if (index != selectedIndex)
@@ -185,31 +185,29 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 			}
 		}
 		
-		if (length > 0 && checkAction(ACCEPT_P))
+		if (length > 0 && justPressed(ACCEPT))
 			accept();
 	}
 	
-	function checkAction(action:Action)
+	function justPressed(action:Action)
+	{
+		return checkStatus(action, JUST_PRESSED);
+	}
+	
+	function pressed(action:Action)
+	{
+		return checkStatus(action, PRESSED);
+	}
+	
+	function checkStatus(action:Action, state:FlxInputState)
 	{
 		return switch (controlsMode)
 		{
 			case ALL:
-				PlayerSettings.checkAction(action);
+				Controls.anyCheckStatus(action, state);
 			case PLAYER(player):
-				PlayerSettings.checkPlayerAction(player, action);
+				Controls.playerCheckStatus(player, action, state);
 		}
-	}
-	
-	function checkActions(actions:Array<Action>)
-	{
-		for (action in actions)
-		{
-			if (checkAction(action))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	function navigate(elapsed:Float, prev:Bool, next:Bool, prevHold:Bool, nextHold:Bool)
@@ -315,8 +313,8 @@ class TypedMenuList<T:MenuItem> extends FlxTypedGroup<T>
 	
 	function navigateColumns(elapsed:Float)
 	{
-		return navigateGrid(elapsed, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT), checkAction(UI_UP_P),
-			checkAction(UI_DOWN_P), checkAction(UI_UP), checkAction(UI_DOWN));
+		return navigateGrid(elapsed, justPressed(UI_LEFT), justPressed(UI_RIGHT), pressed(UI_LEFT), pressed(UI_RIGHT), justPressed(UI_UP),
+			justPressed(UI_DOWN), pressed(UI_UP), pressed(UI_DOWN));
 	}
 	
 	function changeIndex(index:Int, prev:Bool, amount:Int = 1)
@@ -432,7 +430,7 @@ class TypedMenuItem<T:FlxSprite> extends MenuItem
 			value.x = x;
 			value.y = y;
 			if (Std.isOfType(value, FlxTypedSpriteGroup))
-				cast (value, FlxTypedSpriteGroup<Dynamic>).directAlpha = true;
+				cast(value, FlxTypedSpriteGroup<Dynamic>).directAlpha = true;
 			value.alpha = alpha;
 		}
 		return label = value;

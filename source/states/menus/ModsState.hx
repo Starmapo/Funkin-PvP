@@ -76,7 +76,7 @@ class ModsState extends FNFState
 	
 	override function update(elapsed:Float)
 	{
-		if (PlayerSettings.checkAction(BACK_P) && !transitioning)
+		if (Controls.anyJustPressed(BACK) && !transitioning)
 		{
 			transitioning = true;
 			items.controlsEnabled = false;

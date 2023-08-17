@@ -434,7 +434,7 @@ class BootState extends FNFState
 	function loadSave()
 	{
 		Settings.loadData(); // load settings
-		PlayerSettings.init(); // initialize players and controls
+		Controls.init(); // initialize controls
 		
 		Application.current.onExit.add(function(_)
 		{

@@ -1,5 +1,6 @@
 package states.options;
 
+import flixel.util.FlxDestroyUtil;
 import backend.Music;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -79,13 +80,21 @@ class OptionsState extends FNFState
 		super.update(elapsed);
 		
 		camPages.zoom = FlxG.camera.zoom;
+		
+		if (FlxG.keys.justPressed.F5)
+			FlxG.resetState();
 	}
 	
 	override function destroy()
 	{
 		super.destroy();
 		camFollow = null;
-		pages = null;
+		if (pages != null)
+		{
+			for (page in pages)
+				FlxDestroyUtil.destroy(page);
+			pages = null;
+		}
 		camPages = null;
 		nextState = null;
 	}

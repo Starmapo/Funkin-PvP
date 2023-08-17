@@ -133,7 +133,7 @@ class SongEditorPlayState extends FNFState
 		{
 			judgementDisplay = new FlxTypedGroup();
 			for (i in 0...2)
-				judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(PlayerSettings.players[i].config.judgementSkin)));
+				judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(Settings.playerConfigs[i].judgementSkin)));
 			add(judgementDisplay);
 			
 			statsDisplay = new FlxTypedGroup();

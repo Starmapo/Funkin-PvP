@@ -806,7 +806,7 @@ class PlayState extends FNFState
 		{
 			judgementDisplay = new FlxTypedGroup();
 			for (i in 0...2)
-				judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(PlayerSettings.players[i].config.judgementSkin)));
+				judgementDisplay.add(new JudgementDisplay(i, JudgementSkin.loadSkinFromName(Settings.playerConfigs[i].judgementSkin)));
 			judgementDisplay.cameras = [camHUD];
 			add(judgementDisplay);
 			
@@ -1099,7 +1099,7 @@ class PlayState extends FNFState
 		{
 			for (i in 0...2)
 			{
-				if (PlayerSettings.checkPlayerAction(i, PAUSE_P))
+				if (Controls.playerJustPressed(i, PAUSE))
 				{
 					isPaused = true;
 					persistentUpdate = false;
@@ -1439,7 +1439,7 @@ class PlayState extends FNFState
 		for (i in 0...2)
 		{
 			var score = ruleset.playfields[i].scoreProcessor;
-			if (PlayerSettings.checkPlayerAction(i, RESET_P) && !PlayerSettings.players[i].config.noReset)
+			if (Controls.playerJustPressed(i, RESET) && !Settings.playerConfigs[i].noReset)
 				score.forceFail = true;
 			if (score.failed)
 				onDeath(i);

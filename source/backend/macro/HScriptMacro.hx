@@ -16,7 +16,7 @@ class HScriptMacro
 		#if macro
 		#if COMPILE_ALL_CLASSES
 		Compiler.include("", false);
-		Compiler.include("haxe", true, ["haxe.atomic", "haxe.macro"]);
+		Compiler.include("haxe", true, ["haxe.atomic", "haxe.macro", "haxe.ui.macros"]);
 		Compiler.include("lime", true, ["lime._internal", "lime.tools"]);
 		Compiler.include("flixel", true, ["flixel.addons.editors.spine", "flixel.addons.nape", "flixel.system.macros"]);
 		for (m in ["openfl", "hxcodec"])

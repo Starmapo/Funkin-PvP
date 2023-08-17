@@ -203,12 +203,12 @@ class JudgementPresetsSubState extends FNFSubState
 			return;
 		}
 		
-		if (PlayerSettings.checkAction(UI_LEFT_P))
+		if (Controls.anyJustPressed(UI_LEFT))
 			changeSelection(-1);
-		if (PlayerSettings.checkAction(UI_RIGHT_P))
+		if (Controls.anyJustPressed(UI_RIGHT))
 			changeSelection(1);
 			
-		if (PlayerSettings.checkAction(ACCEPT_P))
+		if (Controls.anyJustPressed(ACCEPT))
 		{
 			var preset = presets[curSelected];
 			Settings.marvWindow = preset.marvWindow;
@@ -235,7 +235,7 @@ class JudgementPresetsSubState extends FNFSubState
 			close();
 			CoolUtil.playConfirmSound();
 		}
-		else if (PlayerSettings.checkAction(BACK_P))
+		else if (Controls.anyJustPressed(BACK))
 			close();
 	}
 	

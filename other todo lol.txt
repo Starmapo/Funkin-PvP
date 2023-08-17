@@ -1,3 +1,2 @@
-better controls, remove playersettings
 music timing events
 log viewer

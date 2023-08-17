@@ -130,7 +130,7 @@ class MainMenuState extends FNFState
 				{
 					FlxG.switchState(new ToolboxState());
 				});
-			if (PlayerSettings.checkAction(BACK_P))
+			if (Controls.anyJustPressed(BACK))
 			{
 				var duration = Main.getTransitionTime();
 				FlxTween.tween(FlxG.camera, {zoom: 5}, duration, {

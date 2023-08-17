@@ -74,15 +74,6 @@ class CoolUtil
 	}
 	
 	/**
-		Returns if anything has just been inputted. This includes the keyboard, gamepads, and mouse buttons.
-	**/
-	public static function anyJustInputted():Bool
-	{
-		return (PlayerSettings.anyJustPressed() || FlxG.keys.justPressed.ANY || FlxG.mouse.justPressed || FlxG.mouse.justPressedMiddle
-			|| FlxG.mouse.justPressedRight);
-	}
-	
-	/**
 		Creates a menu background sprite.
 
 		@param	image	The image name to use. Defaults to `menuBG`.

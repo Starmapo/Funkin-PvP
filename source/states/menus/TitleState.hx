@@ -158,7 +158,7 @@ class TitleState extends FNFState
 			
 		if (!startedIntro)
 		{
-			if (CoolUtil.anyJustInputted())
+			if (Controls.anyInputJustPressed())
 			{
 				startTimer.cancel();
 				startIntro();
@@ -166,12 +166,12 @@ class TitleState extends FNFState
 		}
 		else if (!skippedIntro)
 		{
-			if (PlayerSettings.checkAction(ACCEPT_P))
+			if (Controls.anyJustPressed(ACCEPT))
 				skipIntro();
 		}
 		else if (!transitioning)
 		{
-			var pressedEnter = PlayerSettings.checkAction(ACCEPT_P) || FlxG.keys.justPressed.ENTER;
+			var pressedEnter = Controls.anyJustPressed(ACCEPT) || FlxG.keys.justPressed.ENTER;
 			if (!pressedEnter)
 			{
 				for (i in 0...FlxG.gamepads.numActiveGamepads)
@@ -185,14 +185,14 @@ class TitleState extends FNFState
 			if (pressedEnter)
 				onPressEnter();
 			#if sys
-			else if (PlayerSettings.checkAction(BACK_P))
+			else if (Controls.anyJustPressed(BACK))
 				onExit();
 			#end
 		}
 		
-		if (PlayerSettings.checkAction(UI_LEFT))
+		if (Controls.anyPressed(UI_LEFT))
 			colorSwap.update(-elapsed * 0.1);
-		else if (PlayerSettings.checkAction(UI_RIGHT))
+		else if (Controls.anyPressed(UI_RIGHT))
 			colorSwap.update(elapsed * 0.1);
 			
 		for (particle in emitter)
@@ -205,7 +205,7 @@ class TitleState extends FNFState
 		
 		super.update(elapsed);
 		
-		if (PlayerSettings.checkAction(RESET_P))
+		if (Controls.anyJustPressed(RESET))
 			CoolUtil.restart();
 	}
 	

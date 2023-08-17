@@ -151,12 +151,12 @@ class SScriptObject extends Script
 		script.setClass(AnimatedSprite);
 		script.setClass(objects.game.BGSprite);
 		script.setClass(objects.game.Character);
+		script.setClass(Controls);
 		script.setClass(CoolUtil);
 		script.setClass(objects.DancingSprite);
 		script.setClass(Mods);
-		set('Paths', Paths);
-		set('PlayerSettings', PlayerSettings);
-		set('Settings', Settings);
+		script.setClass(Paths);
+		script.setClass(Settings);
 		
 		script.set("debugPrint", Reflect.makeVarArgs(function(el)
 		{

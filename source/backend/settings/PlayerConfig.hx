@@ -1,13 +1,12 @@
 package backend.settings;
 
-import backend.Controls.Control;
-
 typedef PlayerConfig =
 {
 	var device:PlayerConfigDevice;
-	var controls:Map<Control, Array<Int>>;
+	var controls:Map<Action, Array<Int>>;
+	
 	var ?scrollSpeed:Float;
-	var downScroll:Bool;
+	var ?downScroll:Bool;
 	var ?noteSkin:String;
 	var ?judgementSkin:String;
 	var ?splashSkin:String;

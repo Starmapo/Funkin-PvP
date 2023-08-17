@@ -3,6 +3,7 @@ package backend.settings;
 import backend.bindable.Bindable;
 import backend.bindable.BindableFloat;
 import backend.game.Judgement;
+import backend.settings.PlayerConfig.PlayerConfigDevice;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import lime.app.Application;
@@ -104,6 +105,8 @@ class Settings
 				load(f);
 		}
 		
+		if (FlxG.save.data.fullscreen != null)
+			FlxG.fullscreen = FlxG.save.data.fullscreen;
 		if (!FlxG.fullscreen)
 			FlxG.resizeWindow(Math.round(FlxG.width * resolution), Math.round(FlxG.height * resolution));
 		CoolUtil.setFramerate(fpsCap);
@@ -115,6 +118,8 @@ class Settings
 		
 		FlxG.autoPause = autoPause;
 		FlxTransitionableState.defaultTransOut.duration = FlxTransitionableState.defaultTransIn.duration = Main.getTransitionTime();
+		
+		checkPlayerConfigs();
 	}
 	
 	public static function saveData()
@@ -187,6 +192,71 @@ class Settings
 			i--;
 		}
 		fields = daFields;
+	}
+	
+	static function checkPlayerConfigs()
+	{
+		if (Settings.playerConfigs == null)
+		{
+			var playerConfigs:Array<PlayerConfig> = [createDefaultConfig(KEYBOARD)];
+			
+			var foundGamepad:Bool = false;
+			for (i in 0...FlxG.gamepads.numActiveGamepads)
+			{
+				var gamepad = FlxG.gamepads.getByID(i);
+				if (gamepad != null && gamepad.connected)
+				{
+					playerConfigs.push(createDefaultConfig(GAMEPAD(gamepad.id)));
+					foundGamepad = true;
+					break;
+				}
+			}
+			if (!foundGamepad)
+				playerConfigs.push(createDefaultConfig(NONE));
+				
+			Settings.playerConfigs = playerConfigs;
+			Settings.saveData();
+		}
+		
+		for (config in Settings.playerConfigs)
+		{
+			if (config.scrollSpeed == null)
+				config.scrollSpeed = 1;
+			if (config.downScroll == null)
+				config.downScroll = false;
+			if (config.judgementCounter == null)
+				config.judgementCounter = false;
+			if (config.npsDisplay == null)
+				config.npsDisplay = false;
+			if (config.msDisplay == null)
+				config.msDisplay = false;
+			if (config.noteSplashes == null)
+				config.noteSplashes = true;
+			if (config.noReset == null)
+				config.noReset = false;
+			if (config.autoplay == null)
+				config.autoplay = false;
+			if (config.transparentReceptors == null)
+				config.transparentReceptors = false;
+			if (config.transparentHolds == null)
+				config.transparentHolds = false;
+			if (config.notesScale == null)
+				config.notesScale = 1;
+			if (config.noteSkin == null)
+				config.noteSkin = 'fnf:default';
+			if (config.judgementSkin == null)
+				config.judgementSkin = 'fnf:default';
+			if (config.splashSkin == null)
+				config.splashSkin = 'fnf:default';
+		}
+	}
+	
+	static function createDefaultConfig(device:PlayerConfigDevice):PlayerConfig
+	{
+		return {
+			device: device,
+			controls: Controls.getDefaultControls(device)
+		};
 	}
 }
 

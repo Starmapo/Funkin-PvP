@@ -35,6 +35,16 @@
       "version": "3.6.0"
     },
     {
+      "name": "haxeui-core",
+      "type": "haxelib",
+      "version": "1.6.0"
+    },
+    {
+      "name": "haxeui-flixel",
+      "type": "haxelib",
+      "version": "1.6.0"
+    },
+    {
       "name": "hscript",
       "type": "haxelib",
       "version": "2.5.0"

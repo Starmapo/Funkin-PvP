@@ -302,7 +302,7 @@ class PlayerCharacterSelect extends FlxGroup
 	
 	override function update(elapsed:Float)
 	{
-		if (!state.transitioning && PlayerSettings.checkPlayerAction(player, BACK_P))
+		if (!state.transitioning && Controls.playerJustPressed(player, BACK))
 		{
 			if (ready)
 			{

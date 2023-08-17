@@ -70,7 +70,7 @@ class ToolboxState extends FNFState
 	{
 		super.update(elapsed);
 		
-		if (PlayerSettings.checkAction(BACK_P))
+		if (Controls.anyJustPressed(BACK))
 			FlxG.switchState(new MainMenuState());
 			
 		if (FlxG.mouse.visible)

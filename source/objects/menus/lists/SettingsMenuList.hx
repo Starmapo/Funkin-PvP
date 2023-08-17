@@ -25,7 +25,7 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 		{
 			if (!selectedItem.canAccept)
 			{
-				if (navigateItem(elapsed, selectedItem, checkAction(UI_LEFT_P), checkAction(UI_RIGHT_P), checkAction(UI_LEFT), checkAction(UI_RIGHT)))
+				if (navigateItem(elapsed, selectedItem, justPressed(UI_LEFT), justPressed(UI_RIGHT), pressed(UI_LEFT), pressed(UI_RIGHT)))
 				{
 					if (selectedItem.callback != null)
 						selectedItem.callback();
@@ -35,7 +35,7 @@ class TypedSettingsMenuList<T:SettingsMenuItem> extends TypedMenuList<T>
 				}
 			}
 			
-			if (checkAction(RESET_P) && selectedItem.data.type != ACTION)
+			if (justPressed(RESET) && selectedItem.data.type != ACTION)
 			{
 				var defaultValue = selectedItem.getDefaultValue();
 				if (selectedItem.value != defaultValue)

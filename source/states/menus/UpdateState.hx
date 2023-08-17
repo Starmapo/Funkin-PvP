@@ -76,14 +76,14 @@ class UpdateState extends FNFState
 	
 	override function update(elapsed)
 	{
-		if (PlayerSettings.checkAction(UI_LEFT_P) || PlayerSettings.checkAction(UI_RIGHT_P))
+		if (Controls.anyJustPressed(UI_LEFT) || Controls.anyJustPressed(UI_RIGHT))
 		{
 			onSkip = !onSkip;
 			updateSelected();
 			CoolUtil.playScrollSound();
 		}
 		
-		if (PlayerSettings.checkAction(ACCEPT_P))
+		if (Controls.anyJustPressed(ACCEPT))
 		{
 			if (onSkip)
 			{

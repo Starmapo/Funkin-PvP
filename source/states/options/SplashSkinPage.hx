@@ -83,7 +83,7 @@ class SplashSkinPage extends Page
 	
 	override function updateControls()
 	{
-		if (PlayerSettings.checkAction(BACK_P))
+		if (Controls.anyJustPressed(BACK))
 		{
 			if (skinList.visible)
 			{
