@@ -1,9 +1,8 @@
-import("flixel.system.FlxBGSprite");
-
 function onCreatePost()
 {
-	var blackBGThing = new FlxBGSprite();
-	blackBGThing.color = FlxColor.BLACK;
+	var blackBGThing = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+	blackBGThing.screenCenter();
+	blackBGThing.scrollFactor.set();
 	insert(members.indexOf(lilStage), blackBGThing);
 	
 	state.disableCamFollow = true;

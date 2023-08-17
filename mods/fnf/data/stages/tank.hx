@@ -1,3 +1,5 @@
+import flixel.math.FlxAngle;
+
 var tankmanRun:FlxTypedGroup<FlxSprite>;
 var tankAngle:Float = FlxG.random.int(-90, 45);
 var tankSpeed:Float = FlxG.random.float(5, 7);

@@ -14,6 +14,15 @@ class HScriptMacro
 	public static function init()
 	{
 		#if macro
+		#if COMPILE_ALL_CLASSES
+		Compiler.include("", false);
+		Compiler.include("haxe", true, ["haxe.atomic", "haxe.macro"]);
+		Compiler.include("lime", true, ["lime._internal", "lime.tools"]);
+		Compiler.include("flixel", true, ["flixel.addons.editors.spine", "flixel.addons.nape", "flixel.system.macros"]);
+		for (m in ["openfl", "hxcodec"])
+			Compiler.include(m, true);
+		#end
+			
 		Compiler.addGlobalMetadata('flixel', '@:build(backend.macro.HScriptMacro.build())');
 		Compiler.addGlobalMetadata('openfl.display.BlendMode', '@:build(backend.macro.HScriptMacro.build())');
 		#end

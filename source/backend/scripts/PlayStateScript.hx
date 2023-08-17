@@ -20,128 +20,95 @@ import sys.io.File;
 
 using StringTools;
 
-/**
-	A script for the gameplay screen (`PlayState`).
-**/
-class PlayStateScript extends Script
+class PlayStateScript
 {
-	var state:PlayState;
-	
-	public function new(state:PlayState, path:String, mod:String)
+	public static function implement(script:Script, state:PlayState)
 	{
-		this.state = state;
-		super(path, mod);
-	}
-	
-	override function destroy()
-	{
-		state = null;
-		super.destroy();
-	}
-	
-	override function setStartingVariables()
-	{
-		super.setStartingVariables();
+		script.set("state", state);
+		script.set("members", state.members);
+		script.set("opponent", state.opponent);
+		script.set("bf", state.bf);
+		script.set("gf", state.gf);
+		script.set("camFollow", state.camFollow);
+		script.set("ruleset", state.ruleset);
+		script.set("timing", state.timing);
+		script.set("song", state.song);
+		script.set("songName", state.song.name);
+		script.set("difficultyName", state.song.difficultyName);
+		script.set("camHUD", state.camHUD);
+		script.set("camOther", state.camOther);
+		script.set("inst", state.inst);
+		script.set("vocals", state.vocals);
+		script.set("statsDisplay", state.statsDisplay);
+		script.set("judgementDisplay", state.judgementDisplay);
+		script.set("songInfoDisplay", state.songInfoDisplay);
+		script.set("lyricsDisplay", state.lyricsDisplay);
+		script.set("healthBars", state.healthBars);
+		script.set("deathBG", state.deathBG);
+		script.set("backgroundCover", state.backgroundCover);
+		script.set("judgementCounters", state.judgementCounters);
+		script.set("npsDisplay", state.npsDisplay);
+		script.set("msDisplay", state.msDisplay);
+		script.set("staticBG", state.staticBG);
+		script.set("playbackRate", GameplayGlobals.playbackRate);
 		
-		setVariable("state", state);
-		setVariable("members", state.members);
-		setVariable("opponent", state.opponent);
-		setVariable("bf", state.bf);
-		setVariable("gf", state.gf);
-		setVariable("camFollow", state.camFollow);
-		setVariable("ruleset", state.ruleset);
-		setVariable("timing", state.timing);
-		setVariable("song", state.song);
-		setVariable("songName", state.song.name);
-		setVariable("difficultyName", state.song.difficultyName);
-		setVariable("camHUD", state.camHUD);
-		setVariable("camOther", state.camOther);
-		setVariable("inst", state.inst);
-		setVariable("vocals", state.vocals);
-		setVariable("statsDisplay", state.statsDisplay);
-		setVariable("judgementDisplay", state.judgementDisplay);
-		setVariable("songInfoDisplay", state.songInfoDisplay);
-		setVariable("lyricsDisplay", state.lyricsDisplay);
-		setVariable("healthBars", state.healthBars);
-		setVariable("deathBG", state.deathBG);
-		setVariable("backgroundCover", state.backgroundCover);
-		setVariable("judgementCounters", state.judgementCounters);
-		setVariable("npsDisplay", state.npsDisplay);
-		setVariable("msDisplay", state.msDisplay);
-		setVariable("staticBG", state.staticBG);
-		setVariable("playbackRate", GameplayGlobals.playbackRate);
+		script.set("add", state.add);
+		script.set("insert", state.insert);
+		script.set("remove", state.remove);
+		script.set("precacheGraphic", state.precacheGraphic);
+		script.set("precacheImage", state.precacheImage);
+		script.set("precacheCharacter", state.precacheCharacter);
 		
-		setVariable("add", state.add);
-		setVariable("insert", state.insert);
-		setVariable("remove", state.remove);
-		setVariable("precacheGraphic", state.precacheGraphic);
-		setVariable("precacheImage", state.precacheImage);
-		setVariable("precacheCharacter", state.precacheCharacter);
-		setVariable("debugPrint", Reflect.makeVarArgs(function(el)
-		{
-			var inf = interp.posInfos();
-			var posInfo = inf.fileName + ':' + inf.lineNumber + ': ';
-			var max = el.length - 1;
-			for (i in 0...el.length)
-			{
-				posInfo += Std.string(el[i]);
-				if (i < max)
-					posInfo += ', ';
-			}
-			Main.showInternalNotification(posInfo);
-			trace(posInfo);
-		}));
-		
-		setVariable("getOrder", function(obj:FlxBasic)
+		script.set("getOrder", function(obj:FlxBasic)
 		{
 			return state.members.indexOf(obj);
 		});
-		setVariable("setOrder", function(obj:FlxBasic, index:Int)
+		script.set("setOrder", function(obj:FlxBasic, index:Int)
 		{
 			state.remove(obj, true);
 			return state.insert(index, obj);
 		});
-		setVariable("addBehindChars", function(obj:FlxBasic)
+		script.set("addBehindChars", function(obj:FlxBasic)
 		{
 			var index = FlxMath.minInt(FlxMath.minInt(state.members.indexOf(state.gf), state.members.indexOf(state.opponent)),
 				state.members.indexOf(state.bf));
 			return state.insert(index, obj);
 		});
-		setVariable("addOverChars", function(obj:FlxBasic)
+		script.set("addOverChars", function(obj:FlxBasic)
 		{
 			var index = FlxMath.maxInt(FlxMath.maxInt(state.members.indexOf(state.gf), state.members.indexOf(state.opponent)),
 				state.members.indexOf(state.bf));
 			return state.insert(index + 1, obj);
 		});
-		setVariable("addBehindOpponent", function(obj:FlxBasic)
+		script.set("addBehindOpponent", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.opponent), obj);
 		});
-		setVariable("addBehindBF", function(obj:FlxBasic)
+		script.set("addBehindBF", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.bf), obj);
 		});
-		setVariable("addBehindGF", function(obj:FlxBasic)
+		script.set("addBehindGF", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.gf), obj);
 		});
-		setVariable("addOverOpponent", function(obj:FlxBasic)
+		script.set("addOverOpponent", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.opponent) + 1, obj);
 		});
-		setVariable("addOverBF", function(obj:FlxBasic)
+		script.set("addOverBF", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.bf) + 1, obj);
 		});
-		setVariable("addOverGF", function(obj:FlxBasic)
+		script.set("addOverGF", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.gf) + 1, obj);
 		});
-		setVariable("addBehindUI", function(obj:FlxBasic)
+		script.set("addBehindUI", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.ruleset.playfields[0]), obj);
 		});
-		setVariable("getCharacters", function(?name:String, ?mod:String)
+		script.set("getCharacters", function(?name:String, ?mod:String)
 		{
 			var characters:Array<Character> = [];
 			var allChars = [state.gf, state.opponent, state.bf];
@@ -152,15 +119,15 @@ class PlayStateScript extends Script
 			}
 			return characters;
 		});
-		setVariable("getPlayerCharacter", function(player:Int = 0)
+		script.set("getPlayerCharacter", function(player:Int = 0)
 		{
 			return state.getPlayerCharacter(player);
 		});
-		setVariable("getNoteCharacter", function(note:Note)
+		script.set("getNoteCharacter", function(note:Note)
 		{
 			return state.getNoteCharacter(note);
 		});
-		setVariable("getCurrentNotes", function()
+		script.set("getCurrentNotes", function()
 		{
 			var notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
@@ -172,43 +139,43 @@ class PlayStateScript extends Script
 			}
 			return notes;
 		});
-		setVariable("getActiveNotes", function()
+		script.set("getActiveNotes", function()
 		{
 			var notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.activeNoteLanes);
 			return notes;
 		});
-		setVariable("getHeldNotes", function()
+		script.set("getHeldNotes", function()
 		{
 			var notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.heldLongNoteLanes);
 			return notes;
 		});
-		setVariable("getDeadNotes", function()
+		script.set("getDeadNotes", function()
 		{
 			var notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.deadNoteLanes);
 			return notes;
 		});
-		setVariable("getQueueNotes", function()
+		script.set("getQueueNotes", function()
 		{
 			var notes:Array<NoteInfo> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.noteQueueLanes);
 			return notes;
 		});
-		setVariable("getShader", function(name:String)
+		script.set("getShader", function(name:String)
 		{
 			return getShader(name);
 		});
-		setVariable("addGameShader", function(shader:FlxRuntimeShader)
+		script.set("addGameShader", function(shader:FlxRuntimeShader)
 		{
 			if (shader == null)
 			{
-				onError("addGameShader: Shader is `null`.");
+				Main.showInternalNotification("addGameShader: Shader is `null`.", ERROR);
 				return;
 			}
 			
@@ -221,19 +188,19 @@ class PlayStateScript extends Script
 				camera.setFilters(filters);
 			}
 		});
-		setVariable("loadDifficulty", function(difficulty:String)
+		script.set("loadDifficulty", function(difficulty:String)
 		{
 			var song = Song.loadSong('${state.song.name}/$difficulty.json', Mods.currentMod);
 			if (song == null)
-				onError('loadDifficulty: Error loading difficulty "$difficulty".');
+				Main.showInternalNotification('loadDifficulty: Error loading difficulty "$difficulty".', ERROR);
 			return song;
 		});
-		setVariable("createVideoSprite", function(x:Float = 0, y:Float = 0, name:String, ?mod:String, loop:Bool = false, destroy:Bool = true)
+		script.set("createVideoSprite", function(x:Float = 0, y:Float = 0, name:String, ?mod:String, loop:Bool = false, destroy:Bool = true)
 		{
 			var path = Paths.getVideo(name, mod);
 			if (!Paths.exists(path))
 			{
-				onError('createVideoSprite: Could not find video "$name".');
+				Main.showInternalNotification('createVideoSprite: Could not find video "$name".', ERROR);
 				return null;
 			}
 			
@@ -258,18 +225,18 @@ class PlayStateScript extends Script
 			video.bitmap.rate = GameplayGlobals.playbackRate;
 			return video;
 		});
-		setVariable("setupStrumline", function(char:Character, chartName:String)
+		script.set("setupStrumline", function(char:Character, chartName:String)
 		{
 			if (char == null)
 			{
-				onError('setupStrumline: Character is `null`.');
+				Main.showInternalNotification('setupStrumline: Character is `null`.', ERROR);
 				return null;
 			}
 			
 			var song = Song.loadSong(Path.join([state.song.directory, chartName + '.json']), state.song.mod);
 			if (song == null)
 			{
-				onError('setupStrumline: Error loading chart "$chartName".');
+				Main.showInternalNotification('setupStrumline: Error loading chart "$chartName".', ERROR);
 				return null;
 			}
 			
@@ -282,7 +249,7 @@ class PlayStateScript extends Script
 		});
 	}
 	
-	function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)
+	static inline function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)
 	{
 		for (lane in array)
 		{
@@ -291,7 +258,7 @@ class PlayStateScript extends Script
 		}
 	}
 	
-	function getShader(name:String):FlxRuntimeShader
+	static function getShader(name:String):FlxRuntimeShader
 	{
 		var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
 		var ogPath = 'data/shaders/' + nameInfo.name;
@@ -299,7 +266,7 @@ class PlayStateScript extends Script
 		var vert = Paths.getContent(Paths.getPath(ogPath + '.vert', nameInfo.mod));
 		if (frag == null && vert == null)
 		{
-			onError("Couldn't find shader \"" + name + '".');
+			Main.showInternalNotification("getShader: Couldn't find shader \"" + name + '".', ERROR);
 			return null;
 		}
 		

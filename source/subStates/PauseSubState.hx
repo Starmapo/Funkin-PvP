@@ -105,7 +105,7 @@ class PauseSubState extends FNFSubState
 		camSubState = FlxDestroyUtil.destroy(camSubState);
 		camFollow = FlxDestroyUtil.destroy(camFollow);
 		playerText = FlxDestroyUtil.destroy(playerText);
-		music = FlxDestroyUtil.destroy(music);
+		music = null;
 	}
 	
 	override function onOpen()

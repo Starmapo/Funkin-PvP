@@ -1,6 +1,13 @@
 {
   "dependencies": [
     {
+      "name": "SScript",
+      "type": "git",
+      "dir": null,
+      "ref": "8ee24c3e390627f6d6da43ed89094f8eb512b31b",
+      "url": "https://github.com/TheWorldMachinima/SScript"
+    },
+    {
       "name": "discord_rpc",
       "type": "git",
       "dir": null,

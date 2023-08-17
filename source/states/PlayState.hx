@@ -78,7 +78,7 @@ class PlayState extends FNFState
 	public var disableCamFollow:Bool = false;
 	public var defaultCamZoom:Float = 1.05;
 	public var canPause:Bool = false;
-	public var scripts:Map<String, PlayStateScript> = [];
+	public var scripts:Map<String, Script> = [];
 	public var events:Array<PlayStateEvent> = [];
 	public var camZooming:Bool = false;
 	public var camZoomingDecay:Float = 1;
@@ -156,7 +156,7 @@ class PlayState extends FNFState
 		
 		super.create();
 		
-		executeScripts("onCreatePost");
+		callOnScripts("onCreatePost");
 	}
 	
 	override public function update(elapsed:Float)
@@ -170,7 +170,7 @@ class PlayState extends FNFState
 				timing.setTime(inst.time);
 		}
 		
-		executeScripts("onUpdate", [elapsed]);
+		callOnScripts("onUpdate", [elapsed]);
 		
 		super.update(elapsed);
 		
@@ -192,7 +192,7 @@ class PlayState extends FNFState
 		
 		updateBG();
 		
-		executeScripts("onUpdatePost", [elapsed]);
+		callOnScripts("onUpdatePost", [elapsed]);
 		
 		if (FlxG.mouse.visible)
 			FlxG.mouse.visible = false;
@@ -202,11 +202,11 @@ class PlayState extends FNFState
 	{
 		super.destroy();
 		song = null;
-		camHUD = FlxDestroyUtil.destroy(camHUD);
-		camOther = FlxDestroyUtil.destroy(camOther);
+		camHUD = null;
+		camOther = null;
 		timing = FlxDestroyUtil.destroy(timing);
-		inst = FlxDestroyUtil.destroy(inst);
-		vocals = FlxDestroyUtil.destroy(vocals);
+		inst = null;
+		vocals = null;
 		ruleset = FlxDestroyUtil.destroy(ruleset);
 		statsDisplay = FlxDestroyUtil.destroy(statsDisplay);
 		judgementDisplay = FlxDestroyUtil.destroy(judgementDisplay);
@@ -295,7 +295,7 @@ class PlayState extends FNFState
 				
 			FlxG.sound.resume();
 			
-			executeScripts("onResume");
+			callOnScripts("onResume");
 		}
 	}
 	
@@ -326,7 +326,7 @@ class PlayState extends FNFState
 	{
 		hasStarted = true;
 		DiscordClient.changePresence(detailsText, 'In a match', null, true, getSongLength());
-		executeScripts("onStartSong");
+		callOnScripts("onStartSong");
 	}
 	
 	public function exit(state:FlxState, clearCache:Bool = false)
@@ -363,12 +363,12 @@ class PlayState extends FNFState
 	{
 		var path = Paths.getScriptPath(key, mod);
 		if (path != null && Paths.exists(path))
-			return addScriptPath(path, mod, execute);
+			return addScriptFromPath(path, mod, execute);
 			
 		return null;
 	}
 	
-	public function addScriptPath(path:String, mod:String, execute:Bool = true)
+	public function addScriptFromPath(path:String, mod:String, execute:Bool = true)
 	{
 		// Don't add a script if the path is null, dummy.
 		if (path == null)
@@ -377,10 +377,13 @@ class PlayState extends FNFState
 		if (scripts.exists(path))
 			return scripts.get(path);
 			
-		var script = new PlayStateScript(this, path, mod);
+		var script = Script.getScript(path, mod);
+		PlayStateScript.implement(script, this);
 		scripts.set(path, script);
+		
 		if (execute)
-			script.execute("onCreate");
+			script.call("onCreate");
+			
 		return script;
 	}
 	
@@ -399,7 +402,7 @@ class PlayState extends FNFState
 					{
 						if (file.endsWith(ext))
 						{
-							addScriptPath(full, song.mod);
+							addScriptFromPath(full, song.mod);
 							break;
 						}
 					}
@@ -408,7 +411,7 @@ class PlayState extends FNFState
 		}
 	}
 	
-	public function executeScripts(func:String, ?args:Array<Any>, ignoreStops:Bool = true, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic
+	public function callOnScripts(func:String, ?args:Array<Any>, ignoreStops:Bool = true, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic
 	{
 		if (exclusions == null)
 			exclusions = [];
@@ -421,7 +424,7 @@ class PlayState extends FNFState
 			if (exclusions.contains(path))
 				continue;
 				
-			var funcRet:Dynamic = script.execute(func, args);
+			var funcRet:Dynamic = script.call(func, args);
 			if (!ignoreStops)
 			{
 				if (funcRet == Script.FUNCTION_BREAK)
@@ -450,7 +453,7 @@ class PlayState extends FNFState
 			if (exclusions.contains(path))
 				continue;
 				
-			script.setVariable(name, value);
+			script.set(name, value);
 		}
 	}
 	
@@ -599,7 +602,7 @@ class PlayState extends FNFState
 				}
 		}
 		
-		executeScripts("onEvent", [name, params]);
+		callOnScripts("onEvent", [name, params]);
 	}
 	
 	public function endSong()
@@ -607,7 +610,7 @@ class PlayState extends FNFState
 		if (hasEnded)
 			return;
 			
-		var ret = executeScripts("onEndSong");
+		var ret = callOnScripts("onEndSong");
 		if (ret != Script.FUNCTION_STOP)
 		{
 			hasEnded = true;
@@ -687,7 +690,7 @@ class PlayState extends FNFState
 		
 		setCamFollow(camX, camY);
 		
-		executeScripts("onCharFocus", [char]);
+		callOnScripts("onCharFocus", [char]);
 	}
 	
 	public function setCamFollow(x:Float = 0, y:Float = 0, ignoreBounds:Bool = false)
@@ -934,8 +937,8 @@ class PlayState extends FNFState
 		if (stageScript != null)
 		{
 			for (name => spr in stageFile.sprites)
-				stageScript.setVariable(name, spr);
-			stageScript.execute("onCreate");
+				stageScript.set(name, spr);
+			stageScript.call("onCreate");
 		}
 		else if (!stageFile.found)
 			stageFile = new StageFile(this, 'fnf:stage');
@@ -1102,7 +1105,7 @@ class PlayState extends FNFState
 					persistentUpdate = false;
 					pauseSubState.setPlayer(i);
 					openSubState(pauseSubState);
-					executeScripts("onPause", [i]);
+					callOnScripts("onPause", [i]);
 					break;
 				}
 			}
@@ -1113,7 +1116,7 @@ class PlayState extends FNFState
 	{
 		ruleset.playfields[player].onLanePressed(lane);
 		
-		executeScripts("onLanePressed", [lane, player]);
+		callOnScripts("onLanePressed", [lane, player]);
 	}
 	
 	function onLaneReleased(lane:Int, player:Int)
@@ -1129,7 +1132,7 @@ class PlayState extends FNFState
 			char.startDanceTimer(getBeatLength() / 1000);
 		}
 		
-		executeScripts("onLaneReleased", [lane, player]);
+		callOnScripts("onLaneReleased", [lane, player]);
 	}
 	
 	function onGhostTap(lane:Int, player:Int)
@@ -1143,7 +1146,7 @@ class PlayState extends FNFState
 				playMissSound();
 		}
 		
-		executeScripts("onGhostTap", [lane, player]);
+		callOnScripts("onGhostTap", [lane, player]);
 	}
 	
 	function onNoteHit(note:Note, judgement:Judgement, ms:Float)
@@ -1203,7 +1206,7 @@ class PlayState extends FNFState
 		if (!hitNote)
 			camZooming = camBop = hitNote = true;
 			
-		executeScripts("onNoteHit", [note, judgement, ms]);
+		callOnScripts("onNoteHit", [note, judgement, ms]);
 	}
 	
 	function onNoteMissed(note:Note)
@@ -1220,7 +1223,7 @@ class PlayState extends FNFState
 		if (!hitNote)
 			camZooming = camBop = hitNote = true;
 			
-		executeScripts("onNoteMissed", [note]);
+		callOnScripts("onNoteMissed", [note]);
 	}
 	
 	function onNoteReleased(note:Note, judgement:Judgement, ms:Float)
@@ -1228,7 +1231,7 @@ class PlayState extends FNFState
 		var player = note.info.player;
 		msDisplay.members[player].showMS(ms, judgement);
 		
-		executeScripts("onNoteReleased", [note, judgement, ms]);
+		callOnScripts("onNoteReleased", [note, judgement, ms]);
 	}
 	
 	function onNoteReleaseMissed(note:Note)
@@ -1242,7 +1245,7 @@ class PlayState extends FNFState
 		if (Settings.missSounds)
 			playMissSound();
 			
-		executeScripts("onNoteReleaseMissed", [note]);
+		callOnScripts("onNoteReleaseMissed", [note]);
 	}
 	
 	function onJudgementAdded(judgement:Judgement, player:Int)
@@ -1252,17 +1255,17 @@ class PlayState extends FNFState
 			
 		judgementCounters.members[player].updateText();
 		
-		executeScripts("onJudgementAdded", [judgement, player]);
+		callOnScripts("onJudgementAdded", [judgement, player]);
 	}
 	
 	function onNoteSpawned(note:Note)
 	{
-		executeScripts("onNoteSpawned", [note]);
+		callOnScripts("onNoteSpawned", [note]);
 	}
 	
 	function onCharacterSing(char:Character, lane:Int, hold:Bool)
 	{
-		executeScripts("onCharacterSing", [char, lane, hold]);
+		callOnScripts("onCharacterSing", [char, lane, hold]);
 	}
 	
 	function startCountdown()
@@ -1274,10 +1277,10 @@ class PlayState extends FNFState
 				readySetGo('countdown/' + introSprPaths[count - 1]);
 			FlxG.sound.play(Paths.getSound('countdown/' + introSndPaths[count]), 0.6);
 			
-			executeScripts("onCountdownTick", [count]);
+			callOnScripts("onCountdownTick", [count]);
 		}, 4);
 		
-		executeScripts("onStartCountdown");
+		callOnScripts("onStartCountdown");
 	}
 	
 	function readySetGo(path:String):Void
@@ -1296,12 +1299,12 @@ class PlayState extends FNFState
 			}
 		});
 		
-		executeScripts("onReadySetGo", [spr]);
+		callOnScripts("onReadySetGo", [spr]);
 	}
 	
 	function getEventEarlyTrigger(event:PlayStateEvent)
 	{
-		var value:Dynamic = executeScripts("getEventEarlyTrigger", [event]);
+		var value:Dynamic = callOnScripts("getEventEarlyTrigger", [event]);
 		if (value != 0 && value != Script.FUNCTION_CONTINUE)
 			return value;
 			
@@ -1322,7 +1325,7 @@ class PlayState extends FNFState
 		if (hasEnded)
 			return;
 			
-		executeScripts("onStepHit", [step, decStep]);
+		callOnScripts("onStepHit", [step, decStep]);
 	}
 	
 	function onBeatHit(beat:Int, decBeat:Float)
@@ -1339,7 +1342,7 @@ class PlayState extends FNFState
 		if (camBopRate != null && camBopRate > 0 && beat % camBopRate == 0)
 			doCamBop();
 			
-		executeScripts("onBeatHit", [beat, decBeat]);
+		callOnScripts("onBeatHit", [beat, decBeat]);
 	}
 	
 	function onBarHit(bar:Int, decBar:Float)
@@ -1350,7 +1353,7 @@ class PlayState extends FNFState
 		if (camBopRate == null)
 			doCamBop();
 			
-		executeScripts("onBarHit", [bar, decBar]);
+		callOnScripts("onBarHit", [bar, decBar]);
 	}
 	
 	public function doCamBop()
@@ -1425,7 +1428,7 @@ class PlayState extends FNFState
 		FlxG.camera.flash(FlxColor.WHITE, 0.5);
 		FlxG.sound.play(Paths.getSound('death/default'));
 		
-		executeScripts("onDeath", [player]);
+		callOnScripts("onDeath", [player]);
 	}
 	
 	function checkDeath()
@@ -1452,7 +1455,7 @@ class PlayState extends FNFState
 	{
 		timing.setTime(time);
 		ruleset.handleSkip();
-		executeScripts("onSetTime", [time]);
+		callOnScripts("onSetTime", [time]);
 	}
 	
 	function get_isComplete()

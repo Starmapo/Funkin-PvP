@@ -54,7 +54,7 @@
 	
 	<haxelib name="thx.semver" />
 	<haxelib name="markdown" />
-	<haxelib name="hscript" />
+	<haxelib name="SScript" />
 	<haxelib name="systools" if="desktop" />
 	<haxelib name="discord_rpc" if="cpp"/>
 	<haxelib name="hxCodec" if="desktop || android" />
@@ -85,18 +85,16 @@
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<!--Disable this to reduce compilation time at the cost of limited HScript classes-->
-	<haxedef name="COMPILE_ALL_CLASSES" if="hscript" />
+	<haxedef name="COMPILE_ALL_CLASSES" if="SScript" />
 
 	<!--Enables fine error reporting for HScript-->
-	<haxedef name="hscriptPos" if="hscript" />
+	<haxedef name="hscriptPos" if="SScript" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<haxeflag name="--macro" value="backend.macro.HScriptMacro.init()" if="hscript" />
-
-	<section if="COMPILE_ALL_CLASSES">
-		<haxeflag name="-dce" value="no" />
-		<haxeflag name="--macro" value="backend.macro.ScriptsMacro.addAdditionalClasses()" />
+	<section if="SScript">
+		<haxeflag name="--macro" value="backend.macro.HScriptMacro.init()" />
+		<haxeflag name="-dce" value="no" if="COMPILE_ALL_CLASSES" />
 	</section>
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->

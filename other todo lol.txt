@@ -1,7 +1,5 @@
-use sscript
-sscript extend interp
-rework script returns
 playstate script object
-less default script classes
+script shader handling
 better controls, remove playersettings
 music timing events
+log viewer

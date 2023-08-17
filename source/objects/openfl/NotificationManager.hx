@@ -43,17 +43,25 @@ class NotificationDisplay extends FlxTypedGroup<Notification>
 	var tweenManager:FlxTweenManager = new FlxTweenManager();
 	var timerManager:FlxTimerManager = new FlxTimerManager();
 	
+	public function new()
+	{
+		super();
+		FlxG.signals.preStateSwitch.remove(tweenManager.clear);
+		FlxG.signals.preStateSwitch.remove(timerManager.clear);
+	}
+	
 	override function update(elapsed:Float)
 	{
 		tweenManager.update(elapsed);
 		timerManager.update(elapsed);
-
+		
 		var targetY:Float = startY;
 		for (i in 0...length)
 		{
 			var text = members[i];
 			if (text == null)
 				continue;
+				
 			text.y = FlxMath.lerp(text.y, targetY, elapsed * 15);
 			targetY += text.height + 10;
 		}
