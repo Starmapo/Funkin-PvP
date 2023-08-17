@@ -6,13 +6,16 @@ import backend.structures.song.NoteInfo;
 import backend.structures.song.Song;
 import backend.util.UnsafeUtil;
 import flixel.FlxBasic;
+import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.math.FlxMath;
 import haxe.io.Path;
 import hxcodec.flixel.FlxVideoSprite;
 import objects.game.Character;
 import objects.game.Note;
+import openfl.display.BitmapData;
 import openfl.filters.ShaderFilter;
 import states.PlayState;
 import sys.FileSystem;
@@ -22,6 +25,8 @@ using StringTools;
 
 class PlayStateScript
 {
+	public static var shaders:Map<String, FlxRuntimeShader> = [];
+	
 	public static function implement(script:Script, state:PlayState)
 	{
 		script.set("state", state);
@@ -68,15 +73,16 @@ class PlayStateScript
 			state.remove(obj, true);
 			return state.insert(index, obj);
 		});
+		
 		script.set("addBehindChars", function(obj:FlxBasic)
 		{
-			var index = FlxMath.minInt(FlxMath.minInt(state.members.indexOf(state.gf), state.members.indexOf(state.opponent)),
+			final index = FlxMath.minInt(FlxMath.minInt(state.members.indexOf(state.gf), state.members.indexOf(state.opponent)),
 				state.members.indexOf(state.bf));
 			return state.insert(index, obj);
 		});
 		script.set("addOverChars", function(obj:FlxBasic)
 		{
-			var index = FlxMath.maxInt(FlxMath.maxInt(state.members.indexOf(state.gf), state.members.indexOf(state.opponent)),
+			final index = FlxMath.maxInt(FlxMath.maxInt(state.members.indexOf(state.gf), state.members.indexOf(state.opponent)),
 				state.members.indexOf(state.bf));
 			return state.insert(index + 1, obj);
 		});
@@ -104,14 +110,16 @@ class PlayStateScript
 		{
 			return state.insert(state.members.indexOf(state.gf) + 1, obj);
 		});
+		
 		script.set("addBehindUI", function(obj:FlxBasic)
 		{
 			return state.insert(state.members.indexOf(state.ruleset.playfields[0]), obj);
 		});
+		
 		script.set("getCharacters", function(?name:String, ?mod:String)
 		{
-			var characters:Array<Character> = [];
-			var allChars = [state.gf, state.opponent, state.bf];
+			final characters:Array<Character> = [];
+			final allChars = [state.gf, state.opponent, state.bf];
 			for (char in allChars)
 			{
 				if (char.info != null && (name == null || char.info.name == name) && (mod == null || char.info.mod == mod))
@@ -127,12 +135,13 @@ class PlayStateScript
 		{
 			return state.getNoteCharacter(note);
 		});
+		
 		script.set("getCurrentNotes", function()
 		{
-			var notes:Array<Note> = [];
+			final notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
 			{
-				var manager = playfield.noteManager;
+				final manager = playfield.noteManager;
 				pushLaneNotes(notes, manager.activeNoteLanes);
 				pushLaneNotes(notes, manager.heldLongNoteLanes);
 				pushLaneNotes(notes, manager.deadNoteLanes);
@@ -141,60 +150,225 @@ class PlayStateScript
 		});
 		script.set("getActiveNotes", function()
 		{
-			var notes:Array<Note> = [];
+			final notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.activeNoteLanes);
 			return notes;
 		});
 		script.set("getHeldNotes", function()
 		{
-			var notes:Array<Note> = [];
+			final notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.heldLongNoteLanes);
 			return notes;
 		});
 		script.set("getDeadNotes", function()
 		{
-			var notes:Array<Note> = [];
+			final notes:Array<Note> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.deadNoteLanes);
 			return notes;
 		});
 		script.set("getQueueNotes", function()
 		{
-			var notes:Array<NoteInfo> = [];
+			final notes:Array<NoteInfo> = [];
 			for (playfield in state.ruleset.playfields)
 				pushLaneNotes(notes, playfield.noteManager.noteQueueLanes);
 			return notes;
 		});
-		script.set("getShader", function(name:String)
+		
+		script.set("initShader", function(name:String)
 		{
-			return getShader(name);
+			return initShader(name);
 		});
-		script.set("addGameShader", function(shader:FlxRuntimeShader)
+		script.set("setSpriteShader", function(sprite:FlxSprite, name:String)
 		{
+			if (sprite == null)
+			{
+				Main.showInternalNotification("setSpriteShader: Sprite is `null`.", ERROR);
+				return false;
+			}
+			
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification("setSpriteShader: Shader is `null`.", ERROR);
+				return false;
+			}
+			
+			sprite.shader = shader;
+			return true;
+		});
+		script.set("addShaderToCamera", function(name:String, ?camera:FlxCamera)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification("addShaderToCamera: Shader is `null`.", ERROR);
+				return;
+			}
+				
+			addShaderToCamera(shader, camera);
+		});
+		script.set("addGameShader", function(name:String)
+		{
+			final shader = getShader(name);
 			if (shader == null)
 			{
 				Main.showInternalNotification("addGameShader: Shader is `null`.", ERROR);
 				return;
 			}
 			
-			var cameras = [FlxG.camera, state.camHUD, state.camOther];
-			for (camera in cameras)
-			{
-				@:privateAccess
-				var filters = camera._filters != null ? camera._filters : [];
-				filters.push(new ShaderFilter(shader));
-				camera.setFilters(filters);
-			}
+			for (camera in [FlxG.camera, state.camHUD, state.camOther])
+				addShaderToCamera(shader, camera);
 		});
+		script.set("getShaderFloat", function(name:String, variable:String)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('getShaderFloat: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			return shader.getFloat(variable);
+		});
+		script.set("setShaderFloat", function(name:String, variable:String, value:Float)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('setShaderFloat: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			shader.setFloat(variable, value);
+			return value;
+		});
+		script.set("getShaderFloatArray", function(name:String, variable:String)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('getShaderFloatArray: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			return shader.getFloatArray(variable);
+		});
+		script.set("setShaderFloatArray", function(name:String, variable:String, value:Array<Float>)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('setShaderFloatArray: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			shader.setFloatArray(variable, value);
+			return value;
+		});
+		script.set("getShaderInt", function(name:String, variable:String)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('getShaderInt: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			return shader.getInt(variable);
+		});
+		script.set("setShaderInt", function(name:String, variable:String, value:Int)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('setShaderInt: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			shader.setInt(variable, value);
+			return value;
+		});
+		script.set("getShaderIntArray", function(name:String, variable:String)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('getShaderIntArray: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			return shader.getIntArray(variable);
+		});
+		script.set("setShaderIntArray", function(name:String, variable:String, value:Array<Int>)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('setShaderIntArray: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			shader.setIntArray(variable, value);
+			return value;
+		});
+		script.set("getShaderBool", function(name:String, variable:String)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('getShaderBool: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			return shader.getBool(variable);
+		});
+		script.set("setShaderBool", function(name:String, variable:String, value:Bool)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('setShaderBool: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			shader.setBool(variable, value);
+			return value;
+		});
+		script.set("getShaderSampler2D", function(name:String, variable:String)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('getShaderSampler2D: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			return shader.getSampler2D(variable);
+		});
+		script.set("setShaderSampler2D", function(name:String, variable:String, value:BitmapData)
+		{
+			final shader = getShader(name);
+			if (shader == null)
+			{
+				Main.showInternalNotification('setShaderSampler2D: Shader "$name" is not loaded.', ERROR);
+				return null;
+			}
+			
+			shader.setSampler2D(variable, value);
+			return value;
+		});
+		
 		script.set("loadDifficulty", function(difficulty:String)
 		{
-			var song = Song.loadSong('${state.song.name}/$difficulty.json', Mods.currentMod);
+			final song = Song.loadSong('${state.song.name}/$difficulty.json', Mods.currentMod);
 			if (song == null)
 				Main.showInternalNotification('loadDifficulty: Error loading difficulty "$difficulty".', ERROR);
 			return song;
 		});
+		
 		script.set("createVideoSprite", function(x:Float = 0, y:Float = 0, name:String, ?mod:String, loop:Bool = false, destroy:Bool = true)
 		{
 			var path = Paths.getVideo(name, mod);
@@ -207,7 +381,7 @@ class PlayStateScript
 			// The video is in a ZIP.
 			if (!FileSystem.exists(path))
 			{
-				var tempPath = ".temp/" + path;
+				final tempPath = ".temp/" + path;
 				if (!FileSystem.exists(tempPath))
 				{
 					// hxCodec currently only supports loading from files, so we must load it in a temporary folder.
@@ -218,13 +392,14 @@ class PlayStateScript
 				path = tempPath;
 			}
 			
-			var video = new FlxVideoSprite();
+			final video = new FlxVideoSprite();
 			if (destroy)
 				video.bitmap.onEndReached.add(video.destroy);
 			video.play(path, loop);
 			video.bitmap.rate = GameplayGlobals.playbackRate;
 			return video;
 		});
+		
 		script.set("setupStrumline", function(char:Character, chartName:String)
 		{
 			if (char == null)
@@ -233,20 +408,25 @@ class PlayStateScript
 				return null;
 			}
 			
-			var song = Song.loadSong(Path.join([state.song.directory, chartName + '.json']), state.song.mod);
+			final song = Song.loadSong(Path.join([state.song.directory, chartName + '.json']), state.song.mod);
 			if (song == null)
 			{
 				Main.showInternalNotification('setupStrumline: Error loading chart "$chartName".', ERROR);
 				return null;
 			}
 			
-			var strumline = new FakeStrumline(state, char, song.notes);
+			final strumline = new FakeStrumline(state, char, song.notes);
 			state.afterRulesetUpdate.add(function(elapsed)
 			{
 				strumline.update(elapsed);
 			});
 			return strumline;
 		});
+	}
+	
+	public static function clear()
+	{
+		shaders.clear();
 	}
 	
 	static inline function pushLaneNotes<T:Any>(to:Array<T>, array:Array<Array<T>>)
@@ -258,20 +438,55 @@ class PlayStateScript
 		}
 	}
 	
-	static function getShader(name:String):FlxRuntimeShader
+	static function initShader(name:String):FlxRuntimeShader
 	{
-		var nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
-		var ogPath = 'data/shaders/' + nameInfo.name;
-		var frag = Paths.getContent(Paths.getPath(ogPath + '.frag', nameInfo.mod));
-		var vert = Paths.getContent(Paths.getPath(ogPath + '.vert', nameInfo.mod));
+		if (!Settings.shaders)
+			return null;
+			
+		final nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
+		final shaderName = nameInfo.mod + ':' + nameInfo.name;
+		
+		if (shaders.exists(shaderName))
+		{
+			Main.showInternalNotification("initShader: Shader \"" + name + '" is already initialized.', ERROR);
+			return shaders.get(shaderName);
+		}
+		
+		final ogPath = 'data/shaders/' + nameInfo.name;
+		final frag = Paths.getContent(Paths.getPath(ogPath + '.frag', nameInfo.mod));
+		final vert = Paths.getContent(Paths.getPath(ogPath + '.vert', nameInfo.mod));
+		
 		if (frag == null && vert == null)
 		{
-			Main.showInternalNotification("getShader: Couldn't find shader \"" + name + '".', ERROR);
+			Main.showInternalNotification("Couldn't find shader \"" + name + '".', ERROR);
 			return null;
 		}
 		
-		var shader = new FlxRuntimeShader(frag, vert);
-		return shader;
+		shaders.set(shaderName, new FlxRuntimeShader(frag, vert));
+		
+		return shaders.get(shaderName);
+	}
+	
+	static function getShaderName(name:String)
+	{
+		final nameInfo = CoolUtil.getNameInfo(name, Mods.currentMod);
+		return nameInfo.mod + ':' + nameInfo.name;
+	}
+	
+	static function getShader(name:String)
+	{
+		return shaders.get(getShaderName(name));
+	}
+	
+	static function addShaderToCamera(shader:FlxRuntimeShader, ?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = FlxG.camera;
+
+		@:privateAccess
+		var filters = camera._filters != null ? camera._filters : [];
+		filters.push(new ShaderFilter(shader));
+		camera.setFilters(filters);
 	}
 }
 
