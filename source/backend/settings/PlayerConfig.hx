@@ -3,7 +3,7 @@ package backend.settings;
 typedef PlayerConfig =
 {
 	var device:PlayerConfigDevice;
-	var controls:Map<Action, Array<Int>>;
+	var controls:Map<Action, Array<Null<Int>>>;
 	
 	var ?scrollSpeed:Float;
 	var ?downScroll:Bool;

@@ -6,11 +6,9 @@ import flixel.input.keyboard.FlxKey;
 
 class InputFormatter
 {
-	static var dirReg = ~/^((l|r).?)-(left|right|down|up|click)$/;
-	
-	public static function format(id:Int, config:PlayerConfig):String
+	public static function format(id:Int, device:PlayerConfigDevice):String
 	{
-		return switch (config.device)
+		return switch (device)
 		{
 			case KEYBOARD: getKeyName(id);
 			case GAMEPAD(_): getButtonName(id);
@@ -86,17 +84,5 @@ class InputFormatter
 			return str.toUpperCase();
 			
 		return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
-	}
-	
-	static function shortenButtonName(name:String)
-	{
-		return switch (name == null ? "" : name.toLowerCase())
-		{
-			case "": "[?]";
-			case "lb", "rb", "lt", "rt", "ls", "rs", "l1", "r1", "l2", "r2", "ps", "zl", "zr", "sl", "sr": name.toUpperCase();
-			case dir if (dirReg.match(dir)):
-				dirReg.matched(1).toUpperCase() + " " + titleCase(dirReg.matched(3));
-			case label: titleCase(label);
-		}
 	}
 }

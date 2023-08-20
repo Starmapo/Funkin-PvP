@@ -119,6 +119,8 @@ class BootState extends FNFState
 		AudioSwitchFix.init();
 		
 		Paths.init();
+
+		backend.util.HaxeUIUtil.initToolkit();
 		
 		#if !macro
 		DiscordClient.initialize();

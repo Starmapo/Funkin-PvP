@@ -1,0 +1,5 @@
+<module id="funkin-pvp">
+    <components>
+        <class package="components" />
+    </components>
+</module>

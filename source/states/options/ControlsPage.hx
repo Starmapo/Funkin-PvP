@@ -1,8 +1,11 @@
 package states.options;
 
 import backend.util.HaxeUIUtil;
+import components.ActionBinds;
 import flixel.FlxG;
-import haxe.ui.RuntimeComponentBuilder;
+import haxe.ui.containers.VBox;
+
+using StringTools;
 
 class ControlsPage extends Page
 {
@@ -12,11 +15,9 @@ class ControlsPage extends Page
 	{
 		super();
 		this.player = player;
+		rpcDetails = 'Player ${player + 1} Controls';
 		
-		HaxeUIUtil.initToolkit();
-		
-		var view = RuntimeComponentBuilder.fromAsset("assets/data/ui/controls.xml");
-		add(view);
+		HaxeUIUtil.addView(this, new ControlsView(player));
 	}
 	
 	override function update(elapsed:Float)
@@ -25,5 +26,17 @@ class ControlsPage extends Page
 		
 		if (!FlxG.mouse.visible)
 			FlxG.mouse.visible = true;
+	}
+}
+
+@:build(haxe.ui.ComponentBuilder.build("assets/data/ui/views/controls.xml"))
+class ControlsView extends VBox
+{
+	public function new(player:Int)
+	{
+		super();
+		
+		for (c in findComponents(null, ActionBinds))
+			c.player = player;
 	}
 }

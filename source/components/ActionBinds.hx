@@ -1,0 +1,79 @@
+package components;
+
+import backend.InputFormatter;
+import backend.settings.PlayerConfig;
+import haxe.ui.containers.HBox;
+
+using StringTools;
+
+@:build(haxe.ui.ComponentBuilder.build("assets/data/ui/components/action-binds.xml"))
+class ActionBinds extends HBox
+{
+	static function formatActionName(action:Action)
+	{
+		final words = Type.enumConstructor(action).replace('_', ' ').split(' ');
+		for (i in 0...words.length)
+		{
+			if (words[i] != 'UI')
+				words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1).toLowerCase();
+		}
+		return words.join(' ');
+	}
+	
+	public var action(default, set):String = '';
+	public var player(default, set):Int = 0;
+	
+	var enumAction:Action;
+	var config(get, never):PlayerConfig;
+	
+	function updateAction()
+	{
+		enumAction = Type.createEnum(Action, action);
+		if (enumAction == null)
+			return;
+			
+		label.text = formatActionName(enumAction);
+		updateBinds();
+	}
+	
+	function updateBinds()
+	{
+		if (enumAction == null)
+			return;
+			
+		bind1.text = getBind(0);
+		bind2.text = getBind(1);
+	}
+	
+	function getBind(i:Int)
+	{
+		final binds = config.controls.get(enumAction);
+		final bind = (binds != null ? binds[i] : null) ?? -1;
+		return InputFormatter.format(bind, config.device);
+	}
+	
+	function set_action(value:String)
+	{
+		if (action != value)
+		{
+			action = value;
+			updateAction();
+		}
+		return value;
+	}
+	
+	function set_player(value:Int)
+	{
+		if (player != value)
+		{
+			player = value;
+			updateBinds();
+		}
+		return value;
+	}
+	
+	function get_config()
+	{
+		return Settings.playerConfigs[player];
+	}
+}

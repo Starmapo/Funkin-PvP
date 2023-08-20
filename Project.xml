@@ -62,7 +62,7 @@
 	<haxelib name="hxCodec" if="desktop || android" />
 	<haxelib name="systools" if="desktop" />
 
-	<haxelib name="hxcpp-debug-server" if="desktop" />
+	<haxelib name="hxcpp-debug-server" if="desktop debug" />
 
 	<ndll name="systools" haxelib="systools" if="systools" />
 

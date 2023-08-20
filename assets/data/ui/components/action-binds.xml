@@ -1,0 +1,11 @@
+<hbox width="100%">
+    <label id="label" width="120" verticalAlign="center" textAlign="left" />
+
+    <button id="bind1" width="100%" />
+    <button id="bind2" width="100%" />
+    
+    <hbox width="120">
+        <spacer width="100%" />
+        <button id="swap" text="Swap" />
+    </hbox>
+</hbox>

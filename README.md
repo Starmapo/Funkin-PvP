@@ -2,17 +2,22 @@
 
 The open source code of Friday Night Funkin' PvP.
 
+As of the moment, version 0.1 is still in development and nothing is promised to be kept the same until release, so use this at your own risk.
+
 ## Building
 
 ### Supported Platforms
 
 - Windows
-- Mac
+
+#### Probably supported, but needs testing
+
+- macOS
 - Linux
 
 ### Compiling
 
-Before you start, you should already have [Haxe](https://haxe.org/download/) installed.
+Before you start, you should already have [Haxe](https://haxe.org/download/) installed. Versions from 4.3.1 to the next major release should work.
 
 1. Install the [Haxe module manager](https://lib.haxe.org/p/hmm/) if you haven't already, and use it to **locally** install all the required dependencies (`hmm install`).
 2. If this is your first time using Lime, run `haxelib run lime setup` to be able to use the `lime` command, then run the setup for your platform (e.g. `lime setup windows`).
