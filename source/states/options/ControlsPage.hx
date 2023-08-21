@@ -1,9 +1,11 @@
 package states.options;
 
-import backend.util.HaxeUIUtil;
 import components.ActionBinds;
 import flixel.FlxG;
-import haxe.ui.containers.VBox;
+import haxe.ui.RuntimeComponentBuilder;
+import haxe.ui.components.SectionHeader;
+import haxe.ui.containers.Box;
+import haxe.ui.core.Screen;
 
 using StringTools;
 
@@ -17,7 +19,7 @@ class ControlsPage extends Page
 		this.player = player;
 		rpcDetails = 'Player ${player + 1} Controls';
 		
-		HaxeUIUtil.addView(this, new ControlsView(player));
+		add(new ControlsView(player));
 	}
 	
 	override function update(elapsed:Float)
@@ -29,14 +31,35 @@ class ControlsPage extends Page
 	}
 }
 
-@:build(haxe.ui.ComponentBuilder.build("assets/data/ui/views/controls.xml"))
-class ControlsView extends VBox
+class ControlsView extends Box
 {
 	public function new(player:Int)
 	{
 		super();
+		width = Screen.instance.width;
+		height = Screen.instance.height;
 		
-		for (c in findComponents(null, ActionBinds))
+		final ui = RuntimeComponentBuilder.fromAsset("assets/data/ui/views/controls.xml");
+		for (c in ui.findComponents(null, ActionBinds))
 			c.player = player;
+			
+		// add note controls
+		final scrollView = ui.findComponent("scrollView");
+		for (i in 1...Main.MAX_KEY_AMOUNT + 1)
+		{
+			final header = new SectionHeader();
+			header.text = i + 'K';
+			scrollView.addComponent(header);
+			
+			for (key in 1...i + 1)
+			{
+				final binds = new ActionBinds();
+				binds.setAction(NOTE(i, key));
+				binds.player = player;
+				scrollView.addComponent(binds);
+			}
+		}
+
+		addComponent(ui);
 	}
 }

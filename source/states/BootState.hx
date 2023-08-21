@@ -10,7 +10,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
-import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;

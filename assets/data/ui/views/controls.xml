@@ -1,5 +1,7 @@
-<vbox>
-    <!-- <scrollview width="100%" height="360" contentWidth="100%" horizontalAlign="center">
+<vbox width="100%" height="100%">
+    <spacer height="100%"/>
+
+    <scrollview id="scrollView" width="75%" height="540" contentWidth="100%" horizontalAlign="center">
         <style>
             .label {
                 font-size: 24px;
@@ -24,17 +26,19 @@
         <action-binds action="BACK" />
         <action-binds action="PAUSE" />
         <action-binds action="RESET" />
-    </scrollview> -->
+    </scrollview>
 
-    <hbox horizontalAlign="center" style="padding:5px;">
+    <hbox width="75%" horizontalAlign="center" style="padding:5px;">
         <style>
             .label {
                 font-size: 18px;
             }
         </style>
 
-        <button id="changeDevice" text="Change Device"/>
-        <button id="resetDefault" text="Reset to Default"/>
-        <button id="clearAll" text="Clear All"/>
+        <button id="changeDevice" width="100%" text="Change Device"/>
+        <button id="resetDefault" width="100%" text="Reset to Default"/>
+        <button id="clearAll" width="100%" text="Clear All"/>
     </hbox>
+
+    <spacer height="100%"/>
 </vbox>

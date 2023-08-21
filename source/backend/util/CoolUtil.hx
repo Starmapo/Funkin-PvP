@@ -310,7 +310,7 @@ class CoolUtil
 	}
 	
 	/**
-		Gets the macro class created by `util.ScriptsMacro` for an abstract/enum.
+		Gets the macro class created by `util.HScriptMacro` for an abstract/enum.
 	**/
 	public static inline function getMacroAbstractClass(className:String):Class<Dynamic>
 	{

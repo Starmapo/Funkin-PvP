@@ -10,11 +10,8 @@ class HaxeUIUtil
 {
 	public static function initToolkit()
 	{
-		if (!Toolkit.initialized)
-		{
-			// Toolkit.theme = "dark";
-			Toolkit.init();
-		}
+		// Toolkit.theme = "dark";
+		Toolkit.init();
 	}
 	
 	public static function addView(group:FlxGroup, ?component:Component)
@@ -25,7 +22,7 @@ class HaxeUIUtil
 		
 		if (component != null)
 			box.addComponent(component);
-		
+			
 		group.add(box);
 		return box;
 	}

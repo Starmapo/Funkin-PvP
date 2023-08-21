@@ -25,6 +25,8 @@ class Main extends Sprite
 		Duration of transitions between screens.
 	**/
 	public static final TRANSITION_TIME:Float = 0.7;
+
+	public static final MAX_KEY_AMOUNT:Int = 10;
 	
 	/**
 		Internal variable to track if the audio was disconnected.

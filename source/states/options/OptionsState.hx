@@ -1,6 +1,5 @@
 package states.options;
 
-import flixel.util.FlxDestroyUtil;
 import backend.Music;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -9,6 +8,7 @@ import flixel.FlxState;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import states.menus.MainMenuState;
 
 class OptionsState extends FNFState
@@ -104,9 +104,9 @@ class OptionsState extends FNFState
 		page.onSwitch.add(switchPage);
 		page.onOpenSubState.add(openSubState);
 		pages[name] = page;
-		add(page);
-		page.exists = currentName == name;
 		page.cameras = [camPages];
+		page.exists = currentName == name;
+		add(page);
 		return page;
 	}
 	
