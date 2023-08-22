@@ -2,6 +2,7 @@ package objects.editors;
 
 import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 class EditorRadioGroup extends FlxUIRadioGroup
 {
@@ -14,5 +15,15 @@ class EditorRadioGroup extends FlxUIRadioGroup
 		{
 			radio.button.label.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		}
+	}
+	
+	override function destroy()
+	{
+		if (_list != null)
+		{
+			FlxDestroyUtil.destroy(_list.prevButton);
+			FlxDestroyUtil.destroy(_list.nextButton);
+		}
+		super.destroy();
 	}
 }

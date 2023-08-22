@@ -5,18 +5,18 @@ import backend.settings.PlayerConfig;
 import haxe.ui.RuntimeComponentBuilder;
 import haxe.ui.components.Button;
 import haxe.ui.components.Label;
-import haxe.ui.containers.HBox;
+import haxe.ui.containers.Box;
 
 using StringTools;
 
-class ActionBinds extends HBox
+class ActionBinds extends Box
 {
 	static function formatActionName(action:Action)
 	{
 		return switch (action)
 		{
 			case NOTE(_, key):
-				'Key $key';
+				'Key ${key + 1}';
 			default:
 				final words = Type.enumConstructor(action).replace('_', ' ').split(' ');
 				for (i in 0...words.length)
@@ -55,9 +55,21 @@ class ActionBinds extends HBox
 	
 	public function setAction(action:Action)
 	{
+		if (action == null)
+			return;
 		enumAction = action;
 		updateLabel();
 		updateBinds();
+	}
+	
+	override function destroy()
+	{
+		label = null;
+		bind1 = null;
+		bind2 = null;
+		swap = null;
+		enumAction = null;
+		super.destroy();
 	}
 	
 	function updateAction()

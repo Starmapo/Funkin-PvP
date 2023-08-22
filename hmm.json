@@ -36,13 +36,17 @@
     },
     {
       "name": "haxeui-core",
-      "type": "haxelib",
-      "version": "1.6.0"
+      "type": "git",
+      "dir": null,
+      "ref": "f5daafe93bdfa957538f199294a54e0476c805b7",
+      "url": "https://github.com/haxeui/haxeui-core"
     },
     {
       "name": "haxeui-flixel",
-      "type": "haxelib",
-      "version": "1.6.0"
+      "type": "git",
+      "dir": null,
+      "ref": "be0b18553189a55fd42821026618a18615b070e3",
+      "url": "https://github.com/haxeui/haxeui-flixel"
     },
     {
       "name": "hscript",
