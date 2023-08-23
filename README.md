@@ -1,6 +1,6 @@
 # Friday Night Funkin' PvP
 
-The open source code of Friday Night Funkin' PvP.
+The open source code of Friday Night Funkin' PvP, a WIP fangame.
 
 **As of the moment, version 0.1 is still in development and nothing is promised to be kept the same until release, so use this at your own risk.**
 
