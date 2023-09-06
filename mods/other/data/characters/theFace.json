@@ -1,0 +1,64 @@
+{
+	"positionOffset": [
+		-28,
+		279
+	],
+	"image": "characters/The_Face",
+	"healthIcon": "face",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Face Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 18,
+			"prefix": "Face Down",
+			"name": "singDOWN",
+			"offset": [
+				-55,
+				18
+			]
+		},
+		{
+			"fps": 18,
+			"prefix": "Face Left",
+			"name": "singLEFT",
+			"offset": [
+				188,
+				53
+			]
+		},
+		{
+			"fps": 18,
+			"prefix": "Face Right",
+			"name": "singRIGHT",
+			"offset": [
+				-108,
+				10
+			]
+		},
+		{
+			"fps": 18,
+			"prefix": "Face Up",
+			"name": "singUP",
+			"offset": [
+				3,
+				54
+			]
+		}
+	],
+	"cameraOffset": [
+		25,
+		-81
+	],
+	"healthColors": [
+		161,
+		161,
+		161
+	]
+}

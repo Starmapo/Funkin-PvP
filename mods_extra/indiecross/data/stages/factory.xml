@@ -1,0 +1,17 @@
+<stage zoom="0.5" folder="stages/factory/">
+	<spr name="farbg" image="BACKBACKgROUND" x="-634" y="-556.5" scroll="0.8"/>
+	<spr name="bg" image="BackgroundwhereDEEZNUTSfitINYOmOUTH" x="center" y="center" scroll="0.91"/>
+	<spr name="blackStickmanThereInBG" image="SammyBg" x="225" y="180" scale="1.1" danceAnims="sam" updateHitbox="false">
+		<anim name="sam" prefix="Sam instance 1" loop="false"/>
+	</spr>
+	<spr name="mg" image="MidGrounUTS" x="center" y="center" scroll="0.95"/>
+	<high-quality>
+		<spr name="chain" image="ChainUTS" x="-1044.5" y="-699"/>
+		<spr name="bendyForeground" image="NUTS" x="center" y="-648.5"/>
+	</high-quality>
+	<dad x="-600" y="370"/>
+	<bf x="935" y="370"/>
+	<high-quality>
+		<spr name="fg" image="ForegroundEEZNUTS" x="1094.5" y="center" scroll="1.1"/>
+	</high-quality>
+</stage>

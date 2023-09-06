@@ -1,0 +1,61 @@
+{
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-58,
+		333.3
+	],
+	"image": "characters/Cuphead Sprites",
+	"healthIcon": "cuphead-demo",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Cuphead_standing instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "CupON THE GROUND NOW instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-44.1,
+				-14.9
+			]
+		},
+		{
+			"prefix": "Cupleft instance 1",
+			"name": "singLEFT",
+			"offset": [
+				136.9,
+				9.1
+			]
+		},
+		{
+			"prefix": "CupyRight instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-57.1,
+				-6.90000000000001
+			]
+		},
+		{
+			"prefix": "CupUp instance 1",
+			"name": "singUP",
+			"offset": [
+				-6.09999999999999,
+				83.1
+			]
+		}
+	],
+	"cameraOffset": [
+		34,
+		-90
+	],
+	"healthColors": [
+		171,
+		22,
+		74
+	]
+}

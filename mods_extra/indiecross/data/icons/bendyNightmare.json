@@ -1,0 +1,11 @@
+{
+	"image": "icons/UI_assets",
+	"frames": 3,
+	"normalAnim": "nightmare bendy normal",
+	"normalFPS": 24,
+	"losingAnim": "nightmare bendy normal",
+	"losingFPS": 24,
+	"winningAnim": "nightmare bendy win",
+	"winningFPS": 24,
+	"winningOffset": [5, 5]
+}

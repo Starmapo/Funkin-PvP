@@ -1,0 +1,91 @@
+{
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-43,
+		356.8
+	],
+	"image": "characters/BoyFriend_3rdPhase",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "BF idle dance copy 2 instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN copy 2 instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-1,
+				-30
+			]
+		},
+		{
+			"nextAnim": "singLEFT-loop",
+			"prefix": "BF NOTE RIGHT copy 2 instance 1",
+			"name": "singLEFT",
+			"offset": [
+				84,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				26,
+				27
+			],
+			"prefix": "BF NOTE RIGHT copy 2 instance 1",
+			"name": "singLEFT-loop",
+			"offset": [
+				84,
+				0
+			]
+		},
+		{
+			"nextAnim": "singRIGHT-loop",
+			"prefix": "BF NOTE LEFT copy 2 instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-12,
+				-4
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				19,
+				20,
+				21
+			],
+			"prefix": "BF NOTE LEFT copy 2 instance 1",
+			"name": "singRIGHT-loop",
+			"offset": [
+				-12,
+				-4
+			]
+		},
+		{
+			"prefix": "BF NOTE UP copy 2 instance 1",
+			"name": "singUP",
+			"offset": [
+				15,
+				58
+			]
+		}
+	],
+	"cameraOffset": [
+		2,
+		-70
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	]
+}

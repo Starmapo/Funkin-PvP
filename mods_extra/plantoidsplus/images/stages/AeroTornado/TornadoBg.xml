@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="TornadoBg.png">
+	<!-- Used VMan_2002's spritesheet converter. -->
+	<SubTexture name="Tornado bg anim0001" x="0" y="0" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0002" x="801" y="0" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0003" x="1602" y="0" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0004" x="2403" y="0" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0005" x="3204" y="0" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0006" x="0" y="601" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0007" x="801" y="601" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0008" x="1602" y="601" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0009" x="2403" y="601" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0010" x="3204" y="601" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0011" x="0" y="1202" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0012" x="801" y="1202" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0013" x="1602" y="1202" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0014" x="2403" y="1202" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+	<SubTexture name="Tornado bg anim0015" x="3204" y="1202" width="800" height="600" frameX="0" frameY="0" frameWidth="800" frameHeight="600"/>
+</TextureAtlas>

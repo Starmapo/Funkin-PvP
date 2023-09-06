@@ -1,0 +1,101 @@
+{
+	"holdLoopPoint": 3,
+	"danceAnims": [
+		"idleLeft",
+		"idleRight"
+	],
+	"positionOffset": [
+		0,
+		0
+	],
+	"image": "characters/Sans_but_Rip_colors",
+	"healthIcon": "sans",
+	"anims": [
+		{
+			"indices": [
+				24,
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12
+			],
+			"prefix": "EReree ee instance 1",
+			"name": "idleLeft",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"indices": [
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23
+			],
+			"prefix": "EReree ee instance 1",
+			"name": "idleRight",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "DownUT instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-3,
+				1
+			]
+		},
+		{
+			"prefix": "LeftUT instance 1",
+			"name": "singLEFT",
+			"offset": [
+				52,
+				2
+			]
+		},
+		{
+			"prefix": "RightUT instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-3,
+				1
+			]
+		},
+		{
+			"prefix": "UpUT instance 1",
+			"name": "singUP",
+			"offset": [
+				-3,
+				30
+			]
+		}
+	],
+	"cameraOffset": [
+		-12,
+		-115
+	],
+	"healthColors": [
+		41,
+		72,
+		118
+	]
+}

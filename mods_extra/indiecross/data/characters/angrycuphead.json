@@ -1,0 +1,82 @@
+{
+	"scale": 1.7,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-14,
+		323
+	],
+	"image": "characters/Cuphead Pissed",
+	"healthIcon": "cuphead-angry",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "1 instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"nextAnim": "indiecross_regret",
+			"prefix": "Hadoken!! instance 1",
+			"name": "indiecross_attack2",
+			"offset": [
+				354,
+				278.6
+			]
+		},
+		{
+			"indices": [
+				0
+			],
+			"prefix": "Phase 2 starts instance 1",
+			"name": "indiecross_regret",
+			"offset": [
+				-42,
+				-29
+			]
+		},
+		{
+			"prefix": "Down instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-40,
+				-31
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				120,
+				-10
+			]
+		},
+		{
+			"prefix": "Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-30,
+				30
+			]
+		},
+		{
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				35,
+				125
+			]
+		}
+	],
+	"cameraOffset": [
+		22,
+		-89
+	],
+	"healthColors": [
+		171,
+		22,
+		74
+	]
+}

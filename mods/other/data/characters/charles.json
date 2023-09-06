@@ -1,0 +1,64 @@
+{
+	"positionOffset": [
+		-57,
+		243
+	],
+	"image": "characters/Charles",
+	"healthIcon": "face",
+	"anims": [
+		{
+			"fps": 18,
+			"prefix": "Charles Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Charles Down",
+			"name": "singDOWN",
+			"offset": [
+				22,
+				-176
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Charles Left",
+			"name": "singLEFT",
+			"offset": [
+				43,
+				14
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Charles Right",
+			"name": "singRIGHT",
+			"offset": [
+				-41,
+				-27
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Charles Up",
+			"name": "singUP",
+			"offset": [
+				19,
+				8
+			]
+		}
+	],
+	"cameraOffset": [
+		-60,
+		-131
+	],
+	"healthColors": [
+		161,
+		161,
+		161
+	]
+}

@@ -6,6 +6,26 @@
 				{
 					"name": "lok",
 					"displayName": "Lok"
+				},
+				{
+					"name": "purpleFace",
+					"displayName": "Purple Face"
+				},
+				{
+					"name": "purpleFace-christmas",
+					"displayName": "Purple Face (Sweater)"
+				},
+				{
+					"name": "theFace",
+					"displayName": "The Face (2021)"
+				},
+				{
+					"name": "charles",
+					"displayName": "Charles Entertainment Cheese (2021)"
+				},
+				{
+					"name": "craig",
+					"displayName": "Craig (2021)"
 				}
 			]
 		}

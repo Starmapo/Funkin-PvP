@@ -1,0 +1,21 @@
+{
+	"groups": [
+		{
+			"name": "Other",
+			"credits": [
+				{
+					"name": "ThatAzazelFire",
+					"description": "Artist (Lok)",
+					"color": "#660000",
+					"link": "https://twitter.com/ThatAzazelFire"
+				},
+				{
+					"name": "Starmapo",
+					"description": "Artist",
+					"color": "#FFFF72",
+					"link": "https://starmapo.carrd.co/"
+				}
+			]
+		}
+	]
+}

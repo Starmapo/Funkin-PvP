@@ -1,0 +1,7 @@
+<stage zoom="0.85" folder="stages/freaky-machine/">
+	<spr name="bg" image="dabg" x="-500" y="50" scale="1.6"/>
+	<spr name="machineCurtainLeft" image="Curtain1" x="-403" y="-50" scale="1.6"/>
+	<spr name="machineCurtainRight" image="Curtain1" x="568" y="-50" scale="1.6"/>
+	<dad x="200" y="300"/>
+	<bf x="900" y="300"/>
+</stage>

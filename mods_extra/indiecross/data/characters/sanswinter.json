@@ -1,0 +1,151 @@
+{
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-73,
+		249
+	],
+	"image": "characters/Sans_Brrrr",
+	"healthIcon": "sans",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Sans FNF instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "SansboneIdle instance 1",
+			"name": "idle-alt",
+			"offset": [
+				66,
+				0
+			]
+		},
+		{
+			"prefix": "1:22 instance 1",
+			"name": "indiecross_letsgo",
+			"offset": [
+				-17,
+				33
+			]
+		},
+		{
+			"prefix": "Sans puts back his shit instance 1",
+			"name": "indiecross_putin",
+			"offset": [
+				38,
+				88
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "02 instance 1",
+			"name": "indiecross_sleep",
+			"offset": [
+				-10,
+				-124
+			]
+		},
+		{
+			"prefix": "Taste my Lightsaber instance 1",
+			"name": "indiecross_takeout",
+			"offset": [
+				43,
+				89
+			]
+		},
+		{
+			"prefix": "03 instance 1",
+			"name": "intro",
+			"offset": [
+				29,
+				9
+			]
+		},
+		{
+			"nextAnim": "indiecross_sleep",
+			"prefix": "01 instance 1",
+			"name": "outro",
+			"offset": [
+				32,
+				3
+			]
+		},
+		{
+			"prefix": "Donw instance 1",
+			"name": "singDOWN",
+			"offset": [
+				5,
+				0
+			]
+		},
+		{
+			"prefix": "Right instance 1",
+			"name": "singDOWN-alt",
+			"offset": [
+				76,
+				96
+			]
+		},
+		{
+			"prefix": "Lefft instance 1",
+			"name": "singLEFT",
+			"offset": [
+				46,
+				-4
+			]
+		},
+		{
+			"prefix": "Right instance 1",
+			"name": "singLEFT-alt",
+			"offset": [
+				76,
+				96
+			]
+		},
+		{
+			"prefix": "S-Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-22,
+				7
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singRIGHT-alt",
+			"offset": [
+				159,
+				51
+			]
+		},
+		{
+			"prefix": "Upo instance 1",
+			"name": "singUP",
+			"offset": [
+				-10,
+				25
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singUP-alt",
+			"offset": [
+				159,
+				51
+			]
+		}
+	],
+	"cameraOffset": [
+		5,
+		-95
+	],
+	"healthColors": [
+		41,
+		72,
+		118
+	]
+}

@@ -1,0 +1,67 @@
+{
+	"positionOffset": [
+		-78,
+		42
+	],
+	"image": "characters/VIGOR_PLANTOID",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "vigor",
+	"flipX": false,
+	"anims": [
+		{
+			"prefix": "Idle",
+			"name": "idle",
+			"offset": [
+				80,
+				-40
+			]
+		},
+		{
+			"prefix": "Down",
+			"name": "singDOWN",
+			"offset": [
+				130,
+				-30
+			]
+		},
+		{
+			"prefix": "Left",
+			"name": "singLEFT",
+			"offset": [
+				170,
+				-100
+			]
+		},
+		{
+			"prefix": "Right",
+			"name": "singRIGHT",
+			"offset": [
+				190,
+				-70
+			]
+		},
+		{
+			"prefix": "Up",
+			"name": "singUP",
+			"offset": [
+				80,
+				10
+			]
+		}
+	],
+	"cameraOffset": [
+		-82,
+		2
+	],
+	"healthColors": [
+		0,
+		0,
+		0
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

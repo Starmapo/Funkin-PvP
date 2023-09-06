@@ -1,0 +1,10 @@
+indiecross:Indie Cross
+blueBones:Blue Bones
+orangeBones:Orange Bones
+sin:Ink Notes
+parry:Parry Notes
+tricky:Tricky Notes
+flash:Flash Notes
+blueBounce:Blue Bounce Notes
+orangeBounce:Orange Bounce Notes
+fire:Fire Notes

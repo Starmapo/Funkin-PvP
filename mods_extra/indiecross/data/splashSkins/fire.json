@@ -1,0 +1,18 @@
+{
+	"image": "splashes/NOTE_fire",
+	"splashes": [
+		{
+			"anim": "oUCH"
+		},
+		{
+			"anim": "oUCH"
+		},
+		{
+			"anim": "oUCH"
+		},
+		{
+			"anim": "oUCH"
+		}
+	],
+	"positionOffset": [-15, -20]
+}

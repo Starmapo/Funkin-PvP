@@ -1,0 +1,5 @@
+<stage zoom="0.9" folder="stages/hall/">
+	<spr name="bg" image="hall" x="-620" y="center" scale="1.5"/>
+	<dad x="-300" y="25"/>
+	<bf x="616.3" y="25"/>
+</stage>

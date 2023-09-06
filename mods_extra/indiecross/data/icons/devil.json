@@ -1,0 +1,6 @@
+{
+	"image": "icons/NewDevilIcon",
+	"normalAnim": "Dev instance 1",
+	"losingAnim": "Devilmad instance 1",
+	"losingOffset": [20, -4]
+}

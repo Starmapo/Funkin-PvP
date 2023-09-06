@@ -1,0 +1,96 @@
+{
+	"scale": 1.75,
+	"positionOffset": [
+		-104,
+		-235.5
+	],
+	"image": "characters/SammyRemastered",
+	"healthIcon": "sammy",
+	"anims": [
+		{
+			"prefix": "Sammy Idle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "End02 instance 1",
+			"name": "indiecross_ritualEnd",
+			"offset": [
+				188,
+				31
+			]
+		},
+		{
+			"fps": 27,
+			"prefix": "Intro instance 1",
+			"name": "indiecross_ritualIntro",
+			"offset": [
+				881,
+				163.4
+			]
+		},
+		{
+			"prefix": "down instance 1",
+			"name": "singDOWN",
+			"offset": [
+				155,
+				-163.4
+			]
+		},
+		{
+			"nextAnim": "singLEFT-loop",
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				562,
+				-41.4
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20
+			],
+			"prefix": "Left instance 1",
+			"name": "singLEFT-loop",
+			"offset": [
+				562,
+				-41.4
+			]
+		},
+		{
+			"prefix": "Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				137,
+				-136.5
+			]
+		},
+		{
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				268,
+				54.7
+			]
+		}
+	],
+	"cameraOffset": [
+		-70,
+		-353
+	],
+	"healthColors": [
+		100,
+		53,
+		21
+	]
+}

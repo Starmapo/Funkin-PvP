@@ -1,0 +1,101 @@
+{
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-42,
+		348.9
+	],
+	"image": "characters/BoyFriend_Assets_CHRISTMAS_VARIANT",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"prefix": "BF HEY!! instance 1",
+			"name": "hey",
+			"offset": [
+				10,
+				0.200000000000003
+			]
+		},
+		{
+			"prefix": "BF idle dance instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN instance 1",
+			"name": "singDOWN",
+			"offset": [
+				1,
+				-37
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN MISS instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				-2,
+				-21
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT instance 1",
+			"name": "singLEFT",
+			"offset": [
+				65,
+				-6
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT MISS instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				43,
+				23
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-21,
+				-7
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT MISS instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-27,
+				17.2
+			]
+		},
+		{
+			"prefix": "BF NOTE UP instance 1",
+			"name": "singUP",
+			"offset": [
+				16,
+				37
+			]
+		},
+		{
+			"prefix": "BF NOTE UP MISS instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				3,
+				27.2
+			]
+		}
+	],
+	"cameraOffset": [
+		-18,
+		-62
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	]
+}

@@ -1,0 +1,15 @@
+<stage zoom="0.61" folder="stages/field-angry/">
+	<spr name="bg" image="CH-RN-00" x="center" y="center" scale="2.8" scroll="0.2"/>
+	<spr name="trees" image="CH-RN-01" x="-779" y="center" scale="2.8" scroll="0.45"/>
+	<spr name="fg" image="CH-RN-02" x="-1188" y="-812" scale="3.6"/>
+	<high-quality>
+		<spr name="fgRain" image="NewRAINLayer01" x="center" y="center" graphicWidth="1280" scroll="0" camera="other">
+			<anim name="play" prefix="RainFirstlayer instance 1" baseAnim="true"/>
+		</spr>
+		<spr name="fgRain2" image="NewRAINLayer02" x="center" y="center" graphicWidth="1280" scroll="0" camera="other">
+			<anim name="play" prefix="RainFirstlayer instance 1" baseAnim="true"/>
+		</spr>
+	</high-quality>
+	<dad x="-50"/>
+	<bf x="945"/>
+</stage>

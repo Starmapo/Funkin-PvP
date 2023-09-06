@@ -1,0 +1,68 @@
+{
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-31.6,
+		296.4
+	],
+	"image": "characters/goose",
+	"healthIcon": "gose",
+	"anims": [
+		{
+			"prefix": "Gose Idle Dank",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Goose MLG Anim",
+			"name": "intro",
+			"offset": [
+				-3,
+				162
+			]
+		},
+		{
+			"prefix": "Gose Down Dank",
+			"name": "singDOWN",
+			"offset": [
+				-10,
+				-30
+			]
+		},
+		{
+			"prefix": "Gose Left Dank",
+			"name": "singLEFT",
+			"offset": [
+				170,
+				50
+			]
+		},
+		{
+			"prefix": "Gose Right Dank",
+			"name": "singRIGHT",
+			"offset": [
+				-10,
+				-3
+			]
+		},
+		{
+			"prefix": "Gose Up Dank",
+			"name": "singUP",
+			"offset": [
+				-16,
+				170
+			]
+		}
+	],
+	"cameraOffset": [
+		82,
+		-208
+	],
+	"healthColors": [
+		255,
+		255,
+		255
+	]
+}

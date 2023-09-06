@@ -1,0 +1,7 @@
+{
+	"image": "icons/NewIcons",
+	"positionOffset": [0, -15],
+	"normalAnim": "C-Pissed instance 1",
+	"losingAnim": "C-Dead instance 1",
+	"losingOffset": [0, -15]
+}

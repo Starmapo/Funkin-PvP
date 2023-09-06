@@ -1,0 +1,17 @@
+{
+	"image": "splashes/sinSplashes",
+	"splashes": [
+		{
+			"anim": "note impact 1 purple"
+		},
+		{
+			"anim": "note impact 1 blue"
+		},
+		{
+			"anim": "note impact 1 green"
+		},
+		{
+			"anim": "note impact 1 red"
+		}
+	]
+}

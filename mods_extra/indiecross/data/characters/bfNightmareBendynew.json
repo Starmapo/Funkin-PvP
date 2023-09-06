@@ -1,0 +1,110 @@
+{
+	"scale": 2.11,
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-70.72,
+		249.88
+	],
+	"image": "characters/BoyFriend_NM_Bendy",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "BF idle dance copy 2 instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "BF NOTE DOWN copy 2 instance 1",
+			"name": "singDOWN",
+			"offset": [
+				1,
+				-37
+			]
+		},
+		{
+			"prefix": "D-Miss instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				-3,
+				-21
+			]
+		},
+		{
+			"nextAnim": "singLEFT-loop",
+			"prefix": "BF NOTE RIGHT copy 2 instance 1",
+			"name": "singLEFT",
+			"offset": [
+				113,
+				6
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				26,
+				27
+			],
+			"prefix": "BF NOTE RIGHT copy 2 instance 1",
+			"name": "singLEFT-loop",
+			"offset": [
+				113,
+				6
+			]
+		},
+		{
+			"prefix": "L-Miss instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				132,
+				37
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT copy 2 instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-14,
+				-2
+			]
+		},
+		{
+			"prefix": "R-Miss instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				29,
+				31
+			]
+		},
+		{
+			"prefix": "BF NOTE UP copy 2 instance 1",
+			"name": "singUP",
+			"offset": [
+				25,
+				77
+			]
+		},
+		{
+			"prefix": "U-Miss instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				-15,
+				145
+			]
+		}
+	],
+	"cameraOffset": [
+		-6,
+		-51
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	]
+}

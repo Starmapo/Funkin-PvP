@@ -1,0 +1,67 @@
+{
+	"constantLooping": true,
+	"scale": 2.5,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-800,
+		-306
+	],
+	"image": "characters/dark/Bendy_run_Remastered",
+	"healthIcon": "bendy",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Bendy Run instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Dowwn instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-3,
+				-115
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Leftr instance 1",
+			"name": "singLEFT",
+			"offset": [
+				161,
+				161
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-1,
+				-44
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Upp instance 1",
+			"name": "singUP",
+			"offset": [
+				-2,
+				241
+			]
+		}
+	],
+	"cameraOffset": [
+		154,
+		-225
+	],
+	"healthColors": [
+		22,
+		22,
+		22
+	]
+}

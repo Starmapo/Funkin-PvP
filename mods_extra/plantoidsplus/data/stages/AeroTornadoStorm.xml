@@ -1,0 +1,24 @@
+<stage zoom="0.6" folder="stages/AeroTornado/">
+	<spr name="sky" image="StormSky" x="-700" y="-320" scrollX="0.2" scrollY="0.7" scaleX="25" scaleY="2.4"/>
+	<spr name="bgThing" image="TornadoBg" x="-900" y="-300" scrollX="0.7" scrollY="0.6" scaleX="3.5" scaleY="3" alpha="0.6">
+		<anim name="idle" prefix="Tornado bg anim" fps="12" baseAnim="true"/>
+		<property name="color" type="i" value="0xff596170"/>
+	</spr>
+	<spr name="plat" image="TornadoPlat" x="250" y="660" scroll="0.95">
+		<property name="origin.y" type="f" value="120"/>
+		<property name="angle" type="f" value="6"/>
+	</spr>
+	<dad x="-200"/>
+	<bf x="590"/>
+	<gf x="700" y="350"/>
+	<spr name="fgThing" image="TornadoBg" x="-1300" y="-400" scrollX="1.3" scrollY="1.2" scaleX="5" scaleY="3" alpha="0.33">
+		<anim name="idle" prefix="Tornado bg anim" fps="12" baseAnim="true"/>
+		<property name="flipX" type="b" value="true"/>
+		<property name="animation.curAnim.curFrame" type="i" value="7"/>
+		<property name="color" type="i" value="0xffB1BBCC"/>
+	</spr>
+	<spr name="rain" image="RainBg" x="-700" y="-320" scroll="0.1" scaleX="3" scaleY="2" alpha="0.3">
+		<anim name="idle" prefix="rainbg" fps="20" baseAnim="true"/>
+	</spr>
+	<spr name="vig" image="Vignette" x="-700" y="-320" scroll="0.1" scaleY="0.8" alpha="0.8"/>
+</stage>

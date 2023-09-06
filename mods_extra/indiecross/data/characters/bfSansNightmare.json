@@ -1,0 +1,93 @@
+{
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-50.1,
+		356.2
+	],
+	"image": "characters/BF-BS-shader",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"prefix": "BF idle dance instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-18,
+				-33
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN MISS instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				-19,
+				-12
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT instance 1",
+			"name": "singLEFT",
+			"offset": [
+				73,
+				2
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT MISS instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				18,
+				25
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-23,
+				-3
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT MISS instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-42,
+				23
+			]
+		},
+		{
+			"prefix": "BF NOTE UP instance 1",
+			"name": "singUP",
+			"offset": [
+				6,
+				56
+			]
+		},
+		{
+			"prefix": "BF NOTE UP MISS instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				-25,
+				20
+			]
+		}
+	],
+	"cameraOffset": [
+		-16,
+		-63
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	]
+}

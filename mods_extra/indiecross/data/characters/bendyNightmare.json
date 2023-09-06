@@ -1,0 +1,156 @@
+{
+	"scale": 3,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-814.75,
+		-1170.15
+	],
+	"image": "characters/NMB",
+	"healthIcon": "bendyNightmare",
+	"anims": [
+		{
+			"loop": true,
+			"fps": 25,
+			"prefix": "DeathBendy instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 25,
+			"prefix": "bye bitch instance 1",
+			"name": "indiecross_ink",
+			"offset": [
+				513.92,
+				-199.23
+			]
+		},
+		{
+			"fps": 25,
+			"prefix": "Intro instance 1",
+			"name": "intro",
+			"offset": [
+				-263.29,
+				3319.01
+			]
+		},
+		{
+			"nextAnim": "singDOWN-loop",
+			"fps": 25,
+			"prefix": "Down instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-216.61,
+				-455
+			]
+		},
+		{
+			"loop": true,
+			"fps": 25,
+			"indices": [
+				4,
+				5,
+				6,
+				7
+			],
+			"prefix": "Down instance 1",
+			"name": "singDOWN-loop",
+			"offset": [
+				-216.61,
+				-455
+			]
+		},
+		{
+			"nextAnim": "singLEFT-loop",
+			"fps": 25,
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				321,
+				8
+			]
+		},
+		{
+			"loop": true,
+			"fps": 25,
+			"indices": [
+				6,
+				7,
+				8,
+				9
+			],
+			"prefix": "Left instance 1",
+			"name": "singLEFT-loop",
+			"offset": [
+				321,
+				8
+			]
+		},
+		{
+			"nextAnim": "singRIGHT-loop",
+			"fps": 25,
+			"prefix": "FUCK YOU instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-146.51,
+				84.5
+			]
+		},
+		{
+			"loop": true,
+			"fps": 25,
+			"indices": [
+				8,
+				9,
+				10,
+				11
+			],
+			"prefix": "FUCK YOU instance 1",
+			"name": "singRIGHT-loop",
+			"offset": [
+				-146.51,
+				84.5
+			]
+		},
+		{
+			"nextAnim": "singUP-loop",
+			"fps": 25,
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				50.52,
+				402.07
+			]
+		},
+		{
+			"loop": true,
+			"fps": 25,
+			"indices": [
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39
+			],
+			"prefix": "Up instance 1",
+			"name": "singUP-loop",
+			"offset": [
+				50.52,
+				402.07
+			]
+		}
+	],
+	"cameraOffset": [
+		206,
+		-244
+	],
+	"healthColors": [
+		255,
+		204,
+		0
+	]
+}

@@ -1,0 +1,25 @@
+{
+	"groups": [
+		{
+			"name": "Plantoids+",
+			"songs": [
+				{
+					"name": "Breeze",
+					"icon": "aero"
+				},
+				{
+					"name": "Whirlwind",
+					"icon": "aerosad"
+				},
+				{
+					"name": "Torn-Aero",
+					"icon": "manifestaero"
+				},
+				{
+					"name": "Manifest (Aero Mix)",
+					"icon": "manifestaero"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,73 @@
+{
+	"positionOffset": [
+		-72.65,
+		208.45
+	],
+	"image": "characters/Craig",
+	"healthIcon": "craig",
+	"anims": [
+		{
+			"fps": 12,
+			"prefix": "Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Idle Blink",
+			"name": "idle-blink",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Down",
+			"name": "singDOWN",
+			"offset": [
+				-39,
+				-31.7
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Left",
+			"name": "singLEFT",
+			"offset": [
+				9,
+				0
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Right",
+			"name": "singRIGHT",
+			"offset": [
+				-8,
+				-7.8
+			]
+		},
+		{
+			"fps": 12,
+			"prefix": "Up",
+			"name": "singUP",
+			"offset": [
+				-32,
+				10.2
+			]
+		}
+	],
+	"cameraOffset": [
+		-14,
+		22
+	],
+	"healthColors": [
+		243,
+		224,
+		61
+	]
+}

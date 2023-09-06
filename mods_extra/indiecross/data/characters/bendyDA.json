@@ -1,0 +1,78 @@
+{
+	"scale": 1.5,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-20,
+		93.2
+	],
+	"image": "characters/BendyDAgames",
+	"healthIcon": "bendyDA",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Idle Normal instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Transformation instance 1",
+			"name": "indiecross_bendyIsTrans",
+			"offset": [
+				-6,
+				-28
+			]
+		},
+		{
+			"prefix": "You've got this instance 1",
+			"name": "indiecross_youvegotthis",
+			"offset": [
+				33,
+				-49
+			]
+		},
+		{
+			"prefix": "Down Normal instance 1",
+			"name": "singDOWN",
+			"offset": [
+				114,
+				-59
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				222,
+				-44
+			]
+		},
+		{
+			"prefix": "Right Normal instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				20,
+				-39
+			]
+		},
+		{
+			"prefix": "Up Normal instance 1",
+			"name": "singUP",
+			"offset": [
+				74,
+				92
+			]
+		}
+	],
+	"cameraOffset": [
+		20,
+		-115
+	],
+	"healthColors": [
+		35,
+		41,
+		47
+	]
+}

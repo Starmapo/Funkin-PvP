@@ -1,0 +1,102 @@
+{
+	"groups": [
+		{
+			"songs": [
+				{
+					"name": "Snake Eyes",
+					"icon": "cuphead"
+				},
+				{
+					"name": "Technicolor Tussle",
+					"icon": "cuphead"
+				},
+				{
+					"name": "Knockout",
+					"icon": "cuphead-angry"
+				},
+				{
+					"name": "Whoopee",
+					"icon": "sans"
+				},
+				{
+					"name": "Sansational",
+					"icon": "sans"
+				},
+				{
+					"name": "Final Stretch",
+					"icon": "sans"
+				},
+				{
+					"name": "Burning in Hell",
+					"icon": "sansScared"
+				},
+				{
+					"name": "Imminent Demise",
+					"icon": "bendyDA"
+				},
+				{
+					"name": "Terrible Sin",
+					"icon": "bendy"
+				},
+				{
+					"name": "Last Reel",
+					"icon": "bendy"
+				},
+				{
+					"name": "Last Reel (Demo)",
+					"icon": "bendy"
+				},
+				{
+					"name": "Nightmare Run",
+					"icon": "bendy",
+					"forceCharacters": true
+				},
+				{
+					"name": "Satanic Funkin'",
+					"icon": "devil"
+				},
+				{
+					"name": "Bonedoggle",
+					"icon": "papyrusandsans"
+				},
+				{
+					"name": "Bad to the Bone",
+					"icon": "papyrus"
+				},
+				{
+					"name": "Ritual",
+					"icon": "sammy"
+				},
+				{
+					"name": "Freaky Machine",
+					"icon": "bendyDA"
+				},
+				{
+					"name": "Devil's Gambit",
+					"icon": "cupheadNightmare"
+				},
+				{
+					"name": "BAD TIME",
+					"icon": "sansNightmare"
+				},
+				{
+					"name": "DESPAIR",
+					"icon": "bendyNightmare"
+				},
+				{
+					"name": "Saness",
+					"icon": "saness"
+				},
+				{
+					"name": "Gose",
+					"icon": "gose"
+				},
+				{
+					"name": "Gose (Classic)",
+					"icon": "gose"
+				}
+			],
+			"name": "Indie Cross"
+		}
+	]
+}

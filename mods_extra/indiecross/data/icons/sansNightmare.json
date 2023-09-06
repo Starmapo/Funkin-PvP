@@ -1,0 +1,13 @@
+{
+	"image": "icons/UISansIcon_assets",
+	"frames": 3,
+	"positionOffset": [-50, -40],
+	"normalAnim": "normal",
+	"normalFPS": 24,
+	"losingAnim": "loss",
+	"losingFPS": 24,
+	"losingOffset": [-80, -20],
+	"winningAnim": "win",
+	"winningFPS": 24,
+	"winningOffset": [25, -17]
+}

@@ -1,0 +1,93 @@
+{
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-53,
+		356
+	],
+	"image": "characters/BoyFriend_BendyShade",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"prefix": "BF idle dance instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-27,
+				-39
+			]
+		},
+		{
+			"prefix": "D-Miss instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				-34,
+				-24
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT instance 1",
+			"name": "singLEFT",
+			"offset": [
+				74,
+				1
+			]
+		},
+		{
+			"prefix": "L-Miss instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				91,
+				21
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-25,
+				-4
+			]
+		},
+		{
+			"prefix": "R-Miss instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				15,
+				22
+			]
+		},
+		{
+			"prefix": "BF NOTE UP instance 1",
+			"name": "singUP",
+			"offset": [
+				3,
+				56
+			]
+		},
+		{
+			"prefix": "U-Miss instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				-19,
+				111
+			]
+		}
+	],
+	"cameraOffset": [
+		-15,
+		-62
+	],
+	"healthColors": [
+		8,
+		191,
+		212
+	]
+}

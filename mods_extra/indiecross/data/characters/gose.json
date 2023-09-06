@@ -1,0 +1,60 @@
+{
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-31.6,
+		296.4
+	],
+	"image": "characters/goose",
+	"healthIcon": "gose",
+	"anims": [
+		{
+			"prefix": "Goose Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Goose Down",
+			"name": "singDOWN",
+			"offset": [
+				-10,
+				-30
+			]
+		},
+		{
+			"prefix": "Goose Left",
+			"name": "singLEFT",
+			"offset": [
+				170,
+				50
+			]
+		},
+		{
+			"prefix": "Goose Right",
+			"name": "singRIGHT",
+			"offset": [
+				-10,
+				-3
+			]
+		},
+		{
+			"prefix": "Goose Up",
+			"name": "singUP",
+			"offset": [
+				-16,
+				170
+			]
+		}
+	],
+	"cameraOffset": [
+		82,
+		-208
+	],
+	"healthColors": [
+		255,
+		255,
+		255
+	]
+}

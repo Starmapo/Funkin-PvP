@@ -1,0 +1,13 @@
+<stage zoom="0.375" folder="stages/factory-sammy/">
+	<spr name="bg" image="SammyS" x="center" y="center"/>
+	<dad x="-200" y="300" />
+	<bf x="1070" y="300" />
+	<high-quality>
+		<spr name="candle" image="Candles" x="345" y="1300" scale="3" scroll="0.95" updateHitbox="false">
+			<anim name="candles" prefix="Candless instance 1" baseAnim="true"/>
+		</spr>
+		<spr name="candleLight" image="Candles" x="250" y="1100" scale="3" scroll="0.95" blend="add" updateHitbox="false">
+			<anim name="lights" prefix="Lights instance 1" baseAnim="true"/>
+		</spr>
+	</high-quality>
+</stage>

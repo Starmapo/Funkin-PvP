@@ -1,0 +1,93 @@
+{
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-48,
+		356
+	],
+	"image": "characters/BoyFriend_SansWT",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"prefix": "BF idle dance instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-27,
+				-39
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN MISS instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				-26,
+				-15
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT instance 1",
+			"name": "singLEFT",
+			"offset": [
+				74,
+				1
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT MISS instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				14,
+				21
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-25,
+				-4
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT MISS instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-42,
+				22
+			]
+		},
+		{
+			"prefix": "BF NOTE UP instance 1",
+			"name": "singUP",
+			"offset": [
+				3,
+				56
+			]
+		},
+		{
+			"prefix": "BF NOTE UP MISS instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				-24,
+				18
+			]
+		}
+	],
+	"cameraOffset": [
+		-15,
+		-62
+	],
+	"healthColors": [
+		8,
+		191,
+		212
+	]
+}

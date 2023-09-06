@@ -1,0 +1,165 @@
+{
+	"groups": [
+		{
+			"name": "Indie Cross",
+			"chars": [
+				{
+					"name": "bfswag",
+					"displayName": "Boyfriend"
+				},
+				{
+					"name": "cuphead",
+					"displayName": "Cuphead"
+				},
+				{
+					"name": "rainbf",
+					"displayName": "Boyfriend (Knockout)"
+				},
+				{
+					"name": "angrycuphead",
+					"displayName": "Cuphead (Angry)"
+				},
+				{
+					"name": "angrycuphead-pew",
+					"displayName": "Cuphead (Angry, Shooting)"
+				},
+				{
+					"name": "bfSans",
+					"displayName": "Boyfriend (Judgement Hall)"
+				},
+				{
+					"name": "sans",
+					"displayName": "Sans (Judgement Hall)"
+				},
+				{
+					"name": "bfsanswaterfall",
+					"displayName": "Boyfriend (Waterfall)"
+				},
+				{
+					"name": "sanswaterfall",
+					"displayName": "Sans (Waterfall)"
+				},
+				{
+					"name": "bfchara",
+					"displayName": "Boyfriend (Chara)"
+				},
+				{
+					"name": "sansScared",
+					"displayName": "Sans (Scared)"
+				},
+				{
+					"name": "sansTired",
+					"displayName": "Sans (Tired)"
+				},
+				{
+					"name": "bf-bendo",
+					"displayName": "Boyfriend (Bendy)"
+				},
+				{
+					"name": "bfwhoareyou",
+					"displayName": "Boyfriend (Bendy, Confused)"
+				},
+				{
+					"name": "bendy",
+					"displayName": "Ink Demon"
+				},
+				{
+					"name": "bfFUCKINWHATTHEFUCKBITCH",
+					"displayName": "Boyfriend (Last Reel)"
+				},
+				{
+					"name": "devilFull",
+					"displayName": "The Devil"
+				},
+				{
+					"name": "bfwinter",
+					"displayName": "Boyfriend (Winter)"
+				},
+				{
+					"name": "papyrus",
+					"displayName": "Papyrus"
+				},
+				{
+					"name": "sanswinter",
+					"displayName": "Sans"
+				},
+				{
+					"name": "sanswinter-bone",
+					"displayName": "Sans (Bones)"
+				},
+				{
+					"name": "bfSammy",
+					"displayName": "Boyfriend (Ritual)"
+				},
+				{
+					"name": "sammy",
+					"displayName": "Sammy Lawrence"
+				},
+				{
+					"name": "bfda",
+					"displayName": "Boyfriend (Freaky Machine)"
+				},
+				{
+					"name": "bendyDA",
+					"displayName": "Bendy"
+				},
+				{
+					"name": "bendyDA-alt",
+					"displayName": "Bendy (Oblivion)"
+				},
+				{
+					"name": "bfnightmareCup",
+					"displayName": "Boyfriend (Devil's Gambit)"
+				},
+				{
+					"name": "cupheadNightmare",
+					"displayName": "Nightmare Cuphead"
+				},
+				{
+					"name": "cupheadNightmare-pew",
+					"displayName": "Nightmare Cuphead (Shooting)"
+				},
+				{
+					"name": "bfSansNightmare",
+					"displayName": "Boyfriend (BAD TIME)"
+				},
+				{
+					"name": "sansNightmare",
+					"displayName": "Nightmare Sans"
+				},
+				{
+					"name": "bfNightmareBendynew",
+					"displayName": "Boyfriend (DESPAIR)"
+				},
+				{
+					"name": "bendyNightmare",
+					"displayName": "Nightmare Bendy"
+				},
+				{
+					"name": "saness",
+					"displayName": "Saness"
+				},
+				{
+					"name": "gose",
+					"displayName": "Goose"
+				},
+				{
+					"name": "gose-mlg",
+					"displayName": "Goose (MLG)"
+				},
+				{
+					"name": "cuphead-demo",
+					"displayName": "Cuphead (Demo)"
+				},
+				{
+					"name": "angrycuphead-demo",
+					"displayName": "Cuphead (Demo, Angry)"
+				},
+				{
+					"name": "bendy-demo",
+					"displayName": "Ink Demon (Demo)"
+				}
+			]
+		}
+	]
+}

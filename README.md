@@ -1,8 +1,19 @@
 # Friday Night Funkin' PvP
 
-The open source code of Friday Night Funkin' PvP, a WIP fangame.
+The unfinished source code of Friday Night Funkin' PvP, a cancelled fangame which revolves around a local multiplayer mode.
 
-**As of the moment, version 0.1 is still in development and nothing is promised to be kept the same until release, so use this at your own risk.**
+## Why's it cancelled?
+
+It's a culmination of a few reasons. I'll try to list them from most to least impact on my decision to cancel the game:
+
+- I was planning on revamping the editor UIs, and I spent a while implementing a new library for it (HaxeUI), only to find out that it was way too laggy. Since I couldn't find another UI system for HaxeFlixel other than the official one, I started losing motivation to continue the game.
+- I've lost interest in FNF in general, and I have ideas for other non-FNF projects that I want to make.
+- I started to doubt if anyone would have interest in a game like this when online multiplayer FNF games already exist, like Online VS or Roblox fangames.
+- I needed to ask the original content creators for permission to add their respective mods, and I'm still rather insecure, so I kept procrastinating on it.
+
+It was made a little easier by the fact that I hadn't made an official page for the mod yet, so I could kinda cancel it privately.
+
+I don't want all the months of code to go to waste, so I've released it publicly here. If anyone wants to continue the game, you have my permission, though be aware that the code is rather messy and I was planning on revamping it before I decided to cancel it. The controls page was left unfinished, but you can find the original working version by going through the commit history.
 
 ## Fangame? Is this not a mod?
 
@@ -10,14 +21,13 @@ Although it uses some code from other FNF projects, this game was built from the
 
 ## Modding
 
-The game heavily relies on modpacks (even the base Friday Night Funkin' content is in its own mod), meaning you can easily softcode your own songs, characters, etc.
+The game heavily relies on modpacks (even the base Friday Night Funkin' content is in its own mod), meaning you can softcode your own songs, characters, etc.
 
-Modding documentation is yet to be done, as the game is unreleased and still being worked on. However, you can take a look at the official mods for examples on how to make one, as long as you have some coding experience already.
+There is no modding documentation, as it was cancelled before it could be written. However, you can take a look at the official mods for an idea of how to make one, as long as you have some coding experience already.
 
 ## Credits
 
 - [Starmapo](https://starmapo.carrd.co/) - Creator and programmer
-- [ThatAzazelFire](https://linktr.ee/thatazazelfire) - Lending me some of his character sprites
 
 ### Assets
 
@@ -25,6 +35,7 @@ Modding documentation is yet to be done, as the game is unreleased and still bei
 - [PhantomMuff font](https://gamebanana.com/tools/7763)
 - VCR OSD Mono font
 - Pixel Arial 11 font
+- [ThatAzazelFire](https://linktr.ee/thatazazelfire) - Lent me some of his character sprites for the "Other" modpack
 - [YoshiCrafter Engine](https://github.com/FNF-CNE-Devs/YoshiCrafterEngine) - Color picker assets
 - [Quaver Team](https://github.com/Quaver/Quaver) - Song editor hitsound and metronome sounds
 

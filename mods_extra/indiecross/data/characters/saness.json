@@ -1,0 +1,147 @@
+{
+	"scale": 1.5,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-228,
+		136.4
+	],
+	"image": "characters/Saness",
+	"healthIcon": "saness",
+	"anims": [
+		{
+			"nextAnim": "idle-loop",
+			"prefix": "Sans instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				9,
+				10,
+				11,
+				12
+			],
+			"prefix": "Sans instance 1",
+			"name": "idle-loop",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"nextAnim": "singDOWN-loop",
+			"prefix": "Down instance 1",
+			"name": "singDOWN",
+			"offset": [
+				52,
+				15
+			]
+		},
+		{
+			"prefix": "Table sfx instance 1",
+			"name": "singDOWN-alt",
+			"offset": [
+				30,
+				-45
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				24,
+				25,
+				26,
+				27
+			],
+			"prefix": "Down instance 1",
+			"name": "singDOWN-loop",
+			"offset": [
+				52,
+				15
+			]
+		},
+		{
+			"nextAnim": "singLEFT-loop",
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				97,
+				-62
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				13,
+				14
+			],
+			"prefix": "Left instance 1",
+			"name": "singLEFT-loop",
+			"offset": [
+				97,
+				-62
+			]
+		},
+		{
+			"nextAnim": "singRIGHT-loop",
+			"prefix": "Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-52,
+				-23
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				9,
+				10,
+				11,
+				12
+			],
+			"prefix": "Right instance 1",
+			"name": "singRIGHT-loop",
+			"offset": [
+				-52,
+				-23
+			]
+		},
+		{
+			"nextAnim": "singUP-loop",
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				-15,
+				152
+			]
+		},
+		{
+			"loop": true,
+			"indices": [
+				18,
+				19,
+				20,
+				21
+			],
+			"prefix": "Up instance 1",
+			"name": "singUP-loop",
+			"offset": [
+				-15,
+				152
+			]
+		}
+	],
+	"cameraOffset": [
+		-84,
+		-180
+	],
+	"healthColors": [
+		255,
+		255,
+		255
+	]
+}

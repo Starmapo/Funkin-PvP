@@ -1,0 +1,110 @@
+{
+	"loopAnimsOnHold": false,
+	"flipX": true,
+	"positionOffset": [
+		2,
+		375.9
+	],
+	"image": "characters/purpleFace",
+	"healthIcon": "purpleFace",
+	"anims": [
+		{
+			"prefix": "BF HEY!!",
+			"name": "hey",
+			"offset": [
+				2,
+				11
+			]
+		},
+		{
+			"prefix": "BF idle dance",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "BF idle shaking",
+			"name": "scared",
+			"offset": [
+				-5,
+				1
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN0",
+			"name": "singDOWN",
+			"offset": [
+				-4,
+				-45
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN MISS",
+			"name": "singDOWNmiss",
+			"offset": [
+				-2,
+				-45
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT0",
+			"name": "singLEFT",
+			"offset": [
+				29,
+				46
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT MISS",
+			"name": "singLEFTmiss",
+			"offset": [
+				24,
+				40
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT0",
+			"name": "singRIGHT",
+			"offset": [
+				-32,
+				-1
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT MISS",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-38,
+				-4
+			]
+		},
+		{
+			"prefix": "BF NOTE UP0",
+			"name": "singUP",
+			"offset": [
+				-3,
+				46
+			]
+		},
+		{
+			"prefix": "BF NOTE UP MISS",
+			"name": "singUPmiss",
+			"offset": [
+				-5,
+				70
+			]
+		}
+	],
+	"cameraOffset": [
+		22,
+		-98
+	],
+	"healthColors": [
+		165,
+		85,
+		253
+	]
+}

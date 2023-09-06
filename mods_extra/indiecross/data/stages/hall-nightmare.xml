@@ -1,0 +1,12 @@
+<stage zoom="0.9" folder="stages/hall-nightmare/">
+	<spr name="bg" image="Nightmare Sans Stage" x="-600" y="-160">
+		<anim name="normal" prefix="Normal instance 1" indices="0" fps="0" baseAnim="true"/>
+		<anim name="beatdrop" prefix="Normal instance 1"/>
+		<anim name="beatDropFinish" prefix="sdfs instance 1" loop="false"/>
+	</spr>
+	<dad x="-300" y="25"/>
+	<bf x="616.3" y="25"/>
+	<spr name="beatDropbg" image="Nightmare Sans Stage" x="-100" y="300" scroll="0" blend="add" alpha="0">
+		<anim name="beatHit" atlasName="dd instance 1" fps="32" loop="false" baseAnim="true"/>
+	</spr>
+</stage>

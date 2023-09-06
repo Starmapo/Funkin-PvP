@@ -1,0 +1,77 @@
+{
+	"flipAll": true,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-137.09,
+		247.41
+	],
+	"image": "characters/Sans_Brrrr",
+	"healthIcon": "sans",
+	"anims": [
+		{
+			"prefix": "SansboneIdle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Taste my Lightsaber instance 1",
+			"name": "intro",
+			"offset": [
+				-21,
+				90
+			]
+		},
+		{
+			"prefix": "Sans puts back his shit instance 1",
+			"name": "outro",
+			"offset": [
+				-30,
+				90
+			]
+		},
+		{
+			"prefix": "Right instance 1",
+			"name": "singDOWN",
+			"offset": [
+				8,
+				95
+			]
+		},
+		{
+			"prefix": "Right instance 1",
+			"name": "singLEFT",
+			"offset": [
+				8,
+				95
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				90,
+				54
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singUP",
+			"offset": [
+				90,
+				54
+			]
+		}
+	],
+	"cameraOffset": [
+		16,
+		-108
+	],
+	"healthColors": [
+		41,
+		72,
+		118
+	]
+}

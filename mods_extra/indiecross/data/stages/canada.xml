@@ -1,0 +1,7 @@
+<stage zoom="0.75" folder="stages/canada/">
+	<spr name="gosebg" image="BG" x="center" y="center">
+		<anim name="bop" prefix="BG instance 1" loop="false"/>
+	</spr>
+	<dad x="100" y="-200"/>
+	<bf x="770" y="-60"/>
+</stage>

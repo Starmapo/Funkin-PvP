@@ -1,0 +1,17 @@
+{
+	"image": "splashes/NOTE_bounce",
+	"splashes": [
+		{
+			"anim": "NoteSplash Orange instance 1"
+		},
+		{
+			"anim": "NoteSplash Orange instance 1"
+		},
+		{
+			"anim": "NoteSplash Orange instance 1"
+		},
+		{
+			"anim": "NoteSplash Orange instance 1"
+		}
+	]
+}

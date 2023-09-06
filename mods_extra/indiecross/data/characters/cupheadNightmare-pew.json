@@ -1,0 +1,62 @@
+{
+	"scale": 1.25,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-9,
+		108
+	],
+	"image": "characters/Nightmare_Cuphead",
+	"healthIcon": "cupheadNightmare",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Idle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "ShootDown instance 1",
+			"name": "singDOWN",
+			"offset": [
+				47,
+				-72
+			]
+		},
+		{
+			"prefix": "ShootLeft instance 1",
+			"name": "singLEFT",
+			"offset": [
+				118,
+				-120
+			]
+		},
+		{
+			"prefix": "ShootRight instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				24,
+				-54
+			]
+		},
+		{
+			"prefix": "ShootUp instance 1",
+			"name": "singUP",
+			"offset": [
+				115,
+				-15
+			]
+		}
+	],
+	"cameraOffset": [
+		12,
+		25
+	],
+	"healthColors": [
+		171,
+		22,
+		74
+	]
+}

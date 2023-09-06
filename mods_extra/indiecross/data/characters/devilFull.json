@@ -1,0 +1,66 @@
+{
+	"scale": 1.3,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-282,
+		-527
+	],
+	"image": "characters/Devil",
+	"healthIcon": "devil",
+	"anims": [
+		{
+			"fps": 20,
+			"prefix": "Idle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"fps": 20,
+			"prefix": "Down instance 1",
+			"name": "singDOWN",
+			"offset": [
+				107.9,
+				9.1
+			]
+		},
+		{
+			"fps": 20,
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				795.6,
+				-150.8
+			]
+		},
+		{
+			"fps": 20,
+			"prefix": "Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-49.4,
+				-386.1
+			]
+		},
+		{
+			"fps": 20,
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				280.8,
+				188.5
+			]
+		}
+	],
+	"cameraOffset": [
+		36,
+		-199
+	],
+	"healthColors": [
+		35,
+		50,
+		78
+	]
+}

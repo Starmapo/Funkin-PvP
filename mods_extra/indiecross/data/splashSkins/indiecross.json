@@ -1,0 +1,17 @@
+{
+	"image": "splashes/AllnoteSplashes",
+	"splashes": [
+		{
+			"anim": "PurpC instance 1"
+		},
+		{
+			"anim": "BlueC instance 1"
+		},
+		{
+			"anim": "GreenC instance 1"
+		},
+		{
+			"anim": "RedC instance 1"
+		}
+	]
+}

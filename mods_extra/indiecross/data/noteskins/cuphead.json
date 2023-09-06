@@ -1,0 +1,49 @@
+{
+	"image": "notes/NOTE_cup",
+	"receptors": [
+		{
+			"staticAnim": "arrowLEFT",
+			"pressedAnim": "left press instance 1",
+			"confirmAnim": "left confirm instance 1"
+		},
+		{
+			"staticAnim": "arrowDOWN",
+			"pressedAnim": "down press instance 1",
+			"confirmAnim": "down confirm instance 1"
+		},
+		{
+			"staticAnim": "arrowUP",
+			"pressedAnim": "up press instance 1",
+			"confirmAnim": "up confirm instance 1"
+		},
+		{
+			"staticAnim": "arrowRIGHT",
+			"pressedAnim": "right press instance 1",
+			"confirmAnim": "right confirm instance 1"
+		}
+	],
+	"receptorsScale": 0.7,
+	"notes": [
+		{
+			"headAnim": "purple alone",
+			"bodyAnim": "purple hold",
+			"tailAnim": "purple tail"
+		},
+		{
+			"headAnim": "blue alone",
+			"bodyAnim": "blue hold",
+			"tailAnim": "blue tail"
+		},
+		{
+			"headAnim": "green alone",
+			"bodyAnim": "green hold",
+			"tailAnim": "green tail"
+		},
+		{
+			"headAnim": "red alone",
+			"bodyAnim": "red hold",
+			"tailAnim": "red tail"
+		}
+	],
+	"notesScale": 0.7
+}

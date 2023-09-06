@@ -1,0 +1,60 @@
+{
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-55,
+		254.8
+	],
+	"image": "characters/SansWF",
+	"healthIcon": "sans",
+	"anims": [
+		{
+			"prefix": "Sans FNF Tired instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Down Tired instance 1",
+			"name": "singDOWN",
+			"offset": [
+				3,
+				-15
+			]
+		},
+		{
+			"prefix": "Left Tired instance 1",
+			"name": "singLEFT",
+			"offset": [
+				58,
+				3
+			]
+		},
+		{
+			"prefix": "Right Tired instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-3,
+				-1
+			]
+		},
+		{
+			"prefix": "Up Tired instance 1",
+			"name": "singUP",
+			"offset": [
+				52,
+				30
+			]
+		}
+	],
+	"cameraOffset": [
+		-2,
+		-100
+	],
+	"healthColors": [
+		41,
+		72,
+		118
+	]
+}

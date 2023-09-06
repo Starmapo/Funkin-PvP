@@ -1,0 +1,94 @@
+{
+	"scale": 1.48,
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-27,
+		357.4
+	],
+	"image": "characters/BF_FINAL",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"prefix": "BF annoyed instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN copy instance 1",
+			"name": "singDOWN",
+			"offset": [
+				9,
+				-31
+			]
+		},
+		{
+			"prefix": "D-Miss instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				2,
+				-18
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT copy instance 1",
+			"name": "singLEFT",
+			"offset": [
+				97,
+				-3
+			]
+		},
+		{
+			"prefix": "L-Miss instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				110,
+				24
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT copy instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-1,
+				-4
+			]
+		},
+		{
+			"prefix": "R-Miss instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				31,
+				22
+			]
+		},
+		{
+			"prefix": "BF NOTE UP copy instance 1",
+			"name": "singUP",
+			"offset": [
+				21,
+				54
+			]
+		},
+		{
+			"prefix": "U-Miss instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				-4,
+				108
+			]
+		}
+	],
+	"cameraOffset": [
+		-14,
+		-62
+	],
+	"healthColors": [
+		8,
+		191,
+		212
+	]
+}

@@ -1,0 +1,134 @@
+{
+	"scale": 1.45,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-80,
+		23.9
+	],
+	"image": "characters/Papyrus",
+	"healthIcon": "papyrus",
+	"anims": [
+		{
+			"prefix": "Idle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "gzezy instance 1",
+			"name": "idle-alt",
+			"offset": [
+				100,
+				-36.95
+			]
+		},
+		{
+			"prefix": "Bruh instance 1",
+			"name": "indiecross_bruh",
+			"offset": [
+				-5.8,
+				-36.25
+			]
+		},
+		{
+			"prefix": "Sans lessgo instance 1",
+			"name": "indiecross_letsgo",
+			"offset": [
+				66,
+				58.05
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "That's ma boi instance 1",
+			"name": "indiecross_maboi",
+			"offset": [
+				54,
+				10.05
+			]
+		},
+		{
+			"prefix": "Oh Sans you Mother fuc- instance 1",
+			"name": "indiecross_ohyoumotherfucker",
+			"offset": [
+				9,
+				78.05
+			]
+		},
+		{
+			"prefix": "fzt instance 1",
+			"name": "singDOWN",
+			"offset": [
+				117.45,
+				-116
+			]
+		},
+		{
+			"prefix": "jghrue instance 1",
+			"name": "singDOWN-alt",
+			"offset": [
+				209,
+				13.05
+			]
+		},
+		{
+			"prefix": "left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				129.05,
+				7.25
+			]
+		},
+		{
+			"prefix": "SANS WAKE UP BITCH instance 1",
+			"name": "singLEFT-alt",
+			"offset": [
+				232,
+				-102.95
+			]
+		},
+		{
+			"prefix": "Right copy instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				165.3,
+				-56.55
+			]
+		},
+		{
+			"prefix": "upahgn instance 1",
+			"name": "singRIGHT-alt",
+			"offset": [
+				48,
+				36.05
+			]
+		},
+		{
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				-1.45,
+				121.8
+			]
+		},
+		{
+			"prefix": "ISTG instance 1",
+			"name": "singUP-alt",
+			"offset": [
+				130,
+				114.05
+			]
+		}
+	],
+	"cameraOffset": [
+		32,
+		-278
+	],
+	"healthColors": [
+		171,
+		22,
+		74
+	]
+}

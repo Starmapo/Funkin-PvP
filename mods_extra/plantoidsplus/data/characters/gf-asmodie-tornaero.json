@@ -1,0 +1,75 @@
+{
+	"antialiasing": false,
+	"flipX": true,
+	"danceAnims": [
+		"danceLeft",
+		"danceRight"
+	],
+	"positionOffset": [
+		0,
+		50
+	],
+	"image": "characters/ASMODIE_PLANTOID_TORNAERO",
+	"healthIcon": "asmodie",
+	"anims": [
+		{
+			"indices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"prefix": "Idle TornAero",
+			"name": "danceLeft",
+			"offset": [
+				-17,
+				-40
+			]
+		},
+		{
+			"indices": [
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29
+			],
+			"prefix": "Idle TornAero",
+			"name": "danceRight",
+			"offset": [
+				-17,
+				-40
+			]
+		}
+	],
+	"cameraOffset": [
+		0,
+		0
+	],
+	"healthColors": [
+		165,
+		0,
+		77
+	]
+}

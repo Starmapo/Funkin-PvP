@@ -1,0 +1,5 @@
+<stage zoom="0.45" folder="stages/devilHall/">
+	<spr name="bg" image="devil" x="center" y="center" scale="2"/>
+	<dad x="-200" y="400"/>
+	<bf x="1200" y="400"/>
+</stage>

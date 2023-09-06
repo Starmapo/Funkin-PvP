@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="RainBg.png">
+	<!-- Used VMan_2002's spritesheet converter. -->
+	<SubTexture name="rainbg0000" x="0" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0001" x="1001" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0002" x="2002" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0003" x="3003" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0004" x="4004" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0005" x="5005" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0006" x="6006" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0007" x="7007" y="0" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0008" x="0" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0009" x="1001" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0010" x="2002" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0011" x="3003" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0012" x="4004" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0013" x="5005" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0014" x="6006" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0015" x="7007" y="701" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0016" x="0" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0017" x="1001" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0018" x="2002" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0019" x="3003" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0020" x="4004" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0021" x="5005" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0022" x="6006" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0023" x="7007" y="1402" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0024" x="0" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0025" x="1001" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0026" x="2002" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0027" x="3003" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0028" x="4004" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0029" x="5005" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0030" x="6006" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0031" x="7007" y="2103" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0032" x="0" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0033" x="1001" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0034" x="2002" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0035" x="3003" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0036" x="4004" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0037" x="5005" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0038" x="6006" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0039" x="7007" y="2804" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+	<SubTexture name="rainbg0040" x="0" y="3505" width="1000" height="700" frameX="0" frameY="0" frameWidth="1000" frameHeight="700"/>
+</TextureAtlas>

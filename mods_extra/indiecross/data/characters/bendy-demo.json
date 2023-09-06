@@ -1,0 +1,71 @@
+{
+	"scale": 1.4,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-153,
+		-387
+	],
+	"image": "characters/Bendy_sprites",
+	"healthIcon": "bendy-demo",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "B-Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Roar",
+			"name": "indiecross_roar",
+			"offset": [
+				229,
+				-64
+			]
+		},
+		{
+			"prefix": "Ef",
+			"name": "singDOWN",
+			"offset": [
+				365,
+				-73.1
+			]
+		},
+		{
+			"prefix": "B-Left",
+			"name": "singLEFT",
+			"offset": [
+				438,
+				-139.5
+			]
+		},
+		{
+			"prefix": "B-Right",
+			"name": "singRIGHT",
+			"offset": [
+				179,
+				-175.1
+			]
+		},
+		{
+			"prefix": "B-Up",
+			"name": "singUP",
+			"offset": [
+				238,
+				-28.1
+			]
+		}
+	],
+	"cameraOffset": [
+		38.13,
+		-260.58
+	],
+	"healthColors": [
+		0,
+		0,
+		0
+	]
+}

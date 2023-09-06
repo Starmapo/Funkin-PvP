@@ -1,0 +1,9 @@
+<stage zoom="0.65" folder="stages/factory-nightmare/">
+	<spr name="despairBG" image="inky depths" x="-1580" y="-671" scale="2" scroll="0.6" alpha="0.00001"/>
+	<spr name="fire" image="Fyre" x="center" y="760" scale="2.3" scroll="0.8" alpha="0.00001">
+		<anim name="fire" prefix="Penis instance 1"/>
+	</spr>
+	<spr name="bg2" image="nightmareBendy_foreground" x="center" y="-244" scale="2.8" scroll="0.91"/>
+	<dad x="100" y="400" scroll="0.91"/>
+	<bf x="1370" y="400" scroll="0.91"/>
+</stage>

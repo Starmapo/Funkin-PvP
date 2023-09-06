@@ -1,0 +1,70 @@
+{
+	"scale": 1.5,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-238,
+		-97.4
+	],
+	"image": "characters/BendyDAgames",
+	"healthIcon": "bendyDA",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Oblivion Bendy instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "ugh lowblow instance 1",
+			"name": "indiecross_ugh",
+			"offset": [
+				-260,
+				-59
+			]
+		},
+		{
+			"prefix": "Down Oblivion instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-56,
+				-72
+			]
+		},
+		{
+			"prefix": "Left Oblivion instance 1",
+			"name": "singLEFT",
+			"offset": [
+				54,
+				-34
+			]
+		},
+		{
+			"prefix": "Right Oblivion instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-77,
+				-25
+			]
+		},
+		{
+			"prefix": "Up Oblivion instance 1",
+			"name": "singUP",
+			"offset": [
+				-169,
+				69
+			]
+		}
+	],
+	"cameraOffset": [
+		54,
+		-162
+	],
+	"healthColors": [
+		35,
+		41,
+		47
+	]
+}

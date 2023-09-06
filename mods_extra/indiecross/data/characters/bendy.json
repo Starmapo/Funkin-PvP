@@ -1,0 +1,69 @@
+{
+	"scale": 2.4,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-243,
+		-544
+	],
+	"image": "characters/Bendy_remastered",
+	"healthIcon": "bendy",
+	"anims": [
+		{
+			"prefix": "Bendy Idle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Scream instance 1",
+			"name": "indiecross_roar",
+			"offset": [
+				142,
+				4
+			]
+		},
+		{
+			"prefix": "bendydown instance 1",
+			"name": "singDOWN",
+			"offset": [
+				141,
+				-82
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				571,
+				25
+			]
+		},
+		{
+			"prefix": "B-Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				123,
+				-47
+			]
+		},
+		{
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				321,
+				241
+			]
+		}
+	],
+	"cameraOffset": [
+		125,
+		-303
+	],
+	"healthColors": [
+		22,
+		22,
+		22
+	]
+}

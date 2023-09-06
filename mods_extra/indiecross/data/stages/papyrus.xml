@@ -1,0 +1,6 @@
+<stage zoom="0.85" folder="stages/papyrus/">
+	<spr name="bg" image="Papyrus_BG" x="-690" y="-115" scale="1.2"/>
+	<dad/>
+	<bf/>
+	<gf x="-100" scroll="1"/>
+</stage>

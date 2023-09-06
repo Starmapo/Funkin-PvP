@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Charles.png">
+	<!-- Created with Adobe Animate version 19.0.0.326 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Charles Center0000" x="0" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0001" x="445" y="0" width="444" height="514" frameX="0" frameY="-6" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0002" x="890" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0003" x="1335" y="0" width="444" height="520"/>
+	<SubTexture name="Charles Center0004" x="1780" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0005" x="1780" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0006" x="1780" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0007" x="1780" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0008" x="1780" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Center0009" x="1780" y="0" width="444" height="517" frameX="0" frameY="-3" frameWidth="444" frameHeight="520"/>
+	<SubTexture name="Charles Down0000" x="2225" y="0" width="434" height="389" frameX="0" frameY="-1" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0001" x="2660" y="0" width="430" height="388" frameX="-1" frameY="-2" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0002" x="3091" y="0" width="428" height="390" frameX="-2" frameY="0" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0003" x="3520" y="0" width="427" height="390" frameX="-2" frameY="0" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0004" x="0" y="521" width="425" height="388" frameX="-2" frameY="-2" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0005" x="0" y="521" width="425" height="388" frameX="-2" frameY="-2" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0006" x="0" y="521" width="425" height="388" frameX="-2" frameY="-2" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0007" x="0" y="521" width="425" height="388" frameX="-2" frameY="-2" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Down0008" x="0" y="521" width="425" height="388" frameX="-2" frameY="-2" frameWidth="434" frameHeight="390"/>
+	<SubTexture name="Charles Idle0000" x="426" y="521" width="521" height="509" frameX="0" frameY="-11" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0001" x="948" y="521" width="502" height="509" frameX="-15" frameY="-11" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0002" x="1451" y="521" width="483" height="508" frameX="-20" frameY="-12" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0003" x="1935" y="521" width="482" height="508" frameX="-17" frameY="-12" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0004" x="2418" y="521" width="483" height="513" frameX="-11" frameY="-7" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0005" x="2902" y="521" width="480" height="513" frameX="-9" frameY="-7" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0006" x="3383" y="521" width="474" height="518" frameX="-6" frameY="-2" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0007" x="0" y="1040" width="470" height="518" frameX="-6" frameY="-2" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0008" x="471" y="1040" width="463" height="520" frameX="-4" frameY="0" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0009" x="471" y="1040" width="463" height="520" frameX="-4" frameY="0" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0010" x="471" y="1040" width="463" height="520" frameX="-4" frameY="0" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0011" x="471" y="1040" width="463" height="520" frameX="-4" frameY="0" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0012" x="471" y="1040" width="463" height="520" frameX="-4" frameY="0" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0013" x="471" y="1040" width="463" height="520" frameX="-4" frameY="0" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Idle0014" x="471" y="1040" width="463" height="520" frameX="-4" frameY="0" frameWidth="521" frameHeight="520"/>
+	<SubTexture name="Charles Left0000" x="935" y="1040" width="562" height="556"/>
+	<SubTexture name="Charles Left0001" x="1498" y="1040" width="553" height="532" frameX="-2" frameY="-10" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Left0002" x="2052" y="1040" width="542" height="525" frameX="-8" frameY="-12" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Left0003" x="2595" y="1040" width="535" height="519" frameX="-10" frameY="-15" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Left0004" x="3131" y="1040" width="529" height="520" frameX="-13" frameY="-14" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Left0005" x="3131" y="1040" width="529" height="520" frameX="-13" frameY="-14" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Left0006" x="3131" y="1040" width="529" height="520" frameX="-13" frameY="-14" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Left0007" x="3131" y="1040" width="529" height="520" frameX="-13" frameY="-14" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Left0008" x="3131" y="1040" width="529" height="520" frameX="-13" frameY="-14" frameWidth="562" frameHeight="556"/>
+	<SubTexture name="Charles Right0000" x="0" y="1597" width="475" height="510" frameX="-7" frameY="-4" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0001" x="476" y="1597" width="461" height="503" frameX="-11" frameY="-5" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0002" x="938" y="1597" width="459" height="501" frameX="-7" frameY="-2" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0003" x="1398" y="1597" width="461" height="498" frameX="-1" frameY="0" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0004" x="1860" y="1597" width="452" height="493" frameX="0" frameY="0" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0005" x="1860" y="1597" width="452" height="493" frameX="0" frameY="0" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0006" x="1860" y="1597" width="452" height="493" frameX="0" frameY="0" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0007" x="1860" y="1597" width="452" height="493" frameX="0" frameY="0" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Right0008" x="1860" y="1597" width="452" height="493" frameX="0" frameY="0" frameWidth="482" frameHeight="514"/>
+	<SubTexture name="Charles Up0000" x="2313" y="1597" width="526" height="528"/>
+	<SubTexture name="Charles Up0001" x="2840" y="1597" width="518" height="524" frameX="-4" frameY="-4" frameWidth="526" frameHeight="528"/>
+	<SubTexture name="Charles Up0002" x="3359" y="1597" width="517" height="515" frameX="-5" frameY="-13" frameWidth="526" frameHeight="528"/>
+	<SubTexture name="Charles Up0003" x="0" y="2126" width="511" height="505" frameX="-9" frameY="-23" frameWidth="526" frameHeight="528"/>
+	<SubTexture name="Charles Up0004" x="512" y="2126" width="506" height="508" frameX="-14" frameY="-20" frameWidth="526" frameHeight="528"/>
+	<SubTexture name="Charles Up0005" x="512" y="2126" width="506" height="508" frameX="-14" frameY="-20" frameWidth="526" frameHeight="528"/>
+	<SubTexture name="Charles Up0006" x="512" y="2126" width="506" height="508" frameX="-14" frameY="-20" frameWidth="526" frameHeight="528"/>
+	<SubTexture name="Charles Up0007" x="512" y="2126" width="506" height="508" frameX="-14" frameY="-20" frameWidth="526" frameHeight="528"/>
+	<SubTexture name="Charles Up0008" x="512" y="2126" width="506" height="508" frameX="-14" frameY="-20" frameWidth="526" frameHeight="528"/>
+</TextureAtlas>

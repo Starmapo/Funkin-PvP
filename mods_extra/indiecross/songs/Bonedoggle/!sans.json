@@ -1,0 +1,766 @@
+{
+	"stage": "papyrus",
+	"timingPoints": [
+		{
+			"bpm": 150
+		}
+	],
+	"vocalsFile": "Voices.ogg",
+	"events": [
+		{
+			"startTime": 19200,
+			"events": [
+				{
+					"params": "1.15,4",
+					"event": "Tween Default Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 24000,
+			"events": [
+				{
+					"params": "outro,gf",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 24800,
+			"events": [
+				{
+					"params": "0.85",
+					"event": "Set Default Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 25200,
+			"events": [
+				{
+					"params": "0.7,0.5",
+					"event": "Tween Default Camera Zoom"
+				},
+				{
+					"params": "indiecross_ohyoumotherfucker",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 25600,
+			"events": [
+				{
+					"params": "",
+					"event": "Papyrus Alt"
+				}
+			]
+		},
+		{
+			"startTime": 29700,
+			"events": [
+				{
+					"params": "indiecross_wakeup,gf",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 30400,
+			"events": [
+				{
+					"params": "",
+					"event": "Papyrus Alt"
+				}
+			]
+		},
+		{
+			"startTime": 32000,
+			"events": [
+				{
+					"params": "0.85",
+					"event": "Set Default Camera Zoom"
+				}
+			]
+		},
+		{
+			"startTime": 35200,
+			"events": [
+				{
+					"params": "indiecross_maboi",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 41600,
+			"events": [
+				{
+					"params": "idle",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 68400,
+			"events": [
+				{
+					"params": "0.75,0.5",
+					"event": "Tween Default Camera Zoom"
+				},
+				{
+					"params": "indiecross_takeout,gf",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 68800,
+			"events": [
+				{
+					"params": "",
+					"event": "Sans Bones"
+				},
+				{
+					"params": "singUP-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 68900,
+			"events": [
+				{
+					"params": "singRIGHT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69000,
+			"events": [
+				{
+					"params": "singRIGHT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69100,
+			"events": [
+				{
+					"params": "singLEFT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69200,
+			"events": [
+				{
+					"params": "singLEFT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69300,
+			"events": [
+				{
+					"params": "singDOWN-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69400,
+			"events": [
+				{
+					"params": "singRIGHT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69500,
+			"events": [
+				{
+					"params": "singUP-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69600,
+			"events": [
+				{
+					"params": "singDOWN-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69700,
+			"events": [
+				{
+					"params": "singLEFT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69800,
+			"events": [
+				{
+					"params": "singRIGHT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 69900,
+			"events": [
+				{
+					"params": "singDOWN-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 70000,
+			"events": [
+				{
+					"params": "singLEFT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 70100,
+			"events": [
+				{
+					"params": "singUP-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 70200,
+			"events": [
+				{
+					"params": "singUP-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 70300,
+			"events": [
+				{
+					"params": "singRIGHT-alt",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 70400,
+			"events": [
+				{
+					"params": "",
+					"event": "Bruh"
+				}
+			]
+		},
+		{
+			"startTime": 76800,
+			"events": [
+				{
+					"params": "0.85",
+					"event": "Set Default Camera Zoom"
+				},
+				{
+					"params": "",
+					"event": "Bruh"
+				},
+				{
+					"params": "",
+					"event": "Papyrus Alt"
+				}
+			]
+		},
+		{
+			"startTime": 81200,
+			"events": [
+				{
+					"params": "outro,gf",
+					"event": "Play Animation"
+				},
+				{
+					"params": "indiecross_maboi",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 82400,
+			"events": [
+				{
+					"params": "",
+					"event": "Sans Bones"
+				},
+				{
+					"params": "indiecross_letsgo,gf",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 82800,
+			"events": [
+				{
+					"params": "indiecross_letsgo",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 123200,
+			"events": [
+				{
+					"params": "outro,gf",
+					"event": "Play Animation"
+				}
+			]
+		},
+		{
+			"startTime": 124400,
+			"events": [
+				{
+					"params": "",
+					"event": "Bruh"
+				}
+			]
+		}
+	],
+	"notes": [
+		{
+			"endTime": 20200,
+			"lane": 3,
+			"startTime": 19200
+		},
+		{
+			"endTime": 20700,
+			"startTime": 20400
+		},
+		{
+			"endTime": 21500,
+			"lane": 2,
+			"startTime": 20800
+		},
+		{
+			"endTime": 22300,
+			"lane": 1,
+			"startTime": 21600
+		},
+		{
+			"endTime": 23900,
+			"lane": 3,
+			"startTime": 22400
+		},
+		{
+			"type": "No Animation",
+			"endTime": 30300,
+			"lane": 1,
+			"startTime": 30000
+		},
+		{
+			"type": "No Animation",
+			"endTime": 30300,
+			"startTime": 30200
+		},
+		{
+			"type": "No Animation",
+			"lane": 3,
+			"startTime": 30600
+		},
+		{
+			"type": "No Animation",
+			"startTime": 30800
+		},
+		{
+			"type": "No Animation",
+			"lane": 1,
+			"startTime": 31000
+		},
+		{
+			"type": "No Animation",
+			"startTime": 31200
+		},
+		{
+			"endTime": 55700,
+			"lane": 1,
+			"startTime": 55600
+		},
+		{
+			"endTime": 55900,
+			"lane": 3,
+			"startTime": 55800
+		},
+		{
+			"endTime": 56300,
+			"lane": 2,
+			"startTime": 56000
+		},
+		{
+			"endTime": 56700,
+			"lane": 1,
+			"startTime": 56400
+		},
+		{
+			"endTime": 57000,
+			"lane": 3,
+			"startTime": 56800
+		},
+		{
+			"startTime": 92200
+		},
+		{
+			"lane": 3,
+			"startTime": 92400
+		},
+		{
+			"endTime": 93000,
+			"lane": 1,
+			"startTime": 92600
+		},
+		{
+			"lane": 2,
+			"startTime": 93000
+		},
+		{
+			"endTime": 93300,
+			"lane": 1,
+			"startTime": 93200
+		},
+		{
+			"startTime": 93400
+		},
+		{
+			"lane": 3,
+			"startTime": 93600
+		},
+		{
+			"lane": 1,
+			"startTime": 93800
+		},
+		{
+			"endTime": 94500,
+			"lane": 3,
+			"startTime": 94200
+		},
+		{
+			"startTime": 94600
+		},
+		{
+			"lane": 2,
+			"startTime": 94800
+		},
+		{
+			"endTime": 95200,
+			"lane": 3,
+			"startTime": 94900
+		},
+		{
+			"endTime": 97900,
+			"lane": 3,
+			"startTime": 97600
+		},
+		{
+			"startTime": 98000
+		},
+		{
+			"lane": 3,
+			"startTime": 98200
+		},
+		{
+			"endTime": 98700,
+			"lane": 1,
+			"startTime": 98400
+		},
+		{
+			"endTime": 100900,
+			"lane": 1,
+			"startTime": 100800
+		},
+		{
+			"startTime": 101000
+		},
+		{
+			"lane": 2,
+			"startTime": 101100
+		},
+		{
+			"lane": 1,
+			"startTime": 101200
+		},
+		{
+			"lane": 3,
+			"startTime": 101400
+		},
+		{
+			"lane": 2,
+			"startTime": 101600
+		},
+		{
+			"lane": 1,
+			"startTime": 101650
+		},
+		{
+			"endTime": 102000,
+			"startTime": 101700
+		},
+		{
+			"endTime": 107300,
+			"startTime": 107200
+		},
+		{
+			"lane": 3,
+			"startTime": 107400
+		},
+		{
+			"endTime": 107700,
+			"startTime": 107600
+		},
+		{
+			"lane": 2,
+			"startTime": 108000
+		},
+		{
+			"lane": 1,
+			"startTime": 108050
+		},
+		{
+			"endTime": 108400,
+			"startTime": 108100
+		},
+		{
+			"endTime": 112300,
+			"lane": 1,
+			"startTime": 112000
+		},
+		{
+			"endTime": 112700,
+			"lane": 3,
+			"startTime": 112400
+		},
+		{
+			"endTime": 113100,
+			"lane": 1,
+			"startTime": 112800
+		},
+		{
+			"endTime": 113500,
+			"startTime": 113200
+		},
+		{
+			"endTime": 114300,
+			"lane": 2,
+			"startTime": 113600
+		},
+		{
+			"endTime": 115100,
+			"lane": 1,
+			"startTime": 114400
+		},
+		{
+			"endTime": 118700,
+			"lane": 1,
+			"startTime": 118400
+		},
+		{
+			"endTime": 119100,
+			"lane": 2,
+			"startTime": 118800
+		},
+		{
+			"endTime": 119500,
+			"lane": 1,
+			"startTime": 119200
+		},
+		{
+			"endTime": 119900,
+			"startTime": 119600
+		},
+		{
+			"lane": 2,
+			"startTime": 120000
+		},
+		{
+			"lane": 1,
+			"startTime": 120400
+		},
+		{
+			"lane": 2,
+			"startTime": 120800
+		},
+		{
+			"lane": 3,
+			"startTime": 121000
+		},
+		{
+			"lane": 2,
+			"startTime": 121200
+		},
+		{
+			"startTime": 121400
+		},
+		{
+			"lane": 3,
+			"startTime": 121600
+		},
+		{
+			"type": "No Animation",
+			"lane": 1,
+			"startTime": 123200
+		},
+		{
+			"type": "No Animation",
+			"lane": 3,
+			"startTime": 123400
+		},
+		{
+			"type": "No Animation",
+			"endTime": 123900,
+			"lane": 2,
+			"startTime": 123600
+		},
+		{
+			"type": "No Animation",
+			"startTime": 124000
+		}
+	],
+	"artist": "Saster",
+	"opponent": "dad",
+	"bf": "bf",
+	"gf": "sanswinter",
+	"lyricSteps": [],
+	"title": "Bonedoggle",
+	"initialScrollVelocity": 1,
+	"source": "Indie Cross",
+	"instFile": "Inst.ogg",
+	"cameraFocuses": [
+		{},
+		{
+			"char": 1,
+			"startTime": 3200
+		},
+		{
+			"startTime": 6400
+		},
+		{
+			"char": 1,
+			"startTime": 12800
+		},
+		{
+			"char": 2,
+			"startTime": 19200
+		},
+		{
+			"char": 1,
+			"startTime": 25600
+		},
+		{
+			"startTime": 32000
+		},
+		{
+			"char": 2,
+			"startTime": 35200
+		},
+		{
+			"char": 1,
+			"startTime": 38400
+		},
+		{
+			"char": 2,
+			"startTime": 44800
+		},
+		{
+			"char": 1,
+			"startTime": 46400
+		},
+		{
+			"startTime": 48000
+		},
+		{
+			"char": 1,
+			"startTime": 49600
+		},
+		{
+			"startTime": 54400
+		},
+		{
+			"char": 1,
+			"startTime": 56000
+		},
+		{
+			"char": 2,
+			"startTime": 57600
+		},
+		{
+			"char": 1,
+			"startTime": 64000
+		},
+		{
+			"char": 2,
+			"startTime": 68800
+		},
+		{
+			"char": 1,
+			"startTime": 76800
+		},
+		{
+			"startTime": 83200
+		},
+		{
+			"char": 1,
+			"startTime": 86400
+		},
+		{
+			"char": 2,
+			"startTime": 89600
+		},
+		{
+			"char": 1,
+			"startTime": 102400
+		},
+		{
+			"startTime": 108800
+		},
+		{
+			"char": 1,
+			"startTime": 110400
+		},
+		{
+			"startTime": 112000
+		},
+		{
+			"char": 1,
+			"startTime": 113600
+		},
+		{
+			"startTime": 115200
+		},
+		{
+			"char": 1,
+			"startTime": 116800
+		},
+		{
+			"startTime": 118400
+		},
+		{
+			"char": 1,
+			"startTime": 120000
+		}
+	],
+	"scrollVelocities": []
+}

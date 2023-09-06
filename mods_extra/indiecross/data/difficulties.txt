@@ -1,0 +1,6 @@
+Easy
+Normal
+Hard
+Devilish
+Genocidal
+Demonic

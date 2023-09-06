@@ -1,0 +1,18 @@
+<stage zoom="0.55" folder="stages/factory-first/">
+	<spr name="bg" image="BG01" x="-1244.5" y="center" scroll="0.9"/>
+	<high-quality>
+		<spr name="speaker" image="MusicBox" x="80" y="102" scroll="0.95" danceAnims="bump" danceBeats="2">
+			<anim name="bump" prefix="Music box thingy instance 1" loop="false" baseAnim="true"/>
+		</spr>
+	</high-quality>
+	<spr name="bendo" image="Boi" x="-433" y="-81"/>
+	<spr name="postDemise" image="postdemise" x="-1280" y="-845" alpha="0.00001"/>
+	<dad x="-800" visible="false"/>
+	<bf/>
+	<high-quality>
+		<spr name="light" image="Light(Add-Blend)" x="-188" y="-365.5" scroll="0.9" blend="add">
+			<anim name="flash" prefix="fezt instance 1" baseAnim="true"/>
+		</spr>
+		<spr name="pillar" image="Pillar" x="1100" y="center" scroll="1.2"/>
+	</high-quality>
+</stage>

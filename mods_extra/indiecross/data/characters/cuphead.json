@@ -1,0 +1,61 @@
+{
+	"scale": 1.74,
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-69,
+		303
+	],
+	"image": "characters/Cuphead_Remastered",
+	"healthIcon": "cuphead",
+	"anims": [
+		{
+			"prefix": "Cuphead_standing instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Down instance 1",
+			"name": "singDOWN",
+			"offset": [
+				-43.88,
+				-25.26
+			]
+		},
+		{
+			"prefix": "Left instance 1",
+			"name": "singLEFT",
+			"offset": [
+				40,
+				-8
+			]
+		},
+		{
+			"prefix": "Right instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-29,
+				-15
+			]
+		},
+		{
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				-12,
+				87
+			]
+		}
+	],
+	"cameraOffset": [
+		27,
+		-86
+	],
+	"healthColors": [
+		171,
+		22,
+		74
+	]
+}

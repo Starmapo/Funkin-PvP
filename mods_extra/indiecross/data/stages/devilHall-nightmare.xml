@@ -1,0 +1,8 @@
+<stage zoom="0.65" folder="stages/devilHall-nightmare/">
+	<spr name="bg" image="nightmarecupbg" x="center" y="center" scale="2"/>
+	<spr name="bgGlow" image="NMClight" x="-560" y="80">
+		<anim name="play" prefix="rgrrr instance 1" fps="30" baseAnim="true"/>
+	</spr>
+	<dad x="-150" y="400"/>
+	<bf x="900" y="400"/>
+</stage>

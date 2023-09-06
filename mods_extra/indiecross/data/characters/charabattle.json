@@ -1,0 +1,93 @@
+{
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		0,
+		0
+	],
+	"image": "characters/CharaUT",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"prefix": "0Idle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "0Ouu instance 1",
+			"name": "singDOWN",
+			"offset": [
+				30,
+				-30
+			]
+		},
+		{
+			"prefix": "Ouch instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				-6,
+				-29
+			]
+		},
+		{
+			"prefix": "0EEEE instance 1",
+			"name": "singLEFT",
+			"offset": [
+				94,
+				-10
+			]
+		},
+		{
+			"prefix": "Ouch instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				-6,
+				-29
+			]
+		},
+		{
+			"prefix": "0EERR instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-13,
+				-14
+			]
+		},
+		{
+			"prefix": "Ouch instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-6,
+				-29
+			]
+		},
+		{
+			"prefix": "0UPPP instance 1",
+			"name": "singUP",
+			"offset": [
+				4,
+				73
+			]
+		},
+		{
+			"prefix": "Ouch instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				-6,
+				-29
+			]
+		}
+	],
+	"cameraOffset": [
+		-44,
+		-91
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	]
+}

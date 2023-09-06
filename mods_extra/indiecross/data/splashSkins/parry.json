@@ -1,0 +1,17 @@
+{
+	"image": "splashes/Parry_assets",
+	"splashes": [
+		{
+			"anim": "ParryFX"
+		},
+		{
+			"anim": "ParryFX"
+		},
+		{
+			"anim": "ParryFX"
+		},
+		{
+			"anim": "ParryFX"
+		}
+	]
+}

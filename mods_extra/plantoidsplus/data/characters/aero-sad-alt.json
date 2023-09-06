@@ -1,0 +1,91 @@
+{
+	"positionOffset": [
+		-62,
+		183
+	],
+	"image": "characters/AERO_PLANTOID_SAD",
+	"healthIcon": "aerosad",
+	"anims": [
+		{
+			"prefix": "IdleSadAlt",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Desperate",
+			"name": "plantoidsplus_desperate",
+			"offset": [
+				-8,
+				1
+			]
+		},
+		{
+			"prefix": "GiveUp",
+			"name": "plantoidsplus_giveup",
+			"offset": [
+				2,
+				-5
+			]
+		},
+		{
+			"prefix": "Huh",
+			"name": "plantoidsplus_huh",
+			"offset": [
+				-35,
+				-6
+			]
+		},
+		{
+			"prefix": "Struggle",
+			"name": "plantoidsplus_struggling",
+			"offset": [
+				88,
+				-2
+			]
+		},
+		{
+			"prefix": "DownSadAlt",
+			"name": "singDOWN",
+			"offset": [
+				94,
+				-25
+			]
+		},
+		{
+			"prefix": "LeftSadAlt",
+			"name": "singLEFT",
+			"offset": [
+				79,
+				27
+			]
+		},
+		{
+			"prefix": "RightSadAlt",
+			"name": "singRIGHT",
+			"offset": [
+				-65,
+				-59
+			]
+		},
+		{
+			"prefix": "UpSadAlt",
+			"name": "singUP",
+			"offset": [
+				50,
+				31
+			]
+		}
+	],
+	"cameraOffset": [
+		16,
+		-102
+	],
+	"healthColors": [
+		211,
+		91,
+		255
+	]
+}

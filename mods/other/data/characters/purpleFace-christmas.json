@@ -1,0 +1,101 @@
+{
+	"loopAnimsOnHold": false,
+	"flipX": true,
+	"positionOffset": [
+		-66,
+		376.2
+	],
+	"image": "characters/purpleFace-christmas",
+	"healthIcon": "purpleFace",
+	"anims": [
+		{
+			"prefix": "BF HEY!!",
+			"name": "hey",
+			"offset": [
+				1.5,
+				11.4
+			]
+		},
+		{
+			"prefix": "BF idle dance",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN0",
+			"name": "singDOWN",
+			"offset": [
+				-7.5,
+				-35.6
+			]
+		},
+		{
+			"prefix": "BF NOTE DOWN MISS",
+			"name": "singDOWNmiss",
+			"offset": [
+				-5.5,
+				-44.6
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT0",
+			"name": "singLEFT",
+			"offset": [
+				19.5,
+				46.4
+			]
+		},
+		{
+			"prefix": "BF NOTE RIGHT MISS",
+			"name": "singLEFTmiss",
+			"offset": [
+				18.5,
+				40.4
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT0",
+			"name": "singRIGHT",
+			"offset": [
+				-36.5,
+				-1.6
+			]
+		},
+		{
+			"prefix": "BF NOTE LEFT MISS",
+			"name": "singRIGHTmiss",
+			"offset": [
+				-38.5,
+				-4.6
+			]
+		},
+		{
+			"prefix": "BF NOTE UP0",
+			"name": "singUP",
+			"offset": [
+				-12.5,
+				46.4
+			]
+		},
+		{
+			"prefix": "BF NOTE UP MISS",
+			"name": "singUPmiss",
+			"offset": [
+				-11.5,
+				71.4
+			]
+		}
+	],
+	"cameraOffset": [
+		28,
+		-98
+	],
+	"healthColors": [
+		165,
+		85,
+		253
+	]
+}

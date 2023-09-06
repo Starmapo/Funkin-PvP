@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="ASMODIE_PLANTOID_TORNAERO.png">
+	<!-- Created with Adobe Animate version 20.0.0.17400 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Idle TornAero0000" x="10" y="10" width="851" height="834" frameX="-27" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0001" x="871" y="10" width="878" height="834"/>
+	<SubTexture name="Idle TornAero0002" x="1759" y="10" width="849" height="834" frameX="-29" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0003" x="2618" y="10" width="876" height="834" frameX="-2" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0004" x="3504" y="10" width="845" height="834" frameX="-33" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0005" x="4359" y="10" width="872" height="834" frameX="-6" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0006" x="5241" y="10" width="817" height="834" frameX="-61" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0007" x="6068" y="10" width="848" height="834" frameX="-30" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0008" x="6926" y="10" width="801" height="834" frameX="-77" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0009" x="10" y="854" width="831" height="834" frameX="-47" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0010" x="851" y="854" width="801" height="834" frameX="-77" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0011" x="1662" y="854" width="831" height="834" frameX="-47" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0012" x="2503" y="854" width="801" height="834" frameX="-77" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0013" x="1662" y="854" width="831" height="834" frameX="-47" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0014" x="2503" y="854" width="801" height="834" frameX="-77" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0015" x="3314" y="854" width="794" height="834" frameX="-84" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0016" x="4118" y="854" width="762" height="834" frameX="-116" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0017" x="4890" y="854" width="795" height="834" frameX="-83" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0018" x="5695" y="854" width="763" height="834" frameX="-115" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0019" x="6468" y="854" width="802" height="834" frameX="-76" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0020" x="7280" y="854" width="770" height="834" frameX="-108" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0021" x="10" y="1698" width="811" height="834" frameX="-67" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0022" x="831" y="1698" width="778" height="834" frameX="-100" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0023" x="1619" y="1698" width="818" height="834" frameX="-60" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0024" x="2447" y="1698" width="785" height="834" frameX="-93" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0025" x="3242" y="1698" width="826" height="834" frameX="-52" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0026" x="4078" y="1698" width="799" height="834" frameX="-79" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0027" x="3242" y="1698" width="826" height="834" frameX="-52" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0028" x="4078" y="1698" width="799" height="834" frameX="-79" frameY="0" frameWidth="878" frameHeight="834"/>
+	<SubTexture name="Idle TornAero0029" x="3242" y="1698" width="826" height="834" frameX="-52" frameY="0" frameWidth="878" frameHeight="834"/>
+</TextureAtlas>

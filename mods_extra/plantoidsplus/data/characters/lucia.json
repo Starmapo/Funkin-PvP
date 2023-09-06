@@ -1,0 +1,67 @@
+{
+	"positionOffset": [
+		-140,
+		310
+	],
+	"image": "characters/LUCIA_PLANTOID",
+	"danceAnims": [
+		"idle"
+	],
+	"holdLoopPoint": 0,
+	"healthIcon": "lucia",
+	"flipX": false,
+	"anims": [
+		{
+			"prefix": "Idle",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Down",
+			"name": "singDOWN",
+			"offset": [
+				2,
+				9
+			]
+		},
+		{
+			"prefix": "Left",
+			"name": "singLEFT",
+			"offset": [
+				23,
+				19
+			]
+		},
+		{
+			"prefix": "Right",
+			"name": "singRIGHT",
+			"offset": [
+				16,
+				18
+			]
+		},
+		{
+			"prefix": "Up",
+			"name": "singUP",
+			"offset": [
+				41,
+				31
+			]
+		}
+	],
+	"cameraOffset": [
+		47,
+		-49
+	],
+	"healthColors": [
+		35,
+		194,
+		0
+	],
+	"loopAnimsOnHold": true,
+	"antialiasing": true,
+	"scale": 1
+}

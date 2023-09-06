@@ -1,0 +1,4 @@
+bf characters have their hold loop point at 4
+all others are at 3
+
+just noticed this now

@@ -1,0 +1,68 @@
+{
+	"holdLoopPoint": 3,
+	"positionOffset": [
+		-57,
+		249.8
+	],
+	"image": "characters/Sans_Phase_3",
+	"healthIcon": "sansScared",
+	"anims": [
+		{
+			"prefix": "Sans FNF Tired instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"prefix": "Snap to UT mode instance 1",
+			"name": "indiecross_snap",
+			"offset": [
+				34,
+				-1
+			]
+		},
+		{
+			"prefix": "Down Tired instance 1",
+			"name": "singDOWN",
+			"offset": [
+				3,
+				-15
+			]
+		},
+		{
+			"prefix": "Left Tired instance 1",
+			"name": "singLEFT",
+			"offset": [
+				58,
+				3
+			]
+		},
+		{
+			"prefix": "Right Tired instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				-3,
+				-1
+			]
+		},
+		{
+			"prefix": "Up Tired instance 1",
+			"name": "singUP",
+			"offset": [
+				52,
+				30
+			]
+		}
+	],
+	"cameraOffset": [
+		-2,
+		-100
+	],
+	"healthColors": [
+		41,
+		72,
+		118
+	]
+}

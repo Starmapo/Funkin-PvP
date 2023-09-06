@@ -1,0 +1,100 @@
+{
+	"constantLooping": true,
+	"scale": 1.4,
+	"holdLoopPoint": 4,
+	"flipX": true,
+	"positionOffset": [
+		-46,
+		306.8
+	],
+	"image": "characters/NM_run_BF",
+	"healthIcon": "bf",
+	"anims": [
+		{
+			"loop": true,
+			"prefix": "Run_cycle instance 1",
+			"name": "idle",
+			"offset": [
+				0,
+				0
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Down instance 1",
+			"name": "singDOWN",
+			"offset": [
+				9,
+				-1
+			]
+		},
+		{
+			"prefix": "Down Miss instance 1",
+			"name": "singDOWNmiss",
+			"offset": [
+				22,
+				-35
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Rightt instance 1",
+			"name": "singLEFT",
+			"offset": [
+				11,
+				-1
+			]
+		},
+		{
+			"prefix": "Right Miss instance 1",
+			"name": "singLEFTmiss",
+			"offset": [
+				4,
+				-33
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Leftt instance 1",
+			"name": "singRIGHT",
+			"offset": [
+				17,
+				13
+			]
+		},
+		{
+			"prefix": "Left Miss instance 1",
+			"name": "singRIGHTmiss",
+			"offset": [
+				46,
+				-31
+			]
+		},
+		{
+			"loop": true,
+			"prefix": "Up instance 1",
+			"name": "singUP",
+			"offset": [
+				-7,
+				-1
+			]
+		},
+		{
+			"prefix": "Up Miss instance 1",
+			"name": "singUPmiss",
+			"offset": [
+				-9,
+				-21
+			]
+		}
+	],
+	"cameraOffset": [
+		-49.8,
+		-90.2
+	],
+	"healthColors": [
+		49,
+		176,
+		209
+	]
+}
