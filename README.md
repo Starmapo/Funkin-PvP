@@ -2,16 +2,11 @@
 
 The unfinished source code of Friday Night Funkin' PvP, a cancelled fangame which revolves around a local multiplayer mode.
 
-## Why's it cancelled?
+## Why is it cancelled?
 
-It's a culmination of a few reasons. I'll try to list them from most to least impact on my decision to cancel the game:
+To put it shortly, I began to lose motivation to work on the game, and I had doubts that people would actually be interested in it. I hadn't posted anything publicly about it (outside of a preview on YouTube, which didn't get a lot of attention anyways), so it was easier to make the decision to cancel it.
 
-- I was planning on revamping the editor UIs, and I spent a while implementing a new library for it (HaxeUI), only to find out that it was way too laggy. Since I couldn't find another UI system for HaxeFlixel other than the official one, I started losing motivation to continue the game.
-- I've lost interest in FNF in general, and I have ideas for other non-FNF projects that I want to make.
-- I started to doubt if anyone would have interest in a game like this when online multiplayer FNF games already exist, like Online VS or Roblox fangames.
-- I needed to ask the original content creators for permission to add their respective mods, and I'm still rather insecure, so I kept procrastinating on it.
-
-It was made a little easier by the fact that I hadn't made an official page for the mod yet, so I could kinda cancel it privately.
+There's also now [Super Engine](https://github.com/superpowers04/Super-Engine), an online multiplayer engine that also allows singleplayer, and has even more modding capabilities than I planned for this game. It's essentially a better version of this.
 
 I don't want all the months of code to go to waste, so I've released it publicly here. If anyone wants to continue the game, you have my permission, though be aware that the code is rather messy and I was planning on revamping it before I decided to cancel it. The controls page was left unfinished, but you can find the original working version by going through the commit history.
 
