@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="LUCIA_PLANTOID.png">
-	<!-- Created with Adobe Animate version 20.0.0.17400 -->
-	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="normal0000" x="0" y="0" width="200" height="200"/>
-	<SubTexture name="normal0001" x="200" y="0" width="200" height="200"/>
-	<SubTexture name="losing0000" x="0" y="200" width="200" height="200"/>
-	<SubTexture name="losing0001" x="200" y="200" width="200" height="200"/>
-</TextureAtlas>

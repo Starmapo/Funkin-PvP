@@ -1,9 +1,0 @@
-{
-    "title": "VS Plantoids+",
-    "description": "Plants.",
-    "api_version": "0.1.0",
-    "mod_version": "1.0.0",
-    "dependencies": {
-        "fnf": "1.*.*"
-    }
-}

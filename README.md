@@ -6,8 +6,6 @@ The unfinished source code of Friday Night Funkin' PvP, a cancelled fangame whic
 
 To put it shortly, I began to lose motivation to work on the game, and I had doubts that people would actually be interested in it. I hadn't posted anything publicly about it (outside of a preview on YouTube, which didn't get a lot of attention anyways), so it was easier to make the decision to cancel it.
 
-There's also now [Super Engine](https://github.com/superpowers04/Super-Engine), an online multiplayer engine that also allows singleplayer, and has even more modding capabilities than I planned for this game. It's essentially a better version of this.
-
 I don't want all the months of code to go to waste, so I've released it publicly here. If anyone wants to continue the game, you have my permission, though be aware that the code is rather messy and I was planning on revamping it before I decided to cancel it. The controls page was left unfinished, but you can find the original working version by going through the commit history.
 
 ## Fangame? Is this not a mod?
@@ -30,7 +28,6 @@ There is no modding documentation, as it was cancelled before it could be writte
 - [PhantomMuff font](https://gamebanana.com/tools/7763)
 - VCR OSD Mono font
 - Pixel Arial 11 font
-- [ThatAzazelFire](https://linktr.ee/thatazazelfire) - Lent me some of his character sprites for the "Other" modpack
 - [YoshiCrafter Engine](https://github.com/FNF-CNE-Devs/YoshiCrafterEngine) - Color picker assets
 - [Quaver Team](https://github.com/Quaver/Quaver) - Song editor hitsound and metronome sounds
 

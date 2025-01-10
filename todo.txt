@@ -24,7 +24,6 @@ better ruleset
 add demo gameplay
 loading screen for characters and stages
 
-plantoids plus
 ourple guy
 vreen guy
 hypno's lullaby
@@ -33,4 +32,3 @@ friday night incident
 yung lixo
 tails gets trolled
 mario fnf port
-vs uzi
